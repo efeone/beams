@@ -67,13 +67,13 @@ app_license = "mit"
 # Installation
 # ------------
 
-# before_install = "beams.install.before_install"
-# after_install = "beams.install.after_install"
+after_install = "beams.install.after_install"
+after_migrate = "beams.setup.after_migrate"
 
 # Uninstallation
 # ------------
 
-# before_uninstall = "beams.uninstall.before_uninstall"
+before_uninstall = "beams.uninstall.before_uninstall"
 # after_uninstall = "beams.uninstall.after_uninstall"
 
 # Integration Setup
@@ -226,4 +226,3 @@ app_license = "mit"
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
-
