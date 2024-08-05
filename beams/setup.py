@@ -6,12 +6,14 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_install():
     create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
 
 def before_uninstall():
     delete_custom_fields(get_customer_custom_fields())
+    delete_custom_fields(get_sales_invoice_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -57,5 +59,40 @@ def get_customer_custom_fields():
                 "insert_after": "is_agent"
             }
 
+        ]
+    }
+
+def get_sales_invoice_custom_fields():
+    '''
+    Custom fields that need to be added to the Sales Invoice Doctype
+    '''
+    return {
+        "Sales Invoice": [
+            {
+                "fieldname": "actual_customer",
+                "fieldtype": "Link",
+                "label": "Actual Customer",
+                "options": "Customer",
+                "insert_after": "customer"
+            },
+            {
+                "fieldname": "actual_customer_group",
+                "fieldtype": "Link",
+                "label": "Actual Customer Group",
+                "options": "Customer Group",
+                "insert_after": "actual_customer"
+            },
+            {
+                "fieldname": "include_in_ibf",
+                "fieldtype": "Check",
+                "label": "Include in IBF",
+                "insert_after": "actual_customer_group"
+            },
+            {
+                "fieldname": "is_barter_invoice",
+                "fieldtype": "Check",
+                "label": "Is Barter Invoice",
+                "insert_after": "include_in_ibf"
+            }
         ]
     }
