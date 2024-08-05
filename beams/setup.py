@@ -6,7 +6,7 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_install():
     create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
-
+    create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
 def after_migrate():
     after_install()
 
@@ -55,6 +55,28 @@ def get_customer_custom_fields():
                 "options": "Customer",
                 "depends_on": "eval:doc.is_agent == 1",
                 "insert_after": "is_agent"
+            }
+
+        ]
+    }
+
+def get_quotation_custom_fields():
+    '''
+    Custom fields that need to be added to the Quotation DocType
+    '''
+    return {
+        "Quotation": [
+            {
+                "fieldname": "customer_purchase_reference_id",
+                "fieldtype": "Data",
+                "label": "Customer Purchase Reference ID",
+                "insert_after": "valid_till"
+            },
+            {
+                "fieldname": "is_barter",
+                "fieldtype": "Check",
+                "label": "Is Barter",
+                "insert_after": "order_type"
             }
 
         ]
