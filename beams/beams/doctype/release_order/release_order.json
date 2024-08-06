@@ -202,7 +202,7 @@
    "no_copy": 1,
    "oldfieldname": "naming_series",
    "oldfieldtype": "Select",
-   "options": "SAL-ORD-.YYYY.-",
+   "options": "REL-ORD-.YYYY.-",
    "print_hide": 1,
    "reqd": 1,
    "set_only_once": 1
@@ -243,7 +243,7 @@
    "label": "Order Type",
    "oldfieldname": "order_type",
    "oldfieldtype": "Select",
-   "options": "\nSales\nMaintenance\nShopping Cart",
+   "options": "\nTime Sales\nDigital Sales\nDigital Ad Sales\nDigital Clicks",
    "print_hide": 1,
    "reqd": 1
   },
@@ -507,7 +507,7 @@
    "label": "Exchange Rate",
    "oldfieldname": "conversion_rate",
    "oldfieldtype": "Currency",
-   "precision": "9",
+   "precision": "4",
    "print_hide": 1,
    "reqd": 1,
    "width": "100px"
@@ -605,7 +605,7 @@
    "hide_days": 1,
    "hide_seconds": 1,
    "label": "Items",
-   "oldfieldname": "sales_order_details",
+   "oldfieldname": "release_order_details",
    "oldfieldtype": "Table",
    "options": "Release Order Item",
    "reqd": 1
@@ -1657,11 +1657,6 @@
    "print_hide": 1
   },
   {
-   "fieldname": "customer_purchase_reference_id",
-   "fieldtype": "Data",
-   "label": "Customer Purchase Reference ID"
-  },
-  {
    "default": "0",
    "fieldname": "is_barter",
    "fieldtype": "Check",
@@ -1671,7 +1666,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-05 16:07:56.997010",
+ "modified": "2024-08-06 09:53:12.888021",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Release Order",
