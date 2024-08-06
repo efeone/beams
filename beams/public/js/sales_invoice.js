@@ -1,5 +1,7 @@
 frappe.ui.form.on('Sales Invoice', {
+  // Function triggered on form load
     onload: function(frm) {
+      // Hide 'actual_customer' and 'actual_customer_group' fields by default
         frm.toggle_display('actual_customer', false);
         frm.toggle_display('actual_customer_group', false);
     },
@@ -23,6 +25,7 @@ frappe.ui.form.on('Sales Invoice', {
     },
     actual_customer: function(frm) {
         if (frm.doc.actual_customer) {
+          // Fetch the 'customer_group' of the selected 'actual_customer'
             frappe.db.get_value('Customer', frm.doc.actual_customer, 'customer_group', function(response) {
                 if (response && response.customer_group) {
                     frm.toggle_display('actual_customer_group', true);
