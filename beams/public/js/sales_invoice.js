@@ -39,5 +39,22 @@ frappe.ui.form.on('Sales Invoice', {
             frm.set_value('actual_customer_group', '');
             frm.toggle_display('actual_customer_group', false);
         }
-    }
+    },
+    customer: function(frm) {
+          if (frm.doc.customer) {
+              frappe.db.get_value('Customer', frm.doc.customer, 'territory', (r) => {
+                  if (r.territory === 'India' && !frm.doc.is_barter_invoice) {
+                      frm.set_value('include_in_ibf', 1);
+                  } else {
+                      frm.set_value('include_in_ibf', 0);
+                  }
+              });
+          } else {
+              frm.set_value('include_in_ibf', 0);
+          }
+      },
+      is_barter_invoice: function(frm) {
+          frm.trigger('customer');
+      }
+
 });
