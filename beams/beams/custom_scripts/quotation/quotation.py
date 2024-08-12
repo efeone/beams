@@ -62,7 +62,7 @@ def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False
     '''
 
     def set_missing_values(source, target):
-        target.quotation_reference = source.name  
+        target.quotation_reference = source.name
 
     doclist = get_mapped_doc(
         "Quotation",
@@ -82,3 +82,15 @@ def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False
     )
 
     return doclist
+
+@frappe.whitelist()
+def get_total_sales_invoice_amount(quotation_name):
+    '''
+    Method: Calculates the total amount of all Sales Invoices linked to the Quotation via the reference_id field.
+    '''
+    total_amount = frappe.db.sql("""
+        SELECT SUM(grand_total) FROM `tabSales Invoice`
+        WHERE reference_id = %s AND docstatus = 1
+    """, quotation_name)[0][0]
+
+    return total_amount or 0
