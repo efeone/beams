@@ -90,6 +90,7 @@ def get_sales_invoice_custom_fields():
                 "fieldname": "include_in_ibf",
                 "fieldtype": "Check",
                 "label": "Include in IBF",
+                "read_only": 1,
                 "insert_after": "actual_customer_group"
             },
             {
@@ -102,11 +103,13 @@ def get_sales_invoice_custom_fields():
                 "fieldname": "reference_id",
                 "fieldtype": "Link",
                 "options":"Quotation",
-                "label": "Reference ID",
-                "insert_after": "customer"
+                "label": "Quotation",
+                "insert_after": "naming_series"
             },
         ]
     }
+
+
 
 def get_quotation_custom_fields():
     '''
