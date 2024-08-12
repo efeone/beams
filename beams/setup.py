@@ -8,6 +8,7 @@ def after_install():
     create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -16,7 +17,7 @@ def before_uninstall():
     delete_custom_fields(get_customer_custom_fields())
     delete_custom_fields(get_sales_invoice_custom_fields())
     delete_custom_fields(get_quotation_custom_fields())
-
+    delete_custom_fields(get_purchase_invoice_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -124,6 +125,29 @@ def get_quotation_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Barter",
                 "insert_after": "order_type"
+            }
+        ]
+    }
+
+def get_purchase_invoice_custom_fields():
+    '''
+    Custom fields that need to be added to the Purchase Invoice Doctype
+    '''
+    return {
+        "Purchase Invoice": [
+            {
+                "fieldname": "barter_invoice",
+                "fieldtype": "Check",
+                "label": "Barter Invoice",
+                "insert_after": "supplier"
+            },
+            {
+                "fieldname": "quotation_reference",
+                "fieldtype": "Link",
+                "label": "Quotation Reference",
+                "options": "Quotation",
+                "insert_after": "barter_invoice"
+
             }
         ]
     }
