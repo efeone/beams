@@ -53,3 +53,32 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     )
 
     return doclist
+
+@frappe.whitelist()
+def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False):
+    '''
+    Method: Maps the Quotation ID to the quotation_reference field in Purchase Invoice.
+    Output: A new Purchase Invoice document with the Quotation ID mapped to quotation_reference.
+    '''
+
+    def set_missing_values(source, target):
+        target.quotation_reference = source.name  
+
+    doclist = get_mapped_doc(
+        "Quotation",
+        source_name,
+        {
+            "Quotation": {
+                "doctype": "Purchase Invoice",
+                "validation": {"docstatus": ["=", 1]},
+                "field_map": {
+                    "name": "quotation_reference"
+                }
+            }
+        },
+        target_doc,
+        set_missing_values,
+        ignore_permissions=ignore_permissions,
+    )
+
+    return doclist
