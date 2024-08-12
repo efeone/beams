@@ -96,7 +96,14 @@ def get_sales_invoice_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Barter Invoice",
                 "insert_after": "include_in_ibf"
-            }
+            },
+            {
+                "fieldname": "reference_id",
+                "fieldtype": "Link",
+                "options":"Quotation",
+                "label": "Reference ID",
+                "insert_after": "customer"
+            },
         ]
     }
 
