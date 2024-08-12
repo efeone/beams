@@ -100,17 +100,10 @@ def get_sales_invoice_custom_fields():
                 "insert_after": "include_in_ibf"
             },
             {
-                "fieldname": "quotation_reference",
-                "fieldtype": "Link",
-                "label": "Quotation Reference",
-                "options": "Quotation",
-                "insert_after": "is_barter_invoice"
-            },
-            {
                 "fieldname": "reference_id",
                 "fieldtype": "Link",
                 "options":"Quotation",
-                "label": "Reference ID",
+                "label": "Quotation Reference",
                 "insert_after": "naming_series"
             },
         ]
