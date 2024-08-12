@@ -103,7 +103,7 @@ def get_sales_invoice_custom_fields():
                 "fieldname": "reference_id",
                 "fieldtype": "Link",
                 "options":"Quotation",
-                "label": "Quotation Reference",
+                "label": "Quotation",
                 "insert_after": "naming_series"
             },
         ]
