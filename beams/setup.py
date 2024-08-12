@@ -53,14 +53,6 @@ def get_customer_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Agent",
                 "insert_after": "msme_status"
-            },
-            {
-                "fieldname": "agent_of",
-                "fieldtype": "Link",
-                "label": "Agent Of",
-                "options": "Customer",
-                "depends_on": "eval:doc.is_agent == 1",
-                "insert_after": "is_agent"
             }
 
         ]
