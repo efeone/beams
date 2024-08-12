@@ -4,7 +4,12 @@ frappe.ui.form.on('Sales Invoice', {
       // Hide 'actual_customer' and 'actual_customer_group' fields by default
         frm.toggle_display('actual_customer', false);
         frm.toggle_display('actual_customer_group', false);
-    },
+
+        // Check the "Is Barter Invoice" checkbox by default when the Sales Invoice is created
+        if(frm.is_new()) {
+            frm.set_value('is_barter_invoice', 1);
+        }
+   },
     customer: function(frm) {
         if (frm.doc.customer) {
             frappe.db.get_value('Customer', frm.doc.customer, ['is_agent'], function(value) {
