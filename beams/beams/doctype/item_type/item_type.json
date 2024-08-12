@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:item_type",
+ "creation": "2024-08-12 10:34:05.640581",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_szxw",
+  "item_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_szxw",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Type",
+   "reqd": 1,
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-08-12 10:36:01.308217",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Item Type",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
