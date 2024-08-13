@@ -3,7 +3,7 @@ import frappe
 from frappe import _
 
 @frappe.whitelist()
-def validate_sales_order_amount(doc, method):
+def validate_sales_invoice_amount_with_quotation(doc, method):
     '''
         Method to validate the sum of total amount in Sales Invoices against the total amount in the Quotation.
     '''
