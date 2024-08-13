@@ -4,6 +4,14 @@ frappe.ui.form.on('Sales Invoice', {
       // Hide 'actual_customer' and 'actual_customer_group' fields by default
         frm.toggle_display('actual_customer', false);
         frm.toggle_display('actual_customer_group', false);
+        // Set a filter for 'actual_customer' to show only non-agent customers
+        frm.set_query('actual_customer', function() {
+            return {
+                filters: {
+                    'is_agent': 0
+                }
+            };
+        });
     },
     customer: function(frm) {
         if (frm.doc.customer) {
