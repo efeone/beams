@@ -137,7 +137,7 @@ def get_purchase_invoice_custom_fields():
                 "insert_after": "supplier"
             },
             {
-                "fieldname": "quotation_reference",
+                "fieldname": "quotation",
                 "fieldtype": "Link",
                 "label": "Quotation",
                 "options": "Quotation",
