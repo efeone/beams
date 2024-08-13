@@ -89,7 +89,9 @@ def get_sales_invoice_custom_fields():
                 "fieldname": "is_barter_invoice",
                 "fieldtype": "Check",
                 "label": "Is Barter Invoice",
-                "insert_after": "include_in_ibf"
+                "read_only": 1,
+                "insert_after": "include_in_ibf",
+                "fetch_from": "reference_id.is_barter"
             },
             {
                 "fieldname": "reference_id",
