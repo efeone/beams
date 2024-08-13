@@ -139,7 +139,7 @@ def get_purchase_invoice_custom_fields():
             {
                 "fieldname": "quotation_reference",
                 "fieldtype": "Link",
-                "label": "Quotation Reference",
+                "label": "Quotation",
                 "options": "Quotation",
                 "insert_after": "barter_invoice"
 
