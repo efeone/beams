@@ -86,10 +86,10 @@ def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False
 @frappe.whitelist()
 def get_total_sales_invoice_amount(quotation_name):
     '''
-    Method: Calculates the total amount of all Sales Invoices linked to the Quotation via the reference_id field.
+    Method: Calculates the total amount of all Sales Invoices linked to the Quotation using rounded_total.
     '''
     total_amount = frappe.db.sql("""
-        SELECT SUM(grand_total) FROM `tabSales Invoice`
+        SELECT SUM(rounded_total) FROM `tabSales Invoice`
         WHERE reference_id = %s AND docstatus = 1
     """, quotation_name)[0][0]
 

@@ -126,7 +126,9 @@ before_uninstall = "beams.uninstall.before_uninstall"
 # Hook on document methods and events
 
 doc_events = {
-    
+    "Sales Invoice": {
+        "validate": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice"
+    }
 }
 
 # Scheduled Tasks
