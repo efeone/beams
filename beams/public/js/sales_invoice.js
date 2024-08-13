@@ -56,5 +56,8 @@ frappe.ui.form.on('Sales Invoice', {
     },
     is_barter_invoice: function(frm) {
         frm.trigger('customer');
-    }
+    },
+    refresh: function(frm) {
+       frm.trigger('customer');
+   }
     });
