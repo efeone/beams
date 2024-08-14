@@ -9,6 +9,7 @@ def after_install():
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -18,6 +19,8 @@ def before_uninstall():
     delete_custom_fields(get_sales_invoice_custom_fields())
     delete_custom_fields(get_quotation_custom_fields())
     delete_custom_fields(get_purchase_invoice_custom_fields())
+    delete_custom_fields(get_quotation_item_custom_fields())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -110,17 +113,25 @@ def get_quotation_custom_fields():
     return {
         "Quotation": [
             {
-                "fieldname": "customer_purchase_reference_id",
+                "fieldname": "customer_purchase_order_reference",
                 "fieldtype": "Data",
-                "label": "Customer Purchase Reference ID",
+                "label": "Customer Purchase Order Reference",
                 "insert_after": "valid_till"
+            },
+            {
+                "fieldname": "albatross_ro_id",
+                "fieldtype": "Data",
+                "label": "Albatross RO ID",
+                "in_standard_filter": 1,
+                "insert_after": "order_type"
             },
             {
                 "fieldname": "is_barter",
                 "fieldtype": "Check",
                 "label": "Is Barter",
-                "insert_after": "order_type"
-            }
+                "insert_after": "albatross_ro_id"
+            },
+
         ]
     }
 
@@ -143,6 +154,22 @@ def get_purchase_invoice_custom_fields():
                 "options": "Quotation",
                 "insert_after": "barter_invoice"
 
+            }
+        ]
+    }
+
+def get_quotation_item_custom_fields():
+    '''
+    Custom fields that need to be added to the Quotation Item Doctype
+    '''
+    return {
+        "Quotation Item": [
+            {
+                "fieldname": "item_type",
+                "fieldtype": "Link",
+                "options": "Item Type",
+                "label": "Item Type",
+                "insert_after": "item_name"
             }
         ]
     }
