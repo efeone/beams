@@ -1,7 +1,5 @@
-
 import frappe
 from frappe import _
-
 @frappe.whitelist()
 def validate_sales_invoice_amount_with_quotation(doc, method):
     '''
