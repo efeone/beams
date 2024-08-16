@@ -1,0 +1,43 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-16 16:34:14.372737",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "budget_expense_type",
+  "budget_amount"
+ ],
+ "fields": [
+  {
+   "fieldname": "budget_expense_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Budget Expense Type",
+   "options": "Budget Expense Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "budget_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Budget Amount",
+   "non_negative": 1,
+   "precision": "2",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-16 17:07:56.609105",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Budget Expense",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
