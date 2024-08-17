@@ -161,7 +161,7 @@ def get_total_sales_invoice_amount(quotation_name):
     return total_amount or 0
 
 @frappe.whitelist()
-def validate_is_barter(quotation):
+def validate_is_barter(quotation,method=None):
     '''
     Method: Checking Whether enable_common_party_accounting checked or not.
     '''
