@@ -31,5 +31,18 @@ frappe.ui.form.on('Quotation', {
                 }
             });
         }
+    },
+
+    is_barter: function(frm) {
+        if (frm.doc.is_barter) {
+            frappe.db.get_single_value('Accounts Settings', 'enable_common_party_accounting')
+            .then(check => {
+              if (!check) {
+                  frm.set_value('is_barter', 0); // Uncheck the checkbox if validation fails
+                  frm.refresh_fields()
+                  frappe.msgprint("Please enable 'Common Party Accounting' in the Accounts Settings to proceed with barter transactions.");
+              }
+            })
+        }
     }
 });
