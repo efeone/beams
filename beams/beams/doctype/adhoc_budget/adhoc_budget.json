@@ -6,12 +6,18 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_egqo",
   "project",
   "fiscal_year",
-  "expected_revenue",
-  "budget_expense",
-  "amended_from"
+  "column_break_aybs",
+  "start_date",
+  "end_date",
+  "section_break_egqo",
+  "budget_expen",
+  "amended_from",
+  "section_break_fhpd",
+  "total_amount",
+  "column_break_apuq",
+  "expected_revenue"
  ],
  "fields": [
   {
@@ -29,25 +35,29 @@
   {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Fiscal year",
+   "label": "Fiscal Year",
    "options": "Fiscal Year",
    "reqd": 1
   },
   {
-   "fieldname": "expected_revenue",
-   "fieldtype": "Currency",
-   "in_list_view": 1,
-   "label": "Expected Revenue",
-   "non_negative": 1,
-   "precision": "2",
-   "reqd": 1
-  },
-  {
-   "fieldname": "budget_expense",
+   "fieldname": "budget_expen",
    "fieldtype": "Table",
    "label": "Budget Expense",
    "options": "Budget Expense"
+  },
+  {
+   "fieldname": "column_break_aybs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "label": "Start Date"
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "label": "End Date"
   },
   {
    "fieldname": "amended_from",
@@ -58,12 +68,36 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "non_negative": 1,
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "expected_revenue",
+   "fieldtype": "Currency",
+   "label": "Expected Revenue",
+   "non_negative": 1,
+   "precision": "2",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_fhpd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_apuq",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-16 17:06:48.584728",
+ "modified": "2024-08-17 11:20:52.810913",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",
