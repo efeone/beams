@@ -1,6 +1,10 @@
 import frappe
 from frappe.model.mapper import get_mapped_doc
 
+def validate(self):
+    super(Quotation, self).validate()
+    validate_is_barter(self)
+
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     """
@@ -59,6 +63,57 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     return doclist
 
 
+
+def get_party_link_if_exist(party_type, party):
+    ''' Method to get Common Party Link if exists '''
+    query = """
+        SELECT
+            CASE
+                WHEN primary_role = %(party_type)s THEN secondary_party
+                WHEN secondary_role = %(party_type)s THEN primary_party
+            END AS party
+        FROM
+            `tabParty Link`  # Adjusted to use backticks for the table name
+        WHERE
+            (primary_role = %(party_type)s AND primary_party = %(party)s )
+            OR (secondary_role = %(party_type)s AND secondary_party = %(party)s )
+    """
+    party_link = frappe.db.sql(query, { 'party_type': party_type, 'party': party }, as_dict=1)
+
+    if not party_link:
+        return None
+    else:
+        return party_link[0].party
+
+
+def create_common_party_and_supplier(customer):
+    ''' Method to create Supplier against customer and link as Common Party '''
+    common_party = get_party_link_if_exist('Customer', customer)
+    if not common_party:
+        # Create supplier for common party
+        supplier_doc = frappe.new_doc('Supplier')
+        customer_name = frappe.db.get_value('Customer', customer, 'customer_name')
+        supplier_doc.supplier_name = customer_name
+        supplier_group = frappe.db.get_single_value('Buying Settings', 'supplier_group')
+        if not supplier_group:
+            frappe.throw('Default Supplier Group is not configured in Buying Settings!')
+        supplier_doc.supplier_group = supplier_group
+        supplier_doc.insert()
+
+        # Link common party
+        if supplier_doc.name:
+            link_doc = frappe.new_doc('Party Link')
+            link_doc.primary_role = 'Customer'
+            link_doc.primary_party = customer
+            link_doc.secondary_role = 'Supplier'
+            link_doc.secondary_party = supplier_doc.name
+            link_doc.insert()
+
+        frappe.msgprint('Common Party and Supplier Created and Linked', indicator="green", alert=1)
+        common_party = supplier_doc.name
+
+    return common_party
+
 @frappe.whitelist()
 def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False):
     '''
@@ -66,8 +121,13 @@ def make_purchase_invoice(source_name, target_doc=None, ignore_permissions=False
     Output: A new Purchase Invoice document with the Quotation ID mapped to quotation.
     '''
 
+    customer = frappe.db.get_value("Quotation", source_name, "party_name")
+
+    supplier = create_common_party_and_supplier(customer)
+
     def set_missing_values(source, target):
         target.quotation = source.name
+        target.supplier = supplier
 
     doclist = get_mapped_doc(
         "Quotation",
@@ -99,3 +159,15 @@ def get_total_sales_invoice_amount(quotation_name):
     """, quotation_name)[0][0]
 
     return total_amount or 0
+
+@frappe.whitelist()
+def validate_is_barter(quotation):
+    '''
+    Method: Checking Whether enable_common_party_accounting checked or not.
+    '''
+    # Fetch the setting from the Account Setting DocType
+    enable_common_party_accounting = frappe.db.get_single_value('Accounts Settings', 'enable_common_party_accounting')
+
+    # Check if 'is_barter' is checked
+    if quotation.is_barter and not enable_common_party_accounting:
+        frappe.throw("Please enable 'Common Party Accounting' in the Accounts Settings to proceed with barter transactions.")
