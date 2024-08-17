@@ -1,10 +1,6 @@
 import frappe
 from frappe.model.mapper import get_mapped_doc
 
-def validate(self):
-    super(Quotation, self).validate()
-    validate_is_barter(self)
-
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     """
