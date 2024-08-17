@@ -231,7 +231,6 @@ doc_events = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 fixtures = [
-    {"dt":"Role", "filters":[["name", "in", ["Accounts User"]]]},
     {"dt":"Workflow","filters":[["name","in",["Customer Approval", "Account Approval"]]]},
     {"dt":"Workflow State","filters":[["name","in",["Draft", "Pending Approval", "Approved", "Rejected"]]]},
     {"dt":"Workflow Action Master","filters":[["name","in",["Submit for Approval", "Approve", "Reject", "Change Request"]]]},
