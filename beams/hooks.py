@@ -30,7 +30,9 @@ app_license = "mit"
 # include js in doctype views
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
-    "Quotation": "public/js/quotation.js"
+    "Quotation": "public/js/quotation.js",
+    "Customer": "public/js/customer.js",
+    "Account": "public/js/account.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -228,3 +230,9 @@ doc_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
+fixtures = [
+    {"dt":"Role", "filters":[["name", "in", ["Accounts User"]]]},
+    {"dt":"Workflow","filters":[["name","in",["Customer Approval", "Account Approval"]]]},
+    {"dt":"Workflow State","filters":[["name","in",["Draft", "Pending Approval", "Approved", "Rejected"]]]},
+    {"dt":"Workflow Action Master","filters":[["name","in",["Submit for Approval", "Approve", "Reject", "Change Request"]]]},
+]
