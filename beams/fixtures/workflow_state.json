@@ -29,14 +29,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "modified": "2024-08-17 14:29:11.732294",
-  "name": "Pending Verfication",
-  "style": "",
-  "workflow_state_name": "Pending Verfication"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "",
   "modified": "2024-08-17 14:30:26.456251",
   "name": "Verified",
