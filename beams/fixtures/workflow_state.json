@@ -2,17 +2,8 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "ok-sign",
-  "modified": "2024-08-03 14:59:52.132982",
-  "name": "Approved",
-  "style": "Success",
-  "workflow_state_name": "Approved"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "remove",
-  "modified": "2024-08-03 14:59:52.136137",
+  "modified": "2024-08-03 13:55:57.609026",
   "name": "Rejected",
   "style": "Danger",
   "workflow_state_name": "Rejected"
@@ -21,7 +12,7 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 14:26:48.530305",
+  "modified": "2024-08-16 14:44:27.097706",
   "name": "Draft",
   "style": "",
   "workflow_state_name": "Draft"
@@ -29,25 +20,17 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "modified": "2024-08-17 14:29:11.732294",
-  "name": "Pending Verfication",
-  "style": "",
-  "workflow_state_name": "Pending Verfication"
+  "icon": "ok-sign",
+  "modified": "2024-08-03 13:55:57.606241",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
  },
  {
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 14:30:26.456251",
-  "name": "Verified",
-  "style": "",
-  "workflow_state_name": "Verified"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-17 15:00:11.970925"
+  "modified": "2024-08-16 14:46:14.066144",
   "name": "Pending Approval",
   "style": "",
   "workflow_state_name": "Pending Approval"

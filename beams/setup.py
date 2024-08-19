@@ -12,7 +12,6 @@ def after_install():
     create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
     create_property_setters(get_property_setters())
 
-
 def after_migrate():
     after_install()
 
@@ -194,7 +193,7 @@ def create_property_setters(property_setter_datas):
 
 def get_property_setters():
     '''
-        BEAMS specific property setters that need to be added to the Customer and Account DocTypes
+        BEAMS specific property setters that need to be added to the Customer, Account and supplier DocTypes
     '''
     return [
         {
@@ -212,5 +211,14 @@ def get_property_setters():
             "property": "default",
             "property_type": "Check",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Supplier",
+            "field_name": "disabled",
+            "property": "default",
+            "property_type": "Check",
+            "value": 1
         }
+
     ]
