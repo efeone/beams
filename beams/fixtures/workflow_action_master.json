@@ -5,6 +5,9 @@
   "modified": "2024-08-03 14:59:52.174092",
   "name": "Approve",
   "workflow_action_name": "Approve"
+  "modified": "2024-08-17 14:30:11.875762",
+  "name": "Verify",
+  "workflow_action_name": "Verify"
  },
  {
   "docstatus": 0,
@@ -26,5 +29,8 @@
   "modified": "2024-08-16 14:53:30.140650",
   "name": "Change Request",
   "workflow_action_name": "Change Request"
+  "modified": "2024-08-17 14:57:09.879634",
+  "name": "Sent For CEO Approval",
+  "workflow_action_name": "Sent For CEO Approval"
  }
 ]
