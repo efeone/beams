@@ -21,7 +21,7 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-16 14:39:10.231760",
+  "modified": "2024-08-17 14:26:48.530305",
   "name": "Draft",
   "style": "",
   "workflow_state_name": "Draft"
@@ -29,8 +29,25 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "modified": "2024-08-17 14:29:11.732294",
+  "name": "Pending Verfication",
+  "style": "",
+  "workflow_state_name": "Pending Verfication"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-16 14:42:12.613608",
+  "modified": "2024-08-17 14:30:26.456251",
+  "name": "Verified",
+  "style": "",
+  "workflow_state_name": "Verified"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-17 15:00:11.970925"
   "name": "Pending Approval",
   "style": "",
   "workflow_state_name": "Pending Approval"
