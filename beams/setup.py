@@ -10,6 +10,8 @@ def after_install():
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
+    create_property_setters(get_property_setters())
+
 
 def after_migrate():
     after_install()
@@ -56,7 +58,7 @@ def get_customer_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Agent",
                 "insert_after": "msme_status"
-            }
+            },
 
         ]
     }
@@ -175,3 +177,40 @@ def get_quotation_item_custom_fields():
             }
         ]
     }
+
+def create_property_setters(property_setter_datas):
+    '''
+    Method to create custom property setters
+    args:
+        property_setter_datas : list of dict of property setter obj
+    '''
+    for property_setter_data in property_setter_datas:
+        if frappe.db.exists("Property Setter", property_setter_data):
+            continue
+        property_setter = frappe.new_doc("Property Setter")
+        property_setter.update(property_setter_data)
+        property_setter.flags.ignore_permissions = True
+        property_setter.insert()
+
+def get_property_setters():
+    '''
+        BEAMS specific property setters that need to be added to the Customer and Account DocTypes
+    '''
+    return [
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Customer",
+            "field_name": "disabled",
+            "property": "default",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Account",
+            "field_name": "disabled",
+            "property": "default",
+            "property_type": "Check",
+            "value": 1
+        }
+    ]
