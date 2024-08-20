@@ -42,9 +42,8 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2024-08-20 16:43:09.392113",
+ "modified": "2024-08-20 16:55:16.556657",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
@@ -61,7 +60,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
