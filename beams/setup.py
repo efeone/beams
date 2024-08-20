@@ -127,6 +127,7 @@ def get_quotation_custom_fields():
                 "fieldtype": "Data",
                 "label": "Albatross RO ID",
                 "in_standard_filter": 1,
+                "reqd":1,
                 "insert_after": "order_type"
             },
             {
@@ -149,12 +150,15 @@ def get_purchase_invoice_custom_fields():
                 "fieldname": "barter_invoice",
                 "fieldtype": "Check",
                 "label": "Barter Invoice",
+                "read_only": 1,
+                "fetch_from": "quotation.is_barter",
                 "insert_after": "supplier"
             },
             {
                 "fieldname": "quotation",
                 "fieldtype": "Link",
                 "label": "Quotation",
+                "read_only": 1,
                 "options": "Quotation",
                 "insert_after": "barter_invoice"
 

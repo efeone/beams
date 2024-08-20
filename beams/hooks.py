@@ -131,6 +131,9 @@ doc_events = {
     },
     "Quotation": {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter"
+    },
+    "Purchase Invoice": {
+        "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
     }
 }
 
