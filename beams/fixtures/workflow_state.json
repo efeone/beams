@@ -39,9 +39,9 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 15:00:11.970925",
+  "modified": "2024-08-20 14:52:12.123094",
   "name": "Pending Approval",
-  "style": "",
+  "style": "Info",
   "workflow_state_name": "Pending Approval"
  }
 ]

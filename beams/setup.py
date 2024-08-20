@@ -207,9 +207,25 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Customer",
+            "field_name": "disabled",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Account",
             "field_name": "disabled",
             "property": "default",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Account",
+            "field_name": "disabled",
+            "property": "read_only",
             "property_type": "Check",
             "value": 1
         }

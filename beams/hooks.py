@@ -70,7 +70,7 @@ doctype_js = {
 # Installation
 # ------------
 
-after_install = "beams.install.after_install"
+after_install = "beams.setup.after_install"
 after_migrate = "beams.setup.after_migrate"
 
 # Uninstallation
@@ -239,9 +239,9 @@ fixtures = [
         ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Verification", "Verified"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval", "Approve", "Reject", "Change Request", "Sent For Verification", "Verify", "Sent For CEO Approval"]]
+        ["name", "in", ["Submit for Approval", "Approve", "Reject", "Sent For Verification", "Verify", "Sent For CEO Approval"]]
     ]},
     {"dt": "Role", "filters": [
-        ["name", "in", ["CEO","Accounts User"]]
+        ["name", "in", ["CEO"]]
     ]}
 ]
