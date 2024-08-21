@@ -97,7 +97,7 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "eval:doc.docstatus==1",
+   "depends_on": "eval: doc.workflow_state !== 'Draft'",
    "fieldname": "remarks",
    "fieldtype": "Long Text",
    "label": "Remarks"
@@ -110,7 +110,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-19 11:58:04.796340",
+ "modified": "2024-08-21 10:09:09.377617",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",
