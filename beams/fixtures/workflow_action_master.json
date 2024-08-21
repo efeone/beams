@@ -9,13 +9,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-17 14:27:56.976813",
-  "name": "Sent For Verification",
-  "workflow_action_name": "Sent For Verification"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-08-17 14:30:11.875762",
   "name": "Verify",
   "workflow_action_name": "Verify"
@@ -37,8 +30,8 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-17 14:57:09.879634",
-  "name": "Sent For CEO Approval",
-  "workflow_action_name": "Sent For CEO Approval"
+  "modified": "2024-08-21 09:48:56.345580",
+  "name": "Sent For Finance Verification",
+  "workflow_action_name": "Sent For Finance Verification"
  }
 ]

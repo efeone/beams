@@ -30,18 +30,36 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 14:30:26.456251",
-  "name": "Verified",
-  "style": "",
-  "workflow_state_name": "Verified"
+  "modified": "2024-08-20 14:52:12.123094",
+  "name": "Pending Approval",
+  "style": "Info",
+  "workflow_state_name": "Pending Approval"
  },
  {
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-20 14:52:12.123094",
-  "name": "Pending Approval",
+  "modified": "2024-08-21 10:32:58.704051",
+  "name": "Pending Finance Verification",
   "style": "Info",
-  "workflow_state_name": "Pending Approval"
+  "workflow_state_name": "Pending Finance Verification"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-21 10:30:46.381388",
+  "name": "Verified By Finance",
+  "style": "Primary",
+  "workflow_state_name": "Verified By Finance"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-21 10:30:33.607805",
+  "name": "Rejected By Finance",
+  "style": "Warning",
+  "workflow_state_name": "Rejected By Finance"
  }
 ]
