@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-21 11:50:04.743208",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "adhoc_budget_revenue_expectation"
+ ],
+ "fields": [
+  {
+   "fieldname": "adhoc_budget_revenue_expectation",
+   "fieldtype": "Float",
+   "label": "Adhoc Budget Revenue Expectation"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-08-21 11:58:19.020988",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Additional Account Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
