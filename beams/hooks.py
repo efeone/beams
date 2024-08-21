@@ -134,6 +134,12 @@ doc_events = {
     },
     "Purchase Invoice": {
         "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
+    },
+    "Account": {
+        "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
+    },
+    "Customer": {
+        "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer"
     }
 }
 
