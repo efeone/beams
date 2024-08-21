@@ -2,20 +2,21 @@ import frappe
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils.user import get_users_with_role
 
-def create_todo_on_account_creation(doc, method):
-    '''
-        This function is triggered on the creation of an Account document.
-        It creates a ToDo and assigns it to the Accounts user.
-    '''
-
+def create_todo_on_creation(doc, method, doctype_name, action_description):
     users = get_users_with_role("Accounts User")
 
     if users:
-        description = f"New Account Created: {doc.name}.<br> Please review and update details or take necessary actions."
+        description = f"New {doctype_name} Created: {doc.name}.<br>{action_description}"
 
         add_assign({
             "assign_to": users,
-            "doctype": "Account",
+            "doctype": doctype_name,
             "name": doc.name,
             "description": description
         })
+
+def create_todo_on_creation_for_account(doc, method):
+    create_todo_on_creation(doc, method, "Account", "Please review and update details or take necessary actions.")
+
+def create_todo_on_creation_for_customer(doc, method):
+    create_todo_on_creation(doc, method, "Customer", "Please review and update details or take necessary actions.")
