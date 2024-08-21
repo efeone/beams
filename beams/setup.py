@@ -198,7 +198,7 @@ def create_property_setters(property_setter_datas):
 
 def get_property_setters():
     '''
-        BEAMS specific property setters that need to be added to the Customer and Account DocTypes
+        BEAMS specific property setters that need to be added to the Customer ,Account and Supplier DocTypes
     '''
     return [
         {
@@ -232,5 +232,22 @@ def get_property_setters():
             "property": "read_only",
             "property_type": "Check",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Supplier",
+            "field_name": "disabled",
+            "property": "default",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Supplier",
+            "field_name": "disabled",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": 1
         }
+
     ]
