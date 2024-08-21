@@ -8,7 +8,8 @@
  "field_order": [
   "section_break_2qa9",
   "budget_expense_type",
-  "amended_from"
+  "accounts",
+  "description"
  ],
  "fields": [
   {
@@ -19,25 +20,26 @@
    "fieldname": "budget_expense_type",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Budget Expense Type",
+   "label": "Budget  Expense Type",
    "reqd": 1,
    "unique": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Budget Expense Type",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "fieldname": "accounts",
+   "fieldtype": "Table",
+   "label": "Accounts",
+   "options": "Accounts"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-16 16:32:37.500264",
+ "modified": "2024-08-21 10:13:22.241024",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Expense Type",
