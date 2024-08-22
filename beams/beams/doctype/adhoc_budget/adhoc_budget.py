@@ -21,7 +21,7 @@ class AdhocBudget(Document):
         """
         users = get_users_with_role("Accounts User")
         if users:
-            description = f"New Adhoc Budget Created: {self.name}. Please review and update details or take necessary actions."
+            description = f"New Adhoc Budget Created: {self.project}. Please review and update details or take necessary actions."
             for user in users:
                 if not frappe.db.exists('ToDo', {'reference_name': self.name, 'assign_to': user}):
                     add_assign({
@@ -40,7 +40,7 @@ class AdhocBudget(Document):
         if self.workflow_state == "Verified By Finance":
             ceo_users = get_users_with_role("CEO")
             if ceo_users:
-                description = f"Approved by Finance: Adhoc Budget {self.name}. Please proceed with the next step."
+                description = f"Approved by Finance: Adhoc Budget {self.project}. Please proceed with the next step."
                 if not frappe.db.exists('ToDo', {'reference_name': self.name, 'reference_type': 'Adhoc Budget', 'description':description}):
                     add_assign({
                         "assign_to": ceo_users,
@@ -51,7 +51,7 @@ class AdhocBudget(Document):
         elif self.workflow_state == "Rejected By Finance":
             ceo_users = get_users_with_role("CEO")
             if ceo_users:
-                description = f"Rejected by Finance: Adhoc Budget {self.name}. Please review and revise, or proceed with their feedback."
+                description = f"Rejected by Finance: Adhoc Budget {self.project}. Please review and revise, or proceed with their feedback."
                 if not frappe.db.exists('ToDo', {'reference_name': self.name, 'reference_type': 'Adhoc Budget', 'description':description}):
                     add_assign({
                         "assign_to": ceo_users,
