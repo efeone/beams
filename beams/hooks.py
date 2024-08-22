@@ -142,8 +142,9 @@ doc_events = {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer"
     },
     "Purchase Order": {
-        "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification"
-    },
+        "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
+        "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation"
+    }
 }
 
 
