@@ -74,6 +74,16 @@ def get_sales_invoice_custom_fields():
                 "fieldtype": "Link",
                 "label": "Actual Customer",
                 "options": "Customer",
+                "depends_on": "eval:doc.is_agent == 1",
+                "insert_after": "is_agent"
+            },
+            {
+                "fieldname": "is_agent",
+                "fieldtype": "Check",
+                "label": "Is Agent",
+                "read_only":1,
+                "fetch_from": "customer.is_agent",
+                "depends_on": "eval:doc.is_agent",
                 "insert_after": "customer"
             },
             {
@@ -81,6 +91,8 @@ def get_sales_invoice_custom_fields():
                 "fieldtype": "Link",
                 "label": "Actual Customer Group",
                 "options": "Customer Group",
+                "read_only": 1,
+                "fetch_from": "actual_customer.customer_group",
                 "insert_after": "actual_customer"
             },
             {

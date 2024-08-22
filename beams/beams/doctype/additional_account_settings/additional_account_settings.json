@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "adhoc_budget_revenue_expectation",
-  "equalize_purchase_and_sales_amounts"
+  "equalize_purchase_and_quotation_amounts"
  ],
  "fields": [
   {
@@ -16,15 +16,15 @@
   },
   {
    "default": "0",
-   "fieldname": "equalize_purchase_and_sales_amounts",
+   "fieldname": "equalize_purchase_and_quotation_amounts",
    "fieldtype": "Check",
-   "label": "Equalize Purchase and Sales Amounts"
+   "label": "Equalize Purchase and Quotation Amounts"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-22 16:24:07.998252",
+ "modified": "2024-08-22 16:42:46.493814",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Additional Account Settings",
