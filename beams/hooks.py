@@ -140,7 +140,10 @@ doc_events = {
     },
     "Customer": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer"
-    }
+    },
+    "Purchase Order": {
+        "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification"
+    },
 }
 
 
