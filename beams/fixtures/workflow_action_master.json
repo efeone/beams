@@ -2,23 +2,9 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-12 10:10:50.428635",
-  "name": "Approve",
-  "workflow_action_name": "Approve"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-08-17 14:30:11.875762",
   "name": "Verify",
   "workflow_action_name": "Verify"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
-  "modified": "2024-08-03 14:59:52.176496",
-  "name": "Reject",
-  "workflow_action_name": "Reject"
  },
  {
   "docstatus": 0,
@@ -33,5 +19,26 @@
   "modified": "2024-08-21 09:48:56.345580",
   "name": "Sent For Finance Verification",
   "workflow_action_name": "Sent For Finance Verification"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-21 15:43:10.632909",
+  "name": "Sent for Approval",
+  "workflow_action_name": "Sent for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-12 10:10:50.428635",
+  "name": "Approve",
+  "workflow_action_name": "Approve"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-03 14:59:52.176496",
+  "name": "Reject",
+  "workflow_action_name": "Reject"
  }
 ]
