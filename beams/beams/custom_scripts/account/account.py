@@ -20,3 +20,6 @@ def create_todo_on_creation_for_account(doc, method):
 
 def create_todo_on_creation_for_customer(doc, method):
     create_todo_on_creation(doc, method, "Customer", "Please review and update details or take necessary actions.")
+
+def create_todo_on_creation_for_supplier(doc, method):
+    create_todo_on_creation(doc, method, "Supplier", "Please review and update details or take necessary actions.")
