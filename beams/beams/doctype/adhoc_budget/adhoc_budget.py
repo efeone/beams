@@ -59,3 +59,50 @@ class AdhocBudget(Document):
                         "name": self.name,
                         "description": description
                     })
+
+    def on_submit(self):
+        if self.workflow_state == 'Approved':
+            self.create_budget_from_adhoc_budget()
+
+    def create_budget_from_adhoc_budget(self):
+        """
+        Budget Creation On The Approval Of the Adhoc Budget
+        """
+        budget = frappe.new_doc('Budget')
+        budget.budget_against = 'Project'
+        budget.project = self.project
+        budget.fiscal_year = self.fiscal_year
+
+        budget.applicable_on_material_request = 1
+        budget.applicable_on_booking_actual_expenses = 1
+        budget.applicable_on_purchase_order = 1
+
+        budget.action_if_annual_budget_exceeded_on_mr = 'Warn'
+        budget.action_if_accumulated_monthly_budget_exceeded_on_mr = 'Warn'
+        budget.action_if_annual_budget_exceeded_on_po = 'Warn'
+        budget.action_if_accumulated_monthly_budget_exceeded_on_po = 'Warn'
+        budget.action_if_annual_budget_exceeded = 'Warn'
+        budget.action_if_accumulated_monthly_budget_exceeded = 'Warn'
+
+        budget.flags.ignore_validate = True
+        budget.flags.ignore_mandatory = True
+        budget.flags.ignore_permissions = True
+
+        account_budget_map = {}
+
+        for expense in self.budget_expense:
+            account = 'Cost of Goods Sold - E'
+
+            if account in account_budget_map:
+                account_budget_map[account] += expense.budget_amount
+            else:
+                account_budget_map[account] = expense.budget_amount
+
+        for account, total_budget_amount in account_budget_map.items():
+            budget.append('accounts', {
+                'account': account,
+                'budget_amount': total_budget_amount
+            })
+
+        budget.insert()
+        budget.submit()
