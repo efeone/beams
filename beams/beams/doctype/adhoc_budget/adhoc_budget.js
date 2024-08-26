@@ -56,8 +56,8 @@
   }
 
   function check_expected_revenue_reached(frm) {
-     // Fetch the adhoc_budget_revenue_expectation from Additional Account Settings
-      frappe.db.get_single_value('Additional Account Settings', 'adhoc_budget_revenue_expectation')
+     // Fetch the adhoc_budget_threshold from Beams Accounts Settings
+      frappe.db.get_single_value('Beams Accounts Settings', 'adhoc_budget_threshold')
           .then(value => {
               frm.set_df_property("expected_revenue", "description", `Expected Revenue should be greater than ${value * frm.doc.total_budget_amount}`)
               if (value) {
@@ -80,7 +80,7 @@
                     }
                   }
               } else {
-                  console.error('Failed to fetch Additional Account Settings');
+                  console.error('Failed to fetch Beams Accounts Settings');
               }
           });
   }

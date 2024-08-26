@@ -255,7 +255,7 @@ fixtures = [
         ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval", "Approve", "Reject", "Sent For Finance Verification", "Verify", "Sent for Approval"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Sent For Finance Verification", "Verify", "Sent for Approval"]]
     ]},
     {"dt": "Role", "filters": [
         ["name", "in", ["CEO"]]

@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestAdditionalAccountSettings(FrappeTestCase):
+class TestBeamsAccountsSettings(FrappeTestCase):
 	pass

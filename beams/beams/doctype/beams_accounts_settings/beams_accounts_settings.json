@@ -5,29 +5,30 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "adhoc_budget_revenue_expectation",
+  "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts"
  ],
  "fields": [
-  {
-   "fieldname": "adhoc_budget_revenue_expectation",
-   "fieldtype": "Float",
-   "label": "Adhoc Budget Revenue Expectation"
-  },
   {
    "default": "0",
    "fieldname": "equalize_purchase_and_quotation_amounts",
    "fieldtype": "Check",
    "label": "Equalize Purchase and Quotation Amounts"
+  },
+  {
+   "description": "Adhoc Budget Revenue Expectation Threshold",
+   "fieldname": "adhoc_budget_threshold",
+   "fieldtype": "Float",
+   "label": "Adhoc Budget Threshold"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-22 16:42:46.493814",
+ "modified": "2024-08-24 17:35:13.018564",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Additional Account Settings",
+ "name": "Beams Accounts Settings",
  "owner": "Administrator",
  "permissions": [
   {
