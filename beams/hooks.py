@@ -127,7 +127,7 @@ before_uninstall = "beams.uninstall.before_uninstall"
 
 doc_events = {
     "Sales Invoice": {
-        "on_submit": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation"
+        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation"
     },
     "Quotation": {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter"

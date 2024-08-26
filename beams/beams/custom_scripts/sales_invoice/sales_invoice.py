@@ -14,21 +14,28 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
         # Fetch the Quotation document
         quotation = frappe.get_doc('Quotation', doc.reference_id)
 
-        # Validate the sum of Sales Invoice amounts against the Quotation
+        # Fetch all related Sales Invoices (excluding the current one)
         sales_invoices = frappe.get_all('Sales Invoice',
-            filters={'reference_id': doc.reference_id, 'docstatus': 1},  # Only consider submitted invoices
+            filters={'reference_id': doc.reference_id, 'docstatus': 1, 'name': ['!=', doc.name]},
             fields=['grand_total'])
 
-        total_grand_total = 0
+        # Calculate the total grand total of existing Sales Invoices
+        total_grand_total = sum(invoice.grand_total for invoice in sales_invoices)
 
-        if sales_invoices:
-            for invoice in sales_invoices:
-                grand_total = invoice.grand_total
-                total_grand_total += grand_total
-                if total_grand_total > quotation.grand_total:
-                    frappe.throw(_(
-                        "The total amount of Sales Invoices for this Quotation cannot exceed the total amount in the Quotation."
-                    ))
+        # Add the current Sales Invoice's grand total
+        total_grand_total += doc.grand_total
+
+        # Perform the comparison with the Quotation's grand total
+        if total_grand_total > quotation.grand_total:
+            frappe.throw(_(
+                "The total amount of Sales Invoices for this Quotation cannot exceed the total amount in the Quotation."
+            ))
+
+        # Optional: Inform the user if the total is less than the Quotation (if required)
+        elif total_grand_total < quotation.grand_total:
+            frappe.throw(_(
+                "The total amount of Sales Invoices for this Quotation is less than the total amount in the Quotation."
+            ))
 
         # Check if `is_barter` is checked in the Quotation
         if quotation.is_barter:
@@ -38,7 +45,6 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
                 fields=['supplier'])
 
             if purchase_invoices:
-                # Ensure the customer exists in the Purchase Invoice
                 customer = doc.customer
                 for purchase_invoice in purchase_invoices:
                     supplier = purchase_invoice.supplier
