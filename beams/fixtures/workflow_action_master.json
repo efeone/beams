@@ -40,5 +40,12 @@
   "modified": "2024-08-03 14:59:52.176496",
   "name": "Reject",
   "workflow_action_name": "Reject"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-24 19:49:57.324772",
+  "name": "Reopen",
+  "workflow_action_name": "Reopen"
  }
 ]

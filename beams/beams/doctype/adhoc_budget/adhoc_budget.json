@@ -16,11 +16,14 @@
   "expected_end_date",
   "section_break_fzul",
   "budget_expense",
-  "column_break_mjii",
+  "section_break_qooy",
+  "column_break_qnen",
+  "column_break_yptk",
+  "column_break_yjus",
   "total_budget_amount",
   "section_break_yiku",
-  "amended_from",
-  "remarks"
+  "remarks",
+  "amended_from"
  ],
  "fields": [
   {
@@ -84,21 +87,12 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Adhoc Budget",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "default": "0",
    "depends_on": "eval:doc.expected_revenue_reached",
    "fieldname": "expected_revenue_reached",
    "fieldtype": "Check",
-   "label": "Expected Revenue Reached"
+   "label": "Expected Revenue Reached",
+   "read_only": 1
   },
   {
    "fieldname": "total_budget_amount",
@@ -110,10 +104,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "column_break_mjii",
-   "fieldtype": "Column Break"
-  },
-  {
    "allow_on_submit": 1,
    "depends_on": "eval:doc.docstatus==1",
    "fieldname": "remarks",
@@ -123,12 +113,38 @@
   {
    "fieldname": "column_break_zhmw",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qnen",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yptk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yjus",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Adhoc Budget",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_qooy",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-22 10:50:33.253518",
+ "modified": "2024-08-24 16:07:56.125636",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",

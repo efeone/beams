@@ -115,6 +115,7 @@ def get_sales_invoice_custom_fields():
                 "fieldtype": "Link",
                 "options":"Quotation",
                 "label": "Quotation",
+                "read_only":1,
                 "insert_after": "naming_series"
             },
         ]
