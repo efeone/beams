@@ -130,7 +130,8 @@ doc_events = {
         "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation"
     },
     "Quotation": {
-        "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter"
+        "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
+        "on_submit": "beams.beams.custom_scripts.quotation.quotation.create_tasks_for_production_items"
     },
     "Purchase Invoice": {
         "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
@@ -258,6 +259,6 @@ fixtures = [
         ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Sent For Finance Verification", "Verify", "Sent for Approval"]]
     ]},
     {"dt": "Role", "filters": [
-        ["name", "in", ["CEO"]]
+        ["name", "in", ["CEO","Production Manager"]]
     ]}
 ]
