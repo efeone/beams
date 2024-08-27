@@ -10,6 +10,7 @@ def after_install():
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_supplier_custom_fields(), ignore_validate=True)
     create_property_setters(get_property_setters())
 
 
@@ -22,6 +23,7 @@ def before_uninstall():
     delete_custom_fields(get_quotation_custom_fields())
     delete_custom_fields(get_purchase_invoice_custom_fields())
     delete_custom_fields(get_quotation_item_custom_fields())
+    delete_custom_fields(get_supplier_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -174,6 +176,30 @@ def get_purchase_invoice_custom_fields():
                 "read_only": 1,
                 "options": "Quotation",
                 "insert_after": "barter_invoice"
+
+            }
+        ]
+    }
+
+def get_supplier_custom_fields():
+    '''
+    Custom fields that need to be added to the Supplier Doctype
+    '''
+    return {
+        "Supplier": [
+            {
+                "fieldname": "is_stringer",
+                "fieldtype": "Check",
+                "label": "Is Stringer",
+                "insert_after": "supplier_name"
+            },
+            {
+                "fieldname": "bureau",
+                "fieldtype": "Link",
+                "label": "Bureau",
+                "options": "Bureau",
+                "depends_on": "eval:doc.is_stringer == 1",
+                "insert_after": "is_stringer"
 
             }
         ]
