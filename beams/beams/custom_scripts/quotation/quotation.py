@@ -175,6 +175,9 @@ def validate_is_barter(quotation,method=None):
 
 @frappe.whitelist()
 def create_tasks_for_production_items(doc, method):
+    '''
+    Method: Creating task for production items.
+    '''
     if doc.docstatus == 1:  # Ensure it's only triggered on submit
         for item in doc.items:
             # Fetch `is_production_item` from the Item DocType using item_code from the child table
@@ -186,6 +189,9 @@ def create_tasks_for_production_items(doc, method):
                     create_task(item.item_code, doc.name)
 
 def create_task(item_code, quotation_name):
+    '''
+    Method: Task Creation and Assigning to Production Manager.
+    '''
     # Check if the task already exists
     if frappe.db.exists("Task", {"description": f'Production task for item {item_code} in Quotation {quotation_name}'}):
         return False
@@ -219,6 +225,9 @@ def create_task(item_code, quotation_name):
     return True
 
 def get_production_managers():
+    '''
+    Method: Getting User Id for Production Manager Role.
+    '''
     # Fetch all users with the Production Manager role
     try:
         users = frappe.get_all('User', filters={'roles': ['Production Manager']}, fields=['name'])
