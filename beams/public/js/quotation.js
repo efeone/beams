@@ -33,23 +33,4 @@ frappe.ui.form.on('Quotation', {
             })
         }
     },
-
-    before_save: function(frm) {
-        // Check the total amount of linked Sales Invoices before saving
-        return frappe.call({
-            method: "beams.beams.custom_scripts.quotation.quotation.get_total_sales_invoice_amount",
-            args: {
-                quotation_name: frm.doc.name
-            },
-            callback: function(r) {
-                if (r.message < frm.doc.total) {
-                    // Allow saving
-                    return true;
-                } else {
-                    frappe.msgprint(__('The total amount of Sales Invoices for this Quotation has reached or exceeded the limit.'));
-                    frappe.validated = false; // Prevent saving
-                }
-            }
-        });
-    }
 });

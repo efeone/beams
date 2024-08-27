@@ -1,5 +1,9 @@
 import frappe
 from frappe.model.mapper import get_mapped_doc
+from frappe import _
+from frappe.utils import nowdate
+from frappe.desk.form.assign_to import add as add_assign
+
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
@@ -167,3 +171,58 @@ def validate_is_barter(quotation,method=None):
     # Check if 'is_barter' is checked
     if quotation.is_barter and not enable_common_party_accounting:
         frappe.throw("Please enable 'Common Party Accounting' in the Accounts Settings to proceed with barter transactions.")
+
+
+@frappe.whitelist()
+def create_tasks_for_production_items(doc, method):
+    if doc.docstatus == 1:  # Ensure it's only triggered on submit
+        for item in doc.items:
+            # Fetch `is_production_item` from the Item DocType using item_code from the child table
+            is_production_item = frappe.db.get_value('Item', item.item_code, 'is_production_item')
+
+            if is_production_item:
+                quantity = item.qty
+                for _ in range(int(quantity)):
+                    create_task(item.item_code, doc.name)
+
+def create_task(item_code, quotation_name):
+    # Check if the task already exists
+    if frappe.db.exists("Task", {"description": f'Production task for item {item_code} in Quotation {quotation_name}'}):
+        return False
+
+    # Create a new task document
+    task = frappe.get_doc({
+        'doctype': 'Task',
+        'subject': f'Production Task for {item_code}',
+        'description': f'Production task for item {item_code} in Quotation {quotation_name}.',
+        'status': 'Open',
+        'exp_start_date': nowdate(),
+        'exp_end_date': nowdate(),  # Adjust the end date as needed
+        'assigned_by': frappe.session.user,
+    })
+
+    # Insert the Task into the database
+    task.insert(ignore_permissions=True)
+
+    # Fetch Production Managers and assign the Task
+    production_managers = get_production_managers()
+    if production_managers:
+        add_assign({
+            "assign_to": production_managers,
+            "doctype": "Task",
+            "name": task.name,
+            "description": f'You are assigned a production task for item {item_code} in Quotation {quotation_name}.'
+        })
+    else:
+        frappe.log_error(message=f"No Production Managers found to assign the task for item {item_code} in Quotation {quotation_name}.", title="Task Assignment Error")
+
+    return True
+
+def get_production_managers():
+    # Fetch all users with the Production Manager role
+    try:
+        users = frappe.get_all('User', filters={'roles': ['Production Manager']}, fields=['name'])
+        return [user.name for user in users] if users else []
+    except Exception as e:
+        frappe.log_error(message=str(e), title="Error Fetching Production Managers")
+        return []

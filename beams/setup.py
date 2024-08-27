@@ -11,6 +11,7 @@ def after_install():
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
     create_custom_fields(get_supplier_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_item_custom_fields(), ignore_validate=True)
     create_property_setters(get_property_setters())
 
 
@@ -220,6 +221,22 @@ def get_quotation_item_custom_fields():
             }
         ]
     }
+
+def get_item_custom_fields():
+    '''
+    Custom fields that need to be added to the Quotation Item Doctype
+    '''
+    return {
+        "Item": [
+            {
+                "fieldname": "is_production_item",
+                "fieldtype": "Check",
+                "label": "Is Production Item",
+                "insert_after": "stock_uom"
+            }
+        ]
+    }
+
 
 def create_property_setters(property_setter_datas):
     '''
