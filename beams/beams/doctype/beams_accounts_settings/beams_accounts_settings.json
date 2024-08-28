@@ -8,7 +8,9 @@
   "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts",
   "tab_break_4hid",
-  "default_working_hours"
+  "default_working_hours",
+  "naming_rule_tab",
+  "beams_naming_rule"
  ],
  "fields": [
   {
@@ -32,12 +34,23 @@
    "fieldname": "default_working_hours",
    "fieldtype": "Float",
    "label": "Default Working Hours"
+  },
+  {
+   "fieldname": "naming_rule_tab",
+   "fieldtype": "Tab Break",
+   "label": "Naming Rule"
+  },
+  {
+   "fieldname": "beams_naming_rule",
+   "fieldtype": "Table",
+   "label": "Beams Naming Rule",
+   "options": "Beams Naming Rule"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-27 16:14:50.632078",
+ "modified": "2024-08-28 17:29:43.107733",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
