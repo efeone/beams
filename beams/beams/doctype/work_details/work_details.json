@@ -1,0 +1,68 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-27 15:03:06.724421",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "from_date_and_time",
+  "to_date_and_time",
+  "total_hours",
+  "ot_hours",
+  "daily_batta",
+  "ot_batta"
+ ],
+ "fields": [
+  {
+   "fieldname": "from_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "From Date and Time"
+  },
+  {
+   "fieldname": "to_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "To Date and Time"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ot_hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "OT Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "daily_batta",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": " Daily Batta"
+  },
+  {
+   "fieldname": "ot_batta",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "OT Batta"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-08-27 16:56:40.780408",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Work Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -6,7 +6,9 @@
  "engine": "InnoDB",
  "field_order": [
   "adhoc_budget_threshold",
-  "equalize_purchase_and_quotation_amounts"
+  "equalize_purchase_and_quotation_amounts",
+  "tab_break_4hid",
+  "default_working_hours"
  ],
  "fields": [
   {
@@ -20,12 +22,22 @@
    "fieldname": "adhoc_budget_threshold",
    "fieldtype": "Float",
    "label": "Adhoc Budget Threshold"
+  },
+  {
+   "fieldname": "tab_break_4hid",
+   "fieldtype": "Tab Break",
+   "label": "Work Settings"
+  },
+  {
+   "fieldname": "default_working_hours",
+   "fieldtype": "Float",
+   "label": "Default Working Hours"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-24 17:35:13.018564",
+ "modified": "2024-08-27 16:14:50.632078",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
