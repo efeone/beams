@@ -3,15 +3,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-20 14:52:12.123094",
-  "name": "Pending Approval",
-  "style": "Info",
-  "workflow_state_name": "Pending Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-08-21 10:32:58.704051",
   "name": "Pending Finance Verification",
   "style": "Info",
@@ -25,24 +16,6 @@
   "name": "Verified By Finance",
   "style": "Primary",
   "workflow_state_name": "Verified By Finance"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-17 14:26:48.530305",
-  "name": "Draft",
-  "style": "",
-  "workflow_state_name": "Draft"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "remove",
-  "modified": "2024-08-03 14:59:52.136137",
-  "name": "Rejected",
-  "style": "Danger",
-  "workflow_state_name": "Rejected"
  },
  {
   "docstatus": 0,
@@ -65,6 +38,24 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-22 09:42:18.336199",
+  "name": "Pending Finance Approval",
+  "style": "Info",
+  "workflow_state_name": "Pending Finance Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-17 14:26:48.530305",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "ok-sign",
   "modified": "2024-08-03 14:59:52.132982",
   "name": "Approved",
@@ -74,10 +65,19 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2024-08-03 14:59:52.136137",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-22 09:42:18.336199",
-  "name": "Pending Finance Approval",
+  "modified": "2024-08-20 14:52:12.123094",
+  "name": "Pending Approval",
   "style": "Info",
-  "workflow_state_name": "Pending Finance Approval"
+  "workflow_state_name": "Pending Approval"
  }
 ]
