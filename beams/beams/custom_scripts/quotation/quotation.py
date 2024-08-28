@@ -57,8 +57,8 @@ def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     )
 
     # Manually trigger validation
-    if doclist:
-        doclist.run_method("validate")
+    # if doclist:
+    #     doclist.run_method("validate")
 
     return doclist
 
