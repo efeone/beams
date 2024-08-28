@@ -124,8 +124,6 @@ def get_sales_invoice_custom_fields():
         ]
     }
 
-
-
 def get_quotation_custom_fields():
     '''
     Custom fields that need to be added to the Quotation DocType
@@ -151,7 +149,7 @@ def get_quotation_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Barter",
                 "insert_after": "albatross_ro_id"
-            },
+            }
 
         ]
     }
@@ -178,6 +176,21 @@ def get_purchase_invoice_custom_fields():
                 "options": "Quotation",
                 "insert_after": "barter_invoice"
 
+            },
+            {
+                "fieldname": "invoice_type",
+                "fieldtype": "Select",
+                "options": "\nGeneral\nStringer Bill",
+                "default": "General",
+                "label": "Invoice Type",
+                "insert_after": "naming_series"
+            },
+            {
+                "fieldname": "stringer_work_details",
+                "fieldtype": "Table",
+                "label": "Stringer Work Details",
+                "options": "Stringer Work Details",
+                "insert_after": "items"
             }
         ]
     }
@@ -305,5 +318,4 @@ def get_property_setters():
             "property_type": "Check",
             "value": 1
         }
-
     ]
