@@ -9,13 +9,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-16 14:50:26.425434",
-  "name": "Submit for Approval",
-  "workflow_action_name": "Submit for Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-08-21 09:48:56.345580",
   "name": "Send For Finance Verification",
   "workflow_action_name": "Send For Finance Verification"
@@ -33,6 +26,13 @@
   "modified": "2024-08-28 08:49:11.130190",
   "name": "Send for Approval",
   "workflow_action_name": "Send for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-16 14:50:26.425434",
+  "name": "Submit for Approval",
+  "workflow_action_name": "Submit for Approval"
  },
  {
   "docstatus": 0,
