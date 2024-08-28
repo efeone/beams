@@ -249,13 +249,13 @@ doc_events = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval"]]
     ]},
     {"dt": "Workflow State", "filters": [
         ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Sent For Finance Verification", "Verify", "Sent for Approval"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval"]]
     ]},
     {"dt": "Role", "filters": [
         ["name", "in", ["CEO"]]

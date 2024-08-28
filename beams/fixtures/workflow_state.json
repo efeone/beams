@@ -38,20 +38,20 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-21 10:30:33.607805",
-  "name": "Rejected By Finance",
-  "style": "Warning",
-  "workflow_state_name": "Rejected By Finance"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "remove",
   "modified": "2024-08-03 14:59:52.136137",
   "name": "Rejected",
   "style": "Danger",
   "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-21 10:30:33.607805",
+  "name": "Rejected By Finance",
+  "style": "Warning",
+  "workflow_state_name": "Rejected By Finance"
  },
  {
   "docstatus": 0,
