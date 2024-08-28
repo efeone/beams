@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-08-27 15:06:17.164899",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_bhxb",
+  "amended_from",
+  "driver",
+  "address",
+  "cellphone_number",
+  "daily_batta",
+  "ot_bata",
+  "work_detials",
+  "section_break_5rwv",
+  "column_break_xmsy",
+  "total_daily_batta",
+  "column_break_rybv",
+  "total_ot_batta",
+  "column_break_ouos",
+  "total_driver_batta"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_bhxb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Driver Batta Claim",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "label": "Driver",
+   "options": "Driver"
+  },
+  {
+   "fetch_from": "driver.address",
+   "fieldname": "address",
+   "fieldtype": "Data",
+   "label": "Address",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "driver.cell_number",
+   "fieldname": "cellphone_number",
+   "fieldtype": "Data",
+   "label": "CellPhone Number",
+   "read_only": 1
+  },
+  {
+   "description": "per hour",
+   "fieldname": "daily_batta",
+   "fieldtype": "Currency",
+   "label": "Daily Batta"
+  },
+  {
+   "description": "per hour",
+   "fieldname": "ot_bata",
+   "fieldtype": "Currency",
+   "label": "OT Batta"
+  },
+  {
+   "fieldname": "work_detials",
+   "fieldtype": "Table",
+   "label": "Work Detials",
+   "options": "Work Details"
+  },
+  {
+   "fieldname": "section_break_5rwv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xmsy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_rybv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ouos",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_daily_batta",
+   "fieldtype": "Currency",
+   "label": "Total Daily Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total OT Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_driver_batta",
+   "fieldtype": "Currency",
+   "label": "Total Driver Batta"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-08-28 09:46:56.735004",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Driver Batta Claim",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
