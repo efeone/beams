@@ -3,11 +3,8 @@ from frappe.model.mapper import get_mapped_doc
 from frappe import _
 from frappe.utils import nowdate
 from frappe.desk.form.assign_to import add as add_assign
-<<<<<<< Updated upstream
 from frappe.utils.user import get_users_with_role
-=======
 
->>>>>>> Stashed changes
 
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
