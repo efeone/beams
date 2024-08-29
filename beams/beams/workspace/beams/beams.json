@@ -1,0 +1,159 @@
+{
+ "charts": [
+  {
+   "chart_name": "Quotation Is Barter",
+   "label": "Quotation Is Barter"
+  }
+ ],
+ "content": "[{\"id\":\"mM37igfJxh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Beams</span>\",\"col\":12}},{\"id\":\"mYOrBb92TB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Account\",\"col\":3}},{\"id\":\"OihJCscygq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget\",\"col\":3}},{\"id\":\"jmqh_E2eLE\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Driver Batta Claim\",\"col\":3}},{\"id\":\"KVIBfudYxi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Adhoc Budget\",\"col\":3}},{\"id\":\"y1KpAUVh-r\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qf4-cjQ8K_\",\"type\":\"card\",\"data\":{\"card_name\":\"Employees\",\"col\":6}},{\"id\":\"CVVtbAAAyD\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying\",\"col\":6}},{\"id\":\"gc6Nr4BsjN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jNk-0qCCN-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Quotation Is Barter\",\"col\":12}}]",
+ "creation": "2024-08-29 09:58:35.022181",
+ "custom_blocks": [],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "full-page",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Beams",
+ "links": [
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Employees",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Customer",
+   "link_count": 0,
+   "link_to": "Customer",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Supplier",
+   "link_count": 0,
+   "link_to": "Supplier",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Driver",
+   "link_count": 0,
+   "link_to": "Driver",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Selling & Buying",
+   "link_count": 3,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Invoice",
+   "link_count": 0,
+   "link_to": "Purchase Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Invoice",
+   "link_count": 0,
+   "link_to": "Sales Invoice",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Purchase Order",
+   "link_count": 0,
+   "link_to": "Purchase Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  }
+ ],
+ "modified": "2024-08-29 10:49:01.526766",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Beams",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Accounts Manager"
+  },
+  {
+   "role": "Administrator"
+  },
+  {
+   "role": "CEO"
+  },
+  {
+   "role": "Production Manager"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Driver Batta Claim",
+   "link_to": "Driver Batta Claim",
+   "stats_filter": "[[\"Driver Batta Claim\",\"name\",\"=\",null,false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Account",
+   "link_to": "Account",
+   "stats_filter": "[[\"Account\",\"workflow_state\",\"=\",\"Approved\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Adhoc Budget",
+   "link_to": "Adhoc Budget",
+   "stats_filter": "[[\"Adhoc Budget\",\"workflow_state\",\"=\",\"Approved\",false]]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Budget",
+   "link_to": "Budget",
+   "stats_filter": "[[\"Budget\",\"workflow_state\",\"=\",\"Approved\",false]]",
+   "type": "DocType"
+  }
+ ],
+ "title": "Beams"
+}
