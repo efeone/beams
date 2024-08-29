@@ -70,7 +70,9 @@ function calculate_hours(frm, cdt, cdn) {
 }
 
 function handle_workflow_button(frm) {
+  //Function to handle the visibility or behavior of workflow buttons
   if (frm.doc.purchase_order_id) {
+    // Check if the current document contains a Purchase Order ID
     $(document).ready(function () {
         var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
            workflow_button
