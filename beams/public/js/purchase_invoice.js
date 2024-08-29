@@ -1,4 +1,7 @@
 frappe.ui.form.on('Purchase Invoice', {
+  setup: function(frm) {
+      handle_workflow_button(frm);
+  },
   invoice_type: function(frm) {
     if (frm.doc.invoice_type === 'Stringer Bill') {
       frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
@@ -63,5 +66,21 @@ function calculate_hours(frm, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, 'hrs', diff.toFixed(2));
   } else {
     frappe.model.set_value(cdt, cdn, 'hrs', 0);
+  }
+}
+
+function handle_workflow_button(frm) {
+  //Function to handle the visibility or behavior of workflow buttons
+  if (frm.doc.purchase_order_id) {
+    // Check if the current document contains a Purchase Order ID
+    $(document).ready(function () {
+        var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
+           workflow_button
+           .html('<span>S<span class="alt-underline">u</span>bmit</span>');
+        workflow_button.find("svg").remove();
+        workflow_button.on("click", function () {
+          frm.savesubmit();
+        });
+    });
   }
 }

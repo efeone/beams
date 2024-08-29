@@ -16,13 +16,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-24 19:49:57.324772",
-  "name": "Reopen",
-  "workflow_action_name": "Reopen"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-08-28 08:49:11.130190",
   "name": "Send for Approval",
   "workflow_action_name": "Send for Approval"
@@ -30,9 +23,9 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-16 14:50:26.425434",
-  "name": "Submit for Approval",
-  "workflow_action_name": "Submit for Approval"
+  "modified": "2024-08-24 19:49:57.324772",
+  "name": "Reopen",
+  "workflow_action_name": "Reopen"
  },
  {
   "docstatus": 0,
@@ -47,5 +40,19 @@
   "modified": "2024-08-03 14:59:52.176496",
   "name": "Reject",
   "workflow_action_name": "Reject"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-16 14:50:26.425434",
+  "name": "Submit for Approval",
+  "workflow_action_name": "Submit for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-27 09:57:11.806048",
+  "name": "Submit",
+  "workflow_action_name": "Submit"
  }
 ]

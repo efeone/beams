@@ -31,7 +31,8 @@ app_license = "mit"
 doctype_js = {
     "Sales Invoice": "public/js/sales_invoice.js",
     "Quotation": "public/js/quotation.js",
-    "Purchase Invoice": "public/js/purchase_invoice.js"
+    "Purchase Invoice": "public/js/purchase_invoice.js",
+    "Driver":"public/js/driver.js"
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -251,13 +252,13 @@ doc_events = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Driver Batta Claim Approval"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Driver Batta Claim Approval","Purchase Invoice Workflow"]]
     ]},
     {"dt": "Workflow State", "filters": [
-        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance"]]
+        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit"]]
     ]},
     {"dt": "Role", "filters": [
         ["name", "in", ["CEO","Production Manager"]]
