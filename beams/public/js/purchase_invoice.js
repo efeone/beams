@@ -1,4 +1,7 @@
 frappe.ui.form.on('Purchase Invoice', {
+  on_update: function(frm) {
+      handle_workflow_button(frm);
+  },
   invoice_type: function(frm) {
     if (frm.doc.invoice_type === 'Stringer Bill') {
       frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
@@ -63,5 +66,23 @@ function calculate_hours(frm, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, 'hrs', diff.toFixed(2));
   } else {
     frappe.model.set_value(cdt, cdn, 'hrs', 0);
+  }
+}
+
+function handle_workflow_button(frm) {
+  if (frm.doc.purchase_order_id) {
+    $(document).ready(function () {
+        var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
+           workflow_button
+          .removeAttr("data-toggle")
+          .removeAttr("aria-expanded")
+          .attr("data-label", "Submit")
+          // .addClass("primary-action")
+          .html('<span>S<span class="alt-underline">u</span>bmit</span>');
+        workflow_button.find("svg").remove();
+        workflow_button.on("click", function () {
+          frm.savesubmit();
+        });
+    });
   }
 }
