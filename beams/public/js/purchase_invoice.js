@@ -1,5 +1,5 @@
 frappe.ui.form.on('Purchase Invoice', {
-  on_update: function(frm) {
+  setup: function(frm) {
       handle_workflow_button(frm);
   },
   invoice_type: function(frm) {
@@ -74,11 +74,7 @@ function handle_workflow_button(frm) {
     $(document).ready(function () {
         var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
            workflow_button
-          .removeAttr("data-toggle")
-          .removeAttr("aria-expanded")
-          .attr("data-label", "Submit")
-          // .addClass("primary-action")
-          .html('<span>S<span class="alt-underline">u</span>bmit</span>');
+           .html('<span>S<span class="alt-underline">u</span>bmit</span>');
         workflow_button.find("svg").remove();
         workflow_button.on("click", function () {
           frm.savesubmit();
