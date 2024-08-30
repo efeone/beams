@@ -129,7 +129,8 @@ before_uninstall = "beams.uninstall.before_uninstall"
 
 doc_events = {
     "Sales Invoice": {
-        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation"
+        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation",
+         "on_submit":  "beams.beams.custom_scripts.sales_invoice.sales_invoice.send_email_to_party"
     },
     "Quotation": {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
@@ -252,13 +253,13 @@ doc_events = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Driver Batta Claim Approval","Purchase Invoice Workflow"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Driver Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval"]]
     ]},
     {"dt": "Workflow State", "filters": [
-        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted"]]
+        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party"]]
     ]},
     {"dt": "Role", "filters": [
         ["name", "in", ["CEO","Production Manager"]]

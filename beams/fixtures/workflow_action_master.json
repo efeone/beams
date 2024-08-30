@@ -54,5 +54,19 @@
   "modified": "2024-08-27 09:57:11.806048",
   "name": "Submit",
   "workflow_action_name": "Submit"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-26 16:23:42.399000",
+  "name": "Cancel",
+  "workflow_action_name": "Cancel"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-27 10:16:17.791427",
+  "name": "Send Email To Party",
+  "workflow_action_name": "Send Email To Party"
  }
 ]

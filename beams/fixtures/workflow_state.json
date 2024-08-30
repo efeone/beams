@@ -29,15 +29,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-22 09:42:42.961823",
-  "name": "Approved by Finance",
-  "style": "Info",
-  "workflow_state_name": "Approved by Finance"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "remove",
   "modified": "2024-08-03 14:59:52.136137",
   "name": "Rejected",
@@ -61,6 +52,33 @@
   "name": "Pending Finance Approval",
   "style": "Info",
   "workflow_state_name": "Pending Finance Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-22 09:42:42.961823",
+  "name": "Approved by Finance",
+  "style": "Info",
+  "workflow_state_name": "Approved by Finance"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-27 12:10:51.168269",
+  "name": "Cancelled",
+  "style": "Danger",
+  "workflow_state_name": "Cancelled"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-27 12:10:23.108903",
+  "name": "Completed",
+  "style": "Success",
+  "workflow_state_name": "Completed"
  },
  {
   "docstatus": 0,
