@@ -252,10 +252,10 @@ def get_quotation_item_custom_fields():
     return {
         "Quotation Item": [
             {
-                "fieldname": "item_type",
+                "fieldname": "sales_type",
                 "fieldtype": "Link",
-                "options": "Item Type",
-                "label": "Item Type",
+                "options": "Sales Type",
+                "label": "Sales Type",
                 "insert_after": "item_name"
             }
         ]
