@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format: {DBC}-{MM}{YY}{####}",
  "creation": "2024-08-27 15:06:17.164899",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -111,10 +112,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-28 09:46:56.735004",
+ "modified": "2024-08-30 10:17:50.320792",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Driver Batta Claim",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
