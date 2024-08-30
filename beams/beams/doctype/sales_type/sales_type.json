@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_szxw",
-  "item_type"
+  "item_type",
+  "is_digital_sales",
+  "amended_from"
  ],
  "fields": [
   {
@@ -21,15 +23,31 @@
    "label": "Item Type",
    "reqd": 1,
    "unique": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_digital_sales",
+   "fieldtype": "Check",
+   "label": "Is Digital Sales"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Sales Type",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-12 10:36:01.308217",
+ "modified": "2024-08-30 09:40:06.978975",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Item Type",
+ "name": "Sales Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

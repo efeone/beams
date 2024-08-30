@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ItemType(Document):
+class SalesType(Document):
 	pass
