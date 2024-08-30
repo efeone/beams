@@ -272,7 +272,15 @@ def get_item_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Production Item",
                 "insert_after": "stock_uom"
-            }
+            },
+            {
+                "fieldname": "sales_type",
+                "fieldtype": "Link",
+                "label": "Sales Type",
+                "options": "Sales Type",
+                "insert_after": "is_production_item"
+           }
+
         ]
     }
 
