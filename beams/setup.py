@@ -209,7 +209,8 @@ def get_purchase_invoice_custom_fields():
                 "fieldtype": "Table",
                 "label": "Stringer Work Details",
                 "options": "Stringer Work Details",
-                "insert_after": "items"
+                "insert_after": "items",
+                "depends_on": "eval:doc.invoice_type == 'Stringer Bill'"
             },
             {
                 "fieldname": "purchase_order_id",

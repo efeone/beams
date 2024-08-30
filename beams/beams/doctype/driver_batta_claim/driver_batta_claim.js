@@ -6,8 +6,15 @@ frappe.ui.form.on('Driver Batta Claim', {
         calculate_totals(frm);
     },
     refresh: function (frm) {
+        frm.set_query('driver', function() {
+              return {
+                  filters: {
+                      'is_internal': 0
+                  }
+              };
+          });
         calculate_totals(frm);
-    }
+    },
 });
 
 frappe.ui.form.on('Work Details', {
