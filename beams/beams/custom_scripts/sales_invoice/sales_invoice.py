@@ -1,8 +1,36 @@
 import frappe
 from frappe import _
+from datetime import datetime
+from frappe.model.naming import make_autoname
+
+
 from beams.beams.custom_scripts.quotation.quotation import create_common_party_and_supplier
 from frappe.core.doctype.communication.email import make
 
+
+def autoname(doc, method=None):
+    """
+    Automatically generate a name for the Sales Invoice document based on custom naming rules defined
+    in the 'Beams Accounts Settings' doctype."""
+    beams_accounts_settings = frappe.get_doc("Beams Accounts Settings")
+    sales_invoice_naming_series = ''
+
+    # Iterate through the naming rules
+    for rule in beams_accounts_settings.beams_naming_rule:
+        # Check if the rule applies to the Sales_invoice doctype
+        if rule.doc_type == "Sales Invoice" and rule.naming_series:
+            sales_invoice_naming_series = rule.naming_series
+            if sales_invoice_naming_series:
+                # Replace date placeholders with current date values
+                if "{MM}" in sales_invoice_naming_series or "{DD}" in sales_invoice_naming_series or "{YY}" in sales_invoice_naming_series:
+                    sales_invoice_naming_series = sales_invoice_naming_series.replace("{MM}", datetime.now().strftime("%m"))
+                    sales_invoice_naming_series = sales_invoice_naming_series.replace("{DD}", datetime.now().strftime("%d"))
+                    sales_invoice_naming_series = sales_invoice_naming_series.replace("{YY}", datetime.now().strftime("%y"))
+
+                # Generate the name using the updated naming series
+                doc.name = frappe.model.naming.make_autoname(sales_invoice_naming_series )
+            else:
+                frappe.throw(_("No valid naming series found for Sales Invoice doctype"))
 
 @frappe.whitelist()
 def validate_sales_invoice_amount_with_quotation(doc, method):
