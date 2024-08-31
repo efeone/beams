@@ -1,0 +1,124 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:SB-{YY}-{####}",
+ "creation": "2024-08-31 09:52:45.011086",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vh0v",
+  "supplier",
+  "substituting_for",
+  "company",
+  "column_break_byey",
+  "bureau",
+  "daily_wage",
+  "section_break_zcc8",
+  "date",
+  "section_break_irsg",
+  "no_of_days",
+  "column_break_kcjz",
+  "total_wage"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vh0v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "substituting_for",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Substituting For",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "substituting_for.company",
+   "fieldname": "company",
+   "fieldtype": "Data",
+   "label": "Company",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "daily_wage",
+   "fieldtype": "Currency",
+   "label": "Daily Wage"
+  },
+  {
+   "fieldname": "no_of_days",
+   "fieldtype": "Int",
+   "label": "No Of Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_wage",
+   "fieldtype": "Currency",
+   "label": "Total Wage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_irsg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_zcc8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_byey",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kcjz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Table",
+   "label": "Date",
+   "options": "Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-08-31 15:57:29.917074",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Stringer Bill",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -13,9 +13,9 @@ def after_install():
     create_custom_fields(get_supplier_custom_fields(), ignore_validate=True)
     create_custom_fields(get_item_custom_fields(), ignore_validate=True)
     create_custom_fields(get_driver_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_employee_custom_fields(), ignore_validate=True)
     create_property_setters(get_property_setters())
     create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
-
 
 def after_migrate():
     after_install()
@@ -29,6 +29,7 @@ def before_uninstall():
     delete_custom_fields(get_supplier_custom_fields())
     delete_custom_fields(get_driver_custom_fields())
     delete_custom_fields(get_material_request_custom_fields())
+    delete_custom_fields(get_employee_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -284,6 +285,22 @@ def get_item_custom_fields():
                 "insert_after": "is_production_item"
            }
 
+        ]
+    }
+
+def get_employee_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Doctype
+    '''
+    return {
+        "Employee": [
+            {
+                "fieldname": "Bureau",
+                "fieldtype": "Link",
+                "options": "Bureau",
+                "label": "Bureau",
+                "insert_after": "last_name"
+            }
         ]
     }
 
