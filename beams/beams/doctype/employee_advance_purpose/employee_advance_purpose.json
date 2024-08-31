@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:purpose",
  "creation": "2024-08-31 13:00:47.514140",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -26,17 +27,19 @@
   },
   {
    "fieldname": "purpose",
-   "fieldtype": "Small Text",
-   "label": "Purpose"
+   "fieldtype": "Data",
+   "label": "Purpose",
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-31 13:02:54.413046",
+ "modified": "2024-08-31 15:38:33.528621",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Advance Purpose",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
