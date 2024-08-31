@@ -9,7 +9,6 @@ def after_install():
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
-    create_custom_fields(get_quotation_item_custom_fields(), ignore_validate=True)
     create_custom_fields(get_supplier_custom_fields(), ignore_validate=True)
     create_custom_fields(get_item_custom_fields(), ignore_validate=True)
     create_custom_fields(get_driver_custom_fields(), ignore_validate=True)
@@ -26,7 +25,6 @@ def before_uninstall():
     delete_custom_fields(get_sales_invoice_custom_fields())
     delete_custom_fields(get_quotation_custom_fields())
     delete_custom_fields(get_purchase_invoice_custom_fields())
-    delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_supplier_custom_fields())
     delete_custom_fields(get_driver_custom_fields())
     delete_custom_fields(get_material_request_custom_fields())
@@ -253,22 +251,6 @@ def get_supplier_custom_fields():
                 "depends_on": "eval:doc.is_stringer == 1",
                 "insert_after": "is_stringer"
 
-            }
-        ]
-    }
-
-def get_quotation_item_custom_fields():
-    '''
-    Custom fields that need to be added to the Quotation Item Doctype
-    '''
-    return {
-        "Quotation Item": [
-            {
-                "fieldname": "sales_type",
-                "fieldtype": "Link",
-                "options": "Sales Type",
-                "label": "Sales Type",
-                "insert_after": "item_name"
             }
         ]
     }
