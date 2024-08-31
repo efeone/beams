@@ -128,11 +128,15 @@ before_uninstall = "beams.uninstall.before_uninstall"
 
 doc_events = {
     "Sales Invoice": {
-        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation"
+        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation",
+        "autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname"
+
     },
     "Quotation": {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
-        "on_submit": "beams.beams.custom_scripts.quotation.quotation.create_tasks_for_production_items"
+        "on_submit": "beams.beams.custom_scripts.quotation.quotation.create_tasks_for_production_items",
+        "autoname": "beams.beams.custom_scripts.quotation.quotation.autoname"
+
     },
     "Purchase Invoice": {
         "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
@@ -149,7 +153,10 @@ doc_events = {
     "Purchase Order": {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
         "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation"
-    }
+    },
+    "Sales Order": {
+        "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname"
+        }
 }
 
 

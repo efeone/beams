@@ -4,6 +4,27 @@ from frappe import _
 from frappe.utils import nowdate
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils.user import get_users_with_role
+from frappe.model.naming import make_autoname
+from datetime import datetime
+
+def autoname(doc, method=None):
+    beams_accounts_settings = frappe.get_doc("Beams Accounts Settings")
+    quotation_naming_series = ''
+
+    for rule in beams_accounts_settings.beams_naming_rule:
+        # Check if the rule applies to the "Quotation" doctype
+        if rule.doc_type == "Quotation" and rule.naming_series:
+            quotation_naming_series = rule.naming_series
+            if quotation_naming_series:
+                if "{MM}" in quotation_naming_series or "{DD}" in quotation_naming_series or "{YY}" in quotation_naming_series:
+                    quotation_naming_series = quotation_naming_series.replace("{MM}", datetime.now().strftime("%m"))
+                    quotation_naming_series = quotation_naming_series.replace("{DD}", datetime.now().strftime("%d"))
+                    quotation_naming_series = quotation_naming_series.replace("{YY}", datetime.now().strftime("%y"))
+
+                # Generate the name using the updated naming series
+                doc.name = frappe.model.naming.make_autoname(quotation_naming_series )
+            else:
+                frappe.throw(_("No valid naming series found for Quotation doctype"))
 
 
 @frappe.whitelist()
@@ -222,5 +243,13 @@ def create_task(item_code, quotation_name):
             "name": task.name,
             "description": f'You are assigned a production task for item {item_code} in Quotation {quotation_name}.'
         })
-
     return True
+# def autoname(doc, method=None):
+#     beams_accounts_settings = frappe.get_doc("Beams Accounts Settings")
+#     for rule in doc.beams_naming_rule:
+#         if rule.doc_type and rule.naming_series:
+#             series = rule.naming_series
+#             if series:
+#                 doc.name = frappe.model.naming.make_autoname(series + '.#####')
+#             else:
+#                 frappe.throw(_("Naming Series is not created"))
