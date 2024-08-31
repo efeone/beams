@@ -8,6 +8,19 @@ frappe.ui.form.on('Sales Invoice', {
       };
     });
   },
+  sales_type: function(frm) {
+      if (frm.doc.sales_type) {
+        frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
+          return {
+            filters: {
+              'sales_type': frm.doc.sales_type
+            }
+         };
+      };
+    }
+    frm.clear_table('items');
+    frm.refresh_field('items');
+  },
   customer: function(frm) {
     if (frm.doc.customer) {
       if (!frm.doc.is_barter_invoice) {
