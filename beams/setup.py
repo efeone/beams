@@ -15,6 +15,8 @@ def after_install():
     create_property_setters(get_property_setters())
     create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
+
 
 
 def after_migrate():
@@ -29,6 +31,7 @@ def before_uninstall():
     delete_custom_fields(get_driver_custom_fields())
     delete_custom_fields(get_material_request_custom_fields())
     delete_custom_fields(get_sales_order_custom_fields())
+    delete_custom_fields(get_employee_advance_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -345,6 +348,14 @@ def get_property_setters():
             "property": "read_only",
             "property_type": "Check",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Advance",
+            "field_name": "purpose",
+            "property": "hidden",
+            "property_type": "Small Text",
+            "value":1
         }
     ]
 def get_material_request_custom_fields():
@@ -374,6 +385,22 @@ def get_sales_order_custom_fields():
                 "label": "Sales Type",
                 "insert_after": "naming_series",
                 "options": "Sales Type"
+            }
+        ]
+    }
+
+def get_employee_advance_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Advance  Doctype
+    '''
+    return {
+        "Employee Advance": [
+            {
+                "fieldname": "purpose",
+                "fieldtype": "Link",
+                "label": "Purpose",
+                "options": "Employee Advance Purpose",
+                "insert_after":"currency"
             }
         ]
     }
