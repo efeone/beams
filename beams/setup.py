@@ -173,7 +173,7 @@ def get_quotation_custom_fields():
                 "fieldtype": "Data",
                 "label": "Albatross RO ID",
                 "in_standard_filter": 1,
-                "reqd":1,
+                "reqd":0,
                 "insert_after": "order_type"
             },
             {
@@ -181,6 +181,21 @@ def get_quotation_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Barter",
                 "insert_after": "albatross_ro_id"
+            },
+            {
+                "fieldname": "sales_type",
+                "fieldtype": "Link",
+                "label": "Sales Type",
+                "insert_after": "order_type",
+                "options": "Sales Type"
+            },
+            {
+                "fieldname": "purchase_order",
+                "fieldtype": "Link",
+                "label": "Purchase Order",
+                "insert_after": "valid_till",
+                "depends_on": "eval:doc.is_barter",
+                "options": "Purchase Order"
             }
 
         ]

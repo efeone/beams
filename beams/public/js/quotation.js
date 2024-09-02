@@ -24,13 +24,34 @@ frappe.ui.form.on('Quotation', {
     is_barter: function(frm) {
         if (frm.doc.is_barter) {
             frappe.db.get_single_value('Accounts Settings', 'enable_common_party_accounting')
-            .then(check => {
-              if (!check) {
-                  frm.set_value('is_barter', 0); // Uncheck the checkbox if validation fails
-                  frm.refresh_fields();
-                  frappe.msgprint("Please enable 'Common Party Accounting' in the Accounts Settings to proceed with barter transactions.");
-              }
-            })
+                .then(check => {
+                    if (!check) {
+                        frm.set_value('is_barter', 0); // Uncheck the checkbox if validation fails
+                        frm.refresh_fields();
+                        frappe.msgprint("Please enable 'Common Party Accounting' in the Accounts Settings to proceed with barter transactions.");
+                    }
+                });
         }
     },
+
+    sales_type: function(frm) {
+        check_sales_type(frm);
+    }
 });
+
+function check_sales_type(frm) {
+    // Fetch  is_time_sales field value from the linked Sales Type doctype
+    if (frm.doc.sales_type) {
+        frappe.db.get_value('Sales Type', frm.doc.sales_type, 'is_time_sales')
+            .then(r => {
+                let is_time_sales = r.message.is_time_sales;
+                if (is_time_sales) {
+                    frm.set_df_property('albatross_ro_id', 'reqd', true);
+                } else {
+                    frm.set_df_property('albatross_ro_id', 'reqd', false);
+                }
+            });
+    } else {
+        frm.set_df_property('albatross_ro_id', 'reqd', false);
+    }
+}
