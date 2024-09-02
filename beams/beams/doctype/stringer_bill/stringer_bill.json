@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_vh0v",
+  "stringer_type",
   "supplier",
   "substituting_for",
   "company",
@@ -15,10 +16,10 @@
   "daily_wage",
   "section_break_zcc8",
   "date",
-  "section_break_irsg",
+  "column_break_cgfc",
   "no_of_days",
-  "column_break_kcjz",
-  "total_wage"
+  "total_wage",
+  "amended_from"
  ],
  "fields": [
   {
@@ -72,10 +73,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "section_break_irsg",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "section_break_zcc8",
    "fieldtype": "Section Break"
   },
@@ -84,20 +81,36 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "column_break_kcjz",
+   "fieldname": "date",
+   "fieldtype": "Table",
+   "label": "Stringer Bill Date",
+   "options": "Stringer Bill Date"
+  },
+  {
+   "fieldname": "column_break_cgfc",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "date",
-   "fieldtype": "Table",
-   "label": "Date",
-   "options": "Date"
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stringer Bill",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "stringer_type",
+   "fieldtype": "Link",
+   "label": "Stringer Type",
+   "options": "Stringer Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-31 15:57:29.917074",
+ "modified": "2024-09-02 14:30:00.607845",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
