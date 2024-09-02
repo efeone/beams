@@ -212,17 +212,23 @@ def get_purchase_invoice_custom_fields():
             {
                 "fieldname": "invoice_type",
                 "fieldtype": "Select",
-                "options": "\nGeneral\nStringer Bill",
+                "options": "General\nStringer Bill",
                 "default": "General",
                 "label": "Invoice Type",
                 "insert_after": "naming_series"
             },
             {
+			    "fieldname": "stringer_work_details_sb",
+			    "fieldtype": "Section Break",
+			    "label": "",
+			    "insert_after": "is_reverse_charge"
+			},
+            {
                 "fieldname": "stringer_work_details",
                 "fieldtype": "Table",
                 "label": "Stringer Work Details",
                 "options": "Stringer Work Details",
-                "insert_after": "items",
+                "insert_after": "stringer_work_details_sb",
                 "depends_on": "eval:doc.invoice_type == 'Stringer Bill'"
             },
             {
@@ -373,6 +379,30 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Small Text",
             "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Purchase Invoice",
+            "field_name": "update_stock",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Purchase Invoice",
+            "field_name": "is_subcontracted",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Purchase Invoice",
+            "field_name": "scan_barcode",
+            "property": "hidden",
+            "property_type": "Data",
+            "value": 1
         }
     ]
 def get_material_request_custom_fields():

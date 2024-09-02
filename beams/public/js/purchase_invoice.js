@@ -18,7 +18,16 @@ frappe.ui.form.on('Purchase Invoice', {
           }
         };
       });
+    }else if (frm.doc.invoice_type === 'General') {
+      // Clear filters when 'General' is selected
+      frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
+        return {};
+      };
+      frm.set_query('supplier', function() {
+        return {};
+      });
     }
+
     frm.clear_table('stringer_work_details');
     frm.clear_table('items');
     frm.refresh_field('stringer_work_details');
