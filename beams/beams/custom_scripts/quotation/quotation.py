@@ -30,7 +30,6 @@ def autoname(doc, method=None):
             else:
                 frappe.throw(_("No valid naming series found for Quotation doctype"))
 
-
 @frappe.whitelist()
 def make_sales_invoice(source_name, target_doc=None, ignore_permissions=False):
     """
