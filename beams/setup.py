@@ -212,7 +212,7 @@ def get_purchase_invoice_custom_fields():
             {
                 "fieldname": "invoice_type",
                 "fieldtype": "Select",
-                "options": "\nGeneral\nStringer Bill",
+                "options": "General\nStringer Bill",
                 "default": "General",
                 "label": "Invoice Type",
                 "insert_after": "naming_series"

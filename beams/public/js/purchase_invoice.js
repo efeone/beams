@@ -2,18 +2,6 @@ frappe.ui.form.on('Purchase Invoice', {
   setup: function(frm) {
       handle_workflow_button(frm);
   },
-  refresh: function (frm) {
-        // Trim spaces from selecbox invoice type
-        const options = frm.fields_dict['invoice_type'].df.options;
-        if (options) {
-            frm.fields_dict['invoice_type'].df.options = options
-                .split('\n')
-                .map(option => option.trim())
-                .filter(option => option)
-                .join('\n');
-            frm.refresh_field('invoice_type');
-        }
-  },
   invoice_type: function(frm) {
     if (frm.doc.invoice_type === 'Stringer Bill') {
       frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
