@@ -36,6 +36,20 @@ frappe.ui.form.on('Quotation', {
 
     sales_type: function(frm) {
         check_sales_type(frm);
+        // function to check the selected Sales Type
+        frm.clear_table('items');
+        frm.refresh_field('items');
+
+        //function to check the selected Sales Type
+        if (frm.doc.sales_type) {
+            frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
+                return {
+                    filters: {
+                        'sales_type': frm.doc.sales_type
+                    }
+                };
+            };
+        }
     }
 });
 
