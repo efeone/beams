@@ -8,6 +8,7 @@
  "field_order": [
   "project",
   "fiscal_year",
+  "company",
   "expected_revenue",
   "expected_revenue_reached",
   "column_break_zhmw",
@@ -139,12 +140,19 @@
   {
    "fieldname": "section_break_qooy",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-08-24 16:07:56.125636",
+ "modified": "2024-09-03 17:22:50.245140",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",

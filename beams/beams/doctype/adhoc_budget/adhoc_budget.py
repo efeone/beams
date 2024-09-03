@@ -72,6 +72,7 @@ class AdhocBudget(Document):
         budget.budget_against = 'Project'
         budget.project = self.project
         budget.fiscal_year = self.fiscal_year
+        budget.company = self.company
 
         budget.applicable_on_material_request = 1
         budget.applicable_on_booking_actual_expenses = 1
