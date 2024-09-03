@@ -91,7 +91,24 @@ class AdhocBudget(Document):
         account_budget_map = {}
 
         for expense in self.budget_expense:
-            account = 'Cost of Goods Sold - E'
+            # Fetch the Budget Expense Type document
+            expense_type = frappe.get_doc('Budget Expense Type', expense.budget_expense_type)
+
+            # Initialize default_expense_account
+            default_expense_account = None
+
+            # Check the child table for default account
+            for account in expense_type.accounts:
+                if account.default_account:  # Adjust field name if needed
+                    default_expense_account = account.default_account
+                    break  # Assuming one default account is sufficient
+
+            # Use default expense account from the Budget Expense Type
+            if default_expense_account:
+                account = default_expense_account
+            else:
+                # Raise an exception if no default account is found
+                frappe.throw(_("No default account found for Budget Expense Type: {0}").format(expense.budget_expense_type))
 
             if account in account_budget_map:
                 account_budget_map[account] += expense.budget_amount
