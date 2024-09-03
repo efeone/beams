@@ -3,15 +3,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-21 10:30:33.607805",
-  "name": "Rejected By Finance",
-  "style": "Warning",
-  "workflow_state_name": "Rejected By Finance"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-08-21 10:32:58.704051",
   "name": "Pending Finance Verification",
   "style": "Info",
@@ -29,38 +20,11 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "remove",
-  "modified": "2024-08-03 14:59:52.136137",
-  "name": "Rejected",
-  "style": "Danger",
-  "workflow_state_name": "Rejected"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "",
   "modified": "2024-08-20 14:52:12.123094",
   "name": "Pending Approval",
   "style": "Info",
   "workflow_state_name": "Pending Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-22 09:42:18.336199",
-  "name": "Pending Finance Approval",
-  "style": "Info",
-  "workflow_state_name": "Pending Finance Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-22 09:42:42.961823",
-  "name": "Approved by Finance",
-  "style": "Info",
-  "workflow_state_name": "Approved by Finance"
  },
  {
   "docstatus": 0,
@@ -83,15 +47,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "ok-sign",
-  "modified": "2024-08-03 14:59:52.132982",
-  "name": "Approved",
-  "style": "Success",
-  "workflow_state_name": "Approved"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "",
   "modified": "2024-08-28 09:26:35.371460",
   "name": "Submitted",
@@ -106,5 +61,50 @@
   "name": "Draft",
   "style": "",
   "workflow_state_name": "Draft"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-21 10:30:33.607805",
+  "name": "Rejected By Finance",
+  "style": "Warning",
+  "workflow_state_name": "Rejected By Finance"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-22 09:42:42.961823",
+  "name": "Approved by Finance",
+  "style": "Info",
+  "workflow_state_name": "Approved by Finance"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2024-08-03 14:59:52.136137",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "ok-sign",
+  "modified": "2024-08-03 14:59:52.132982",
+  "name": "Approved",
+  "style": "Success",
+  "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-22 09:42:18.336199",
+  "name": "Pending Finance Approval",
+  "style": "Info",
+  "workflow_state_name": "Pending Finance Approval"
  }
 ]
