@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class Date(Document):
+class StringerType(Document):
 	pass

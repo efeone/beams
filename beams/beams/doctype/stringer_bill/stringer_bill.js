@@ -28,7 +28,7 @@ frappe.ui.form.on('Stringer Bill', {
        update_total_wage(frm);
    }
 });
-frappe.ui.form.on('Date', {
+frappe.ui.form.on('Stringer Bill Date', {
     date: function(frm, cdt, cdn) {
         let child = locals[cdt][cdn];
         // Get the list of dates from the child table

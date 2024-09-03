@@ -22,7 +22,7 @@
  "modified": "2024-08-31 09:57:24.841923",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Date",
+ "name": "Stringer Bill Date",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
