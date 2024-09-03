@@ -9,7 +9,8 @@
   "section_break_zaao",
   "bureau_name",
   "cost_center",
-  "amended_from"
+  "amended_from",
+  "company"
  ],
  "fields": [
   {
@@ -39,11 +40,17 @@
    "fieldtype": "Link",
    "label": "Cost Center",
    "options": "Cost Center"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-08-20 16:55:16.556657",
+ "modified": "2024-09-03 10:30:55.280684",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
