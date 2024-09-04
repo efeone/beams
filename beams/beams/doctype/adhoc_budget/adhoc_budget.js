@@ -1,15 +1,16 @@
   frappe.ui.form.on('Adhoc Budget', {
       onload: function(frm) {
+          check_expected_revenue_reached(frm);
           if (!frm.doc.posting_date) {
             // Set the posting date to today if not already set
               frm.set_value('posting_date', frappe.datetime.nowdate());
           }
-
       },
       refresh: function(frm) {
           if (!frm.doc.posting_date) {
               frm.set_value('posting_date', frappe.datetime.nowdate());
           }
+          check_expected_revenue_reached(frm);
       },
       project: function(frm) {
          // Fetch expected start date and end date from the selected project
