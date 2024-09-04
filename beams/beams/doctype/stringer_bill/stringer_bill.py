@@ -36,4 +36,4 @@ class StringerBill(Document):
         purchase_invoice.insert()
         purchase_invoice.submit()
 
-        frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully.")
+        frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully.",alert=True,indicator="green")
