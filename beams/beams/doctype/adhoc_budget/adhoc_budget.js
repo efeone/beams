@@ -34,6 +34,24 @@
 
           frm.refresh_fields()
 
+      },
+      company: function (frm) {
+          // Fetch the selected company
+          let selected_company = frm.doc.company;
+          frm.clear_table('budget_expense');
+          frm.refresh_field('budget_expense');
+
+          // Apply filter on the child table's 'budget_expense_type' field
+          frm.fields_dict['budget_expense'].grid.get_field('budget_expense_type').get_query = function () {
+              return {
+                  filters: {
+                      company: selected_company
+                  }
+              };
+          };
+
+          // Refresh the field to apply the filter
+          frm.fields_dict['budget_expense'].grid.refresh_field('budget_expense_type');
       }
   });
 
