@@ -4,7 +4,6 @@
 
 import frappe
 from frappe import _
-from frappe.model.document import Document
 from frappe.utils import add_months, flt, fmt_money, get_last_day, getdate
 
 from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
@@ -140,6 +139,8 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 
 	total_expense = args.actual_expense + amount
 
+	print(total_expense, budget_amount)
+
 	if total_expense > budget_amount:
 		if args.actual_expense > budget_amount:
 			error_tense = _("is already")
@@ -166,6 +167,8 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 			frappe.session.user
 		):
 			action = "Warn"
+
+		print("are we here?")
 
 		# Set is_budget_exceed field in the Purchase Order doctype before showing warning or error
 		if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
