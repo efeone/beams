@@ -105,7 +105,9 @@ def get_purchase_order_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Budget Exceed",
                 "insert_after": "items_section",
-                "read_only":1
+                "read_only":1,
+                "no_copy":1,
+                "depends_on": "eval:doc.is_budget_exceed == 1"
 
             }
         ]
@@ -459,7 +461,10 @@ def get_material_request_custom_fields():
                 "fieldtype": "Check",
                 "label": "Budget Exceeded",
                 "insert_after": "schedule_date",
-                "read_only":1
+                "read_only":1,
+                "no_copy":1,
+                "depends_on": "eval:doc.budget_exceeded == 1"
+
             }
         ]
     }

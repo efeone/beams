@@ -139,8 +139,6 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 
 	total_expense = args.actual_expense + amount
 
-	print(total_expense, budget_amount)
-
 	if total_expense > budget_amount:
 		if args.actual_expense > budget_amount:
 			error_tense = _("is already")
@@ -168,13 +166,18 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 		):
 			action = "Warn"
 
-		print("are we here?")
-
 		# Set is_budget_exceed field in the Purchase Order doctype before showing warning or error
 		if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
 			args.get("object").is_budget_exceed = 1
 		elif args.get("doctype") == "Material Request" and args.for_material_request:
 			args.get("object").budget_exceeded = 1
+	else:
+
+		# If total_expense is less than or equal to budget_amount, reset the is_budget_exceed field
+		if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
+			args.get("object").is_budget_exceed = 0
+		elif args.get("doctype") == "Material Request" and args.for_material_request:
+			args.get("object").budget_exceeded = 0
 
 
 
@@ -284,7 +287,13 @@ def get_requested_amount(args):
 		as_list=1,
 	)
 
-	return data[0][0] if data else 0
+	if args.get("doctype") == "Material Request":
+		unsubmitted_requested_amount = 0
+		for item in args.get("object").items:
+			unsubmitted_requested_amount += (item.stock_qty - item.ordered_qty) * item.rate
+
+		data[0][0] += unsubmitted_requested_amount
+		return data[0][0] if data else 0
 
 
 def get_ordered_amount(args):
@@ -300,6 +309,12 @@ def get_ordered_amount(args):
 		as_list=1,
 	)
 
+	if args.get("doctype") == "Purchase Order":
+		unsubmitted_ordered_amount = 0
+		for item in args.get("object").items:
+			unsubmitted_ordered_amount += item.amount - item.billed_amt
+
+		data[0][0] += unsubmitted_ordered_amount
 	return data[0][0] if data else 0
 
 
