@@ -121,8 +121,7 @@ before_uninstall = "beams.uninstall.before_uninstall"
 # Override standard doctype classes
 
 # override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+# "ToDo": "custom_app.overrides.CustomToDo"# }
 
 # Document Events
 # ---------------
@@ -155,7 +154,11 @@ doc_events = {
     },
     "Purchase Order": {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
-        "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation"
+        "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation",
+        "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget"
+    },
+    "Material Request":{
+        "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget"
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname"

@@ -5,7 +5,7 @@
    "label": "Quotation Is Barter"
   }
  ],
- "content": "[{\"id\":\"mM37igfJxh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Beams</span>\",\"col\":12}},{\"id\":\"mYOrBb92TB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Account\",\"col\":3}},{\"id\":\"OihJCscygq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget\",\"col\":3}},{\"id\":\"KVIBfudYxi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Adhoc Budget\",\"col\":3}},{\"id\":\"AU3IgQiL8w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batta Claim\",\"col\":3}},{\"id\":\"y1KpAUVh-r\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qf4-cjQ8K_\",\"type\":\"card\",\"data\":{\"card_name\":\"Employees\",\"col\":6}},{\"id\":\"CVVtbAAAyD\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying\",\"col\":6}},{\"id\":\"gc6Nr4BsjN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jNk-0qCCN-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Quotation Is Barter\",\"col\":12}}]",
+ "content": "[{\"id\":\"mM37igfJxh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">BEAMS</span>\",\"col\":12}},{\"id\":\"mYOrBb92TB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Account\",\"col\":3}},{\"id\":\"OihJCscygq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget\",\"col\":3}},{\"id\":\"KVIBfudYxi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Adhoc Budget\",\"col\":3}},{\"id\":\"AU3IgQiL8w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batta Claim\",\"col\":3}},{\"id\":\"y1KpAUVh-r\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qf4-cjQ8K_\",\"type\":\"card\",\"data\":{\"card_name\":\"Employees\",\"col\":6}},{\"id\":\"CVVtbAAAyD\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying\",\"col\":6}},{\"id\":\"gc6Nr4BsjN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jNk-0qCCN-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Quotation Is Barter\",\"col\":12}}]",
  "creation": "2024-08-29 09:58:35.022181",
  "custom_blocks": [],
  "docstatus": 0,
@@ -14,9 +14,9 @@
  "hide_custom": 0,
  "icon": "full-page",
  "idx": 0,
- "indicator_color": "green",
+ "indicator_color": "",
  "is_hidden": 0,
- "label": "Beams",
+ "label": "BEAMS",
  "links": [
   {
    "hidden": 0,
@@ -97,10 +97,10 @@
    "type": "Link"
   }
  ],
- "modified": "2024-09-04 09:46:11.451262",
+ "modified": "2024-09-05 16:40:37.733913",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Beams",
+ "name": "BEAMS",
  "number_cards": [],
  "owner": "Administrator",
  "parent_page": "",
@@ -155,5 +155,5 @@
    "type": "DocType"
   }
  ],
- "title": "Beams"
+ "title": "BEAMS"
 }
