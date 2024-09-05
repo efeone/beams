@@ -48,6 +48,11 @@ def create_todo_on_purchase_order_creation(doc, method):
 		})
 
 def validate(self):
+	'''
+
+	This function validates the expenses for each item in the document against the defined budget.
+
+	'''
 	for item in self.items:
 		if item.cost_center:
 			budget = frappe.get_value('Budget', {'cost_center': item.cost_center, 'fiscal_year': self.fiscal_year}, 'total_budget')
@@ -71,7 +76,7 @@ def validate(self):
 
 def validate_budget(self, method=None):
 	'''
-		Validating Budget for Purchase order and material request 
+		Validating Budget for Purchase order and material request
 	'''
 	from beams.beams.overrides.budget import validate_expense_against_budget
 	if self.name:
