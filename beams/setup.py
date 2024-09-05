@@ -436,6 +436,14 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Data",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Advance",
+            "field_name": "naming_series",
+            "property": "hidden",
+            "property_type": "Data",
+            "value": 1
         }
     ]
 def get_material_request_custom_fields():
@@ -481,6 +489,15 @@ def get_employee_advance_custom_fields():
                 "label": "Purpose",
                 "options": "Employee Advance Purpose",
                 "insert_after":"currency"
+            },
+            {
+                "fieldname": "purpose",
+                "fieldtype": "Link",
+                "label": "Purpose",
+                "options": "Employee Advance Purpose",
+                "insert_after": "currency",
+                "reqd": 1
             }
+
         ]
     }
