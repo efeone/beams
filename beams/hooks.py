@@ -121,8 +121,7 @@ before_uninstall = "beams.uninstall.before_uninstall"
 # Override standard doctype classes
 
 # override_doctype_class = {
-# 	"Purchase Order": "beams.beams.overrides.purchase_order.PurchaseOrderCustom"
-# }
+# "ToDo": "custom_app.overrides.CustomToDo"# }
 
 # Document Events
 # ---------------

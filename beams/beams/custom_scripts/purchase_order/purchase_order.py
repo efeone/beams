@@ -49,9 +49,7 @@ def create_todo_on_purchase_order_creation(doc, method):
 
 def validate(self):
 	'''
-
-	This function validates the expenses for each item in the document against the defined budget.
-
+		This function validates the expenses for each item in the document against the defined budget.
 	'''
 	for item in self.items:
 		if item.cost_center:
