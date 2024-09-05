@@ -39,9 +39,9 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-28 09:26:35.371460",
+  "modified": "2024-09-05 14:49:00.261384",
   "name": "Submitted",
-  "style": "",
+  "style": "Success",
   "workflow_state_name": "Submitted"
  },
  {
