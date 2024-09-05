@@ -70,6 +70,9 @@ def validate(self):
 				frappe.msgprint(_("The budget for Cost Center {0} has been exceeded.").format(item.cost_center))
 
 def validate_budget(self, method=None):
+	'''
+		Validating Budget for Purchase order and material request 
+	'''
 	from beams.beams.overrides.budget import validate_expense_against_budget
 	if self.name:
 		for data in self.get("items"):
