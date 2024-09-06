@@ -9,6 +9,7 @@
   "equalize_purchase_and_quotation_amounts",
   "tab_break_4hid",
   "default_working_hours",
+  "batta_claim_service_item",
   "naming_rule_tab",
   "beams_naming_rule"
  ],
@@ -45,12 +46,18 @@
    "fieldtype": "Table",
    "label": "Beams Naming Rule",
    "options": "Beams Naming Rule"
+  },
+  {
+   "fieldname": "batta_claim_service_item",
+   "fieldtype": "Link",
+   "label": "Batta Claim Service Item",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-08-29 10:14:41.594535",
+ "modified": "2024-09-05 16:52:17.585822",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
