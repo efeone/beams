@@ -21,4 +21,14 @@ frappe.ui.form.on('Beams Accounts Settings', {
             };
         });
     },
+    onload: function(frm) {
+        frm.set_query('default_sales_invoice_print_format', function() {
+            return {
+                filters: {
+                    'doc_type': 'Sales Invoice',
+                    'disabled': 0  
+                }
+            };
+        });
+    }
 });

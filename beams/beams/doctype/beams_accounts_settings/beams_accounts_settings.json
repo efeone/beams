@@ -9,6 +9,8 @@
   "equalize_purchase_and_quotation_amounts",
   "batta_payable_account",
   "single_sales_invoice",
+  "batta_expense_account",
+  "default_sales_invoice_print_format",
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
@@ -66,12 +68,24 @@
    "fieldname": "single_sales_invoice",
    "fieldtype": "Check",
    "label": "Single Sales Invoice"
+ },
+ {
+   "fieldname": "batta_expense_account",
+   "fieldtype": "Link",
+   "label": "Batta Expense Account",
+   "options": "Account"
+ },
+ {
+   "fieldname": "default_sales_invoice_print_format",
+   "fieldtype": "Link",
+   "label": "Default Sales Invoice Print Format",
+   "options": "Print Format"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-10 11:51:50.626726",
+ "modified": "2024-09-05 15:59:09.254258",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
