@@ -249,31 +249,26 @@ def get_purchase_invoice_custom_fields():
             {
                 "fieldname": "invoice_type",
                 "fieldtype": "Select",
-                "options": "General\nStringer Bill",
-                "default": "General",
+                "options": "Normal\nStringer Bill",
+                "default": "Normal",
                 "label": "Invoice Type",
                 "insert_after": "naming_series"
-            },
-            {
-			    "fieldname": "stringer_work_details_sb",
-			    "fieldtype": "Section Break",
-			    "label": "",
-			    "insert_after": "is_reverse_charge"
-			},
-            {
-                "fieldname": "stringer_work_details",
-                "fieldtype": "Table",
-                "label": "Stringer Work Details",
-                "options": "Stringer Work Details",
-                "insert_after": "stringer_work_details_sb",
-                "depends_on": "eval:doc.invoice_type == 'Stringer Bill'"
             },
             {
                 "fieldname": "purchase_order_id",
                 "fieldtype": "Link",
                 "label": "Purchase Order",
                 "options": "Purchase Order",
-                "insert_after": "supplier"
+                "insert_after": "naming_series"
+            },
+            {
+                "fieldname": "stringer_bill_reference",
+                "fieldtype": "Link",
+                "label": "Stringer Bill Reference",
+                "options": "Stringer Bill",
+                "depends_on": "eval:doc.invoice_type == 'Stringer Bill' ",
+                "read_only": 1,
+                "insert_after": "purchase_order_id"
             }
         ]
     }
