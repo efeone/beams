@@ -2,8 +2,6 @@ import frappe
 from frappe import _
 from datetime import datetime
 from frappe.model.naming import make_autoname
-
-
 from beams.beams.custom_scripts.quotation.quotation import create_common_party_and_supplier
 from frappe.core.doctype.communication.email import make
 
@@ -11,13 +9,14 @@ from frappe.core.doctype.communication.email import make
 def autoname(doc, method=None):
     """
     Automatically generate a name for the Sales Invoice document based on custom naming rules defined
-    in the 'Beams Accounts Settings' doctype."""
+    in the 'Beams Accounts Settings' doctype.
+    """
     beams_accounts_settings = frappe.get_doc("Beams Accounts Settings")
     sales_invoice_naming_series = ''
 
     # Iterate through the naming rules
     for rule in beams_accounts_settings.beams_naming_rule:
-        # Check if the rule applies to the Sales_invoice doctype
+        # Check if the rule applies to the Sales Invoice doctype
         if rule.doc_type == "Sales Invoice" and rule.naming_series:
             sales_invoice_naming_series = rule.naming_series
             if sales_invoice_naming_series:
@@ -28,9 +27,10 @@ def autoname(doc, method=None):
                     sales_invoice_naming_series = sales_invoice_naming_series.replace("{YY}", datetime.now().strftime("%y"))
 
                 # Generate the name using the updated naming series
-                doc.name = frappe.model.naming.make_autoname(sales_invoice_naming_series )
+                doc.name = frappe.model.naming.make_autoname(sales_invoice_naming_series)
             else:
                 frappe.throw(_("No valid naming series found for Sales Invoice doctype"))
+
 
 @frappe.whitelist()
 def validate_sales_invoice_amount_with_quotation(doc, method):
@@ -44,28 +44,34 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
         # Fetch the Quotation document
         quotation = frappe.get_doc('Quotation', doc.reference_id)
 
-        # Fetch all related Sales Invoices (excluding the current one)
-        sales_invoices = frappe.get_all('Sales Invoice',
-            filters={'reference_id': doc.reference_id, 'docstatus': 1, 'name': ['!=', doc.name]},
-            fields=['grand_total'])
+        # Fetch the Beams Account Settings to check if single_sales_invoice is enabled
+        beams_accounts_settings = frappe.get_single('Beams Accounts Settings')
 
-        # Calculate the total grand total of existing Sales Invoices
-        total_grand_total = sum(invoice.grand_total for invoice in sales_invoices)
+        # Proceed only if the single_sales_invoice checkbox is checked
+        if beams_accounts_settings.single_sales_invoice == 1:
+            # Fetch all related Sales Invoices (excluding the current one)
+            sales_invoices = frappe.get_all('Sales Invoice',
+                filters={'reference_id': doc.reference_id, 'docstatus': 1, 'name': ['!=', doc.name]},
+                fields=['grand_total'])
 
-        # Add the current Sales Invoice's grand total
-        total_grand_total += doc.grand_total
+            # Calculate the total grand total of existing Sales Invoices
+            total_grand_total = sum(invoice.grand_total for invoice in sales_invoices)
 
-        # Perform the comparison with the Quotation's grand total
-        if total_grand_total > quotation.grand_total:
-            frappe.throw(_(
-                "The total amount of Sales Invoices for this Quotation cannot exceed the total amount in the Quotation."
-            ))
+            # Add the current Sales Invoice's grand total
+            total_grand_total += doc.grand_total
 
-        # Optional: Inform the user if the total is less than the Quotation (if required)
-        elif total_grand_total < quotation.grand_total:
-            frappe.throw(_(
-                "The total amount of Sales Invoices for this Quotation is less than the total amount in the Quotation."
-            ))
+            # Perform the comparison with the Quotation's grand total
+            if total_grand_total > quotation.grand_total:
+                frappe.throw(_(
+                    "The total amount of Sales Invoices for this Quotation cannot exceed the total amount in the Quotation."
+                ))
+
+            # Optional: Inform the user if the total is less than the Quotation (if required)
+            elif total_grand_total < quotation.grand_total:
+                frappe.throw(_(
+                    "The total amount of Sales Invoices for this Quotation is less than the total amount in the Quotation."
+                ))
+
 
         # Check if `is_barter` is checked in the Quotation
         if quotation.is_barter:
@@ -91,10 +97,10 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
 
 
 @frappe.whitelist()
-def send_email_to_party(doc,method=None):
+def send_email_to_party(doc, method=None):
     """
-      Method to Send an Email with a PDF attachment of the given document  Sales Invoice to the contact associated with the customer.
-      Also validate the existence of the contact for customer  and its Email ID.
+    Method to Send an Email with a PDF attachment of the given document (Sales Invoice) to the contact associated with the customer.
+    Also validate the existence of the contact for customer and its Email ID.
     """
     customer_name = doc.customer
     contact_name = frappe.db.get_value("Dynamic Link", {
