@@ -1,15 +1,13 @@
-
-
 // Copyright (c) 2024, efeone and contributors
 // For license information, please see license.txt
 
 frappe.ui.form.on('Batta Claim', {
     onload: function (frm) {
-        set_batta_based_on_options(frm)
+        set_batta_based_on_options(frm);
         calculate_totals(frm);
     },
     refresh: function (frm) {
-        set_batta_based_on_options(frm)
+        set_batta_based_on_options(frm);
         calculate_totals(frm);
     },
     batta_type: function(frm) {
@@ -18,6 +16,12 @@ frappe.ui.form.on('Batta Claim', {
             frappe.model.set_value(row.doctype, row.name, 'batta_type', frm.doc.batta_type);
         });
         frm.refresh_field('work_detail');
+    batta_type: function (frm) {
+        set_batta_based_on_options(frm);
+        handle_designation_based_on_batta_type(frm);
+    },
+    employee: function (frm) {
+        handle_designation_based_on_batta_type(frm);
     }
 });
 
@@ -30,15 +34,33 @@ frappe.ui.form.on('Work Detail', {
     }
 });
 
-
-
 /* Function to set options for Batta Based On field based on Batta Type */
 function set_batta_based_on_options(frm) {
     if (frm.doc.batta_type === 'External') {
         frm.set_df_property('batta_based_on', 'options', 'Hours');
         frm.set_value('batta_based_on', 'Hours');
     } else {
-        frm.set_df_property('batta_based_on', 'options', ['Daily', 'Hours']);
+        frm.set_df_property('batta_based_on', 'options', ['Daily']);
+        frm.set_value('batta_based_on', 'Daily');
+    }
+}
+
+/* Function to handle designation field based on batta_type */
+function handle_designation_based_on_batta_type(frm) {
+    if (frm.doc.batta_type === 'Internal' && frm.doc.employee) {
+        // Fetch and set designation when batta_type is Internal
+        frappe.db.get_value('Employee', frm.doc.employee, 'designation', function (r) {
+            if (r && r.designation) {
+                frm.set_value('designation', r.designation);
+                frm.set_df_property('designation', 'read_only', 1);
+            } else {
+                frappe.msgprint(__('Designation not found for the selected employee.'));
+            }
+        });
+    } else if (frm.doc.batta_type === 'External') {
+        // Allow designation to be selectable for External
+        frm.set_df_property('designation', 'read_only', 0);
+        frm.set_value('designation', '');
     }
 }
 
@@ -79,7 +101,6 @@ function calculate_hours_and_totals(frm, cdt, cdn) {
                         row.number_of_days = Math.ceil(row.total_hours / 24);
                         row.daily_batta = row.number_of_days * frm.doc.batta;
                     } else if (frm.doc.batta_based_on === 'Hours') {
-                        // row.number_of_days = 1;
                         row.daily_batta = (row.total_hours - row.ot_hours) * frm.doc.batta;
                     }
 
