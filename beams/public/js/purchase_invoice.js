@@ -1,6 +1,6 @@
 frappe.ui.form.on('Purchase Invoice', {
   setup: function(frm) {
-      handle_workflow_button(frm);
+    handle_workflow_button(frm);
   },
   invoice_type: function(frm) {
     if (frm.doc.invoice_type === 'Stringer Bill') {
@@ -13,12 +13,12 @@ frappe.ui.form.on('Purchase Invoice', {
       };
       frm.set_query('supplier', function() {
         return {
-          "filters": {
+          filters: {
             is_stringer: 1
           }
         };
       });
-    }else if (frm.doc.invoice_type === 'General') {
+    } else if (frm.doc.invoice_type === 'General') {
       // Clear filters when 'General' is selected
       frm.fields_dict['items'].grid.get_field('item_code').get_query = function(doc, cdt, cdn) {
         return {};
@@ -32,7 +32,7 @@ frappe.ui.form.on('Purchase Invoice', {
     frm.clear_table('items');
     frm.refresh_field('stringer_work_details');
     frm.refresh_field('items');
-    frm.set_value('supplier','');
+    frm.set_value('supplier', '');
   },
   supplier: function(frm) {
     if (frm.doc.supplier) {
@@ -49,15 +49,21 @@ frappe.ui.form.on('Purchase Invoice', {
         frm.refresh_field('stringer_work_details');
       });
     }
+  },
+  onload: function(frm) {
+    // Set the supplier as read-only when reference_id is present (e.g., from Quotation)
+    if (frm.doc.quotation) {
+      frm.set_df_property('supplier', 'read_only', 1);
+    }
   }
 });
 
 frappe.ui.form.on('Stringer Work Details', {
-  from_time: function (frm, cdt, cdn) {
+  from_time: function(frm, cdt, cdn) {
     validate_time_and_calculate_hours(frm, cdt, cdn);
     validate_row_dates(frm, cdt, cdn);
   },
-  to_time: function (frm, cdt, cdn) {
+  to_time: function(frm, cdt, cdn) {
     validate_time_and_calculate_hours(frm, cdt, cdn);
     validate_row_dates(frm, cdt, cdn);
   },
@@ -71,9 +77,6 @@ frappe.ui.form.on('Stringer Work Details', {
 });
 
 function validate_time_and_calculate_hours(frm, cdt, cdn) {
-  /**
-   * Function for validating from_time and to_time and calculating hours.
-   */
   var row = locals[cdt][cdn];
   if (row.from_time && row.to_time) {
     var from_time = new Date(row.from_time);
@@ -93,9 +96,6 @@ function validate_time_and_calculate_hours(frm, cdt, cdn) {
 }
 
 function validate_row_dates(frm, cdt, cdn) {
-  /**
-    Ensures that all rows in the 'stringer_work_details' table have the same date.
-   */
   var row = locals[cdt][cdn];
 
   if (row.from_time) {
@@ -119,15 +119,13 @@ function validate_row_dates(frm, cdt, cdn) {
 function handle_workflow_button(frm) {
   //Function to handle the visibility or behavior of workflow buttons
   if (frm.doc.purchase_order_id) {
-    // Check if the current document contains a Purchase Order ID
     $(document).ready(function () {
-        var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
-           workflow_button
-           .html('<span>S<span class="alt-underline">u</span>bmit</span>');
-        workflow_button.find("svg").remove();
-        workflow_button.on("click", function () {
-          frm.savesubmit();
-        });
+      var workflow_button = $(".btn.btn-primary.btn-sm[data-toggle='dropdown']");
+      workflow_button.html('<span>S<span class="alt-underline">u</span>bmit</span>');
+      workflow_button.find("svg").remove();
+      workflow_button.on("click", function () {
+        frm.savesubmit();
+      });
     });
   }
 }

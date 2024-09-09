@@ -7,6 +7,7 @@
  "field_order": [
   "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts",
+  "single_sales_invoice",
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
@@ -52,12 +53,19 @@
    "fieldtype": "Link",
    "label": "Batta Claim Service Item",
    "options": "Item"
+ },
+ {
+   "default": "0",
+   "fieldname": "single_sales_invoice",
+   "fieldtype": "Check",
+   "label": "Single Sales Invoice"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
  "modified": "2024-09-05 16:52:17.585822",
+ "modified": "2024-09-07 09:17:24.229429",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
