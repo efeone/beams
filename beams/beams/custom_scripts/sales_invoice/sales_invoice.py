@@ -97,7 +97,7 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
 
 
 @frappe.whitelist()
-def on_update_after_submit(doc, method=None):
+def si_on_update_after_submit_custom(doc, method=None):
     """
     Method triggered after the document is updated and submitted. It checks if the workflow state
     has changed to "Send Email to Party".
