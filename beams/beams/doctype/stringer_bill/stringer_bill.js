@@ -26,6 +26,21 @@ frappe.ui.form.on('Stringer Bill', {
    },
    no_of_days: function(frm) {
        update_total_wage(frm);
+   },
+   bureau: function(frm) {
+        if (frm.doc.bureau) {
+            frm.set_query('substituting_for', function() {
+                return {
+                    filters: {
+                        'bureau': frm.doc.bureau
+                    }
+                };
+            });
+        } else {
+            frm.set_query('substituting_for', function() {
+                return {};
+            });
+        }
    }
 });
 frappe.ui.form.on('Stringer Bill Date', {

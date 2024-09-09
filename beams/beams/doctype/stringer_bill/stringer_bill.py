@@ -3,11 +3,18 @@
 
 import frappe
 from frappe.model.document import Document
+from datetime import datetime
 
 class StringerBill(Document):
     def on_submit(self):
         if self.workflow_state == 'Approved':
             self.create_purchase_invoice_from_stringer_bill()
+    def before_save(self):
+        old_doc = self.get_doc_before_save()
+
+        if old_doc and old_doc.workflow_state != self.workflow_state and self.workflow_state == "Pending Approval":
+            self.check_employee_leave()
+
 
     def create_purchase_invoice_from_stringer_bill(self):
         """
@@ -37,3 +44,22 @@ class StringerBill(Document):
         purchase_invoice.submit()
 
         frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully.",alert=True,indicator="green")
+
+    def check_employee_leave(self):
+        '''
+            Method to verifies if the employee is on  leave for each specified date.
+        '''
+        employee = self.substituting_for
+
+        if self.date and employee:
+            for date_entry in self.date:
+                leave_exists = frappe.db.exists('Leave Application', {
+                    'employee': employee,
+                    'status': 'Approved',
+                    'from_date': ('<=', date_entry.date),
+                    'to_date': ('>=', date_entry.date)
+                })
+
+                if not leave_exists:
+                    formatted_date = date_entry.date.strftime("%d/%m/%Y")
+                    frappe.throw(f"Employee {employee} is not on leave on {formatted_date}.")
