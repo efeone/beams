@@ -263,6 +263,8 @@ doc_events = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
 fixtures = [
+    "Quotation" ,
+
     {"dt": "Workflow", "filters": [
         ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval"]]
     ]},
