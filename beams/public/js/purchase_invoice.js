@@ -96,6 +96,9 @@ function validate_time_and_calculate_hours(frm, cdt, cdn) {
 }
 
 function validate_row_dates(frm, cdt, cdn) {
+  /**
+  Ensures that all rows in the 'stringer_work_details' table have the same date.
+ */
   var row = locals[cdt][cdn];
 
   if (row.from_time) {

@@ -31,7 +31,6 @@ def autoname(doc, method=None):
             else:
                 frappe.throw(_("No valid naming series found for Sales Invoice doctype"))
 
-
 @frappe.whitelist()
 def validate_sales_invoice_amount_with_quotation(doc, method):
     '''
@@ -45,10 +44,10 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
         quotation = frappe.get_doc('Quotation', doc.reference_id)
 
         # Fetch the Beams Account Settings to check if single_sales_invoice is enabled
-        beams_accounts_settings = frappe.get_single('Beams Accounts Settings')
+        single_sales_invoice_enabled = frappe.db.get_single_value('Beams Accounts Settings', 'single_sales_invoice')
 
         # Proceed only if the single_sales_invoice checkbox is checked
-        if beams_accounts_settings.single_sales_invoice == 1:
+        if single_sales_invoice_enabled == 1:
             # Fetch all related Sales Invoices (excluding the current one)
             sales_invoices = frappe.get_all('Sales Invoice',
                 filters={'reference_id': doc.reference_id, 'docstatus': 1, 'name': ['!=', doc.name]},
