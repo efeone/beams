@@ -7,6 +7,8 @@
  "field_order": [
   "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts",
+  "batta_payable_account",
+  "batta_expense_account",
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
@@ -52,12 +54,24 @@
    "fieldtype": "Link",
    "label": "Batta Claim Service Item",
    "options": "Item"
+  },
+  {
+   "fieldname": "batta_payable_account",
+   "fieldtype": "Link",
+   "label": "Batta Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "batta_expense_account",
+   "fieldtype": "Link",
+   "label": "Batta Expense Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-05 16:52:17.585822",
+ "modified": "2024-09-09 15:37:38.356341",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
