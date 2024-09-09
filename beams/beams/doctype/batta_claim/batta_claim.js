@@ -14,6 +14,10 @@ frappe.ui.form.on('Batta Claim', {
     },
     batta_type: function(frm) {
         set_batta_based_on_options(frm)
+        frm.doc.work_detail.forEach(function(row) {
+            frappe.model.set_value(row.doctype, row.name, 'batta_type', frm.doc.batta_type);
+        });
+        frm.refresh_field('work_detail');
     }
 });
 

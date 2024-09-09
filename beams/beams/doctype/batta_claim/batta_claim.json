@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:BC-{YY}-{####}",
  "creation": "2024-09-02 10:37:13.367643",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -18,8 +19,10 @@
   "km_travelled",
   "section_break_bkxb",
   "batta_based_on",
+  "column_break_gbiv",
   "batta",
   "ot_batta",
+  "section_break_gksm",
   "work_detail",
   "section_break_nsff",
   "total_daily_batta",
@@ -47,7 +50,7 @@
    "fieldname": "batta_type",
    "fieldtype": "Select",
    "label": "Batta Type",
-   "options": "Internal\nExternal"
+   "options": "External\nInternal"
   },
   {
    "depends_on": "eval:doc.batta_type == \"Internal\"\n",
@@ -55,6 +58,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Employee",
+   "mandatory_depends_on": "eval:doc.batta_type == 'Internal'",
    "options": "Employee"
   },
   {
@@ -76,6 +80,7 @@
    "fieldname": "supplier",
    "fieldtype": "Link",
    "label": "Supplier",
+   "mandatory_depends_on": "eval:doc.batta_type == 'External'",
    "options": "Supplier"
   },
   {
@@ -155,15 +160,24 @@
    "fieldtype": "Table",
    "label": "Work Detail",
    "options": "Work Detail"
+  },
+  {
+   "fieldname": "column_break_gbiv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_gksm",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-02 14:59:16.574156",
+ "modified": "2024-09-04 10:27:14.695663",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

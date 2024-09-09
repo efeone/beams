@@ -12,7 +12,8 @@
   "ot_hours",
   "number_of_days",
   "daily_batta",
-  "ot_batta"
+  "ot_batta",
+  "batta_type"
  ],
  "fields": [
   {
@@ -35,6 +36,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.batta_type == 'External'",
    "fieldname": "ot_hours",
    "fieldtype": "Float",
    "in_list_view": 1,
@@ -49,6 +51,7 @@
    "read_only": 1
   },
   {
+   "depends_on": "eval:doc.batta_type == 'External'",
    "fieldname": "ot_batta",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -61,12 +64,21 @@
    "in_list_view": 1,
    "label": "Number of Days",
    "read_only": 1
+  },
+  {
+   "fieldname": "batta_type",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Batta Type",
+   "options": "External\nInternal",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-02 14:25:58.478678",
+ "modified": "2024-09-09 13:21:49.716310",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Work Detail",
