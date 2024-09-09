@@ -22,18 +22,21 @@ class StringerBill(Document):
 
         # Create a new Purchase Invoice
         purchase_invoice = frappe.new_doc('Purchase Invoice')
+        purchase_invoice.stringer_bill_reference = self.name
         purchase_invoice.supplier = self.supplier
         purchase_invoice.invoice_type = 'Stringer Bill'  # Set invoice type to "Stringer Bill"
         purchase_invoice.posting_date = frappe.utils.nowdate()
 
-		# Populate Child Table
+        # Populate Child Table
         purchase_invoice.append('items', {
             'item_code': item_code,
             'qty': 1,
             'rate': self.total_wage
         })
 
+        # Insert and submit the document
         purchase_invoice.insert()
         purchase_invoice.submit()
 
-        frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully.",alert=True,indicator="green")
+        # Confirm success
+        frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully with Stringer Bill reference {self.name}.", alert=True, indicator="green")
