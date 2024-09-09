@@ -13,16 +13,20 @@
   "employee_name",
   "designation",
   "supplier",
+  "bureau",
   "column_break_lgjy",
+  "company",
   "orgin",
   "destination",
-  "km_travelled",
+  "distance_travelledkm",
   "section_break_bkxb",
   "batta_based_on",
   "column_break_gbiv",
   "batta",
+  "column_break_jwtq",
   "ot_batta",
   "section_break_gksm",
+  "section_break_osak",
   "work_detail",
   "section_break_nsff",
   "total_daily_batta",
@@ -71,9 +75,9 @@
   {
    "fetch_from": "employee.designation",
    "fieldname": "designation",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Designation",
-   "read_only": 1
+   "options": "Designation"
   },
   {
    "depends_on": "eval:doc.batta_type == \"External\"\n",
@@ -85,18 +89,15 @@
   },
   {
    "fieldname": "orgin",
-   "fieldtype": "Data",
-   "label": "Origin"
+   "fieldtype": "Link",
+   "label": "Origin",
+   "options": "Location"
   },
   {
    "fieldname": "destination",
-   "fieldtype": "Data",
-   "label": "Destination"
-  },
-  {
-   "fieldname": "km_travelled",
-   "fieldtype": "Float",
-   "label": "Km Travelled"
+   "fieldtype": "Link",
+   "label": "Destination",
+   "options": "Location"
   },
   {
    "fieldname": "column_break_lgjy",
@@ -168,12 +169,35 @@
   {
    "fieldname": "section_break_gksm",
    "fieldtype": "Section Break"
+   "fieldname": "column_break_jwtq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_osak",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "distance_travelledkm",
+   "fieldtype": "Float",
+   "label": "Distance Travelled(KM)"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-04 10:27:14.695663",
+ "modified": "2024-09-09 12:55:59.610599",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

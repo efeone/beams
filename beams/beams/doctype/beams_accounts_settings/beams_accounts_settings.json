@@ -9,6 +9,7 @@
   "equalize_purchase_and_quotation_amounts",
   "batta_payable_account",
   "batta_expense_account",
+  "single_sales_invoice",
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
@@ -66,6 +67,12 @@
    "fieldtype": "Link",
    "label": "Batta Expense Account",
    "options": "Account"
+ },
+ {
+   "default": "0",
+   "fieldname": "single_sales_invoice",
+   "fieldtype": "Check",
+   "label": "Single Sales Invoice"
   }
  ],
  "index_web_pages_for_search": 1,
