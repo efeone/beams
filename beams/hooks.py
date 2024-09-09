@@ -130,7 +130,7 @@ before_uninstall = "beams.uninstall.before_uninstall"
 doc_events = {
     "Sales Invoice": {
         "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation",
-        "on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.send_email_to_party",
+        "on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.si_on_update_after_submit_custom",
         "autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname"
 
     },
