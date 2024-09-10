@@ -14,9 +14,10 @@
   "employee_name",
   "supplier",
   "designation",
+  "company",
   "column_break_lgjy",
   "bureau",
-  "company",
+  "cost_centre",
   "orgin",
   "destination",
   "distance_travelledkm",
@@ -196,12 +197,19 @@
    "fieldtype": "Link",
    "label": "Batta Claim Type",
    "options": "Batta Claim Type"
+  },
+  {
+   "fetch_from": "bureau.cost_center",
+   "fieldname": "cost_centre",
+   "fieldtype": "Link",
+   "label": "Cost Centre",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 11:47:56.950837",
+ "modified": "2024-09-10 14:39:48.355394",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

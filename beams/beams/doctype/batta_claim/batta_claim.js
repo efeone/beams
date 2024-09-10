@@ -1,17 +1,12 @@
-// Copyright (c) 2024, efeone and contributors
-// For license information, please see license.txt
-
 frappe.ui.form.on('Batta Claim', {
     onload: function (frm) {
         set_batta_based_on_options(frm);
-        calculate_totals(frm);
     },
     refresh: function (frm) {
         set_batta_based_on_options(frm);
-        calculate_totals(frm);
     },
     batta_type: function(frm) {
-        set_batta_based_on_options(frm)
+        set_batta_based_on_options(frm);
         frm.doc.work_detail.forEach(function(row) {
             frappe.model.set_value(row.doctype, row.name, 'batta_type', frm.doc.batta_type);
         });
@@ -21,6 +16,25 @@ frappe.ui.form.on('Batta Claim', {
     },
     employee: function (frm) {
         handle_designation_based_on_batta_type(frm);
+    },
+    batta: function (frm) {
+        // Loop through each row in the work_detail child table to calculate the row values based on the updated batta
+        frm.doc.work_detail.forEach(function(row) {
+            if (frm.doc.batta_based_on === 'Daily') {
+                row.number_of_days = Math.ceil(row.total_hours / 24); 
+                row.daily_batta = row.number_of_days * frm.doc.batta;
+            } else if (frm.doc.batta_based_on === 'Hours') {
+                row.daily_batta = (row.total_hours - row.ot_hours) * frm.doc.batta;
+            }
+
+            row.ot_batta = row.ot_hours * frm.doc.ot_batta;
+
+            // Refresh the fields for each row in the child table
+            frm.refresh_field('work_detail');
+        });
+
+        // After updating all the rows, recalculate the total values
+        calculate_totals(frm);
     }
 });
 
