@@ -8,7 +8,6 @@
   "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts",
   "batta_payable_account",
-  "batta_expense_account",
   "single_sales_invoice",
   "tab_break_4hid",
   "default_working_hours",
@@ -63,12 +62,6 @@
    "options": "Account"
   },
   {
-   "fieldname": "batta_expense_account",
-   "fieldtype": "Link",
-   "label": "Batta Expense Account",
-   "options": "Account"
- },
- {
    "default": "0",
    "fieldname": "single_sales_invoice",
    "fieldtype": "Check",
@@ -78,7 +71,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-09 15:37:38.356341",
+ "modified": "2024-09-10 11:51:50.626726",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

@@ -9,12 +9,13 @@
   "section_break_twbt",
   "amended_from",
   "batta_type",
+  "batta_claim_type",
   "employee",
   "employee_name",
-  "designation",
   "supplier",
-  "bureau",
+  "designation",
   "column_break_lgjy",
+  "bureau",
   "company",
   "orgin",
   "destination",
@@ -25,7 +26,6 @@
   "batta",
   "column_break_jwtq",
   "ot_batta",
-  "section_break_gksm",
   "section_break_osak",
   "work_detail",
   "section_break_nsff",
@@ -167,8 +167,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_gksm",
-   "fieldtype": "Section Break",
    "fieldname": "column_break_jwtq",
    "fieldtype": "Column Break"
   },
@@ -192,12 +190,18 @@
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company"
+  },
+  {
+   "fieldname": "batta_claim_type",
+   "fieldtype": "Link",
+   "label": "Batta Claim Type",
+   "options": "Batta Claim Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-09 12:55:59.610599",
+ "modified": "2024-09-10 11:47:56.950837",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
