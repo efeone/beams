@@ -20,8 +20,7 @@ class BattaClaim(Document):
         purchase_invoice.supplier = self.supplier
         purchase_invoice.posting_date = frappe.utils.nowdate()
         purchase_invoice.due_date = frappe.utils.add_days(purchase_invoice.posting_date, 30)
-        beams_account_settings = frappe.get_doc('Beams Accounts Settings')
-        batta_claim_service_item = beams_account_settings.batta_claim_service_item
+        batta_claim_service_item = frappe.db.get_single_value('Beams Accounts Settings', 'batta_claim_service_item')
         purchase_invoice.append('items', {
             'item_code': batta_claim_service_item,
             'rate': self.total_driver_batta,
@@ -38,10 +37,8 @@ class BattaClaim(Document):
 
         journal_entry = frappe.new_doc('Journal Entry')
         journal_entry.posting_date = frappe.utils.nowdate()
-        beams_account_settings = frappe.get_doc('Beams Accounts Settings')
-
-        batta_payable_account = beams_account_settings.batta_payable_account
-        batta_expense_account = beams_account_settings.batta_expense_account
+        batta_payable_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_payable_account')
+        batta_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
 
         journal_entry.append('accounts', {
             'account': batta_payable_account,
