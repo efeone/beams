@@ -347,7 +347,7 @@
   "doctype": "Workflow",
   "document_type": "Sales Invoice",
   "is_active": 1,
-  "modified": "2024-08-27 10:51:28.351947",
+  "modified": "2024-09-10 12:54:41.490051",
   "name": "Sales Invoice Approval",
   "override_status": 0,
   "send_email_alert": 0,
@@ -400,7 +400,7 @@
    {
     "allow_edit": "Accounts Manager",
     "avoid_status_override": 0,
-    "doc_status": "0",
+    "doc_status": "1",
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -430,7 +430,7 @@
    {
     "allow_edit": "Accounts Manager",
     "avoid_status_override": 0,
-    "doc_status": "0",
+    "doc_status": "2",
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
