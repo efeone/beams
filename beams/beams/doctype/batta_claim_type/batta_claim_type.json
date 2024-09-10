@@ -42,9 +42,8 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 11:48:47.491015",
+ "modified": "2024-09-10 14:54:27.730657",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim Type",
@@ -61,7 +60,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
