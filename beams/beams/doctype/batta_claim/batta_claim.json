@@ -168,7 +168,7 @@
   },
   {
    "fieldname": "section_break_gksm",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
    "fieldname": "column_break_jwtq",
    "fieldtype": "Column Break"
   },
