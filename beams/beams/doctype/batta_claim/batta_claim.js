@@ -16,7 +16,6 @@ frappe.ui.form.on('Batta Claim', {
             frappe.model.set_value(row.doctype, row.name, 'batta_type', frm.doc.batta_type);
         });
         frm.refresh_field('work_detail');
-    batta_type: function (frm) {
         set_batta_based_on_options(frm);
         handle_designation_based_on_batta_type(frm);
     },
@@ -93,7 +92,7 @@ function calculate_hours_and_totals(frm, cdt, cdn) {
 
         if (diff >= 0) {
             frappe.db.get_single_value('Beams Accounts Settings', 'default_working_hours')
-                .then(default_working_hours => {
+              .then(default_working_hours => {
                     row.total_hours = diff;
                     row.ot_hours = diff > default_working_hours ? diff - default_working_hours : 0;
 
