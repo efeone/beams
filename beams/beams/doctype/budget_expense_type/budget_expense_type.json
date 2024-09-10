@@ -37,9 +37,8 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2024-08-21 10:13:22.241024",
+ "modified": "2024-09-10 14:54:55.322266",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Expense Type",
@@ -56,7 +55,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],

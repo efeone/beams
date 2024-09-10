@@ -14,6 +14,7 @@
   "employee_name",
   "supplier",
   "designation",
+  "purpose",
   "column_break_lgjy",
   "bureau",
   "company",
@@ -196,12 +197,17 @@
    "fieldtype": "Link",
    "label": "Batta Claim Type",
    "options": "Batta Claim Type"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 11:47:56.950837",
+ "modified": "2024-09-10 14:56:56.241561",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

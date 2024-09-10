@@ -8,8 +8,7 @@
  "field_order": [
   "section_break_hilt",
   "batta_claim_type",
-  "accounts",
-  "amended_from"
+  "accounts"
  ],
  "fields": [
   {
@@ -29,22 +28,11 @@
    "fieldtype": "Table",
    "label": "Accounts",
    "options": "Accounts"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Batta Claim Type",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 11:48:47.491015",
+ "modified": "2024-09-10 15:08:57.844471",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim Type",
@@ -61,7 +49,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
