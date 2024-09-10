@@ -269,6 +269,22 @@ def get_purchase_invoice_custom_fields():
                 "depends_on": "eval:doc.invoice_type == 'Stringer Bill' ",
                 "read_only": 1,
                 "insert_after": "purchase_order_id"
+            },
+            {
+                "fieldname": "bureau",
+                "fieldtype": "Link",
+                "label": "Bureau",
+                "read_only": 1,
+                "options": "Bureau",
+                "insert_after": "supplier"
+            },
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "label": "Cost Center",
+                "read_only": 1,
+                "options": "Cost Center",
+                "insert_after": "bureau"
             }
         ]
     }

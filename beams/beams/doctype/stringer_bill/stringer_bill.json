@@ -13,6 +13,7 @@
   "company",
   "column_break_byey",
   "bureau",
+  "cost_center",
   "daily_wage",
   "section_break_zcc8",
   "date",
@@ -106,6 +107,13 @@
    "fieldtype": "Link",
    "label": "Stringer Type",
    "options": "Stringer Type"
+  },
+  {
+   "fetch_from": "bureau.cost_center",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
