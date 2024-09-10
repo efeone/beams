@@ -13,6 +13,7 @@
   "company",
   "column_break_byey",
   "bureau",
+  "cost_center",
   "daily_wage",
   "section_break_zcc8",
   "date",
@@ -105,12 +106,19 @@
    "fieldtype": "Link",
    "label": "Stringer Type",
    "options": "Stringer Type"
+  },
+  {
+   "fetch_from": "bureau.cost_center",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-02 14:30:00.607845",
+ "modified": "2024-09-10 13:20:39.224545",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
