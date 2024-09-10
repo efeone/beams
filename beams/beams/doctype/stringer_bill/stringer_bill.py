@@ -27,12 +27,20 @@ class StringerBill(Document):
             frappe.throw(f"No item found for Stringer Type: {self.stringer_type}")
             return
 
+
+
         # Create a new Purchase Invoice
         purchase_invoice = frappe.new_doc('Purchase Invoice')
         purchase_invoice.stringer_bill_reference = self.name
         purchase_invoice.supplier = self.supplier
         purchase_invoice.invoice_type = 'Stringer Bill'  # Set invoice type to "Stringer Bill"
         purchase_invoice.posting_date = frappe.utils.nowdate()
+
+        purchase_invoice.bureau = self.bureau  # Assuming bureau is a field in the Stringer Bill
+        if self.bureau:
+            bureau_doc = frappe.get_doc('Bureau', self.bureau)
+            purchase_invoice.cost_center = bureau_doc.cost_center
+
 
         # Populate Child Table
         purchase_invoice.append('items', {
