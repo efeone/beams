@@ -15,6 +15,7 @@
   "supplier",
   "designation",
   "company",
+  "purpose",
   "column_break_lgjy",
   "bureau",
   "cost_centre",
@@ -204,12 +205,17 @@
    "fieldtype": "Link",
    "label": "Cost Centre",
    "options": "Cost Center"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 14:39:48.355394",
+ "modified": "2024-09-11 10:00:05.144516",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
