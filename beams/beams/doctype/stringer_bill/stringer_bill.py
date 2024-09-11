@@ -84,8 +84,6 @@ class StringerBill(Document):
 
         if len(dates) != len(set(dates)):
             frappe.throw(_('Each Date should be unique.'))
-        else:
-            print("All dates are unique.")
 
         self.update_no_of_days()
 
