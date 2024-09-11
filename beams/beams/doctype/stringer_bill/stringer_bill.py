@@ -14,6 +14,9 @@ class StringerBill(Document):
 
         if old_doc and old_doc.workflow_state != self.workflow_state and self.workflow_state == "Pending Approval":
             self.check_employee_leave()
+    def validate(self):
+        self.validate_unique_dates()
+        self.update_total_wage()
 
 
     def create_purchase_invoice_from_stringer_bill(self):
@@ -71,3 +74,32 @@ class StringerBill(Document):
                 if not leave_exists:
                     formatted_date = date_entry.date.strftime("%d/%m/%Y")
                     frappe.throw(f"Employee {employee} is not on leave on {formatted_date}.")
+
+
+    def validate_unique_dates(self):
+        '''
+            Validate that each date in the Stringer Bill Date table is unique.
+        '''
+        dates = [row.date for row in self.date]
+
+        if len(dates) != len(set(dates)):
+            frappe.throw(_('Each Date should be unique.'))
+
+        self.update_no_of_days()
+
+    def update_no_of_days(self):
+        '''
+            Update the number of unique days based on the dates in the Stringer Bill Date table.
+        '''
+        unique_dates = set([row.date for row in self.date])
+
+        self.no_of_days = len(unique_dates)
+
+    def update_total_wage(self):
+        '''
+            Calculate and update the total wage based on daily wage and the number of days.
+        '''
+        if self.daily_wage and self.no_of_days:
+            self.total_wage = self.daily_wage * self.no_of_days
+        else:
+            self.total_wage = 0
