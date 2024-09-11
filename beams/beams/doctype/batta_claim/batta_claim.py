@@ -68,3 +68,24 @@ class BattaClaim(Document):
         })
         journal_entry.insert()
         journal_entry.submit()
+
+
+'''Function to calculate the Total Daily Batta based on data in work detail child table
+   and batta'''
+    @frappe.whitelist()
+    def calculate_total_batta(doc):
+        total_daily_batta = 0
+        total_ot_batta = 0
+
+        # Loop through the work_detail child table
+        for row in doc.get('work_detail', []):
+            total_daily_batta += row.get('daily_batta', 0)
+            total_ot_batta += row.get('ot_batta', 0)
+
+        # Total batta is the sum of total_daily_batta and total_ot_batta
+        total_driver_batta = total_daily_batta + total_ot_batta
+        return {
+            'total_daily_batta': total_daily_batta,
+            'total_ot_batta': total_ot_batta,
+            'total_driver_batta': total_driver_batta
+        }
