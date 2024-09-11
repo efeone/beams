@@ -36,11 +36,8 @@ class StringerBill(Document):
         purchase_invoice.invoice_type = 'Stringer Bill'  # Set invoice type to "Stringer Bill"
         purchase_invoice.posting_date = frappe.utils.nowdate()
 
-        purchase_invoice.bureau = self.bureau  # Assuming bureau is a field in the Stringer Bill
-        if self.bureau:
-            bureau_doc = frappe.get_doc('Bureau', self.bureau)
-            purchase_invoice.cost_center = bureau_doc.cost_center
-
+        purchase_invoice.bureau = self.bureau
+        purchase_invoice.cost_center = self.cost_center
 
         # Populate Child Table
         purchase_invoice.append('items', {
