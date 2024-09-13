@@ -12,8 +12,12 @@
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
+  "batta_expense_account",
   "naming_rule_tab",
-  "beams_naming_rule"
+  "beams_naming_rule",
+  "substitute_booking_tab",
+  "default_credit_account",
+  "default_debit_account"
  ],
  "fields": [
   {
@@ -66,12 +70,35 @@
    "fieldname": "single_sales_invoice",
    "fieldtype": "Check",
    "label": "Single Sales Invoice"
+  },
+  {
+   "fieldname": "substitute_booking_tab",
+   "fieldtype": "Tab Break",
+   "label": "Substitute Booking"
+  },
+  {
+   "fieldname": "default_credit_account",
+   "fieldtype": "Link",
+   "label": " Default Credit Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "default_debit_account",
+   "fieldtype": "Link",
+   "label": "Default Debit Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "batta_expense_account",
+   "fieldtype": "Link",
+   "label": "Batta Expense Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-10 11:51:50.626726",
+ "modified": "2024-09-12 15:41:21.018466",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
