@@ -14,6 +14,7 @@
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
+  "stringer_service_item",
   "naming_rule_tab",
   "beams_naming_rule",
   "substitute_booking_tab",
@@ -94,18 +95,24 @@
    "fieldtype": "Link",
    "label": "Batta Expense Account",
    "options": "Account"
- },
- {
+  },
+  {
    "fieldname": "default_sales_invoice_print_format",
    "fieldtype": "Link",
    "label": "Default Sales Invoice Print Format",
    "options": "Print Format"
- }
+  },
+  {
+   "fieldname": "stringer_service_item",
+   "fieldtype": "Link",
+   "label": "Stringer Service Item",
+   "options": "Item"
+  }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-12 15:41:21.018466",
+ "modified": "2024-09-17 10:09:31.090372",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
