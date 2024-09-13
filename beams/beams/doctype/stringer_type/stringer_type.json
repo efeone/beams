@@ -8,7 +8,6 @@
  "field_order": [
   "section_break_bdam",
   "stringer_type",
-  "item",
   "amended_from"
  ],
  "fields": [
@@ -23,12 +22,6 @@
    "unique": 1
   },
   {
-   "fieldname": "item",
-   "fieldtype": "Link",
-   "label": "Item",
-   "options": "Item"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -41,7 +34,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-05 10:15:15.842517",
+ "modified": "2024-09-12 14:28:56.010143",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Type",

@@ -348,10 +348,16 @@ def get_employee_custom_fields():
                 "options": "Bureau",
                 "label": "Bureau",
                 "insert_after": "last_name"
+            },
+            {
+                "fieldname": "stringer_type",
+                "fieldtype": "Link",
+                "options": "Stringer Type",
+                "label": "Stringer Type",
+                "insert_after": "salutation"
             }
         ]
     }
-
 
 def create_property_setters(property_setter_datas):
     '''
