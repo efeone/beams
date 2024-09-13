@@ -1,43 +1,27 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:stringer_type",
- "creation": "2024-09-02 12:24:41.742874",
+ "autoname": "field:room_criteria",
+ "creation": "2024-09-13 09:25:43.150535",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_bdam",
-  "stringer_type",
-  "amended_from"
+  "room_criteria"
  ],
  "fields": [
   {
-   "fieldname": "section_break_bdam",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "stringer_type",
+   "fieldname": "room_criteria",
    "fieldtype": "Data",
-   "label": "Stringer Type",
+   "label": "Room Criteria",
    "unique": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Stringer Type",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 14:28:56.010143",
+ "modified": "2024-09-13 09:27:13.549190",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Stringer Type",
+ "name": "Room Criteria",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [

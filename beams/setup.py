@@ -252,7 +252,8 @@ def get_purchase_invoice_custom_fields():
                 "options": "Normal\nStringer Bill",
                 "default": "Normal",
                 "label": "Invoice Type",
-                "insert_after": "naming_series"
+                "insert_after": "naming_series",
+                "read_only": 1
             },
             {
                 "fieldname": "purchase_order_id",
@@ -348,10 +349,16 @@ def get_employee_custom_fields():
                 "options": "Bureau",
                 "label": "Bureau",
                 "insert_after": "last_name"
+            },
+            {
+                "fieldname": "stringer_type",
+                "fieldtype": "Link",
+                "options": "Stringer Type",
+                "label": "Stringer Type",
+                "insert_after": "salutation"
             }
         ]
     }
-
 
 def create_property_setters(property_setter_datas):
     '''

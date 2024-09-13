@@ -1,0 +1,147 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:SUB-{YY}-{####}",
+ "creation": "2024-09-12 16:11:41.683569",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "stringer_type",
+  "substituting_for",
+  "substituted_by",
+  "bureau",
+  "cost_center",
+  "column_break_rbcg",
+  "phone_number",
+  "email_id",
+  "column_break_jbgj",
+  "posting_date",
+  "section_break_igie",
+  "substitution_bill_date",
+  "section_break_apfh",
+  "daily_wage",
+  "column_break_fdcd",
+  "no_of_days",
+  "column_break_ymbh",
+  "total_wage"
+ ],
+ "fields": [
+  {
+   "fieldname": "substituting_for",
+   "fieldtype": "Link",
+   "label": "Substituting For",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "stringer_type",
+   "fieldtype": "Link",
+   "label": "Stringer Type",
+   "options": "Stringer Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "substituted_by",
+   "fieldtype": "Data",
+   "label": "Substituted By"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Data",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email Id"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "daily_wage",
+   "fieldtype": "Currency",
+   "label": "Daily Wage"
+  },
+  {
+   "fieldname": "no_of_days",
+   "fieldtype": "Int",
+   "label": "No of Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_wage",
+   "fieldtype": "Currency",
+   "label": "Total Wage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "column_break_rbcg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jbgj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_apfh",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fdcd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ymbh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_igie",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "substitution_bill_date",
+   "fieldtype": "Table",
+   "label": "Substitution Bill Date",
+   "options": "Substitution Bill Date"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-09-13 09:06:18.023171",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Substitute Booking",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
