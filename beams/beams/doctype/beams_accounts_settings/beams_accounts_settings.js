@@ -20,5 +20,13 @@ frappe.ui.form.on('Beams Accounts Settings', {
                 }
             };
         });
+
+        frm.set_query('stringer_service_item', function() {
+          return {
+                filters: {
+                    'is_stock_item' : 0
+                  }
+                };
+              });
     },
 });

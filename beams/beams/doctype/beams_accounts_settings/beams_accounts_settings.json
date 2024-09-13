@@ -12,6 +12,7 @@
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
+  "stringer_service_item",
   "naming_rule_tab",
   "beams_naming_rule"
  ],
@@ -66,12 +67,18 @@
    "fieldname": "single_sales_invoice",
    "fieldtype": "Check",
    "label": "Single Sales Invoice"
+  },
+  {
+   "fieldname": "stringer_service_item",
+   "fieldtype": "Link",
+   "label": "Stringer Service Item",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-10 11:51:50.626726",
+ "modified": "2024-09-12 16:02:32.392538",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

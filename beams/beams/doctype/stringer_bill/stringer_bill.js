@@ -10,38 +10,7 @@ frappe.ui.form.on('Stringer Bill', {
                 }
             };
         });
-        /*
-        *  Set a query filter for the 'substituting_for' field to only show records where 'bureau' is not empty
-        */
-        frm.set_query('substituting_for', function() {
-            return {
-                filters: {
-                    'bureau': ['!=', '']
-                }
-            };
-        });
     },
-    daily_wage: function(frm) {
-       update_total_wage(frm);
-   },
-   no_of_days: function(frm) {
-       update_total_wage(frm);
-   },
-   bureau: function(frm) {
-        if (frm.doc.bureau) {
-            frm.set_query('substituting_for', function() {
-                return {
-                    filters: {
-                        'bureau': frm.doc.bureau
-                    }
-                };
-            });
-        } else {
-            frm.set_query('substituting_for', function() {
-                return {};
-            });
-        }
-   }
 });
 frappe.ui.form.on('Stringer Bill Date', {
     date: function(frm, cdt, cdn) {
@@ -74,14 +43,4 @@ function update_no_of_days(frm) {
     let dates = frm.doc.date.map(row => row.date);
     let unique_dates = [...new Set(dates)];
     frm.set_value('no_of_days', unique_dates.length);
-}
-/*
-*  Function to check when daily_wage or no_of_days fields are updated to ensure total_wage is always current.
-*/
-function update_total_wage(frm) {
-    if (frm.doc.daily_wage && frm.doc.no_of_days) {
-        frm.set_value('total_wage', frm.doc.daily_wage * frm.doc.no_of_days);
-    } else {
-        frm.set_value('total_wage', 0); // Set to 0 if either field is missing
-    }
 }
