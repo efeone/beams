@@ -122,12 +122,12 @@ def send_email_to_party(doc):
     }, "parent")
 
     if not contact_name:
-        frappe.msgprint(f"please Configure contact for Customer")
+        frappe.msgprint(f"please configure contact for customer")
 
     contact = frappe.get_doc("Contact", contact_name)
 
     if not contact.email_id:
-        frappe.msgprint("Please configure an email address for the contact.")
+        frappe.msgprint("please configure an email address for the contact.")
         return
 
     email_id = contact.email_id
@@ -138,7 +138,7 @@ def send_email_to_party(doc):
     print_format = frappe.db.get_single_value("Beams Accounts Settings", "default_sales_invoice_print_format")
 
     if not print_format:
-        frappe.msgprint("Please configure a default print format for Sales Invoice in Beam Account Settings.")
+        frappe.msgprint("please configure a default print format for Sales Invoice in Beam Account Settings.")
         return
 
     try:
