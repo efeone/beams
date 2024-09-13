@@ -252,7 +252,8 @@ def get_purchase_invoice_custom_fields():
                 "options": "Normal\nStringer Bill",
                 "default": "Normal",
                 "label": "Invoice Type",
-                "insert_after": "naming_series"
+                "insert_after": "naming_series",
+                "read_only": 1
             },
             {
                 "fieldname": "purchase_order_id",
