@@ -109,8 +109,9 @@ def on_update_after_submit(doc, method=None):
 @frappe.whitelist()
 def send_email_to_party(doc):
     """
-    Method to send an email with a PDF attachment of the given document (Sales Invoice) to the contact associated with the customer.
-    Also validate the existence of the contact for the customer and its Email ID.
+    Method to send an email with a PDF attachment of the given document (Sales Invoice)
+    to the contact associated with the customer. Also validates the existence of the
+    contact for the customer and its email ID.
     """
     customer_name = doc.customer
 
@@ -122,12 +123,13 @@ def send_email_to_party(doc):
     }, "parent")
 
     if not contact_name:
-        frappe.msgprint(f"Please Configure Contact for {customer_name}")
+        frappe.msgprint(f"Please Configure a Contact for Customer {customer_name}")
+        return
 
     contact = frappe.get_doc("Contact", contact_name)
 
     if not contact.email_id:
-        frappe.msgprint("Please Configure an Email Id  for the {contact_name}.")
+        frappe.msgprint(f"Please Configure an Email Id  {contact.first_name or contact_name}.")
         return
 
     email_id = contact.email_id
@@ -138,7 +140,7 @@ def send_email_to_party(doc):
     print_format = frappe.db.get_single_value("Beams Accounts Settings", "default_sales_invoice_print_format")
 
     if not print_format:
-        frappe.msgprint("Please Configure a default print format for Sales Invoice in Beam Account Settings.")
+        frappe.msgprint("Please configure a default print format for Sales Invoice in Beam Account Settings.")
         return
 
     try:
@@ -162,4 +164,4 @@ def send_email_to_party(doc):
     except Exception as e:
         # Log the error and notify the user
         frappe.log_error(f"Failed to generate PDF or send email for {doc.doctype} {doc.name}: {str(e)}", "PDF/Email Failure")
-        frappe.msgprint("Failed to generate PDF or send email. Please check the system logs for more details.")
+        frappe.msgprint(f"Failed to generate PDF or send email to {contact.first_name or 'Customer'} ({email_id}). Please check the system logs for more details.")
