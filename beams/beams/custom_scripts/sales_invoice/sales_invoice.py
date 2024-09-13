@@ -95,40 +95,71 @@ def validate_sales_invoice_amount_with_quotation(doc, method):
                 ))
 
 
+
 @frappe.whitelist()
-def send_email_to_party(doc, method=None):
+def on_update_after_submit(doc, method=None):
     """
-    Method to Send an Email with a PDF attachment of the given document (Sales Invoice) to the contact associated with the customer.
-    Also validate the existence of the contact for customer and its Email ID.
+    Method triggered after the document is updated and submitted.
+    It checks if the workflow state has changed to "Completed".
+    """
+    if doc.workflow_state == "Completed":
+        send_email_to_party(doc)
+
+
+@frappe.whitelist()
+def send_email_to_party(doc):
+    """
+    Method to send an email with a PDF attachment of the given document (Sales Invoice) to the contact associated with the customer.
+    Also validate the existence of the contact for the customer and its Email ID.
     """
     customer_name = doc.customer
+
+    # Fetch contact linked to the customer
     contact_name = frappe.db.get_value("Dynamic Link", {
         "link_doctype": "Customer",
         "link_name": customer_name,
         "parenttype": "Contact"
     }, "parent")
+
     if not contact_name:
-        frappe.throw(f"Email id is not found for the {customer_name}")
+        frappe.msgprint(f"please configure contact for customer")
+
     contact = frappe.get_doc("Contact", contact_name)
+
     if not contact.email_id:
-        frappe.throw(f"Email id is not found {contact_name} linked to {customer_name}")
+        frappe.msgprint("please configure an email address for the contact.")
+        return
+
     email_id = contact.email_id
     subject = f"{doc.doctype} {doc.name}"
     message = f"Dear {contact.first_name or 'Customer'},<br><br>Please find the attached {doc.doctype} {doc.name}.<br><br>Thank you."
 
-    # Generate PDF for the Sales Invoice
-    pdf_data = frappe.attach_print('Sales Invoice', doc.name)
+    # Fetch the print format from Beam Account Settings
+    print_format = frappe.db.get_single_value("Beams Accounts Settings", "default_sales_invoice_print_format")
 
-    # Attach the PDF and send the email
-    frappe.sendmail(
-        recipients=[email_id],
-        subject=subject,
-        message=message,
-        reference_doctype=doc.doctype,
-        reference_name=doc.name,
-        attachments=[{
-            'fname': pdf_data['fname'],
-            'fcontent': pdf_data['fcontent'],
-        }]
-    )
-    frappe.msgprint(f"Email sent to {email_id} successfully.")
+    if not print_format:
+        frappe.msgprint("please configure a default print format for Sales Invoice in Beam Account Settings.")
+        return
+
+    try:
+        # Try to generate PDF using the selected print format
+        pdf_data = frappe.attach_print('Sales Invoice', doc.name, print_format=print_format)
+
+        # Send the email with the PDF attachment
+        frappe.sendmail(
+            recipients=[email_id],
+            subject=subject,
+            message=message,
+            reference_doctype=doc.doctype,
+            reference_name=doc.name,
+            attachments=[{
+                'fname': pdf_data['fname'],
+                'fcontent': pdf_data['fcontent'],
+            }]
+        )
+        frappe.msgprint(f"Email sent to {email_id} successfully.")
+
+    except Exception as e:
+        # Log the error and notify the user
+        frappe.log_error(f"Failed to generate PDF or send email for {doc.doctype} {doc.name}: {str(e)}", "PDF/Email Failure")
+        frappe.msgprint("Failed to generate PDF or send email. Please check the system logs for more details.")

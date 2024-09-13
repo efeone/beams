@@ -21,4 +21,17 @@ frappe.ui.form.on('Beams Accounts Settings', {
             };
         });
     },
+    onload: function(frm) {
+      /*
+      * Set a query filter for the 'default_sales_invoice_print_format' field only the enabled print formats for Sales Invoice is show
+      */
+        frm.set_query('default_sales_invoice_print_format', function() {
+            return {
+                filters: {
+                    'doc_type': 'Sales Invoice',
+                    'disabled': 0
+                }
+            };
+        });
+    }
 });
