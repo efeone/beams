@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:voucher_entry_type",
  "creation": "2024-09-17 13:26:13.618444",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -14,7 +15,8 @@
   {
    "fieldname": "voucher_entry_type",
    "fieldtype": "Data",
-   "label": "Voucher Entry Type"
+   "label": "Voucher Entry Type",
+   "unique": 1
   },
   {
    "fieldname": "accounts",
@@ -35,10 +37,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-17 13:42:46.538035",
+ "modified": "2024-09-17 15:23:34.049378",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Voucher Entry Type",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

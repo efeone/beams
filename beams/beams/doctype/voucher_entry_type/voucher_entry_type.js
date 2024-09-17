@@ -9,6 +9,9 @@ frappe.ui.form.on("Voucher Entry Type", {
 frappe.ui.form.on('Accounts', {
     company: function(frm, cdt, cdn) {
         set_account_query(frm);
+    },
+    accounts_add: function(frm, cdt, cdn) {
+        set_account_query(frm);
     }
 });
 
