@@ -1,0 +1,181 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:BP-{YY}-{####}",
+ "creation": "2024-09-17 12:45:50.596082",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fmn1",
+  "designation",
+  "mode_of_travel",
+  "room_rent_overnightbills_section",
+  "outside_kerala_",
+  "room_criteria",
+  "column_break_rvoh",
+  "inside_kerala_",
+  "daily_batta_with_overnight_stay_section",
+  "outside_kerala__",
+  "column_break_xaxj",
+  "inside_kerala__",
+  "daily_batta_without_over_night_stay_section",
+  "outside_kerala",
+  "column_break_ixxb",
+  "inside_kerala",
+  "food_allowance_section",
+  "break_fast",
+  "column_break_yfuo",
+  "lunch",
+  "column_break_ieaw",
+  "dinner",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fmn1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "mode_of_travel",
+   "fieldtype": "Link",
+   "label": "Mode of Travel",
+   "options": "Mode of Travel"
+  },
+  {
+   "fieldname": "room_rent_overnightbills_section",
+   "fieldtype": "Section Break",
+   "label": "Room Rent for OverNight Stay"
+  },
+  {
+   "fieldname": "outside_kerala",
+   "fieldtype": "Currency",
+   "label": "Outside Kerala"
+  },
+  {
+   "fieldname": "column_break_rvoh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "room_criteria",
+   "fieldtype": "Link",
+   "label": "Room Criteria",
+   "options": "Room Criteria"
+  },
+  {
+   "fieldname": "outside_kerala_",
+   "fieldtype": "Currency",
+   "label": "Outside Kerala"
+  },
+  {
+   "fieldname": "inside_kerala_",
+   "fieldtype": "Currency",
+   "label": "Inside Kerala"
+  },
+  {
+   "fieldname": "daily_batta_with_overnight_stay_section",
+   "fieldtype": "Section Break",
+   "label": " Daily Batta With OverNight Stay"
+  },
+  {
+   "fieldname": "column_break_xaxj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "outside_kerala__",
+   "fieldtype": "Currency",
+   "label": "Outside Kerala"
+  },
+  {
+   "fieldname": "inside_kerala__",
+   "fieldtype": "Currency",
+   "label": "Inside Kerala"
+  },
+  {
+   "description": "Travel 50 kms with minimum 8 hours.\n",
+   "fieldname": "daily_batta_without_over_night_stay_section",
+   "fieldtype": "Section Break",
+   "label": "Daily Batta Without OverNight Stay"
+  },
+  {
+   "fieldname": "column_break_ixxb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "inside_kerala",
+   "fieldtype": "Currency",
+   "label": "Inside Kerala"
+  },
+  {
+   "description": "Travel 25 kms with minimum 6 hours ",
+   "fieldname": "food_allowance_section",
+   "fieldtype": "Section Break",
+   "label": "Food Allowance "
+  },
+  {
+   "fieldname": "break_fast",
+   "fieldtype": "Currency",
+   "label": "BreakFast"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch"
+  },
+  {
+   "fieldname": "column_break_yfuo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ieaw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Batta Policy",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-09-17 15:04:19.210223",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Batta Policy",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
