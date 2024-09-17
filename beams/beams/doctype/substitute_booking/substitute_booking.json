@@ -33,6 +33,7 @@
    "options": "Employee"
   },
   {
+   "fetch_from": "substituting_for.stringer_type",
    "fieldname": "stringer_type",
    "fieldtype": "Link",
    "label": "Stringer Type",
@@ -61,6 +62,7 @@
    "options": "Bureau"
   },
   {
+   "fetch_from": "bureau.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -121,7 +123,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-13 09:06:18.023171",
+ "modified": "2024-09-13 11:32:42.355552",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
