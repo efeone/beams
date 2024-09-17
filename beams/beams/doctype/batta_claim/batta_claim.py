@@ -69,10 +69,11 @@ class BattaClaim(Document):
         journal_entry.insert()
         journal_entry.submit()
 
-    '''Function to calculate the Total Daily Batta based on data in work detail child table
-        and batta'''
     @frappe.whitelist()
     def calculate_total_batta(doc):
+        '''Function to calculate the Total Daily Batta based on data in work detail child table
+            and batta
+        '''
         total_daily_batta = 0
         total_ot_batta = 0
 

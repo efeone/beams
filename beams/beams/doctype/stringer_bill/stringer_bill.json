@@ -7,17 +7,17 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_vh0v",
-  "stringer_type",
   "supplier",
-  "substituting_for",
   "company",
   "column_break_byey",
+  "date",
   "bureau",
   "cost_center",
-  "daily_wage",
   "section_break_zcc8",
-  "date",
+  "on_air_date_and_time",
+  "news_remarks",
   "column_break_cgfc",
+  "daily_wage",
   "no_of_days",
   "total_wage",
   "amended_from"
@@ -33,14 +33,6 @@
    "in_list_view": 1,
    "label": "Supplier",
    "options": "Supplier",
-   "reqd": 1
-  },
-  {
-   "fieldname": "substituting_for",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Substituting For",
-   "options": "Employee",
    "reqd": 1
   },
   {
@@ -60,7 +52,7 @@
   {
    "fieldname": "daily_wage",
    "fieldtype": "Currency",
-   "label": "Daily Wage"
+   "label": "Stringer Amount"
   },
   {
    "fieldname": "no_of_days",
@@ -83,10 +75,10 @@
    "fieldtype": "Column Break"
   },
   {
+   "default": "Today",
    "fieldname": "date",
-   "fieldtype": "Table",
-   "label": "Stringer Bill Date",
-   "options": "Stringer Bill Date"
+   "fieldtype": "Date",
+   "label": "Date"
   },
   {
    "fieldname": "column_break_cgfc",
@@ -103,23 +95,27 @@
    "search_index": 1
   },
   {
-   "fieldname": "stringer_type",
-   "fieldtype": "Link",
-   "label": "Stringer Type",
-   "options": "Stringer Type"
-  },
-  {
    "fetch_from": "bureau.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
    "options": "Cost Center"
+  },
+  {
+   "fieldname": "news_remarks",
+   "fieldtype": "Small Text",
+   "label": "News Remarks"
+  },
+  {
+   "fieldname": "on_air_date_and_time",
+   "fieldtype": "Datetime",
+   "label": "On Air Date and Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-09-10 14:53:10.745984",
+ "modified": "2024-09-12 16:39:04.551473",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
