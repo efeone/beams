@@ -38,6 +38,15 @@ class BattaClaim(Document):
         journal_entry = frappe.new_doc('Journal Entry')
         journal_entry.posting_date = frappe.utils.nowdate()
         batta_payable_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_payable_account')
+        batta_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
+        # Validate that both accounts are set
+        if not batta_payable_account and not batta_expense_account:
+            frappe.throw("Please configure both the Batta Payable Account and the Batta Expense Account in the Beams Accounts Settings.")
+        # Validate that both accounts are set
+        if not batta_payable_account:
+            frappe.throw("Please configure the Batta Payable Account in the Beams Accounts Settings.")
+        if not batta_expense_account:
+            frappe.throw("Please configure the Batta Expense  Account in the Beams Accounts Settings..")
 
         journal_entry.append('accounts', {
             'account': batta_payable_account,
@@ -46,19 +55,6 @@ class BattaClaim(Document):
             'debit_in_account_currency': 0,
             'credit_in_account_currency': self.total_driver_batta,
         })
-
-        batta_claim_type = frappe.get_doc('Batta Claim Type', self.batta_claim_type)
-
-        batta_expense_account = None
-
-        for row in batta_claim_type.accounts:
-            if row.company == self.company:
-                batta_expense_account = row.default_account
-                break
-
-        if not batta_expense_account:
-            frappe.throw(_("Batta expense account not found for the company {0}").format(self.company))
-
         journal_entry.append('accounts', {
             'account': batta_expense_account,
             'party_type': 'Employee',
@@ -68,6 +64,7 @@ class BattaClaim(Document):
         })
         journal_entry.insert()
         journal_entry.submit()
+        frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True,indicator="green")
 
     @frappe.whitelist()
     def calculate_total_batta(doc):
