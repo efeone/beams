@@ -11,17 +11,15 @@ frappe.ui.form.on('Batta Claim', {
     },
     destination: function(frm) {
         update_work_detail(frm);
-  //   },
-  //   work_detail_add: function(frm, cdt, cdn) {
-  //      calculate_total_distance_travelled(frm);
-  //  },
-   //
-  //  work_detail_onform_render: function(frm, cdt, cdn) {
-  //      calculate_total_distance_travelled(frm);
-  //  },
-   //
-  //  work_detail_remove: function(frm, cdt, cdn) {
-  //      calculate_total_distance_travelled(frm);
+    },
+    work_detail_add: function(frm, cdt, cdn) {
+       calculate_total_distance_travelled(frm);
+   },
+    work_detail_onform_render: function(frm, cdt, cdn) {
+      calculate_total_distance_travelled(frm);
+   },
+    work_detail_remove: function(frm, cdt, cdn) {
+       calculate_total_distance_travelled(frm);
    },
     refresh: function (frm) {
         set_batta_based_on_options(frm);
@@ -191,7 +189,6 @@ frappe.ui.form.on('Work Detail', {
         calculate_total_distance_travelled(frm);
     }
 });
-
 
 function calculate_total_distance_travelled(frm) {
     let totalDistance = 0;
