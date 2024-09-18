@@ -39,6 +39,15 @@ class BattaClaim(Document):
         journal_entry.posting_date = frappe.utils.nowdate()
         batta_payable_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_payable_account')
         batta_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
+        # Validate that both accounts are set
+        if not batta_payable_account and not batta_expense_account:
+            frappe.throw("Please configure both the Batta Payable Account and the Batta Expense Account in the Beams Accounts Settings.")
+        # Validate that both accounts are set
+        if not batta_payable_account:
+            frappe.throw("Please configure the Batta Payable Account in the Beams Accounts Settings.")
+        if not batta_expense_account:
+            frappe.throw("Please configure the Batta Expense  Account in the Beams Accounts Settings..")
+
         journal_entry.append('accounts', {
             'account': batta_payable_account,
             'party_type': 'Employee',
@@ -55,8 +64,8 @@ class BattaClaim(Document):
         })
         journal_entry.insert()
         journal_entry.submit()
-        frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True)
-        
+        frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True,indicator="green")
+
     @frappe.whitelist()
     def calculate_total_batta(doc):
         '''Function to calculate the Total Daily Batta based on data in work detail child table
