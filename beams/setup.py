@@ -19,6 +19,8 @@ def after_install():
     create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
     create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
     create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
+
 
 def after_migrate():
     after_install()
@@ -37,6 +39,7 @@ def before_uninstall():
     delete_custom_fields(get_employee_advance_custom_fields())
     delete_custom_fields(get_employee_custom_fields())
     delete_custom_fields(get_journal_entry_custom_fields())
+    delete_custom_fields(get_voucher_entry_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -361,6 +364,22 @@ def get_employee_custom_fields():
         ]
     }
 
+def get_voucher_entry_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Doctype
+    '''
+    return {
+        "Voucher Entry": [
+            {
+                "fieldname": "bureau",
+                "fieldtype": "Link",
+                "options": "Bureau",
+                "label": "Bureau",
+                "insert_after": "balance"
+            }
+        ]
+    }
+
 def create_property_setters(property_setter_datas):
     '''
     Method to create custom property setters
@@ -503,6 +522,8 @@ def get_sales_order_custom_fields():
             }
         ]
     }
+
+
 
 def get_employee_advance_custom_fields():
     '''
