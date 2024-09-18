@@ -6,9 +6,25 @@ frappe.ui.form.on('Batta Claim', {
         set_batta_based_on_options(frm);
         calculate_totals(frm);
     },
+    origin: function(frm) {
+        update_work_detail(frm);
+    },
+    destination: function(frm) {
+        update_work_detail(frm);
+    },
+    work_detail_add: function(frm, cdt, cdn) {
+       calculate_total_distance_travelled(frm);
+   },
+    work_detail_onform_render: function(frm, cdt, cdn) {
+      calculate_total_distance_travelled(frm);
+   },
+    work_detail_remove: function(frm, cdt, cdn) {
+       calculate_total_distance_travelled(frm);
+   },
     refresh: function (frm) {
         set_batta_based_on_options(frm);
         calculate_totals(frm);
+        calculate_total_distance_travelled(frm);
     },
     batta_type: function(frm) {
         set_batta_based_on_options(frm);
@@ -39,7 +55,7 @@ frappe.ui.form.on('Batta Claim', {
         });
         // After updating all the rows, recalculate the total values
         calculate_totals(frm);
-    }
+    },
 });
 
 frappe.ui.form.on('Work Detail', {
@@ -48,6 +64,12 @@ frappe.ui.form.on('Work Detail', {
     },
     to_date_and_time: function (frm, cdt, cdn) {
         validate_dates_and_calculate(frm, cdt, cdn);
+    },
+    origin: function(frm) {
+        update_work_detail(frm);
+    },
+    destination: function(frm) {
+        update_work_detail(frm);
     }
 });
 
@@ -147,4 +169,35 @@ function calculate_totals(frm) {
             frm.refresh_field(['total_daily_batta', 'total_ot_batta', 'total_driver_batta']);
         }
     });
+}
+
+function update_work_detail(frm) {
+const { origin, destination, work_detail } = frm.doc;
+
+    // Update child table rows
+work_detail.forEach(row => {
+    frappe.model.set_value(row.doctype, row.name, 'origin', origin);
+    frappe.model.set_value(row.doctype, row.name, 'destination', destination);
+});
+
+frm.refresh_field('work_detail');
+    // Refresh child table to reflect changes
+}
+
+frappe.ui.form.on('Work Detail', {
+    distance_travelled_km: function(frm, cdt, cdn) {
+        calculate_total_distance_travelled(frm);
+    }
+});
+
+function calculate_total_distance_travelled(frm) {
+    let totalDistance = 0;
+       // Sum all distance_travelled_km from the Work Detail child table
+    frm.doc.work_detail.forEach(function(row) {
+        if (row.distance_travelled_km) {
+            totalDistance += row.distance_travelled_km;
+        }
+    });
+       // Set the total_distance_travelled_km field with the calculated sum
+    frm.set_value('total_distance_travelled_km', totalDistance);
 }
