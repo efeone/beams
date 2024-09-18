@@ -9,20 +9,17 @@
   "stringer_type",
   "substituting_for",
   "substituted_by",
-  "bureau",
-  "cost_center",
-  "column_break_rbcg",
   "phone_number",
   "email_id",
-  "column_break_jbgj",
+  "column_break_rbcg",
   "posting_date",
+  "bureau",
+  "cost_center",
+  "daily_wage",
   "section_break_igie",
   "substitution_bill_date",
-  "section_break_apfh",
-  "daily_wage",
-  "column_break_fdcd",
+  "column_break_bclp",
   "no_of_days",
-  "column_break_ymbh",
   "total_wage"
  ],
  "fields": [
@@ -33,6 +30,7 @@
    "options": "Employee"
   },
   {
+   "fetch_from": "substituting_for.stringer_type",
    "fieldname": "stringer_type",
    "fieldtype": "Link",
    "label": "Stringer Type",
@@ -61,6 +59,7 @@
    "options": "Bureau"
   },
   {
+   "fetch_from": "bureau.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
@@ -84,28 +83,13 @@
    "read_only": 1
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
   },
   {
    "fieldname": "column_break_rbcg",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_jbgj",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_apfh",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_fdcd",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_ymbh",
    "fieldtype": "Column Break"
   },
   {
@@ -117,11 +101,15 @@
    "fieldtype": "Table",
    "label": "Substitution Bill Date",
    "options": "Substitution Bill Date"
+  },
+  {
+   "fieldname": "column_break_bclp",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-13 09:06:18.023171",
+ "modified": "2024-09-17 16:09:40.484715",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
