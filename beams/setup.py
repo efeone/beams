@@ -18,7 +18,7 @@ def after_install():
     create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
     create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
-
+    create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -36,6 +36,7 @@ def before_uninstall():
     delete_custom_fields(get_sales_order_custom_fields())
     delete_custom_fields(get_employee_advance_custom_fields())
     delete_custom_fields(get_employee_custom_fields())
+    delete_custom_fields(get_journal_entry_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -525,5 +526,22 @@ def get_employee_advance_custom_fields():
                 "reqd": 1
             }
 
+        ]
+    }
+
+def get_journal_entry_custom_fields():
+    '''
+    Custom fields that need to be added to the Journal Entry Doctype.
+    '''
+    return {
+        "Journal Entry": [
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "label": "Cost Center",
+                "read_only": 1,
+                "options": "Cost Center",
+                "insert_after": "naming_series"
+            }
         ]
     }

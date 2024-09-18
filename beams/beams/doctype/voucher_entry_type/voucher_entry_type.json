@@ -7,9 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "voucher_entry_type",
-  "description",
-  "accounts",
-  "attachements"
+  "accounts"
  ],
  "fields": [
   {
@@ -23,21 +21,11 @@
    "fieldtype": "Table",
    "label": "Accounts",
    "options": "Accounts"
-  },
-  {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
-  },
-  {
-   "fieldname": "attachements",
-   "fieldtype": "Attach Image",
-   "label": "Attachments"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-17 15:23:34.049378",
+ "modified": "2024-09-18 10:06:24.063798",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Voucher Entry Type",
