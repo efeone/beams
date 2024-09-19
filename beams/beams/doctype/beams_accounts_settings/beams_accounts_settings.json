@@ -69,6 +69,7 @@
   },
   {
    "default": "0",
+   "description": "Only a single Sales Invoice can be created from a Quotation.",
    "fieldname": "single_sales_invoice",
    "fieldtype": "Check",
    "label": "Single Sales Invoice"
@@ -112,7 +113,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-17 10:09:31.090372",
+ "modified": "2024-09-19 09:43:58.471970",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

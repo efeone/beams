@@ -13,6 +13,23 @@ class BattaClaim(Document):
             elif self.batta_type == 'Internal':
                 self.create_journal_entry_from_batta_claim()
 
+    def validate(self):
+        # Call the method to calculate the total distance travelled
+        self.calculate_total_distance_travelled()
+
+    def calculate_total_distance_travelled(self):
+        total_distance = 0
+
+        # Loop through the rows in the 'work_detail' child table
+        if self.work_detail:
+            for row in self.work_detail:
+                if row.distance_travelled_km:
+                    total_distance += row.distance_travelled_km
+
+        # Set the 'total_distance_travelled_km' field with the calculated sum
+        self.total_distance_travelled_km = total_distance
+
+
     def create_purchase_invoice_from_batta_claim(self):
         '''
             Creation of Purchase Invoice on The Approval Of the Batta Claim.
