@@ -18,8 +18,6 @@
   "news_remarks",
   "column_break_cgfc",
   "daily_wage",
-  "no_of_days",
-  "total_wage",
   "amended_from"
  ],
  "fields": [
@@ -38,9 +36,9 @@
   {
    "fetch_from": "substituting_for.company",
    "fieldname": "company",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Company",
-   "read_only": 1
+   "options": "Company"
   },
   {
    "fetch_from": "substituting_for.Bureau",
@@ -53,18 +51,6 @@
    "fieldname": "daily_wage",
    "fieldtype": "Currency",
    "label": "Stringer Amount"
-  },
-  {
-   "fieldname": "no_of_days",
-   "fieldtype": "Int",
-   "label": "No Of Days",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_wage",
-   "fieldtype": "Currency",
-   "label": "Total Wage",
-   "read_only": 1
   },
   {
    "fieldname": "section_break_zcc8",
@@ -85,16 +71,6 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Stringer Bill",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fetch_from": "bureau.cost_center",
    "fieldname": "cost_center",
    "fieldtype": "Link",
@@ -110,12 +86,27 @@
    "fieldname": "on_air_date_and_time",
    "fieldtype": "Datetime",
    "label": "On Air Date and Time"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Stringer Bill",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-09-12 16:39:04.551473",
+ "links": [
+  {
+   "link_doctype": "Purchase Invoice",
+   "link_fieldname": "stringer_bill_reference"
+  }
+ ],
+ "modified": "2024-09-18 16:11:38.332043",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
