@@ -241,8 +241,17 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-09-17 17:18:42.829235",
+ "links": [
+  {
+   "link_doctype": "Purchase Invoice",
+   "link_fieldname": "batta_claim_reference"
+  },
+  {
+   "link_doctype": "Journal Entry",
+   "link_fieldname": "batta_claim_reference"
+  }
+ ],
+ "modified": "2024-09-19 10:55:19.767891",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

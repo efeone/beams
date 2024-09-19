@@ -275,6 +275,14 @@ def get_purchase_invoice_custom_fields():
                 "insert_after": "purchase_order_id"
             },
             {
+                "fieldname": "batta_claim_reference",
+                "fieldtype": "Link",
+                "label": "Batta Claim Reference",
+                "read_only": 1,
+                "options": "Batta Claim",
+                "insert_after": "stringer_bill_reference"
+            },
+            {
                 "fieldname": "bureau",
                 "fieldtype": "Link",
                 "label": "Bureau",
@@ -560,6 +568,15 @@ def get_journal_entry_custom_fields():
                 "read_only": 1,
                 "options": "Cost Center",
                 "insert_after": "naming_series"
+            },
+            {
+                "fieldname": "batta_claim_reference",
+                "fieldtype": "Link",
+                "label": "Batta Claim Reference",
+                "read_only": 1,
+                "options": "Batta Claim",
+                "insert_after": "voucher_type"
             }
+
         ]
     }

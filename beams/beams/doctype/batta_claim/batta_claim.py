@@ -19,6 +19,7 @@ class BattaClaim(Document):
         '''
         purchase_invoice = frappe.new_doc('Purchase Invoice')
         purchase_invoice.supplier = self.supplier
+        purchase_invoice.batta_claim_reference = self.name
         purchase_invoice.posting_date = frappe.utils.nowdate()
         purchase_invoice.due_date = frappe.utils.add_days(purchase_invoice.posting_date, 30)
         batta_claim_service_item = frappe.db.get_single_value('Beams Accounts Settings', 'batta_claim_service_item')
@@ -36,6 +37,7 @@ class BattaClaim(Document):
             Creation of Journal Entry on the Approval of the Batta Claim.
         '''
         journal_entry = frappe.new_doc('Journal Entry')
+        journal_entry.batta_claim_reference = self.name
         journal_entry.posting_date = frappe.utils.nowdate()
         batta_payable_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_payable_account')
         batta_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
