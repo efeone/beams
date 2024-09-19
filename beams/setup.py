@@ -76,6 +76,12 @@ def get_customer_custom_fields():
                 "label": "Is Agent",
                 "insert_after": "msme_status"
             },
+            {
+                "fieldname": "albatross_customer_id",
+                "fieldtype": "Data",
+                "label": "Albatross Customer ID",
+                "insert_after": "is_agent"
+            }
 
         ]
     }
@@ -194,18 +200,10 @@ def get_quotation_custom_fields():
                 "insert_after": "valid_till"
             },
             {
-                "fieldname": "albatross_ro_id",
-                "fieldtype": "Data",
-                "label": "Albatross RO ID",
-                "in_standard_filter": 1,
-                "reqd":0,
-                "insert_after": "order_type"
-            },
-            {
                 "fieldname": "is_barter",
                 "fieldtype": "Check",
                 "label": "Is Barter",
-                "insert_after": "albatross_ro_id"
+                "insert_after": "sales_type"
             },
             {
                 "fieldname": "sales_type",
@@ -221,6 +219,56 @@ def get_quotation_custom_fields():
                 "insert_after": "valid_till",
                 "depends_on": "eval:doc.is_barter",
                 "options": "Purchase Order"
+            },
+            {
+                "fieldname": "region",
+                "fieldtype": "Link",
+                "label": "Region",
+                "insert_after": "party_name",
+                "options": "Region"
+
+            },
+            {
+                "fieldname": "albatross_details_section",
+                "fieldtype": "Section Break",
+                "label": "Albatross Details",
+                "insert_after": "sales_type"
+            },
+            {
+                "fieldname": "albatross_ro_id",
+                "fieldtype": "Data",
+                "label": "Albatross RO ID",
+                "insert_after": "albatross_details_section"
+            },
+            {
+                "fieldname": "albatross_invoice_number",
+                "fieldtype": "Data",
+                "label": "Albatross Invoice Number",
+                "insert_after": "albatross_ro_id"
+            },
+            {
+                "fieldname": "albatross_ref_number",
+                "fieldtype": "Data",
+                "label": "Albatross Ref Number",
+                "insert_after": "albatross_invoice_number"
+            },
+            {
+                "fieldname": "albatross_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "albatross_ref_number"
+            },
+            {
+                "fieldname": "client_name",
+                "fieldtype": "Data",
+                "label": "Client Name",
+                "insert_after": "albatross_column_break"
+            },
+            {
+                "fieldname": "executive_name",
+                "fieldtype": "Data",
+                "label": "Executive Name",
+                "insert_after": "client_name"
             }
 
         ]

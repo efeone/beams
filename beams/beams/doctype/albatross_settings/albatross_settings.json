@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-09-19 10:36:36.024839",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "albatross_service_item"
+ ],
+ "fields": [
+  {
+   "fieldname": "albatross_service_item",
+   "fieldtype": "Link",
+   "label": "Albatross Service Item",
+   "options": "Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-09-19 10:37:42.276246",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Albatross Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
