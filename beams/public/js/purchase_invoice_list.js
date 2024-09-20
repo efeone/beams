@@ -1,10 +1,10 @@
 frappe.listview_settings["Purchase Invoice"] = {
-  /*
-   * The code sets the list view settings for the Purchase Invoice doctype, adding custom status indicators based on
-   * the invoice's status and workflow state. These indicators visually distinguish invoices as Paid, Unpaid,
-   * Partly Paid, Overdue, etc.
-   */
-  has_indicator_for_draft: 1,
+    /*
+    * The code sets the list view settings for the Purchase Invoice doctype, adding custom status indicators based on
+    * the invoice's status and workflow state. These indicators visually distinguish invoices as Paid, Unpaid,
+    * Partly Paid, Overdue, etc.
+    */
+    has_indicator_for_draft: 1,
     add_fields: ["status", "workflow_state"],
     get_indicator: function (doc) {
         if (doc.workflow_state === "Approved"|| doc.workflow_state == "Submitted") {
