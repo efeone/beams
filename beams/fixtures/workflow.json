@@ -347,9 +347,9 @@
   "doctype": "Workflow",
   "document_type": "Sales Invoice",
   "is_active": 1,
-  "modified": "2024-09-10 12:54:41.490051",
+  "modified": "2024-09-19 17:18:48.437823",
   "name": "Sales Invoice Approval",
-  "override_status": 0,
+  "override_status": 1,
   "send_email_alert": 0,
   "states": [
    {
@@ -1650,9 +1650,9 @@
   "doctype": "Workflow",
   "document_type": "Purchase Invoice",
   "is_active": 1,
-  "modified": "2024-08-29 10:32:28.384697",
+  "modified": "2024-09-20 09:43:23.468116",
   "name": "Purchase Invoice Workflow",
-  "override_status": 0,
+  "override_status": 1,
   "send_email_alert": 0,
   "states": [
    {
