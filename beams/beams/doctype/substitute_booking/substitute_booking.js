@@ -17,8 +17,35 @@ frappe.ui.form.on("Substitute Booking", {
 			}
 		});
 	}
-}
+},
+  refresh: function(frm) {
+    // Remove button if the document is dirty (not saved)
+    if (frm.is_dirty()) {
+      frm.remove_custom_button(__('Leave Application List'), __("View"));
+    }
+
+    // Add button if the document is in draft status and "Substituting For" has a value
+    if (!frm.is_new()&& frm.doc.substituting_for) {
+      frm.add_custom_button(__('Leave Application List'), function () {
+          const employee = frm.doc.substituting_for;
+          if (employee) {
+              // Navigate to the Leave Application List filtered by the employee
+              frappe.set_route('List', 'Leave Application', { employee: employee });
+          } else {
+              frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
+          }
+      }, __("View"));
+    }
+  },
+
+  substituting_for: function(frm) {
+    // Remove the button if the form is not saved
+    if (frm.is_dirty()) {
+      frm.remove_custom_button(__('Leave Application List'), __("View"));
+    }
+  }
 });
+
 
 frappe.ui.form.on('Substitution Bill Date', {
 	date: function(frm, cdt, cdn) {
