@@ -15,7 +15,7 @@
    "fieldname": "items",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Items",
+   "label": "Item",
    "options": "Item"
   },
   {
@@ -34,7 +34,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-21 09:43:08.436110",
+ "modified": "2024-09-23 11:34:18.024366",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Services",

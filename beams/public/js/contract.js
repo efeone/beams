@@ -3,9 +3,8 @@ frappe.ui.form.on('Contract', {
         calculate_total_amount(frm);
     },
     refresh: function(frm) {
-        calculate_total_amount(frm);
         set_item_query(frm);
-
+        calculate_total_amount(frm);
     },
     services_add: function(frm) {
         calculate_total_amount(frm);
@@ -25,7 +24,7 @@ frappe.ui.form.on('Services', {
     }
 });
 
-// Set query to filter items based on the maintain stock
+// Set query to filter items based on maintain stock
 function set_item_query(frm) {
     frm.fields_dict['services'].grid.get_field("items").get_query = function(doc, cdt, cdn) {
         return {
@@ -46,5 +45,9 @@ function calculate_total_amount(frm) {
             }
         });
     }
-    frm.set_value('total_amount', total);
+
+    // Update only if value is not set or calculated total is different from existing
+    if (!frm.doc.total_amount || frm.doc.total_amount !== total) {
+        frm.set_value('total_amount', total);
+    }
 }
