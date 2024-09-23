@@ -171,22 +171,17 @@ function calculate_totals(frm) {
     });
 }
 
-function update_work_detail(frm) {
-const { origin, destination, work_detail } = frm.doc;
-
-    // Update child table rows
-work_detail.forEach(row => {
-    frappe.model.set_value(row.doctype, row.name, 'origin', origin);
-    frappe.model.set_value(row.doctype, row.name, 'destination', destination);
-});
-
-frm.refresh_field('work_detail');
-    // Refresh child table to reflect changes
-}
-
 frappe.ui.form.on('Work Detail', {
     distance_travelled_km: function(frm, cdt, cdn) {
         calculate_total_distance_travelled(frm);
+    },
+
+    work_detail_add: function(frm, cdt, cdn) {
+        const { origin, destination } = frm.doc;
+
+           // Set initial values for the new row
+        frappe.model.set_value(cdt, cdn, 'origin', origin);
+        frappe.model.set_value(cdt, cdn, 'destination', destination);
     }
 });
 
@@ -200,4 +195,20 @@ function calculate_total_distance_travelled(frm) {
     });
        // Set the total_distance_travelled_km field with the calculated sum
     frm.set_value('total_distance_travelled_km', totalDistance);
+}
+
+function update_work_detail(frm) {
+    const { origin, destination, work_detail } = frm.doc;
+
+    // Update existing child rows with parent values
+    work_detail.forEach((row, index) => {
+        if (index >= 0) {
+            if (!row.origin || !row.destination) {
+                frappe.model.set_value(row.doctype, row.name, 'origin', origin);
+                frappe.model.set_value(row.doctype, row.name, 'destination', destination);
+            }
+        }
+    });
+
+    frm.refresh_field('work_detail');
 }
