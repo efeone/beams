@@ -166,7 +166,11 @@ doc_events = {
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname"
-        }
+        },
+    "Contract": {
+        "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
+        "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation"
+    }
 }
 
 
@@ -277,6 +281,6 @@ fixtures = [
         ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party"]]
     ]},
     {"dt": "Role", "filters": [
-        ["name", "in", ["CEO","Production Manager"]]
+        ["name", "in", ["CEO","Production Manager","Company Secretary"]]
         ]}
 ]
