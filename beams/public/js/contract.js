@@ -16,14 +16,14 @@ frappe.ui.form.on('Services', {
     amount: function(frm, cdt, cdn) {
         calculate_total_amount(frm);
     },
-    items: function(frm, cdt, cdn) {
+    item: function(frm, cdt, cdn) {
         set_item_query(frm, cdt, cdn);
     }
 });
 
 // Set query to filter items based on maintain stock
 function set_item_query(frm) {
-    frm.fields_dict['services'].grid.get_field("items").get_query = function(doc, cdt, cdn) {
+    frm.fields_dict['services'].grid.get_field("item").get_query = function(doc, cdt, cdn) {
         return {
             filters: {
                 'is_stock_item': 0  // Only service items
