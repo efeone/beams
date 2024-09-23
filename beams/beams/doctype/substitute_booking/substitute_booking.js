@@ -4,7 +4,18 @@
 frappe.ui.form.on("Substitute Booking", {
 	daily_wage: function(frm) {
 			calculate_total_wage(frm);
-	}
+	},
+	onload: function(frm) {
+        // Fetch the default debit account from Beams Account Settings
+        frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
+            .then(default_account => {
+                if (default_account) {
+                    frm.set_value('expense_account', default_account);
+                } else {
+                    frappe.msgprint(__('Default Debit Account is not set in Beams Account Settings.'));
+                }
+            });
+    }
 });
 
 frappe.ui.form.on('Substitution Bill Date', {

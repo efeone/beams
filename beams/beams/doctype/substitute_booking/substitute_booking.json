@@ -6,28 +6,45 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "stringer_type",
+  "section_break_l0sx",
   "substituting_for",
+  "employee_name",
+  "column_break_dxgp",
+  "stringer_type",
+  "designation",
+  "section_break_wusz",
   "substituted_by",
   "phone_number",
+  "column_break_unny",
   "email_id",
+  "section_break_lftz",
   "column_break_rbcg",
-  "posting_date",
   "bureau",
   "cost_center",
+  "column_break_ekck",
+  "posting_date",
   "daily_wage",
   "section_break_igie",
   "substitution_bill_date",
-  "column_break_bclp",
+  "section_break_hhic",
   "no_of_days",
-  "total_wage"
+  "column_break_pxuk",
+  "total_wage",
+  "section_break_yzva",
+  "expense_account",
+  "column_break_sbia",
+  "mode_of_payment",
+  "column_break_rqau",
+  "paid_amount"
  ],
  "fields": [
   {
    "fieldname": "substituting_for",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Substituting For",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fetch_from": "substituting_for.stringer_type",
@@ -40,7 +57,8 @@
   {
    "fieldname": "substituted_by",
    "fieldtype": "Data",
-   "label": "Substituted By"
+   "label": "Substituted By",
+   "reqd": 1
   },
   {
    "fieldname": "phone_number",
@@ -94,7 +112,8 @@
   },
   {
    "fieldname": "section_break_igie",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Payment Details"
   },
   {
    "fieldname": "substitution_bill_date",
@@ -103,13 +122,88 @@
    "options": "Substitution Bill Date"
   },
   {
-   "fieldname": "column_break_bclp",
+   "fieldname": "section_break_l0sx",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "section_break_lftz",
+   "fieldtype": "Section Break",
+   "label": "Administrative Details"
+  },
+  {
+   "fetch_from": "substituting_for.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "substituting_for.designation",
+   "fieldname": "designation",
+   "fieldtype": "Data",
+   "label": "Designation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_wusz",
+   "fieldtype": "Section Break",
+   "label": "Substitute Details"
+  },
+  {
+   "fieldname": "section_break_hhic",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_pxuk",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dxgp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ekck",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_unny",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expense_account",
+   "fieldtype": "Link",
+   "label": "Expense Account",
+   "options": "Account",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_yzva",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_sbia",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "column_break_rqau",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "paid_amount",
+   "fieldtype": "Currency",
+   "label": "Paid Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-17 16:09:40.484715",
+ "modified": "2024-09-21 13:16:44.225429",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
