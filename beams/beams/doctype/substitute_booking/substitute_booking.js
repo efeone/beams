@@ -15,10 +15,10 @@ frappe.ui.form.on("Substitute Booking", {
             }
           }, __("View"));
         },
-	daily_wage: function(frm) {
-			calculate_total_wage(frm);
-	}
-});
+        daily_wage: function(frm) {
+              calculate_total_wage(frm);
+          },
+
 
 frappe.ui.form.on('Substitution Bill Date', {
     date: function(frm, cdt, cdn) {
