@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 from datetime import datetime
+from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils.user import get_users_with_role
 
 class StringerBill(Document):
     def on_submit(self):
@@ -46,3 +48,20 @@ class StringerBill(Document):
 
         # Confirm success
         frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully with Stringer Bill reference {self.name}.", alert=True, indicator="green")
+
+    def after_insert(self):
+            self.create_todo_on_creation_for_stringer_bill()
+
+    def create_todo_on_creation_for_stringer_bill(self):
+            """
+            Create a ToDo for Accounts Manager when a new Stringer Bill is created.
+            """
+            users = get_users_with_role("Accounts Manager")
+            if users:
+                description = f"New Stringer Bill Created for {self.supplier}.<br>Please Review and Update Details or Take Necessary Actions."
+                add_assign({
+                    "assign_to": users,
+                    "doctype": "Stringer Bill",
+                    "name": self.name,
+                    "description": description
+                })

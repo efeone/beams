@@ -3,6 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils.user import get_users_with_role
 
 class SubstituteBooking(Document):
     def on_submit(self):
@@ -91,3 +93,20 @@ class SubstituteBooking(Document):
                 if not leave_exists:
                     formatted_date = date_entry.date.strftime("%d/%m/%Y")
                     frappe.throw(f"Employee {employee} is not on leave on {formatted_date}.")
+
+    def after_insert(self):
+            self.create_todo_on_creation_for_substitute_booking()
+
+    def create_todo_on_creation_for_substitute_booking(self):
+            """
+            Create a ToDo for Accounts Manager when a new Substitute Booking is created.
+            """
+            users = get_users_with_role("Accounts Manager")
+            if users:
+                description = f"New Substitute Booking Created for {self.substituted_by}.<br>Please Review and Update Details or take Necessary Actions."
+                add_assign({
+                    "assign_to": users,
+                    "doctype": "Substitute Booking",
+                    "name": self.name,
+                    "description": description
+                })
