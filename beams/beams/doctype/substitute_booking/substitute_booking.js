@@ -3,22 +3,22 @@
 
 frappe.ui.form.on("Substitute Booking", {
   refresh: function(frm) {
-      // Add "Leave Application" button under "View"
+      // Add "Leave Application List" button under "View"
       frm.add_custom_button(__('Leave Application List'), function () {
           const employee = frm.doc.substituting_for;
           if (employee) {
-              // Navigate to the Leave Application doctype for the specified employee
-              frappe.set_route('Form', 'Leave Application', { employee: employee });
-              }
-          else {
+              // Navigate to the Leave Application List filtered by the employee
+              frappe.set_route('List', 'Leave Application', { employee: employee });
+          } else {
               frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
-            }
-          }, __("View"));
-        },
-        daily_wage: function(frm) {
-              calculate_total_wage(frm);
-          },
+          }
+      }, __("View"));
+  },
 
+  daily_wage: function(frm) {
+      calculate_total_wage(frm);
+  }
+});
 
 frappe.ui.form.on('Substitution Bill Date', {
     date: function(frm, cdt, cdn) {
