@@ -1,9 +1,14 @@
 //  Copyright (c) 2024, efeone and contributors
 //  For license information, please see license.txt
-
 frappe.ui.form.on("Substitute Booking", {
   refresh: function(frm) {
-      // Add "Leave Application List" button under "View"
+    // Remove button if the document is dirty (not saved)
+    if (frm.is_dirty()) {
+      frm.remove_custom_button(__('Leave Application List'), __("View"));
+    }
+
+    // Add button if the document is in draft status and "Substituting For" has a value
+    if (frm.doc.docstatus === 0 && frm.doc.substituting_for) {
       frm.add_custom_button(__('Leave Application List'), function () {
           const employee = frm.doc.substituting_for;
           if (employee) {
@@ -13,8 +18,16 @@ frappe.ui.form.on("Substitute Booking", {
               frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
           }
       }, __("View"));
+    }
   },
 
+  substituting_for: function(frm) {
+    // Remove the button if the form is not saved
+    if (frm.is_dirty()) {
+      frm.remove_custom_button(__('Leave Application List'), __("View"));
+    }
+  },
+  
   daily_wage: function(frm) {
       calculate_total_wage(frm);
   }
