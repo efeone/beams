@@ -1,7 +1,4 @@
 frappe.ui.form.on('Contract', {
-    onload: function(frm) {
-        calculate_total_amount(frm);
-    },
     refresh: function(frm) {
         set_item_query(frm);
         calculate_total_amount(frm);
