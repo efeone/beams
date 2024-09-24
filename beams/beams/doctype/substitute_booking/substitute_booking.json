@@ -205,6 +205,13 @@
  "is_submittable": 1,
  "links": [],
  "modified": "2024-09-23 15:19:21.887973",
+ "links": [
+  {
+   "link_doctype": "Journal Entry",
+   "link_fieldname": "substitute_booking_reference"
+  }
+ ],
+ "modified": "2024-09-24 10:15:40.605043",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
