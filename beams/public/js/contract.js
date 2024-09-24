@@ -1,7 +1,4 @@
 frappe.ui.form.on('Contract', {
-    onload: function(frm) {
-        calculate_total_amount(frm);
-    },
     refresh: function(frm) {
         set_item_query(frm);
         calculate_total_amount(frm);
@@ -19,20 +16,38 @@ frappe.ui.form.on('Services', {
     amount: function(frm, cdt, cdn) {
         calculate_total_amount(frm);
     },
-    items: function(frm, cdt, cdn) {
+    item: function(frm, cdt, cdn) {
         set_item_query(frm, cdt, cdn);
+    },
+    quantity: function(frm, cdt, cdn) {
+        calculate_item_amount(frm, cdt, cdn);
+        calculate_total_amount(frm);
+    },
+    rate: function(frm, cdt, cdn) {
+        calculate_item_amount(frm, cdt, cdn);
+        calculate_total_amount(frm);
     }
 });
 
 // Set query to filter items based on maintain stock
 function set_item_query(frm) {
-    frm.fields_dict['services'].grid.get_field("items").get_query = function(doc, cdt, cdn) {
+    frm.fields_dict['services'].grid.get_field("item").get_query = function(doc, cdt, cdn) {
         return {
             filters: {
                 'is_stock_item': 0  // Only service items
             }
         };
     };
+}
+
+// Function to calculate the 'amount' for each row based on 'quantity' and 'rate'
+function calculate_item_amount(frm, cdt, cdn) {
+    let row = locals[cdt][cdn];
+    if (row.quantity && row.rate) {
+        // Calculate the amount: quantity * rate
+        row.amount = flt(row.quantity) * flt(row.rate);
+        frm.refresh_field('services');  // Refresh the child table to reflect the new amount
+    }
 }
 
 // Function to calculate total amount from Services child table
