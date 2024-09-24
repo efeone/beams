@@ -29,6 +29,7 @@ class SubstituteBooking(Document):
             frappe.throw("Please configure the Default Debit Account in the Beams Accounts Settings.")
         # Create a new Journal Entry
         journal_entry = frappe.new_doc('Journal Entry')
+        journal_entry.substitute_booking_reference = self.name
         journal_entry.posting_date = frappe.utils.nowdate()
         # Append credit entry
         journal_entry.append('accounts', {
@@ -49,7 +50,7 @@ class SubstituteBooking(Document):
         # Insert and submit the Journal Entry
         journal_entry.insert(ignore_permissions=True)
         journal_entry.submit()
-        frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True)
+        frappe.msgprint(f"Journal Entry {journal_entry.name} with Substitute Booking Reference {self.name} has been created successfully.", alert=True)
 
     def before_save(self):
         self.calculate_no_of_days()

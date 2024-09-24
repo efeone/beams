@@ -657,6 +657,14 @@ def get_journal_entry_custom_fields():
                 "read_only": 1,
                 "options": "Batta Claim",
                 "insert_after": "voucher_type"
+            },
+            {
+                "fieldname": "substitute_booking_reference",
+                "fieldtype": "Link",
+                "label": "Substitute Booking Reference",
+                "read_only": 1,
+                "options": "Substitute Booking",
+                "insert_after": "batta_claim_reference"
             }
 
         ]
