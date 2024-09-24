@@ -47,3 +47,58 @@ def create_todo_on_contract_verified_by_finance(doc,method):
                     "name": doc.name,
                     "description": description
                 })
+
+def on_submit(doc, method):
+    """
+    Check if a Purchase Order exists for the contract. If not, create one.
+    """
+    if doc.workflow_state == "Approved":
+        # Check if a Purchase Order already exists for this contract and supplier
+        existing_order = frappe.db.exists({
+            "doctype": "Purchase Order",
+            "supplier": doc.party_name,  # Using 'party_name' for Supplier
+            "contract_reference": doc.name  # Assuming 'contract_reference' is the field to link to contract
+        })
+
+        if existing_order:
+            frappe.throw(f"A Purchase Order already exists for this contract: {existing_order}")
+        else:
+            create_purchase_order(doc)
+
+def create_purchase_order(doc):
+    """
+    Create a Purchase Order using the contract data.
+    """
+    # Fetch total amount from the contract and set it in the Purchase Order
+    purchase_order = frappe.get_doc({
+        "doctype": "Purchase Order",
+        "supplier": doc.party_name,  # Supplier field from the contract
+        "transaction_date": frappe.utils.nowdate(),
+        "schedule_date": frappe.utils.add_days(frappe.utils.nowdate(), 30),  # Example schedule date logic
+        "items": get_contract_items(doc),  # Fetch the items from the contract
+        "total": doc.total_amount,  # Assuming 'total_amount' is the total field in the contract
+    })
+
+    # Insert and submit the Purchase Order
+    purchase_order.insert(ignore_permissions=True)
+    purchase_order.submit()
+
+def get_contract_items(doc):
+    """
+    Fetch service items from the contract's child table and add them to the Purchase Order.
+    """
+    items = []
+
+    if not doc.services:  # Assuming 'services' is the child table for contract items
+        frappe.throw("No service items found in the contract. Cannot create a Purchase Order.")
+
+    # Iterate through the contract services and add them to the Purchase Order
+    for service in doc.services:
+        items.append({
+            "item_code": service.item,  # Assuming 'item_code' exists in the services child table
+            "qty": service.quantity,  # Quantity from the contract's service
+            "rate": service.rate,  # Fetch the 'amount' from the service and set it as the rate
+            "amount":service.amount
+        })
+
+    return items

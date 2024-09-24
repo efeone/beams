@@ -6,18 +6,12 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "items",
+  "item",
   "quantity",
+  "rate",
   "amount"
  ],
  "fields": [
-  {
-   "fieldname": "items",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Item",
-   "options": "Item"
-  },
   {
    "fieldname": "quantity",
    "fieldtype": "Float",
@@ -28,13 +22,27 @@
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "Amount"
+   "label": "Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-23 11:34:18.024366",
+ "modified": "2024-09-24 13:19:39.261888",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Services",

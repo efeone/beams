@@ -35,7 +35,7 @@ doctype_js = {
     "Driver":"public/js/driver.js",
     "Sales Order": "public/js/sales_order.js",
     "Voucher Entry": "public/js/voucher_entry.js",
-    "Contract": "public/js/contract.js"
+    "Contract":"public/js/contract.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "public/js/sales_invoice_list.js",
@@ -170,7 +170,8 @@ doc_events = {
         },
     "Contract": {
         "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
-        "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation"
+        "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation",
+        "on_submit":"beams.beams.custom_scripts.contract.contract.on_submit"
     }
 }
 
