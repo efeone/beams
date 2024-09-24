@@ -20,6 +20,7 @@ def after_install():
     create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
     create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -39,6 +40,7 @@ def before_uninstall():
     delete_custom_fields(get_employee_custom_fields())
     delete_custom_fields(get_journal_entry_custom_fields())
     delete_custom_fields(get_voucher_entry_custom_fields())
+    delete_custom_fields(get_contract_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -431,6 +433,37 @@ def get_voucher_entry_custom_fields():
                 "options": "Bureau",
                 "label": "Bureau",
                 "insert_after": "balance"
+            }
+        ]
+    }
+
+def get_contract_custom_fields():
+    '''
+    Custom fields that need to be added to the Contract Doctype
+    '''
+    return {
+        "Contract": [
+            {
+                "fieldname": "services_section",
+                "fieldtype": "Section Break",
+                "label": "Services",
+                "insert_after": "ip_address"
+            },
+            {
+                "fieldname": "services",
+                "fieldtype": "Table",
+                "options": "Services",
+                "label": "Services",
+                "insert_after": "services_section",
+                "depends_on": "eval:doc.party_type == 'Supplier'"
+            },
+            {
+                "fieldname": "total_amount",
+                "fieldtype": "Currency",
+                "label": "Total Amount",
+                "insert_after": "services",
+                "read_only":1,
+                "no_copy":1
             }
         ]
     }
