@@ -169,7 +169,8 @@ doc_events = {
         },
     "Contract": {
         "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
-        "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation"
+        "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation",
+        "on_submit":"beams.beams.custom_scripts.contract.contract.on_submit"
     }
 }
 
