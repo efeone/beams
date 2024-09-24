@@ -84,7 +84,7 @@ def create_release_order():
         input_data = frappe.request.json
 
         # Validate mandatory fields
-        mandatory_fields = ['Quotation To', 'Date', 'Order Type', 'Series']
+        mandatory_fields = ['quotation_to', 'date', 'order_type', 'series']
         for field in mandatory_fields:
             if field not in input_data:
                 return {
@@ -102,57 +102,37 @@ def create_release_order():
         # Create new Quotation document
         quotation_doc = frappe.get_doc({
             "doctype": "Quotation",
-            "transaction_date": input_data.get("Date"),
-            "party_name": input_data.get("Invoice To (Party Name)"),
-            "client_name": input_data.get("Client Name"),
-            "executive_name": input_data.get("Executive Name"),
-            "albatross_ref_number": input_data.get("Ref No"),
-            "albatross_ro_id": input_data.get("RO No."),
-            "region": input_data.get("Region"),
-            "order_type": input_data.get("Order Type"),
-            "series": input_data.get("Series"),
-            "sales_type": input_data.get("Service Type"),
-            "albatross_invoice_number": input_data.get("Invoice No."),
+            "transaction_date": input_data.get("date"),
+            "party_name": input_data.get("invoice_to"),
+            "client_name": input_data.get("client_name"),
+            "executive_name": input_data.get("executive_name"),
+            "albatross_ref_number": input_data.get("ref_no"),
+            "albatross_ro_id": input_data.get("ro_no"),
+            "region": input_data.get("region"),
+            "order_type": input_data.get("order_type"),
+            "series": input_data.get("series"),
+            "sales_type": input_data.get("service_type"),
+            "albatross_invoice_number": input_data.get("invoice_no"),
+            "company": input_data.get("company"),
+            "currency": input_data.get("currency"),
+            "place_of_supply": input_data.get("place_of_supply")
         })
 
         # Add items to the quotation
         quotation_doc.append('items', {
             'item_code': albatross_settings.albatross_service_item,
             'qty': 1,
-            'rate': input_data.get('Taxable Value')
+            'rate': input_data.get('taxable_value')
         })
 
-        # Add taxes based on GST Rate
-        gst_rate = input_data.get('GST Rate')
-        if gst_rate:
-            if input_data.get('CGST'):
-                quotation_doc.append('taxes', {
-                    'charge_type': 'On Net Total',
-                    'account_head': 'Output Tax CGST - E',
-                    'rate': gst_rate / 2,
-                    'tax_amount': input_data['CGST'],
-                    'description': 'CGST'
-                })
-            if input_data.get('SGST'):
-                quotation_doc.append('taxes', {
-                    'charge_type': 'On Net Total',
-                    'account_head': 'Output Tax SGST - E',
-                    'rate': gst_rate / 2,
-                    'tax_amount': input_data['SGST'],
-                    'description': 'SGST'
-                })
-            if input_data.get('IGST'):
-                quotation_doc.append('taxes', {
-                    'charge_type': 'On Net Total',
-                    'account_head': 'Input Tax IGST - E',
-                    'rate': gst_rate,
-                    'tax_amount': input_data['IGST'],
-                    'description': 'IGST'
-                })
+        template_name = input_data.get('template_name')
+        quotation_doc.taxes_and_charges = template_name
+        quotation_doc.set_missing_values()
 
         quotation_doc.save(ignore_permissions=True)
         frappe.clear_messages()
         return response('Created Release Order Successfully', quotation_doc.as_dict(), True, 201)
+
 
     except frappe.exceptions.CharacterLengthExceededError as e:
         frappe.log_error("Character Length Exceeded", "Error in Release Order creation: " + str(e)[:120])
