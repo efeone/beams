@@ -7,7 +7,7 @@ from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 def after_install():
     create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
-    # create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_supplier_custom_fields(), ignore_validate=True)
     create_custom_fields(get_item_custom_fields(), ignore_validate=True)
@@ -28,7 +28,7 @@ def after_migrate():
 def before_uninstall():
     delete_custom_fields(get_customer_custom_fields())
     delete_custom_fields(get_sales_invoice_custom_fields())
-    # delete_custom_fields(get_quotation_custom_fields())
+    delete_custom_fields(get_quotation_custom_fields())
     delete_custom_fields(get_purchase_invoice_custom_fields())
     delete_custom_fields(get_supplier_custom_fields())
     delete_custom_fields(get_item_custom_fields())
