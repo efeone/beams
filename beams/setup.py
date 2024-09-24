@@ -234,7 +234,7 @@ def get_quotation_custom_fields():
                 "fieldname": "albatross_details_section",
                 "fieldtype": "Section Break",
                 "label": "Albatross Details",
-                "insert_after": "sales_type"
+                "insert_after": "is_barter"
             },
             {
                 "fieldname": "albatross_ro_id",
