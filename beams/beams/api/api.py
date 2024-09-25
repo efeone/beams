@@ -21,7 +21,7 @@ def response(message, data, success, status_code):
     return
 
 @frappe.whitelist(allow_guest=True)
-def login(login_id, password, device_token=None):
+def login(login_id, password):
     '''
         API for user login
         args:
@@ -38,10 +38,6 @@ def login(login_id, password, device_token=None):
     api_generate = generate_keys(frappe.session.user)
     user = frappe.get_doc("User", frappe.session.user)
     roles = frappe.get_roles(frappe.session.user)
-
-    if device_token:
-        add_new_device(login_id, device_token)
-
     frappe.local.response["message"] = {
             "success_key":1,
             "sid": frappe.session.sid,
