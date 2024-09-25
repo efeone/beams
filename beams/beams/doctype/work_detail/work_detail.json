@@ -6,19 +6,23 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "from_date_and_time",
-  "to_date_and_time",
   "origin",
   "destination",
   "distance_travelled_km",
-  "total_hours",
-  "ot_hours",
   "number_of_days",
-  "daily_batta",
-  "ot_batta",
   "batta_type",
+  "column_break_aerg",
+  "from_date_and_time",
+  "to_date_and_time",
+  "on_air_date",
+  "section_break_wigg",
+  "daily_batta",
+  "column_break_uihk",
+  "ot_batta",
+  "section_break_elqj",
   "purpose",
-  "on_air_date"
+  "total_hours",
+  "ot_hours"
  ],
  "fields": [
   {
@@ -109,12 +113,28 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "On Air date"
+  },
+  {
+   "fieldname": "column_break_aerg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_elqj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_wigg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_uihk",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-21 09:42:35.688083",
+ "modified": "2024-09-25 11:27:06.396834",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Work Detail",
