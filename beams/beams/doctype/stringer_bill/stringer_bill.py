@@ -39,7 +39,7 @@ class StringerBill(Document):
         purchase_invoice.append('items', {
             'item_code': item_code,
             'qty': 1,
-            'rate': self.total_wage
+            'rate': self.daily_wage
         })
 
         # Insert and submit the document
