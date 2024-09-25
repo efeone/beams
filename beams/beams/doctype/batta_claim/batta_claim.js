@@ -55,7 +55,7 @@ frappe.ui.form.on('Batta Claim', {
         });
         // After updating all the rows, recalculate the total values
         calculate_totals(frm);
-    },
+    }
 });
 
 frappe.ui.form.on('Work Detail', {
@@ -88,20 +88,19 @@ function set_batta_based_on_options(frm) {
 function handle_designation_based_on_batta_type(frm) {
     if (frm.doc.batta_type === 'Internal' && frm.doc.employee) {
         // Fetch and set designation when batta_type is Internal
-        frappe.db.get_value('Employee', frm.doc.employee, 'designation', function (r) {
+        designation = frappe.db.get_value('Employee', frm.doc.employee, 'designation', function (r) {
             if (r && r.designation) {
                 frm.set_value('designation', r.designation);
-                frm.set_df_property('designation', 'read_only', 1);
             } else {
                 frappe.msgprint(__('Designation not found for the selected employee.'));
             }
         });
+        // Clear designation for External
     } else if (frm.doc.batta_type === 'External') {
-        // Allow designation to be selectable for External
-        frm.set_df_property('designation', 'read_only', 0);
         frm.set_value('designation', '');
     }
 }
+
 
 /* Function to validate dates and perform calculations */
 function validate_dates_and_calculate(frm, cdt, cdn) {

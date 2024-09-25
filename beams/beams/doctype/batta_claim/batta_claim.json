@@ -79,7 +79,6 @@
   },
   {
    "depends_on": "eval:doc.batta_type !== 'External'",
-   "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
@@ -251,7 +250,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-09-19 10:55:19.767891",
+ "modified": "2024-09-25 09:30:19.697103",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
