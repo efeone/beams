@@ -121,14 +121,9 @@ def create_release_order():
             'rate': input_data.get('taxable_value')
         })
 
-        template_name = input_data.get('template_name')
-        quotation_doc.taxes_and_charges = template_name
-        quotation_doc.set_missing_values()
-
         quotation_doc.save(ignore_permissions=True)
         frappe.clear_messages()
         return response('Created Release Order Successfully', quotation_doc.as_dict(), True, 201)
-
 
     except frappe.exceptions.CharacterLengthExceededError as e:
         frappe.log_error("Character Length Exceeded", "Error in Release Order creation: " + str(e)[:120])
