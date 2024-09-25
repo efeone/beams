@@ -52,7 +52,7 @@ def on_submit(doc, method):
     """
     Check if a Purchase Order exists for the contract. If not, create one.
     """
-    if doc.workflow_state == "Approved":
+    if doc.workflow_state == "Approved" and doc.party_type == "Supplier":  # Check if the party type is 'Supplier'
         # Check if a Purchase Order already exists for this contract and supplier
         existing_order = frappe.db.exists({
             "doctype": "Purchase Order",
@@ -89,7 +89,7 @@ def get_contract_items(doc):
     """
     items = []
 
-    if not doc.services:  # Assuming 'services' is the child table for contract items
+    if not doc.services and doc.party_type == "Supplier":  # Only throw if party type is 'Supplier'
         frappe.throw("No service items found in the contract. Cannot create a Purchase Order.")
 
     # Iterate through the contract services and add them to the Purchase Order
@@ -98,7 +98,7 @@ def get_contract_items(doc):
             "item_code": service.item,  # Assuming 'item_code' exists in the services child table
             "qty": service.quantity,  # Quantity from the contract's service
             "rate": service.rate,  # Fetch the 'amount' from the service and set it as the rate
-            "amount":service.amount
+            "amount": service.amount  # Fetch amount directly
         })
 
     return items
