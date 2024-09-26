@@ -60,7 +60,6 @@ function calculate_total_amount(frm) {
             }
         });
     }
-    
     // Update only if value is not set or calculated total is different from existing
     if (!frm.doc.total_amount || frm.doc.total_amount !== total) {
         frm.set_value('total_amount', total);
