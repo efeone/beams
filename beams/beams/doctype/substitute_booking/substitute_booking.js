@@ -51,6 +51,9 @@ frappe.ui.form.on('Substitution Bill Date', {
 	date: function(frm, cdt, cdn) {
 		// Validate dates and update no_of_days when a date is entered or changed
 		validate_dates(frm);
+	},
+	substitution_bill_date_remove: function(frm) {
+			validate_dates(frm);
 	}
 });
 
