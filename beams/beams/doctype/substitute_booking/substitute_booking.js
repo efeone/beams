@@ -2,49 +2,85 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Substitute Booking", {
-	daily_wage: function(frm) {
-		calculate_total_wage(frm);
-	},
-	onload: function(frm) {
-		if (frm.is_new() && !frm.doc.expense_account) {  // Check if it's a new form and the field is empty
-		// Fetch the default debit account from Beams Account Settings
-		frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
-		.then(default_account => {
-			if (default_account) {
-				frm.set_value('expense_account', default_account);
-			} else {
-				frappe.msgprint(__('Default Debit Account is not set in Beams Account Settings.'));
-			}
-		});
-	}
+    daily_wage: function(frm) {
+        calculate_total_wage(frm);
+    },
+
+    onload: function(frm) {
+      if (frm.is_new() && !frm.doc.expense_account) {  // Check if it's a new form and the field is empty
+      // Fetch the default debit account from Beams Account Settings
+        frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
+          .then(default_account => {
+            if (default_account) {
+              frm.set_value('expense_account', default_account);
+            } else {
+              frappe.msgprint(__('Default Debit Account is not set in Beams Account Settings.'));
+                    }
+               });
+      }
 },
-  refresh: function(frm) {
-    // Remove button if the document is dirty (not saved)
-    if (frm.is_dirty()) {
-      frm.remove_custom_button(__('Leave Application List'), __("View"));
-    }
 
-    // Add button if the document is in draft status and "Substituting For" has a value
-    if (!frm.is_new()&& frm.doc.substituting_for) {
-      frm.add_custom_button(__('Leave Application List'), function () {
-          const employee = frm.doc.substituting_for;
-          if (employee) {
-              // Navigate to the Leave Application List filtered by the employee
-              frappe.set_route('List', 'Leave Application', { employee: employee });
-          } else {
-              frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
-          }
-      }, __("View"));
-    }
-  },
+    refresh: function(frm) {
+        // Remove the "Leave Application List" button if the form is dirty (unsaved changes)
+        if (frm.is_dirty()) {
+            frm.remove_custom_button(__('Leave Application List'), __("View"));
+        }
 
-  substituting_for: function(frm) {
-    // Remove the button if the form is not saved
-    if (frm.is_dirty()) {
-      frm.remove_custom_button(__('Leave Application List'), __("View"));
-    }
-  }
+        // Add "Leave Application List" button only if the form is saved and "Substituting For" has a value
+        if (!frm.is_new() && frm.doc.substituting_for) {
+            frm.add_custom_button(__('Leave Application List'), function () {
+                const employee = frm.doc.substituting_for;
+                if (employee) {
+                    // Navigate to the Leave Application List filtered by the employee
+                    frappe.set_route('List', 'Leave Application', { employee: employee });
+                } else {
+                    frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
+                }
+            }, __("View"));
+        }
+
+        // Add "Make Payment" button if is_paid is not checked
+        if (!frm.is_new() && !frm.doc.is_paid && frm.doc.workflow_state === "Approved") {
+            frm.add_custom_button(__('Make Payment'), function() {
+                // Mark the booking as paid
+                frm.set_value("is_paid", 1);
+                // Hide the "Make Payment" button
+                frm.remove_custom_button(__('Make Payment'));
+
+                // Call the server-side method to create the journal entry
+                frm.call({
+                    doc: frm.doc,
+                    method: "create_journal_entry_from_substitute_booking",
+                });
+            });
+        }
+    },
+
+    // Triggered when the 'substituting_for' field is changed
+    substituting_for: function(frm) {
+        // Ensure the button is only shown when the form is saved
+        if (!frm.is_dirty() && frm.doc.substituting_for) {
+            frm.add_custom_button(__('Leave Application List'), function() {
+                const employee = frm.doc.substituting_for;
+                if (employee) {
+                    frappe.set_route('List', 'Leave Application', { employee: employee });
+                } else {
+                    frappe.msgprint(__('Please specify an employee in the "Substituting For" field.'));
+                }
+            }, __("View"));
+        } else {
+            frm.remove_custom_button(__('Leave Application List'), __("View"));
+        }
+    },
+		is_paid: function(frm) {
+		    if (frm.doc.is_paid) {
+		        frm.set_value('paid_amount', frm.doc.total_wage);
+		    } else {
+		        frm.set_value('paid_amount', null);  // Clear the field by setting it to null
+		    }
+		}
 });
+
 
 
 frappe.ui.form.on('Substitution Bill Date', {

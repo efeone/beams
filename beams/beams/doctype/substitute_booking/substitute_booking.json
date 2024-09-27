@@ -35,7 +35,9 @@
   "column_break_sbia",
   "mode_of_payment",
   "column_break_rqau",
-  "paid_amount"
+  "is_paid",
+  "paid_amount",
+  "amended_from"
  ],
  "fields": [
   {
@@ -86,7 +88,8 @@
   {
    "fieldname": "daily_wage",
    "fieldtype": "Currency",
-   "label": "Daily Wage"
+   "label": "Daily Wage",
+   "reqd": 1
   },
   {
    "fieldname": "no_of_days",
@@ -119,7 +122,8 @@
    "fieldname": "substitution_bill_date",
    "fieldtype": "Table",
    "label": "Substitution Bill Date",
-   "options": "Substitution Bill Date"
+   "options": "Substitution Bill Date",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_l0sx",
@@ -199,19 +203,35 @@
    "fieldname": "paid_amount",
    "fieldtype": "Currency",
    "label": "Paid Amount"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Substitute Booking",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "is_paid",
+   "fieldtype": "Check",
+   "label": "Is Paid",
+   "mandatory_depends_on": "eval:doc.workflow_state === \"Pending Approval\";"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2024-09-23 15:19:21.887973",
  "links": [
   {
    "link_doctype": "Journal Entry",
    "link_fieldname": "substitute_booking_reference"
   }
  ],
- "modified": "2024-09-24 10:15:40.605043",
+ "modified": "2024-09-27 13:30:44.924183",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
