@@ -5,7 +5,20 @@ frappe.ui.form.on('Batta Claim', {
     onload: function (frm) {
         set_batta_based_on_options(frm);
         calculate_totals(frm);
+        calculate_batta_totals(frm);
     },
+    room_rent_batta: function(frm) {
+       calculate_batta_totals(frm);
+   },
+   daily_batta_with_overnight_stay: function(frm) {
+       calculate_batta_totals(frm);
+   },
+   daily_batta_without_overnight_stay: function(frm) {
+       calculate_batta_totals(frm);
+   },
+   food_allowance: function(frm) {
+       calculate_batta_totals(frm);
+   },
     origin: function(frm) {
         update_work_detail(frm);
     },
@@ -25,6 +38,7 @@ frappe.ui.form.on('Batta Claim', {
         set_batta_based_on_options(frm);
         calculate_totals(frm);
         calculate_total_distance_travelled(frm);
+        calculate_batta_totals(frm);
     },
     batta_type: function(frm) {
         set_batta_based_on_options(frm);
@@ -170,6 +184,28 @@ function calculate_totals(frm) {
     });
 }
 
+/* Function to calculate batta values */
+function calculate_batta_totals(frm) {
+    frm.call({
+        method: "calculate_batta",  // Replace with actual path to the Python function
+        doc: frm.doc,
+        callback: function(response) {
+            // Update the form fields with the calculated totals from the Python method
+            frm.set_value({
+                'room_rent_batta': response.message.room_rent_batta,
+                'daily_batta_with_overnight_stay': response.message.daily_batta_with_overnight_stay,
+                'daily_batta_without_overnight_stay': response.message.daily_batta_without_overnight_stay,
+                'food_allowance': response.message.food_allowance,
+                'batta': response.message.batta  // Assuming 'batta' is the total batta field
+            });
+
+            // Refresh the fields to display updated totals
+            frm.refresh_field(['room_rent_batta', 'daily_batta_with_overnight_stay', 'daily_batta_without_overnight_stay', 'food_allowance', 'batta']);
+        }
+    });
+}
+
+
 frappe.ui.form.on('Work Detail', {
     distance_travelled_km: function(frm, cdt, cdn) {
         calculate_total_distance_travelled(frm);
@@ -211,3 +247,52 @@ function update_work_detail(frm) {
 
     frm.refresh_field('work_detail');
 }
+
+frappe.ui.form.on('Batta Claim', {
+    designation: function(frm) {
+        frm.trigger('calculate_batta');
+    },
+    is_travelling_outside_kerala: function(frm) {
+        frm.trigger('calculate_batta');
+    },
+    is_overnight_stay: function(frm) {
+        frm.trigger('calculate_batta');
+    },
+    total_distance_travelled_km: function(frm) {
+        frm.trigger('calculate_batta');
+    },
+
+    calculate_batta: function(frm) {
+        // Ensure designation and total distance are filled before calling the function
+        if (frm.doc.designation && frm.doc.total_distance_travelled_km) {
+            // Sum up total_hours from the work_detail child table
+            let total_hours = 0;
+            if (frm.doc.work_detail) {
+                frm.doc.work_detail.forEach(row => {
+                    total_hours += row.total_hours || 0;
+                });
+            }
+
+            frappe.call({
+                method: "beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
+                args: {
+                    designation: frm.doc.designation,
+                    is_travelling_outside_kerala: frm.doc.is_travelling_outside_kerala,
+                    is_overnight_stay: frm.doc.is_overnight_stay,
+                    total_distance_travelled_km: frm.doc.total_distance_travelled_km,
+                    total_hours: total_hours,
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        // Set batta values in the form
+                        frm.set_value('batta', r.message.batta);
+                        frm.set_value('room_rent_batta', r.message.room_rent_batta);
+                        frm.set_value('daily_batta_with_overnight_stay', r.message.daily_batta_with_overnight_stay);
+                        frm.set_value('daily_batta_without_overnight_stay', r.message.daily_batta_without_overnight_stay);
+                        frm.set_value('food_allowance', r.message.food_allowance);
+                    }
+                }
+            });
+        }
+    }
+});
