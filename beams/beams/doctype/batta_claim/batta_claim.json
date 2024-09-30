@@ -25,10 +25,14 @@
   "is_overnight_stay",
   "room_criteria",
   "section_break_bkxb",
+  "room_rent_batta",
   "batta_based_on",
   "column_break_gbiv",
+  "daily_batta_with_overnight_stay",
+  "daily_batta_without_overnight_stay",
   "batta",
   "column_break_jwtq",
+  "food_allowance",
   "ot_batta",
   "section_break_osak",
   "work_detail",
@@ -115,7 +119,8 @@
   {
    "fieldname": "batta",
    "fieldtype": "Currency",
-   "label": "Batta"
+   "label": "Batta",
+   "read_only_depends_on": "eval:doc.batta_type == \"Internal\""
   },
   {
    "depends_on": "eval:doc.batta_type == \"External\"\n",
@@ -236,6 +241,34 @@
    "fieldtype": "Link",
    "label": "Origin",
    "options": "Location"
+  },
+  {
+   "depends_on": "eval:doc.batta_type == \"Internal\"",
+   "fieldname": "room_rent_batta",
+   "fieldtype": "Currency",
+   "label": "Room Rent Batta",
+   "precision": "2"
+  },
+  {
+   "depends_on": "is_overnight_stay",
+   "fieldname": "daily_batta_with_overnight_stay",
+   "fieldtype": "Currency",
+   "label": "Daily Batta With Overnight Stay",
+   "precision": "2"
+  },
+  {
+   "depends_on": "eval:doc.batta_type == \"Internal\" && !doc.is_overnight_stay",
+   "fieldname": "daily_batta_without_overnight_stay",
+   "fieldtype": "Currency",
+   "label": "Daily Batta Without Overnight Stay",
+   "precision": "2"
+  },
+  {
+   "depends_on": "eval:doc.batta_type == \"Internal\"",
+   "fieldname": "food_allowance",
+   "fieldtype": "Currency",
+   "label": "Food Allowance",
+   "precision": "2"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -250,7 +283,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-09-25 09:30:19.697103",
+ "modified": "2024-09-27 13:49:25.220656",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

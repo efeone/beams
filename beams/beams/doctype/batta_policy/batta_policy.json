@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:BP-{YY}-{####}",
+ "autoname": "field:designation",
  "creation": "2024-09-17 12:45:50.596082",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -10,25 +10,29 @@
   "designation",
   "mode_of_travel",
   "room_rent_overnightbills_section",
-  "outside_kerala_",
   "room_criteria",
+  "is_actual",
   "column_break_rvoh",
   "inside_kerala_",
+  "column_break_zcmt",
+  "outside_kerala_",
   "daily_batta_with_overnight_stay_section",
   "outside_kerala__",
+  "is_actual_",
   "column_break_xaxj",
   "inside_kerala__",
   "daily_batta_without_over_night_stay_section",
   "outside_kerala",
+  "is_actual__",
   "column_break_ixxb",
   "inside_kerala",
   "food_allowance_section",
   "break_fast",
+  "is_actual___",
   "column_break_yfuo",
   "lunch",
   "column_break_ieaw",
-  "dinner",
-  "amended_from"
+  "dinner"
  ],
  "fields": [
   {
@@ -38,8 +42,11 @@
   {
    "fieldname": "designation",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "reqd": 1,
+   "unique": 1
   },
   {
    "fieldname": "mode_of_travel",
@@ -141,24 +148,41 @@
    "label": "Dinner"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Batta Policy",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "default": "0",
+   "fieldname": "is_actual",
+   "fieldtype": "Check",
+   "label": "Is Actual"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_actual_",
+   "fieldtype": "Check",
+   "label": "Is Actual"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_actual__",
+   "fieldtype": "Check",
+   "label": "Is Actual"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_actual___",
+   "fieldtype": "Check",
+   "label": "Is Actual"
+  },
+  {
+   "fieldname": "column_break_zcmt",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
- "is_submittable": 1,
  "links": [],
- "modified": "2024-09-17 15:04:19.210223",
+ "modified": "2024-09-26 16:54:05.504390",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Policy",
- "naming_rule": "Expression",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
@@ -171,7 +195,6 @@
    "report": 1,
    "role": "System Manager",
    "share": 1,
-   "submit": 1,
    "write": 1
   }
  ],
