@@ -21,6 +21,7 @@ def after_install():
     create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_department_custom_fields(),ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -41,7 +42,7 @@ def before_uninstall():
     delete_custom_fields(get_journal_entry_custom_fields())
     delete_custom_fields(get_voucher_entry_custom_fields())
     delete_custom_fields(get_contract_custom_fields())
-
+    delete_custom_fields(get_department_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -83,6 +84,32 @@ def get_customer_custom_fields():
                 "fieldtype": "Data",
                 "label": "Albatross Customer ID",
                 "insert_after": "is_agent"
+            }
+
+        ]
+    }
+
+
+def get_department_custom_fields():
+    '''
+    Custom fields that need to be added to the Department Doctype
+    '''
+    return {
+        "Department": [
+            {
+                "fieldname": "head_of_department",
+                "fieldtype": "Link",
+                "label": "Head Of Department",
+                "options":"Employee",
+                "insert_after": "department_name"
+            },
+            {
+                "fieldname": "abbreviation",
+                "fieldtype": "Data",
+                "label": "Abbreviation",
+                "reqd":1,
+                "unique":1,
+                "insert_after": "head_of_department"
             }
 
         ]
