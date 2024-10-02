@@ -22,6 +22,7 @@ def after_install():
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -43,6 +44,7 @@ def before_uninstall():
     delete_custom_fields(get_voucher_entry_custom_fields())
     delete_custom_fields(get_contract_custom_fields())
     delete_custom_fields(get_department_custom_fields())
+    delete_custom_fields(get_job_requisition_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -692,6 +694,23 @@ def get_journal_entry_custom_fields():
                 "read_only": 1,
                 "options": "Substitute Booking",
                 "insert_after": "batta_claim_reference"
+            }
+
+        ]
+    }
+
+def get_job_requisition_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Requisition Doctype
+    '''
+    return {
+        "Job Requisition": [
+            {
+                "fieldname": "job_description_template",
+                "fieldtype": "Link",
+                "label": "Job Description Template",
+                "options": "Job Description Template",
+                "insert_after": "job_description_tab"
             }
 
         ]
