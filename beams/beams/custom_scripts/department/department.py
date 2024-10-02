@@ -1,10 +1,11 @@
 import frappe
+
+@frappe.whitelist()
+def get_hod_users(department_name):
     """
     Fetches the user IDs of employees who belong to a specific department and have the 'Hod' role.
     Returns a list of user IDs for filtering in the client-side code.
     """
-@frappe.whitelist()
-def get_hod_users(department_name):
     users = frappe.db.sql("""
         SELECT emp.user_id
         FROM `tabEmployee` emp
