@@ -60,6 +60,7 @@
    "label": "Room Rent for OverNight Stay"
   },
   {
+   "depends_on": "eval:doc.is_actual__ == \"0\"",
    "fieldname": "outside_kerala",
    "fieldtype": "Currency",
    "label": "Outside Kerala"
@@ -69,17 +70,20 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.is_actual == \"0\"",
    "fieldname": "room_criteria",
    "fieldtype": "Link",
    "label": "Room Criteria",
    "options": "Room Criteria"
   },
   {
+   "depends_on": "eval:doc.is_actual == \"0\"",
    "fieldname": "outside_kerala_",
    "fieldtype": "Currency",
    "label": "Outside Kerala"
   },
   {
+   "depends_on": "eval:doc.is_actual == \"0\"",
    "fieldname": "inside_kerala_",
    "fieldtype": "Currency",
    "label": "Inside Kerala"
@@ -94,11 +98,13 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.is_actual_ == \"0\"",
    "fieldname": "outside_kerala__",
    "fieldtype": "Currency",
    "label": "Outside Kerala"
   },
   {
+   "depends_on": "eval:doc.is_actual_ == \"0\"",
    "fieldname": "inside_kerala__",
    "fieldtype": "Currency",
    "label": "Inside Kerala"
@@ -114,6 +120,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.is_actual__ == \"0\"",
    "fieldname": "inside_kerala",
    "fieldtype": "Currency",
    "label": "Inside Kerala"
@@ -125,11 +132,13 @@
    "label": "Food Allowance "
   },
   {
+   "depends_on": "eval:doc.is_actual___ == \"0\"",
    "fieldname": "break_fast",
    "fieldtype": "Currency",
    "label": "BreakFast"
   },
   {
+   "depends_on": "eval:doc.is_actual___ == \"0\"",
    "fieldname": "lunch",
    "fieldtype": "Currency",
    "label": "Lunch"
@@ -143,6 +152,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.is_actual___ == \"0\"",
    "fieldname": "dinner",
    "fieldtype": "Currency",
    "label": "Dinner"
@@ -178,7 +188,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-26 16:54:05.504390",
+ "modified": "2024-09-30 14:17:07.081112",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Policy",

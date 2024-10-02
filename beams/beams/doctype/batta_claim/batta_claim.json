@@ -194,7 +194,7 @@
    "fetch_from": "bureau.cost_center",
    "fieldname": "cost_centre",
    "fieldtype": "Link",
-   "label": "Cost Centre",
+   "label": "Cost Center",
    "options": "Cost Center"
   },
   {
@@ -283,7 +283,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-09-27 13:49:25.220656",
+ "modified": "2024-09-30 14:23:17.220180",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
