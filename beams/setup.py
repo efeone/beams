@@ -22,9 +22,12 @@ def after_install():
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
+    create_custom_roles('')
+   
 
 def after_migrate():
     after_install()
+   
 
 def before_uninstall():
     delete_custom_fields(get_customer_custom_fields())
@@ -696,3 +699,20 @@ def get_journal_entry_custom_fields():
 
         ]
     }
+
+
+
+
+def create_custom_roles(role_name):
+
+        if not frappe.db.exists("Role", role_name):
+            new_role = frappe.get_doc({
+                "doctype": "Role",
+                "role_name": role_name
+            })
+            new_role.insert(ignore_permissions=True)
+            print(f"Created role: {role_name}")
+        else:
+            print(f"Role already exists: {role_name}")
+
+        frappe.db.commit()
