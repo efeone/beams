@@ -23,6 +23,7 @@ def after_install():
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_roles('')
 
 def after_migrate():
@@ -46,6 +47,7 @@ def before_uninstall():
     delete_custom_fields(get_contract_custom_fields())
     delete_custom_fields(get_department_custom_fields())
     delete_custom_fields(get_job_requisition_custom_fields())
+    delete_custom_fields(get_quotation_item_custom_fields())
 
 
 
@@ -242,7 +244,7 @@ def get_quotation_custom_fields():
             {
                 "fieldname": "sales_type",
                 "fieldtype": "Link",
-                "label": "Sales Type",
+                "label": "Default Sales Type",
                 "insert_after": "order_type",
                 "options": "Sales Type"
             },
@@ -305,6 +307,22 @@ def get_quotation_custom_fields():
                 "insert_after": "client_name"
             }
 
+        ]
+    }
+
+def get_quotation_item_custom_fields():
+    '''
+    Custom fields that need to be added to the Quotation Item Child Table
+    '''
+    return {
+        "Quotation Item": [
+            {
+                "fieldname": "sales_type",
+                "fieldtype": "Link",
+                "label": "Sales Type",
+                "options": "Sales Type",
+                "insert_after": "item_name"
+           }
         ]
     }
 
@@ -746,6 +764,55 @@ def get_sales_order_custom_fields():
                 "label": "Sales Type",
                 "insert_after": "naming_series",
                 "options": "Sales Type"
+            },
+            {
+                "fieldname": "actual_customer",
+                "fieldtype": "Link",
+                "label": "Actual Customer",
+                "options": "Customer",
+                "depends_on": "eval:doc.is_agent == 1",
+                "insert_after": "is_agent"
+            },
+            {
+                "fieldname": "is_agent",
+                "fieldtype": "Check",
+                "label": "Is Agent",
+                "read_only":1,
+                "fetch_from": "customer.is_agent",
+                "depends_on": "eval:doc.is_agent",
+                "insert_after": "customer"
+            },
+            {
+                "fieldname": "actual_customer_group",
+                "fieldtype": "Link",
+                "label": "Actual Customer Group",
+                "options": "Customer Group",
+                "read_only": 1,
+                "fetch_from": "actual_customer.customer_group",
+                "insert_after": "actual_customer"
+            },
+            {
+                "fieldname": "include_in_ibf",
+                "fieldtype": "Check",
+                "label": "Include in IBF",
+                "read_only": 1,
+                "insert_after": "actual_customer_group"
+            },
+            {
+                "fieldname": "is_barter_invoice",
+                "fieldtype": "Check",
+                "label": "Is Barter Invoice",
+                "read_only": 1,
+                "insert_after": "include_in_ibf",
+                "fetch_from": "reference_id.is_barter"
+            },
+            {
+                "fieldname": "reference_id",
+                "fieldtype": "Link",
+                "options":"Quotation",
+                "label": "Quotation",
+                "read_only":1,
+                "insert_after": "naming_series"
             }
         ]
     }
