@@ -51,6 +51,30 @@ frappe.ui.form.on('Batta Claim', {
         calculate_totals(frm);
         calculate_total_distance_travelled(frm);
         calculate_batta_totals(frm);
+
+        frappe.call({
+            method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
+            callback: function(response) {
+                if (response.message) {
+                    let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
+                    let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
+                    let is_actual_room_rent_batta = response.message.is_actual;
+                    let is_actual_food_allowance = response.message.is_actual___;
+
+                    // Set read-only based on conditions
+                    frm.set_df_property('daily_batta_without_overnight_stay', 'read_only', is_actual_daily_batta_without_overnight_stay == 0);
+                    frm.set_df_property('daily_batta_with_overnight_stay', 'read_only', is_actual_daily_batta_with_overnight_stay == 0);
+                    frm.set_df_property('room_rent_batta', 'read_only', is_actual_room_rent_batta == 0);
+                    frm.set_df_property('food_allowance', 'read_only', is_actual_food_allowance == 0);
+
+                    // Refresh the fields to reflect the changes
+                    frm.refresh_field('daily_batta_without_overnight_stay');
+                    frm.refresh_field('daily_batta_with_overnight_stay');
+                    frm.refresh_field('room_rent_batta');
+                    frm.refresh_field('food_allowance');
+                }
+            }
+        });
     },
     batta_type: function(frm) {
         set_batta_based_on_options(frm);
