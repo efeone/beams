@@ -15,6 +15,8 @@ class SubstituteBooking(Document):
         if self.workflow_state == 'Approved':
             self.create_journal_entry_from_substitute_booking()
 
+
+    @frappe.whitelist()
     def create_journal_entry_from_substitute_booking(self):
         """
         Creation of Journal Entry on the Approval of the Substitute Booking.
@@ -24,33 +26,40 @@ class SubstituteBooking(Document):
         default_debit_account = frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
         # Validate that both debit and credit accounts are configured and different
         if not default_credit_account:
-            frappe.throw("Please configure the Default Credit Account in the Beams Accounts Settings.")
+           frappe.throw("Please configure the Default Credit Account in the Beams Accounts Settings.")
         if not default_debit_account:
             frappe.throw("Please configure the Default Debit Account in the Beams Accounts Settings.")
-        # Create a new Journal Entry
-        journal_entry = frappe.new_doc('Journal Entry')
-        journal_entry.substitute_booking_reference = self.name
-        journal_entry.posting_date = frappe.utils.nowdate()
-        # Append credit entry
-        journal_entry.append('accounts', {
-            'account': default_credit_account,
-            'party_type': 'Employee',
-            'party': self.substituting_for,
-            'debit_in_account_currency': 0,
-            'credit_in_account_currency': self.total_wage,
-        })
-        # Append debit entry
-        journal_entry.append('accounts', {
-            'account': default_debit_account,
-            'party_type': 'Employee',
-            'party': self.substituting_for,
-            'debit_in_account_currency': self.total_wage,
-            'credit_in_account_currency': 0,
-        })
-        # Insert and submit the Journal Entry
-        journal_entry.insert(ignore_permissions=True)
-        journal_entry.submit()
-        frappe.msgprint(f"Journal Entry {journal_entry.name} with Substitute Booking Reference {self.name} has been created successfully.", alert=True)
+
+
+        # Create Journal Entry only if no entry exists
+        journal_entry_exists = frappe.db.exists("Journal Entry", {"substitute_booking_reference": self.name})
+        if journal_entry_exists:
+            frappe.throw("Journal Entry already exists for this Substitute Booking.")
+
+        if self.is_paid:
+            journal_entry = frappe.new_doc('Journal Entry')
+            journal_entry.substitute_booking_reference = self.name
+            journal_entry.posting_date = frappe.utils.nowdate()
+            journal_entry.append('accounts', {
+                'account': default_credit_account,
+                'party_type': 'Employee',
+                'party': self.substituting_for,
+                'debit_in_account_currency': 0,
+                'credit_in_account_currency': self.total_wage,
+            })
+            journal_entry.append('accounts', {
+                'account': default_debit_account,
+                'party_type': 'Employee',
+                'party': self.substituting_for,
+                'debit_in_account_currency': self.total_wage,
+                'credit_in_account_currency': 0,
+            })
+              # Insert and submit the Journal Entry
+            journal_entry.insert(ignore_permissions=True)
+            journal_entry.submit()
+            frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True)
+        else:
+            frappe.msgprint("Please make the payment to proceed.")
 
     def before_save(self):
         self.calculate_no_of_days()
