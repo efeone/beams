@@ -702,7 +702,7 @@ def get_journal_entry_custom_fields():
 
 
 
-
+"Method to create Role , when argument is Passed"
 def create_custom_roles(role_name):
 
         if not frappe.db.exists("Role", role_name):
