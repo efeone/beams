@@ -208,3 +208,8 @@ def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_over
         "food_allowance": food_allowance,
         "batta": total_batta
     }
+
+@frappe.whitelist()
+def get_batta_policy_values():
+    result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
+    return result    

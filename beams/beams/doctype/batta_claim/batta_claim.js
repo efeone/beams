@@ -53,15 +53,10 @@ frappe.ui.form.on('Batta Claim', {
         calculate_batta_totals(frm);
 
         frappe.call({
-            method: "frappe.client.get_value",
-            args: {
-                doctype: "Batta Policy",
-                filters: {},
-                fieldname: ["is_actual", "is_actual_", "is_actual__", "is_actual___"]  
-            },
+            method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
             callback: function(response) {
                 if (response.message) {
-                    let is_actual_daily_batta_without_overnight_stay = response.message.is_actual___;
+                    let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
                     let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
                     let is_actual_room_rent_batta = response.message.is_actual;
                     let is_actual_food_allowance = response.message.is_actual___;
