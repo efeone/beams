@@ -702,17 +702,20 @@ def get_journal_entry_custom_fields():
 
 
 
-"Method to create Role , when argument is Passed"
-def create_custom_roles(role_name):
 
-        if not frappe.db.exists("Role", role_name):
+def create_custom_roles(role_name):
+    """
+    Method to create Role , when argument is Passed
+    """
+
+    if not frappe.db.exists("Role", role_name):
             new_role = frappe.get_doc({
                 "doctype": "Role",
                 "role_name": role_name
             })
             new_role.insert(ignore_permissions=True)
             print(f"Created role: {role_name}")
-        else:
+    else:
             print(f"Role already exists: {role_name}")
 
-        frappe.db.commit()
+    frappe.db.commit()
