@@ -15,7 +15,7 @@
    "fieldname": "job_description_template",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Job Description Template ",
+   "label": "Job Description Template Name",
    "reqd": 1,
    "unique": 1
   },
@@ -35,7 +35,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-02 10:04:43.882045",
+ "modified": "2024-10-03 09:26:47.952327",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Job Description Template",
