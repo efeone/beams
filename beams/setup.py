@@ -21,6 +21,7 @@ def after_install():
     create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -41,6 +42,7 @@ def before_uninstall():
     delete_custom_fields(get_journal_entry_custom_fields())
     delete_custom_fields(get_voucher_entry_custom_fields())
     delete_custom_fields(get_contract_custom_fields())
+    delete_custom_fields(get_job_requisition_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -421,6 +423,7 @@ def get_employee_custom_fields():
         ]
     }
 
+
 def get_voucher_entry_custom_fields():
     '''
     Custom fields that need to be added to the Employee Doctype
@@ -436,6 +439,118 @@ def get_voucher_entry_custom_fields():
             }
         ]
     }
+
+def get_job_requisition_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Requisition Doctype
+    '''
+    return {
+        "Job Requisition": [
+            {
+                "fieldname": "work_details",
+                "fieldtype": "Section Break",
+                "label": "Work Details",
+                "insert_after": "requested_by_designation"
+            },
+            {
+                "fieldname": "employment_type",
+                "fieldtype": "Link",
+                "options": "Employment Type",
+                "label": "Employment Type",
+                "insert_after": "work_details"
+            },
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "insert_after": "work_details"
+            },
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "insert_after": "employment_type"
+            },
+            {
+                "fieldname": "work_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "no_of_days_off"
+            },
+            {
+                "fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Travel required for the position",
+                "insert_after": "work_details_column_break"
+            },
+            {
+                "fieldname": "is_work_shift_needed",
+                "fieldtype": "Check",
+                "label": "Is Shift Work Needed",
+                "insert_after": "travel_required"
+            },
+            {
+                "fieldname": "driving_license_needed",
+                "fieldtype": "Check",
+                "label": "Driving License Needed for this Position",
+                "depends_on": "eval:doc.travel_required == 1",
+                "insert_after": "is_work_shift_needed"
+            },
+            {
+                "fieldname": "license_type",
+                "fieldtype": "Select",
+                "label": "License Type",
+                "options": "\nLight\nHeavy\nMotor Bike",
+                "depends_on": "eval:doc.driving_license_needed == 1",
+                "insert_after": "driving_license_needed"
+            },
+            {
+                "fieldname": "eduacation",
+                "fieldtype": "Section Break",
+                "label": "Education and Qualification Details",
+                "insert_after": "license_type"
+            },
+            {
+                "fieldname": "min_eduction_qual",
+                "fieldtype": "Select",
+                "label": "Minimum Educational Qualification",
+                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                "insert_after": "eduacation"
+            },
+            {
+                "fieldname": "education_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_eduction_qual"
+            },
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required",
+                "insert_after": "education_column_break"
+            },
+            {
+                "fieldname": "reset_column",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "label": "Language Proficiency",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "insert_after": "language_proficiency"
+            }
+        ]
+}
 
 def get_contract_custom_fields():
     '''
