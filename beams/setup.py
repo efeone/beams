@@ -590,6 +590,13 @@ def get_job_requisition_custom_fields():
                 "options": "Skill Proficiency",
                 "label": "Skill Proficiency",
                 "insert_after": "language_proficiency"
+            },
+            {
+                "fieldname": "job_description_template",
+                "fieldtype": "Link",
+                "label": "Job Description Template",
+                "options": "Job Description Template",
+                "insert_after": "job_description_tab"
             }
         ]
 }
@@ -876,22 +883,6 @@ def get_journal_entry_custom_fields():
         ]
     }
 
-def get_job_requisition_custom_fields():
-    '''
-    Custom fields that need to be added to the Job Requisition Doctype
-    '''
-    return {
-        "Job Requisition": [
-            {
-                "fieldname": "job_description_template",
-                "fieldtype": "Link",
-                "label": "Job Description Template",
-                "options": "Job Description Template",
-                "insert_after": "job_description_tab"
-            }
-
-        ]
-    }
 
 def create_custom_roles(role_name):
     """
@@ -909,5 +900,3 @@ def create_custom_roles(role_name):
             print(f"Role already exists: {role_name}")
 
     frappe.db.commit()
- 
- 
