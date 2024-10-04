@@ -24,7 +24,7 @@ def after_install():
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
-    create_custom_roles('')
+    # create_custom_roles('')
 
 def after_migrate():
     after_install()
@@ -909,3 +909,5 @@ def create_custom_roles(role_name):
             print(f"Role already exists: {role_name}")
 
     frappe.db.commit()
+ 
+ 
