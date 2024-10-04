@@ -54,8 +54,14 @@ frappe.ui.form.on("Substitute Booking", {
                 });
             });
         }
-    },
+        // disabled '+' icon in connections for creating journal entry manually
+        if (frm.doc.status === 'Approved') {
+            frm.fields_dict['connections'].grid.wrapper.find('.grid-add').hide();
+        } else {
+            frm.fields_dict['connections'].grid.wrapper.find('.grid-add').show(); 
+        }
 
+    },
     // Triggered when the 'substituting_for' field is changed
     substituting_for: function(frm) {
         // Ensure the button is only shown when the form is saved
