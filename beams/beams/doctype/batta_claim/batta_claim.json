@@ -211,9 +211,9 @@
   {
    "depends_on": "eval: doc.batta_type == 'Internal'",
    "fieldname": "mode_of_travelling",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Mode Of Travelling",
-   "options": "Mode of Travel"
+   "options": "Mode of Travel Table"
   },
   {
    "default": "0",
@@ -232,9 +232,9 @@
   {
    "depends_on": "eval: doc.batta_type == 'Internal'",
    "fieldname": "room_criteria",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Room Criteria",
-   "options": "Room Criteria"
+   "options": "Room Criteria Table"
   },
   {
    "fieldname": "origin",
@@ -283,7 +283,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-09-30 14:23:17.220180",
+ "modified": "2024-10-04 14:56:54.663716",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

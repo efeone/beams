@@ -12,13 +12,15 @@
   {
    "fieldname": "room_criteria",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Room Criteria",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-13 09:27:13.549190",
+ "modified": "2024-10-04 15:00:04.148592",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Room Criteria",

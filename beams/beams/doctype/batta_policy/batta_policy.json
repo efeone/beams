@@ -50,9 +50,9 @@
   },
   {
    "fieldname": "mode_of_travel",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Mode of Travel",
-   "options": "Mode of Travel"
+   "options": "Mode of Travel Table"
   },
   {
    "fieldname": "room_rent_overnightbills_section",
@@ -72,9 +72,9 @@
   {
    "depends_on": "eval:doc.is_actual == \"0\"",
    "fieldname": "room_criteria",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Room Criteria",
-   "options": "Room Criteria"
+   "options": "Room Criteria Table"
   },
   {
    "depends_on": "eval:doc.is_actual == \"0\"",
@@ -188,7 +188,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-30 14:17:07.081112",
+ "modified": "2024-10-04 15:14:47.080979",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Policy",
