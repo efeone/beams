@@ -1,6 +1,9 @@
 
 frappe.ui.form.on('Job Requisition', {
-    /*
+  refresh: function(frm) {
+        frm.set_df_property('status', 'read_only', 1);
+    },
+     /*
      * This function triggers when the designation field is changed.
      * It sets a filter for the Job Description Template based on the selected designation.
      */
