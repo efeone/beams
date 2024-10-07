@@ -178,6 +178,9 @@ doc_events = {
     "Batta Claim": {
         "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
         "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
+    },
+    "Job Requisition": {
+        "on_update": "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition"
     }
 }
 
