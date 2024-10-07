@@ -1,4 +1,5 @@
 import frappe
+from frappe.utils import nowdate
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
     '''
@@ -35,3 +36,28 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.insert()
         job_opening.submit()
         frappe.msgprint(f"Job Opening {job_opening.name} has been created successfully.", alert=True, indicator="green")
+
+def on_workflow_cancel(doc, method):
+    # Check if the Workflow Status is set to "Cancelled"
+        # Find the Job Opening linked to this Job Requisition
+        job_opening = frappe.db.get_value('Job Opening', {'job_requisition': doc.name}, 'name')
+
+        if job_opening:
+            frappe.msgprint(f"Linked Job Opening found: {job_opening}")
+
+            # Fetch the Job Opening document
+            job_opening_doc = frappe.get_doc('Job Opening', job_opening)
+
+            # Update the status of the Job Opening to "Closed"
+            job_opening_doc.db_set("status","Closed")
+
+            # Set the closed_on field to the current date
+            job_opening_doc.closed_on = nowdate()
+
+            job_opening_doc.cancel()
+
+            job_opening_doc.ignore_validate = True
+            # Save the updated Job Opening document
+            frappe.msgprint(f"Job Opening {job_opening_doc.name} has been closed.")
+        else:
+            frappe.msgprint(f"No Job Opening found for Job Requisition {doc.name}.")
