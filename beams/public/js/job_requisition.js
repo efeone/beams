@@ -34,5 +34,21 @@ frappe.ui.form.on('Job Requisition', {
                 }
             );
         }
+    },
+
+    /*
+     * This function triggers when the Job Description Template field is changed.
+     * It fetches the employee who's status is Left
+     */
+
+    employee_left: function(frm) {
+        frm.set_query('employee_left', function() {
+            return {
+                filters: {
+                    status: 'Left' 
+                }
+            };
+        });
     }
 });
+
