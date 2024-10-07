@@ -2118,7 +2118,7 @@
   "doctype": "Workflow",
   "document_type": "Job Requisition",
   "is_active": 1,
-  "modified": "2024-10-07 13:06:55.155651",
+  "modified": "2024-10-07 13:24:25.339978",
   "name": "Job Requisition Workflow",
   "override_status": 0,
   "send_email_alert": 0,
@@ -2165,7 +2165,7 @@
     "parenttype": "Workflow",
     "state": "Approved",
     "update_field": "status",
-    "update_value": "Open & Approve ",
+    "update_value": "Open & Approved",
     "workflow_builder_id": null
    },
    {
