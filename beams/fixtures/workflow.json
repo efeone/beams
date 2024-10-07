@@ -2118,7 +2118,7 @@
   "doctype": "Workflow",
   "document_type": "Job Requisition",
   "is_active": 1,
-  "modified": "2024-10-02 11:10:32.753834",
+  "modified": "2024-10-07 13:06:55.155651",
   "name": "Job Requisition Workflow",
   "override_status": 0,
   "send_email_alert": 0,
@@ -2134,8 +2134,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "Draft",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "Pending ",
     "workflow_builder_id": null
    },
    {
@@ -2149,8 +2149,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "Pending Approval",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "Pending ",
     "workflow_builder_id": null
    },
    {
@@ -2164,8 +2164,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "Approved",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "Open & Approve ",
     "workflow_builder_id": null
    },
    {
@@ -2179,8 +2179,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "Rejected",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "Rejected",
     "workflow_builder_id": null
    },
    {
@@ -2194,8 +2194,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "On Hold",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "On Hold",
     "workflow_builder_id": null
    },
    {
@@ -2209,8 +2209,8 @@
     "parentfield": "states",
     "parenttype": "Workflow",
     "state": "Cancelled",
-    "update_field": null,
-    "update_value": null,
+    "update_field": "status",
+    "update_value": "Cancelled",
     "workflow_builder_id": null
    }
   ],
