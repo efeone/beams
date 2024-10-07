@@ -41,7 +41,7 @@ def validate_sales_order_amount_with_quotation(doc, method):
         quotation = frappe.get_doc('Quotation', doc.reference_id)
 
         # Fetch the Beams Account Settings to check if single_sales_Order is enabled
-        single_sales_order_enabled = frappe.db.get_single_value('Beams Accounts Settings', 'single_sales_Order')
+        single_sales_order_enabled = frappe.db.get_single_value('Beams Accounts Settings', 'single_sales_order')
 
         # Proceed only if the single_sales_Order checkbox is checked
         if single_sales_order_enabled == 1:
