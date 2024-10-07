@@ -7,7 +7,7 @@
  "field_order": [
   "adhoc_budget_threshold",
   "equalize_purchase_and_quotation_amounts",
-  "single_sales_invoice",
+  "single_sales_order",
   "batta_payable_account",
   "batta_expense_account",
   "default_sales_invoice_print_format",
@@ -68,13 +68,6 @@
    "options": "Account"
   },
   {
-   "default": "0",
-   "description": "Only a single Sales Invoice can be created from a Quotation.",
-   "fieldname": "single_sales_invoice",
-   "fieldtype": "Check",
-   "label": "Single Sales Invoice"
-  },
-  {
    "fieldname": "substitute_booking_tab",
    "fieldtype": "Tab Break",
    "label": "Substitute Booking"
@@ -108,12 +101,19 @@
    "fieldtype": "Link",
    "label": "Stringer Service Item",
    "options": "Item"
+  },
+  {
+   "default": "0",
+   "description": "Only a single Sales Order can be created from a Quotation.",
+   "fieldname": "single_sales_order",
+   "fieldtype": "Check",
+   "label": "Single Sales Order"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-09-23 16:37:34.377456",
+ "modified": "2024-10-07 11:39:50.058277",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

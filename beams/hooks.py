@@ -136,7 +136,6 @@ before_uninstall = "beams.uninstall.before_uninstall"
 
 doc_events = {
     "Sales Invoice": {
-        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_amount_with_quotation",
         "on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.on_update_after_submit",
         "autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname"
 
@@ -168,7 +167,8 @@ doc_events = {
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget"
     },
     "Sales Order": {
-        "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname"
+        "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
+        "before_save": "beams.beams.custom_scripts.sales_order.sales_order.validate_sales_order_amount_with_quotation"
         },
     "Contract": {
         "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
