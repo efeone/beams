@@ -24,6 +24,7 @@ def after_install():
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
 
 def after_migrate():
@@ -48,6 +49,7 @@ def before_uninstall():
     delete_custom_fields(get_department_custom_fields())
     delete_custom_fields(get_job_requisition_custom_fields())
     delete_custom_fields(get_quotation_item_custom_fields())
+    delete_custom_fields(get_job_opening_custom_fields())
 
 
 
@@ -553,7 +555,7 @@ def get_job_requisition_custom_fields():
                 "insert_after": "license_type"
             },
             {
-                "fieldname": "min_eduction_qual",
+                "fieldname": "min_education_qual",
                 "fieldtype": "Select",
                 "label": "Minimum Educational Qualification",
                 "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
@@ -563,7 +565,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "education_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "min_eduction_qual"
+                "insert_after": "min_education_qual"
             },
             {
                 "fieldname": "min_experience",
@@ -628,6 +630,70 @@ def get_contract_custom_fields():
                 "insert_after": "services",
                 "read_only":1,
                 "no_copy":1
+            }
+        ]
+    }
+
+def get_job_opening_custom_fields():
+    '''
+    Custom fields that need to be added to the Contract Doctype
+    '''
+    return {
+        "Job Opening": [
+            {
+                "fieldname": "qualification_details",
+                "fieldtype": "Section Break",
+                "label": "Qualification Deatils",
+                "insert_after": "location"
+            },
+            {
+                "fieldname": "min_education_qual",
+                "fieldtype": "Select",
+                "label": "Minimum Educational Qualification",
+                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                "insert_after": "qualification_details"
+            },
+            {
+                "fieldname": "qualification_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_education_qual"
+            },
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required",
+                "insert_after": "qualification_details_column_break"
+            },
+            {
+                "fieldname": "job_details",
+                "fieldtype": "Section Break",
+                "label": "Job Deatils",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "no_of_positions",
+                "fieldtype": "Float",
+                "label": "Number of Positions",
+                "insert_after": "job_details"
+            },
+            {
+                "fieldname": "expected_compensation",
+                "fieldtype": "Currency",
+                "label": "Expected Compensation",
+                "insert_after": "no_of_positions"
+            },
+            {
+                "fieldname": "job_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "expected_compensation"
+            },
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "insert_after": "job_details_column_break"
             }
         ]
     }
