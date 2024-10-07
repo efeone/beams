@@ -599,6 +599,14 @@ def get_job_requisition_custom_fields():
                 "label": "Job Description Template",
                 "options": "Job Description Template",
                 "insert_after": "job_description_tab"
+            },
+            {
+                "fieldname": "status",
+                "fieldtype": "Select",
+                "label": "Status",
+                "options": "\nDraft\nPending\nOpen & Approved\nRejected\nOn Hold\nCancelled",
+                "default": "Pending",
+                "read_only": 1
             }
         ]
 }
