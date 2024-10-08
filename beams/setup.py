@@ -22,7 +22,6 @@ def after_install():
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
@@ -50,8 +49,6 @@ def before_uninstall():
     delete_custom_fields(get_job_requisition_custom_fields())
     delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_job_opening_custom_fields())
-
-
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -957,7 +954,6 @@ def get_journal_entry_custom_fields():
         ]
     }
 
-
 def create_custom_roles(role_name):
     """
     Method to create Role , when argument is Passed
@@ -975,8 +971,6 @@ def create_custom_roles(role_name):
 
     frappe.db.commit()
 
- 
- 
 def get_job_requisition_custom_fields():
     '''
     Custom fields that need to be added to the Job Requisition Doctype.
@@ -994,7 +988,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "employee_left",
                 "label": "Employees Who Left",
                 "fieldtype": "Table MultiSelect",
-                "options": "Employees Left", 
+                "options": "Employees Left",
                 "insert_after": "request_for",
                 "depends_on": "eval:doc.request_for == 'Employee Exit'"
             },
