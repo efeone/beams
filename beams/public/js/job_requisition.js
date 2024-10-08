@@ -34,5 +34,25 @@ frappe.ui.form.on('Job Requisition', {
                 }
             );
         }
-    }
+    },
+    onload: function(frm) {
+       if (!frm.doc.requested_by) {
+           // Fetch the Employee linked to the current User
+           frappe.call({
+               method: "frappe.client.get_value",
+               args: {
+                   doctype: "Employee",
+                   filters: {
+                       user_id: frappe.session.user
+                   },
+                   fieldname: "name"
+               },
+               callback: function(r) {
+                   if (r.message) {
+                       frm.set_value('requested_by', r.message.name);
+                   }
+               }
+           });
+       }
+   }
 });

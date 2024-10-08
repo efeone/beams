@@ -549,7 +549,7 @@ def get_job_requisition_custom_fields():
                 "insert_after": "driving_license_needed"
             },
             {
-                "fieldname": "eduacation",
+                "fieldname": "education",
                 "fieldtype": "Section Break",
                 "label": "Education and Qualification Details",
                 "insert_after": "license_type"
@@ -559,7 +559,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Select",
                 "label": "Minimum Educational Qualification",
                 "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
-                "insert_after": "eduacation"
+                "insert_after": "education"
             },
             {
                 "fieldname": "education_column_break",
@@ -643,7 +643,7 @@ def get_job_opening_custom_fields():
             {
                 "fieldname": "qualification_details",
                 "fieldtype": "Section Break",
-                "label": "Qualification Deatils",
+                "label": "Qualification Details",
                 "insert_after": "location"
             },
             {
@@ -668,7 +668,7 @@ def get_job_opening_custom_fields():
             {
                 "fieldname": "job_details",
                 "fieldtype": "Section Break",
-                "label": "Job Deatils",
+                "label": "Job Details",
                 "insert_after": "min_experience"
             },
             {
@@ -804,8 +804,16 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Data",
             "value": 1
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "posting_date",
+            "property": "read_only",
+            "value": 1
+        },
     ]
+
 def get_material_request_custom_fields():
     '''
     Custom fields that need to be added to the Material Request Doctype
