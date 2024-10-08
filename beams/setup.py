@@ -22,6 +22,7 @@ def after_install():
     create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
