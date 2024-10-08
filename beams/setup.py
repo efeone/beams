@@ -597,17 +597,9 @@ def get_job_requisition_custom_fields():
                 "label": "Job Description Template",
                 "options": "Job Description Template",
                 "insert_after": "job_description_tab"
-            },
-            {
-                "fieldname": "status",
-                "fieldtype": "Select",
-                "label": "Status",
-                "options": "\nDraft\nPending\nOpen & Approved\nRejected\nOn Hold\nCancelled",
-                "default": "Pending",
-                "read_only": 1
             }
         ]
-}
+    }
 
 def get_contract_custom_fields():
     '''
@@ -733,6 +725,13 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "status",
+            "property": "read_only",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Customer",
             "field_name": "disabled",
             "property": "read_only",
@@ -818,6 +817,7 @@ def get_property_setters():
             "property": "read_only",
             "value": 1
         },
+
     ]
 
 def get_material_request_custom_fields():
@@ -1016,19 +1016,5 @@ def get_job_requisition_custom_fields():
                 "options": "Employee",
                 "insert_after": "staffing_plan",
             },
-            {
-                "fieldname": "posting_date",
-                "label": "Posting Date",
-                "fieldtype": "Date",
-                "insert_after": "requested_by",
-                "read_only": 1
-            },
-            {
-                "fieldname": "status",
-                "label": "Status",
-                "fieldtype": "Select",
-                "options": "\nActive\nInactive\nLeft",
-                "insert_after": "posting_date",
-            }
         ]
    }
