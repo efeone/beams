@@ -41,14 +41,14 @@ frappe.ui.form.on('Job Requisition', {
      * It fetches the employee who's status is Left
      */
 
-    employee_left: function(frm) {
-        frm.set_query('employee_left', function() {
-            return {
-                filters: {
-                    status: 'Left'
-                }
-            };
-        });
+    refresh: function(frm) {
+         frm.set_query('employee_left', function() {
+             return {
+                 filters: {
+                     status: 'Left'
+                 }
+             };
+         });
     },
     onload: function(frm) {
       if (!frm.doc.requested_by) {
