@@ -10,14 +10,6 @@ frappe.ui.form.on('Quotation', {
                     });
                 }, __('Create'));
             }
-
-            // Add Sales Invoice button without validation
-            frm.add_custom_button(__('Sales Invoice'), function() {
-                frappe.model.open_mapped_doc({
-                    method: "beams.beams.custom_scripts.quotation.quotation.make_sales_invoice",
-                    frm: frm
-                });
-            }, __('Create'));
         }
     },
 
@@ -69,3 +61,31 @@ function check_sales_type(frm) {
         frm.set_df_property('albatross_ro_id', 'reqd', false);
     }
 }
+
+frappe.ui.form.on('Quotation Item', {
+    item_code: function(frm, cdt, cdn) {
+        var row = locals[cdt][cdn];
+
+        if (row.item_code) {
+            // Fetch sales_type from Item doctype based on selected item_code
+            frappe.call({
+                method: 'frappe.client.get_value',
+                args: {
+                    'doctype': 'Item',
+                    'filters': {'item_code': row.item_code},
+                    'fieldname': ['sales_type']
+                },
+                callback: function(response) {
+                    var sales_type = response.message.sales_type;
+
+                    if (sales_type) {
+                        // Set the sales_type in the child table row
+                        frappe.model.set_value(cdt, cdn, 'sales_type', sales_type);
+                    } else {
+                        frappe.model.set_value(cdt, cdn, 'sales_type', ''); // Clear if no sales_type in Item
+                    }
+                }
+            });
+        }
+    }
+});
