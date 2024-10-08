@@ -68,24 +68,19 @@ frappe.ui.form.on('Quotation Item', {
 
         if (row.item_code) {
             // Fetch sales_type from Item doctype based on selected item_code
-            frappe.call({
-                method: 'frappe.client.get_value',
-                args: {
-                    'doctype': 'Item',
-                    'filters': {'item_code': row.item_code},
-                    'fieldname': ['sales_type']
-                },
-                callback: function(response) {
-                    var sales_type = response.message.sales_type;
+            frappe.db.get_value('Item', {'item_code': row.item_code}, 'sales_type')
+                .then(r => {
+                    if (r.message) {
+                        var sales_type = r.message.sales_type;
 
-                    if (sales_type) {
-                        // Set the sales_type in the child table row
-                        frappe.model.set_value(cdt, cdn, 'sales_type', sales_type);
-                    } else {
-                        frappe.model.set_value(cdt, cdn, 'sales_type', ''); // Clear if no sales_type in Item
+                        if (sales_type) {
+                            // Set the sales_type in the child table row
+                            frappe.model.set_value(cdt, cdn, 'sales_type', sales_type);
+                        } else {
+                            frappe.model.set_value(cdt, cdn, 'sales_type', ''); // Clear if no sales_type in Item
+                        }
                     }
-                }
-            });
+                });
         }
     }
 });
