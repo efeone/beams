@@ -45,10 +45,20 @@ frappe.ui.form.on('Job Requisition', {
         frm.set_query('employee_left', function() {
             return {
                 filters: {
-                    status: 'Left' 
+                    status: 'Left'
                 }
             };
         });
+    },
+    onload: function(frm) {
+      if (!frm.doc.requested_by) {
+        // Fetch the Employee linked to the current User
+        frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+        .then(r => {
+          if (r && r.message) {
+            frm.set_value('requested_by', r.message.name);
+          }
+        });
+      }
     }
 });
-

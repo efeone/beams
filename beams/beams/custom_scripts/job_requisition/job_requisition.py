@@ -16,6 +16,10 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.expected_compensation = doc.expected_compensation
         job_opening.job_title = doc.designation
         job_opening.no_of_positions = doc.no_of_positions
+        job_opening.employment_type = doc.employment_type
+        job_opening.department = doc.department
+        job_opening.designation = doc.designation
+
 
         if not job_opening.employment_type:
             frappe.throw("Please specify the Employment Type in the Job Requisition.")
