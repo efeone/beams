@@ -597,6 +597,36 @@ def get_job_requisition_custom_fields():
                 "label": "Job Description Template",
                 "options": "Job Description Template",
                 "insert_after": "job_description_tab"
+            },
+            {
+                "fieldname": "request_for",
+                "label": "Request For",
+                "fieldtype": "Select",
+                "options": "\nEmployee Exit\nStaffing Plan\nUnplanned",
+                "insert_after": "naming_series"
+            },
+            {
+                "fieldname": "employee_left",
+                "label": "Employees Who Left",
+                "fieldtype": "Table MultiSelect",
+                "options": "Employees Left",
+                "insert_after": "request_for",
+                "depends_on": "eval:doc.request_for == 'Employee Exit'"
+            },
+            {
+                "fieldname": "staffing_plan",
+                "label": "Staffing Plan",
+                "fieldtype": "Link",
+                "options": "Staffing Plan",
+                "insert_after": "employee_left",
+                "depends_on": "eval:doc.request_for == 'Staffing Plan'"
+            },
+            {
+                "fieldname": "requested_by",
+                "label": "Requested By",
+                "fieldtype": "Link",
+                "options": "Employee",
+                "insert_after": "staffing_plan",
             }
         ]
     }
@@ -979,42 +1009,3 @@ def create_custom_roles(role_name):
             print(f"Role already exists: {role_name}")
 
     frappe.db.commit()
-
-def get_job_requisition_custom_fields():
-    '''
-    Custom fields that need to be added to the Job Requisition Doctype.
-    '''
-    return {
-        "Job Requisition": [
-            {
-                "fieldname": "request_for",
-                "label": "Request For",
-                "fieldtype": "Select",
-                "options": "\nEmployee Exit\nStaffing Plan\nUnplanned",
-                "insert_after": "naming_series"
-            },
-            {
-                "fieldname": "employee_left",
-                "label": "Employees Who Left",
-                "fieldtype": "Table MultiSelect",
-                "options": "Employees Left",
-                "insert_after": "request_for",
-                "depends_on": "eval:doc.request_for == 'Employee Exit'"
-            },
-            {
-                "fieldname": "staffing_plan",
-                "label": "Staffing Plan",
-                "fieldtype": "Link",
-                "options": "Staffing Plan",
-                "insert_after": "employee_left",
-                "depends_on": "eval:doc.request_for == 'Staffing Plan'"
-            },
-            {
-                "fieldname": "requested_by",
-                "label": "Requested By",
-                "fieldtype": "Link",
-                "options": "Employee",
-                "insert_after": "staffing_plan",
-            },
-        ]
-   }
