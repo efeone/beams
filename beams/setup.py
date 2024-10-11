@@ -554,9 +554,9 @@ def get_job_requisition_custom_fields():
             },
             {
                 "fieldname": "min_education_qual",
-                "fieldtype": "Select",
+                "fieldtype": "Link",
                 "label": "Minimum Educational Qualification",
-                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                "options": "Educational Qualification",
                 "insert_after": "education"
             },
             {
