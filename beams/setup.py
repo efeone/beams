@@ -540,9 +540,9 @@ def get_job_requisition_custom_fields():
             },
             {
                 "fieldname": "license_type",
-                "fieldtype": "Select",
+                "fieldtype": "Link",
                 "label": "License Type",
-                "options": "\nLight\nHeavy\nMotor Bike",
+                "options": "License Type",
                 "depends_on": "eval:doc.driving_license_needed == 1",
                 "insert_after": "driving_license_needed"
             },
