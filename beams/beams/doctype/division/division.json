@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:Division-{department_abbreviation}",
+ "autoname": "format:{division}-{department_abbreviation}",
  "creation": "2024-10-01 10:39:21.831573",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -35,7 +35,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-02 09:33:19.901503",
+ "modified": "2024-10-11 08:58:05.387867",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Division",
