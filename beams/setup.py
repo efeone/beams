@@ -26,6 +26,8 @@ def after_install():
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
+    create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
+
 
 def after_migrate():
     after_install()
@@ -50,6 +52,8 @@ def before_uninstall():
     delete_custom_fields(get_job_requisition_custom_fields())
     delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_job_opening_custom_fields())
+    delete_custom_fields(get_job_applicant_custom_field())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -507,6 +511,7 @@ def get_job_requisition_custom_fields():
                 "label": "Employment Type",
                 "insert_after": "work_details"
             },
+
             {
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
@@ -635,10 +640,223 @@ def get_job_requisition_custom_fields():
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "no_of_days_off",  # Adjust based on your form layout
+                "insert_after": "no_of_days_off"
             },
         ]
     }
+
+def get_job_requisition_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Requisition Doctype
+    '''
+    return {
+        "Job Requisition": [
+            {
+                "fieldname": "work_details",
+                "fieldtype": "Section Break",
+                "label": "Work Details",
+                "insert_after": "requested_by_designation"
+            },
+            {
+                "fieldname": "employment_type",
+                "fieldtype": "Link",
+                "options": "Employment Type",
+                "label": "Employment Type",
+                "insert_after": "work_details"
+            },
+
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "description": "Number of days off in 30 days.",
+                "insert_after": "employment_type"
+            },
+            {
+                "fieldname": "work_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "no_of_days_off"
+            },
+            {
+                "fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Travel required for the position",
+                "insert_after": "work_details_column_break"
+            },
+            {
+                "fieldname": "is_work_shift_needed",
+                "fieldtype": "Check",
+                "label": "Is Shift Work Needed",
+                "insert_after": "travel_required"
+            },
+            {
+                "fieldname": "driving_license_needed",
+                "fieldtype": "Check",
+                "label": "Driving License Needed for this Position",
+                "depends_on": "eval:doc.travel_required == 1",
+                "insert_after": "is_work_shift_needed"
+            },
+            {
+                "fieldname": "license_type",
+                "fieldtype": "Link",
+                "label": "License Type",
+                "options": "License Type",
+                "depends_on": "eval:doc.driving_license_needed == 1",
+                "insert_after": "driving_license_needed"
+            },
+            {
+                "fieldname": "education",
+                "fieldtype": "Section Break",
+                "label": "Education and Qualification Details",
+                "insert_after": "license_type"
+            },
+            {
+                "fieldname": "min_education_qual",
+                "fieldtype": "Link",
+                "label": "Minimum Educational Qualification",
+                "options": "Educational Qualification",
+                "insert_after": "education"
+            },
+            {
+                "fieldname": "education_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_education_qual"
+            },
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required",
+                "insert_after": "education_column_break"
+            },
+            {
+                "fieldname": "reset_column",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "label": "Language Proficiency",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "description": "Proficency selected here is the minimum proficency needed.",
+                "insert_after": "language_proficiency"
+            },
+            {
+                "fieldname": "job_description_template",
+                "fieldtype": "Link",
+                "label": "Job Description Template",
+                "options": "Job Description Template",
+                "insert_after": "job_description_tab"
+            },
+            {
+                "fieldname": "request_for",
+                "label": "Request For",
+                "fieldtype": "Select",
+                "options": "\nEmployee Exit\nStaffing Plan\nUnplanned",
+                "insert_after": "naming_series"
+            },
+            {
+                "fieldname": "employee_left",
+                "label": "Employees Who Left",
+                "fieldtype": "Table MultiSelect",
+                "options": "Employees Left",
+                "insert_after": "request_for",
+                "depends_on": "eval:doc.request_for == 'Employee Exit'"
+            },
+            {
+                "fieldname": "staffing_plan",
+                "label": "Staffing Plan",
+                "fieldtype": "Link",
+                "options": "Staffing Plan",
+                "insert_after": "employee_left",
+                "depends_on": "eval:doc.request_for == 'Staffing Plan'"
+            },
+            {
+                "fieldname": "requested_by",
+                "label": "Requested By",
+                "fieldtype": "Link",
+                "options": "Employee",
+                "insert_after": "staffing_plan",
+            },
+             {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off"
+            },
+        ]
+    }
+def get_job_applicant_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Applicant Doctype
+    '''
+    return {
+        "Job Applicant": [
+
+            {
+                "fieldname": "min_education_qual",
+                "fieldtype": "Link",
+                "label": "Minimum Educational Qualification",
+                "options": "Educational Qualification",
+                "insert_after": "details_column_break"
+            },
+            {
+                "fieldname": "details",
+                "fieldtype": "Section Break",
+                "label": "Qualification Details",
+                "insert_after": "applicant_rating"
+            },
+
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required",
+                "insert_after": "details"
+            },
+            {
+                "fieldname": "details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "reqd":1,
+                "label": "Language Proficiency",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "reqd":1,
+                "insert_after": "min_experience"
+            },
+             {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "status"
+            }
+        ]
+    }
+
 
 def get_contract_custom_fields():
     '''
@@ -684,12 +902,13 @@ def get_job_opening_custom_fields():
                 "insert_after": "location"
             },
             {
-                "fieldname": "min_education_qual",
-                "fieldtype": "Select",
+               "fieldname": "min_education_qual",
+                "fieldtype": "Table MultiSelect",
                 "label": "Minimum Educational Qualification",
-                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                'options':"Educational Qualifications",
                 "insert_after": "qualification_details"
             },
+
             {
                 "fieldname": "qualification_details_column_break",
                 "fieldtype": "Column Break",
@@ -731,6 +950,13 @@ def get_job_opening_custom_fields():
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
                 "insert_after": "job_details_column_break"
+            },
+            {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off"
             }
         ]
     }
