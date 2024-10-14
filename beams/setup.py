@@ -540,9 +540,9 @@ def get_job_requisition_custom_fields():
             },
             {
                 "fieldname": "license_type",
-                "fieldtype": "Select",
+                "fieldtype": "Link",
                 "label": "License Type",
-                "options": "\nLight\nHeavy\nMotor Bike",
+                "options": "License Type",
                 "depends_on": "eval:doc.driving_license_needed == 1",
                 "insert_after": "driving_license_needed"
             },
@@ -554,9 +554,9 @@ def get_job_requisition_custom_fields():
             },
             {
                 "fieldname": "min_education_qual",
-                "fieldtype": "Select",
+                "fieldtype": "Link",
                 "label": "Minimum Educational Qualification",
-                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                "options": "Educational Qualification",
                 "insert_after": "education"
             },
             {
