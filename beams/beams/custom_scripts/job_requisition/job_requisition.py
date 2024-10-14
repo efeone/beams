@@ -5,9 +5,22 @@ from frappe.utils import nowdate
 def create_job_opening_from_job_requisition(doc, method):
     '''
     Create a Job Opening when the Job Requisition is approved.
-    
+
     '''
+    if doc.workflow_state == "Pending Approval":
+        department = frappe.get_doc('Department', doc.department)
+        head_of_department = department.head_of_department
+        if not head_of_department:
+            frappe.throw(f"Head of Department is not set for the {doc.department} department.")
+        head_of_department_doc = frappe.get_doc('Employee', head_of_department)
+        user_email = head_of_department_doc.user_id
+        if frappe.session.user != user_email:
+            frappe.throw(f"Only the Head of Department ({head_of_department}) can change the workflow state from '<b>Draft</b>' to '<b>Submit for Approval</b>' .")
+
     if doc.workflow_state == "Approved":
+        if not "CEO" in frappe.get_roles(frappe.session.user):
+            frappe.throw("Only a user with the 'CEO' role can approve this Job Requisition.")
+
         job_opening = frappe.new_doc('Job Opening')
         job_opening.job_requisition = doc.name
         job_opening.posting_date = frappe.utils.nowdate()
@@ -17,11 +30,12 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.min_education_qual = doc.min_education_qual
         job_opening.min_experience = doc.min_experience
         job_opening.expected_compensation = doc.expected_compensation
-        job_opening.job_title = doc.designation
+        job_opening.job_title = doc.job_title
         job_opening.no_of_positions = doc.no_of_positions
         job_opening.employment_type = doc.employment_type
         job_opening.department = doc.department
         job_opening.designation = doc.designation
+        job_opening.description = doc.description
 
 
         # Validation checks
@@ -39,11 +53,11 @@ def create_job_opening_from_job_requisition(doc, method):
             frappe.throw("Please specify the Expected Compensation in the Job Requisition.")
         if not job_opening.no_of_positions:
             frappe.throw("Please specify the Number of Positions in the Job Requisition.")
+        if not job_opening.description:
+            frappe.throw("Please specify the Description in the job Requisition")
 
-        # Insert and submit the Job Opening document
+        # Insert the Job Opening document
         job_opening.insert()
-        job_opening.submit()
-
         frappe.msgprint(f"Job Opening {job_opening.name} has been created successfully.", alert=True, indicator="green")
 
 

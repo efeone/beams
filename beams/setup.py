@@ -495,6 +495,12 @@ def get_job_requisition_custom_fields():
     return {
         "Job Requisition": [
             {
+                "fieldname": "job_title",
+                "fieldtype": "Data",
+                "label": "Job Title",
+                "insert_after": "job_description_template"
+            },
+            {
                 "fieldname": "work_details",
                 "fieldtype": "Section Break",
                 "label": "Work Details",
@@ -847,6 +853,14 @@ def get_property_setters():
             "property": "read_only",
             "value": 1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "job_title",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 1
+        }
 
     ]
 
