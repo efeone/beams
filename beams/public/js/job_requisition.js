@@ -1,25 +1,6 @@
 
 frappe.ui.form.on('Job Requisition', {
     /*
-     * This function triggers when the designation field is changed.
-     * It sets a filter for the Job Description Template based on the selected designation.
-     */
-    designation: function(frm) {
-        frm.set_query('job_description_template', function() {
-            return {
-                filters: {
-                    'designation': frm.doc.designation
-                }
-            };
-        });
-        // Refresh the Job Description Template field to apply the new filter
-        frm.refresh_field('job_description_template');
-
-        // Clear the current selection in Job Description Template if designation changes
-        frm.set_value('job_description_template', null);
-    },
-
-    /*
      * This function triggers when the Job Description Template field is changed.
      * It fetches the Job Description based on the selected Job Description Template.
      */
@@ -46,6 +27,17 @@ frappe.ui.form.on('Job Requisition', {
              return {
                  filters: {
                      status: 'Left'
+                 }
+             };
+         });
+         /*
+          * Sets a filter on the Job Description Template field based on the Designation .
+          * Clears the Job Description Template field when the form is refreshed,
+          */
+         frm.set_query('job_description_template', function() {
+             return {
+                 filters: {
+                     'designation': frm.doc.designation
                  }
              };
          });
