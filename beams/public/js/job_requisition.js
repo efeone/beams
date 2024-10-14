@@ -1,5 +1,41 @@
 
 frappe.ui.form.on('Job Requisition', {
+    refresh: function(frm) {
+        // Set the query for employee_left based on request_for
+        frm.set_query('employee_left', function() {
+            if (frm.doc.request_for === 'Employee Exit') {
+                return {
+                    filters: {
+                        status: 'Left'  // Assuming 'status' is the field that indicates the employee's status
+                    }
+                };
+            } else {
+                return {
+                    filters: {
+                        // No filter if it's not Employee Exit
+                    }
+                };
+            }
+        });
+        /*
+         * Sets a filter on the Job Description Template field based on the Designation .
+         * Clears the Job Description Template field when the form is refreshed,
+         */
+        frm.set_query('job_description_template', function() {
+            return {
+                filters: {
+                    'designation': frm.doc.designation
+                }
+            };
+        });
+    },
+
+    request_for: function(frm) {
+        // When request_for changes, reset the employee_left field
+        frm.set_value('employee_left', []);
+        frm.refresh_field('employee_left');  // Refresh the field to apply the new query
+    },
+
     /*
      * This function triggers when the Job Description Template field is changed.
      * It fetches the Job Description based on the selected Job Description Template.
@@ -15,32 +51,6 @@ frappe.ui.form.on('Job Requisition', {
                 }
             );
         }
-    },
-
-    /*
-     * This function triggers when the Job Description Template field is changed.
-     * It fetches the employee who's status is Left
-     */
-
-    refresh: function(frm) {
-         frm.set_query('employee_left', function() {
-             return {
-                 filters: {
-                     status: 'Left'
-                 }
-             };
-         });
-         /*
-          * Sets a filter on the Job Description Template field based on the Designation .
-          * Clears the Job Description Template field when the form is refreshed,
-          */
-         frm.set_query('job_description_template', function() {
-             return {
-                 filters: {
-                     'designation': frm.doc.designation
-                 }
-             };
-         });
     },
     onload: function(frm) {
       if (!frm.doc.requested_by) {
