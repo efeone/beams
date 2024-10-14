@@ -511,6 +511,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
+                "description": "Number of days off in 30 days.",
                 "insert_after": "employment_type"
             },
             {
@@ -589,6 +590,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Table",
                 "options": "Skill Proficiency",
                 "label": "Skill Proficiency",
+                "description": "Proficency selected here is the minimum proficency needed.",
                 "insert_after": "language_proficiency"
             },
             {
@@ -627,7 +629,14 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Link",
                 "options": "Employee",
                 "insert_after": "staffing_plan",
-            }
+            },
+             {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off",  # Adjust based on your form layout
+            },
         ]
     }
 

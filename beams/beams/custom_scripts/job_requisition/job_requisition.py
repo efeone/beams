@@ -1,11 +1,23 @@
 import frappe
 from frappe.utils import nowdate
+from frappe import ValidationError
+
+
+def validate_job_requisition(doc, method):
+    # Adjusted to use request_for instead of request_type
+    if doc.request_for == 'Employee Exit':
+        if not doc.employee_left:
+            raise ValidationError("Please select at least one employee who has left.")
+    else:
+        doc.employee_left = []
+
+
 
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
     '''
     Create a Job Opening when the Job Requisition is approved.
-    
+
     '''
     if doc.workflow_state == "Approved":
         job_opening = frappe.new_doc('Job Opening')
