@@ -12,9 +12,24 @@ frappe.ui.form.on('Sales Order', {
             callback: function(r) {
                 if (r.message && r.message.length > 0) {
                     let overdue_invoices = r.message;
-                    let message = "<b>Overdue Sales Invoices found:</b><br>";
-                    overdue_invoices.forEach(invoice => {
-                        message += `<a href="/app/sales-invoice/${invoice.name}" style="color:red;">${invoice.name}</a> - ${invoice.due_date}<br>`;
+                    let message = "<b>Overdue Sales Invoices found:</b>";
+
+                    overdue_invoices.forEach((invoice, index) => {
+                        // Convert the due date to a proper date object
+                        let due_date = new Date(invoice.due_date);
+
+                        // Manually format the date as dd-mm-yy
+                        let day = ("0" + due_date.getDate()).slice(-2);
+                        let month = ("0" + (due_date.getMonth() + 1)).slice(-2);
+                        let year = due_date.getFullYear().toString().slice(-2);
+
+                        let formatted_due_date = `${day}-${month}-${year}`;
+
+                        // Add comma after each sales invoice except the last one
+                        message += `<a href="/app/sales-invoice/${invoice.name}" style="color:red;">${invoice.name}</a> - (${formatted_due_date})`;
+                        if (index < overdue_invoices.length - 1) {
+                            message += ", ";
+                        }
                     });
 
                     frm.dashboard.set_headline_alert(message, 'red');
@@ -22,7 +37,6 @@ frappe.ui.form.on('Sales Order', {
             }
         });
     }
-
     // Check if the Sales Order is being created from a Quotation (i.e., reference_id is set)
     if (frm.doc.reference_id) {
       frm.set_df_property('customer', 'read_only', 1);

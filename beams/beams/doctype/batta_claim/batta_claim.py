@@ -94,10 +94,10 @@ class BattaClaim(Document):
         total_daily_batta = 0
         total_ot_batta = 0
 
-        # Loop through the work_detail child table
+        # Loop through the work_detail child table and ensure default values are integers
         for row in doc.get('work_detail', []):
-            total_daily_batta += row.get('daily_batta', 0)
-            total_ot_batta += row.get('ot_batta', 0)
+            total_daily_batta += row.get('daily_batta', 0) or 0
+            total_ot_batta += row.get('ot_batta', 0) or 0
 
         # Total batta is the sum of total_daily_batta and total_ot_batta
         total_driver_batta = total_daily_batta + total_ot_batta
@@ -212,4 +212,4 @@ def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_over
 @frappe.whitelist()
 def get_batta_policy_values():
     result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
-    return result    
+    return result
