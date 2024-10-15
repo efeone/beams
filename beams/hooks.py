@@ -138,7 +138,7 @@ doc_events = {
     "Sales Invoice": {
         "on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.on_update_after_submit",
         "autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname",
-        "before_save": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_for_barter"
+        "validate": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_for_barter"
     },
     "Quotation": {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
