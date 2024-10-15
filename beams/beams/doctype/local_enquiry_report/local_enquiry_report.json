@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "LER-.#####",
  "creation": "2024-10-14 14:11:06.356872",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -94,10 +95,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-14 14:22:30.397095",
+ "modified": "2024-10-15 10:34:17.158722",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
