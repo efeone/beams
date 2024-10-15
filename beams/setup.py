@@ -26,6 +26,8 @@ def after_install():
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
+    create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
+
 
 def after_migrate():
     after_install()
@@ -50,6 +52,8 @@ def before_uninstall():
     delete_custom_fields(get_job_requisition_custom_fields())
     delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_job_opening_custom_fields())
+    delete_custom_fields(get_job_applicant_custom_field())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -488,6 +492,7 @@ def get_voucher_entry_custom_fields():
         ]
     }
 
+
 def get_job_requisition_custom_fields():
     '''
     Custom fields that need to be added to the Job Requisition Doctype
@@ -507,6 +512,7 @@ def get_job_requisition_custom_fields():
                 "label": "Employment Type",
                 "insert_after": "work_details"
             },
+
             {
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
@@ -635,10 +641,70 @@ def get_job_requisition_custom_fields():
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "no_of_days_off",  # Adjust based on your form layout
+                "insert_after": "no_of_days_off"
             },
         ]
     }
+def get_job_applicant_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Applicant Doctype
+    '''
+    return {
+        "Job Applicant": [
+
+            {
+                "fieldname": "min_education_qual",
+                "fieldtype": "Link",
+                "label": "Minimum Educational Qualification",
+                "options": "Educational Qualification",
+                "insert_after": "details_column_break"
+            },
+            {
+                "fieldname": "details",
+                "fieldtype": "Section Break",
+                "label": "Qualification Details",
+                "insert_after": "applicant_rating"
+            },
+
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required",
+                "insert_after": "details"
+            },
+            {
+                "fieldname": "details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "reqd":1,
+                "label": "Language Proficiency",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "reqd":1,
+                "insert_after": "min_experience"
+            },
+             {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "status"
+            }
+        ]
+    }
+
 
 def get_contract_custom_fields():
     '''
@@ -684,12 +750,13 @@ def get_job_opening_custom_fields():
                 "insert_after": "location"
             },
             {
-                "fieldname": "min_education_qual",
-                "fieldtype": "Select",
+               "fieldname": "min_education_qual",
+                "fieldtype": "Table MultiSelect",
                 "label": "Minimum Educational Qualification",
-                "options": "\nPost Graduate Diploma in Journalism/Media\nDiploma in Media/Journalism/Communication\nUndergraduate (BA/BSc/BCom in any field)\nPost graduate (BA/BSc/BCom in any field)\nBachelor's in Journalism/Mass Communication/Media Studies\nBachelor's in Film/Television Production\nMaster's in Journalism/Mass Communication/Media Studies\nMBA/PGDM (for management roles)\nPlus Two\nSSLC\nOthers",
+                'options':"Educational Qualifications",
                 "insert_after": "qualification_details"
             },
+
             {
                 "fieldname": "qualification_details_column_break",
                 "fieldtype": "Column Break",
@@ -731,6 +798,13 @@ def get_job_opening_custom_fields():
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
                 "insert_after": "job_details_column_break"
+            },
+            {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off"
             }
         ]
     }
