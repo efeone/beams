@@ -651,14 +651,14 @@ def get_job_applicant_custom_fields():
     '''
     return {
         "Job Applicant": [
-
             {
-                "fieldname": "min_education_qual",
-                "fieldtype": "Link",
+               "fieldname": "min_education_qual",
+                "fieldtype": "Table MultiSelect",
                 "label": "Minimum Educational Qualification",
-                "options": "Educational Qualification",
-                "insert_after": "details_column_break"
+                'options':"Educational Qualifications",
+                "insert_after": "details"
             },
+
             {
                 "fieldname": "details",
                 "fieldtype": "Section Break",
@@ -670,11 +670,17 @@ def get_job_applicant_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Minimum Experience Required",
-                "insert_after": "details"
+                "insert_after": "details_column_break"
             },
             {
                 "fieldname": "details_column_break",
                 "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_education_qual"
+            },
+            {
+                "fieldname": "reset_column",
+                "fieldtype": "Section Break",
                 "label": "",
                 "insert_after": "min_experience"
             },
@@ -693,7 +699,7 @@ def get_job_applicant_custom_fields():
                 "options": "Skill Proficiency",
                 "label": "Skill Proficiency",
                 "reqd":1,
-                "insert_after": "min_experience"
+                "insert_after": "language_proficiency"
             },
              {
                 "fieldname": "location",
