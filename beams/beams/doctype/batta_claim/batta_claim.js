@@ -84,6 +84,7 @@ frappe.ui.form.on('Batta Claim', {
         frm.refresh_field('work_detail');
         set_batta_based_on_options(frm);
         handle_designation_based_on_batta_type(frm);
+        frm.set_value('batta', 0);
     },
     employee: function (frm) {
         handle_designation_based_on_batta_type(frm);

@@ -75,6 +75,7 @@
    "options": "Employee"
   },
   {
+   "depends_on": "eval:doc.batta_type == \"Internal\"",
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
@@ -283,7 +284,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-10-04 14:56:54.663716",
+ "modified": "2024-10-10 11:01:24.580594",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

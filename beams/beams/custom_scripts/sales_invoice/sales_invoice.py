@@ -40,6 +40,38 @@ def on_update_after_submit(doc, method=None):
     if doc.workflow_state == "Completed":
         send_email_to_party(doc)
 
+@frappe.whitelist()
+def validate_sales_invoice_for_barter(doc, method):
+    '''
+    Method to validate the `is_barter` checkbox in the Quotation and ensure that a corresponding Purchase Invoice exists for the same Quotation.
+    Also creates a common party and supplier if necessary.
+    '''
+    if doc.reference_id:
+        # Fetch the Quotation document
+        quotation = frappe.get_doc('Quotation', doc.reference_id)
+
+        # Check if `is_barter` is checked in the Quotation
+        if quotation.is_barter:
+            # Check if there is a Purchase Invoice for the same Quotation
+            purchase_invoices = frappe.get_all('Purchase Invoice',
+                filters={'quotation': doc.reference_id, 'docstatus': 1},
+                fields=['supplier'])
+
+            if purchase_invoices:
+                customer = doc.customer
+                for purchase_invoice in purchase_invoices:
+                    supplier = purchase_invoice.supplier
+                    if customer:
+                        # Ensure common party accounting is enabled
+                        if frappe.db.get_single_value("Accounts Settings", "enable_common_party_accounting"):
+                            common_party = create_common_party_and_supplier(customer)
+                            if common_party:
+                                frappe.msgprint(f'Common Party and Supplier {common_party} created and linked.', indicator="green", alert=1)
+            else:
+                frappe.throw(_(
+                    "No Purchase Invoice found for the Quotation."
+                ))
+
 
 @frappe.whitelist()
 def send_email_to_party(doc):
