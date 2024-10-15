@@ -1,0 +1,121 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "LER-.#####",
+ "creation": "2024-10-14 14:11:06.356872",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "job_applicant",
+  "job_applicant_name",
+  "designation",
+  "department",
+  "column_break_xtgz",
+  "information_given_by_designation",
+  "information_given_by",
+  "information_collected_by",
+  "status",
+  "section_break_2hnf",
+  "enquiry_report",
+  "remarks"
+ ],
+ "fields": [
+  {
+   "fieldname": "job_applicant",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Job Applicant",
+   "options": "Job Applicant",
+   "reqd": 1
+  },
+  {
+   "fieldname": "enquiry_report",
+   "fieldtype": "Table",
+   "label": "Enquiry Report",
+   "options": "Local Enquiry Checklist",
+   "reqd": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
+  },
+  {
+   "fieldname": "job_applicant_name",
+   "fieldtype": "Link",
+   "label": "Job Applicant Name",
+   "options": "Job Applicant"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nOngoing\nHold\nCompleted"
+  },
+  {
+   "fieldname": "information_given_by",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Information Given By",
+   "reqd": 1
+  },
+  {
+   "fieldname": "information_given_by_designation",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Information Given By Designation",
+   "reqd": 1
+  },
+  {
+   "fieldname": "information_collected_by",
+   "fieldtype": "Link",
+   "label": "Information Collected By",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "section_break_2hnf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_xtgz",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-10-15 10:34:17.158722",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Local Enquiry Report",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
