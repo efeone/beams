@@ -17,19 +17,10 @@ frappe.ui.form.on('Job Requisition', {
                 };
             }
         });
-    },
-
-    request_for: function(frm) {
-        // When request_for changes, reset the employee_left field
-        frm.set_value('employee_left', []);
-        frm.refresh_field('employee_left');  // Refresh the field to apply the new query
-    },
-
-    /*
-     * This function triggers when the designation field is changed.
-     * It sets a filter for the Job Description Template based on the selected designation.
-     */
-    designation: function(frm) {
+        /*
+         * Sets a filter on the Job Description Template field based on the Designation .
+         * Clears the Job Description Template field when the form is refreshed,
+         */
         frm.set_query('job_description_template', function() {
             return {
                 filters: {
@@ -37,11 +28,12 @@ frappe.ui.form.on('Job Requisition', {
                 }
             };
         });
-        // Refresh the Job Description Template field to apply the new filter
-        frm.refresh_field('job_description_template');
+    },
 
-        // Clear the current selection in Job Description Template if designation changes
-        frm.set_value('job_description_template', null);
+    request_for: function(frm) {
+        // When request_for changes, reset the employee_left field
+        frm.set_value('employee_left', []);
+        frm.refresh_field('employee_left');  // Refresh the field to apply the new query
     },
 
     /*
@@ -60,7 +52,6 @@ frappe.ui.form.on('Job Requisition', {
             );
         }
     },
-
     onload: function(frm) {
       if (!frm.doc.requested_by) {
         // Fetch the Employee linked to the current User
