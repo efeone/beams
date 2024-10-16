@@ -30,13 +30,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-16 14:50:26.425434",
-  "name": "Submit for Approval",
-  "workflow_action_name": "Submit for Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-08-27 09:57:11.806048",
   "name": "Submit",
   "workflow_action_name": "Submit"
@@ -44,16 +37,16 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-26 16:23:42.399000",
-  "name": "Cancel",
-  "workflow_action_name": "Cancel"
+  "modified": "2024-08-27 10:16:17.791427",
+  "name": "Send Email To Party",
+  "workflow_action_name": "Send Email To Party"
  },
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-27 10:16:17.791427",
-  "name": "Send Email To Party",
-  "workflow_action_name": "Send Email To Party"
+  "modified": "2024-08-16 14:50:26.425434",
+  "name": "Submit for Approval",
+  "workflow_action_name": "Submit for Approval"
  },
  {
   "docstatus": 0,
@@ -75,5 +68,12 @@
   "modified": "2024-10-02 11:08:42.938069",
   "name": "Put On Hold",
   "workflow_action_name": "Put On Hold"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-26 16:23:42.399000",
+  "name": "Cancel",
+  "workflow_action_name": "Cancel"
  }
 ]

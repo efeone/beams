@@ -21,15 +21,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-27 12:10:51.168269",
-  "name": "Cancelled",
-  "style": "Danger",
-  "workflow_state_name": "Cancelled"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-08-27 12:10:23.108903",
   "name": "Completed",
   "style": "Success",
@@ -65,20 +56,20 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "remove",
-  "modified": "2024-08-03 14:59:52.136137",
-  "name": "Rejected",
-  "style": "Danger",
-  "workflow_state_name": "Rejected"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
   "icon": "",
   "modified": "2024-08-22 09:42:18.336199",
   "name": "Pending Finance Approval",
   "style": "Info",
   "workflow_state_name": "Pending Finance Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "remove",
+  "modified": "2024-08-03 14:59:52.136137",
+  "name": "Rejected",
+  "style": "Danger",
+  "workflow_state_name": "Rejected"
  },
  {
   "docstatus": 0,
@@ -93,10 +84,19 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-20 14:52:12.123094",
-  "name": "Pending Approval",
-  "style": "Info",
-  "workflow_state_name": "Pending Approval"
+  "modified": "2024-10-02 11:07:13.425158",
+  "name": "On Hold",
+  "style": "",
+  "workflow_state_name": "On Hold"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-27 12:10:51.168269",
+  "name": "Cancelled",
+  "style": "Danger",
+  "workflow_state_name": "Cancelled"
  },
  {
   "docstatus": 0,
@@ -111,9 +111,9 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-10-02 11:07:13.425158",
-  "name": "On Hold",
-  "style": "",
-  "workflow_state_name": "On Hold"
+  "modified": "2024-08-20 14:52:12.123094",
+  "name": "Pending Approval",
+  "style": "Info",
+  "workflow_state_name": "Pending Approval"
  }
 ]
