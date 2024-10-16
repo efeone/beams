@@ -41,10 +41,12 @@
    "label": "Remarks"
   },
   {
+   "fetch_from": "job_applicant.applicant_name",
    "fieldname": "job_applicant_name",
    "fieldtype": "Link",
    "label": "Job Applicant Name",
-   "options": "Job Applicant"
+   "options": "Job Applicant",
+   "read_only": 1
   },
   {
    "fieldname": "designation",
@@ -82,7 +84,8 @@
    "fieldname": "information_collected_by",
    "fieldtype": "Link",
    "label": "Information Collected By",
-   "options": "Employee"
+   "options": "Employee",
+   "read_only": 1
   },
   {
    "fieldname": "section_break_2hnf",
@@ -95,7 +98,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-15 10:34:17.158722",
+ "modified": "2024-10-16 11:52:48.316033",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",
