@@ -120,7 +120,7 @@ permission_query_conditions = {
 }
 
 # has_permission = {
-# 	"Job Applicant": "beams.beams.custom_scripts.job_applicant.job_applicant.has_permission",
+# 	
 # }
 
 # DocType Class
