@@ -643,6 +643,13 @@ def get_job_requisition_custom_fields():
                 "options": "Location",
                 "insert_after": "no_of_days_off"
             },
+            {
+                "fieldname": "job_title",
+                "fieldtype": "Data",
+                "label": "Job Title",
+                "insert_after": "job_description_template",
+                "reqd": 1
+            }
         ]
     }
 def get_job_applicant_custom_fields():
@@ -935,8 +942,7 @@ def get_property_setters():
             "field_name": "posting_date",
             "property": "read_only",
             "value": 1
-        },
-
+        }
     ]
 
 def get_material_request_custom_fields():

@@ -11,8 +11,6 @@ def validate_job_requisition(doc, method):
     else:
         doc.employee_left = []
 
-
-
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
     '''
@@ -35,7 +33,6 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.department = doc.department
         job_opening.designation = doc.designation
 
-
         # Validation checks
         if not job_opening.employment_type:
             frappe.throw("Please specify the Employment Type in the Job Requisition.")
@@ -54,10 +51,7 @@ def create_job_opening_from_job_requisition(doc, method):
 
         # Insert and submit the Job Opening document
         job_opening.insert()
-        job_opening.submit()
-
         frappe.msgprint(f"Job Opening {job_opening.name} has been created successfully.", alert=True, indicator="green")
-
 
 def on_workflow_cancel(doc, method):
     '''
