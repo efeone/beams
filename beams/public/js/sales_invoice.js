@@ -1,5 +1,8 @@
 frappe.ui.form.on('Sales Invoice', {
   refresh: function(frm) {
+    setTimeout(() => {
+        frm.remove_custom_button('Delivery', 'Create');
+    }, 500);
     set_actual_customer_query(frm);
 
     // Check if the Sales Invoice is being created from a Quotation (i.e., reference_id is set)

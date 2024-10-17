@@ -5,7 +5,7 @@
    "label": "Quotation Is Barter"
   }
  ],
- "content": "[{\"id\":\"mM37igfJxh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">BEAMS</span>\",\"col\":12}},{\"id\":\"mYOrBb92TB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Account\",\"col\":3}},{\"id\":\"WLO_tZBeIe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Beams Accounts Settings\",\"col\":3}},{\"id\":\"OihJCscygq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget\",\"col\":3}},{\"id\":\"KVIBfudYxi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Adhoc Budget\",\"col\":3}},{\"id\":\"AU3IgQiL8w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batta Claim\",\"col\":3}},{\"id\":\"y1KpAUVh-r\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qf4-cjQ8K_\",\"type\":\"card\",\"data\":{\"card_name\":\"Employees\",\"col\":6}},{\"id\":\"CVVtbAAAyD\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying\",\"col\":6}},{\"id\":\"gc6Nr4BsjN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jNk-0qCCN-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Quotation Is Barter\",\"col\":12}}]",
+ "content": "[{\"id\":\"mM37igfJxh\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">BEAMS</span>\",\"col\":12}},{\"id\":\"mYOrBb92TB\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Account\",\"col\":3}},{\"id\":\"WLO_tZBeIe\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Beams Accounts Settings\",\"col\":3}},{\"id\":\"OihJCscygq\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Budget\",\"col\":3}},{\"id\":\"KVIBfudYxi\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Adhoc Budget\",\"col\":3}},{\"id\":\"AU3IgQiL8w\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batta Claim\",\"col\":3}},{\"id\":\"97_E879z_e\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Batta Policy\",\"col\":3}},{\"id\":\"k4gKNeLbJK\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Albatross Settings\",\"col\":3}},{\"id\":\"7ww0mBjFgz\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Contract\",\"col\":3}},{\"id\":\"y1KpAUVh-r\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"Qf4-cjQ8K_\",\"type\":\"card\",\"data\":{\"card_name\":\"Employees\",\"col\":3}},{\"id\":\"rBG0GFGfuj\",\"type\":\"card\",\"data\":{\"card_name\":\"Stringer Billing & Substitues\",\"col\":4}},{\"id\":\"CVVtbAAAyD\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying\",\"col\":5}},{\"id\":\"gc6Nr4BsjN\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"jNk-0qCCN-\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Quotation Is Barter\",\"col\":12}}]",
  "creation": "2024-08-29 09:58:35.022181",
  "custom_blocks": [],
  "docstatus": 0,
@@ -61,7 +61,7 @@
    "hidden": 0,
    "is_query_report": 0,
    "label": "Selling & Buying",
-   "link_count": 3,
+   "link_count": 4,
    "link_type": "DocType",
    "onboard": 0,
    "type": "Card Break"
@@ -95,9 +95,48 @@
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Sales Order",
+   "link_count": 0,
+   "link_to": "Sales Order",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stringer Billing & Substitues",
+   "link_count": 2,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Stringer Bill",
+   "link_count": 0,
+   "link_to": "Stringer Bill",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Substitute Booking",
+   "link_count": 0,
+   "link_to": "Substitute Booking",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
   }
  ],
- "modified": "2024-09-24 09:35:44.221395",
+ "modified": "2024-10-17 09:52:43.979836",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS",
@@ -125,8 +164,31 @@
   {
    "color": "Grey",
    "doc_view": "List",
+   "label": "Albatross Settings",
+   "link_to": "Albatross Settings",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Contract",
+   "link_to": "Contract",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
    "label": "Beams Accounts Settings",
    "link_to": "Beams Accounts Settings",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Batta Policy",
+   "link_to": "Batta Policy",
+   "stats_filter": "[]",
    "type": "DocType"
   },
   {

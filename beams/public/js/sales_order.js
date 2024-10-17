@@ -1,7 +1,11 @@
 frappe.ui.form.on('Sales Order', {
   refresh: function(frm) {
+    setTimeout(() => {
+        frm.remove_custom_button('Delivery Note', 'Create');
+    }, 500);
     set_actual_customer_query(frm);
     frm.dashboard.clear_headline();
+
     //Check Overdue Invoices
     if (frm.doc.customer) {
         frappe.call({

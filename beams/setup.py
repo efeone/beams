@@ -87,7 +87,7 @@ def get_customer_custom_fields():
             {
                 "fieldname": "is_agent",
                 "fieldtype": "Check",
-                "label": "Is Agent",
+                "label": "Is Agency",
                 "insert_after": "msme_status"
             },
             {
@@ -179,7 +179,7 @@ def get_sales_invoice_custom_fields():
             {
                 "fieldname": "is_agent",
                 "fieldtype": "Check",
-                "label": "Is Agent",
+                "label": "Is Agency",
                 "read_only":1,
                 "fetch_from": "customer.is_agent",
                 "depends_on": "eval:doc.is_agent",
@@ -914,6 +914,14 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Customer",
+            "field_name": "sales_team_tab",
+            "property": "hidden",
+            "property_type": "TabBreak",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Purchase Invoice",
             "field_name": "is_subcontracted",
             "property": "hidden",
@@ -935,6 +943,53 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Data",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Item",
+            "field_name": "grant_commission",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Customer",
+            "field_name": "dn_required",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Item",
+            "field_name": "include_item_in_manufacturing",
+            "property": "default",
+            "property_type": "Check",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Item",
+            "field_name": "inspection_required_before_delivery",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Item",
+            "field_name": "manufacturing",
+            "property": "depends_on",
+            "property_type": "TabBreak",
+            "value": "eval:doc.is_stock_item == 0"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Item",
+            "property": "quick_entry",
+            "property_type": "Check",
+            "value": 0
         },
         {
             "doctype_or_field": "DocField",
@@ -988,7 +1043,7 @@ def get_sales_order_custom_fields():
             {
                 "fieldname": "is_agent",
                 "fieldtype": "Check",
-                "label": "Is Agent",
+                "label": "Is Agency",
                 "read_only":1,
                 "fetch_from": "customer.is_agent",
                 "depends_on": "eval:doc.is_agent",
@@ -1104,3 +1159,27 @@ def create_custom_roles(role_name):
             print(f"Role already exists: {role_name}")
 
     frappe.db.commit()
+
+def create_translation_quotation():
+    translation = frappe.get_doc({
+        'doctype': 'Translation',
+        'source_text': 'Quotation',
+        'translated_text': 'Release Order',
+        'language': 'en'
+    })
+    translation.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+create_translation_quotation()
+
+def create_translation_quotation_to():
+    translation = frappe.get_doc({
+        'doctype': 'Translation',
+        'source_text': 'Quotation To',
+        'translated_text': 'Release Order To',
+        'language': 'en'
+    })
+    translation.insert(ignore_permissions=True)
+    frappe.db.commit()
+
+create_translation_quotation_to()
