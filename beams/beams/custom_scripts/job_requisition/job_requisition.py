@@ -27,11 +27,12 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.min_education_qual = doc.min_education_qual
         job_opening.min_experience = doc.min_experience
         job_opening.expected_compensation = doc.expected_compensation
-        job_opening.job_title = doc.designation
+        job_opening.job_title = doc.job_title
         job_opening.no_of_positions = doc.no_of_positions
         job_opening.employment_type = doc.employment_type
         job_opening.department = doc.department
         job_opening.designation = doc.designation
+        job_opening.location = doc.location
 
         # Validation checks
         if not job_opening.employment_type:
@@ -49,37 +50,47 @@ def create_job_opening_from_job_requisition(doc, method):
         if not job_opening.no_of_positions:
             frappe.throw("Please specify the Number of Positions in the Job Requisition.")
 
+        for skill in doc.skill_proficiency:
+            job_opening.append("skill_proficiency", {
+                "skill": skill.skill,
+                "proficiency": skill.proficiency
+            })
+
         # Insert and submit the Job Opening document
         job_opening.insert()
         frappe.msgprint(f"Job Opening {job_opening.name} has been created successfully.", alert=True, indicator="green")
 
-def on_workflow_cancel(doc, method):
+@frappe.whitelist()
+def on_update(doc, method=None):
+    """
+    Method triggered after the document is updated.
+    It checks if the workflow state has changed to "Cancelled".
+    """
+    # Fetch the document state before saving
+    old_doc = doc.get_doc_before_save()
+
+    # Check if the old workflow state is different from the new one and if the new state is "Cancelled"
+    if old_doc and old_doc.workflow_state != doc.workflow_state and doc.workflow_state == "Cancelled":
+        job_opening_closed(doc)
+
+@frappe.whitelist()
+def job_opening_closed(doc):
     '''
     Close the linked Job Opening when the Job Requisition is cancelled.
-
     '''
-    # Find the Job Opening linked to this Job Requisition
     job_opening = frappe.db.get_value('Job Opening', {'job_requisition': doc.name}, 'name')
-
     if job_opening:
-        frappe.msgprint(f"Linked Job Opening found: {job_opening}")
-
-        # Fetch the Job Opening document
         job_opening_doc = frappe.get_doc('Job Opening', job_opening)
 
-        # Update the status of the Job Opening to "Closed"
+        # Check if it's already closed to prevent running this again
+        if job_opening_doc.status == "Closed":
+            frappe.msgprint(f"Job Opening {job_opening_doc.name} is already closed.")
+            return
+
+        # Otherwise, proceed to close it
         job_opening_doc.db_set("status", "Closed")
-
-        # Set the closed_on field to the current date
-        job_opening_doc.closed_on = nowdate()
-
-        # Cancel the Job Opening
-        job_opening_doc.cancel()
-
-        # Ignore validation during cancellation
-        job_opening_doc.ignore_validate = True
-
-        # Inform the user
+        job_opening_doc.db_set("closed_on", nowdate())
+        job_opening_doc.save(ignore_permissions=True)
         frappe.msgprint(f"Job Opening {job_opening_doc.name} has been closed.")
     else:
         frappe.msgprint(f"No Job Opening found for Job Requisition {doc.name}.")

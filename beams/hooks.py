@@ -37,7 +37,8 @@ doctype_js = {
     "Voucher Entry": "public/js/voucher_entry.js",
     "Contract":"public/js/contract.js",
     "Department":"public/js/department.js",
-    "Job Requisition":"public/js/job_requisition.js"
+    "Job Requisition":"public/js/job_requisition.js",
+    "Job Applicant" :"public/js/job_applicant.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "public/js/sales_invoice_list.js",
@@ -120,7 +121,7 @@ permission_query_conditions = {
 }
 
 # has_permission = {
-# 	
+#
 # }
 
 # DocType Class
@@ -180,15 +181,18 @@ doc_events = {
         "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
     },
     "Job Requisition": {
-        "on_update": "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
-        "on_cancel": "beams.beams.custom_scripts.job_requisition.job_requisition.on_workflow_cancel",
+        "on_update": ["beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
+                      "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"],
         "validate":  "beams.beams.custom_scripts.job_requisition.job_requisition.validate_job_requisition"
     },
     "Journal Entry": {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
-        }
-    }
+        },
+    "Job Applicant": {
+        "validate": "beams.beams.custom_scripts.job_applicant.job_applicant.validate"
+        },
 
+    }
 
 
 # Scheduled Tasks
