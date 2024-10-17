@@ -517,7 +517,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
-                "description": "Number of days off in 30 days.",
+                "description": " number of days off within a 30-day period",
                 "insert_after": "employment_type"
             },
             {
@@ -942,7 +942,14 @@ def get_property_setters():
             "field_name": "posting_date",
             "property": "read_only",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Requisition",
+            "property": "field_order",
+            "value": "[\"workflow_state\", \"naming_series\", \"request_for\", \"employee_left\", \"staffing_plan\", \"designation\", \"column_break_qkna\", \"department\", \"no_of_positions\", \"expected_compensation\", \"column_break_4\", \"company\", \"status\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"work_details\", \"employment_type\", \"no_of_days_off\", \"location\", \"work_details_column_break\", \"travel_required\", \"driving_license_needed\", \"is_work_shift_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"reason_for_requesting\", \"connections_tab\"]"
         }
+
     ]
 
 def get_material_request_custom_fields():
