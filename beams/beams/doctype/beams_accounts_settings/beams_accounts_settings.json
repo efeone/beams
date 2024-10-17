@@ -6,20 +6,23 @@
  "engine": "InnoDB",
  "field_order": [
   "adhoc_budget_threshold",
+  "default_sales_invoice_print_format",
+  "column_break_eqou",
   "equalize_purchase_and_quotation_amounts",
   "single_sales_order",
-  "batta_payable_account",
-  "batta_expense_account",
-  "default_sales_invoice_print_format",
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
-  "stringer_service_item",
+  "column_break_jaqb",
+  "batta_expense_account",
+  "batta_payable_account",
   "naming_rule_tab",
   "beams_naming_rule",
   "substitute_booking_tab",
   "default_credit_account",
-  "default_debit_account"
+  "default_debit_account",
+  "stringer_settings_tab",
+  "stringer_service_item"
  ],
  "fields": [
   {
@@ -37,7 +40,7 @@
   {
    "fieldname": "tab_break_4hid",
    "fieldtype": "Tab Break",
-   "label": "Work Settings"
+   "label": "Batta Settings"
   },
   {
    "fieldname": "default_working_hours",
@@ -108,12 +111,25 @@
    "fieldname": "single_sales_order",
    "fieldtype": "Check",
    "label": "Single Sales Order"
+  },
+  {
+   "fieldname": "stringer_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Stringer Settings"
+  },
+  {
+   "fieldname": "column_break_eqou",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_jaqb",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-10-07 11:39:50.058277",
+ "modified": "2024-10-16 14:57:42.229657",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

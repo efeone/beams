@@ -14,11 +14,12 @@
   "bureau",
   "cost_center",
   "section_break_zcc8",
-  "on_air_date_and_time",
   "news_remarks",
   "column_break_cgfc",
   "daily_wage",
-  "amended_from"
+  "amended_from",
+  "section_break_njgm",
+  "stringer_bill_detail"
  ],
  "fields": [
   {
@@ -83,11 +84,6 @@
    "label": "News Remarks"
   },
   {
-   "fieldname": "on_air_date_and_time",
-   "fieldtype": "Datetime",
-   "label": "On Air Date and Time"
-  },
-  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -96,6 +92,16 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "section_break_njgm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "stringer_bill_detail",
+   "fieldtype": "Table",
+   "label": "Stringer Bill Detail",
+   "options": "Stringer Bill Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -106,7 +112,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2024-09-18 16:11:38.332043",
+ "modified": "2024-10-17 09:39:46.949991",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
