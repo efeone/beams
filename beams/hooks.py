@@ -183,7 +183,6 @@ doc_events = {
     "Job Requisition": {
         "on_update": ["beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
                       "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"],
-        "on_cancel": "beams.beams.custom_scripts.job_requisition.job_requisition.on_workflow_cancel",
         "validate":  "beams.beams.custom_scripts.job_requisition.job_requisition.validate_job_requisition"
     },
     "Journal Entry": {
