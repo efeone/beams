@@ -27,11 +27,12 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.min_education_qual = doc.min_education_qual
         job_opening.min_experience = doc.min_experience
         job_opening.expected_compensation = doc.expected_compensation
-        job_opening.job_title = doc.designation
+        job_opening.job_title = doc.job_title
         job_opening.no_of_positions = doc.no_of_positions
         job_opening.employment_type = doc.employment_type
         job_opening.department = doc.department
         job_opening.designation = doc.designation
+        job_opening.location = doc.location
 
         # Validation checks
         if not job_opening.employment_type:
@@ -48,6 +49,12 @@ def create_job_opening_from_job_requisition(doc, method):
             frappe.throw("Please specify the Expected Compensation in the Job Requisition.")
         if not job_opening.no_of_positions:
             frappe.throw("Please specify the Number of Positions in the Job Requisition.")
+
+        for skill in doc.skill_proficiency:
+            job_opening.append("skill_proficiency", {
+                "skill": skill.skill,
+                "proficiency": skill.proficiency
+            })
 
         # Insert and submit the Job Opening document
         job_opening.insert()

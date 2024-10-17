@@ -560,10 +560,10 @@ def get_job_requisition_custom_fields():
                 "insert_after": "license_type"
             },
             {
-                "fieldname": "min_education_qual",
-                "fieldtype": "Link",
+               "fieldname": "min_education_qual",
+                "fieldtype": "Table MultiSelect",
                 "label": "Minimum Educational Qualification",
-                "options": "Educational Qualification",
+                'options':"Educational Qualifications",
                 "insert_after": "education"
             },
             {
@@ -818,6 +818,26 @@ def get_job_opening_custom_fields():
                 "fieldtype": "Link",
                 "options": "Location",
                 "insert_after": "no_of_days_off"
+            },
+             {
+                 "fieldname": "skill_proficiency_break",
+                 "fieldtype": "Section Break",
+                 "label": "",
+                 "insert_after": "job_details"
+             },
+             {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "insert_after": "skill_proficiency_break"
+            },
+            {
+                "fieldname": "skill_proficiency_description",
+                "fieldtype": "HTML",
+                "label": "",
+                "options": "<p style='margin-top: 5px; color: #6c757d; font-size: 0.9em;'>Proficiency selected here is the minimum proficiency needed.</p>",
+                "insert_after": "skill_proficiency"
             }
         ]
     }
