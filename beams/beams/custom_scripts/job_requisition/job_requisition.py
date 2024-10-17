@@ -60,33 +60,37 @@ def create_job_opening_from_job_requisition(doc, method):
         job_opening.insert()
         frappe.msgprint(f"Job Opening {job_opening.name} has been created successfully.", alert=True, indicator="green")
 
-def on_workflow_cancel(doc, method):
+@frappe.whitelist()
+def on_update(doc, method=None):
+    """
+    Method triggered after the document is updated.
+    It checks if the workflow state has changed to "Cancelled".
+    """
+    # Fetch the document state before saving
+    old_doc = doc.get_doc_before_save()
+
+    # Check if the old workflow state is different from the new one and if the new state is "Cancelled"
+    if old_doc and old_doc.workflow_state != doc.workflow_state and doc.workflow_state == "Cancelled":
+        job_opening_closed(doc)
+
+@frappe.whitelist()
+def job_opening_closed(doc):
     '''
     Close the linked Job Opening when the Job Requisition is cancelled.
-
     '''
-    # Find the Job Opening linked to this Job Requisition
     job_opening = frappe.db.get_value('Job Opening', {'job_requisition': doc.name}, 'name')
-
     if job_opening:
-        frappe.msgprint(f"Linked Job Opening found: {job_opening}")
-
-        # Fetch the Job Opening document
         job_opening_doc = frappe.get_doc('Job Opening', job_opening)
 
-        # Update the status of the Job Opening to "Closed"
+        # Check if it's already closed to prevent running this again
+        if job_opening_doc.status == "Closed":
+            frappe.msgprint(f"Job Opening {job_opening_doc.name} is already closed.")
+            return
+
+        # Otherwise, proceed to close it
         job_opening_doc.db_set("status", "Closed")
-
-        # Set the closed_on field to the current date
-        job_opening_doc.closed_on = nowdate()
-
-        # Cancel the Job Opening
-        job_opening_doc.cancel()
-
-        # Ignore validation during cancellation
-        job_opening_doc.ignore_validate = True
-
-        # Inform the user
+        job_opening_doc.db_set("closed_on", nowdate())
+        job_opening_doc.save(ignore_permissions=True)
         frappe.msgprint(f"Job Opening {job_opening_doc.name} has been closed.")
     else:
         frappe.msgprint(f"No Job Opening found for Job Requisition {doc.name}.")

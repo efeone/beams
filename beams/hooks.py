@@ -181,7 +181,8 @@ doc_events = {
         "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
     },
     "Job Requisition": {
-        "on_update": "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
+        "on_update": ["beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
+                      "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"],
         "on_cancel": "beams.beams.custom_scripts.job_requisition.job_requisition.on_workflow_cancel",
         "validate":  "beams.beams.custom_scripts.job_requisition.job_requisition.validate_job_requisition"
     },
