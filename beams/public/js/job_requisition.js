@@ -40,18 +40,18 @@ frappe.ui.form.on('Job Requisition', {
      * This function triggers when the Job Description Template field is changed.
      * It fetches the Job Description based on the selected Job Description Template.
      */
-    job_description_template: function(frm) {
-        if (frm.doc.job_description_template) {
-            // Fetch Job Description from the selected Job Description Template
-            frappe.db.get_value('Job Description Template',{'name': frm.doc.job_description_template},'description',
-                function(r) {
-                    if (r && r.description) {
-                        frm.set_value('description', r.description);
-                    }
-                }
-            );
-        }
-    },
+    // job_description_template: function(frm) {
+    //     if (frm.doc.job_description_template) {
+    //         // Fetch Job Description from the selected Job Description Template
+    //         frappe.db.get_value('Job Description Template',{'name': frm.doc.job_description_template},'description',
+    //             function(r) {
+    //                 if (r && r.description) {
+    //                     frm.set_value('description', r.description);
+    //                 }
+    //             }
+    //         );
+    //     }
+    // },
     onload: function(frm) {
       if (!frm.doc.requested_by) {
         // Fetch the Employee linked to the current User
@@ -62,5 +62,32 @@ frappe.ui.form.on('Job Requisition', {
           }
         });
       }
-    }
+    },
+});
+
+
+
+/*
+
+This script automatically fills the job description in the Job Requisition form based on 
+the selected Job Description Template and the current form details.
+*/
+frappe.ui.form.on("Job Requisition", {
+	job_description_template: function (frm) {
+		if (frm.doc.job_description_template) {
+			
+			frappe.call({
+				method: "beams.beams.custom_scripts.job_requisition.job_requisition.display_template_content",
+				args: {
+					template_name: frm.doc.job_description_template,
+					doc: frm.doc, 
+				},
+				callback: function (r) {
+					if (r.message) {
+						frm.set_value("description", r.message);
+					}
+				},
+			});
+		}
+	},
 });

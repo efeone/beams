@@ -1,3 +1,5 @@
+import json
+
 import frappe
 from frappe.utils import nowdate
 from frappe import ValidationError
@@ -83,3 +85,25 @@ def on_workflow_cancel(doc, method):
         frappe.msgprint(f"Job Opening {job_opening_doc.name} has been closed.")
     else:
         frappe.msgprint(f"No Job Opening found for Job Requisition {doc.name}.")
+
+
+@frappe.whitelist()
+def display_template_content(template_name, doc):
+    """
+    This function fetches the Job Description Template and renders its content dynamically 
+    using the details of the Job Requisition document, returning the formatted job description 
+    for display.
+    """
+    
+    if isinstance(doc, str):
+        doc = frappe.parse_json(doc)  
+    
+    job_description_template = frappe.get_doc("Job Description Template", template_name)
+
+    if job_description_template.description:
+        
+        rendered_description = frappe.render_template(job_description_template.description, doc)
+        return rendered_description  
+    return ""
+
+
