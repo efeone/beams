@@ -35,23 +35,7 @@ frappe.ui.form.on('Job Requisition', {
         frm.set_value('employee_left', []);
         frm.refresh_field('employee_left');  // Refresh the field to apply the new query
     },
-
-    /*
-     * This function triggers when the Job Description Template field is changed.
-     * It fetches the Job Description based on the selected Job Description Template.
-     */
-    // job_description_template: function(frm) {
-    //     if (frm.doc.job_description_template) {
-    //         // Fetch Job Description from the selected Job Description Template
-    //         frappe.db.get_value('Job Description Template',{'name': frm.doc.job_description_template},'description',
-    //             function(r) {
-    //                 if (r && r.description) {
-    //                     frm.set_value('description', r.description);
-    //                 }
-    //             }
-    //         );
-    //     }
-    // },
+    
     onload: function(frm) {
       if (!frm.doc.requested_by) {
         // Fetch the Employee linked to the current User

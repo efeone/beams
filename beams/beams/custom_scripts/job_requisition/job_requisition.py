@@ -98,11 +98,11 @@ def display_template_content(template_name, doc):
     if isinstance(doc, str):
         doc = frappe.parse_json(doc)  
     
-    job_description_template = frappe.get_doc("Job Description Template", template_name)
+    job_description_template = frappe.get_value("Job Description Template",{'name': template_name},['description'])
 
-    if job_description_template.description:
+    if job_description_template:
         
-        rendered_description = frappe.render_template(job_description_template.description, doc)
+        rendered_description = frappe.render_template(job_description_template, doc)
         return rendered_description  
     return ""
 
