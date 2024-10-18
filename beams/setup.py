@@ -751,9 +751,9 @@ def get_job_applicant_custom_fields():
         "Job Applicant": [
             {
                "fieldname": "min_education_qual",
-                "fieldtype": "Table MultiSelect",
-                "label": "Minimum Educational Qualification",
-                'options':"Educational Qualifications",
+                "fieldtype": "Link",
+                "label": "Educational Qualification",
+                'options':"Educational Qualification",
                 "insert_after": "details"
             },
 
@@ -767,7 +767,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
-                "label": "Minimum Experience Required",
+                "label": "Work Experience(in years)",
                 "insert_after": "details_column_break"
             },
             {
@@ -799,12 +799,12 @@ def get_job_applicant_custom_fields():
                 "reqd":1,
                 "insert_after": "language_proficiency"
             },
-             {
+            {
                 "fieldname": "location",
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "status"
+                "insert_after": "country"
             }
         ]
     }
