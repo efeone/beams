@@ -38,7 +38,8 @@ doctype_js = {
     "Contract":"public/js/contract.js",
     "Department":"public/js/department.js",
     "Job Requisition":"public/js/job_requisition.js",
-    "Job Applicant" : "public/js/job_applicant.js"
+    "Job Applicant" :"public/js/job_applicant.js",
+    "Budget":"public/js/budget.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "public/js/sales_invoice_list.js",
@@ -191,6 +192,9 @@ doc_events = {
     "Job Applicant": {
         "validate": "beams.beams.custom_scripts.job_applicant.job_applicant.validate"
         },
+    "Department": {
+       "validate": "beams.beams.custom_scripts.department.department.validate"
+    }
 
     }
 
