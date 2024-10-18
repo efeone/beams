@@ -28,3 +28,21 @@ def get_hod_users(department_name):
     """, (department_name,))
 
     return [user[0] for user in users]  # Return a list of user IDs
+
+@frappe.whitelist()
+def get_used_cost_centers():
+    """
+    Fetch departments that have a cost center set.
+    Returns a list of used cost centers.
+    """
+    # Fetch departments with a cost center set
+    departments = frappe.db.get_list(
+        'Department',
+        fields=['cost_center'],
+        filters={'cost_center': ['is', 'set']}
+    )
+
+    # Extract the cost centers from the result
+    used_cost_centers = [department['cost_center'] for department in departments]
+
+    return used_cost_centers

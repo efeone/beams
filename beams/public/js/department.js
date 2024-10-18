@@ -30,57 +30,25 @@ frappe.ui.form.on('Department', {
     }
 });
 
-function get_used_cost_centers() {
-    let used_cost_centers = [];
-
-    // Fetch departments that have already selected cost centers
+function get_used_cost_centers(callback) {
     frappe.call({
-        method: 'frappe.client.get_list',
-        args: {
-            doctype: 'Department',
-            fields: ['cost_center'],
-            filters: {
-                cost_center: ['is', 'set']
+        method: 'beams.beams.custom_scripts.department.department.get_used_cost_centers',  // Replace with your actual module name
+        callback: function(response) {
+            if (response.message) {
+                const used_cost_centers = response.message;
+                if (callback) {
+                    callback(used_cost_centers);  // Pass the result to the callback
+                }
+            } else {
+                if (callback) {
+                    callback([]);
+                }
             }
         },
-        async: false,
-        callback: function(response) {
-            used_cost_centers = response.message.map(department => department.cost_center);
+        error: function(error) {
+            console.error('Error fetching used cost centers:', error);
         }
     });
-
-    return used_cost_centers;
 }
-
-
-
-
-// frappe.ui.form.on('Department', {
-//     validate: function(frm) {
-//         // Check if the selected cost center is already used
-//         let cost_center = frm.doc.cost_center;
-//         if (cost_center) {
-//             frappe.call({
-//                 method: 'frappe.client.get_list',
-//                 args: {
-//                     doctype: 'Department',
-//                     fields: ['name'],
-//                     filters: {
-//                         cost_center: cost_center
-//                     }
-//                 },
-//                 async: false,
-//                 callback: function(response) {
-//                     if (response.message.length > 0) {
-//                         frappe.msgprint({
-//                             title: __('Cost Center already used'),
-//                             message: __('The selected cost center is already assigned to another department: {0}', [response.message[0].name]),
-//                             indicator: 'red'
-//                         });
-//                         frappe.validated = false; // Prevent form submission
-//                     }
-//                 }
-//             });
-//         }
-//     }
-// });
+get_used_cost_centers(function(cost_centers) {
+});
