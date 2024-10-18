@@ -27,6 +27,8 @@ def after_install():
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
     create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_budget_account_custom_fields(),ignore_validate=True)
 
 
 def after_migrate():
@@ -53,6 +55,8 @@ def before_uninstall():
     delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_job_opening_custom_fields())
     delete_custom_fields(get_job_applicant_custom_field())
+    delete_custom_fields(get_budget_custom_fields())
+    delete_custom_fields(get_budget_account_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -121,6 +125,14 @@ def get_department_custom_fields():
                 "reqd":1,
                 "unique":1,
                 "insert_after": "head_of_department"
+            },
+            {
+                "fieldname": "cost_center",
+                "fieldtype": "Link",
+                "label": "Cost Center",
+                "options":"Cost Center",
+                "insert_after": "company",
+                "reqd":1
             }
 
         ]
@@ -159,6 +171,51 @@ def get_purchase_order_custom_fields():
                 "depends_on": "eval:doc.is_budget_exceed == 1"
 
             }
+        ]
+    }
+
+def get_budget_custom_fields():
+    '''
+    Custom fields that need to be added to the Budget DocType
+    '''
+    return {
+        "Budget": [
+            {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "label": "Department",
+                "options":"Department",
+                "insert_after": "monthly_distribution"
+            }
+        ]
+    }
+
+def get_budget_account_custom_fields():
+    '''
+    Custom fields that need to be added to the Budget Account Child Table
+    '''
+    return {
+        "Budget Account": [
+            {
+                "fieldname": "cost_subhead",
+                "fieldtype": "Link",
+                "label": "Cost Subhead",
+                "options":"Cost Subhead",
+                "insert_after": "cost_description"
+            },
+            {
+                "fieldname": "cost_category",
+                "fieldtype": "Link",
+                "label": "Cost Category",
+                "options":"Cost Category",
+                "insert_after": "account"
+            },
+            {
+                "fieldname": "cost_description",
+                "fieldtype": "Data",
+                "label": "Cost Description",
+                "insert_after": "cost_category"
+            },
         ]
     }
 

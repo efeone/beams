@@ -1,4 +1,17 @@
 import frappe
+from frappe import _
+from frappe.model.document import Document
+
+def validate(doc, method):
+    if doc.cost_center:
+        # Check if the cost center is already used in another department
+        departments = frappe.get_list('Department', filters={'cost_center': doc.cost_center}, fields=['name'])
+
+        if departments:
+            department_name = departments[0].get('name')
+            frappe.throw(
+                _("The selected Cost Center is already assigned to Department: {0}. Please choose a different one.").format(department_name)
+            )
 
 @frappe.whitelist()
 def get_hod_users(department_name):
