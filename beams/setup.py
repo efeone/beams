@@ -25,6 +25,8 @@ def after_install():
     create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
     create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_expected_skill_set_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_interview_round_custom_fields(),ignore_validate=True)
     # create_custom_roles('')
     create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
     create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
@@ -57,7 +59,8 @@ def before_uninstall():
     delete_custom_fields(get_job_applicant_custom_field())
     delete_custom_fields(get_budget_custom_fields())
     delete_custom_fields(get_budget_account_custom_fields())
-
+    delete_custom_fields(get_expected_skill_set_custom_fields())
+    delete_custom_fields(get_interview_round_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -549,6 +552,37 @@ def get_voucher_entry_custom_fields():
         ]
     }
 
+
+def get_expected_skill_set_custom_fields():
+    '''
+    Custom fields that need to be added to the Expected Skill Set Doctype
+    '''
+    return {
+        "Expected Skill Set": [
+            {
+                "fieldname": "weight",
+                "fieldtype": "Float",
+                "label": "Weight",
+                "insert_after": "description"
+            }
+        ]
+    }
+
+def get_interview_round_custom_fields():
+    '''
+    Custom fields that need to be added to the Interview Round Child Table
+    '''
+    return {
+        "Interview Round": [
+            {
+                "fieldname": "expected_question_set_in_interview_round",
+                "fieldtype": "Table",
+                "label": "Expected Questions Set",
+                "options":"Expected Question Set In Interview Round",
+                "insert_after":"expected_skill_set"
+            }
+        ]
+    }
 
 def get_job_requisition_custom_fields():
     '''
