@@ -4,61 +4,43 @@ frappe.ui.form.on('Job Applicant', {
      * This function checks if the applicant's location, qualifications,
      * experience, and skills meet the requirements specified in the Job Opening
      */
-    validate: function(frm) {
-        frappe.db.get_doc('Job Opening', frm.doc.job_title).then((job_opening) => {
-            if (frm.doc.location !== job_opening.location) {
-                frappe.msgprint(__("Applicant's location does not match the Job Opening's location."));
-                frappe.validated = false;
-                return;
-            }
-            if (frm.doc.min_education_qual && job_opening.min_education_qual) {
-                let applicant_qualifications = frm.doc.min_education_qual.map(d => d.qualification);
-                let job_opening_qualifications = job_opening.min_education_qual.map(d => d.qualification);
-                let has_qualification = applicant_qualifications.some(qual => job_opening_qualifications.includes(qual));
+     validate: function(frm) {
+      frappe.db.get_doc('Job Opening', frm.doc.job_title).then((job_opening) => {
+          if (frm.doc.location !== job_opening.location) {
+              frappe.msgprint(__("Applicant location does not match the desired location {0}").format(job_opening.location));
+              frappe.validated = false;
+              return;
+          }
+          if (frm.doc.min_education_qual && job_opening.min_education_qual) {
+              const applicant_qualification = frm.doc.min_education_qual;
+              const job_opening_qualifications = job_opening.min_education_qual.map(d => d.qualification);
 
-                if (!has_qualification) {
-                    frappe.msgprint(__("Applicant's does not meet the minimum qualification  for the Job Opening."));
-                    frappe.validated = false;
-                    return;
-                }
-            }
-            if (frm.doc.min_experience < job_opening.min_experience) {
-                frappe.msgprint(__("Applicant's does not meet the minimum experience  for the Job Opening."));
-                frappe.validated = false;
-                return;
-            }
-            if (job_opening.skill_proficiency && frm.doc.skill_proficiency) {
-                const required_skills = job_opening.skill_proficiency.map(skill => {
-                    return { skill: skill.skill, proficiency: skill.proficiency };
-                });
-                const applicant_skills = frm.doc.skill_proficiency.map(skill => {
-                    return { skill: skill.skill, proficiency: skill.proficiency };
-                });
-                let missing_skills = [];
-                let proficiency_mismatch = [];
-                required_skills.forEach(required => {
-                    const match = applicant_skills.find(applicant => applicant.skill === required.skill);
-                    if (!match) {
-                        // Skill is missing
-                        missing_skills.push(required.skill);
-                    } else if (match.proficiency < required.proficiency) {
-                        // Skill is present, but proficiency is not sufficient
-                        proficiency_mismatch.push(`${required.skill} (Required: ${required.proficiency}, Provided: ${match.proficiency})`);
-                    }
-                });
-                if (missing_skills.length > 0) {
-                    frappe.msgprint(__("The Applicant's does not meet the skill requirements for the Job Opening."));
-                    frappe.validated = false;
-                    return;
-                }
-                if (proficiency_mismatch.length > 0) {
-                    frappe.msgprint(__("Applicant's does not meet the required proficiency levels for the following skills"));
-                    frappe.validated = false;
-                    return;
-                }
-            }
-        });
-    },
+              if (!job_opening_qualifications.includes(applicant_qualification)) {
+                  const required_qualifications = job_opening_qualifications.join(", ");
+                  frappe.msgprint(__("Applicant does not match Educational qualifications required: {0}").format(required_qualifications));
+                  frappe.validated = false;
+                  return;
+              }
+          }
+          if (frm.doc.min_experience < job_opening.min_experience) {
+              frappe.msgprint(__("Applicant does not meet the Required experience: {0} years").format(job_opening.min_experience));
+              frappe.validated = false;
+              return;
+          }
+          if (job_opening.skill_proficiency && frm.doc.skill_proficiency) {
+              const required_skills = job_opening.skill_proficiency.map(skill => skill.skill);
+              const applicant_skills = frm.doc.skill_proficiency.map(skill => skill.skill);
+              const missing_skills = required_skills.filter(skill => !applicant_skills.includes(skill));
+
+              if (missing_skills.length > 0) {
+                  const required_skills_list = required_skills.join(", ");
+                  frappe.msgprint(__("The Applicant does not meet the Required skills: {0}.").format(required_skills_list));
+                  frappe.validated = false;
+                  return;
+              }
+          }
+      });
+     },
 
     refresh: function(frm) {
         // Check if the current form is not a new record
