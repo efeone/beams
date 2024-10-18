@@ -1,4 +1,3 @@
-
 frappe.ui.form.on('Job Applicant', {
     /*
      * Validate the Job Applicant against the requirements of the Job Opening.
@@ -59,5 +58,33 @@ frappe.ui.form.on('Job Applicant', {
                 }
             }
         });
+    },
+
+    refresh: function(frm) {
+        // Check if the current form is not a new record
+        if (!frm.is_new()) {
+            // Add a custom button labeled 'Local Enquiry Report'
+            frm.add_custom_button(frappe._('Local Enquiry Report'), function() {
+                // Call the backend method to create a local enquiry report
+                frappe.call({
+                    method: "beams.beams.custom_scripts.job_applicant.job_applicant.create_local_enquiry",
+                    args: {
+                        doc_name: frm.doc.name  // Pass the name of the Job Applicant to the method
+                    },
+                    callback: function(r) {
+                        // Check if a report was successfully created
+                        if (r.message) {
+                            // Notify the user that the report was created successfully
+                            frappe.msgprint(__('Local Enquiry Report created: {0}', [r.message]));
+                            // Redirect to the Local Enquiry Report form
+                            frappe.set_route('Form', 'Local Enquiry Report', r.message);
+                        } else {
+                            // Notify the user that the report already exists
+                            frappe.msgprint(__('Report already exists.'));
+                        }
+                    },
+                });
+            }, frappe._('Create')); // Set the label of the button
+        }
     }
 });
