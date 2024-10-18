@@ -35,7 +35,7 @@ frappe.ui.form.on('Job Requisition', {
         frm.set_value('employee_left', []);
         frm.refresh_field('employee_left');  // Refresh the field to apply the new query
     },
-    
+
     onload: function(frm) {
       if (!frm.doc.requested_by) {
         // Fetch the Employee linked to the current User
@@ -47,8 +47,6 @@ frappe.ui.form.on('Job Requisition', {
         });
       }
     },
-});
-
 
 
 /*
@@ -56,8 +54,8 @@ frappe.ui.form.on('Job Requisition', {
 This script automatically fills the job description in the Job Requisition form based on 
 the selected Job Description Template and the current form details.
 */
-frappe.ui.form.on("Job Requisition", {
-	job_description_template: function (frm) {
+
+    job_description_template: function (frm) {
 		if (frm.doc.job_description_template) {
 			
 			frappe.call({
@@ -75,3 +73,5 @@ frappe.ui.form.on("Job Requisition", {
 		}
 	},
 });
+
+
