@@ -727,6 +727,20 @@ def get_job_requisition_custom_fields():
                 "options": "Employee",
                 "insert_after": "staffing_plan",
             },
+            {
+                "fieldname": "interview",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "requested_by"
+            },
+            {
+                "fieldname": "interview_rounds",
+                "fieldtype": "Table MultiSelect",
+                "options": "Interview Rounds",
+                "label": "Interview Rounds",
+                "insert_after": "interview"
+            },
+            
              {
                 "fieldname": "location",
                 "label": "Location",
