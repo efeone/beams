@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-10-18 11:30:17.316218",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "name_of_course_university",
+  "name_location_of_institution",
+  "dates_attended_from",
+  "dates_attended_to",
+  "result"
+ ],
+ "fields": [
+  {
+   "fieldname": "name_of_course_university",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name of Course & University"
+  },
+  {
+   "fieldname": "name_location_of_institution",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name & Location of Institution"
+  },
+  {
+   "fieldname": "dates_attended_from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Dates Attended From"
+  },
+  {
+   "fieldname": "dates_attended_to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Dates Attended To"
+  },
+  {
+   "fieldname": "result",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Result %"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-10-18 11:40:00.657282",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Education Qualification",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -750,6 +750,129 @@ def get_job_applicant_custom_fields():
     return {
         "Job Applicant": [
             {
+               "fieldname": "date_of_birth",
+                "fieldtype": "Data",
+                "label": "Date of Birth",
+                "insert_after": "email_id"
+            },
+            {
+               "fieldname": "gender",
+                "fieldtype": "Select",
+                "label": "Gender",
+                "options": "\nMale\nFemale",
+                "insert_after": "date_of_birth"
+            },
+            {
+               "fieldname": "father_name",
+                "fieldtype": "Data",
+                "label": "Father's Name",
+                "insert_after": "job_title"
+            },
+            {
+               "fieldname": "marital_status",
+                "fieldtype": "Select",
+                "label": "Marital Status",
+                "options": "\nSingle\nMarried\nDivorced\nWidowed",
+                "insert_after": "location"
+            },
+            {
+                "fieldname": "current_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "Current Address",
+                "insert_after": "marital_status"
+            },
+            {
+               "fieldname": "current_address",
+                "fieldtype": "Small Text",
+                "label": "current_address",
+                "insert_after": "current_address_session_break"
+            },
+            {
+               "fieldname": "current_mobile_no",
+                "fieldtype": "Data",
+                "label": "Mobile Number",
+                "insert_after": "current_address"
+            },
+
+            {
+               "fieldname": "current_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "current_mobile_no"
+            },
+            {
+               "fieldname": "current_period_from",
+                "fieldtype": "Data",
+                "label": "Period of From(mm/yy) stay",
+                "insert_after": "current_column_break"
+            },
+            {
+               "fieldname": "current_period_to",
+                "fieldtype": "Data",
+                "label": "Period of To(mm/yy) stay",
+                "insert_after": "current_period_from"
+            },
+            {
+               "fieldname": "current_residence_no",
+                "fieldtype": "Data",
+                "label": "Residence Number",
+                "insert_after": "current_period_to"
+            },
+            {
+                "fieldname": "permanent_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "Permanent Address",
+                "insert_after": "current_residence_no"
+            },
+            {
+               "fieldname": "permanent_address",
+                "fieldtype": "Small Text",
+                "label": "Permanent Address",
+                "insert_after": "permanent_address_session_break"
+            },
+            {
+               "fieldname": "permanent_residence_no",
+                "fieldtype": "Data",
+                "label": "Residence Number",
+                "insert_after": "permanent_address"
+            },
+            {
+               "fieldname": "permanent_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "permanent_residence_no"
+            },
+            {
+               "fieldname": "permanen_period_from",
+                "fieldtype": "Data",
+                "label": "Period of From(mm/yy) stay",
+                "insert_after": "permanent_column_break"
+            },
+            {
+               "fieldname": "permanent_period_to",
+                "fieldtype": "Data",
+                "label": "Period of To(mm/yy) stay",
+                "insert_after": "permanen_period_from"
+            },
+            {
+               "fieldname": "permananet_email_id",
+                "fieldtype": "Data",
+                "label": "Email ID",
+                "insert_after": "permanent_period_to"
+            },
+            {
+                "fieldname": "email_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "current_email_id"
+            },
+            {
+               "fieldname": "email_id_1",
+                "fieldtype": "Data",
+                "label": "Email ID",
+                "insert_after": "email_address_session_break"
+            },
+            {
                "fieldname": "min_education_qual",
                 "fieldtype": "Link",
                 "label": "Educational Qualification",
@@ -800,11 +923,335 @@ def get_job_applicant_custom_fields():
                 "insert_after": "language_proficiency"
             },
             {
+                "fieldname": "education_qualification",
+                "fieldtype": "Table",
+                "options": "Education Qualification",
+                "label": "Education Qualification",
+                "insert_after": "skill_proficiency"
+            },
+            {
+                "fieldname": "professional_certification",
+                "fieldtype": "Table",
+                "options": "Professional Certification",
+                "label": "Professional Certification",
+                "insert_after": "education_qualification"
+            },
+            {
                 "fieldname": "location",
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
                 "insert_after": "country"
+            },
+            {
+                "fieldname": "current_employer_tab_break",
+                "fieldtype": "Tab Break",
+                "label": "Current Employer Details",
+                "insert_after": "upper_range"
+            },
+            {
+                "fieldname": "current_employer",
+                "fieldtype": "Section Break",
+                "label": "Current Employer / Immediate Previous Employer",
+                "insert_after": "current_employer_tab_break"
+            },
+            {
+                "fieldname": "name_of_employer",
+                "fieldtype": "Data",
+                "label": "Name of Employer",
+                "insert_after": "current_employer"
+            },
+            {
+                "fieldname": "employee_code",
+                "fieldtype": "Int",
+                "label": "Employee Code",
+                "insert_after": "name_of_employer"
+            },
+            {
+                "fieldname": "telephone_no",
+                "fieldtype": "Int",
+                "label": "Telephone No",
+                "insert_after": "employee_code"
+            },
+            {
+                "fieldname": "employment_period_from",
+                "fieldtype": "Int",
+                "label": "Employment Period From",
+                "insert_after": "telephone_no"
+            },
+            {
+                "fieldname": "employment_period_to",
+                "fieldtype": "Int",
+                "label": "Employment Period To",
+                "insert_after": "employment_period_from"
+            },
+            {
+                "fieldname": "address_of_employer",
+                "fieldtype": "Small Text",
+                "label": "Address of Employer",
+                "insert_after": "employment_period_to"
+            },
+
+            {
+                "fieldname": "current_employer_1_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "address_of_employer"
+            },
+
+            {
+                "fieldname": "first_salary_drawn",
+                "fieldtype": "Float",
+                "label": "First Salary Drawn",
+                "insert_after": "current_employer_1_column_break"
+            },
+            {
+                "fieldname": "last_salary_drawn",
+                "fieldtype": "Float",
+                "label": "Last Salary Drawn",
+                "insert_after": "first_salary_drawn"
+            },
+            {
+                "fieldname": "current_designation",
+                "fieldtype": "Data",
+                "label": "Designation",
+                "insert_after": "last_salary_drawn"
+            },
+            {
+                "fieldname": "reference_taken",
+                "fieldtype": "Select",
+                "label": "Can a reference taken now?",
+                "options": "\nYes\nNo",
+                "insert_after": "current_designation"
+            },
+            {
+                "fieldname": "was_this_position",
+                "fieldtype": "Select",
+                "label": "Was this Position(Permanent,Temporary,Contractual)",
+                "options": "\nPermanent\nTemporary\nContractual",
+                "insert_after": "reference_taken"
+            },
+            {
+                "fieldname": "duties_and_reponsibilities",
+                "fieldtype": "Small Text",
+                "label": "Duties and Responsibilities",
+                "insert_after": "was_this_position"
+            },
+            {
+                "fieldname": "current_employer_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "was_this_position"
+            },
+            {
+                "fieldname": "current_department",
+                "fieldtype": "Data",
+                "label": "Department",
+                "insert_after": "current_employer_column_break"
+            },
+            {
+                "fieldname": "manager_name",
+                "fieldtype": "Data",
+                "label": "Manager's Name",
+                "insert_after": "current_department"
+            },
+            {
+                "fieldname": "manager_contact_no",
+                "fieldtype": "Int",
+                "label": "Manager's Contact No",
+                "insert_after": "manager_name"
+            },
+            {
+                "fieldname": "manager_email",
+                "fieldtype": "Data",
+                "label": "Manager's Email",
+                "insert_after": "manager_contact_no"
+            },
+            {
+                "fieldname": "reason_for_leaving",
+                "fieldtype": "Small Text",
+                "label": "Reason For Leaving",
+                "insert_after": "manager_email"
+            },
+            {
+                "fieldname": "agency_details",
+                "fieldtype": "Small Text",
+                "label": "Agency Details(if temporary or contractual)",
+                "insert_after": "reason_for_leaving"
+            },
+            {
+                "fieldname": "previous_emplyoment",
+                "fieldtype": "Section Break",
+                "label": "Previous Employment History",
+                "insert_after": "agency_details"
+            },
+            {
+                "fieldname": "prev_emp_his",
+                "fieldtype": "Table",
+                "options": "Previous Employment History",
+                "insert_after": "previous_emplyoment"
+            },
+            {
+                "fieldname": "more_details_tab_break",
+                "fieldtype": "Tab Break",
+                "label": "More Details",
+                "insert_after": "prev_emp_his"
+            },
+            {
+                "fieldname": "current_salary",
+                "fieldtype": "Float",
+                "label": "Current Salary",
+                "insert_after": "more_details_tab_break"
+            },
+            {
+                "fieldname": "current_salary_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "current_salary"
+            },
+            {
+                "fieldname": "expected_salary",
+                "fieldtype": "Float",
+                "label": "Expected Salary",
+                "insert_after": "current_salary_column_break"
+            },
+            {
+                "fieldname": "other_achievments_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "current_employer_tab_break"
+            },
+            {
+                "fieldname": "other_achievments",
+                "fieldtype": "Small Text",
+                "label": "Please add details of Professional and other achievements,awards and accomplishments,if any",
+                "insert_after": "other_achievments_session_break"
+            },
+            {
+                "fieldname": "interviewed_session_break",
+                "fieldtype": "Section Break",
+                "label": "Have you been interviewed before by Madhyamam Group?If yes, Please give details below :",
+                "insert_after": "other_achievments"
+            },
+            {
+                "fieldname": "position",
+                "fieldtype": "Data",
+                "label": "Position",
+                "insert_after": "interviewed_session_break"
+            },
+            {
+                "fieldname": "interviewed_date",
+                "fieldtype": "Data",
+                "label": "Date",
+                "insert_after": "position"
+            },
+            {
+                "fieldname": "interviewed_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "interviewed_date"
+            },
+            {
+                "fieldname": "interviewed_location",
+                "fieldtype": "Data",
+                "label": "Location",
+                "insert_after": "interviewed_column_break"
+            },
+            {
+                "fieldname": "interviewed_outcome",
+                "fieldtype": "Data",
+                "label": "Outcome",
+                "insert_after": "interviewed_location"
+            },
+            {
+                "fieldname": "travel_session_break",
+                "fieldtype": "Section Break",
+                "label": "Are you willing to travel :",
+                "insert_after": "interviewed_outcome"
+            },
+            {
+                "fieldname": "in_india",
+                "fieldtype": "Check",
+                "label": "In India",
+                "insert_after": "travel_session_break"
+            },
+            {
+                "fieldname": "state_restriction",
+                "fieldtype": "Data",
+                "label": "State Restriction If any",
+                "insert_after": "in_india"
+            },
+            {
+                "fieldname": "india_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "state_restriction"
+            },
+            {
+                "fieldname": "abroad",
+                "fieldtype": "Check",
+                "label": "Abroad",
+                "insert_after": "india_column_break"
+            },
+            {
+                "fieldname": "related_session_break",
+                "fieldtype": "Section Break",
+                "label": "Are you related to any of employee of the Madhyamam Group? If yes,please give details :",
+                "insert_after": "state_restriction"
+            },
+            {
+                "fieldname": "name_of_related_employee",
+                "fieldtype": "Data",
+                "label": "Name",
+                "insert_after": "related_session_break"
+            },
+            {
+                "fieldname": "name_of_related_employee_org",
+                "fieldtype": "Data",
+                "label": "Organization",
+                "insert_after": "name_of_related_employee"
+            },
+            {
+                "fieldname": "related_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "name_of_related_employee_org"
+            },
+            {
+                "fieldname": "name_of_related_employee_pos",
+                "fieldtype": "Data",
+                "label": "Position",
+                "insert_after": "related_column_break",
+            },
+            {
+                "fieldname": "name_of_related_employee_rel",
+                "fieldtype": "Data",
+                "label": "Relationship",
+                "insert_after": "name_of_related_employee_pos"
+            },
+            {
+                "fieldname": "prof_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "name_of_related_employee_rel"
+            },
+            {
+                "fieldname": "professional_org",
+                "fieldtype": "Small Text",
+                "label": "Are you a member of any Professional Organization? If yes, Please give details :",
+                "insert_after": "prof_session_break"
+            },
+            {
+                "fieldname": "political_org",
+                "fieldtype": "Small Text",
+                "label": "Are you a member of any Political Organization? If yes, Please give details :",
+                "insert_after": "professional_org"
+            },
+            {
+                "fieldname": "specialised_training",
+                "fieldtype": "Small Text",
+                "label": "Have you attended any specialised training program?If yes, Please give detais :",
+                "insert_after": "political_org"
             }
         ]
     }
@@ -1115,7 +1562,6 @@ def get_property_setters():
             "property": "field_order",
             "value": "[\"workflow_state\", \"naming_series\", \"request_for\", \"employee_left\", \"staffing_plan\", \"designation\", \"column_break_qkna\", \"department\", \"no_of_positions\", \"expected_compensation\", \"column_break_4\", \"company\", \"status\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"work_details\", \"employment_type\", \"no_of_days_off\", \"location\", \"work_details_column_break\", \"travel_required\", \"driving_license_needed\", \"is_work_shift_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"reason_for_requesting\", \"connections_tab\"]"
         }
-
     ]
 
 def get_material_request_custom_fields():
