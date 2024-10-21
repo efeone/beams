@@ -75,5 +75,26 @@
   "modified": "2024-08-26 16:23:42.399000",
   "name": "Cancel",
   "workflow_action_name": "Cancel"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-10-21 12:26:15.665204",
+  "name": "Assign to Admin",
+  "workflow_action_name": "Assign to Admin"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-10-21 12:27:34.654392",
+  "name": "Assign to Enquiry Officer",
+  "workflow_action_name": "Assign to Enquiry Officer"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-10-21 12:30:09.317225",
+  "name": "Start Enquiry",
+  "workflow_action_name": "Start Enquiry"
  }
 ]
