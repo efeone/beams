@@ -575,10 +575,10 @@ def get_interview_round_custom_fields():
     return {
         "Interview Round": [
             {
-                "fieldname": "expected_question_set_in_interview_round",
+                "fieldname": "expected_question_set",
                 "fieldtype": "Table",
                 "label": "Expected Questions Set",
-                "options":"Expected Question Set In Interview Round",
+                "options":"Expected Question Set",
                 "insert_after":"expected_skill_set"
             }
         ]
