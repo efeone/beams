@@ -2,21 +2,21 @@ frappe.ui.form.on('Interview Feedback', {
     // The code fetches both expected_skill_set and expected_question_set_in_interview_round
     // from the selected "Interview Round" and dynamically updates the respective tables
     interview_round: function(frm) {
-        const interviewRoundName = frm.doc.interview_round;
-        if (interviewRoundName) {
+        const interview_round_name = frm.doc.interview_round;
+        if (interview_round_name) {
             frappe.call({
                 method: 'frappe.client.get',
                 args: {
                     doctype: 'Interview Round',
-                    name: interviewRoundName
+                    name: interview_round_name
                 },
                 callback: function(response) {
-                    const interviewRound = response.message;
+                    const interview_round = response.message;
 
-                    if (interviewRound && Array.isArray(interviewRound.expected_skill_set)) {
+                    if (interview_round && Array.isArray(interview_round.expected_skill_set)) {
                         frm.clear_table('skill_assessment');
                         
-                        interviewRound.expected_skill_set.forEach(skill => {
+                        interview_round.expected_skill_set.forEach(skill => {
                             const row = frm.add_child('skill_assessment');
                             row.weight = skill.weight;
                         });
@@ -26,10 +26,10 @@ frappe.ui.form.on('Interview Feedback', {
                         frappe.msgprint(__('No expected skill set found for the selected interview round.'));
                     }
 
-                    if (interviewRound && Array.isArray(interviewRound.expected_question_set_in_interview_round)) {
+                    if (interview_round && Array.isArray(interview_round.expected_question_set_in_interview_round)) {
                         frm.clear_table('interview_question_result');
                         
-                        interviewRound.expected_question_set_in_interview_round.forEach(question => {
+                        interview_round.expected_question_set_in_interview_round.forEach(question => {
                             const row = frm.add_child('interview_question_result');
                             row.weight = question.weight;
                         });
