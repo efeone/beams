@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Application for Employment</title>
+    <style>
+        :root {
+            --ff-h-mt-text-rg: "HelveticaNowMTText", "HelveticaNowMTTextRegular", "Helvetica Now MT Text", Arial, sans-serif;
+        }
+        body {
+            font-family: var(--ff-h-mt-text-rg);
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        .container{
+            padding: 60px;
+        }
+        h1,
+        h2 {
+            text-align: center;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        hr{
+          border-top:: 1px solid #e0e0e0;
+
+        }
+
+        .tabs {
+            gap: 50px;
+            display: flex;
+            border-bottom: 1px solid #dcdcdc;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+
+        .tabs button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+            border-bottom: 3px solid transparent;
+            margin-right: 10px;
+        }
+
+        .tabs button.active {
+            color: #4A90E2;
+            border-bottom: 3px solid #4A90E2;
+        }
+
+        .form-section {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 50px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 50px;
+            margin-bottom: 22px;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 30%;
+        }
+
+        label {
+            font-weight: 400;
+            margin-bottom: 10px;
+            display: block;
+            color: #444;
+        }
+
+        input,
+        select, textarea {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #fff;
+            border-radius: 10px;
+            background-color: #f7f7f7;
+            font-size: 14px;
+        }
+
+        .submit-button {
+            text-align: center;
+            width: 30%;
+            padding: 12px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background-color: #357ABD;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+
+        .tax-details {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+            margin-top: 15px;
+            margin-bottom: 23px;
+
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-family: 'Arial', sans-serif;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden; /* Ensures border radius shows */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+        }
+        table thead {
+            background-color: #f4f4f4;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            font-size: 14px;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            /* margin: 5px; */
+            background-color: #f7f7f7;
+            border: none;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-row {
+            background-color: #f44336;
+        }
+        .delete-row:hover {
+            background-color: #e53935;
+        }
+
+        .star-rating {
+            display: inline-flex;
+            direction: rtl;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 25px;
+            color: lightgray;
+            cursor: pointer;
+            padding: 0 5px;
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: gold;
+        }
+
+        .star-rating input:checked ~ label {
+            color: gold;
+        }
+
+
+
+        @media (max-width: 540px) {
+            table, th, td {
+                display: block;
+                width: 100%;
+            }
+            /*thead {
+                display: none;
+            }*/
+            tr {
+                margin-bottom: 15px;
+            }
+            td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                padding-left: 10px;
+                font-weight: bold;
+                text-align: left;
+            }
+            .container{
+              padding: 0px;
+            }
+
+            .row {
+
+              display: block;
+              flex-wrap: wrap;
+              gap: 50px;
+              margin-bottom: 22px;
+
+            }
+
+            .delete-row {
+                background-color: #f44336;
+            }
+            .delete-row:hover {
+                background-color: #e53935;
+            }
+
+            .star-rating {
+                display: inline-flex;
+                direction: rtl;
+            }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 25px;
+                color: lightgray;
+                cursor: pointer;
+                padding: 0 5px;
+            }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+
+            .star-rating input:checked ~ label {
+                color: gold;
+            }
+
+
+        }
+
+        @media (max-width: 780px) {
+            table, th, td {
+                display: block;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                margin-bottom: 15px;
+            }
+            td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                padding-left: 10px;
+                font-weight: bold;
+                text-align: left;
+            }
+            .container{
+              padding: 0px;
+            }
+
+            .row {
+
+              display: block;
+              flex-wrap: wrap;
+              gap: 50px;
+              margin-bottom: 22px;
+
+            }
+
+            .delete-row {
+                background-color: #f44336;
+            }
+            .delete-row:hover {
+                background-color: #e53935;
+            }
+
+            .star-rating {
+                display: inline-flex;
+                direction: rtl;
+            }
+
+            .star-rating input {
+                display: none;
+            }
+
+            .star-rating label {
+                font-size: 25px;
+                color: lightgray;
+                cursor: pointer;
+                padding: 0 5px;
+            }
+
+            .star-rating label:hover,
+            .star-rating label:hover ~ label {
+                color: gold;
+            }
+
+            .star-rating input:checked ~ label {
+                color: gold;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1><b>APPLICATION FOR EMPLOYEMENT</b></h1>
+    <center><h3>Madhyamam Broadcasting Limited</h3></center>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab(0)">Personal Information</button>
+            <button class="tab-button" onclick="showTab(1)">Current Employer / Immediate Previous Employer</button>
+            <button class="tab-button" onclick="showTab(2)">More details</button>
+
+        </div>
+
+        <form id="submit-application" action="/submit-application" method="post">
+            <div class="form-section active" id="tab-0">
+                <div class="row" style="width: 31%;">
+                    <div class="column">
+                        <label for="designation">Position Appplied For :</label>
+                        <input type="text" id="designation" name="designation" required value="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="applicant_name">Full Name</label>
+                        <input type="text" id="applicant_name" name="applicant_name" required value="">
+                    </div>
+                    <div class="column">
+                        <label for="father_name">Father's Name</label>
+                        <input type="text" id="father_name" name="father_name">
+                    </div>
+                    <div class="column">
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" required>
+            </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    </div>
+                    <div class="column">
+                        <label for="country">Nationality</label>
+                        <input type="text" id="country" name="country">
+                    </div>
+                    <div class="column">
+                        <label for="marital_status">Maritial Status</label>
+                        <select id="marital_status" name="marital_status" required>
+                            <option value="single">Single</option>
+                            <option value="married">Married</option>
+                            <option value="divorced">Divorced</option>
+                            <option value="widowed">Widowed</option>
+                        </select>
+                    </div>
+                </div><br>
+                <h3>Current Address</h3>
+                <div class="row tax-details">
+                    <div class="column">
+                        <label for="current_address">Current Address</label>
+                        <textarea id="current_address" name="current_address" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="column">
+                        <label for="current_period_from">Period of Stay From (mm/yy)</label>
+                        <input type="month" id="current_period_from" name="current_period_from" required>
+                    </div>
+                    <div class="column">
+                        <label for="current_period_to">To (mm/yy):</label>
+                        <input type="month" id="current_period_to" name="current_period_to" required>
+                    </div>
+                    <div class="column">
+                        <label for="current_residence_no">Residence No.</label>
+                        <input type="text" id="current_residence_no" name="current_residence_no" required>
+                    </div>
+                    <div class="column">
+                        <label for="current_mobile_no">Mobile Number</label>
+                        <input type="tel" id="current_mobile_no" name="current_mobile_no" required pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
+                    </div>
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                </div><br>
+                <h3>Permanent Address</h3>
+                <div class="row tax-details">
+                  <div class="column">
+                      <label for="permanent_address">Permanent Address</label>
+                      <textarea id="permanent_address" name="permanent_address" rows="4" cols="50"></textarea>
+                  </div>
+                    <div class="column">
+                        <label for="permanen_period_from">Period of Stay From (mm/yy)</label>
+                        <input type="month" id="permanen_period_from" name="permanen_period_from" required>
+                    </div>
+                    <div class="column">
+                        <label for="permanent_period_to">To (mm/yy)</label>
+                        <input type="month" id="permanent_period_to" name="permanent_period_to" required>
+                    </div>
+                    <div class="column">
+                        <label for="permanent_residence_no">Residence No.</label>
+                        <input type="text" id="permanent_residence_no" name="permanent_residence_no" required value="">
+                    </div>
+                    <div class="column">
+                        <label for="permananet_email_id">Residence No.</label>
+                        <input type="text" id="permananet_email_id" name="permananet_email_id" required value="">
+                    </div>
+
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                    <div class="column">
+                    </div>
+                </div>
+
+                <div class="row tax-details">
+                    <div class="column">
+                        <label for="email_id_1">Email Id</label>
+                        <input type="text" id="email_id_1" name="email_id_1" required value="">
+                    </div>
+
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                    <div class="column">
+                    </div>
+                </div>
+
+                <h3>Educational Qualification</h3>
+                <div class="row tax-details">
+                    <table id="item-table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name Of Course & University</th>
+                                <th>Name & Location Of Institute</th>
+                                <th colspan="2">Date Attended</th>
+                                <th> Result</th>
+                            </tr>
+                            <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th></th>
+                  </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="course_university_1" required></td>
+                                <td><input type="text" name="institution_location_1" required></td>
+                                <td><input type="month" name="date_from_1" required></td>
+                                <td><input type="month" name="date_to_1" required></td>
+                                <td><input type="text" name="results_1" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="add-buttons">
+                        <button type="button" id="add-row">Add Row</button>
+                    </div>
+                </div>
+
+
+
+            <h3>Personal Certification</h3>
+                <div class="row tax-details">
+                    <table id="table_1">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Course</th>
+                                <th>Institute Name</th>
+                                <th colspan="2">Date Attended</th>
+                                <th> Type of Cerfificate</th>
+                                <th>Subject Major</th>
+                            </tr>
+                            <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th></th>
+                    <th></th>
+                  </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="course_1" required></td>
+                                <td><input type="text" name="institute_name_1" required></td>
+                                <td><input type="month" name="date_from_1" required></td>
+                                <td><input type="month" name="date_to_1" required></td>
+                                <td><input type="text" name="type_of_certification_1" required></td>
+                                <td><input type="text" name="sub_major_1" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="add-buttons">
+                        <button type="button" id="add-row-prof">Add Row</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section" id="tab-1">
+                <div class="row">
+                    <div class="column">
+                        <label for="name_of_employer">Name Of Employer</label>
+                        <input type="text" id="name_of_employer" name="name_of_employer" required>
+                    </div>
+                    <div class="column">
+                        <label for="address_of_employer">Address of Employer</label>
+                        <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="column">
+                        <label for="telephone_no">Telephone No</label>
+                        <input type="text" id="telephone_no" name="telephone_no" required>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column">
+                        <label for="employee_code">Employee Code/No.</label>
+                        <input type="text" id="employee_code" name="employee_code" required>
+                    </div>
+                    <div class="column">
+                        <label for="current_designation">Designation</label>
+                        <input type="text" id="current_designation" name="current_designation" required>
+                    </div>
+                    <div class="column">
+                        <label for="current_department">Department</label>
+                        <input type="text" id="current_department" name="current_department" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="employment_period_from">Employment Period From</label>
+                        <input type="month" id="employment_period_from" name="employment_period_from" required>
+                    </div>
+                    <div class="column">
+                        <label for="employment_period_to">Employment Period To</label>
+                        <input type="month" id="employment_period_to" name="employment_period_to" required>
+                    </div>
+                    <div class="column">
+                        <label for="manager_name">Manager's Name</label>
+                        <input type="text" id="manager_name" name="manager_name" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="manager_contact_no">Manager's Contact No</label>
+                        <input type="number" id="manager_contact_no" name="manager_contact_no" required>
+                    </div>
+                    <div class="column">
+                        <label for="manager_email">Manager's Email</label>
+                        <input type="email" id="manager_email" name="manager_email" required>
+                    </div>
+                    <div class="column">
+                        <label for="reference_taken">Can a Reference taken now?(Yes/No)</label>
+                        <select id="reference_taken" name="reference_taken" required>
+                            <option value=""></option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+
+                    <div class="column">
+                        <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
+                        <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4" cols="50"></textarea>
+                    </div>
+
+                    <div class="column">
+                        <label for="reason_for_leaving">Reasons for leaving</label>
+                        <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="column">
+                        <label for="first_salary_drawn">First Salary Drawn</label>
+                        <input type="first_salary_drawn" id="first_salary_drawn" name="first_salary_drawn" required>
+                    </div>
+                    <div class="column">
+                        <label for="last_salary_drawn">Last Salary Drawn </label>
+                        <input type="currency" id="last_salary_drawn" name="last_salary_drawn" required69>
+                    </div>
+                  </div>
+                  <div class="row">
+                     <div class="column">
+                        <label for="was_this_position">Was this Position (Permanent, Temporary,Contractual)?</label>
+                        <select id="was_this_position" name="was_this_position" required>
+                            <option value=""></option>
+                            <option value="permanent">Permanent</option>
+                            <option value="temporary">Temporary</option>
+                            <option value="contractual">Contractual</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="agency_details">Agency Deatils(If temporary or contractual),provide details </label>
+                        <textarea id="agency_details" name="agency_details" rows="4" cols="50"></textarea>
+                    </div>
+                  </div>
+                    <div class="column">
+                    </div>
+
+
+                <h3>Previous Employment History</h3>
+                <div class="row tax-details">
+                    <table id="table_2">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name Of Organization(With Location)</th>
+                                <th>Designation</th>
+                                <th>Last Salary Drawn</th>
+                                <th>Name Of Manager/Reporting Head</th>
+                                <th>Period Of Employment</th>
+                                <th>Reason for Leaving</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="name_of_org" required></td>
+                                <td><input type="text" name="designation" required></td>
+                                <td><input type="text" name="last_sal" required></td>
+                                <td><input type="text" name="name_of_manager" required></td>
+                                <td><input type="text" name="prd_of_emp" required></td>
+                                <td><input type="text" name="reason_for_leaving" required></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="add-buttons">
+                        <button type="button" id="add-row-prev">Add Row</button>
+                    </div>
+                </div>
+            </div>
+          </div>
+
+            <div class="form-section" id="tab-2">
+                <div class="row">
+                    <div class="column">
+                        <label for="current_salary">Current Salary</label>
+                        <input type="number" id="current_salary" name="current_salary" required>
+                    </div>
+                    <div class="column">
+                        <label for="expected_salary">Expected Salary</label>
+                        <input type="number" id="expected_salary" name="expected_salary" required>
+                    </div>
+                    <div class="column">
+                        <label for="telephone-no">Telephone No</label>
+                        <input type="tel" name="telphone"  pattern="[0-9]{10}"  required/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="other_achievments">Please add details of Professional and other Acheivements, Awards and Accomplishments, if any </label>
+                        <textarea id="other_achievments" name="other_achievments" rows="4" cols="50"></textarea>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <label for="address">Have you been interviewed before by Madhyamam Group? If yes, Please give details below</label>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="position">Position</label>
+                        <input type="text" id="position" name="position" required>
+                    </div>
+                    <div class="column">
+                        <label for="interviewed_location">Location </label>
+                        <input type="text" id="interviewed_location" name="interviewed_location" required>
+                    </div>
+                    <div class="column">
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="column">
+                        <label for="interviewed_date">Date</label>
+                        <input type="date" id="interviewed_date" name="interviewed_date" required>
+                    </div>
+                    <div class="column">
+                        <label for="interviewed_outcome">Outcome</label>
+                        <input type="text" id="interviewed_outcome" name="interviewed_outcome" required>
+                    </div>
+                    <div class="column">
+                    </div>
+                  </div>
+
+                <h3>Languages Known :</h3>
+                <div class="row tax-details">
+                  <table id="table_3">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Language</th>
+                      <th>Speak</th>
+                      <th>Read</th>
+                      <th>Write</th>
+                      <th>Understand</th>
+                  </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td><input type="text" name="language" required></td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="speak-5" name="speak" value="5"><label for="speak-5">&#9733;</label>
+                                      <input type="radio" id="speak-4" name="speak" value="4"><label for="speak-4">&#9733;</label>
+                                      <input type="radio" id="speak-3" name="speak" value="3"><label for="speak-3">&#9733;</label>
+                                      <input type="radio" id="speak-2" name="speak" value="2"><label for="speak-2">&#9733;</label>
+                                      <input type="radio" id="speak-1" name="speak" value="1"><label for="speak-1">&#9733;</label>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="read-5" name="read" value="5"><label for="read-5">&#9733;</label>
+                                      <input type="radio" id="read-4" name="read" value="4"><label for="read-4">&#9733;</label>
+                                      <input type="radio" id="read-3" name="read" value="3"><label for="read-3">&#9733;</label>
+                                      <input type="radio" id="read-2" name="read" value="2"><label for="read-2">&#9733;</label>
+                                      <input type="radio" id="read-1" name="read" value="1"><label for="read-1">&#9733;</label>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="write-5" name="write" value="5"><label for="write-5">&#9733;</label>
+                                      <input type="radio" id="write-4" name="write" value="4"><label for="write-4">&#9733;</label>
+                                      <input type="radio" id="write-3" name="write" value="3"><label for="write-3">&#9733;</label>
+                                      <input type="radio" id="write-2" name="write" value="2"><label for="write-2">&#9733;</label>
+                                      <input type="radio" id="write-1" name="write" value="1"><label for="write-1">&#9733;</label>
+                                  </div>
+                              </td>
+                              <td>
+                                <div class="star-rating">
+                                  <input type="radio" id="understand-5" name="understand" value="5"><label for="understand-5">&#9733;</label>
+                                  <input type="radio" id="understand-4" name="understand" value="4"><label for="understand-4">&#9733;</label>
+                                  <input type="radio" id="understand-3" name="understand" value="3"><label for="understand-3">&#9733;</label>
+                                  <input type="radio" id="understand-2" name="understand" value="2"><label for="understand-2">&#9733;</label>
+                                  <input type="radio" id="understand-1" name="understand" value="1"><label for="understand-1">&#9733;</label>
+                                </div>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+
+                  <div class="add-buttons">
+                      <button type="button" id="add-row-lang">Add Row</button>
+                  </div>
+              </div>
+
+
+
+                <div class="row">
+                  <table>
+                    <tr>
+                      <td style="border:1px solid #fff;    font-size: 17px;">  <label for="address">Are you willing to travel :</label>
+                      </td><tr>
+
+                    <tr>
+                        <td>In India</td>
+                        <td><input type="checkbox"></td>
+                        <td>Abroad</td>
+                        <td><input type="checkbox"></td>
+                        <td>State Restrictions if any</td>
+                        <td colspan="3"><input type="text"></td>
+                    </tr>
+                </table>
+              </div>
+              <div class="row">
+                  <label for="address">Are you related to any of the Madhyamam Group? If yes, please give details : </label>
+              </div>
+              <div class="row">
+                <div class="column">
+                <label for="name_of_related_employee">Name</label>
+                <input type="text" id="name_of_related_employee" name="name_of_related_employee" required>
+              </div>
+              <div class="column">
+                <label for="name_of_related_employee_org">Organization</label>
+                <input type="text" id="name_of_related_employee_org" name="name_of_related_employee_org" required>
+              </div>
+              <div class="column">
+              </div>
+            </div>
+              <div class="row">
+                <div class="column">
+                <label for="name_of_related_employee_pos">Position</label>
+                <input type="text" id="name_of_related_employee_pos" name="name_of_related_employee_pos" required>
+              </div>
+              <div class="column">
+                <label for="name_of_related_employee_rel">Relationship</label>
+                <input type="text" id="name_of_related_employee_rel" name="name_of_related_employee_rel" required>
+              </div>
+              <div class="column">
+              </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="professional_org">Are you a member of any Professional Organization? If yes, please give details </label>
+                    <textarea id="professional_org" name="professional_org" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="political_org">Are you a member of any Political Organization? If yes, please give details </label>
+                    <textarea id="political_org" name="political_org" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="specialised_training">Have you attended any specialized training program? If yes, please give details </label>
+                    <textarea id="specialised_training" name="specialised_training" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <h3>Declaration and Authorization </h3>
+            <hr></hr>
+            <div class="row">
+              <p class="declaration">
+        I hereby authorize Madhyamam Broadcasting Limited (or a third party agent appointed by the Company) to contact any former employers as indicated above and carry out all Background Checks not restricted to education and employment deemed appropriate through this selection procedure. I authorize former employers, agencies, educational institutes, etc., to release any information pertaining to my employment/education and I release them from any liability in doing so.
+        <br><br>
+        <input type="checkbox" name="confirm" id="confirm" style="width: 1%;">        I confirm that the above information is correct to the best of my knowledge and I understand that any misrepresentation of information on this application may, in the event of my obtaining employment, result in action based on company policy.
+</p> </div>
+<p id="error-message" style="color: red; display: none;">Please check the checkbox to proceed.</p>
+<button id="submitBtn" type="submit">Submit</button>
+    </form>
+    </div>
+
+    <script>
+          function handleSubmitValidation() {
+              const checkbox = document.getElementById('confirm');
+              const submitBtn = document.getElementById('submitBtn');
+              const errorMessage = document.getElementById('error-message');
+              function validateSubmit(event) {
+                    if (!checkbox.checked) {
+                      event.preventDefault();
+                      errorMessage.style.display = 'block';
+                    } else {
+                      errorMessage.style.display = 'none';
+                    }
+                    }
+                    submitBtn.addEventListener('click', validateSubmit);
+                    }
+              document.addEventListener('DOMContentLoaded', handleSubmitValidation);
+
+        function showTab(index) {
+            const sections = document.querySelectorAll('.form-section');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            sections.forEach(section => section.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            sections[index].classList.add('active');
+            tabButtons[index].classList.add('active');
+        }
+
+        function addRow_educ(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="course_university_1[]" required>';
+            cell3.innerHTML = '<input type="text" name="institution_location_1[]" required>';
+            cell4.innerHTML = '<input type="month" name="date_from_1[]" required>';
+            cell5.innerHTML = '<input type="month" name="date_to_1[]" required>';
+            cell6.innerHTML = '<input type="text" name="results_1[]" required>';
+
+
+        }
+        function addRow_prof(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="course_1[]" required>';
+            cell3.innerHTML = '<input type="text" name="institute_name_1[]" required>';
+            cell4.innerHTML = '<input type="month" name="date_from_1[]" required>';
+            cell5.innerHTML = '<input type="month" name="date_from_1[]" required>';
+            cell6.innerHTML = '<input type="text" name="type_of_certification_1" required>';
+            cell7.innerHTML = '<input type="text" name="sub_major_1" required>';
+
+        }
+        function addRow_prev(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="name_of_org" required>';
+            cell3.innerHTML = '<input type="text" name="designation" required>';
+            cell4.innerHTML = '<input type="text" name="last_sal" required>';
+            cell5.innerHTML = '<input type="text" name="name_of_manager" required>';
+            cell6.innerHTML = '<input type="text" name="prd_of_emp" required>';
+            cell7.innerHTML = '<input type="text" name="reason_for_leaving" required>';
+
+        }
+        function addRow_lang(tableId) {
+              var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+              var rowCount = table.rows.length;
+              var row = table.insertRow(rowCount);
+
+              // Insert cells and their contents
+              var cell1 = row.insertCell(0);
+              var cell2 = row.insertCell(1);
+              var cell3 = row.insertCell(2);
+              var cell4 = row.insertCell(3);
+              var cell5 = row.insertCell(4);
+              var cell6 = row.insertCell(5);
+
+              // Add content to cells
+              cell1.innerHTML = rowCount + 1;
+              cell2.innerHTML = '<input type="text" name="language" required>';
+              cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
+              cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
+              cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
+              cell6.innerHTML = getStarRatingHTML('understand' + (rowCount + 1));
+          }
+
+        function getStarRatingHTML(name) {
+            return `
+                <div class="star-rating">
+                    <input type="radio" id="${name}_star5" name="${name}" value="5"><label for="${name}_star5">&#9733;</label>
+                    <input type="radio" id="${name}_star4" name="${name}" value="4"><label for="${name}_star4">&#9733;</label>
+                    <input type="radio" id="${name}_star3" name="${name}" value="3"><label for="${name}_star3">&#9733;</label>
+                    <input type="radio" id="${name}_star2" name="${name}" value="2"><label for="${name}_star2">&#9733;</label>
+                    <input type="radio" id="${name}_star1" name="${name}" value="1"><label for="${name}_star1">&#9733;</label>
+                </div>
+            `;
+        }
+
+
+        // Attach event listeners for buttons on all tables
+        document.getElementById('add-row').addEventListener('click', function() {
+            addRow_educ('item-table');
+        });
+
+        document.getElementById('add-row-prof').addEventListener('click', function() {
+            addRow_prof('table_1');
+        });
+
+        document.getElementById('add-row-prev').addEventListener('click', function() {
+            addRow_prev('table_2');
+        });
+        document.getElementById('add-row-lang').addEventListener('click', function() {
+            addRow_lang('table_3');
+        });
+
+        // Add delete functionality to all tables on initial load
+        addDeleteFunctionality('item-table');
+        addDeleteFunctionality('table_1');
+        addDeleteFunctionality('table_2');
+        addDeleteFunctionality('table_3');
+    </script>
+
+</body>
+
+</html>
