@@ -31,6 +31,7 @@ def after_install():
     create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
     create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
     create_custom_fields(get_budget_account_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_interview_feedback_custom_fields(),ignore_validate=True)
 
 
 def after_migrate():
@@ -1315,3 +1316,35 @@ def create_translation_quotation_to():
     frappe.db.commit()
 
 create_translation_quotation_to()
+
+
+
+def get_interview_feedback_custom_fields():
+    '''
+    Custom fields that need to be added to the Interview Feedback
+    '''
+    return {
+        "Interview Feedback": [
+            {
+                "fieldname": "skill_assessment_section",
+                "label": "Skill Assessment",
+                "fieldtype": "Section Break",
+                "insert_after": "section_break_4"  
+            },
+            {
+                "fieldname": "skill_assessment",
+                "label": "Skill Assessment",
+                "fieldtype": "Table",
+                "options": "Skill Assessment",
+                "insert_after": "skill_assessment_section"
+            },
+            {
+                "fieldname": "interview_question_result",
+                "label": "Interview Question Result",
+                "fieldtype": "Table",
+                "options": "Interview Question Result",
+                "insert_after": "section_break_4"
+            }
+        ]
+    }
+
