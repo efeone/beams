@@ -27,6 +27,3 @@ def update_local_enquiry_status():
             if not doc.enquiry_completion_date or doc.enquiry_completion_date > doc.expected_completion_date:
                 doc.status = 'Overdue'  # Set status to 'Overdue'
                 doc.save()  # Save the document
-
-    # Commit the changes to the database
-    frappe.db.commit()
