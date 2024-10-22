@@ -15,6 +15,12 @@
   "information_given_by",
   "information_collected_by",
   "status",
+  "section_break_gnwp",
+  "enquiry_start_date",
+  "enquiry_completion_date",
+  "column_break_yfct",
+  "expected_completion_date",
+  "enquiry_officer",
   "section_break_2hnf",
   "enquiry_report",
   "remarks"
@@ -64,7 +70,7 @@
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Open\nOngoing\nHold\nCompleted"
+   "options": "Open\nOngoing\nHold\nCompleted\nOverdue"
   },
   {
    "fieldname": "information_given_by",
@@ -94,11 +100,40 @@
   {
    "fieldname": "column_break_xtgz",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_gnwp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "enquiry_start_date",
+   "fieldtype": "Date",
+   "label": "Enquiry Start Date"
+  },
+  {
+   "fieldname": "column_break_yfct",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enquiry_completion_date",
+   "fieldtype": "Date",
+   "label": " Enquiry Completion Date"
+  },
+  {
+   "fieldname": "expected_completion_date",
+   "fieldtype": "Date",
+   "label": "Expected Completion Date "
+  },
+  {
+   "fieldname": "enquiry_officer",
+   "fieldtype": "Link",
+   "label": "Enquiry Officer",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-17 10:06:49.714988",
+ "modified": "2024-10-19 13:14:11.101690",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",
