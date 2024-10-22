@@ -2,6 +2,13 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
+  "modified": "2024-10-21 12:32:01.780757",
+  "name": "Enquiry Completed",
+  "workflow_action_name": "Enquiry Completed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
   "modified": "2024-08-17 14:30:11.875762",
   "name": "Verify",
   "workflow_action_name": "Verify"
