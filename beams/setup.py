@@ -730,8 +730,8 @@ def get_job_requisition_custom_fields():
             {
                 "fieldname": "interview",
                 "fieldtype": "Section Break",
-                "label": "",
-                "insert_after": "requested_by"
+                "label": "Interview Details",
+                "insert_after": "requested_by_designation"
             },
             {
                 "fieldname": "interview_rounds",
@@ -740,7 +740,7 @@ def get_job_requisition_custom_fields():
                 "label": "Interview Rounds",
                 "insert_after": "interview"
             },
-            
+
              {
                 "fieldname": "location",
                 "label": "Location",
