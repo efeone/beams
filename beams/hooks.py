@@ -202,7 +202,10 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
+    "daily": [
+        "beams.beams.doctype.local_enquiry_report.local_enquiry_report.update_local_enquiry_status"
+    ],
 # 	"all": [
 # 		"beams.tasks.all"
 # 	],
@@ -218,7 +221,7 @@ doc_events = {
 # 	"monthly": [
 # 		"beams.tasks.monthly"
 # 	],
-# }
+  }
 
 # Testing
 # -------
