@@ -32,7 +32,7 @@ def after_install():
     create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
     create_custom_fields(get_budget_account_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_feedback_custom_fields(),ignore_validate=True)
-
+    create_custom_fields(get_skill_assessment_custom_fields(), ignore_validate=True)
 
 def after_migrate():
     after_install()
@@ -62,6 +62,7 @@ def before_uninstall():
     delete_custom_fields(get_budget_account_custom_fields())
     delete_custom_fields(get_expected_skill_set_custom_fields())
     delete_custom_fields(get_interview_round_custom_fields())
+    delete_custom_fields(get_skill_assessment_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1326,25 +1327,39 @@ def get_interview_feedback_custom_fields():
     return {
         "Interview Feedback": [
             {
-                "fieldname": "skill_assessment_section",
-                "label": "Skill Assessment",
-                "fieldtype": "Section Break",
-                "insert_after": "section_break_4"  
-            },
-            {
-                "fieldname": "skill_assessment",
-                "label": "Skill Assessment",
-                "fieldtype": "Table",
-                "options": "Skill Assessment",
-                "insert_after": "skill_assessment_section"
-            },
-            {
                 "fieldname": "interview_question_result",
                 "label": "Interview Question Result",
                 "fieldtype": "Table",
                 "options": "Interview Question Result",
-                "insert_after": "section_break_4"
+                "insert_after": "skill_assessment"
             }
         ]
     }
 
+def get_skill_assessment_custom_fields():
+    '''
+    Custom fields that need to be added to the Skill Assessment Child Table
+    '''
+    return {
+        "Skill Assessment": [
+            {
+                "fieldname": "score",
+                "fieldtype": "Float",
+                "label": "Score",
+                "reqd": 1,
+                "insert_after":"skill"
+            },
+            {
+                "fieldname": "remarks",
+                "fieldtype": "Small Text",
+                "label": "Remarks",
+                "insert_after":"score"
+            },
+            {
+                "fieldname": "weight",
+                "fieldtype": "Float",
+                "label": "weight",
+                "insert_after":"remarks"
+            }
+        ]
+    }

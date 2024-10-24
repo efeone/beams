@@ -11,9 +11,9 @@
   "designation",
   "department",
   "column_break_xtgz",
-  "information_given_by_designation",
-  "information_given_by",
   "information_collected_by",
+  "information_given_by",
+  "information_given_by_designation",
   "status",
   "section_break_gnwp",
   "enquiry_start_date",
@@ -55,6 +55,7 @@
    "read_only": 1
   },
   {
+   "fetch_from": "job_applicant.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
@@ -133,7 +134,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-19 13:14:11.101690",
+ "modified": "2024-10-24 10:11:19.070639",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",

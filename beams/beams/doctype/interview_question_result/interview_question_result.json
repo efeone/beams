@@ -27,7 +27,8 @@
   {
    "fieldname": "answer",
    "fieldtype": "Small Text",
-   "label": "Answer"
+   "label": "Answer",
+   "reqd": 1
   },
   {
    "fieldname": "score",
@@ -38,7 +39,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-21 11:26:25.124663",
+ "modified": "2024-10-22 14:20:28.447524",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Interview Question Result",
