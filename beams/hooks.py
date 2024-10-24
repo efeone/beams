@@ -312,7 +312,5 @@ fixtures = [
     {"dt": "Workflow Action Master", "filters": [
         ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Start Enquiry"]]
     ]},
-    {"dt": "Role", "filters": [
-        ["name", "in", ["CEO","Production Manager","Company Secretary","Hod"]]
-        ]}
+
 ]
