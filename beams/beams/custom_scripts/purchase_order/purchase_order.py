@@ -94,3 +94,17 @@ def validate_budget(self, method=None):
 			)
 
 			validate_expense_against_budget(args)
+
+@frappe.whitelist()
+def fetch_department_from_cost_center(doc, method):
+	"""
+		Automatically fetch the department based on the selected cost center
+		in both Purchase Order and Material Request.
+	"""
+	for row in doc.get("items"):
+		if row.cost_center:
+			department = frappe.get_value('Department', {'cost_center': row.cost_center}, 'name')
+			if department:
+				row.department = department
+			else:
+				frappe.msgprint(_("No department found for the selected Cost Center {0}.").format(row.cost_center))

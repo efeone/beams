@@ -164,10 +164,12 @@ doc_events = {
     "Purchase Order": {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
         "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation",
-        "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget"
+        "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+        "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Material Request":{
-        "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget"
+        "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+        "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
