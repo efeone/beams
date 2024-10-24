@@ -39,6 +39,15 @@ def validate(doc, method):
     if applicant_qualification not in job_opening_qualifications:
         required_qualifications = ", ".join(job_opening_qualifications)
         frappe.throw(_("Applicant does not match Educational qualifications required: {0}").format(required_qualifications))
+    if doc.min_experience is None:
+        frappe.throw(_("Applicant's experience is not provided."))
+
+    if job_opening.min_experience is None:
+        frappe.throw(_("The job's required experience is not specified."))
+
+    if doc.min_experience < job_opening.min_experience:
+        frappe.throw(_("Applicant does not meet the required experience: {0} years").format(job_opening.min_experience))
+
     if doc.min_experience < job_opening.min_experience:
         frappe.throw(_("Applicant does not meet the Required experience: {0} years").format(job_opening.min_experience))
     required_skills = {skill.skill for skill in job_opening.skill_proficiency}
