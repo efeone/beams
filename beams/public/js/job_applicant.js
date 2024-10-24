@@ -60,10 +60,7 @@ frappe.ui.form.on('Job Applicant', {
                             frappe.msgprint(__('Local Enquiry Report created: {0}', [r.message]));
                             // Redirect to the Local Enquiry Report form
                             frappe.set_route('Form', 'Local Enquiry Report', r.message);
-                        } else {
-                            // Notify the user that the report already exists
-                            frappe.msgprint(__('Report already exists.'));
-                        }
+                        } 
                     },
                 });
             }, frappe._('Create')); // Set the label of the button

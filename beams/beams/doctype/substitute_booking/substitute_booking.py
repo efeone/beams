@@ -168,16 +168,44 @@ class SubstituteBooking(Document):
                 frappe.throw(_("A substitute is already assigned for {0} on {1}. No duplicate bookings are allowed.")
                              .format(self.substituting_for, row.date))
 
+#
+# @frappe.whitelist()
+# def check_leave_application(employee, dates):
+#     dates = json.loads(dates)  # Parse JSON string into Python list of dates
+#     leave_applications = {}
+#     missing_dates = []
+#
+#     # Loop through the provided dates and check for approved leave applications
+#     for date in dates:
+#         approved_leaves = frappe.get_all("Leave Application",
+#             filters={
+#                 "employee": employee,
+#                 "status": "Approved",
+#                 "from_date": ["<=", date],
+#                 "to_date": [">=", date]
+#             },
+#             fields=["name", "from_date", "to_date"]
+#         )
+#
+#         if approved_leaves:
+#             leave_applications[date] = approved_leaves  # Store approved leaves by date
+#         else:
+#             missing_dates.append(date)  # No approved leave found for this date
+#
+#     return {
+#         "leave_applications": leave_applications,
+#         "missing_dates": missing_dates
+#     }
 
-@frappe.whitelist()
-def check_leave_application(employee, dates):
-    dates = json.loads(dates)  # Parse JSON string into Python list of dates
-    leave_applications = {}
-    missing_dates = []
 
-    # Loop through the provided dates and check for approved leave applications
+
+def get_filtered_leave_applications(employee, dates):
+    filtered_leaves = []
+
     for date in dates:
-        approved_leaves = frappe.get_all("Leave Application",
+        # Fetch approved leave applications that cover the current date
+        approved_leaves = frappe.get_all(
+            "Leave Application",
             filters={
                 "employee": employee,
                 "status": "Approved",
@@ -187,12 +215,9 @@ def check_leave_application(employee, dates):
             fields=["name", "from_date", "to_date"]
         )
 
+        # If there are approved leaves for this date, add them to the filtered list
         if approved_leaves:
-            leave_applications[date] = approved_leaves  # Store approved leaves by date
-        else:
-            missing_dates.append(date)  # No approved leave found for this date
+            filtered_leaves.extend(approved_leaves)
 
-    return {
-        "leave_applications": leave_applications,
-        "missing_dates": missing_dates
-    }
+    # Return the filtered list of leave applications without duplicates
+    return {leave['name']: leave for leave in filtered_leaves}.values()

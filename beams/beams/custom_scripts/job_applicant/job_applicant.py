@@ -60,19 +60,25 @@ def create_local_enquiry(doc_name):
         str: The name of the existing report if found, or the name of the newly created report.
     """
 
-    # Check if a Local Enquiry Report already exists for the given Job Applicant
-    report_exists = frappe.db.exists("Local Enquiry Report", {"job_applicant": doc_name})
+    # Check if a Local Enquiry Report already exists for this Job Applicant
+    report_exists = frappe.db.get_value(
+        "Local Enquiry Report",
+        {"job_applicant": doc_name},
+        "name"
+    )
 
     if report_exists:
-        # Update the message to indicate that the report with the given name exists
         frappe.msgprint(_("Enquiry Report {0} already exists").format(report_exists))
-        return report_exists  # Return the existing report name
+        return report_exists  # Return the existing report's name
 
-    # Logic to create a new Local Enquiry Report
+    # Create and save a new Local Enquiry Report
     new_report = frappe.new_doc("Local Enquiry Report")
-    new_report.job_applicant = doc_name  # Set the job_applicant field to the name of the Job Applicant
+    new_report.job_applicant = doc_name
 
-    # Insert the new report
-    new_report.insert(ignore_mandatory=True, ignore_permissions=True)
+    new_report.save(ignore_mandatory=True, ignore_permissions=True)  # Ensure the changes are saved
 
-    return new_report.name  # Return the name of the newly created report
+
+    # Display the message after successful commit
+    frappe.msgprint(_("New Local Enquiry Report created: {0}").format(new_report.name))
+
+    return new_report.name  # Return the name of the new report
