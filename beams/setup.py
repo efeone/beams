@@ -1329,7 +1329,7 @@ def get_interview_feedback_custom_fields():
                 "fieldname": "skill_assessment_section",
                 "label": "Skill Assessment",
                 "fieldtype": "Section Break",
-                "insert_after": "section_break_4"  
+                "insert_after": "section_break_4"
             },
             {
                 "fieldname": "skill_assessment",
@@ -1347,4 +1347,3 @@ def get_interview_feedback_custom_fields():
             }
         ]
     }
-
