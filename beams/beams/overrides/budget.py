@@ -43,6 +43,10 @@ def validate_expense_against_budget(args, expense_amount=0):
 			"fieldname": "cost_center",
 			"document_type": "Cost Center",
 		},
+        {
+            "fieldname": "department",
+            "document_type": "Department",
+        },
 	]
 
 	for dimension in default_dimensions + get_accounting_dimensions(as_list=False):
