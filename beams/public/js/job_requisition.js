@@ -5,22 +5,31 @@ frappe.ui.form.on('Job Requisition', {
             if (frm.doc.request_for === 'Employee Exit') {
                 return {
                     filters: {
-                        status: 'Left'  // Assuming 'status' is the field that indicates the employee's status
-                    }
-                };
-            } else {
-                return {
-                    filters: {
-                        // No filter if it's not Employee Exit
+                        status: 'Left'  // Filter for employees who have left
                     }
                 };
             }
+            return {};  // No filter if it's not Employee Exit
         });
 
-        /*
-         * Sets a filter on the Job Description Template field based on the Designation.
-         * Clears the Job Description Template field when the form is refreshed.
-         */
+        // Rename Actions Button  as 'Create'  not primary action button
+         $(document).ready(function () {
+              // Find the specific custom "Actions" button dropdown using the parent or group
+              var dropdownActions = frm.page.inner_toolbar
+                  .find('button:contains("Actions")')
+                  .first();
+
+              // Rename this specific "Actions" button to "Create"
+              if (dropdownActions.length) {
+                  dropdownActions.text("Create");
+              }
+          });
+
+
+          /*
+            * Sets a filter on the Job Description Template field based on the Designation.
+            * Clears the Job Description Template field when the form is refreshed.
+           */
         frm.set_query('job_description_template', function() {
             return {
                 filters: {
@@ -28,7 +37,8 @@ frappe.ui.form.on('Job Requisition', {
                 }
             };
         });
-    },
+
+      },
 
     request_for: function(frm) {
         // When request_for changes, reset the employee_left field
@@ -49,7 +59,7 @@ frappe.ui.form.on('Job Requisition', {
     },
 
     /*
-     * This script automatically fills the job description in the Job Requisition form based on 
+     * This script automatically fills the job description in the Job Requisition form based on
      * the selected Job Description Template and the current form details.
      */
     job_description_template: function (frm) {
@@ -58,7 +68,7 @@ frappe.ui.form.on('Job Requisition', {
                 method: "beams.beams.custom_scripts.job_requisition.job_requisition.display_template_content",
                 args: {
                     template_name: frm.doc.job_description_template,
-                    doc: frm.doc, 
+                    doc: frm.doc,
                 },
                 callback: function (r) {
                     if (r.message) {
