@@ -1,5 +1,5 @@
 import json
-
+from frappe.model.mapper import get_mapped_doc
 import frappe
 from frappe.utils import nowdate
 from frappe import ValidationError
@@ -101,20 +101,55 @@ def job_opening_closed(doc):
 @frappe.whitelist()
 def display_template_content(template_name, doc):
     """
-    This function fetches the Job Description Template and renders its content dynamically 
-    using the details of the Job Requisition document, returning the formatted job description 
+    This function fetches the Job Description Template and renders its content dynamically
+    using the details of the Job Requisition document, returning the formatted job description
     for display.
     """
-    
+
     if isinstance(doc, str):
-        doc = frappe.parse_json(doc)  
-    
+        doc = frappe.parse_json(doc)
+
     job_description_template = frappe.get_value("Job Description Template",{'name': template_name},['description'])
 
     if job_description_template:
-        
+
         rendered_description = frappe.render_template(job_description_template, doc)
-        return rendered_description  
+        return rendered_description
     return ""
 
 
+@frappe.whitelist()
+def make_job_opening(source_name, target_doc=None):
+    def set_missing_values(source, target):
+        target.job_title = source.designation
+        target.status = "Open"
+        target.currency = frappe.db.get_value("Company", source.company, "default_currency")
+        target.lower_range = source.expected_compensation
+        target.description = source.description
+
+    return get_mapped_doc(
+        "Job Requisition",
+        source_name,
+        {
+            "Job Requisition": {
+                "doctype": "Job Opening",
+            },
+            "field_map": {
+                "designation": "designation",
+                "name": "job_requisition",
+                "department": "department",
+                "no_of_positions": "vacancies",
+            },
+        },
+        target_doc,
+        set_missing_values,
+    )
+
+
+@frappe.whitelist()
+def associate_job_opening(job_requisition, job_opening):
+    """Associate an existing Job Opening with the Job Requisition."""
+    job_requisition_doc = frappe.get_doc("Job Requisition", job_requisition)
+    job_requisition_doc.job_opening = job_opening
+    job_requisition_doc.save()
+    frappe.msgprint(f"Job Opening {job_opening} has been successfully associated.")
