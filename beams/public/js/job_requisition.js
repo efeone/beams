@@ -17,11 +17,13 @@ frappe.ui.form.on('Job Requisition', {
             }
         });
 
+        // Check if the Job Requisition status is "Approved"
         if(frm.doc.status =="Approved") {
           // Create Job Opening Button
           frm.add_custom_button(
               __("Create Job Opening"),
               () => {
+                // Open a mapped document to create a Job Opening
                   frappe.model.open_mapped_doc({
                       method: "beams.beams.custom_scripts.job_requisition.job_requisition.make_job_opening",
                       source_name: frm.doc.name,  // Pass the current Job Requisition ID
@@ -43,6 +45,8 @@ frappe.ui.form.on('Job Requisition', {
                           options: "Job Opening",
                           reqd: 1,
                           get_query: () => {
+
+                            // Define query filters for the Job Opening link
                               const filters = {
                                   company: frm.doc.company,
                                   status: "Open",

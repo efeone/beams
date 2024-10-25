@@ -120,7 +120,30 @@ def display_template_content(template_name, doc):
 
 @frappe.whitelist()
 def make_job_opening(source_name, target_doc=None):
+       """
+    Create a Job Opening from a Job Requisition.
+
+    This function maps fields from a Job Requisition to a new Job Opening.
+    It retrieves the Job Requisition by its name and sets relevant fields
+    in the Job Opening based on the information in the Job Requisition.
+
+    Parameters:
+    - source_name: str, the name of the Job Requisition document to be converted.
+    - target_doc: Document, optional; an existing Job Opening document to update.
+                  If not provided, a new Job Opening will be created.
+
+    Returns:
+    - Document: The newly created or updated Job Opening document.
+    """
     def set_missing_values(source, target):
+         """
+        Set default values in the target Job Opening document
+        that are missing from the source Job Requisition.
+
+        Parameters:
+        - source: Document, the source Job Requisition document.
+        - target: Document, the target Job Opening document to update.
+        """
         target.job_title = source.designation
         target.status = "Open"
         target.currency = frappe.db.get_value("Company", source.company, "default_currency")
@@ -152,4 +175,3 @@ def associate_job_opening(job_requisition, job_opening):
     job_requisition_doc = frappe.get_doc("Job Requisition", job_requisition)
     job_requisition_doc.job_opening = job_opening
     job_requisition_doc.save()
-    frappe.msgprint(f"Job Opening {job_opening} has been successfully associated.")
