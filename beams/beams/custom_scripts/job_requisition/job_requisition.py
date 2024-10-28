@@ -1,5 +1,5 @@
 import json
-
+from frappe.model.mapper import get_mapped_doc
 import frappe
 from frappe.utils import nowdate
 from frappe import ValidationError
@@ -101,20 +101,77 @@ def job_opening_closed(doc):
 @frappe.whitelist()
 def display_template_content(template_name, doc):
     """
-    This function fetches the Job Description Template and renders its content dynamically 
-    using the details of the Job Requisition document, returning the formatted job description 
+    This function fetches the Job Description Template and renders its content dynamically
+    using the details of the Job Requisition document, returning the formatted job description
     for display.
     """
-    
+
     if isinstance(doc, str):
-        doc = frappe.parse_json(doc)  
-    
+        doc = frappe.parse_json(doc)
+
     job_description_template = frappe.get_value("Job Description Template",{'name': template_name},['description'])
 
     if job_description_template:
-        
+
         rendered_description = frappe.render_template(job_description_template, doc)
-        return rendered_description  
+        return rendered_description
     return ""
 
 
+@frappe.whitelist()
+def make_job_opening(source_name, target_doc=None):
+       """
+    Create a Job Opening from a Job Requisition.
+
+    This function maps fields from a Job Requisition to a new Job Opening.
+    It retrieves the Job Requisition by its name and sets relevant fields
+    in the Job Opening based on the information in the Job Requisition.
+
+    Parameters:
+    - source_name: str, the name of the Job Requisition document to be converted.
+    - target_doc: Document, optional; an existing Job Opening document to update.
+                  If not provided, a new Job Opening will be created.
+
+    Returns:
+    - Document: The newly created or updated Job Opening document.
+    """
+    def set_missing_values(source, target):
+         """
+        Set default values in the target Job Opening document
+        that are missing from the source Job Requisition.
+
+        Parameters:
+        - source: Document, the source Job Requisition document.
+        - target: Document, the target Job Opening document to update.
+        """
+        target.job_title = source.designation
+        target.status = "Open"
+        target.currency = frappe.db.get_value("Company", source.company, "default_currency")
+        target.lower_range = source.expected_compensation
+        target.description = source.description
+
+    return get_mapped_doc(
+        "Job Requisition",
+        source_name,
+        {
+            "Job Requisition": {
+                "doctype": "Job Opening",
+            },
+            "field_map": {
+                "designation": "designation",
+                "name": "job_requisition",
+                "department": "department",
+                "no_of_positions": "vacancies",
+            },
+        },
+        target_doc,
+        set_missing_values,
+    )
+
+
+@frappe.whitelist()
+def associate_job_opening(job_requisition, job_opening):
+    """Associate an existing Job Opening with the Job Requisition."""
+    job_requisition_doc = frappe.get_doc("Job Requisition", job_requisition)
+    job_requisition_doc.job_opening = job_opening
+    job_requisition_doc.save()
