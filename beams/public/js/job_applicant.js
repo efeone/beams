@@ -67,6 +67,26 @@ frappe.ui.form.on('Job Applicant', {
                     },
                 });
             }, frappe._('Create')); // Set the label of the button
-        }
-    }
+
+            frm.add_custom_button(__('Send Magic Link'), function() {
+               frappe.confirm(
+                   'Are you sure you want to send the magic link to the candidate?',
+                   function() {
+                       console.log("Applicant Name (ID):", frm.doc.name);
+                       frappe.call({
+                           method: "beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link",
+                           args: {
+                               applicant_id: frm.doc.name
+                           },
+                           callback: function(r) {
+                               if (r.message) {
+                                   frappe.msgprint("Magic link has been sent to the candidate.");
+                               }
+                           }
+                       });
+                   }
+               );
+           }, __('Create'));
+       }
+   }
 });
