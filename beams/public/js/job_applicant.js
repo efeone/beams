@@ -86,7 +86,7 @@ frappe.ui.form.on('Job Applicant', {
                        });
                    }
                );
-           }, __('Create'));
+           });
        }
    }
 });
