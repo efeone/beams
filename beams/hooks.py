@@ -193,7 +193,8 @@ doc_events = {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
         },
     "Job Applicant": {
-        "validate": "beams.beams.custom_scripts.job_applicant.job_applicant.validate"
+        "validate": "beams.beams.custom_scripts.job_applicant.job_applicant.validate",
+        "before_save":"beams.beams.custom_scripts.job_applicant.job_applicant.fetch_interview_rounds"
         },
     "Department": {
        "validate": "beams.beams.custom_scripts.department.department.validate"
