@@ -821,6 +821,19 @@ def get_job_applicant_custom_fields():
                 "fieldtype": "Link",
                 "options": "Location",
                 "insert_after": "country"
+            },
+            {
+                "fieldname": "interview_process_break",
+                "fieldtype": "Section Break",
+                "label": "Interview Process",
+                "insert_after": "skill_proficiency"
+            },
+            {
+                "fieldname": "applicant_interview_round",
+                "fieldtype": "Table",
+                "options": "Applicant Interview Round",
+                "label": "Interview Rounds",
+                "insert_after": "interview_process_break"
             }
         ]
     }
@@ -945,6 +958,13 @@ def get_job_opening_custom_fields():
                 "label": "",
                 "options": "<p style='margin-top: 5px; color: #6c757d; font-size: 0.9em;'>Proficiency selected here is the minimum proficiency needed.</p>",
                 "insert_after": "skill_proficiency"
+            },
+            {
+                "fieldname": "job_requisition_id_",
+                "label": "job Requisition",
+                "fieldtype": "Link",
+                "options": "Job Requisition",
+                "insert_after": "designation"
             }
         ]
     }
