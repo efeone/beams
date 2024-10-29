@@ -68,5 +68,48 @@ frappe.ui.form.on('Job Applicant', {
                 });
             }, frappe._('Create')); // Set the label of the button
         }
+
+        if (frm.is_new()) {
+            frm.toggle_display('applicant_interview_round', false);
+        }
+        fetch_interview_rounds(frm);
+    },
+    after_save: function(frm) {
+        frm.toggle_display('applicant_interview_round', true);
+    },
+    job_title: function(frm) {
+        fetch_interview_rounds(frm);
     }
-});
+  });
+ /*
+  * Fetches and populates interview rounds for a job applicant based on the selected job title.
+  * interview rounds in the 'applicant_interview_round' child table and fetches the corresponding
+  * job requisition details for the selected job title.
+  */
+function fetch_interview_rounds(frm) {
+    if (frm.doc.job_title) {
+        frm.clear_table('applicant_interview_round');
+        frappe.db.get_value('Job Opening', { 'name': frm.doc.job_title }, 'job_requisition').then(r => {
+            if (r.message && r.message.job_requisition) {
+                const jobRequisition = r.message.job_requisition;
+                frappe.db.exists('Job Requisition', jobRequisition).then(exists => {
+                    if (exists) {
+                        frappe.db.get_doc('Job Requisition', jobRequisition).then(job_requisition => {
+                            if (job_requisition.interview_rounds && job_requisition.interview_rounds.length > 0) {
+                                const existingRounds = frm.doc.applicant_interview_round.map(round => round.interview_round);
+
+                                job_requisition.interview_rounds.forEach(round => {
+                                    if (!existingRounds.includes(round.interview_round)) {
+                                        const row = frm.add_child('applicant_interview_round');
+                                        row.interview_round = round.interview_round;
+                                    }
+                                });
+                                frm.refresh_field('applicant_interview_round');
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+}

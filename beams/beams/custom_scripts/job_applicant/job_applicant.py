@@ -85,3 +85,27 @@ def create_local_enquiry(doc_name):
     new_report.insert(ignore_mandatory=True, ignore_permissions=True)
 
     return new_report.name  # Return the name of the newly created report
+
+
+@frappe.whitelist()
+def fetch_interview_rounds(doc, method):
+    """
+    Fetch interview rounds for a job applicant based on the job title.
+    If the applicant has a job title and no interview rounds have been added,
+    this function retrieves the job requisition linked to the job opening
+    and populates the interview rounds in the applicant's document.
+    """
+    if doc.job_title:
+        if not doc.applicant_interview_round:  # Check if rounds have not been added
+            if frappe.db.exists('Job Opening', doc.job_title):  # Check if the job opening exists
+                job_opening = frappe.get_doc('Job Opening', doc.job_title)
+                if job_opening.job_requisition:
+                    if frappe.db.exists('Job Requisition', job_opening.job_requisition):
+                        job_requisition = frappe.get_doc('Job Requisition', job_opening.job_requisition)
+                        if job_requisition.interview_rounds:
+                            existing_rounds = {round.interview_round for round in doc.applicant_interview_round}
+                            for round in job_requisition.interview_rounds:
+                                if round.interview_round not in existing_rounds:
+                                    doc.append('applicant_interview_round', {
+                                        'interview_round': round.interview_round
+                                    })
