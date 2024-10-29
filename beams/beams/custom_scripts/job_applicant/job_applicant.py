@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.utils import get_url, now_datetime
 
 def get_permission_query_conditions(user):
     if not user:
@@ -57,6 +58,7 @@ def validate(doc, method):
         required_skills_list = ", ".join(required_skills)
         frappe.throw(_("The Applicant does not meet the Required skills: {0}").format(required_skills_list))
 
+
 @frappe.whitelist()
 def create_local_enquiry(doc_name):
     """
@@ -85,3 +87,48 @@ def create_local_enquiry(doc_name):
     new_report.insert(ignore_mandatory=True, ignore_permissions=True)
 
     return new_report.name  # Return the name of the newly created report
+
+@frappe.whitelist()
+def send_magic_link(applicant_id):
+    """
+    Sends a unique magic link to the specified job applicant's email for document upload.
+    Args:
+        applicant_name (str): The name of the job applicant.
+    Returns:
+        None
+    """
+    doc = frappe.get_doc('Job Applicant', applicant_id)
+    link = generate_magic_link(doc.name)
+
+    subject = f"{doc.applicant_name}, Complete Your Application"
+    frappe.sendmail(
+        recipients=[doc.email_id],
+        subject=subject,
+        message=f"Dear {doc.applicant_name},<br><br>"
+                f"We're excited to move forward with your application! To continue, please "
+                f"upload the required documents by clicking the link below:<br><br>"
+                f"<a href='{link}'>Complete Your Application</a><br><br>"
+                f"Thank you for your interest in joining us!<br>"
+                f"If you have any questions, feel free to reach out.<br><br>"
+                f"Best regards,<br>The Hiring Team"
+    )
+
+    frappe.msgprint(f"Magic link sent to {doc.email_id}")
+
+def generate_magic_link(applicant_id):
+    """
+    Generates and returns a magic link URL for the specified job applicant
+    Args:
+        applicant_name (str): The name of the job applicant.
+    Returns:
+        str: The generated magic link URL.
+    """
+    token = frappe.generate_hash(length=10)
+    expiration_time = now_datetime()
+    link = f"{get_url()}/job_application_upload/upload_doc?applicant_id={applicant_id}&token={token}"
+    doc = frappe.get_doc('Job Applicant', applicant_id)
+    doc.magic_link_token = token
+    doc.magic_link_expiration = expiration_time
+    doc.save()
+
+    return link
