@@ -89,7 +89,7 @@ after_migrate = "beams.setup.after_migrate"
 # Uninstallation
 # ------------
 
-before_uninstall = "beams.uninstall.before_uninstall"
+before_uninstall = "beams.setup.before_uninstall"
 # after_uninstall = "beams.uninstall.after_uninstall"
 
 # Integration Setup
