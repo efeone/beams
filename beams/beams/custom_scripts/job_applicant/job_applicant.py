@@ -97,23 +97,26 @@ def send_magic_link(applicant_id):
     Returns:
         None
     """
-    doc = frappe.get_doc('Job Applicant', applicant_id)
-    link = generate_magic_link(doc.name)
-
-    subject = f"{doc.applicant_name}, Complete Your Application"
-    frappe.sendmail(
-        recipients=[doc.email_id],
-        subject=subject,
-        message=f"Dear {doc.applicant_name},<br><br>"
-                f"We're excited to move forward with your application! To continue, please "
-                f"upload the required documents by clicking the link below:<br><br>"
-                f"<a href='{link}'>Complete Your Application</a><br><br>"
-                f"Thank you for your interest in joining us!<br>"
-                f"If you have any questions, feel free to reach out.<br><br>"
-                f"Best regards,<br>The Hiring Team"
-    )
-
-    frappe.msgprint(f"Magic link sent to {doc.email_id}")
+    if frappe.db.exists('Job Applicant', applicant_id):
+        doc = frappe.get_doc('Job Applicant', applicant_id)
+        link = generate_magic_link(doc.name)
+        if frappe.db.exists('Email Template', 'Job Applicant Follow Up'):
+            template = frappe.get_doc('Email Template', 'Job Applicant Follow Up')
+            subject = frappe.render_template(template.subject, {'applicant_name': doc.applicant_name})
+            response = frappe.render_template(template.response, {
+                'applicant_name': doc.applicant_name,
+                'magic_link': link
+            })
+            frappe.sendmail(
+                recipients=[doc.email_id],
+                subject=subject,
+                message=response
+            )
+            frappe.msgprint(f'Magic link sent to {doc.email_id}')
+        else:
+            frappe.msgprint('Email Template "Job Applicant Follow Up" does not exist.', alert=True)
+    else:
+        frappe.msgprint(f'Job Applicant with ID {applicant_id} does not exist.', alert=True)
 
 def generate_magic_link(applicant_id):
     """
@@ -126,11 +129,13 @@ def generate_magic_link(applicant_id):
     token = frappe.generate_hash(length=10)
     expiration_time = now_datetime()
     link = f"{get_url()}/job_application_upload/upload_doc?applicant_id={applicant_id}&token={token}"
-    doc = frappe.get_doc('Job Applicant', applicant_id)
-    doc.magic_link_token = token
-    doc.magic_link_expiration = expiration_time
-    doc.save()
-
+    if frappe.db.exists('Job Applicant', applicant_id):
+        doc = frappe.get_doc('Job Applicant', applicant_id)
+        doc.magic_link_token = token
+        doc.magic_link_expiration = expiration_time
+        doc.save()
+    else:
+        frappe.msgprint(f'Job Applicant with ID {applicant_id} does not exist when generating magic link.', alert=True)
     return link
 
 

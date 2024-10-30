@@ -40,6 +40,9 @@ def after_install():
     #Creating BEAMS specific Translations
     create_translations(get_custom_translations())
 
+    #Creating BEAMS specific Email Template
+    create_email_templates(get_email_templates())
+
 def after_migrate():
     after_install()
 
@@ -1300,10 +1303,21 @@ def create_custom_roles(roles):
             role_doc.insert(ignore_permissions=True)
     frappe.db.commit()
 
-def create_translations(traslations):
-    for traslation in traslations:
-        if not frappe.db.exists(traslation):
-            frappe.get_doc(traslation).insert(ignore_permissions=True)
+def create_translations(translations):
+    for translation in translations:
+        if not frappe.db.exists(translation):
+            frappe.get_doc(translation).insert(ignore_permissions=True)
+    frappe.db.commit()
+
+def create_email_templates(email_templates):
+    '''
+        Method to Create Email Template
+        args:
+            email_templates : Email Template List
+    '''
+    for email_template in email_templates:
+        if not frappe.db.exists('Email Template', email_template.get('name')):
+            frappe.get_doc(email_template).insert(ignore_permissions=True)
     frappe.db.commit()
 
 def get_interview_feedback_custom_fields():
@@ -1374,3 +1388,22 @@ def get_custom_translations():
             'language': 'en'
         }
     ]
+
+def get_email_templates():
+    '''
+        Method to get Email Templates
+    '''
+    return [
+        {
+            'doctype': 'Email Template',
+            'name': 'Job Applicant Follow Up',
+            'subject': "{{applicant_name}}, Complete your Application",
+            'response': """Dear {{ applicant_name }},
+                           We're excited to move forward with your application!
+                           To continue, please upload the required documents by clicking the link: <a href="{{ magic_link }}">Click Here</a>.
+                           Thank you for your interest in joining us!
+                           If you have any questions, feel free to reach out.
+                           Best regards,
+                           HR Manager"""
+        }
+]
