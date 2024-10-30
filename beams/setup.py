@@ -5,6 +5,7 @@ from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
 
 def after_install():
+    #Creating BEAMS specific custom fields
     create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_invoice_custom_fields(), ignore_validate=True)
     create_custom_fields(get_quotation_custom_fields(), ignore_validate=True)
@@ -14,7 +15,6 @@ def after_install():
     create_custom_fields(get_driver_custom_fields(), ignore_validate=True)
     create_custom_fields(get_employee_custom_fields(), ignore_validate=True)
     create_custom_fields(get_purchase_order_custom_fields(),ignore_validate=True)
-    create_property_setters(get_property_setters())
     create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
     create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
     create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
@@ -23,16 +23,22 @@ def after_install():
     create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
     create_custom_fields(get_department_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_requisition_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_quotation_item_custom_fields(),ignore_validate=True)
     create_custom_fields(get_job_opening_custom_fields(),ignore_validate=True)
     create_custom_fields(get_expected_skill_set_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_round_custom_fields(),ignore_validate=True)
-    # create_custom_roles('')
     create_custom_fields(get_job_applicant_custom_fields(),ignore_validate=True)
     create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_budget_account_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_feedback_custom_fields(),ignore_validate=True)
     create_custom_fields(get_skill_assessment_custom_fields(), ignore_validate=True)
+
+    #Creating BEAMS specific Property Setters
+    create_property_setters(get_property_setters())
+
+    #Creating BEAMS specific Roles
+    create_custom_roles(get_beams_roles())
+
+    #Creating BEAMS specific Translations
+    create_translations(get_custom_translations())
 
 def after_migrate():
     after_install()
@@ -55,11 +61,9 @@ def before_uninstall():
     delete_custom_fields(get_contract_custom_fields())
     delete_custom_fields(get_department_custom_fields())
     delete_custom_fields(get_job_requisition_custom_fields())
-    delete_custom_fields(get_quotation_item_custom_fields())
     delete_custom_fields(get_job_opening_custom_fields())
-    delete_custom_fields(get_job_applicant_custom_field())
+    delete_custom_fields(get_job_applicant_custom_fields())
     delete_custom_fields(get_budget_custom_fields())
-    delete_custom_fields(get_budget_account_custom_fields())
     delete_custom_fields(get_expected_skill_set_custom_fields())
     delete_custom_fields(get_interview_round_custom_fields())
     delete_custom_fields(get_skill_assessment_custom_fields())
@@ -109,7 +113,6 @@ def get_customer_custom_fields():
         ]
     }
 
-
 def get_department_custom_fields():
     '''
     Custom fields that need to be added to the Department Doctype
@@ -142,7 +145,6 @@ def get_department_custom_fields():
 
         ]
     }
-
 
 def get_driver_custom_fields():
     '''
@@ -192,14 +194,7 @@ def get_budget_custom_fields():
                 "options":"Department",
                 "insert_after": "monthly_distribution"
             }
-        ]
-    }
-
-def get_budget_account_custom_fields():
-    '''
-    Custom fields that need to be added to the Budget Account Child Table
-    '''
-    return {
+        ],
         "Budget Account": [
             {
                 "fieldname": "cost_subhead",
@@ -373,14 +368,7 @@ def get_quotation_custom_fields():
                 "insert_after": "client_name"
             }
 
-        ]
-    }
-
-def get_quotation_item_custom_fields():
-    '''
-    Custom fields that need to be added to the Quotation Item Child Table
-    '''
-    return {
+        ],
         "Quotation Item": [
             {
                 "fieldname": "sales_type",
@@ -537,7 +525,6 @@ def get_employee_custom_fields():
         ]
     }
 
-
 def get_voucher_entry_custom_fields():
     '''
     Custom fields that need to be added to the Employee Doctype
@@ -553,7 +540,6 @@ def get_voucher_entry_custom_fields():
             }
         ]
     }
-
 
 def get_expected_skill_set_custom_fields():
     '''
@@ -759,6 +745,7 @@ def get_job_requisition_custom_fields():
             }
         ]
     }
+
 def get_job_applicant_custom_fields():
     '''
     Custom fields that need to be added to the Job Applicant Doctype
@@ -837,7 +824,6 @@ def get_job_applicant_custom_fields():
             }
         ]
     }
-
 
 def get_contract_custom_fields():
     '''
@@ -1297,48 +1283,28 @@ def get_journal_entry_custom_fields():
         ]
     }
 
-def create_custom_roles(role_name):
-    """
-    Method to create Role , when argument is Passed
-    """
-
-    if not frappe.db.exists("Role", role_name):
-            new_role = frappe.get_doc({
+def create_custom_roles(roles):
+    '''
+        Method to create custom Role
+        args:
+            roles : Role List (list of string)
+        example:
+            ["HOD", "Manager"]
+    '''
+    for role in roles:
+        if not frappe.db.exists("Role", role):
+            role_doc = frappe.get_doc({
                 "doctype": "Role",
-                "role_name": role_name
+                "role_name": role
             })
-            new_role.insert(ignore_permissions=True)
-            print(f"Created role: {role_name}")
-    else:
-            print(f"Role already exists: {role_name}")
-
+            role_doc.insert(ignore_permissions=True)
     frappe.db.commit()
 
-def create_translation_quotation():
-    translation = frappe.get_doc({
-        'doctype': 'Translation',
-        'source_text': 'Quotation',
-        'translated_text': 'Release Order',
-        'language': 'en'
-    })
-    translation.insert(ignore_permissions=True)
+def create_translations(traslations):
+    for traslation in traslations:
+        if not frappe.db.exists(traslation):
+            frappe.get_doc(traslation).insert(ignore_permissions=True)
     frappe.db.commit()
-
-create_translation_quotation()
-
-def create_translation_quotation_to():
-    translation = frappe.get_doc({
-        'doctype': 'Translation',
-        'source_text': 'Quotation To',
-        'translated_text': 'Release Order To',
-        'language': 'en'
-    })
-    translation.insert(ignore_permissions=True)
-    frappe.db.commit()
-
-create_translation_quotation_to()
-
-
 
 def get_interview_feedback_custom_fields():
     '''
@@ -1383,3 +1349,28 @@ def get_skill_assessment_custom_fields():
             }
         ]
     }
+
+def get_beams_roles():
+    '''
+        Method to get BEAMS specific roles
+    '''
+    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD']
+
+def get_custom_translations():
+    '''
+        Method to get Translations
+    '''
+    return [
+        {
+            'doctype': 'Translation',
+            'source_text': 'Quotation To',
+            'translated_text': 'Release Order To',
+            'language': 'en'
+        },
+        {
+            'doctype': 'Translation',
+            'source_text': 'Quotation',
+            'translated_text': 'Release Order',
+            'language': 'en'
+        }
+    ]
