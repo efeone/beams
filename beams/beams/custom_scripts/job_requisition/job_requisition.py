@@ -118,9 +118,12 @@ def display_template_content(template_name, doc):
     return ""
 
 
+import frappe
+from frappe.model.mapper import get_mapped_doc
+
 @frappe.whitelist()
 def make_job_opening(source_name, target_doc=None):
-       """
+    """
     Create a Job Opening from a Job Requisition.
 
     This function maps fields from a Job Requisition to a new Job Opening.
@@ -135,8 +138,9 @@ def make_job_opening(source_name, target_doc=None):
     Returns:
     - Document: The newly created or updated Job Opening document.
     """
+
     def set_missing_values(source, target):
-         """
+        """
         Set default values in the target Job Opening document
         that are missing from the source Job Requisition.
 
