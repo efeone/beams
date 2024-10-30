@@ -208,7 +208,7 @@ doc_events = {
 
 scheduler_events = {
     "daily": [
-        "beams.beams.doctype.local_enquiry_report.local_enquiry_report.update_local_enquiry_status"
+        "beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue"
     ],
 # 	"all": [
 # 		"beams.tasks.all"
