@@ -42,7 +42,6 @@ frappe.ui.form.on('Budget', {
 frappe.ui.form.on('Budget Account', {
     cost_subhead: function(frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        console.log(row);
         if (row.cost_subhead) {
             // Fetch the related account and department from the selected cost_subhead
             frappe.db.get_value('Cost Subhead', row.cost_subhead, ['account', 'department'], function(value) {
@@ -59,6 +58,7 @@ frappe.ui.form.on('Budget Account', {
 });
 
 function set_filters(frm){
+  //Apply filters in the cost subhead based on selected department
   frm.set_query('cost_subhead', 'accounts', (doc, cdt, cdn) => {
         var child = locals[cdt][cdn];
         return {
@@ -67,6 +67,7 @@ function set_filters(frm){
             }
         }
     });
+    //Apply filters in the department based on selected cost center
     frm.set_query('department', function() {
           return {
               filters: {

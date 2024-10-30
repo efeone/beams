@@ -3,6 +3,7 @@
 
 import frappe
 from frappe import _
+from frappe.utils import flt
 from decimal import Decimal, ROUND_DOWN
 
 def execute(filters=None):
@@ -16,9 +17,8 @@ def get_columns(filters):
         {"label": _("Cost Description"), "fieldname": "cost_description", "fieldtype": "Data", "width": 230},
         {"label": _("Cost Subhead"), "fieldname": "cost_subhead", "fieldtype": "Data", "width": 230},
         {"label": _("Cost Category"), "fieldname": "cost_category", "fieldtype": "Data", "width": 170},
-        {"label": _("Account"), "fieldname": "account", "fieldtype": "Link", "options": "Account", "width": 230},  # Moved here
+        {"label": _("Account"), "fieldname": "account", "fieldtype": "Link", "options": "Account", "width": 230},
         {"label": _("Department"), "fieldname": "department", "fieldtype": "Link", "options": "Department", "width": 170},
-        {"label": _("Region"), "fieldname": "region", "fieldtype": "Data", "width": 100},
         {"label": _("Fiscal Year"), "fieldname": "fiscal_year", "fieldtype": "Data", "width": 100},
         {"label": _("Total Budget Amount"), "fieldname": "budget_amount", "fieldtype": "Currency", "width": 120},
     ]
@@ -61,7 +61,6 @@ def get_data(filters):
             a.cost_subhead,
             b.department,
             a.cost_category,
-            'National' AS region,
             a.account,
             b.fiscal_year,
             a.budget_amount,
@@ -93,9 +92,9 @@ def get_data(filters):
         # Fetch the monthly distribution linked to the budget
         monthly_distribution = row["monthly_distribution"]
 
-        month_allocation = {month.lower(): Decimal('0.00') for month in generate_month_labels(
-            frappe.get_doc("Fiscal Year", row["fiscal_year"]).year_start_date,
-            frappe.get_doc("Fiscal Year", row["fiscal_year"]).year_end_date)}
+        month_allocation = {month.lower(): flt(0) for month in generate_month_labels(
+            frappe.db.get_value("Fiscal Year", row["fiscal_year"], "year_start_date"),
+            frappe.db.get_value("Fiscal Year", row["fiscal_year"], "year_end_date"))}
 
         # If a monthly distribution is found, get the percentage allocations for the current account
         if monthly_distribution:
@@ -108,10 +107,11 @@ def get_data(filters):
             # Calculate allocated amount for each percentage and assign to the corresponding month column
             for percentage in percentages:
                 month_column = percentage.month.lower()
-                budget_amount = Decimal(row["budget_amount"])
+                budget_amount = Decimal(row.get("budget_amount", 0))
                 allocation_percentage = Decimal(percentage.percentage_allocation)
                 allocated_amount = (budget_amount * allocation_percentage) / Decimal(100)
                 month_allocation[month_column] = allocated_amount.quantize(Decimal('0.01'), rounding=ROUND_DOWN)
+
 
         result_data.append({
             "budget_link": row["budget_link"],
@@ -120,7 +120,6 @@ def get_data(filters):
             "cost_category": row["cost_category"],
             "account": row["account"],
             "department": row["department"],
-            "region": row["region"],
             "fiscal_year": row["fiscal_year"],
             "budget_amount": row["budget_amount"],
             **month_allocation
