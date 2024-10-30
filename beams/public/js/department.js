@@ -18,12 +18,12 @@ frappe.ui.form.on('Department', {
             },
             callback: function(r) {
                 if (r.message) {
-                    // Set the query again to include only Hod users
+                    // Set the query again to include only HOD users
                     frm.set_query('head_of_department', function() {
                         return {
                             filters: {
                                 department: frm.doc.name, // Adjust to match the Employee's department field
-                                user_id: ['in', r.message] // Filter for users with role 'Hod'
+                                user_id: ['in', r.message] // Filter for users with role 'HOD'
                             }
                         };
                     });
