@@ -162,7 +162,7 @@ def make_job_opening(source_name, target_doc=None):
                 "doctype": "Job Opening",
             },
             "field_map": {
-                "designation": "job_title",
+                "designation": "designation",
                 "name": "job_requisition",
                 "department": "department",
                 "no_of_positions": "vacancies",
