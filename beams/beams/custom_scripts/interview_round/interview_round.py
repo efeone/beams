@@ -3,7 +3,9 @@ import frappe
 
 @frappe.whitelist()
 def get_expected_question_set(interview_round):
-    """Fetch the expected questions for the given interview round."""
+    """
+    Fetch the expected questions for the given interview round.
+    """
     # Fetch the Interview Round document
     interview_round_doc = frappe.get_doc("Interview Round", interview_round)
 

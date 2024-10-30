@@ -3,6 +3,9 @@ from frappe import _
 
 @frappe.whitelist()
 def create_interview_feedback(data, interview_name, interviewer, job_applicant):
+    """
+    method: Creates and submits an Interview Feedback document for a job applicant, ensuring the user is the interviewer, validates skills and their scores, and appends them to the feedback.
+    """
     import json
 
     # Parse the incoming data
@@ -33,13 +36,13 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
 
         try:
             # Convert score to integer
-            rating = int(d.score)
+            rating = int(d.score)/10
         except ValueError:
             frappe.throw(_("Invalid score for skill {0}. Please enter a valid number.").format(d.skill))
 
 
         # Append the validated skill and rating to the Interview Feedback
-        interview_feedback.append("skill_assessment", {"skill": d.skill, "rating": rating})
+        interview_feedback.append("skill_assessment", {"skill": d.skill, "rating": rating, "score":d.score})
 
     # Set feedback and result
     interview_feedback.remarks = data.remarks

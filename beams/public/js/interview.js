@@ -2,7 +2,6 @@ frappe.ui.form.on('Interview', {
     refresh: function (frm) {
         setTimeout(function () {
             if (!frm.is_dirty()) {
-                frm.page.clear_primary_action();
                 frm.add_custom_button(__('Interview Feedback'), function () {
                     frm.events.show_feedback_dialog(frm);
                 });
