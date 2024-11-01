@@ -1,15 +1,22 @@
 frappe.ui.form.on('Interview', {
     refresh: function (frm) {
         setTimeout(function () {
-            if (!frm.is_dirty()) {
+            if (!frm.is_dirty() && frm.doc.docstatus==0) {
+                frm.page.clear_primary_action();
+                frm.page.set_primary_action(__('Submit'), function () {
+                    frm.savesubmit();
+                });
                 frm.add_custom_button(__('Interview Feedback'), function () {
                     frm.events.show_feedback_dialog(frm);
                 });
-            } else {
+            } else if (frm.is_dirty() && frm.doc.docstatus==0) {
                 frm.page.clear_primary_action();
                 frm.page.set_primary_action(__('Save'), function () {
                     frm.save();
                 });
+            }
+            else if (frm.doc.docstatus==1){
+              frm.page.clear_primary_action();
             }
         }, 500);
     },
@@ -79,16 +86,15 @@ frappe.ui.form.on('Interview', {
                                 size: "large",
                                 minimizable: true,
                                 static: true,
+                                primary_action_label: __("Submit"),
                                 primary_action: function (values) {
-                                    // Check if all skill set entries have a valid skill and score
                                     const isValid = values.skill_set.every(skill => skill.skill && skill.score != null && skill.score !== '' && !isNaN(skill.score));
 
                                     if (!isValid) {
                                         frappe.msgprint(__('Each skill must have a Skill and a valid Score.'));
-                                        return; // Stop further execution if validation fails
+                                        return;
                                     }
 
-                                    // Submit feedback without converting score to rating
                                     frappe.call({
                                         method: "beams.beams.custom_scripts.interview.interview.create_interview_feedback",
                                         args: {
@@ -108,7 +114,6 @@ frappe.ui.form.on('Interview', {
 
                                     d.hide();
                                 }
-
                             });
 
                             d.show();
@@ -133,13 +138,13 @@ frappe.ui.form.on('Interview', {
             {
                 fieldtype: "Link",
                 fieldname: "skill",
-                options: "Skill",  // Ensure "Skill" is a valid DocType
+                options: "Skill",
                 in_list_view: 1,
                 label: __("Skill")
             },
             {
                 fieldtype: "Int",
-                fieldname: "score", // Keep the field as score in the UI
+                fieldname: "score",
                 label: __("Score"),
                 in_list_view: 1,
                 reqd: 1
