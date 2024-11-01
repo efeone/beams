@@ -9,6 +9,7 @@ from frappe.utils.user import get_users_with_role
 from frappe.utils import getdate, add_days, date_diff
 import json
 from datetime import datetime, date, timedelta
+from frappe.utils import getdate
 
 
 class SubstituteBooking(Document):
@@ -108,22 +109,36 @@ class SubstituteBooking(Document):
         else:
             self.total_wage = 0
 
-    def check_employee_leave(self):
+    @frappe.whitelist()
+    def check_leave_application(employee, dates):
         '''
-            Method to verify whether the employee is on leave for each specified date in the child table Substitution Bill Date.
-        '''
-        employee = self.substituting_for
-        if self.substitution_bill_date and employee:
-            for date_entry in self.substitution_bill_date:
-                leave_exists = frappe.db.exists('Leave Application', {
-                    'employee': employee,
-                    'status': 'Approved',
-                    'from_date': ('<=', date_entry.date),
-                    'to_date': ('>=', date_entry.date)
-                })
-                if not leave_exists:
-                    formatted_date = date_entry.date.strftime("%d/%m/%Y")
-                    frappe.throw(f"Employee {employee} is not on leave on {formatted_date}.")
+            Checks leave applications for specified dates of an employee.
+        '''    
+        import json
+        dates = json.loads(dates)
+        leave_applications = {}
+        missing_dates = []
+
+        for date in dates:
+            formatted_date = getdate(date)
+
+            # Check if there is any approved leave application covering the date
+            leave_records = frappe.get_all('Leave Application', filters={
+                'employee': employee,
+                'status': 'Approved',
+                'from_date': ('<=', formatted_date),
+                'to_date': ('>=', formatted_date)
+            }, fields=['name', 'from_date', 'to_date'])
+
+            if leave_records:
+                leave_applications[date] = leave_records
+            else:
+                missing_dates.append(date)
+        return {
+            'leave_applications': leave_applications,
+            'missing_dates': missing_dates
+        }
+
 
     def after_insert(self):
         self.create_todo_on_creation_for_substitute_booking()

@@ -20,62 +20,63 @@ frappe.ui.form.on("Substitute Booking", {
     }
 },
 
-    refresh: function(frm) {
-        // Add custom button to view leave applications under "View"
-        frm.add_custom_button(__('Leave Application List'), function() {
-            if (!frm.doc.substitution_bill_date || frm.doc.substitution_bill_date.length === 0) {
-                frappe.msgprint(__('No dates found in Substitution Bill Date child table.'));
-                return;
-            }
+  refresh: function(frm) {
+      frm.add_custom_button(__('Leave Application List'), function() {
+          if (!frm.doc.substitution_bill_date || frm.doc.substitution_bill_date.length === 0) {
+              frappe.msgprint(__('No dates found in Substitution Bill Date child table.'));
+              return;
+          }
 
-            // Collect dates from child table and convert them to JSON
-            let dates = frm.doc.substitution_bill_date.map(row => row.date);
-            if (dates.length === 0) {
-                frappe.msgprint(__('Please enter at least one date in the Substitution Bill Date table.'));
-                return;
-            }
+          // Collect dates from the child table
+          let dates = frm.doc.substitution_bill_date.map(row => row.date);
+          if (dates.length === 0) {
+              frappe.msgprint(__('Please enter at least one date in the Substitution Bill Date table.'));
+              return;
+          }
 
-            // Call server-side method to check leave applications
-            frappe.call({
-                method: 'beams.beams.doctype.substitute_booking.substitute_booking.check_leave_application',
-                args: {
-                    employee: frm.doc.substituting_for,
-                    dates: JSON.stringify(dates) // Convert dates array to JSON string
-                },
-                callback: function(r) {
-                    if (r.message) {
-                        let { leave_applications, missing_dates } = r.message;
+          frappe.call({
+              method: 'beams.beams.doctype.substitute_booking.substitute_booking.check_leave_application',
+              args: {
+                  employee: frm.doc.substituting_for,
+                  dates: JSON.stringify(dates)
+              },
+              callback: function(r) {
+                  if (r.message) {
+                      let { leave_applications, missing_dates } = r.message;
 
-                        // If there are missing dates, show a message
-                        if (missing_dates && missing_dates.length > 0) {
-                            frappe.msgprint(__('No Approved Leave Applications found for the following dates: {0}', [missing_dates.join(', ')]));
-                        }
+                      if (missing_dates && missing_dates.length > 0) {
+                          frappe.msgprint(__('No approved leave applications found for these dates: {0}', [missing_dates.join(', ')]));
+                      }
 
-                        // If there are approved leave applications
-                        if (leave_applications && Object.keys(leave_applications).length > 0) {
-                            let leaveDetails = Object.entries(leave_applications).map(([date, applications]) => {
-                                return `For date ${date}: ` + applications.map(leave =>
-                                    `Leave Application ${leave.name} from ${leave.from_date} to ${leave.to_date}`
-                                ).join(', ');
-                            }).join('<br>');
+                      // Display approved leave applications
+                      if (leave_applications && Object.keys(leave_applications).length > 0) {
+                          let leaveDetails = Object.entries(leave_applications).map(([date, applications]) => {
+                              return `For date ${date}: ` + applications.map(leave =>
+                                  `Leave Application ${leave.name} from ${leave.from_date} to ${leave.to_date}`
+                              ).join(', ');
+                          }).join('<br>');
 
-                            frappe.msgprint(__('Approved Leave Applications: <br>{0}', [leaveDetails]));
+                          frappe.msgprint(__('Approved Leave Applications:<br>{0}', [leaveDetails]));
 
-                            // Redirect to Leave Application list with filters for approved leave dates
-                            frappe.set_route('List', 'Leave Application', {
-                                employee: frm.doc.substituting_for,
-                                from_date: ['in', Object.keys(leave_applications)],  // Dates with leave applications
-                                to_date: ['in', Object.keys(leave_applications)]
-                            });
-                        } else if (missing_dates.length === 0) {
-                            frappe.msgprint(__('No approved leave applications found for the provided dates.'));
-                        }
-                    } else {
-                        frappe.msgprint(__('No leave applications found.'));
-                    }
-                }
-            });
-        }, __("View"));
+                          // Navigate to Leave Application list view with filters
+                          frappe.set_route('List', 'Leave Application', {
+                              employee: frm.doc.substituting_for,
+                              status: 'Approved',
+                              from_date: ['<=', dates[0]],
+                              to_date: ['>=', dates[dates.length - 1]]
+                          });
+                      } else {
+                          frappe.msgprint(__('No approved leave applications found for the specified dates.'));
+                      }
+                  } else {
+                      frappe.msgprint(__('Error: No response received from the server.'));
+                  }
+              }
+          });
+      }, __("View"));
+
+
+
 
 
         // Check for payment button visibility
