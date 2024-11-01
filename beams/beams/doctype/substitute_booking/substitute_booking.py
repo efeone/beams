@@ -111,6 +111,9 @@ class SubstituteBooking(Document):
 
     @frappe.whitelist()
     def check_leave_application(employee, dates):
+        '''
+            Checks leave applications for specified dates of an employee.
+        '''    
         import json
         dates = json.loads(dates)
         leave_applications = {}
