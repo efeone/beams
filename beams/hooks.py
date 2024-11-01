@@ -40,8 +40,7 @@ doctype_js = {
     "Job Requisition":"public/js/job_requisition.js",
     "Job Applicant" :"public/js/job_applicant.js",
     "Budget":"public/js/budget.js",
-    "Interview Feedback":"public/js/interview_feedback.js",
-    "Interview":"public/js/interview.js"
+    "Interview Feedback":"public/js/interview_feedback.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "public/js/sales_invoice_list.js",
