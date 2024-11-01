@@ -77,15 +77,13 @@
    "fieldname": "information_given_by",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Information Given By",
-   "reqd": 1
+   "label": "Information Given By"
   },
   {
    "fieldname": "information_given_by_designation",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Information Given By Designation",
-   "reqd": 1
+   "label": "Information Given By Designation"
   },
   {
    "fieldname": "information_collected_by",
@@ -134,7 +132,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-24 10:11:19.070639",
+ "modified": "2024-11-01 12:36:06.438994",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",

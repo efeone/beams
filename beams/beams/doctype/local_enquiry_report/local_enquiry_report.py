@@ -7,7 +7,28 @@ from frappe.utils import getdate
 
 
 class LocalEnquiryReport(Document):
-    pass
+    def validate(self):
+         self.information_required()
+
+    
+    def information_required(self):
+        """
+        Validation for the missing fields -> information_given_by and information_given_by_designation 
+        """
+        if self.workflow_state == "Pending Approval":
+            missing_fields = []
+
+            if not self.information_given_by:
+                missing_fields.append("Information given by")
+            if not self.information_given_by_designation:
+                missing_fields.append("Information given by Designation")
+
+            if len(missing_fields) == 2:
+                frappe.throw("Please provide 'Information given by' and 'Information given by Designation' before completing the report.")
+            
+            elif missing_fields:
+                frappe.throw(f"Please provide '{', '.join(missing_fields)}' before completing the report.")
+
 
 @frappe.whitelist()
 def set_status_to_overdue():
@@ -30,3 +51,5 @@ def set_status_to_overdue():
                 frappe.db.set_value('Local Enquiry Report', enquiry.name, 'status', 'Overdue')
 
         frappe.db.commit()
+
+
