@@ -101,18 +101,18 @@ def get_customer_custom_fields():
                 "insert_after": "customer_group"
             },
             {
-                "fieldname": "is_agent",
-                "fieldtype": "Check",
-                "label": "Is Agency",
+                "fieldname": "region",
+                "fieldtype": "Link",
+                "label": "Region",
+                "options": "Region",
                 "insert_after": "msme_status"
             },
             {
-                "fieldname": "albatross_customer_id",
-                "fieldtype": "Data",
-                "label": "Albatross Customer ID",
-                "insert_after": "is_agent"
+                "fieldname": "is_agent",
+                "fieldtype": "Check",
+                "label": "Is Agency",
+                "insert_after": "region"
             }
-
         ]
     }
 
@@ -303,13 +303,13 @@ def get_quotation_custom_fields():
                 "fieldname": "is_barter",
                 "fieldtype": "Check",
                 "label": "Is Barter",
-                "insert_after": "sales_type"
+                "insert_after": "amended_from"
             },
             {
                 "fieldname": "sales_type",
                 "fieldtype": "Link",
                 "label": "Default Sales Type",
-                "insert_after": "order_type",
+                "insert_after": "customer_purchase_order_reference",
                 "options": "Sales Type"
             },
             {
@@ -338,19 +338,22 @@ def get_quotation_custom_fields():
                 "fieldname": "albatross_ro_id",
                 "fieldtype": "Data",
                 "label": "Albatross RO ID",
-                "insert_after": "albatross_details_section"
+                "insert_after": "albatross_details_section",
+                "read_only":1
             },
             {
                 "fieldname": "albatross_invoice_number",
                 "fieldtype": "Data",
                 "label": "Albatross Invoice Number",
-                "insert_after": "albatross_ro_id"
+                "insert_after": "albatross_ro_id",
+                "read_only":1
             },
             {
                 "fieldname": "albatross_ref_number",
                 "fieldtype": "Data",
                 "label": "Albatross Ref Number",
-                "insert_after": "albatross_invoice_number"
+                "insert_after": "albatross_invoice_number",
+                "read_only":1
             },
             {
                 "fieldname": "albatross_column_break",
@@ -362,13 +365,15 @@ def get_quotation_custom_fields():
                 "fieldname": "client_name",
                 "fieldtype": "Data",
                 "label": "Client Name",
-                "insert_after": "albatross_column_break"
+                "insert_after": "albatross_column_break",
+                "read_only":1
             },
             {
                 "fieldname": "executive_name",
                 "fieldtype": "Data",
                 "label": "Executive Name",
-                "insert_after": "client_name"
+                "insert_after": "client_name",
+                "read_only":1
             }
 
         ],
