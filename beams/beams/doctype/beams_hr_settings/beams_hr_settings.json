@@ -1,0 +1,89 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-02 12:43:07.245206",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "column_break_wgti",
+  "default_local_enquiry_duration",
+  "tab_2_tab",
+  "admin_department",
+  "admin_hod",
+  "column_break_nncm",
+  "it_department",
+  "it_hod"
+ ],
+ "fields": [
+  {
+   "description": "In Days",
+   "fieldname": "default_local_enquiry_duration",
+   "fieldtype": "Int",
+   "label": "Default Local Enquiry Duration"
+  },
+  {
+   "fieldname": "tab_2_tab",
+   "fieldtype": "Tab Break",
+   "label": "Department Settings"
+  },
+  {
+   "fieldname": "column_break_wgti",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "admin_department",
+   "fieldtype": "Link",
+   "label": "Admin Department ",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "admin_department.head_of_department",
+   "fieldname": "admin_hod",
+   "fieldtype": "Link",
+   "label": "Admin HOD",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_nncm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "it_department",
+   "fieldtype": "Link",
+   "label": "IT Department",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "it_department.head_of_department",
+   "fieldname": "it_hod",
+   "fieldtype": "Link",
+   "label": "IT HOD",
+   "options": "Employee",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2024-11-02 13:03:53.608882",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Beams HR Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
