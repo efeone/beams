@@ -17,8 +17,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Language",
-   "options": "Language",
-   "reqd": 1
+   "options": "Language"
   },
   {
    "fieldname": "speak",
@@ -42,7 +41,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-03 10:03:18.480483",
+ "modified": "2024-11-04 14:40:00.168283",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Language Proficiency",

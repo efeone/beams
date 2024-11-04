@@ -798,7 +798,6 @@ def get_job_applicant_custom_fields():
                 "fieldname": "language_proficiency",
                 "fieldtype": "Table",
                 "options": "Language Proficiency",
-                "reqd":1,
                 "label": "Language Proficiency",
                 "insert_after": "min_experience"
             },
@@ -807,7 +806,6 @@ def get_job_applicant_custom_fields():
                 "fieldtype": "Table",
                 "options": "Skill Proficiency",
                 "label": "Skill Proficiency",
-                "reqd":1,
                 "insert_after": "language_proficiency"
             },
             {

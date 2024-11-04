@@ -30,16 +30,33 @@ def validate(doc, method):
     Method triggered before the document is saved.
     Validate the Job Applicant against Job Opening requirements.
     """
-    if not frappe.db.exists("Job Opening", {"name": doc.job_title}):
-        frappe.throw(_("The specified Job Opening does not exist."))
+
+    # Check if job_title is specified and fetch the Job Opening
+    if not doc.job_title:
+        return
+
     job_opening = frappe.get_doc('Job Opening', doc.job_title)
-    if doc.location != job_opening.location:
+
+    # Ensure the Job Opening exists
+    if not job_opening:
+        frappe.throw(_("Specified Job Opening '{0}' not found.").format(doc.job_title))
+    if not doc.location:
+        frappe.throw(_("Applicant's location is not provided."))
+
+    # Validate location only if it's filled in the Job Opening
+    if job_opening.location and doc.location != job_opening.location:
         frappe.throw(_("Applicant location does not match the desired location {0}").format(job_opening.location))
+    if not doc.min_education_qual:
+        frappe.throw(_("Applicant's Educational Qualification is required."))
+
+    # Validate education qualification only if it's filled in the Job Opening
     applicant_qualification = doc.min_education_qual
     job_opening_qualifications = [qual.qualification for qual in job_opening.min_education_qual] if job_opening.min_education_qual else []
-    if applicant_qualification not in job_opening_qualifications:
+    if job_opening_qualifications and applicant_qualification not in job_opening_qualifications:
         required_qualifications = ", ".join(job_opening_qualifications)
         frappe.throw(_("Applicant does not match Educational qualifications required: {0}").format(required_qualifications))
+
+    # Validate experience only if it's filled in the Job Opening
     if doc.min_experience is None:
         frappe.throw(_("Applicant's experience is not provided."))
 
@@ -49,12 +66,13 @@ def validate(doc, method):
     if doc.min_experience < job_opening.min_experience:
         frappe.throw(_("Applicant does not meet the required experience: {0} years").format(job_opening.min_experience))
 
-    if doc.min_experience < job_opening.min_experience:
-        frappe.throw(_("Applicant does not meet the Required experience: {0} years").format(job_opening.min_experience))
+    if not doc.skill_proficiency:
+        frappe.throw(_("Applicant's skills are required."))
+        
+    # Validate skills only if required skills are filled in the Job Opening
     required_skills = {skill.skill for skill in job_opening.skill_proficiency}
     applicant_skills = {skill.skill for skill in doc.skill_proficiency}
-    missing_skills = required_skills - applicant_skills
-    if missing_skills:
+    if required_skills and (missing_skills := required_skills - applicant_skills):
         required_skills_list = ", ".join(required_skills)
         frappe.throw(_("The Applicant does not meet the Required skills: {0}").format(required_skills_list))
 
