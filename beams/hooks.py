@@ -29,23 +29,23 @@ app_license = "mit"
 
 # include js in doctype views
 doctype_js = {
-    "Sales Invoice": "public/js/sales_invoice.js",
-    "Quotation": "public/js/quotation.js",
-    "Purchase Invoice": "public/js/purchase_invoice.js",
-    "Driver":"public/js/driver.js",
-    "Sales Order": "public/js/sales_order.js",
-    "Voucher Entry": "public/js/voucher_entry.js",
-    "Contract":"public/js/contract.js",
-    "Department":"public/js/department.js",
-    "Job Requisition":"public/js/job_requisition.js",
-    "Job Applicant" :"public/js/job_applicant.js",
-    "Budget":"public/js/budget.js",
-    "Interview Feedback":"public/js/interview_feedback.js",
-    "Interview":"public/js/interview.js"
+    "Sales Invoice": "beams/custom_scripts/sales_invoice/sales_invoice.js",
+    "Quotation": "beams/custom_scripts/quotation/quotation.js",
+    "Purchase Invoice": "beams/custom_scripts/purchase_invoice/purchase_invoice.js",
+    "Driver":"beams/custom_scripts/driver/driver.js",
+    "Sales Order": "beams/custom_scripts/sales_order/sales_order.js",
+    "Voucher Entry": "beams/custom_scripts/voucher_entry/voucher_entry.js",
+    "Contract":"beams/custom_scripts/contract/contract.js",
+    "Department":"beams/custom_scripts/department/department.js",
+    "Job Requisition":"beams/custom_scripts/job_requisition/job_requisition.js",
+    "Job Applicant" :"beams/custom_scripts/job_applicant/job_applicant.js",
+    "Budget":"beams/custom_scripts/budget/budget.js",
+    "Interview Feedback":"beams/custom_scripts/interview_feedback/interview_feedback.js",
+    "Interview":"beams/custom_scripts/interview/interview.js"
 }
 doctype_list_js = {
-    "Sales Invoice" : "public/js/sales_invoice_list.js",
-    "Purchase Invoice":"public/js/purchase_invoice_list.js"
+    "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
+    "Purchase Invoice":"beams/custom_scripts/purchase_invoice/purchase_invoice_list.js"
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
