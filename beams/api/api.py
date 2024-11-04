@@ -197,12 +197,12 @@ def get_agency_list(start=0, page_length=20, agency_name=None):
 		API to get List of Agency
 	'''
 	agency_fields = ['name as agency_id', 'customer_name as agency_name', 'region', 'gstin', 'pan as pan_no', 'default_currency as currency']
-	filters = { 'is_agent':0 }
+	filters = { 'is_agent':1 }
 	if agency_name:
-		filters = { 'is_agent':0, 'customer_name':['like', '%{0}%'.format(agency_name)] }
+		filters = { 'is_agent':1, 'customer_name':['like', '%{0}%'.format(agency_name)] }
 	agency_list = frappe.db.get_all('Customer', filters=filters, fields=agency_fields, start=start, page_length=page_length)
 	if agency_list:
-		return response('Data get successfully', agency_list, True, 200)
+		return response('Data get successfully', get_customer_address(agency_list, 1), True, 200)
 	else:
 		return response('No Agencies found', agency_list, True, 200)
 
@@ -217,9 +217,39 @@ def get_client_list(start=0, page_length=20, client_name=None):
 		filters = { 'is_agent':0, 'customer_name':['like', '%{0}%'.format(client_name)] }
 	client_list = frappe.db.get_all('Customer', filters=filters, fields=client_fields, start=start, page_length=page_length)
 	if client_list:
-		return response('Data get successfully', client_list, True, 200)
+		return response('Data get successfully', get_customer_address(client_list), True, 200)
 	else:
 		return response('No Clients found', client_list, True, 200)
+
+@frappe.whitelist()
+def get_customer_address(customer_list, agency=0):
+	"""Method fetches address of customer and add it to the list
+
+	Args:
+		customer_list (list): list of dicts fo customers
+		agency (int, optional): denotes whether the customer list of agents or not. Defaults to 0.
+
+	Returns:
+		list of dicts: customer list of dicts with address keys
+	"""
+	for customer in customer_list:
+		dynamic_link = frappe.db.exists("Dynamic Link", {"parenttype":"Address", "link_doctype":"Customer", "link_name":customer["client_id"] if not agency else customer["agency_id"]})
+		address = "" if not dynamic_link else frappe.db.get_value("Dynamic Link", dynamic_link, "parent")
+		address_data = {
+			"address_line_1": "",
+			"address_line_2": "",
+			"address_line_3": "",
+			"address_line_4": "",
+			"pincode": ""
+		}
+		if address:
+			address_data = frappe.db.get_all("Address", filters={"name":address}, fields=["address_line1 as address_line_1", "address_line2 as address_line_2", "city as address_line_3", "state as address_line_4", "pincode"])[0]
+		customer["address_line_1"] = address_data["address_line_1"]
+		customer["address_line_2"] = address_data["address_line_2"]
+		customer["address_line_3"] = address_data["address_line_3"]
+		customer["address_line_4"] = address_data["address_line_4"]
+		customer["pincode"] = address_data["pincode"]
+	return customer_list
 
 def get_sales_taxes_and_charges_template(tax_rate, tax_category):
 	'''
