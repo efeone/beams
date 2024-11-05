@@ -9,7 +9,7 @@ class LocalEnquiryReport(Document):
     def validate(self):
         self.information_required()
         self.set_expected_completion_date()
-         self.information_required()
+        self.information_required()
     def on_submit(self):
         # Only update Job Applicant status if the Local Enquiry Report is approved
         if self.docstatus == 1:
