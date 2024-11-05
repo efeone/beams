@@ -23,7 +23,7 @@ frappe.ui.form.on('Department', {
                         return {
                             filters: {
                                 department: frm.doc.name, // Adjust to match the Employee's department field
-                                user_id: ['in', r.message] // Filter for users with role 'HOD'
+                                user_id: ['in', r.message || []] // Filter for users with role 'HOD'
                             }
                         };
                     });
