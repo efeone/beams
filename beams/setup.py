@@ -202,7 +202,7 @@ def get_budget_custom_fields():
             {
                 "fieldname": "cost_subhead",
                 "fieldtype": "Link",
-                "label": "Cost Subhead",
+                "label": "Cost Sub Head",
                 "options":"Cost Subhead",
                 "insert_after": "cost_description"
             },
@@ -324,7 +324,7 @@ def get_quotation_custom_fields():
                 "fieldname": "region",
                 "fieldtype": "Link",
                 "label": "Region",
-                "insert_after": "party_name",
+                "insert_after": "customer_name",
                 "options": "Region"
 
             },
@@ -367,6 +367,32 @@ def get_quotation_custom_fields():
                 "label": "Client Name",
                 "insert_after": "albatross_column_break",
                 "read_only":1
+            },
+            {
+                "fieldname": "actual_customer",
+                "fieldtype": "Link",
+                "label": "Actual Customer",
+                "options": "Customer",
+                "depends_on": "eval:doc.is_agent == 1",
+                "insert_after": "is_agent"
+            },
+            {
+                "fieldname": "is_agent",
+                "fieldtype": "Check",
+                "label": "Is Agency",
+                "read_only":1,
+                "fetch_from": "party_name.is_agent",
+                "depends_on": "eval:doc.is_agent",
+                "insert_after": "party_name"
+            },
+            {
+                "fieldname": "actual_customer_group",
+                "fieldtype": "Link",
+                "label": "Actual Customer Group",
+                "options": "Customer Group",
+                "read_only": 1,
+                "fetch_from": "actual_customer.customer_group",
+                "insert_after": "actual_customer"
             },
             {
                 "fieldname": "executive_name",
@@ -1131,6 +1157,13 @@ def get_property_setters():
             "property": "depends_on",
             "property_type": "TabBreak",
             "value": "eval:doc.is_stock_item == 0"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Applicant",
+            "field_name": "status",
+            "property": "options",
+            "value": "Open\nReplied\nRejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted"
         },
         {
             "doctype_or_field": "DocType",
