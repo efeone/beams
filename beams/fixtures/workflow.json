@@ -2297,7 +2297,7 @@
   "doctype": "Workflow",
   "document_type": "Local Enquiry Report",
   "is_active": 1,
-  "modified": "2024-10-21 13:46:07.305503",
+  "modified": "2024-11-04 11:44:07.621677",
   "name": "Enquiry Workflow",
   "override_status": 0,
   "send_email_alert": 0,
@@ -2395,7 +2395,7 @@
    {
     "allow_edit": "HR Manager",
     "avoid_status_override": 0,
-    "doc_status": "1",
+    "doc_status": "0",
     "is_optional_state": 0,
     "message": null,
     "next_action_email_template": null,
@@ -2424,7 +2424,7 @@
    {
     "action": "Assign to Enquiry Officer",
     "allow_self_approval": 1,
-    "allowed": "HR Manager",
+    "allowed": "Enquiry Manager",
     "condition": "",
     "next_state": "Assigned to Enquiry Officer",
     "parent": "Enquiry Workflow",
@@ -2446,7 +2446,7 @@
     "workflow_builder_id": null
    },
    {
-    "action": "Submit for Approval",
+    "action": "Enquiry Completed",
     "allow_self_approval": 1,
     "allowed": "Enquiry Officer",
     "condition": null,
@@ -2458,7 +2458,7 @@
     "workflow_builder_id": null
    },
    {
-    "action": "Submit for Approval",
+    "action": "Enquiry Completed",
     "allow_self_approval": 1,
     "allowed": "Enquiry Officer",
     "condition": null,
@@ -2470,19 +2470,7 @@
     "workflow_builder_id": null
    },
    {
-    "action": "Enquiry Completed",
-    "allow_self_approval": 1,
-    "allowed": "Enquiry Officer",
-    "condition": null,
-    "next_state": "Approved",
-    "parent": "Enquiry Workflow",
-    "parentfield": "transitions",
-    "parenttype": "Workflow",
-    "state": "Pending Approval",
-    "workflow_builder_id": null
-   },
-   {
-    "action": "Enquiry Completed",
+    "action": "Approve",
     "allow_self_approval": 1,
     "allowed": "HR Manager",
     "condition": null,
