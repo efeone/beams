@@ -776,11 +776,20 @@ def get_job_applicant_custom_fields():
             },
 
             {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "label": "Department",
+                "options": "Department",
+                "insert_after": "designation"
+            },
+
+            {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Work Experience(in years)",
                 "insert_after": "details_column_break"
             },
+
             {
                 "fieldname": "details_column_break",
                 "fieldtype": "Column Break",
