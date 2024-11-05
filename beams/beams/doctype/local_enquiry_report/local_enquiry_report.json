@@ -23,7 +23,8 @@
   "enquiry_officer",
   "section_break_2hnf",
   "enquiry_report",
-  "remarks"
+  "remarks",
+  "amended_from"
  ],
  "fields": [
   {
@@ -121,19 +122,30 @@
   {
    "fieldname": "expected_completion_date",
    "fieldtype": "Date",
-   "label": "Expected Completion Date "
+   "label": "Expected Completion Date ",
+   "read_only": 1
   },
   {
    "fieldname": "enquiry_officer",
    "fieldtype": "Link",
    "label": "Enquiry Officer",
    "options": "Employee"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Local Enquiry Report",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-05 10:53:30.537685",
+ "modified": "2024-11-05 14:47:51.525123",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",

@@ -5,7 +5,6 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "column_break_wgti",
   "default_local_enquiry_duration",
   "tab_2_tab",
   "admin_department",
@@ -25,10 +24,6 @@
    "fieldname": "tab_2_tab",
    "fieldtype": "Tab Break",
    "label": "Department Settings"
-  },
-  {
-   "fieldname": "column_break_wgti",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "admin_department",
@@ -66,7 +61,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-04 09:23:13.513846",
+ "modified": "2024-11-05 14:55:50.765755",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
