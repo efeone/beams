@@ -142,5 +142,14 @@
   "name": "Enquiry on Progress",
   "style": "Success",
   "workflow_state_name": "Enquiry on Progress"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-11-05 12:11:26.754828",
+  "name": "Applicant Accepted",
+  "style": "",
+  "workflow_state_name": "Applicant Accepted"
  }
 ]

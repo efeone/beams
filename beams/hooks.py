@@ -308,12 +308,12 @@ override_doctype_dashboards = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow"]]
     ]},
     {"dt": "Workflow State", "filters": [
-        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress"]]
+        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept"]]
     ]}
 ]
