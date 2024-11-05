@@ -15,7 +15,7 @@ def get_columns(filters):
     columns = [
         {"label": _("Budget"), "fieldname": "budget_link", "fieldtype": "Link", "options": "Budget", "width": 230},
         {"label": _("Cost Description"), "fieldname": "cost_description", "fieldtype": "Data", "width": 230},
-        {"label": _("Cost Subhead"), "fieldname": "cost_subhead", "fieldtype": "Data", "width": 230},
+        {"label": _("Cost Sub Head"), "fieldname": "cost_subhead", "fieldtype": "Data", "width": 230},
         {"label": _("Cost Category"), "fieldname": "cost_category", "fieldtype": "Data", "width": 170},
         {"label": _("Account"), "fieldname": "account", "fieldtype": "Link", "options": "Account", "width": 230},
         {"label": _("Department"), "fieldname": "department", "fieldtype": "Link", "options": "Department", "width": 170},
