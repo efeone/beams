@@ -69,7 +69,7 @@ def validate(doc, method):
 
     if not doc.skill_proficiency:
         frappe.throw(_("Applicant's skills are required."))
-        
+
     # Validate skills only if required skills are filled in the Job Opening
     required_skills = {skill.skill for skill in job_opening.skill_proficiency}
     applicant_skills = {skill.skill for skill in doc.skill_proficiency}
@@ -184,6 +184,11 @@ def update_applicant_interview_round(doc, method):
     Update the Applicant Interview Round child table in Job Applicant with interview reference and status.
     """
     if doc.job_applicant and doc.interview_round:
+        # Check if the Job Applicant exists
+        if not frappe.db.exists("Job Applicant", doc.job_applicant):
+            frappe.msgprint(f"Job Applicant {doc.job_applicant} does not exist.")
+            return
+
         job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
         for interview_round in job_applicant_doc.applicant_interview_round:
