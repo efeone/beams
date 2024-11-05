@@ -199,6 +199,9 @@ doc_events = {
         },
     "Department": {
        "validate": "beams.beams.custom_scripts.department.department.validate"
+    },
+    "Interview": {
+        "on_update": "beams.beams.custom_scripts.job_applicant.job_applicant.update_applicant_interview_round"
     }
 
     }

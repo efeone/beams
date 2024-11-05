@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 from frappe.utils import get_url, now_datetime
+from frappe.utils import nowdate
 
 def get_permission_query_conditions(user):
     if not user:
@@ -177,3 +178,24 @@ def fetch_interview_rounds(doc, method):
                             doc.append('applicant_interview_round', {
                                 'interview_round': round.interview_round
                             })
+
+def update_applicant_interview_round(doc, method):
+    """
+    Update the Applicant Interview Round child table in Job Applicant with interview reference and status.
+    """
+    if doc.job_applicant and doc.interview_round:
+        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+
+        for interview_round in job_applicant_doc.applicant_interview_round:
+            if interview_round.interview_round == doc.interview_round:
+                # Update the interview reference and status
+                interview_round.interview_reference = doc.name
+                interview_round.interview_status = doc.status
+                if doc.status == 'Cleared' or doc.status == 'Rejected':
+                    interview_round.interview_completed = 1
+                else:
+                    interview_round.interview_completed = 0
+
+                job_applicant_doc.save(ignore_permissions=True)
+                frappe.msgprint(f"Interview details updated for {doc.job_applicant} in round {doc.interview_round}")
+                break
