@@ -45,7 +45,8 @@ doctype_js = {
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
-    "Purchase Invoice":"beams/custom_scripts/purchase_invoice/purchase_invoice_list.js"
+    "Purchase Invoice":"beams/custom_scripts/purchase_invoice/purchase_invoice_list.js",
+    "Job Applicant":"beams/custom_scripts/job_applicant/job_applicant_list.js"
 }
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}

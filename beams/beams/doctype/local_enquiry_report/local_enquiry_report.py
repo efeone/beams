@@ -9,6 +9,11 @@ class LocalEnquiryReport(Document):
     def validate(self):
         self.information_required()
         self.set_expected_completion_date()
+         self.information_required()
+    def on_submit(self):
+        # Only update Job Applicant status if the Local Enquiry Report is approved
+        if self.docstatus == 1:
+            update_job_applicant_status(self.name)
 
     def information_required(self):
         """
@@ -60,3 +65,19 @@ def set_status_to_overdue():
                 frappe.db.set_value('Local Enquiry Report', enquiry.name, 'status', 'Overdue')
 
         frappe.db.commit()
+
+@frappe.whitelist()
+def update_job_applicant_status(local_enquiry_report):
+    '''
+    This function retrieves the specified Local Enquiry Report and, if a Job Applicant is linked to it,
+    updates the applicant's status to "Local Enquiry Approved" and saves the changes.
+    '''
+    report = frappe.get_doc("Local Enquiry Report", local_enquiry_report)
+    job_applicant = report.job_applicant
+    designation = report.designation
+
+    if job_applicant:
+        applicant_doc = frappe.get_doc("Job Applicant", job_applicant)
+        applicant_doc.status = "Local Enquiry Approved"
+        applicant_doc.save()
+        frappe.msgprint(f"Status of Job Applicant {applicant_doc.name} updated to 'Local Enquiry Approved'.")
