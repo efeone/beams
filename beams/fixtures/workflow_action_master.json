@@ -96,5 +96,12 @@
   "modified": "2024-10-21 12:30:09.317225",
   "name": "Start Enquiry",
   "workflow_action_name": "Start Enquiry"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-11-04 11:38:22.306640",
+  "name": "Enquiry Completed",
+  "workflow_action_name": "Enquiry Completed"
  }
 ]
