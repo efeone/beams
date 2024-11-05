@@ -15,6 +15,9 @@ class LocalEnquiryReport(Document):
         Validation for the missing fields -> information_given_by and information_given_by_designation
         """
         if self.workflow_state == "Pending Approval":
+            if frappe.session.user:
+                self.information_collected_by = frappe.session.user
+
             missing_fields = []
 
             if not self.information_given_by:
@@ -24,6 +27,7 @@ class LocalEnquiryReport(Document):
 
             if len(missing_fields) == 2:
                 frappe.throw("Please provide 'Information given by' and 'Information given by Designation' before completing the report.")
+
             elif missing_fields:
                 frappe.throw(f"Please provide '{', '.join(missing_fields)}' before completing the report.")
 
@@ -37,7 +41,6 @@ class LocalEnquiryReport(Document):
 
             # Set Expected Completion Date as today’s date plus the default duration
             self.expected_completion_date = add_days(today(), int(default_duration))
-
 
 @frappe.whitelist()
 def set_status_to_overdue():
