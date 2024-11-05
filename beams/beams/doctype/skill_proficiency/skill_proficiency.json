@@ -15,21 +15,19 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Skill",
-   "options": "Skill",
-   "reqd": 1
+   "options": "Skill"
   },
   {
    "fieldname": "proficiency",
    "fieldtype": "Rating",
    "in_list_view": 1,
-   "label": "Proficiency",
-   "reqd": 1
+   "label": "Proficiency"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-03 10:03:29.247027",
+ "modified": "2024-11-04 14:40:13.262941",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Skill Proficiency",
