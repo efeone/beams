@@ -2297,13 +2297,13 @@
   "doctype": "Workflow",
   "document_type": "Local Enquiry Report",
   "is_active": 1,
-  "modified": "2024-11-04 11:44:07.621677",
+  "modified": "2024-11-05 12:09:15.146788",
   "name": "Enquiry Workflow",
-  "override_status": 0,
+  "override_status": 1,
   "send_email_alert": 0,
   "states": [
    {
-    "allow_edit": "All",
+    "allow_edit": "HR Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
@@ -2318,7 +2318,7 @@
     "workflow_builder_id": null
    },
    {
-    "allow_edit": "HR Manager",
+    "allow_edit": "Enquiry Manager",
     "avoid_status_override": 0,
     "doc_status": "0",
     "is_optional_state": 0,
