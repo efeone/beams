@@ -17,22 +17,37 @@ frappe.ui.form.on('Job Applicant', {
 
 function handle_custom_buttons(frm) {
     if (!frm.is_new()) {
-        // Button to create Local Enquiry Report
-        frm.add_custom_button(frappe._('Local Enquiry Report'), function () {
-            frappe.call({
-                method: "beams.beams.custom_scripts.job_applicant.job_applicant.create_local_enquiry",
-                args: {
-                    doc_name: frm.doc.name  // Pass the name of the Job Applicant to the method
-                },
-                callback: function (r) {
-                    if (r.message) {
-                        // Redirect to the Local Enquiry Report form
-                        frappe.set_route('Form', 'Local Enquiry Report', r.message);
-                    }
-                },
+      frappe.call({
+            method: "beams.beams.custom_scripts.job_applicant.job_applicant.get_existing_local_enquiry_report",
+            args: {
+                doc_name: frm.doc.name
+            },
+            callback: function(response) {
+                if (response.message === "no_report") {
+                    frm.add_custom_button(__('Local Enquiry Report'), function() {
+                        frappe.call({
+                            method: "beams.beams.custom_scripts.job_applicant.job_applicant.create_and_return_report",
+                            args: {
+                                job_applicant: frm.doc.name
+                            },
+                            callback: function(createResponse) {
+                                if (createResponse.message) {
+                                    frm.add_custom_button(__('Local Enquiry Report'), function() {
+                                        frappe.set_route('Form', 'Local Enquiry Report', createResponse.message);
+                                    }, __('View'));
+                                }
+                            }
+                        });
+                }, __('Create'));
+              } else if (response.message) {
+                  frappe.db.get_doc("Local Enquiry Report", response.message).then(report => {
+                      frm.add_custom_button(__('Local Enquiry Report'), function() {
+                          frappe.set_route('Form', 'Local Enquiry Report', report.name);
+                }, __('View'));
             });
-        }, frappe._('Create'));
-
+        }
+    }
+});
         // Button for Sending Magic Link
         frm.add_custom_button(__('Send Magic Link'), function () {
             frappe.confirm(
