@@ -21,7 +21,7 @@ frappe.ui.form.on('Interview', {
             if (!frm.is_dirty() && frm.doc.docstatus == 0) {
                 frm.page.clear_primary_action();
                 frm.page.set_primary_action(__('Submit'), function () {
-                    frm.submit(); // Use frm.submit() instead of frm.save_submit()
+                    frm.submit(); 
                 });
             } else if (frm.is_dirty() && frm.doc.docstatus == 0) {
                 frm.page.clear_primary_action();
