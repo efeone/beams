@@ -1665,7 +1665,7 @@ def get_property_setters():
             "doc_type": "Job Applicant",
             "field_name": "status",
             "property": "options",
-            "value": "Open\nReplied\nRejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted"
+            "value": "Open\nReplied\nRejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed"
         },
         {
             "doctype_or_field": "DocType",
