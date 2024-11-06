@@ -137,19 +137,3 @@ def get_interview_feedback(interview_name):
         return feedback_data
     else:
         return None
-
-@frappe.whitelist()
-def get_interview_skill_and_question_set(interview_round, interviewer=False, interview_name=False):
-    feedback_exists = False
-    if interviewer and interview_name:
-        feedback_exists = frappe.db.exists(
-            "Interview Feedback",
-            {"interviewer": interviewer, "interview": interview_name, "docstatus": 0},
-        )
-    if feedback_exists:
-        interview_feedback = frappe.get_doc('Interview Feedback', feedback_exists)
-        return interview_feedback.interview_question_result, interview_feedback.skill_assessment, feedback_exists
-    else:
-        question = frappe.get_all('Expected Question Set', filters ={'parent': interview_round}, fields=['questions'], order_by='idx')
-        skill = frappe.get_all('Expected Skill Set', filters ={'parent': interview_round}, fields=['skill'])
-        return question, skill, False
