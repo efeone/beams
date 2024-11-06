@@ -30,6 +30,8 @@ def after_install():
     create_custom_fields(get_budget_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_feedback_custom_fields(),ignore_validate=True)
     create_custom_fields(get_skill_assessment_custom_fields(), ignore_validate=True)
+    create_custom_fields(get_job_offer_custom_fields(), ignore_validate=True)
+
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -70,6 +72,7 @@ def before_uninstall():
     delete_custom_fields(get_expected_skill_set_custom_fields())
     delete_custom_fields(get_interview_round_custom_fields())
     delete_custom_fields(get_skill_assessment_custom_fields())
+    delete_custom_fields(get_job_offer_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -161,6 +164,29 @@ def get_driver_custom_fields():
                 "label": "Is Internal",
                 "insert_after": "transporter",
                 "reqd": 0
+            },
+        ]
+    }
+
+def get_job_offer_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Offer DocType
+    '''
+    return {
+        "Job Offer": [
+            {
+                "fieldname": "job_proposal",
+                "fieldtype": "Link",
+                "label": "Job Proposal",
+                "options":"Job Proposal",
+                "insert_after": "job_applicant"
+            },
+            {
+                "fieldname": "ctc",
+                "fieldtype": "Currency",
+                "label": "CTC",
+                "insert_after": "job_proposal",
+                "fetch_from" : "job_proposal.proposed_ctc"
             }
         ]
     }
