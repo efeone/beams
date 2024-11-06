@@ -179,7 +179,8 @@ def get_job_offer_custom_fields():
                 "fieldtype": "Link",
                 "label": "Job Proposal",
                 "options":"Job Proposal",
-                "insert_after": "job_applicant"
+                "insert_after": "job_applicant",
+                "read_only":1
             },
             {
                 "fieldname": "ctc",
