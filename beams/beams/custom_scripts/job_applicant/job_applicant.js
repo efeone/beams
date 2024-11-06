@@ -1,19 +1,60 @@
 frappe.ui.form.on('Job Applicant', {
-    refresh: function (frm) {
-        handle_custom_buttons(frm);
-        frm.toggle_display('applicant_interview_round', !frm.is_new());
-        // Add the "Set Status" group button with "Selected" option only if status is "Local Enquiry Approved"
-        if (frm.doc.status === 'Local Enquiry Approved') {
-            frm.add_custom_button(__('Selected'), function() {
-                frm.set_value('status', 'Selected');
-                frm.save();
-            }, __('Set Status'));
-        }
-    },
-    status: function(frm) {
-        frm.trigger('refresh');
+  refresh: function (frm) {
+    handle_custom_buttons(frm);
+    frm.toggle_display('applicant_interview_round', !frm.is_new());
+    // Add the "Set Status" group button with "Selected" option only if status is "Local Enquiry Approved"
+    if (frm.doc.status === 'Local Enquiry Approved') {
+      frm.add_custom_button(__('Selected'), function() {
+        frm.set_value('status', 'Selected');
+        frm.save();
+      }, __('Set Status'));
     }
+
+    if (frappe.user.has_role("HR Manager")) {
+      // Check if the status is "Selected"
+      if (frm.doc.status === "Selected") {
+        // Check if there's no existing Job Proposal linked to this Job Applicant
+        frappe.db.get_value('Job Proposal', { 'job_applicant': frm.doc.name }, 'name', function(result) {
+          if (!result || !result.name) {
+            // Add the "Job Proposal" button
+            frm.add_custom_button(__('Job Proposal'), function() {
+              // Redirect to Job Proposal Doctype
+              frappe.new_doc('Job Proposal', {
+                job_applicant: frm.doc.name
+              });
+            }, __('Create'));
+          }
+        });
+      }
+    }
+  },
+  status: function(frm) {
+    frm.trigger('refresh');
+  }
 });
+
+        if (frappe.user.has_role("HR Manager")) {
+                // Check if the status is "Selected"
+                if (frm.doc.status === "Selected") {
+                    // Check if there's no existing Job Proposal linked to this Job Applicant
+                    frappe.db.get_value('Job Proposal', { 'job_applicant': frm.doc.name }, 'name', function(result) {
+                        if (!result || !result.name) {
+                            // Add the "Job Proposal" button
+                            frm.add_custom_button(__('Job Proposal'), function() {
+                                // Redirect to Job Proposal Doctype
+                                frappe.new_doc('Job Proposal', {
+                                    job_applicant: frm.doc.name
+                                });
+                            }, __('Create'));
+                        }
+                    });
+                }
+            }
+        },
+        status: function(frm) {
+            frm.trigger('refresh');
+        }
+    });
 
 function handle_custom_buttons(frm) {
     if (!frm.is_new()) {
