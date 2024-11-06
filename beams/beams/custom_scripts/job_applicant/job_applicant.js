@@ -38,11 +38,11 @@ function handle_custom_buttons(frm) {
                                 }
                             }
                         });
-            }, __('Create'));
-        } else if (response.message) {
-            frappe.db.get_doc("Local Enquiry Report", response.message).then(report => {
-                frm.add_custom_button(__('Local Enquiry Report'), function() {
-                    frappe.set_route('Form', 'Local Enquiry Report', report.name);
+                }, __('Create'));
+              } else if (response.message) {
+                  frappe.db.get_doc("Local Enquiry Report", response.message).then(report => {
+                      frm.add_custom_button(__('Local Enquiry Report'), function() {
+                          frappe.set_route('Form', 'Local Enquiry Report', report.name);
                 }, __('View'));
             });
         }
