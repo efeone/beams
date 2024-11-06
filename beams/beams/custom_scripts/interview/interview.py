@@ -2,9 +2,10 @@ import frappe
 from frappe import _
 
 @frappe.whitelist()
-def create_interview_feedback(data, interview_name, interviewer, job_applicant):
+def create_interview_feedback(data, interview_name, interviewer, job_applicant, submit=0):
     """
-    method: Creates and submits an Interview Feedback document for a job applicant, ensuring the user is the interviewer, validates skills and their scores, and appends them to the feedback.
+    Creates an Interview Feedback document for a job applicant,
+    allowing for draft saves and submission.
     """
     import json
 
@@ -17,7 +18,13 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
         frappe.throw(_("Only Interviewers are allowed to submit Interview Feedback"))
 
     # Create a new Interview Feedback document
-    interview_feedback = frappe.new_doc("Interview Feedback")
+    interview_feedback_name = frappe.db.exists('Interview Feedback',{'interview':interview_name,'docstatus':0})
+
+    if interview_feedback_name:
+        interview_feedback = frappe.get_doc("Interview Feedback",interview_feedback_name)
+    else:
+        interview_feedback = frappe.new_doc("Interview Feedback")
+
     interview_feedback.interview = interview_name
     interview_feedback.interviewer = interviewer
     interview_feedback.job_applicant = job_applicant
@@ -26,6 +33,8 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
     if not hasattr(data, 'skill_set') or not data.skill_set:
         frappe.throw(_("No skills found in the feedback data."))
 
+    if interview_feedback_name:
+        interview_feedback.skill_assessment = []
     # Append skills directly with the score as the rating
     for d in data.skill_set:
         d = frappe._dict(d)
@@ -34,27 +43,97 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant):
         if d.score is None or d.score == '':
             frappe.throw(_("Score for skill {0} is missing or invalid.").format(d.skill))
 
-        try:
-            # Convert score to integer
-            rating = int(d.score)/10
-        except ValueError:
-            frappe.throw(_("Invalid score for skill {0}. Please enter a valid number.").format(d.skill))
+        # Check if score is a number (int or float) and validate
+        if not isinstance(d.score, (int, float)) or d.score < 0 or d.score > 100:
+            frappe.throw(_("Score for skill {0} must be a number between 0 and 100.").format(d.skill))
 
-
+        # Convert score to a float and calculate rating
+        rating = float(d.score) / 10
         # Append the validated skill and rating to the Interview Feedback
-        interview_feedback.append("skill_assessment", {"skill": d.skill, "rating": rating, "score":d.score})
+        interview_feedback.append("skill_assessment", {
+            "skill": d.skill,
+            "rating": rating,
+            "score": d.score
+        })
+
+    # Process question assessments if provided
+    if hasattr(data, 'question_assessment') and data.question_assessment:
+        if interview_feedback_name:
+            interview_feedback.interview_question_result = []
+        for q in data.question_assessment:
+            q = frappe._dict(q)
+
+            # Ensure the score is not None and is a valid number
+            if q.score is None or q.score == '':
+                frappe.throw(_("Score for question '{0}' is missing or invalid.").format(q.question))
+
+            # Check if score is a number (int or float) and validate
+            if not isinstance(q.score, (int, float)) or q.score < 0 or q.score > 100:
+                frappe.throw(_("Score for question '{0}' must be a number between 0 and 100.").format(q.question))
+
+            # Append the validated question, answer, and score to the Interview Feedback
+            interview_feedback.append("interview_question_result", {
+                "question": q.question,
+                "answer": q.answer,
+                "score": q.score  # Directly use the score
+            })
 
     # Set feedback and result
-    interview_feedback.remarks = data.remarks
+    interview_feedback.feedback = data.feedback
     interview_feedback.result = data.result
-
-    # Save and submit the feedback document
-    interview_feedback.save()
-    interview_feedback.submit()
+    if int(submit):
+        interview_feedback.submit()  # Submit if the submit flag is True
+    else:
+        interview_feedback.save()
 
     # Show success message with a link to the created feedback
     frappe.msgprint(
-        _("Interview Feedback {0} submitted successfully").format(
-            frappe.utils.get_link_to_form("Interview Feedback", interview_feedback.name)
+        _("Interview Feedback {0} {1} successfully").format(
+            frappe.utils.get_link_to_form("Interview Feedback", interview_feedback.name),
+            _("submitted") if int(submit) else _("saved")
         )
     )
+
+
+@frappe.whitelist()
+def get_interview_feedback(interview_name):
+    """
+    Fetch the existing Interview Feedback for the specified interview.
+
+    :param interview_name: Name of the interview to fetch feedback for
+    :return: Feedback data including skill assessments and question assessments, or None if not found
+    """
+    # Fetch the existing Interview Feedback
+    feedback = frappe.get_all("Interview Feedback",
+        filters={"interview": interview_name},
+        fields=["name", "feedback", "result"])  # Ensure 'feedback' and 'result' are the correct fields
+
+    if feedback:
+        feedback = feedback[0]  # Get the first feedback if it exists
+
+        # Fetching the skill assessments from the child table 'Skill Assessment'
+        skill_set = frappe.get_all("Skill Assessment",
+            filters={"parent": feedback.name},
+            fields=["skill", "score"])  # Fetching skill and score fields
+
+        # Fetching the question assessments from the child table 'Interview Question Result'
+        question_assessments = frappe.get_all("Interview Question Result",
+            filters={"parent": feedback.name},
+            fields=["question", "answer", "score"])  # Fetching question, _answer, and score fields
+
+        # Map the feedback to include all relevant fields
+        feedback_data = {
+            "name": feedback.name,
+            "feedback": feedback.feedback,  # Mapping  to feedback
+            "result": feedback.result,      # Mapping result
+            "skill_set": [
+                {"skill": set.skill, "score": set.score} for set in skill_set
+            ],  # Including skill assessments with score mapped to rating
+            "question_assessment": [
+                {"question": assessment.question, "answer": assessment.answer, "score": assessment.score} for assessment in question_assessments
+            ]  # Including question assessments with _answer mapped to answer
+        }
+
+        return feedback_data
+    else:
+        return None
