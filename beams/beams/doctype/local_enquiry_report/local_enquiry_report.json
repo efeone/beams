@@ -39,8 +39,7 @@
    "fieldname": "enquiry_report",
    "fieldtype": "Table",
    "label": "Enquiry Report",
-   "options": "Local Enquiry Checklist",
-   "reqd": 1
+   "options": "Local Enquiry Checklist"
   },
   {
    "fieldname": "remarks",
@@ -145,7 +144,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-05 14:47:51.525123",
+ "modified": "2024-11-06 10:41:50.514086",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",

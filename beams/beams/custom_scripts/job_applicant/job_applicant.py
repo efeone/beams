@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import get_url, now_datetime
 from frappe.utils import nowdate
+from frappe.utils import get_url_to_form
 
 def get_permission_query_conditions(user):
     if not user:
@@ -79,33 +80,45 @@ def validate(doc, method):
 
 
 @frappe.whitelist()
-def create_local_enquiry(doc_name):
+def get_existing_local_enquiry_report(doc_name):
     """
     Create a Local Enquiry Report if it doesn't already exist.
 
-    Args:
-        doc_name (str): The name of the Job Applicant.
-
-    Returns:
-        str: The name of the existing report if found, or the name of the newly created report.
     """
 
     # Check if a Local Enquiry Report already exists for the given Job Applicant
     report_exists = frappe.db.exists("Local Enquiry Report", {"job_applicant": doc_name})
-
     if report_exists:
-        # Update the message to indicate that the report with the given name exists
-        frappe.msgprint(_("Enquiry Report {0} already exists").format(report_exists))
-        return report_exists  # Return the existing report name
+        report_doc = frappe.get_doc("Local Enquiry Report", report_exists)
+        return report_doc.name  # Return the report name if it exists
+    return "no_report"  # Indicate no report exists
 
-    # Logic to create a new Local Enquiry Report
-    new_report = frappe.new_doc("Local Enquiry Report")
-    new_report.job_applicant = doc_name  # Set the job_applicant field to the name of the Job Applicant
+@frappe.whitelist()
+def create_and_return_report(job_applicant):
+    """
+    Create a Local Enquiry Report, show an alert message, and return its name.
 
-    # Insert the new report
-    new_report.insert(ignore_mandatory=True, ignore_permissions=True)
+    """
+    # Create a new Local Enquiry Report document
+    new_report = frappe.get_doc({
+        "doctype": "Local Enquiry Report",
+        "job_applicant": job_applicant,
+        # Set other required fields here if needed (e.g., status, date, etc.)
+    })
 
-    return new_report.name  # Return the name of the newly created report
+    # Insert and save the new document into the database, ignoring permissions
+    new_report.insert(ignore_permissions=True)
+    new_report.save(ignore_permissions=True)
+    frappe.msgprint(
+        'Local Enquiry Report Created: <a href="{0}">{1}</a>'.format(
+            get_url_to_form(new_report.doctype, new_report.name),
+            new_report.name
+        ),
+        alert=True,
+        indicator='green'
+    )
+    # Return the name of the newly created report for further use (e.g., navigation)
+    return new_report.name
 
 @frappe.whitelist()
 def send_magic_link(applicant_id):

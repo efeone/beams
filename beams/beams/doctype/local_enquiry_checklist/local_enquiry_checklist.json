@@ -16,8 +16,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Parameter",
-   "options": "Local Enquiry Parameter",
-   "reqd": 1
+   "options": "Local Enquiry Parameter"
   },
   {
    "fieldname": "value",
@@ -34,7 +33,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-24 10:54:30.030785",
+ "modified": "2024-11-06 10:26:01.870601",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Checklist",
