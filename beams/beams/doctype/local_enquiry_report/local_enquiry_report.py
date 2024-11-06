@@ -11,7 +11,6 @@ class LocalEnquiryReport(Document):
         self.set_expected_completion_date()
         self.information_required()
     def on_submit(self):
-        # Only update Job Applicant status if the Local Enquiry Report is approved
         if self.docstatus == 1:
             update_job_applicant_status(self.name)
 
