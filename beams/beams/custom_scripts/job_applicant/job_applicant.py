@@ -3,6 +3,8 @@ from frappe import _
 from frappe.utils import get_url, now_datetime
 from frappe.utils import nowdate
 from frappe.utils import get_url_to_form
+from frappe.utils.password import encrypt
+
 
 def get_permission_query_conditions(user):
     if not user:
@@ -158,16 +160,10 @@ def generate_magic_link(applicant_id):
     Returns:
         str: The generated magic link URL.
     """
-    token = frappe.generate_hash(length=10)
-    expiration_time = now_datetime()
-    link = f"{get_url()}/job_application_upload/upload_doc?applicant_id={applicant_id}&token={token}"
+    link = f"{get_url()}/job_application_upload/upload_doc?applicant_id="
     if frappe.db.exists('Job Applicant', applicant_id):
-        doc = frappe.get_doc('Job Applicant', applicant_id)
-        doc.magic_link_token = token
-        doc.magic_link_expiration = expiration_time
-        doc.save()
-    else:
-        frappe.msgprint(f'Job Applicant with ID {applicant_id} does not exist when generating magic link.', alert=True)
+        encrypted_link = encrypt(applicant_id)
+        link += encrypted_link
     return link
 
 
