@@ -5,8 +5,9 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate, add_days, today, nowdate
 from frappe import _
-from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils.user import get_users_with_role
+from frappe.desk.form.assign_to import add as add_assign
+from frappe.desk.form.assign_to import remove as remove_assign
 
 class LocalEnquiryReport(Document):
 
@@ -15,8 +16,8 @@ class LocalEnquiryReport(Document):
         self.set_expected_completion_date()
 
         """Ensure enquiry officer selection based on workflow state."""
-        # Check if the workflow state is 'Assign to Enquiry Officer'
-        if self.workflow_state == 'Assigned to Admin':
+        # Ensure enquiry officer selection based on workflow state.
+        if self.workflow_state == 'Assign to Enquiry Officer':
             if not self.enquiry_officer:
                 frappe.msgprint(_("Please select an enquiry officer before proceeding."))
 
@@ -39,7 +40,7 @@ class LocalEnquiryReport(Document):
                 missing_fields.append("Information given by Designation")
 
             # Ensure enquiry officer selection based on workflow state.
-            if self.workflow_state == 'Assigned to Admin':
+            if self.workflow_state == 'Assign to Enquiry Officer':
                 if not self.enquiry_officer:
                     frappe.msgprint(_("Please select an enquiry officer before proceeding."))
 
@@ -52,15 +53,13 @@ class LocalEnquiryReport(Document):
     def on_update(doc):
         """Handle workflow transitions upon document update."""
         try:
-            if isinstance(doc, str):
-                doc = frappe.get_doc('Local Enquiry Report', doc)
-
             if doc.workflow_state == "Assigned to Admin":
                 assign_to_enquiry_manager(doc)
 
             elif doc.workflow_state == "Assigned to Enquiry Officer":
-                remove_enquiry_manager_assignment(doc)
                 assign_to_enquiry_officer(doc)
+                remove_enquiry_manager_assignment(doc)
+
 
             elif doc.workflow_state == "Enquiry on Progress":
                 set_enquiry_start_date(doc)
@@ -127,16 +126,16 @@ def update_job_applicant_status(local_enquiry_report):
 def assign_to_enquiry_manager(doc):
     """Assign LER to the Enquiry Manager role."""
     try:
-        managers = frappe.get_all(
-            "Has Role",
-            filters={"role": "Enquiry Manager", "parenttype": "User"},
-            fields=["parent"]
-        )
+        # Use get_users_with_role to get users with the "Enquiry Manager" role
+        managers = get_users_with_role("Enquiry Manager")
 
         if not managers:
             frappe.throw(_("No users found with the 'Enquiry Manager' role."))
 
-        manager_id = managers[0].parent
+        # Use the first user from the list for the assignment
+        manager_id = managers[0]
+
+        # Assign the task using add_assign
         add_assign({
             "assign_to": [manager_id],
             "doctype": "Local Enquiry Report",
@@ -149,27 +148,25 @@ def assign_to_enquiry_manager(doc):
     except Exception as e:
         frappe.throw(str(e))
 
+
 @frappe.whitelist()
 def assign_to_enquiry_officer(doc):
     """Assign LER to the selected Enquiry Officer."""
     try:
-        if not isinstance(doc, Document):
-            doc = frappe.get_doc("Local Enquiry Report", doc)
-
-        # Check if Enquiry Officer is selected
-        if not doc.enquiry_officer:
-            frappe.throw(_("Please select an Enquiry Officer before assigning."))
-
         # Fetch user ID of the enquiry officer
         user_id = frappe.db.get_value("Employee", {"name": doc.enquiry_officer}, "user_id")
 
         if not user_id or not frappe.db.exists("User", user_id):
             frappe.throw(_("The selected enquiry officer is not a valid user."))
 
+        # Validate if the user has the role of Enquiry Officer
+        enquiry_officers = get_users_with_role("Enquiry Officer")
+        if user_id not in enquiry_officers:
+            frappe.throw(_("The selected enquiry officer does not have the 'Enquiry Officer' role."))
 
         # Use add_assign to create the assignment
         add_assign({
-            "assign_to": [user_id],  # Use the user ID of the enquiry officer
+            "assign_to": [user_id],
             "doctype": "Local Enquiry Report",
             "name": doc.name,
             "description": "Local enquiry assigned to you for investigation.",
@@ -177,21 +174,22 @@ def assign_to_enquiry_officer(doc):
 
         frappe.msgprint(_("Assigned to Enquiry Officer successfully."))
     except Exception as e:
-        frappe.log_error(str(e), "Error in assign_to_enquiry_officer")
         frappe.throw(_("An error occurred while assigning to Enquiry Officer: {0}").format(str(e)))
+
 
 @frappe.whitelist()
 def remove_enquiry_manager_assignment(doc):
-    """Remove the specific assignment created by the Enquiry Manager for this LER document."""
+    """Remove the assignment from the Enquiry Manager for this LER document."""
     try:
+        # Ensure the document is fetched correctly
         if not isinstance(doc, Document):
             doc = frappe.get_doc("Local Enquiry Report", doc)
 
-        # Define the unique description  when assigning to the Enquiry Manager
+        # Define the unique description for the task assignment
         manager_assignment_description = "Please review and assign to an Enquiry Officer."
 
-        # Find the specific ToDo with the description created for the Enquiry Manager
-        todo = frappe.get_value(
+        # Fetch the ToDo task linked to the document with the description for the Enquiry Manager
+        todo = frappe.db.get_value(
             "ToDo",
             {
                 "reference_type": "Local Enquiry Report",
@@ -202,12 +200,17 @@ def remove_enquiry_manager_assignment(doc):
             "name"
         )
 
-        # If the ToDo exists, close it
+        # If the ToDo exists, remove the assignment
         if todo:
-            frappe.db.set_value("ToDo", todo, "status", "Closed")
-
+            assigned_user = frappe.db.get_value("ToDo", todo, "allocated_to")
+            if assigned_user:
+                remove_assign(
+                    doctype="Local Enquiry Report",
+                    name=doc.name,
+                    assign_to=assigned_user
+                )
     except Exception as e:
-        frappe.throw(_("Error while removing specific Enquiry Manager assignment: {0}").format(str(e)))
+        frappe.throw(_("Error while removing assignment: {0}").format(str(e)))
 
 @frappe.whitelist()
 def set_enquiry_start_date(doc):
@@ -230,28 +233,64 @@ def set_enquiry_completion_date(doc):
     if not doc.enquiry_completion_date:
         doc.enquiry_completion_date = nowdate()
         doc.save(ignore_permissions=True)
-
 @frappe.whitelist()
 def get_enquiry_officers(doctype, txt, searchfield, start, page_len, filters):
-    """Fetch employees with the 'Enquiry Officer' role."""
+    """
+    Fetch employees with the 'Enquiry Officer' role.
+
+    Args:
+        doctype (str): The doctype being searched
+        txt (str): Search text
+        searchfield (str): Field being searched
+        start (int): Starting index for pagination
+        page_len (int): Number of records per page
+        filters (dict): Additional filters including role
+
+    Returns:
+        list: List of tuples containing employee code and name
+    """
     role_filter = filters.get('role', 'Enquiry Officer')
 
+    query = """
+        SELECT
+            emp.name,
+            emp.employee_name
+        FROM
+            `tabEmployee` emp
+            INNER JOIN `tabUser` u
+                ON u.name = emp.user_id
+            INNER JOIN `tabHas Role` hr
+                ON hr.parent = u.name
+        WHERE
+            hr.role = %(role)s
+            AND emp.status = 'Active'
+            AND (
+                emp.name LIKE %(search_txt)s
+                OR emp.employee_name LIKE %(search_txt)s
+            )
+        LIMIT %(start)s, %(page_len)s
+    """
+
+    # Prepare query parameters
+    params = {
+        'role': role_filter,
+        'search_txt': f"%{txt}%",
+        'start': start,
+        'page_len': page_len
+    }
+
+    # Execute query
     officers = frappe.db.sql(
-        """
-        SELECT emp.name, emp.employee_name
-        FROM `tabEmployee` emp
-        JOIN `tabUser` u ON u.name = emp.user_id
-        JOIN `tabHas Role` hr ON hr.parent = u.name
-        WHERE hr.role = %s
-        AND emp.status = 'Active'
-        AND (emp.name LIKE %s OR emp.employee_name LIKE %s)
-        LIMIT %s, %s
-        """,
-        (role_filter, f"%{txt}%", f"%{txt}%", start, page_len),
+        query,
+        params,
         as_list=True
     )
 
+    # Handle no results case
     if not officers:
-        frappe.throw(_("No Enquiry Officers found with the role '{0}' or the specified criteria.").format(role_filter))
+        frappe.throw(
+            _("No Enquiry Officers found with the role '{0}' or the specified criteria.")
+            .format(role_filter)
+        )
 
     return officers
