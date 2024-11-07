@@ -48,6 +48,22 @@ frappe.ui.form.on('Job Applicant', {
           }
         });
       }
+    },
+    status: function(frm) {
+        frm.trigger('refresh');
+    },
+    willing_to_work_on_location: function(frm) {
+        if (frm.doc.willing_to_work_on_location && frm.doc.job_title) {
+            // Fetch location from Job Opening when checkbox is checked
+            frappe.db.get_value('Job Opening', frm.doc.job_title, 'location', (r) => {
+                if (r && r.location) {
+                    frm.set_value('location', r.location);
+                }
+            });
+        } else {
+            // Clear location field if checkbox is unchecked
+            frm.set_value('location', '');
+        }
     }
   },
   status: function(frm) {
