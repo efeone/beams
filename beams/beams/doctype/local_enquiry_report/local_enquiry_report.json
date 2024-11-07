@@ -6,25 +6,26 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "applicant_details_section",
   "job_applicant",
   "job_applicant_name",
   "designation",
   "department",
+  "enquiry_officer",
   "column_break_xtgz",
-  "information_collected_by",
-  "information_given_by",
-  "information_given_by_designation",
   "status",
-  "section_break_gnwp",
+  "expected_completion_date",
   "enquiry_start_date",
   "enquiry_completion_date",
-  "column_break_yfct",
-  "expected_completion_date",
-  "enquiry_officer",
-  "section_break_2hnf",
+  "enquiry_details",
   "enquiry_report",
   "remarks",
-  "amended_from"
+  "amended_from",
+  "information_collected_by_section",
+  "information_given_by",
+  "information_given_by_designation",
+  "column_break_unwc",
+  "information_collected_by"
  ],
  "fields": [
   {
@@ -51,7 +52,6 @@
    "fieldname": "job_applicant_name",
    "fieldtype": "Data",
    "label": "Job Applicant Name",
-   "options": "Job Applicant",
    "read_only": 1
   },
   {
@@ -62,57 +62,47 @@
    "options": "Designation"
   },
   {
+   "fetch_from": "job_applicant.department",
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "read_only": 1
   },
   {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "Open\nOngoing\nHold\nCompleted\nOverdue"
+   "options": "Open\nOngoing\nHold\nCompleted\nOverdue",
+   "read_only": 1
   },
   {
    "fieldname": "information_given_by",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Information Given By"
+   "label": "Person Name"
   },
   {
    "fieldname": "information_given_by_designation",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Information Given By Designation"
+   "label": "Designation"
   },
   {
    "fieldname": "information_collected_by",
    "fieldtype": "Data",
    "label": "Information Collected By",
-   "options": "Employee",
    "read_only": 1
-  },
-  {
-   "fieldname": "section_break_2hnf",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "column_break_xtgz",
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "section_break_gnwp",
-   "fieldtype": "Section Break"
-  },
-  {
    "fieldname": "enquiry_start_date",
    "fieldtype": "Date",
    "label": "Enquiry Start Date",
    "read_only": 1
-  },
-  {
-   "fieldname": "column_break_yfct",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "enquiry_completion_date",
@@ -136,18 +126,37 @@
   {
    "fieldname": "amended_from",
    "fieldtype": "Link",
+   "hidden": 1,
    "label": "Amended From",
    "no_copy": 1,
    "options": "Local Enquiry Report",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "applicant_details_section",
+   "fieldtype": "Section Break",
+   "label": "Applicant Details"
+  },
+  {
+   "fieldname": "information_collected_by_section",
+   "fieldtype": "Section Break",
+   "label": "Information Collected By"
+  },
+  {
+   "fieldname": "column_break_unwc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "enquiry_details",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-06 21:38:52.915646",
+ "modified": "2024-11-07 17:35:41.996569",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",
