@@ -36,7 +36,6 @@ class JobProposal(Document):
 				# Admin HOD Assignment
 				if frappe.db.exists('Employee', beams_hr_settings.admin_hod):
 					admin_user = frappe.db.get_value('Employee', beams_hr_settings.admin_hod, 'user_id')
-					print(admin_user)
 					if admin_user:
 						admin_message = frappe.render_template(beams_hr_settings.notification_to_admin, context)
 						add_assign({
@@ -48,7 +47,6 @@ class JobProposal(Document):
 				# IT HOD Assignment
 				if frappe.db.exists('Employee', beams_hr_settings.it_hod):
 					it_user = frappe.db.get_value('Employee', beams_hr_settings.it_hod, 'user_id')
-					print(it_user)
 					if it_user:
 						it_message = frappe.render_template(beams_hr_settings.notification_to_it, context)
 						add_assign({
