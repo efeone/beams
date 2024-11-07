@@ -60,7 +60,6 @@ class LocalEnquiryReport(Document):
                 assign_to_enquiry_officer(doc)
                 remove_enquiry_manager_assignment(doc)
 
-
             elif doc.workflow_state == "Enquiry on Progress":
                 set_enquiry_start_date(doc)
 
