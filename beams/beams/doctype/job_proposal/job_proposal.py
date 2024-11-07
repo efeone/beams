@@ -23,6 +23,10 @@ class JobProposal(Document):
 			job_offer.job_applicant = self.job_applicant
 			job_offer.designation = self.designation
 			job_offer.offer_date = getdate(today())
+			job_offer.job_proposal = self.name
+			job_offer.ctc = self.proposed_ctc
+			job_offer.job_offer_term_template = self.job_offer_term_template
+			job_offer.select_terms = self.terms_and_conditions
 			job_offer.flags.ignore_mandatory = True
 			job_offer.flags.ignore_validate = True
 			job_offer.insert()

@@ -13,7 +13,11 @@
   "column_break_bavx",
   "designation",
   "proposed_ctc",
-  "amended_from"
+  "amended_from",
+  "section_break_jt",
+  "job_offer_term_template",
+  "column_break_ogbe",
+  "terms_and_conditions"
  ],
  "fields": [
   {
@@ -69,12 +73,32 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "job_offer_term_template",
+   "fieldtype": "Link",
+   "label": "Job Offer Term Template",
+   "options": "Job Offer Term Template"
+  },
+  {
+   "fieldname": "section_break_jt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_ogbe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "terms_and_conditions",
+   "fieldtype": "Link",
+   "label": "Select Terms and Conditions",
+   "options": "Terms and Conditions"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-05 16:54:19.670572",
+ "modified": "2024-11-07 12:14:17.566123",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Job Proposal",
