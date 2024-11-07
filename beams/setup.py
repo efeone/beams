@@ -800,6 +800,12 @@ def get_job_applicant_custom_fields():
                 "insert_after": "date_of_birth"
             },
             {
+                "fieldname": "willing_to_work_on_location",
+                "fieldtype": "Check",
+                "label": "Willing to work on the selected location?",
+                "insert_after": "country"
+            },
+            {
                "fieldname": "father_name",
                 "fieldtype": "Data",
                 "label": "Father's Name",
@@ -988,7 +994,7 @@ def get_job_applicant_custom_fields():
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "country"
+                "insert_after": "status"
             },
             {
                 "fieldname": "interview_process_break",
