@@ -289,6 +289,28 @@ def get_sales_invoice_custom_fields():
                 "insert_after": "actual_customer_group"
             },
             {
+                "fieldname": "region",
+                "fieldtype": "Link",
+                "options": "Region",
+                "label": "Region",
+                "insert_after": "is_reverse_charge"
+            },
+            {
+                "fieldname": "executive",
+                "fieldtype": "Link",
+                "options": "Employee",
+                "label": "Executive",
+                "insert_after": "due_date"
+            },
+            {
+                "fieldname": "executive_name",
+                "fieldtype": "Data",
+                "label": "Executive Name",
+                "insert_after": "executive",
+                "fetch_from": "executive.employee_name",
+                "read_only": 1
+            },
+            {
                 "fieldname": "is_barter_invoice",
                 "fieldtype": "Check",
                 "label": "Is Barter Invoice",
@@ -420,6 +442,21 @@ def get_quotation_custom_fields():
                 "read_only": 1,
                 "fetch_from": "actual_customer.customer_group",
                 "insert_after": "actual_customer"
+            },
+            {
+                "fieldname": "executive",
+                "fieldtype": "Link",
+                "label": "Executive",
+                "options":"Employee",
+                "insert_after": "sales_type"
+            },
+            {
+                "fieldname": "executive_name_",
+                "fieldtype": "Data",
+                "label": "Executive Name",
+                "insert_after": "executive",
+                "fetch_from": "executive.employee_name",
+                "read_only": 1
             },
             {
                 "fieldname": "executive_name",
@@ -1766,6 +1803,28 @@ def get_sales_order_custom_fields():
                 "label": "Include in IBF",
                 "read_only": 1,
                 "insert_after": "actual_customer_group"
+            },
+            {
+                "fieldname": "region",
+                "fieldtype": "Link",
+                "label": "Region",
+                "options": "Region",
+                "insert_after": "is_reverse_charge"
+            },
+            {
+                "fieldname": "executive",
+                "fieldtype": "Link",
+                "label": "Executive",
+                "options": "Employee",
+                "insert_after": "delivery_date"
+            },
+            {
+                "fieldname": "executive_name",
+                "fieldtype": "Data",
+                "label": "Executive Name",
+                "fetch_from": "executive.employee_name",
+                "insert_after": "executive",
+                "read_only": 1
             },
             {
                 "fieldname": "is_barter_invoice",

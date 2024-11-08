@@ -103,3 +103,8 @@ def check_overdue_invoices(customer):
         fields=['name', 'due_date'])
 
     return overdue_invoices
+
+def set_region_from_quotation(doc, method):
+    if doc.reference_id:
+        quotation = frappe.get_doc("Quotation", doc.reference_id)
+        doc.region = quotation.region

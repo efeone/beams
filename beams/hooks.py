@@ -175,7 +175,8 @@ doc_events = {
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
-        "before_save": "beams.beams.custom_scripts.sales_order.sales_order.validate_sales_order_amount_with_quotation"
+        "before_save": "beams.beams.custom_scripts.sales_order.sales_order.validate_sales_order_amount_with_quotation",
+        "before_insert": "beams.beams.custom_scripts.sales_order.sales_order.set_region_from_quotation"
         },
     "Contract": {
         "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
