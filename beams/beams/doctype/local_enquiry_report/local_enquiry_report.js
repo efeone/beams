@@ -5,8 +5,27 @@ frappe.ui.form.on('Local Enquiry Report', {
     setup: function (frm) {
         set_filters(frm);
     },
-    refresh: function (frm) {
-        handle_field_properties(frm)
+    before_workflow_action: function (frm) {
+        if (frm.selected_workflow_action == 'Enquiry Completed') {
+            frm.set_df_property('enquiry_report', 'reqd', 1);
+            frm.set_df_property('information_given_by', 'reqd', 1);
+            frm.set_df_property('information_given_by_designation', 'reqd', 1);
+            if (!frm.doc.enquiry_report.length) {
+                frm.scroll_to_field('enquiry_report');
+                frappe.dom.unfreeze();
+                frappe.throw({ message: __("Please fill the <b>`Enquiry Report`</b> ."), title: __("Missing field") });
+            }
+            if (!frm.doc.information_given_by) {
+                frm.scroll_to_field('information_given_by');
+                frappe.dom.unfreeze();
+                frappe.throw({ message: __("Please fill the <b>`Person Name`</b> ."), title: __("Missing field") });
+            }
+            if (!frm.doc.information_given_by_designation) {
+                frm.scroll_to_field('information_given_by_designation');
+                frappe.dom.unfreeze();
+                frappe.throw({ message: __("Please fill the <b>`Designation`</b> ."), title: __("Missing field") });
+            }
+        }
     }
 });
 
@@ -24,21 +43,4 @@ function set_filters(frm) {
             }
         };
     });
-}
-
-function handle_field_properties(frm) {
-    frm.set_df_property('information_collected_by_section', 'hidden', 1)
-    if (frm.doc.workflow_state == 'Draft') {
-        frm.set_df_property('enquiry_officer', 'hidden', 1)
-        frm.set_df_property('enquiry_details', 'hidden', 1)
-    }
-
-    if (frm.doc.workflow_state == 'Assigned to Admin') {
-        frm.set_df_property('enquiry_officer', 'hidden', 0)
-        frm.set_df_property('enquiry_details', 'hidden', 1)
-    }
-
-    if (['Enquiry on Progress', 'Pending Approval', 'Approved', 'Rejected'].includes(frm.doc.workflow_state)) {
-        frm.set_df_property('information_collected_by_section', 'hidden', 0)
-    }
 }
