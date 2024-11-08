@@ -1,5 +1,6 @@
 import frappe
 from frappe import _
+from frappe.model.document import Document
 from frappe.utils import get_url, now_datetime
 from frappe.utils import nowdate
 from frappe.utils import get_url_to_form
@@ -44,12 +45,6 @@ def validate(doc, method):
     # Ensure the Job Opening exists
     if not job_opening:
         frappe.throw(_("Specified Job Opening '{0}' not found.").format(doc.job_title))
-    if not doc.location:
-        frappe.throw(_("Applicant's location is not provided."))
-
-    # Validate location only if it's filled in the Job Opening
-    if job_opening.location and doc.location != job_opening.location:
-        frappe.throw(_("Applicant location does not match the desired location {0}").format(job_opening.location))
     if not doc.min_education_qual:
         frappe.throw(_("Applicant's Educational Qualification is required."))
 
@@ -213,3 +208,15 @@ def update_applicant_interview_round(doc, method):
                 job_applicant_doc.save(ignore_permissions=True)
                 frappe.msgprint(f"Interview details updated for {doc.job_applicant} in round {doc.interview_round}")
                 break
+
+@frappe.whitelist()
+def fetch_location_from_job_opening(job_title, willing_to_work_on_location):
+    """
+    Fetches location from Job Opening if the checkbox is checked and job_title is provided.
+    """
+    if willing_to_work_on_location and job_title:
+        # Fetch the location from the linked Job Opening
+        location = frappe.db.get_value('Job Opening', job_title, 'location')
+        if location:
+            return location
+    return None
