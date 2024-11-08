@@ -7,6 +7,29 @@ frappe.ui.form.on('Job Applicant', {
   },
   status: function(frm) {
     frm.trigger('refresh');
+  },
+  willing_to_work_on_location: function(frm) {
+      if (frm.doc.willing_to_work_on_location) {
+          if (frm.doc.job_title) {
+              frappe.call({
+                  method: "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_location_from_job_opening",
+                  args: {
+                      "job_title": frm.doc.job_title,
+                      "willing_to_work_on_location": frm.doc.willing_to_work_on_location
+                  },
+                  callback: function(r) {
+                      if (r.message) {
+                          frm.set_value('location', r.message);
+                      } else {
+                          frm.set_value('location', '');
+                      }
+                  }
+              });
+          }
+      } else {
+          // Clear location if checkbox is unchecked
+          frm.set_value('location', '');
+      }
   }
 });
 

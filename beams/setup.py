@@ -358,7 +358,7 @@ def get_quotation_custom_fields():
                 "fieldname": "sales_type",
                 "fieldtype": "Link",
                 "label": "Default Sales Type",
-                "insert_after": "customer_purchase_order_reference",
+                "insert_after": "is_barter",
                 "options": "Sales Type"
             },
             {
@@ -448,7 +448,7 @@ def get_quotation_custom_fields():
                 "fieldtype": "Link",
                 "label": "Executive",
                 "options":"Employee",
-                "insert_after": "sales_type"
+                "insert_after": "customer_purchase_order_reference"
             },
             {
                 "fieldname": "executive_name_",
@@ -1669,6 +1669,30 @@ def get_property_setters():
             "field_name": "grant_commission",
             "property": "hidden",
             "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "scan_barcode",
+            "property": "hidden",
+            "property_type": "Data",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "shipping_rule",
+            "property": "hidden",
+            "property_type": "Link",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "incoterm",
+            "property": "hidden",
+            "property_type": "Link",
             "value": 1
         },
         {
