@@ -6,16 +6,16 @@
  "engine": "InnoDB",
  "field_order": [
   "default_local_enquiry_duration",
-  "tab_2_tab",
-  "admin_department",
-  "admin_hod",
-  "column_break_nncm",
-  "it_department",
-  "it_hod",
   "notification_settings_tab",
+  "notification_to_admin_department_to_create_id_card_section",
   "notification_to_admin",
-  "column_break_limx",
-  "notification_to_it"
+  "admin_hod",
+  "column_break_gvvx",
+  "notification_to_it_department_for_login_credentials_section",
+  "column_break_nlxx",
+  "notification_to_it",
+  "it_hod",
+  "column_break_qbue"
  ],
  "fields": [
   {
@@ -25,68 +25,60 @@
    "label": "Default Local Enquiry Duration"
   },
   {
-   "fieldname": "tab_2_tab",
-   "fieldtype": "Tab Break",
-   "label": "Department Settings"
-  },
-  {
-   "fieldname": "admin_department",
-   "fieldtype": "Link",
-   "label": "Admin Department",
-   "options": "Department"
-  },
-  {
-   "fetch_from": "admin_department.head_of_department",
-   "fieldname": "admin_hod",
-   "fieldtype": "Link",
-   "label": "Admin HOD",
-   "options": "Employee",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_nncm",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "it_department",
-   "fieldtype": "Link",
-   "label": "IT Department",
-   "options": "Department"
-  },
-  {
-   "fetch_from": "it_department.head_of_department",
-   "fieldname": "it_hod",
-   "fieldtype": "Link",
-   "label": "IT HOD",
-   "options": "Employee",
-   "read_only": 1
-  },
-  {
    "fieldname": "notification_settings_tab",
    "fieldtype": "Tab Break",
    "label": "Notification Settings"
   },
   {
+   "fieldname": "notification_to_admin_department_to_create_id_card_section",
+   "fieldtype": "Section Break",
+   "label": "Notification to Admin Department to Create ID Card"
+  },
+  {
+   "fieldname": "notification_to_it_department_for_login_credentials_section",
+   "fieldtype": "Section Break",
+   "label": "Notification to IT Department to Login Credentials"
+  },
+  {
+   "description": " ",
+   "fieldname": "column_break_nlxx",
+   "fieldtype": "Column Break"
+  },
+  {
    "description": "Based on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
    "fieldname": "notification_to_admin",
-   "fieldtype": "Small Text",
-   "label": "Notification to Admin on Job Offer Creation"
+   "fieldtype": "Small Text"
   },
   {
-   "description": " Based on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
+   "description": "Based on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
    "fieldname": "notification_to_it",
-   "fieldtype": "Small Text",
-   "label": "Notification to IT on Job Offer Creation"
+   "fieldtype": "Small Text"
   },
   {
-   "fieldname": "column_break_limx",
+   "fieldname": "admin_hod",
+   "fieldtype": "Link",
+   "label": "Responsible Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "it_hod",
+   "fieldtype": "Link",
+   "label": "Responsible Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_gvvx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_qbue",
    "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-05 15:48:27.173873",
+ "modified": "2024-11-08 15:10:42.837861",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
