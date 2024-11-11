@@ -150,9 +150,9 @@ def on_interview_creation(doc, method):
 
 
 def update_applicant_interview_round(doc, method):
-    """
+    '''
     Update the Applicant Interview Round child table in Job Applicant with interview reference and status on creation.
-    """
+    '''
     if doc.job_applicant and doc.interview_round:
         # Check if the Job Applicant exists
         if not frappe.db.exists("Job Applicant", doc.job_applicant):
@@ -172,9 +172,9 @@ def update_applicant_interview_round(doc, method):
                 break
 
 def mark_interview_completed(doc, method):
-    """
+    '''
     Mark the interview as completed in the Applicant Interview Round child table in Job Applicant upon submission of Interview.
-    """
+    '''
     if doc.job_applicant and doc.interview_round:
         job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
