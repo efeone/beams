@@ -78,8 +78,8 @@ class JobProposal(Document):
 
 	def after_insert(self):
 	    """Set the corresponding Job Applicant's status to 'Job Proposal Created' when a Job Proposal is created."""
-	   if self.job_applicant:
-		   if frappe.db.exists("Job Applicant", self.job_applicant):
-			   job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
-			   job_applicant.status = "Job Proposal Created"
-			   job_applicant.save()
+	    if self.job_applicant:
+ 		   if frappe.db.exists("Job Applicant", self.job_applicant):
+ 			   job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
+ 			   job_applicant.status = "Job Proposal Created"
+ 			   job_applicant.save()
