@@ -59,3 +59,27 @@ class JobProposal(Document):
 							"name": self.job_applicant,
 							"description": it_message
 						})
+
+
+
+	def on_update_after_submit(self):
+		"""
+		 Updates the status of the linked Job Applicant document to "Applicant Accepted"
+		 when the Job Proposal workflow state changes to "Applicant Accepted".
+
+		"""
+		if self.workflow_state == "Applicant Accepted":
+				if self.job_applicant:
+					if frappe.db.exists("Job Applicant", self.job_applicant):
+						job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
+						job_applicant.status = "Job Proposal Accepted"
+						job_applicant.save()
+
+
+	def after_insert(self):
+	    """Set the corresponding Job Applicant's status to 'Job Proposal Created' when a Job Proposal is created."""
+	   if self.job_applicant:
+		   if frappe.db.exists("Job Applicant", self.job_applicant):
+			   job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
+			   job_applicant.status = "Job Proposal Created"
+			   job_applicant.save()
