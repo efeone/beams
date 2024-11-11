@@ -120,6 +120,12 @@ function handle_custom_buttons(frm) {
       }
 
 
+        // Remove "Interview" button if status is "Training Completed"
+        if (frm.doc.status === 'Training Completed') {
+            frm.remove_custom_button(__('Interview'), __('Create'));
+        }
+
+
        if (frappe.user_roles.includes("HR Manager")) {
                // Handle "Appointment Letter" button for "Training Completed" status
                if (frm.doc.status === "Training Completed") {
