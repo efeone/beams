@@ -31,7 +31,7 @@ def after_install():
     create_custom_fields(get_interview_feedback_custom_fields(),ignore_validate=True)
     create_custom_fields(get_skill_assessment_custom_fields(), ignore_validate=True)
     create_custom_fields(get_job_offer_custom_fields(), ignore_validate=True)
-
+    create_custom_fields(get_company_custom_fields(), ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -73,6 +73,7 @@ def before_uninstall():
     delete_custom_fields(get_interview_round_custom_fields())
     delete_custom_fields(get_skill_assessment_custom_fields())
     delete_custom_fields(get_job_offer_custom_fields())
+    delete_custom_fields(get_company_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1540,6 +1541,28 @@ def get_job_opening_custom_fields():
             }
         ]
     }
+
+def get_company_custom_fields():
+    '''
+        Custom fields that need to be added to the Company Doctype
+    '''
+    return {
+        "Company": [
+            {
+                "fieldname": "company_policy_tab",
+                "fieldtype": "Tab Break",
+                "label": "Company Policy",
+                "insert_after": "dashboard_tab"
+            },
+            {
+                "fieldname": "company_policy",
+                "fieldtype": "Text Editor",
+                "label": "Company Policy",
+                "insert_after": "company_policy_tab" 
+            }
+        ]
+    }
+
 
 def create_property_setters(property_setter_datas):
     '''
