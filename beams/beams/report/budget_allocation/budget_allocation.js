@@ -1,7 +1,7 @@
 // Copyright (c) 2024, efeone and contributors
 // For license information, please see license.txt
 
-frappe.query_reports["Budget Report"] = {
+frappe.query_reports["Budget Allocation"] = {
     "filters": [
         {
             "fieldname": "fiscal_year",
