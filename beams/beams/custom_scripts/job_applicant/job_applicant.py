@@ -183,32 +183,6 @@ def fetch_interview_rounds(doc, method):
                                 'interview_round': round.interview_round
                             })
 
-def update_applicant_interview_round(doc, method):
-    """
-    Update the Applicant Interview Round child table in Job Applicant with interview reference and status.
-    """
-    if doc.job_applicant and doc.interview_round:
-        # Check if the Job Applicant exists
-        if not frappe.db.exists("Job Applicant", doc.job_applicant):
-            frappe.msgprint(f"Job Applicant {doc.job_applicant} does not exist.")
-            return
-
-        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
-
-        for interview_round in job_applicant_doc.applicant_interview_round:
-            if interview_round.interview_round == doc.interview_round:
-                # Update the interview reference and status
-                interview_round.interview_reference = doc.name
-                interview_round.interview_status = doc.status
-                if doc.status == 'Cleared' or doc.status == 'Rejected':
-                    interview_round.interview_completed = 1
-                else:
-                    interview_round.interview_completed = 0
-
-                job_applicant_doc.save(ignore_permissions=True)
-                frappe.msgprint(f"Interview details updated for {doc.job_applicant} in round {doc.interview_round}")
-                break
-
 @frappe.whitelist()
 def fetch_location_from_job_opening(job_title, willing_to_work_on_location):
     """

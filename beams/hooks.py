@@ -203,7 +203,12 @@ doc_events = {
        "validate": "beams.beams.custom_scripts.department.department.validate"
     },
     "Interview": {
-        "on_update": "beams.beams.custom_scripts.job_applicant.job_applicant.update_applicant_interview_round"
+        "on_submit": "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
+        "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
+        "on_update": "beams.beams.custom_scripts.interview.interview.update_applicant_interview_round"
+    },
+    "Interview Feedback": {
+        "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.on_interview_feedback_creation"
     }
 
     }
