@@ -69,11 +69,11 @@ class JobProposal(Document):
 
 		"""
 		if self.workflow_state == "Applicant Accepted":
-				if self.job_applicant:
-					if frappe.db.exists("Job Applicant", self.job_applicant):
-						job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
-						job_applicant.status = "Job Proposal Accepted"
-						job_applicant.save()
+		   if self.job_applicant:
+			   if frappe.db.exists("Job Applicant", self.job_applicant):
+				   job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
+				   job_applicant.status = "Job Proposal Accepted"
+				   job_applicant.save()
 
 
 	def after_insert(self):
