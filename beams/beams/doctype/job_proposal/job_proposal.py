@@ -5,10 +5,29 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import today, getdate
 from frappe.utils import get_url_to_form
-from frappe.desk.form.assign_to import add as add_assign
+from frappe.desk.form.assign_to import add as add_assign, remove as remove_assign
 from frappe.utils.user import get_users_with_role
 from frappe.email.doctype.notification.notification import get_context
 
+@frappe.whitelist()
+def remove_assignment_by_role(doc, role):
+    """
+    Removes ToDo assignments for users with a specific role for a given document.
+    """
+    users = get_users_with_role(role)
+    if users:
+        for user in users:
+            if frappe.db.exists('ToDo', {
+                'reference_type': doc.doctype,
+                'reference_name': doc.name,
+                'allocated_to': user,
+                'status': 'Open'
+            }):
+                remove_assign(
+                    doctype=doc.doctype,
+                    name=doc.name,
+                    assign_to=user
+                )
 
 class JobProposal(Document):
     def on_update(self):
@@ -73,6 +92,8 @@ class JobProposal(Document):
                     job_applicant = frappe.get_doc("Job Applicant", self.job_applicant)
                     job_applicant.status = "Job Proposal Accepted"
                     job_applicant.save()
+        if self.workflow_state in ["Approved", "Rejected"]:
+            remove_assignment_by_role(self, "CEO")
 
     def after_insert(self):
         """Set the corresponding Job Applicant's status to 'Job Proposal Created' when a Job Proposal is created."""
