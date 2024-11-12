@@ -33,6 +33,7 @@ def after_install():
     create_custom_fields(get_job_offer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_company_custom_fields(), ignore_validate=True)
     create_custom_fields(get_training_event_employee_custom_fields(), ignore_validate=True)
+    
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
