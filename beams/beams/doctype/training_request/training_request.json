@@ -49,7 +49,7 @@
   {
    "fieldname": "training_requested_by",
    "fieldtype": "Link",
-   "label": "Training Requested by",
+   "label": "Training Requested By",
    "options": "Employee"
   },
   {
@@ -91,7 +91,7 @@
    "fieldtype": "Column Break"
   },
   {
-   "fetch_from": "training_requested_by.employee",
+   "fetch_from": "training_requested_by.employee_name",
    "fieldname": "training_requested_byname",
    "fieldtype": "Data",
    "label": "Training Requested By(Name)",
@@ -100,7 +100,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-12 12:32:15.936776",
+ "modified": "2024-11-12 12:42:55.187000",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Training Request",
