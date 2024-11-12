@@ -30,6 +30,7 @@
    "reqd": 1
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
@@ -99,7 +100,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-12 11:49:41.154278",
+ "modified": "2024-11-12 12:32:15.936776",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Training Request",
