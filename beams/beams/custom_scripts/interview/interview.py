@@ -176,25 +176,26 @@ def mark_interview_completed(doc, method):
     Mark the interview as completed in the Applicant Interview Round child table in Job Applicant upon submission of Interview.
     '''
     if doc.job_applicant and doc.interview_round:
-        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+        if frappe.db.exists("Job Applicant", doc.job_applicant):
+            job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
-        # Find the corresponding interview round in the Job Applicant's applicant_interview_round table
-        for interview_round in job_applicant_doc.applicant_interview_round:
-            if interview_round.interview_round == doc.interview_round:
-                # Mark the interview as completed upon submission
-                interview_round.interview_completed = 1
+            # Find the corresponding interview round in the Job Applicant's applicant_interview_round table
+            for interview_round in job_applicant_doc.applicant_interview_round:
+                if interview_round.interview_round == doc.interview_round:
+                    # Mark the interview as completed upon submission
+                    interview_round.interview_completed = 1
 
-                job_applicant_doc.save(ignore_permissions=True)
-                break
+                    job_applicant_doc.save(ignore_permissions=True)
+                    break
 
-        all_interviews_completed = True
-        for interview_round in job_applicant_doc.applicant_interview_round:
-            if not interview_round.interview_completed:
-                all_interviews_completed = False
-                break
+            all_interviews_completed = True
+            for interview_round in job_applicant_doc.applicant_interview_round:
+                if not interview_round.interview_completed:
+                    all_interviews_completed = False
+                    break
 
-        # If all interviews are completed, set the Job Applicant status to 'Interview Completed'
-        if all_interviews_completed:
-            job_applicant_doc.status = "Interview Completed"
+            # If all interviews are completed, set the Job Applicant status to 'Interview Completed'
+            if all_interviews_completed:
+                job_applicant_doc.status = "Interview Completed"
 
-        job_applicant_doc.save(ignore_permissions=True)
+            job_applicant_doc.save(ignore_permissions=True)
