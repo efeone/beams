@@ -1,10 +1,53 @@
 frappe.ui.form.on('Job Applicant', {
-  refresh: function (frm) {
-    handle_custom_buttons(frm);
-    frm.toggle_display('applicant_interview_round', !frm.is_new());
-    // Add the "Set Status" group button with "Selected" option only if status is "Local Enquiry Approved"
+    refresh: function(frm) {
+        handle_custom_buttons(frm);
+        frm.toggle_display('applicant_interview_round', !frm.is_new());
 
-  },
+        if (frappe.user_roles.includes("HR Manager")) {
+            // Handle "Appointment Letter" button for "Training Completed" status
+            if (frm.doc.status === "Training Completed") {
+                frappe.db.get_value('Appointment Letter', { 'job_applicant': frm.doc.name }, 'name', function(result) {
+                    if (!result || !result.name) {
+                        frm.add_custom_button(__('Appointment Letter'), function() {
+                            frappe.new_doc('Appointment Letter', {
+                                job_applicant: frm.doc.name
+                            });
+                        }, __('Create'));
+                    } else {
+                        frm.remove_custom_button(__('Appointment Letter'), __('Create'));
+                    }
+                });
+
+                // Remove the "Interview" button when status is "Training Completed"
+                frm.remove_custom_button(__('Interview'), __('Create'));
+            } else {
+                frm.remove_custom_button(__('Appointment Letter'), __('Create'));
+            }
+
+            // Handle "Job Proposal" button for "Selected" status
+            if (frm.doc.status === "Selected") {
+                frappe.db.get_value('Job Proposal', { 'job_applicant': frm.doc.name }, 'name', function(result) {
+                    if (!result || !result.name) {
+                        frm.add_custom_button(__('Job Proposal'), function() {
+                            frappe.new_doc('Job Proposal', {
+                                job_applicant: frm.doc.name
+                            });
+                        }, __('Create'));
+                    } else {
+                        frm.remove_custom_button(__('Job Proposal'), __('Create'));
+                    }
+                });
+            } else {
+                frm.remove_custom_button(__('Job Proposal'), __('Create'));
+            }
+        }
+
+        // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", or "Job Proposal Accepted"
+        if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted'].includes(frm.doc.status)) {
+            frm.remove_custom_button(__('Interview'), __('Create'));
+        }
+    },
+
   status: function(frm) {
     frm.trigger('refresh');
   },
@@ -118,6 +161,12 @@ function handle_custom_buttons(frm) {
              frm.save();
          }, __('Set Status'));
       }
+
+
+        // Remove "Interview" button if status is "Training Completed"
+        if (frm.doc.status === 'Training Completed') {
+            frm.remove_custom_button(__('Interview'), __('Create'));
+        }
 
 
        if (frappe.user_roles.includes("HR Manager")) {
