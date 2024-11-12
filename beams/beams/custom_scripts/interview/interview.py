@@ -143,11 +143,11 @@ def on_interview_creation(doc, method):
     '''
     Set the Job Applicant's status to 'Interview Scheduled' when an Interview is created.
     '''
-    job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
-    if job_applicant_doc.status != "Interview Scheduled":
-        job_applicant_doc.status = "Interview Scheduled"
-        job_applicant_doc.save()
-
+    if frappe.db.exists("Job Applicant", doc.job_applicant):
+        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+        if job_applicant_doc.status != "Interview Scheduled":
+            job_applicant_doc.status = "Interview Scheduled"
+            job_applicant_doc.save()
 
 def update_applicant_interview_round(doc, method):
     '''
