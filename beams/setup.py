@@ -32,7 +32,7 @@ def after_install():
     create_custom_fields(get_skill_assessment_custom_fields(), ignore_validate=True)
     create_custom_fields(get_job_offer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_company_custom_fields(), ignore_validate=True)
-
+    create_custom_fields(get_training_event_employee_custom_fields(), ignore_validate=True)
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -74,6 +74,7 @@ def before_uninstall():
     delete_custom_fields(get_skill_assessment_custom_fields())
     delete_custom_fields(get_job_offer_custom_fields())
     delete_custom_fields(get_company_custom_fields())
+    delete_custom_fields(get_training_event_employee_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1558,7 +1559,7 @@ def get_company_custom_fields():
                 "fieldname": "company_policy",
                 "fieldtype": "Text Editor",
                 "label": "Company Policy",
-                "insert_after": "company_policy_tab" 
+                "insert_after": "company_policy_tab"
             }
         ]
     }
@@ -2026,6 +2027,24 @@ def get_skill_assessment_custom_fields():
                 "label": "weight",
                 "insert_after":"remarks"
             }
+        ]
+    }
+
+def get_training_event_employee_custom_fields():
+    '''
+    Custom fields to be added to the Training Event Employee Doctype
+    '''
+    return {
+        "Training Event Employee": [
+              {
+                    "fieldname": "training_request",
+                    "fieldtype": "Link",
+                    "label": "Training Request",
+                    "options": "Training Request",
+                    "insert_after": "employee_name",
+                    "in_list_view": 1,
+                    "width": 2
+              }
         ]
     }
 
