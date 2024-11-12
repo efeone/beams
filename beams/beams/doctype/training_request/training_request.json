@@ -1,0 +1,150 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TR-EMP-{####}",
+ "creation": "2024-11-12 09:22:32.657845",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "training_request_details_section",
+  "training_requested_by",
+  "training_requested_byname",
+  "remarks",
+  "column_break_cdgq",
+  "posting_date",
+  "expected_training_completion",
+  "status",
+  "training_event",
+  "section_break_vayc",
+  "employee",
+  "employee_name",
+  "column_break_imdc"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "expected_training_completion",
+   "fieldtype": "Date",
+   "label": "Expected Training Completion Date"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks",
+   "reqd": 1
+  },
+  {
+   "fieldname": "training_requested_by",
+   "fieldtype": "Link",
+   "label": "Training Requested By",
+   "options": "Employee"
+  },
+  {
+   "default": "Open",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Open\nTraining Scheduled\nTraining Completed"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "training_request_details_section",
+   "fieldtype": "Section Break",
+   "label": "Training Request Details"
+  },
+  {
+   "fieldname": "training_event",
+   "fieldtype": "Link",
+   "label": "Training Event",
+   "options": "Training Event",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_vayc",
+   "fieldtype": "Section Break",
+   "label": "Employee Details"
+  },
+  {
+   "fieldname": "column_break_cdgq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_imdc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "training_requested_by.employee_name",
+   "fieldname": "training_requested_byname",
+   "fieldtype": "Data",
+   "label": "Training Requested By(Name)",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-11-12 12:42:55.187000",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Training Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HOD",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HR Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
