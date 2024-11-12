@@ -1558,7 +1558,7 @@ def get_company_custom_fields():
                 "fieldname": "company_policy",
                 "fieldtype": "Text Editor",
                 "label": "Company Policy",
-                "insert_after": "company_policy_tab" 
+                "insert_after": "company_policy_tab"
             }
         ]
     }
@@ -1755,7 +1755,7 @@ def get_property_setters():
             "doc_type": "Job Applicant",
             "field_name": "status",
             "property": "options",
-            "value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted"
+            "value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed"
         },
         {
             "doctype_or_field": "DocType",
