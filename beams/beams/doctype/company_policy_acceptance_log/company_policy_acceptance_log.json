@@ -1,0 +1,142 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:CPAL-{YY}-{####}",
+ "creation": "2024-11-11 13:26:45.726462",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_za7i",
+  "employee",
+  "employee_name",
+  "department",
+  "designation",
+  "date_of_joining",
+  "column_break_ohlh",
+  "company",
+  "company_policy",
+  "date",
+  "section_break_nxcd",
+  "read_and_accepted",
+  "column_break_qvpd",
+  "digital_sign",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_za7i",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "date_of_joining",
+   "fieldtype": "Date",
+   "label": "Date Of Joining"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "company.company_policy",
+   "fieldname": "company_policy",
+   "fieldtype": "Text Editor",
+   "in_list_view": 1,
+   "label": "Company Policy",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "read_and_accepted",
+   "fieldtype": "Check",
+   "label": "Read And Accepted"
+  },
+  {
+   "fieldname": "digital_sign",
+   "fieldtype": "Signature",
+   "label": "Digital Sign"
+  },
+  {
+   "fieldname": "column_break_ohlh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_nxcd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_qvpd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Company Policy Acceptance Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-11-11 15:44:35.479870",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Company Policy Acceptance Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
