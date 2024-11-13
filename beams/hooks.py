@@ -41,7 +41,8 @@ doctype_js = {
     "Job Applicant" :"beams/custom_scripts/job_applicant/job_applicant.js",
     "Budget":"beams/custom_scripts/budget/budget.js",
     "Interview Feedback":"beams/custom_scripts/interview_feedback/interview_feedback.js",
-    "Interview":"beams/custom_scripts/interview/interview.js"
+    "Interview":"beams/custom_scripts/interview/interview.js",
+    "Employee":"beams/custom_scripts/employee/employee.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
