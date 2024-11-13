@@ -110,9 +110,23 @@ frappe.ui.form.on('Job Requisition', {
     },
 
     request_for: function(frm) {
-        // When request_for changes, reset the employee_left field
-        frm.set_value('employee_left', []);
-        frm.refresh_field('employee_left');  // Refresh the field to apply the new query
+        // Clear all related fields when changing the Request For option
+        frm.set_value('staffing_plan', '');
+        frm.set_value('employee_left', '');
+
+        // Show/hide fields based on the selected option
+        if (frm.doc.request_for === 'Staffing Plan') {
+            frm.toggle_display('staffing_plan', true);
+            frm.toggle_display('employee_left', false);
+           // Hide Employee Left field
+        } else if (frm.doc.request_for === 'Employee Exit') {
+            frm.toggle_display('employee_left', true);
+            frm.toggle_display('staffing_plan', false);
+        } else {
+            // If no option or any other option, hide all fields
+            frm.toggle_display('staffing_plan', false);
+            frm.toggle_display('employee_left', false);
+        }
     },
 
     onload: function(frm) {
