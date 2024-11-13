@@ -218,8 +218,7 @@ doc_events = {
         "on_submit":  "beams.beams.custom_scripts.employee_onboarding.employee_onboarding.create_cpal"
 
     }
-
-    }
+}
 
 
 # Scheduled Tasks
