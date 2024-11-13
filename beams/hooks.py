@@ -17,6 +17,14 @@ app_license = "mit"
 # web_include_css = "/assets/beams/css/beams.css"
 # web_include_js = "/assets/beams/js/beams.js"
 
+# website_generators = ["Job Application"]
+
+website_route_rules = [
+    {"from_route": "/job_application/new", "to_route": "job_application"},
+    {"from_route": "/job_opening/<job_title>", "to_route": "job_opening"},
+]
+
+
 # include custom scss in every website theme (without file extension ".scss")
 # website_theme_scss = "beams/public/scss/website"
 

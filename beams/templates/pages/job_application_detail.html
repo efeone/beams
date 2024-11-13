@@ -1,0 +1,88 @@
+{% extends "templates/web.html" %}
+{% block page_content %}
+
+<div class="py-12">
+    <!-- Header -->
+    <div class="row">
+        <div class="col-md-9 mb-8">
+            <h1
+                class="mt-0 mb-2 mb-md-3 mx-auto mx-md-0 text-center text-md-left"
+                style="@include media-breakpoint-up(md) {font-size: 3rem}"
+                {{ job_title }}
+            </h1>
+            <div class="flex align-items-center">
+                <div class="mx-auto mx-md-0">
+                    <span class="font-weight-bold">{{ company }}</span>
+                    {{ " · " }}
+                    {{ posted_on }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 flex">
+            <div class="ml-auto d-none d-md-block">
+                {%- if status == "Open" -%}
+                    <a
+                        class="btn btn-primary btn-lg"
+                        href="/job_application?job_title={{ job_title }}"
+                    >
+                        {{ _("Apply Now") }}
+                    </a>
+                {%- else -%}
+                    <div
+                        class="py-4 px-10 font-weight-bold text-nowrap"
+                        style="background: var(--bg-gray);
+                               font-size: 1.1rem;
+                               border-radius: var(--border-radius)"
+                    >
+                        {{ _("Opening closed.") }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Job Opening Details -->
+    <div class="mb-md-4 p-md-4">
+        <div class="row">
+            {%- if location -%}
+                <div class="col-12 col-md-4 mb-6 mb-md-8">
+                    <div class="flex flex-row align-items-center">
+                        <div class="rounded-circle p-4" style="background: var(--purple-50)">
+                            <svg class="icon" style="height: 28px; width: 28px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+                                <g stroke="var(--purple-700)" stroke-miterlimit="10">
+                                    <path d="M11.467 3.458c1.958 1.957 1.958 5.088.027 7.02L7.97 14l-3.523-3.523a4.945 4.945 0 010-6.993l.026-.026a4.922 4.922 0 016.993 0zm0 0c-.026-.026-.026-.026 0 0z"></path>
+                                    <path d="M7.971 8.259a1.305 1.305 0 100-2.61 1.305 1.305 0 000 2.61z"></path>
+                                </g>
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Location") }}</div>
+                            <div class="font-weight-bold">{{ location }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Add your new components or override existing sections here -->
+
+            {%- if department -%}
+                <div class="col-12 col-md-4 mb-6 mb-md-8">
+                    <div class="flex flex-row align-items-center">
+                        <div class="rounded-circle p-4" style="background: var(--blue-50)">
+                            <svg class="icon" style="height: 28px; width: 28px; --icon-stroke: var(--blue-700)">
+                                <use href="#icon-branch"></use>
+                            </svg>
+                        </div>
+                        <div class="ml-5">
+                            <div class="text-secondary text-uppercase" style="font-size: 11px">{{ _("Department") }}</div>
+                            <div class="font-weight-bold">{{ department }}</div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- Add other details as necessary -->
+        </div>
+    </div>
+</div>
+
+{% endblock %}

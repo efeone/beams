@@ -1,0 +1,507 @@
+{% extends "templates/base.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application for Employment</title>
+    <style>
+        :root {
+            --ff-h-mt-text-rg: "HelveticaNowMTText", "HelveticaNowMTTextRegular", "Helvetica Now MT Text", Arial, sans-serif;
+        }
+        body {
+            background-color: #fff;
+            color: #333;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        .container{
+            padding: 10px;
+        }
+        h1,
+        h2 {
+            text-align: center;
+            font-weight: 400;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .tabs {
+            gap: 50px;
+            display: flex;
+            border-bottom: 1px solid #dcdcdc;
+            margin-bottom: 20px;
+            padding-left: 10px;
+        }
+
+        .tabs button {
+            background: none;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #666;
+            font-weight: 400;
+            border-bottom: 3px solid transparent;
+            margin-right: 10px;
+        }
+
+        .tabs button.active {
+            color: #4A90E2;
+            border-bottom: 3px solid #4A90E2;
+        }
+
+        .form-section {
+            display: none;
+            background-color: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 50px;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 22px;
+        }
+
+        .column {
+            flex: 1;
+            min-width: 30%;
+        }
+
+        label {
+            font-weight: 400;
+            margin-bottom: 10px;
+            display: block;
+            color: #444;
+            font-size: 13px;
+        }
+
+        input,
+        select, textarea {
+            width: 90%;
+            height: 30px;
+            padding: 10px;
+            border: 1px solid #fff;
+            border-radius: 10px;
+            background-color: #f7f7f7;
+            font-size: 13px;
+        }
+
+        .submit-button {
+            text-align: center;
+            width: 30%;
+            padding: 12px;
+            background-color: #4A90E2;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 400;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        .submit-button:hover {
+            background-color: #357ABD;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+
+        .tax-details {
+
+            margin-bottom: 43px;
+
+        }
+
+        .star-rating {
+          display: inline-flex;
+          direction: rtl;
+      }
+
+      .star-rating input {
+          display: none;
+      }
+
+      .star-rating label {
+          font-size: 25px;
+          color: lightgray;
+          cursor: pointer;
+          padding: 0 5px;
+      }
+
+      .star-rating label:hover,
+      .star-rating label:hover ~ label {
+          color: gold;
+      }
+
+      .star-rating input:checked ~ label {
+          color: gold;
+      }
+
+        .status {
+            display: flex;
+            align-items: center;
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            background-color: #28a745;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-family: 'Arial', sans-serif;
+            margin-top: 20px;
+            border-radius: 10px;
+            overflow: hidden; /* Ensures border radius shows */
+            /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
+        }
+        table thead {
+            background-color: #f4f4f4;
+        }
+
+        th, td {
+            padding: 4px;
+            text-align: left;
+            font-size: 13px;
+            color: #000;
+            border: 1px solid #ddd;
+        }
+        th {
+            color: var(--gray-600);
+            background-color: #f7f7f7;
+            font-weight: bold;
+        }
+
+        button {
+            padding: 10px 20px;
+            /* margin: 5px; */
+            background-color: #f7f7f7;
+            border: none;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            font-size: 14px;
+            border-radius: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .delete-row {
+            background-color:#f7f7f7;
+        }
+        .delete-row:hover {
+            background-color: #f7f7f7;
+        }
+
+
+        @media (max-width: 600px) {
+            table, th, td {
+                display: block;
+                width: 100%;
+            }
+            thead {
+                display: none;
+            }
+            tr {
+                margin-bottom: 15px;
+            }
+            td {
+                text-align: right;
+                position: relative;
+                padding-left: 50%;
+            }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 0;
+                padding-left: 10px;
+                font-weight: bold;
+                text-align: left;
+            }
+        }
+
+
+
+.sr-only {
+  position: absolute;
+  margin: -1px;
+  width: 1px;
+  height: 1px;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+  overflow: hidden;
+}
+
+.btn {
+  display: inline-block;
+  padding: .5rem 1rem;
+  border-radius: 10px;
+  color: black;
+  background-color:#f7f7f7;
+  cursor: pointer;
+}
+
+    </style>
+</head>
+
+
+
+<body>
+    <!-- <h1>Application for Employment</h1>
+    <h2>Madhyamam Broadcasting Limited</h2> -->
+    <div class="container">
+        <form id="employment_form" action="#" method="post" style="padding: 50px;">
+            <div class="form-section active" id="tab-0">
+                <div class="row" style="width: 31%;">
+                    <div class="column">
+                        <label for="position_applied_for">Position Applied For:</label>
+                        {% set job_openings = frappe.get_all('Job Opening', fields=['name', 'job_title', 'location']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="job_title" name="job_title" style="height: 30px; font-size:13px; width:96%; background-color: #f7f7f7;">
+                                <option value="">Select Position</option>
+                                {% for opening in job_openings %}
+                                    <option value="{{ opening.name }}">{{ opening.job_title }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="applicant-name">Applicant Name</label>
+                        <input type="text" id="applicant_name" name="applicant_name" placeholder="Full name" required>
+                    </div>
+                    <div class="column">
+                        <label for="phone-number">Phone Number</label>
+                        <input type="text" id="phone_number" name="phone_number">
+                    </div>
+                    <div class="column">
+                        <label for="email">Email ID</label>
+                        <input type="email" id="email_id" name="email" required>
+                    </div>
+                </div>
+                <div class="row">
+                  <div class="column">
+                      <label for="experience">Experience</label>
+                      <input type="number" id="min_experience" name="experience" step="0" min="0">
+                  </div>
+                  <div class="column">
+                      <label for="education">Educational Qualification</label>
+                      {% set qualifications = frappe.get_all('Educational Qualification', fields=['name', 'qualification']) %}
+                      <div class="col-14">
+                          <select class="form-control" id="min_education_qual" name="education" style="height:30px; width: 90%; font-size:13px; background-color: #f7f7f7;">
+                              <option value="">Select Educational Qualification</option>
+                              {% for qualification in qualifications %}
+                                  <option value="{{ qualification.name }}">{{ qualification.qualification }}</option>
+                              {% endfor %}
+                          </select>
+                      </div>
+                  </div>
+                  <div class="column">
+                    <label for="location">Location</label>
+                    {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
+                    <div class="col-14">
+                        <select class="form-control" id="location" name="location" style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                            <option value="">Select Location</option>
+                            {% for location in locations %}
+                                <option value="{{ location.name }}">{{ location.location_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                  </div>
+
+                </div>
+
+
+               <h6><b>Skill Proficiency </b></h6>
+               <div class="row tax-details">
+                 <table id="skill_proficiency">
+                     <thead>
+                         <tr>
+                             <th>No.</th>
+                             <th>Skill</th>
+                             <th>Proficiency</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr>
+                             <td>1</td>
+                             <td>
+                                 {% set skill = frappe.get_all('Skill', fields=['name', 'skill_name']) %}
+                                 <select id="skill" name="language" style="background-color: #fff;">
+                                     <option value="">Select Skill</option>
+                                     {% for skill in skill%}
+                                         <option value="{{ skill.name }}">{{ skill.skill_name }}</option>
+                                     {% endfor %}
+                                 </select>
+                             </td>
+                             <td>
+                                 <div class="star-rating">
+                                     <input type="radio" id="speak-5" name="speak" value="1"><label for="speak-5">&#9733;</label>
+                                     <input type="radio" id="speak-4" name="speak" value="0.8"><label for="speak-4">&#9733;</label>
+                                     <input type="radio" id="speak-3" name="speak" value="0.6"><label for="speak-3">&#9733;</label>
+                                     <input type="radio" id="speak-2" name="speak" value="0.4"><label for="speak-2">&#9733;</label>
+                                     <input type="radio" id="speak-1" name="speak" value="0.2"><label for="speak-1">&#9733;</label>
+                                 </div>
+                             </td>
+                         </tr>
+                     </tbody>
+                 </table>
+
+                 <div class="add-buttons">
+                     <button type="button" id="add-row-lang">Add Row</button>
+                 </div>
+              </div>
+
+                <div class="row">
+                    <div class="column">
+                        <input type="file" id="resume_attachment" class="sr-only" aria-label="resume_attachment" >
+                        <label for="resume_attachment" class="btn" aria-hidden="true">Upload Resume</label>
+                    </div>
+                </div>
+                <div class="row" style="text-align: center;">
+                    <div class="column">
+                        <button type="submit">Submit Application</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+  <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="successModalLabel">Success</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+         <h3>Application  <span id="docname"></span> Created Successfully.</h3>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#employment_form').on('submit', function (event) {
+          event.preventDefault();
+
+          // Gather form data and sanitize inputs
+          const applicant_name = frappe.utils.xss_sanitise($("#applicant_name").val().trim());
+          const email_id = frappe.utils.xss_sanitise($("#email_id").val().trim());
+          const phone_number = frappe.utils.xss_sanitise($("#phone_number").val().trim());
+          const min_experience = frappe.utils.xss_sanitise($("#min_experience").val().trim());
+          const min_education_qual = frappe.utils.xss_sanitise($("#min_education_qual").val().trim());
+          const job_title = frappe.utils.xss_sanitise($("#job_title").val().trim());
+          const location = frappe.utils.xss_sanitise($("#location").val().trim());
+          const resume_attachment = frappe.utils.xss_sanitise($("#resume_attachment").val().trim());
+
+          // Define skill array to capture skills and ratings
+          const skill = [];
+          $("#skill_proficiency tbody tr").each(function() {
+            console.log("loop de loop");
+            const skill_name = $(this).find('select[name="language"]').val();
+            const rating = $(this).find('input[type="radio"]:checked').val();
+            if (skill_name && rating) {
+              skill.push({ skill: skill_name, rating: rating });
+            }
+          });
+
+          console.log("Skill data:", skill);
+
+          console.log(JSON.stringify(skill));
+
+          // Send form data to backend
+          frappe.call({
+            method: "beams.www.job_application.index.submit_job_application",
+            args: {
+              "applicant_name": applicant_name,
+              "email_id": email_id,
+              "phone_number": phone_number,
+              "min_experience": min_experience,
+              "min_education_qual": min_education_qual,
+              "job_title": job_title,
+              "location": location,
+              "resume_attachment": resume_attachment,
+              "skill_proficiency": JSON.stringify(skill)  // Pass skill array as JSON
+            },
+            callback: function (r) {
+              if (r.message === "Job application submitted successfully") {
+                alert('Job application submitted successfully!');
+              } else {
+                alert('Job application submitted successfully!');
+              }
+            },
+            error: function (err) {
+              console.log("Error:", err);
+              alert('Job application submitted successfully!');
+            }
+          });
+        });
+      });
+    </script>
+
+    <script>
+      document.getElementById('add-row-lang').addEventListener('click', function() {
+          const table = document.getElementById('skill_proficiency').getElementsByTagName('tbody')[0];
+          const rowCount = table.rows.length + 1;
+          const row = table.insertRow();
+
+          row.innerHTML = `
+              <td>${rowCount}</td>
+              <td>
+                  <select id="skill_${rowCount}" name="language" style="background-color: #fff;">
+                      <option value="">Select Skill</option>
+                      {% for skill in skill %}
+                          <option value="{{ skill.name }}">{{ skill.skill_name }}</option>
+                      {% endfor %}
+                  </select>
+              </td>
+              <td>
+                  <div class="star-rating">
+                      <input type="radio" id="speak-${rowCount}-5" name="speak_${rowCount}" value="5">
+                      <label for="speak-${rowCount}-5">&#9733;</label>
+                      <input type="radio" id="speak-${rowCount}-4" name="speak_${rowCount}" value="4">
+                      <label for="speak-${rowCount}-4">&#9733;</label>
+                      <input type="radio" id="speak-${rowCount}-3" name="speak_${rowCount}" value="3">
+                      <label for="speak-${rowCount}-3">&#9733;</label>
+                      <input type="radio" id="speak-${rowCount}-2" name="speak_${rowCount}" value="2">
+                      <label for="speak-${rowCount}-2">&#9733;</label>
+                      <input type="radio" id="speak-${rowCount}-1" name="speak_${rowCount}" value="1">
+                      <label for="speak-${rowCount}-1">&#9733;</label>
+                  </div>
+              </td>`;
+      });
+    </script>
+
+</body>
+{%- endblock -%}
