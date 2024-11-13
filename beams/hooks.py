@@ -41,7 +41,9 @@ doctype_js = {
     "Job Applicant" :"beams/custom_scripts/job_applicant/job_applicant.js",
     "Budget":"beams/custom_scripts/budget/budget.js",
     "Interview Feedback":"beams/custom_scripts/interview_feedback/interview_feedback.js",
-    "Interview":"beams/custom_scripts/interview/interview.js"
+    "Interview":"beams/custom_scripts/interview/interview.js",
+    "Employee":"beams/custom_scripts/employee/employee.js",
+    "Event":"beams/custom_scripts/event/event.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -257,7 +259,8 @@ override_doctype_dashboards = {
 	'Item': 'beams.beams.custom_scripts.item_dashboard.item_dashboard.get_data',
     'Customer': 'beams.beams.custom_scripts.customer_dashboard.customer_dashboard.get_data',
     'Sales Invoice': 'beams.beams.custom_scripts.sales_invoice_dashboard.sales_invoice_dashboard.get_data',
-    'Sales Order': 'beams.beams.custom_scripts.sales_order_dashboard.sales_order_dashboard.get_data'
+    'Sales Order': 'beams.beams.custom_scripts.sales_order_dashboard.sales_order_dashboard.get_data',
+    'Employee':'beams.beams.custom_scripts.employee_dashboard.employee_dashboard.get_data'
 }
 
 # exempt linked doctypes from being automatically cancelled
