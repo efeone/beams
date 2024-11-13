@@ -9,7 +9,6 @@ frappe.ui.form.on('Employee Onboarding', {
                   'employee': frm.doc.employee
               },
               fields: ['name'],
-              limit_page_length: 1
           },
           callback: function(response) {
               if (response.message && response.message.length > 0) {
@@ -30,13 +29,8 @@ frappe.ui.form.on('Employee Onboarding', {
                               if (response.message) {
                                   // Route to CPAL document form
                                   frappe.set_route('Form', 'Company Policy Acceptance Log', response.message);
-                              } else {
-                                  frappe.msgprint(__('Failed to create CPAL.'));
                               }
                           },
-                          error: function(err) {
-                              frappe.msgprint(__('Error occurred while creating CPAL: ' + err.message));
-                          }
                       });
                   }, __('Create'));
               }
@@ -70,7 +64,7 @@ frappe.ui.form.on('Employee Onboarding', {
                       frm.set_value('date_of_joining', employee.date_of_joining);
                       frm.set_value('holiday_list', employee.holiday_list);
                       frm.set_value('employee_grade', employee.grade);
-                      frm.refresh_fields(); // Refresh fields to ensure they are updated
+                      frm.refresh_fields();
                   } else {
                       frappe.msgprint(__('No employee details found.'));
                   }
@@ -80,7 +74,6 @@ frappe.ui.form.on('Employee Onboarding', {
   },
 
   job_applicant: function(frm) {
-      // If job applicant is selected, fetch the job offer related to the applicant
       if (frm.doc.job_applicant) {
           frappe.call({
               method: 'frappe.client.get',
@@ -91,7 +84,6 @@ frappe.ui.form.on('Employee Onboarding', {
               },
               callback: function(response) {
                   if (response.message) {
-                      // Set the name of the job offer in the Employee Onboarding form
                       frm.set_value('job_offer', response.message.name);
                       frm.set_df_property('job_offer', 'read_only', 1);
                       frm.refresh_fields();

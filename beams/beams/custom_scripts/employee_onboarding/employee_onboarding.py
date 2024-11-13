@@ -2,9 +2,7 @@ import frappe
 from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
-# Create a Company Policy Acceptance Log  Document by mapping fields from employee onboarding 
 def create_cpal(source_name):
-    # Get the Employee Onboarding document
     onboarding_doc = frappe.get_doc('Employee Onboarding', source_name)
 
     # Check if a CPAL already exists for this Employee Onboarding document
