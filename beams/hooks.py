@@ -214,8 +214,7 @@ doc_events = {
     "Interview Feedback": {
         "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.on_interview_feedback_creation"
     }
-
-    }
+}
 
 
 # Scheduled Tasks
