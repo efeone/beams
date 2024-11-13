@@ -1,0 +1,264 @@
+:root {
+    --ff-h-mt-text-rg: "HelveticaNowMTText", "HelveticaNowMTTextRegular", "Helvetica Now MT Text", Arial, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    color: #333;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    padding: 10px;
+}
+
+h1,
+h2 {
+    text-align: center;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.tabs {
+    gap: 50px;
+    display: flex;
+    border-bottom: 1px solid #dcdcdc;
+    margin-bottom: 20px;
+    padding-left: 10px;
+}
+
+.tabs button {
+    background: none;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 18px;
+    color: #666;
+    font-weight: 400;
+    border-bottom: 3px solid transparent;
+    margin-right: 10px;
+}
+
+.tabs button.active {
+    color: #4A90E2;
+    border-bottom: 3px solid #4A90E2;
+}
+
+.form-section {
+    display: none;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 50px;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.column {
+    flex: 1;
+    min-width: 30%;
+}
+
+label {
+    font-weight: 400;
+    margin-bottom: 10px;
+    display: block;
+    color: #444;
+    font-size: 13px;
+}
+
+input,
+select,
+textarea {
+    width: 90%;
+    height: 35px;
+    padding: 8px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    font-size: 13px;
+}
+
+.submit-button {
+    text-align: center;
+    width: 30%;
+    padding: 12px;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #357ABD;
+}
+
+.section-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.tax-details {
+
+    margin-bottom: 43px;
+
+}
+
+.star-rating {
+    display: inline-flex;
+    direction: rtl;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 25px;
+    color: lightgray;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.star-rating label:hover,
+.star-rating label:hover~label {
+    color: gold;
+}
+
+.star-rating input:checked~label {
+    color: gold;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #28a745;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Arial', sans-serif;
+    margin-top: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+table thead {
+    background-color: #f4f4f4;
+}
+
+th,
+td {
+    padding: 4px;
+    text-align: left;
+    font-size: 13px;
+    color: #000;
+    border: 1px solid #ddd;
+}
+
+th {
+    color: var(--gray-600);
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+button {
+    padding: 10px 20px;
+    /* margin: 5px; */
+    background-color: #f7f7f7;
+    border: none;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-row {
+    background-color: #f7f7f7;
+}
+
+.delete-row:hover {
+    background-color: #f7f7f7;
+}
+
+
+@media (max-width: 600px) {
+
+    table,
+    th,
+    td {
+        display: block;
+        width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tr {
+        margin-bottom: 15px;
+    }
+
+    td {
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}
+
+.sr-only {
+    position: absolute;
+    margin: -1px;
+    width: 1px;
+    height: 1px;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    overflow: hidden;
+}
+
+.btn {
+    display: inline-block;
+    padding: .5rem 1rem;
+    border-radius: 10px;
+    color: black;
+    background-color: #f7f7f7;
+    cursor: pointer;
+}

@@ -1,0 +1,162 @@
+{% extends "templates/base.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application for Employment</title>
+</head>
+
+<body>
+    <div class="container">
+        <form id="employment_form" action="#" method="post" style="padding: 50px;">
+            <div class="form-section active" id="tab-0">
+                <div class="row" style="width: 31%;">
+                    <div class="column">
+                        <label for="position_applied_for">Position Applied For:</label>
+                        <div class="col-14">
+                            <select class="form-control" id="job_title" name="job_title"
+                                style="height: 30px; font-size:13px; width:96%; background-color: #f7f7f7;">
+                                <option value="{{ job_opening.name }}">{{ job_opening.job_title }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="applicant-name">Applicant Name</label>
+                        <input type="text" id="applicant_name" name="applicant_name" placeholder="Full name" required>
+                    </div>
+                    <div class="column">
+                        <label for="phone-number">Phone Number</label>
+                        <input type="text" id="phone_number" name="phone_number">
+                    </div>
+                    <div class="column">
+                        <label for="email">Email ID</label>
+                        <input type="email" id="email_id" name="email" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="experience">Experience</label>
+                        <input type="number" id="min_experience" name="experience" step="0" min="0">
+                    </div>
+                    <div class="column">
+                        <label for="education">Educational Qualification</label>
+                        {% set qualifications = frappe.get_all('Educational Qualification', fields=['name',
+                        'qualification']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="min_education_qual" name="education"
+                                style="height:30px; width: 90%; font-size:13px; background-color: #f7f7f7;">
+                                <option value="">Select Educational Qualification</option>
+                                {% for qualification in qualifications %}
+                                <option value="{{ qualification.name }}">{{ qualification.qualification }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="column">
+                        <label for="location">Location</label>
+                        {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="location" name="location"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Location</option>
+                                {% for location in locations %}
+                                <option value="{{ location.name }}">{{ location.location_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <h6><b>Skill Proficiency </b></h6>
+                <div class="row tax-details">
+                    <table id="skill_proficiency">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Skill</th>
+                                <th>Proficiency</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>
+                                    {% set skill = frappe.get_all('Skill', fields=['name', 'skill_name']) %}
+                                    <select id="skill" name="language" style="background-color: #fff;">
+                                        <option value="">Select Skill</option>
+                                        {% for skill in skill%}
+                                        <option value="{{ skill.name }}">{{ skill.skill_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>
+                                    <div class="star-rating">
+                                        <input type="radio" id="speak-5" name="speak" value="1"><label
+                                            for="speak-5">&#9733;</label>
+                                        <input type="radio" id="speak-4" name="speak" value="0.8"><label
+                                            for="speak-4">&#9733;</label>
+                                        <input type="radio" id="speak-3" name="speak" value="0.6"><label
+                                            for="speak-3">&#9733;</label>
+                                        <input type="radio" id="speak-2" name="speak" value="0.4"><label
+                                            for="speak-2">&#9733;</label>
+                                        <input type="radio" id="speak-1" name="speak" value="0.2"><label
+                                            for="speak-1">&#9733;</label>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="add-buttons">
+                        <button type="button" id="add-row-lang">Add Row</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="column">
+                        <input type="file" id="resume_attachment" class="sr-only" aria-label="resume_attachment">
+                        <label for="resume_attachment" class="btn" aria-hidden="true">Upload Resume</label>
+                    </div>
+                </div>
+                <div class="row" style="text-align: center;">
+                    <div class="column">
+                        <button type="submit">Submit Application</button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="successModalLabel">Success</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h3>Application <span id="docname"></span> Created Successfully.</h3>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</body>
+
+</html>
+{%- endblock -%}
