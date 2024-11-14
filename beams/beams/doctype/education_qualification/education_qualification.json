@@ -28,13 +28,13 @@
   },
   {
    "fieldname": "dates_attended_from",
-   "fieldtype": "Date",
+   "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Dates Attended From"
   },
   {
    "fieldname": "dates_attended_to",
-   "fieldtype": "Date",
+   "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Dates Attended To"
   },
@@ -54,7 +54,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-04 11:47:00.927389",
+ "modified": "2024-11-08 18:03:08.014068",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Education Qualification",
