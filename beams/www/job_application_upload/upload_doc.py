@@ -21,18 +21,14 @@ def get_context(context):
 
 def authorize_applicant_id(encrypted_applicant_id):
 	'''
-		Method is used to check the magic ling exist or expired
+		Method is used to check the magic link exist or expired
 		args:
-			encrypted_applicant_id: encrypted value of HD Ticket ID
-		return HD Ticket ID (example: 123)
+			encrypted_applicant_id: encrypted value of Applicant ID
+		return Applicant ID (example: 123)
 	'''
-	# Set decrypted_ticket_id as false to initialize
+	# Set decrypted_applicant_id as false to initialize
 	decrypted_applicant_id = False
 	try:
-		'''
-			Set decrypted_ticket_id as the decripted value (example: 123, the HD Ticket ID)
-			If the encrypted_ticket_id is dirty then decrypt method will raise an exceptions
-		'''
 		decrypted_applicant_id = decrypt(encrypted_applicant_id)
 	except Exception as e:
 		frappe.log_error(str(encrypted_applicant_id), 'Dirty Applicant Link')
@@ -43,8 +39,8 @@ def authorize_applicant_id(encrypted_applicant_id):
 			frappe.log_error(str(decrypted_applicant_id), 'Job Applicant Not exist')
 			frappe.throw(_("Sorry, couldn't find any matching Job Applicant"), frappe.PermissionError)
 		else:
-			is_form_completed = frappe.db.get_value('Job Applicant', decrypted_applicant_id, 'is_form_completed')
-			if is_form_completed:
+			is_form_submitted = frappe.db.get_value('Job Applicant', decrypted_applicant_id, 'is_form_submitted')
+			if is_form_submitted:
 				frappe.log_error(str(decrypted_applicant_id), 'Form Already Submitted')
 				frappe.throw(_("Sorry, Form is already Submitted"), frappe.PermissionError)
 			else:
@@ -60,7 +56,7 @@ def update_register_form(docname, data):
     try:
         data = json.loads(data)
         if not data.get("applicant_name"):
-            frappe.throw("Missing required fields: applicant_name")
+            frappe.throw("Missing required fields: Applicant Name")
         if frappe.db.exists('Job Applicant', docname):
             doc = frappe.get_doc('Job Applicant', docname)
             for field, value in data.items():
@@ -114,10 +110,7 @@ def update_register_form(docname, data):
                     "read": row["read"],
                     "write": row["write"]
                 })
-            doc.flags.ignore_validate = True
-            doc.flags.ignore_mandatory = True
             doc.save(ignore_permissions=True)
-            frappe.db.commit()
             frappe.msgprint(f"{doc.name} updated successfully.", indicator="green", alert=True)
             return {"message": "success", "docname": doc.name}
         else:
@@ -137,13 +130,10 @@ def update_file(filedata, doctype, docname):
     if filedata and doctype and docname:
         filedata_list = filedata["files_data"]
         if frappe.db.exists(doctype, docname):
-            print("doc exist")
             for filedata_item in filedata_list:
-                print("filedata_item")
                 filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], doctype, docname, decode=True, is_private=0)
                 file_name = filedoc.file_url
         else:
-             print("no data")
              for filedata_item in filedata_list:
                 filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], decode=True, is_private=0)
                 file_name = filedoc.file_url

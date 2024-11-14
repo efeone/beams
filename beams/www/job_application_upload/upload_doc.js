@@ -6,7 +6,6 @@ $(document).ready(function () {
     // Handle file selection and reading for each file input
     var $form = $("form[id='submit_application']");
     $form.on("change", "[type='file']", function () {
-        console.log("on change");
         var $input = $(this);
         var input = $input.get(0);
         if (input.files.length) {
