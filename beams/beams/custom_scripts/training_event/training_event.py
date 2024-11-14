@@ -18,8 +18,7 @@ def on_update(doc,method):
         "Completed": "Training Completed",
         "Cancelled": "Open"
     }
-    
+
     if doc.event_status in status_mapping:
         for row in doc.employees:
-            print(row.training_request)
             frappe.db.set_value("Training Request", row.training_request, "status", status_mapping[doc.event_status])
