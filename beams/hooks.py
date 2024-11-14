@@ -43,7 +43,8 @@ doctype_js = {
     "Interview Feedback":"beams/custom_scripts/interview_feedback/interview_feedback.js",
     "Interview":"beams/custom_scripts/interview/interview.js",
     "Employee":"beams/custom_scripts/employee/employee.js",
-    "Event":"beams/custom_scripts/event/event.js"
+    "Event":"beams/custom_scripts/event/event.js",
+    "Training Event":"beams/custom_scripts/training_event/training_event.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
