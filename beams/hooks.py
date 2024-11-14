@@ -163,6 +163,10 @@ doc_events = {
     "Customer": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer"
     },
+    "Training Event": {
+         "on_update": "beams.beams.custom_scripts.training_event.training_event.on_update",
+          "on_update_after_submit": "beams.beams.custom_scripts.training_event.training_event.on_update"
+    },
     "Supplier": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_supplier"
     },
