@@ -19,7 +19,8 @@
   "section_break_nxcd",
   "digital_sign",
   "column_break_qvpd",
-  "read_and_accepted"
+  "read_and_accepted",
+  "amended_from"
  ],
  "fields": [
   {
@@ -102,12 +103,22 @@
   {
    "fieldname": "column_break_qvpd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Company Policy Acceptance Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-13 15:01:20.876944",
+ "modified": "2024-11-14 13:55:03.631141",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Company Policy Acceptance Log",
