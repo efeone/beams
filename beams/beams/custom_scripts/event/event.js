@@ -4,8 +4,7 @@ frappe.ui.form.on('Event', {
    * This button creates a new 'Training Request' document.
    */
     refresh: function(frm) {
-        if (frappe.user.has_role('HOD')) {
-            // Adds the custom button 'Training Request' in the 'Create' section
+        if (!frm.is_new() && frappe.user.has_role('HOD')) { // Adds the custom button 'Training Request' in the 'Create' section
             frm.add_custom_button('Training Request', function() {
                 // Call the server-side function to fetch the employee ID for the current user
                 frappe.call({

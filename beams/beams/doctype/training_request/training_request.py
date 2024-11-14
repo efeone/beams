@@ -21,7 +21,7 @@ class TrainingRequest(Document):
         users = get_users_with_role("HR Manager")
 
         if users:
-            description = f"New Training Request Created for {self.employee_name}.<br>Please review and update details or take necessary actions."
+            description = f"New Training Request Created for {self.employee_name}.Please review and update details or take necessary actions."
 
             # Assign ToDo task to HR Managers
             add_assign({
