@@ -1,0 +1,678 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styled Application for Employment</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+  <div id="form_upload_doc">
+    <h1><b>APPLICATION FOR EMPLOYEMENT</b></h1>
+    <center><h3>Madhyamam Broadcasting Limited</h3></center>
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab(0)">Personal Information</button>
+            <button class="tab-button" onclick="showTab(1)">Current Employer / Immediate Previous Employer</button>
+            <button class="tab-button" onclick="showTab(2)">More details</button>
+        </div>
+        <form id="submit_application" method="post">
+          <input type="hidden" id="docname" value="{{ doc.name }}">
+            <div class="form-section active" id="tab-0">
+                <div class="row" style="width: 31%;">
+                    <div class="column">
+                        <label for="designation">Position Appplied For :</label>
+                        <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" readonly>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="applicant_name">Full Name</label>
+                        <input type="text" id="applicant_name" name="applicant_name"  value="{{ doc.applicant_name }}" readonly>
+                    </div>
+                    <div class="column">
+                        <label for="father_name">Father's Name</label>
+                        <input type="text" id="father_name" name="father_name">
+                    </div>
+                    <div class="column">
+                <label for="date_of_birth">Date of Birth:</label>
+                <input type="date" id="date_of_birth" name="date_of_birth" >
+            </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" >
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    </div>
+                    <div class="column">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country">
+                    </div>
+                    <div class="column">
+                        <label for="marital_status">Maritial Status</label>
+                        <select id="marital_status" name="marital_status" >
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
+                </div><br>
+                <h3>Current Address</h3>
+                <div class="row tax-details">
+                    <div class="column">
+                        <label for="current_address">Current Address</label>
+                        <textarea id="current_address" name="current_address" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="column">
+                        <label for="current_period_from">Period of Stay From </label>
+                        <input type="number" id="current_period_from" name="current_period_from" min="1900" max="2100" placeholder="Year" >
+                    </div>
+                    <div class="column">
+                        <label for="current_period_to">To:</label>
+                        <input type="number" id="current_period_to" name="current_period_to" min="1900" max="2100" placeholder="Year" >
+                    </div>
+                    <div class="column">
+                        <label for="current_residence_no">Residence No.</label>
+                        <input type="text" id="current_residence_no" name="current_residence_no" >
+                    </div>
+                    <div class="column">
+                        <label for="current_mobile_no">Mobile Number</label>
+                        <input type="tel" id="current_mobile_no" name="current_mobile_no"  pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
+                    </div>
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                </div><br>
+                <h3>Permanent Address</h3>
+                <div class="row tax-details">
+                  <div class="column">
+                      <label for="permanent_address">Permanent Address</label>
+                      <textarea id="permanent_address" name="permanent_address" rows="4" cols="50"></textarea>
+                  </div>
+                    <div class="column">
+                        <label for="permanent_period_from">Period of Stay From</label>
+                        <input type="number" id="permanent_period_from" name="permanent_period_from" min="1900" max="2100" placeholder="Year" >
+                    </div>
+                    <div class="column">
+                        <label for="permanent_period_to">To: </label>
+                        <input type="number" id="permanent_period_to" name="permanent_period_to" min="1900" max="2100" placeholder="Year" >
+                    </div>
+                    <div class="column">
+                        <label for="permanent_residence_no">Residence No.</label>
+                        <input type="text" id="permanent_residence_no" name="permanent_residence_no"  value="">
+                    </div>
+                    <div class="column">
+                        <label for="permananet_email_id">Email Id</label>
+                        <input type="text" id="permananet_email_id" name="permananet_email_id"  value="">
+                    </div>
+
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                    <div class="column">
+                    </div>
+                </div>
+                <div class="row tax-details">
+                    <div class="column">
+                        <label for="email_id_1">Email Id</label>
+                        <input type="text" id="email_id_1" name="email_id_1"  value="{{ doc.email_id }}" readonly>
+                    </div>
+
+                    <div class="column">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
+                    </div>
+                    <div class="column">
+                    </div>
+                </div>
+                <h3>Educational Qualification</h3>
+                    <div class="row tax-details">
+                        <table id="educational_qualification_table">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Name Of Course & University</th>
+                                    <th>Name & Location Of Institute</th>
+                                    <th>Date Attended From</th>
+                                    <th>Date Attended To</th>
+                                    <th>Result(%)</th>
+                                    <th>Attachments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" name="course_university_1" class="name_of_course_university"></td>
+                                    <td><input type="text" name="institution_location_1" class="name_location_of_institution"></td>
+                                    <td><input type="number" name="date_from_1" class="dates_attended_from" min="1900" max="2100" placeholder="Year"></td>
+                                    <td><input type="number" name="date_to_1" class="dates_attended_to" min="1900" max="2100" placeholder="Year"></td>
+                                    <td><input type="Float" name="results_1" class="result"></td>
+                                    <td><input type="file" id="qualification_file" class="home-textinput" /></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="add-buttons">
+                            <button type="button" id="add-row">Add Row</button>
+                        </div>
+                    </div>
+            <h3>Professional Certification</h3>
+                <div class="row tax-details">
+                    <table id="professional_qualification_table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Course</th>
+                                <th>Institute Name</th>
+                                <th>Date Attended From</th>
+                                <th>Date Attended To</th>
+                                <th> Type of Cerfificate</th>
+                                <th>Subject Major</th>
+                                <th>Attachments</th>
+                            </tr>
+                            <tr>
+                  </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="course_1" class="course" ></td>
+                                <td><input type="text" name="institute_name_1" class="institute_name" ></td>
+                                <td><input type="number" name="date_from_1" class="dates_attended_from" min="1900" max="2100" placeholder="Year" ></td>
+                                <td><input type="number" name="date_to_1" class="dates_attended_to" min="1900" max="2100" placeholder="Year" ></td>
+                                <td><input type="text" name="type_of_certification_1" class="type_of_certification" ></td>
+                                <td><input type="text" name="sub_major_1" class="subject_major" ></td>
+                                <td><input type="file" id="certification_file" class="home-textinput" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="add-buttons">
+                        <button type="button" id="add-row-prof">Add Row</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-section" id="tab-1">
+                <div class="row">
+                    <div class="column">
+                        <label for="name_of_employer">Name Of Employer</label>
+                        <input type="text" id="name_of_employer" name="name_of_employer" >
+                    </div>
+                    <div class="column">
+                        <label for="address_of_employer">Address of Employer</label>
+                        <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                    </div>
+                    <div class="column">
+                        <label for="telephone_no">Telephone No</label>
+                        <input type="tel" name="telphone" id="telephone_no" pattern="[0-9]{4} [0-9]{7}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="employee_code">Employee Code/No.</label>
+                        <input type="text" id="employee_code" name="employee_code" >
+                    </div>
+                    <div class="column">
+                        <label for="current_designation">Designation</label>
+                        <input type="text" id="current_designation" name="current_designation" >
+                    </div>
+                    <div class="column">
+                        <label for="current_department">Department</label>
+                        <input type="text" id="current_department" name="current_department" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="employment_period_from">Employment Period From</label>
+                        <input type="number" id="employment_period_from" name="employment_period_from" min="1900" max="2100" placeholder="Year">
+                    </div>
+                    <div class="column">
+                        <label for="employment_period_to">Employment Period To</label>
+                        <input type="number" id="employment_period_to" name="employment_period_to" min="1900" max="2100" placeholder="Year" >
+                    </div>
+                    <div class="column">
+                        <label for="manager_name">Manager's Name</label>
+                        <input type="text" id="manager_name" name="manager_name" >
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="manager_contact_no">Manager's Contact No</label>
+                        <input type="tel" id="manager_contact_no" name="manager_contact_no"  pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
+                    </div>
+                    <div class="column">
+                        <label for="manager_email">Manager's Email</label>
+                        <input type="email" id="manager_email" name="manager_email" >
+                    </div>
+                    <div class="column">
+                        <label for="reference_taken">Can a Reference taken now?(Yes/No)</label>
+                        <select id="reference_taken" name="reference_taken" >
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
+                        <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4" cols="50"></textarea>
+                    </div>
+
+                    <div class="column">
+                        <label for="reason_for_leaving">Reasons for leaving</label>
+                        <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="column">
+                        <label for="first_salary_drawn">First Salary Drawn</label>
+                        <input type="first_salary_drawn" id="first_salary_drawn" name="first_salary_drawn" >
+                    </div>
+                    <div class="column">
+                        <label for="last_salary_drawn">Last Salary Drawn </label>
+                        <input type="currency" id="last_salary_drawn" name="last_salary_drawn" 69>
+                    </div>
+                  </div>
+                  <div class="row">
+                     <div class="column">
+                        <label for="was_this_position">Was this Position (Permanent, Temporary,Contractual)?</label>
+                        <select id="was_this_position" name="was_this_position" >
+                            <option value="Permanent">Permanent</option>
+                            <option value="Temporary">Temporary</option>
+                            <option value="Contractual">Contractual</option>
+                        </select>
+                    </div>
+                    <div class="column">
+                        <label for="agency_details">Agency Deatils(If temporary or contractual),provide details </label>
+                        <textarea id="agency_details" name="agency_details" rows="4" cols="50"></textarea>
+                    </div>
+                  </div>
+                    <div class="column">
+                    </div>
+                <h3>Previous Employment History</h3>
+                <div class="row tax-details">
+                    <table id="previous_emplyoment_history_table">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Name Of Organization(With Location)</th>
+                                <th>Designation</th>
+                                <th>Last Salary Drawn</th>
+                                <th>Name Of Manager/Reporting Head</th>
+                                <th>Period Of Employment</th>
+                                <th>Reason for Leaving</th>
+                                <th>Attachments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td><input type="text" name="name_of_org" class="name_of_org" ></td>
+                                <td><input type="text" name="designation" class="prev_designation" ></td>
+                                <td><input type="text" name="last_sal" class="last_salary_drawn" ></td>
+                                <td><input type="text" name="name_of_manager" class="name_of_manager" ></td>
+                                <td><input type="text" name="prd_of_emp" class="period_of_employment" ></td>
+                                <td><input type="text" name="reason_for_leaving" class="reason_for_leaving" ></td>
+                                <td><input type="file" id="prev_emp_file" class="home-textinput" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="add-buttons">
+                        <button type="button" id="add-row-prev">Add Row</button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-section" id="tab-2">
+                <div class="row">
+                    <div class="column">
+                        <label for="current_salary">Current Salary</label>
+                        <input type="number" id="current_salary" name="current_salary" >
+                    </div>
+                    <div class="column">
+                        <label for="expected_salary">Expected Salary</label>
+                        <input type="number" id="expected_salary" name="expected_salary" >
+                    </div>
+                    <div class="column">
+                        <label for="telephone-no">Telephone No</label>
+                        <input type="tel" name="telphone" id="telephone_number" pattern="[0-9]{4} [0-9]{7}" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="other_achievments">Please add details of Professional and other Acheivements, Awards and Accomplishments, if any </label>
+                        <textarea id="other_achievments" name="other_achievments" rows="4" cols="50"></textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="address">Have you been interviewed before by Madhyamam Group? If yes, Please give details below</label>
+                </div>
+                <div class="row">
+                    <div class="column">
+                        <label for="position">Position</label>
+                        <input type="text" id="position" name="position" >
+                    </div>
+                    <div class="column">
+                        <label for="interviewed_location">Location </label>
+                        <input type="text" id="interviewed_location" name="interviewed_location" >
+                    </div>
+                    <div class="column">
+                    </div>
+                  </div>
+                  <div class="row">
+                  <div class="column">
+                        <label for="interviewed_date">Date</label>
+                        <input type="date" id="interviewed_date" name="interviewed_date" >
+                    </div>
+                    <div class="column">
+                        <label for="interviewed_outcome">Outcome</label>
+                        <input type="text" id="interviewed_outcome" name="interviewed_outcome" >
+                    </div>
+                    <div class="column">
+                    </div>
+                  </div>
+                <h3>Languages Known :</h3>
+                <div class="row tax-details">
+                  <table id="table_3">
+                  <thead>
+                    <tr>
+                      <th>No.</th>
+                      <th>Language</th>
+                      <th>Speak</th>
+                      <th>Read</th>
+                      <th>Write</th>
+                  </tr>
+                      </thead>
+                      <tbody>
+                          <tr>
+                              <td>1</td>
+                              <td>
+                              <select name="language" class="form-control">
+                                  <option value="">Select language</option>
+                                  {% for language in languages %}
+                                  <option value="{{ language.name }}">{{ language.language_name }}</option>
+                                  {% endfor %}
+                              </select>
+                          </td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="speak-5" name="speak" value="1"><label for="speak-5">&#9733;</label>
+                                      <input type="radio" id="speak-4" name="speak" value="0.8"><label for="speak-4">&#9733;</label>
+                                      <input type="radio" id="speak-3" name="speak" value="0.6"><label for="speak-3">&#9733;</label>
+                                      <input type="radio" id="speak-2" name="speak" value="0.4"><label for="speak-2">&#9733;</label>
+                                      <input type="radio" id="speak-1" name="speak" value="0.2"><label for="speak-1">&#9733;</label>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="read-5" name="read" value="1"><label for="read-5">&#9733;</label>
+                                      <input type="radio" id="read-4" name="read" value="0.8"><label for="read-4">&#9733;</label>
+                                      <input type="radio" id="read-3" name="read" value="0.6"><label for="read-3">&#9733;</label>
+                                      <input type="radio" id="read-2" name="read" value="0.4"><label for="read-2">&#9733;</label>
+                                      <input type="radio" id="read-1" name="read" value="0.2"><label for="read-1">&#9733;</label>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="star-rating">
+                                      <input type="radio" id="write-5" name="write" value="1"><label for="write-5">&#9733;</label>
+                                      <input type="radio" id="write-4" name="write" value="0.8"><label for="write-4">&#9733;</label>
+                                      <input type="radio" id="write-3" name="write" value="0.6"><label for="write-3">&#9733;</label>
+                                      <input type="radio" id="write-2" name="write" value="0.4"><label for="write-2">&#9733;</label>
+                                      <input type="radio" id="write-1" name="write" value="0.2"><label for="write-1">&#9733;</label>
+                                  </div>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+                   <div class="add-buttons">
+                      <button type="button" id="add-row-lang">Add Row</button>
+                  </div>
+                </div>
+                <div class="row">
+                  <table>
+                    <tr>
+                      <td style="border:1px solid #fff;    font-size: 17px;">  <label for="address">Are you willing to travel :</label>
+                      </td><tr>
+                        <tr>
+                          <td>In India</td>
+                          <td><input type="checkbox" id="in_india_checkbox"></td>
+                          <td>Abroad</td>
+                          <td><input type="checkbox" id="abroad_checkbox"></td>
+                          <td>State Restrictions if any</td>
+                          <td colspan="3"><input type="text" id="state_restriction"></td>
+                      </tr>
+                </table>
+              </div>
+              <div class="row">
+                  <label for="address">Are you related to any of the Madhyamam Group? If yes, please give details : </label>
+              </div>
+              <div class="row">
+                <div class="column">
+                <label for="related_employee">Name</label>
+                <input type="text" id="related_employee" name="related_employee" >
+              </div>
+              <div class="column">
+                <label for="related_employee_org">Organization</label>
+                <input type="text" id="related_employee_org" name="related_employee_org" >
+              </div>
+              <div class="column">
+              </div>
+            </div>
+              <div class="row">
+                <div class="column">
+                <label for="related_employee_pos">Position</label>
+                <input type="text" id="related_employee_pos" name="related_employee_pos" >
+              </div>
+              <div class="column">
+                <label for="related_employee_rel">Relationship</label>
+                <input type="text" id="related_employee_rel" name="related_employee_rel" >
+              </div>
+              <div class="column">
+              </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="professional_org">Are you a member of any Professional Organization? If yes, please give details </label>
+                    <textarea id="professional_org" name="professional_org" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="political_org">Are you a member of any Political Organization? If yes, please give details </label>
+                    <textarea id="political_org" name="political_org" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="column">
+                    <label for="specialised_training">Have you attended any specialized training program? If yes, please give details </label>
+                    <textarea id="specialised_training" name="specialised_training" rows="4" cols="50"></textarea>
+                </div>
+            </div>
+            <h3>Declaration and Authorization </h3>
+            <hr></hr>
+            <div class="row">
+              <p class="declaration">
+        I hereby authorize Madhyamam Broadcasting Limited (or a third party agent appointed by the Company) to contact any former employers as indicated above and carry out all Background Checks not restricted to education and employment deemed appropriate through this selection procedure. I authorize former employers, agencies, educational institutes, etc., to release any information pertaining to my employment/education and I release them from any liability in doing so.
+        <br><br>
+        <input type="checkbox" name="confirm" id="confirm" style="width: 1%;">        I confirm that the above information is correct to the best of my knowledge and I understand that any misrepresentation of information on this application may, in the event of my obtaining employment, result in action based on company policy.
+      </p> </div>
+<p id="error-message" style="color: red; display: none;">Please check the checkbox to proceed.</p>
+<button id="submitBtn" type="submit">Submit</button>
+    </form>
+    </div>
+  </div>
+
+    <script>
+
+        // Function to handle form submission validation based on checkbox status
+        function handleSubmitValidation() {
+            const checkbox = document.getElementById('confirm');
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('error-message');
+            function validateSubmit(event) {
+                  if (!checkbox.checked) {
+                    event.preventDefault();
+                    errorMessage.style.display = 'block';
+                  } else {
+                    errorMessage.style.display = 'none';
+                  }
+                  }
+                  submitBtn.addEventListener('click', validateSubmit);
+                  }
+            document.addEventListener('DOMContentLoaded', handleSubmitValidation);
+        
+        // Function to show specific tab content based on index and set active class
+        function showTab(index) {
+            const sections = document.querySelectorAll('.form-section');
+            const tabButtons = document.querySelectorAll('.tab-button');
+
+            sections.forEach(section => section.classList.remove('active'));
+            tabButtons.forEach(button => button.classList.remove('active'));
+
+            sections[index].classList.add('active');
+            tabButtons[index].classList.add('active');
+        }
+
+        // Function to add a new row in the Education Qualifications table
+        function addRow_educ(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" >';
+            cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" >';
+            cell4.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_from" min="1900" max="2100" placeholder="Year" >';
+            cell5.innerHTML = '<input type="number" name="date_to_1[]" class="dates_attended_to" min="1900" max="2100" placeholder="Year">';
+            cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result" >';
+            cell7.innerHTML = '<input type="file" name=qualification_file[] class="file" >';
+        }
+
+         // Function to add a new row in the Professional Qualifications table
+        function addRow_prof(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="course_1[]" class="course" >';
+            cell3.innerHTML = '<input type="text" name="institute_name_1[]" class="institute_name" >';
+            cell4.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_from" min="1900" max="2100" placeholder="Year">';
+            cell5.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_to" min="1900" max="2100" placeholder="Year">';
+            cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" >';
+            cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" >';
+            cell8.innerHTML = '<input type="file" name=certification_file[] class="file" >';
+
+        }
+
+         // Function to add a new row in the Previous Employment History table
+        function addRow_prev(tableId) {
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
+            var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
+
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<input type="text" name="name_of_org" class="name_of_org" >';
+            cell3.innerHTML = '<input type="text" name="designation" class="prev_designation" >';
+            cell4.innerHTML = '<input type="text" name="last_sal" class="last_salary_drawn" >';
+            cell5.innerHTML = '<input type="text" name="name_of_manager" class="name_of_manager" >';
+            cell6.innerHTML = '<input type="text" name="prd_of_emp" class="period_of_employment" >';
+            cell7.innerHTML = '<input type="text" name="reason_for_leaving" class="reason_for_leaving" >';
+            cell8.innerHTML = '<input type="file" name="prev_emp_file" class="experience_file" >';
+
+        }
+
+        // Function to add a new row in the Language Skills table with star rating inputs
+        function addRow_lang(tableId) {
+              var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+              var rowCount = table.rows.length;
+              var row = table.insertRow(rowCount);
+
+              // Insert cells and their contents
+              var cell1 = row.insertCell(0);
+              var cell2 = row.insertCell(1);
+              var cell3 = row.insertCell(2);
+              var cell4 = row.insertCell(3);
+              var cell5 = row.insertCell(4);
+
+              // Add content to cells
+              cell1.innerHTML = rowCount + 1;
+              cell2.innerHTML = '<select name="language" class="form-control"><option value="">Select language</option>{% for language in languages %}<option value="{{ language.name }}">{{ language.language_name }}</option>{% endfor %}</select>';
+              cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
+              cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
+              cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
+          }
+
+         // Function to generate HTML for star rating input for language proficiency
+        function getStarRatingHTML(name) {
+            return `
+                <div class="star-rating">
+                    <input type="radio" id="${name}_star5" name="${name}" value="1"><label for="${name}_star5">&#9733;</label>
+                    <input type="radio" id="${name}_star4" name="${name}" value="0.8"><label for="${name}_star4">&#9733;</label>
+                    <input type="radio" id="${name}_star3" name="${name}" value="0.6"><label for="${name}_star3">&#9733;</label>
+                    <input type="radio" id="${name}_star2" name="${name}" value="0.4"><label for="${name}_star2">&#9733;</label>
+                    <input type="radio" id="${name}_star1" name="${name}" value="0.2"><label for="${name}_star1">&#9733;</label>
+                </div>
+            `;
+        }
+
+        // Attach event listeners for buttons on all tables
+        document.getElementById('add-row').addEventListener('click', function() {
+            addRow_educ('educational_qualification_table');
+        });
+
+        document.getElementById('add-row-prof').addEventListener('click', function() {
+            addRow_prof('professional_qualification_table');
+        });
+
+        document.getElementById('add-row-prev').addEventListener('click', function() {
+            addRow_prev('previous_emplyoment_history_table');
+        });
+        document.getElementById('add-row-lang').addEventListener('click', function() {
+            addRow_lang('table_3');
+        });
+    </script>
+</body>
+</div>
+<div id="exception_msgs"></div>
+</html>
+
+{%- endblock -%}
