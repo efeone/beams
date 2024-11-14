@@ -6,83 +6,48 @@ from frappe.utils import nowdate
 from frappe.utils import get_url_to_form
 from frappe.utils.password import encrypt
 
-
 def get_permission_query_conditions(user):
     if not user:
         user = frappe.session.user
 
     user_roles = frappe.get_roles(user)
 
-
     if "Administrator" in user_roles:
         return ""
-
 
     if "Interviewer" in user_roles:
         return f"""
         `tabJob Applicant`.name IN (
-            SELECT reference_name
-            FROM `tabToDo`
-            WHERE reference_type = 'Job Applicant'
-            AND allocated_to = '{user}'
+            SELECT
+                reference_name
+            FROM
+                `tabToDo`
+            WHERE
+                reference_type = 'Job Applicant'
+                AND allocated_to = '{user}'
         )
         """
     return None
 
 @frappe.whitelist()
 def validate(doc, method):
-    """
-    Method triggered before the document is saved.
-    Validate the Job Applicant against Job Opening requirements.
-    """
+    '''
+        Method triggered before the document is saved
+        Validate the Job Applicant against Job Opening requirements.
+    '''
+    if doc.job_title:
+        if frappe.db.get_value('Job Opening', doc.job_title, 'job_requisition'):
+            job_requisition = frappe.db.get_value('Job Opening', doc.job_title, 'job_requisition')
+            job_requisition_doc = frappe.get_doc('Job Requisition', job_requisition)
 
-    # Check if job_title is specified and fetch the Job Opening
-    if not doc.job_title:
-        return
-
-    job_opening = frappe.get_doc('Job Opening', doc.job_title)
-
-    # Ensure the Job Opening exists
-    if not job_opening:
-        frappe.throw(_("Specified Job Opening '{0}' not found.").format(doc.job_title))
-    if not doc.min_education_qual:
-        frappe.throw(_("Applicant's Educational Qualification is required."))
-
-    # Validate education qualification only if it's filled in the Job Opening
-    applicant_qualification = doc.min_education_qual
-    job_opening_qualifications = [qual.qualification for qual in job_opening.min_education_qual] if job_opening.min_education_qual else []
-    if job_opening_qualifications and applicant_qualification not in job_opening_qualifications:
-        required_qualifications = ", ".join(job_opening_qualifications)
-        frappe.throw(_("Applicant does not match Educational qualifications required: {0}").format(required_qualifications))
-
-    # Validate experience only if it's filled in the Job Opening
-    if doc.min_experience is None:
-        frappe.throw(_("Applicant's experience is not provided."))
-
-    if job_opening.min_experience is None:
-        frappe.throw(_("The job's required experience is not specified."))
-
-    if doc.min_experience < job_opening.min_experience:
-        frappe.throw(_("Applicant does not meet the required experience: {0} years").format(job_opening.min_experience))
-
-    if not doc.skill_proficiency:
-        frappe.throw(_("Applicant's skills are required."))
-
-    # Validate skills only if required skills are filled in the Job Opening
-    required_skills = {skill.skill for skill in job_opening.skill_proficiency}
-    applicant_skills = {skill.skill for skill in doc.skill_proficiency}
-    if required_skills and (missing_skills := required_skills - applicant_skills):
-        required_skills_list = ", ".join(required_skills)
-        frappe.throw(_("The Applicant does not meet the Required skills: {0}").format(required_skills_list))
-
+            if job_requisition_doc and (doc.min_experience < job_requisition_doc.min_experience):
+                frappe.throw(_("Applicant does not meet the required experience: {0} years").format(job_requisition_doc.min_experience))
 
 @frappe.whitelist()
 def get_existing_local_enquiry_report(doc_name):
     """
-    Create a Local Enquiry Report if it doesn't already exist.
-
+        Create a Local Enquiry Report if it doesn't already exist.
     """
-
     # Check if a Local Enquiry Report already exists for the given Job Applicant
     report_exists = frappe.db.exists("Local Enquiry Report", {"job_applicant": doc_name})
     if report_exists:
@@ -93,8 +58,7 @@ def get_existing_local_enquiry_report(doc_name):
 @frappe.whitelist()
 def create_and_return_report(job_applicant):
     """
-    Create a Local Enquiry Report, show an alert message, and return its name.
-
+    Create a Local Enquiry Report, show an alert message, and return its name
     """
     # Create a new Local Enquiry Report document
     new_report = frappe.get_doc({
