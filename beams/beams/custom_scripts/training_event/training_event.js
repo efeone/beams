@@ -77,7 +77,7 @@ function show_training_request_dialog(frm) {
 // Function to fetch training requests using the custom server-side method
 function fetch_training_requests(frm, dialog) {
     frappe.call({
-        method: "beams.beams.custom_scripts.training_event.training_event.get_open_training_requests", // Replace 'your_app' with your actual app name
+        method: "beams.beams.custom_scripts.training_event.training_event.get_open_training_requests", 
         callback: function(r) {
             if (r.message) {
                 let rows = [];
