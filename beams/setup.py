@@ -1535,8 +1535,8 @@ def get_job_opening_custom_fields():
                 "insert_after": "skill_proficiency"
             },
             {
-                "fieldname": "job_requisition_id_",
-                "label": "job Requisition",
+                "fieldname": "job_requisition",
+                "label": "Job Requisition",
                 "fieldtype": "Link",
                 "options": "Job Requisition",
                 "insert_after": "designation"
