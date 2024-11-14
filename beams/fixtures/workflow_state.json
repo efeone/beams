@@ -75,15 +75,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 14:26:48.530305",
-  "name": "Draft",
-  "style": "",
-  "workflow_state_name": "Draft"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-10-02 11:07:13.425158",
   "name": "On Hold",
   "style": "",
@@ -101,11 +92,38 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-11-05 12:11:26.754828",
+  "name": "Applicant Accepted",
+  "style": "",
+  "workflow_state_name": "Applicant Accepted"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-11-14 12:12:19.950288",
+  "name": "Applicant Rejected",
+  "style": "",
+  "workflow_state_name": "Applicant Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "ok-sign",
   "modified": "2024-08-03 14:59:52.132982",
   "name": "Approved",
   "style": "Success",
   "workflow_state_name": "Approved"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-21 13:14:39.863524",
+  "name": "Assigned to Enquiry Officer",
+  "style": "Primary",
+  "workflow_state_name": "Assigned to Enquiry Officer"
  },
  {
   "docstatus": 0,
@@ -129,10 +147,10 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-10-21 13:14:39.863524",
-  "name": "Assigned to Enquiry Officer",
-  "style": "Primary",
-  "workflow_state_name": "Assigned to Enquiry Officer"
+  "modified": "2024-08-17 14:26:48.530305",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
  },
  {
   "docstatus": 0,
@@ -142,14 +160,5 @@
   "name": "Enquiry on Progress",
   "style": "Success",
   "workflow_state_name": "Enquiry on Progress"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-11-05 12:11:26.754828",
-  "name": "Applicant Accepted",
-  "style": "",
-  "workflow_state_name": "Applicant Accepted"
  }
 ]
