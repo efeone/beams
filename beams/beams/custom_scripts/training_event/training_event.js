@@ -112,6 +112,5 @@ function process_selected_requests(frm, selected_requests) {
     });
 
     frm.refresh_field("employees");
-    frm.save();
     frappe.msgprint("Selected employees have been added to the Training Event.");
 }
