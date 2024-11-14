@@ -1447,15 +1447,68 @@ def get_contract_custom_fields():
 
 def get_job_opening_custom_fields():
     '''
-    Custom fields that need to be added to the Contract Doctype
+        Custom fields that need to be added to the Job Opening Doctype
     '''
     return {
         "Job Opening": [
             {
+                "fieldname": "job_details",
+                "fieldtype": "Section Break",
+                "label": "Job Details",
+                "insert_after": "location"
+            },
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "insert_after": "job_details",
+                "non_negative": 1
+            },
+            {
+                "fieldname": "preffered_location",
+                "label": "Preffered Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off"
+            },
+            {
+                "fieldname": "job_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "preffered_location"
+            },
+            {
+                "fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Travel required for the position",
+                "insert_after": "job_details_column_break"
+            },
+            {
+                "fieldname": "driving_license_needed",
+                "fieldtype": "Check",
+                "label": "Driving License Needed for this Position",
+                "depends_on": "eval:doc.travel_required == 1",
+                "insert_after": "travel_required"
+            },
+            {
+                "fieldname": "license_type",
+                "fieldtype": "Link",
+                "label": "License Type",
+                "options": "License Type",
+                "depends_on": "eval:doc.driving_license_needed == 1",
+                "insert_after": "driving_license_needed"
+            },
+            {
+                "fieldname": "is_work_shift_needed",
+                "fieldtype": "Check",
+                "label": "Is Shift Work Needed",
+                "insert_after": "license_type"
+            },
+            {
                 "fieldname": "qualification_details",
                 "fieldtype": "Section Break",
-                "label": "Qualification Details",
-                "insert_after": "location"
+                "label": "Education and Qualification Details",
+                "insert_after": "license_type"
             },
             {
                "fieldname": "min_education_qual",
@@ -1464,7 +1517,6 @@ def get_job_opening_custom_fields():
                 'options':"Educational Qualifications",
                 "insert_after": "qualification_details"
             },
-
             {
                 "fieldname": "qualification_details_column_break",
                 "fieldtype": "Column Break",
@@ -1478,68 +1530,39 @@ def get_job_opening_custom_fields():
                 "insert_after": "qualification_details_column_break"
             },
             {
-                "fieldname": "job_details",
+                "fieldname": "proficiency_break",
                 "fieldtype": "Section Break",
-                "label": "Job Details",
+                "label": "",
                 "insert_after": "min_experience"
             },
             {
-                "fieldname": "no_of_positions",
-                "fieldtype": "Float",
-                "label": "Number of Positions",
-                "insert_after": "job_details"
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "label": "Language Proficiency",
+                "insert_after": "proficiency_break",
+                "description": "Proficency selected here is the minimum proficency needed"
             },
             {
-                "fieldname": "expected_compensation",
-                "fieldtype": "Currency",
-                "label": "Expected Compensation",
-                "insert_after": "no_of_positions"
-            },
-            {
-                "fieldname": "job_details_column_break",
-                "fieldtype": "Column Break",
-                "label": "",
-                "insert_after": "expected_compensation"
-            },
-            {
-                "fieldname": "no_of_days_off",
-                "fieldtype": "Int",
-                "label": "Number of Days Off",
-                "insert_after": "job_details_column_break"
-            },
-            {
-                "fieldname": "location",
-                "label": "Location",
-                "fieldtype": "Link",
-                "options": "Location",
-                "insert_after": "no_of_days_off"
-            },
-             {
-                 "fieldname": "skill_proficiency_break",
-                 "fieldtype": "Section Break",
-                 "label": "",
-                 "insert_after": "job_details"
-             },
-             {
                 "fieldname": "skill_proficiency",
                 "fieldtype": "Table",
                 "options": "Skill Proficiency",
                 "label": "Skill Proficiency",
-                "insert_after": "skill_proficiency_break"
+                "insert_after": "language_proficiency",
+                "description": "Proficency selected here is the minimum proficency needed"
             },
             {
-                "fieldname": "skill_proficiency_description",
-                "fieldtype": "HTML",
-                "label": "",
-                "options": "<p style='margin-top: 5px; color: #6c757d; font-size: 0.9em;'>Proficiency selected here is the minimum proficiency needed.</p>",
+                "fieldname": "interview_details_sb",
+                "fieldtype": "Section Break",
+                "label": "Interview Details",
                 "insert_after": "skill_proficiency"
             },
             {
-                "fieldname": "job_requisition",
-                "label": "Job Requisition",
-                "fieldtype": "Link",
-                "options": "Job Requisition",
-                "insert_after": "designation"
+               "fieldname": "interview_rounds",
+                "fieldtype": "Table MultiSelect",
+                "label": "Interview Rounds",
+                'options':"Interview Rounds",
+                "insert_after": "interview_details_sb"
             }
         ]
     }
@@ -1774,18 +1797,19 @@ def get_property_setters():
             "value": 1
         },
         {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Requisition",
-            "property": "field_order",
-            "value": "[\"workflow_state\", \"naming_series\", \"request_for\", \"employee_left\", \"staffing_plan\", \"designation\", \"column_break_qkna\", \"department\", \"no_of_positions\", \"expected_compensation\", \"column_break_4\", \"company\", \"status\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"work_details\", \"employment_type\", \"no_of_days_off\", \"location\", \"work_details_column_break\", \"travel_required\", \"driving_license_needed\", \"is_work_shift_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"reason_for_requesting\", \"connections_tab\"]"
-        },
-        {
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "status",
             "property": "options",
             "value": "Pending\nOpen & Approved\nRejected\nOn Hold\nCancelled"
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Opening",
+            "field_name": "location",
+            "property": "hidden",
+            "value": 1
+        },
     ]
 
 def get_material_request_custom_fields():

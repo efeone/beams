@@ -11,28 +11,44 @@ def create_job_opening_from_job_requisition(doc, method):
     if doc.workflow_state == 'Approved':
         if not frappe.db.exists('Job Opening', { 'job_requisition':doc.name }):
             job_opening = frappe.new_doc('Job Opening')
-            job_opening.job_requisition = doc.name
-            job_opening.posting_date = nowdate()
-            job_opening.employment_type = doc.employment_type
-            job_opening.no_of_days_off = doc.no_of_days_off
-            job_opening.designation = doc.designation
-            job_opening.min_education_qual = doc.min_education_qual
-            job_opening.min_experience = doc.min_experience
-            job_opening.expected_compensation = doc.expected_compensation
             job_opening.job_title = doc.job_title
-            job_opening.no_of_positions = doc.no_of_positions
-            job_opening.employment_type = doc.employment_type
-            job_opening.department = doc.department
             job_opening.designation = doc.designation
-            job_opening.location = doc.location
-
+            job_opening.status = 'Open'
+            job_opening.posted_on = nowdate()
+            job_opening.department = doc.department
+            job_opening.employment_type = doc.employment_type
+            # Setting Minimum Educational Qualification
+            for qualification in doc.min_education_qual:
+                job_opening.append('min_education_qual', {
+                    "qualification": qualification.qualification
+                })
+            job_opening.min_experience = doc.min_experience
+            job_opening.job_requisition = doc.name
+            job_opening.no_of_positions = doc.no_of_positions
+            job_opening.no_of_days_off = doc.no_of_days_off
+            job_opening.preffered_location = doc.location
+            #Setting Skill Proficiency
             for skill in doc.skill_proficiency:
                 job_opening.append('skill_proficiency', {
                     "skill": skill.skill,
                     "proficiency": skill.proficiency
                 })
-
-            # Insert and submit the Job Opening document
+            #Setting Language Proficiency
+            for language in doc.language_proficiency:
+                job_opening.append('language_proficiency', {
+                    "language": language.language,
+                    "speak": language.speak,
+                    "write": language.write,
+                    "read": language.read
+                })
+            # Setting Interview Rounds
+            for interview_round in doc.interview_rounds:
+                job_opening.append('interview_rounds', {
+                    "interview_round": interview_round.interview_round
+                })
+            job_opening.description = doc.description
+            job_opening.upper_range = doc.expected_compensation
+            # Insert the Job Opening document
             job_opening.insert()
             frappe.msgprint(
                 'Journal Entry Created: <a href="{0}">{1}</a>'.format(get_url_to_form(job_opening.doctype, job_opening.name), job_opening.name),
