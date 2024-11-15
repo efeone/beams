@@ -1047,7 +1047,7 @@ def get_job_applicant_custom_fields():
                 "fieldtype": "Table",
                 "options": "Education Qualification",
                 "label": "Education Qualification",
-                "insert_after": "applicant_interview_round"
+                "insert_after": "applicant_interview_rounds"
             },
             {
                 "fieldname": "professional_certification",
@@ -1070,7 +1070,7 @@ def get_job_applicant_custom_fields():
                 "insert_after": "skill_proficiency"
             },
             {
-                "fieldname": "applicant_interview_round",
+                "fieldname": "applicant_interview_rounds",
                 "fieldtype": "Table",
                 "options": "Applicant Interview Round",
                 "label": "Interview Rounds",
@@ -1780,7 +1780,7 @@ def get_property_setters():
             "doc_type": "Job Applicant",
             "field_name": "status",
             "property": "options",
-            "value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed"
+            "value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
         },
         {
             "doctype_or_field": "DocType",
