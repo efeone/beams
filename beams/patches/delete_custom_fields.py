@@ -28,6 +28,10 @@ fields_to_remove = [
     {
         'dt':'Job Opening',
         'fieldname':'skill_proficiency_break'
+    },
+    {
+        'dt':'Job Applicant',
+        'fieldname':'applicant_interview_round'
     }
 ]
 

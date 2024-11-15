@@ -1,7 +1,7 @@
 frappe.ui.form.on('Job Applicant', {
     refresh: function (frm) {
         handle_custom_buttons(frm);
-        frm.toggle_display('applicant_interview_round', !frm.is_new());
+        frm.toggle_display('applicant_interview_rounds', !frm.is_new());
     },
     status: function (frm) {
         frm.trigger('refresh');
@@ -10,10 +10,9 @@ frappe.ui.form.on('Job Applicant', {
         if (frm.doc.willing_to_work_on_location) {
             if (frm.doc.job_title) {
                 frappe.call({
-                    method: 'beams.beams.custom_scripts.job_applicant.job_applicant.fetch_location_from_job_opening',
+                    method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_job_opening_location',
                     args: {
-                        'job_title': frm.doc.job_title,
-                        'willing_to_work_on_location': frm.doc.willing_to_work_on_location
+                        'job_opening': frm.doc.job_title
                     },
                     callback: function (r) {
                         if (r.message) {
@@ -70,7 +69,13 @@ function handle_custom_buttons(frm) {
                     doc_name: frm.doc.name
                 },
                 callback: function (response) {
-                    if (response.message === 'no_report') {
+                    if (response.message) {
+                        frappe.db.get_doc('Local Enquiry Report', response.message).then(report => {
+                            frm.add_custom_button(__('Local Enquiry Report'), function () {
+                                frappe.set_route('Form', 'Local Enquiry Report', report.name);
+                            }, __('View'));
+                        });
+                    } else {
                         frm.add_custom_button(__('Local Enquiry Report'), function () {
                             frappe.call({
                                 method: 'beams.beams.custom_scripts.job_applicant.job_applicant.create_and_return_report',
@@ -87,32 +92,28 @@ function handle_custom_buttons(frm) {
                                 }
                             });
                         }, __('Create'));
-                    } else if (response.message) {
-                        frappe.db.get_doc('Local Enquiry Report', response.message).then(report => {
-                            frm.add_custom_button(__('Local Enquiry Report'), function () {
-                                frappe.set_route('Form', 'Local Enquiry Report', report.name);
-                            }, __('View'));
-                        });
                     }
                 }
             });
 
-            // Button for Sending Magic Link
-            frm.add_custom_button(__('Send Magic Link'), function () {
-                frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
-                    frappe.call({
-                        method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link',
-                        args: {
-                            applicant_id: frm.doc.name
-                        },
-                        callback: function (r) {
-                            if (r.message) {
-                                frappe.msgprint('Magic link has been sent to the candidate');
+            if (!frm.doc.is_form_submitted) {
+                // Button for Sending Magic Link
+                frm.add_custom_button(__('Send Magic Link'), function () {
+                    frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
+                        frappe.call({
+                            method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link',
+                            args: {
+                                applicant_id: frm.doc.name
+                            },
+                            callback: function (r) {
+                                if (r.message) {
+                                    frm.reload_doc();
+                                }
                             }
-                        }
+                        });
                     });
                 });
-            });
+            }
 
             if (frm.doc.status === 'Accepted') {
                 frm.add_custom_button(__('Training Completed'), function () {
@@ -146,6 +147,13 @@ function handle_custom_buttons(frm) {
             // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", or "Job Proposal Accepted"
             if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted'].includes(frm.doc.status)) {
                 frm.remove_custom_button(__('Interview'), __('Create'));
+            }
+
+            if (frm.doc.status === 'Open') {
+                frm.add_custom_button(__('Shortlist'), function () {
+                    frm.set_value('status', 'Shortlisted');
+                    frm.save();
+                }, __('Set Status'));
             }
         }
     }

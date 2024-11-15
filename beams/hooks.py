@@ -152,7 +152,6 @@ doc_events = {
         "validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
         "on_submit": "beams.beams.custom_scripts.quotation.quotation.create_tasks_for_production_items",
         "autoname": "beams.beams.custom_scripts.quotation.quotation.autoname"
-
     },
     "Purchase Invoice": {
         "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
@@ -184,7 +183,7 @@ doc_events = {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
         "before_save": "beams.beams.custom_scripts.sales_order.sales_order.validate_sales_order_amount_with_quotation",
         "before_insert": "beams.beams.custom_scripts.sales_order.sales_order.set_region_from_quotation"
-        },
+    },
     "Contract": {
         "on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
         "after_insert": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_creation",
@@ -195,16 +194,18 @@ doc_events = {
         "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
     },
     "Job Requisition": {
-        "on_update": ["beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
-                      "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"],
+        "on_update": [
+            "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
+            "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"
+        ]
     },
     "Journal Entry": {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
-        },
+    },
     "Job Applicant": {
         "validate": "beams.beams.custom_scripts.job_applicant.job_applicant.validate",
-        "before_save":"beams.beams.custom_scripts.job_applicant.job_applicant.fetch_interview_rounds"
-        },
+        "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
+    },
     "Department": {
        "validate": "beams.beams.custom_scripts.department.department.validate"
     },
@@ -216,8 +217,7 @@ doc_events = {
     "Interview Feedback": {
         "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.on_interview_feedback_creation"
     }
-
-    }
+}
 
 
 # Scheduled Tasks

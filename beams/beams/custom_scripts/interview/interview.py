@@ -161,8 +161,8 @@ def update_applicant_interview_round(doc, method):
 
         job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
-        # Find the corresponding interview round in the Job Applicant's applicant_interview_round table
-        for interview_round in job_applicant_doc.applicant_interview_round:
+        # Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
+        for interview_round in job_applicant_doc.applicant_interview_rounds:
             if interview_round.interview_round == doc.interview_round:
                 # Update the interview reference and status on creation or update
                 interview_round.interview_reference = doc.name
@@ -179,8 +179,8 @@ def mark_interview_completed(doc, method):
         if frappe.db.exists("Job Applicant", doc.job_applicant):
             job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
-            # Find the corresponding interview round in the Job Applicant's applicant_interview_round table
-            for interview_round in job_applicant_doc.applicant_interview_round:
+            # Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
+            for interview_round in job_applicant_doc.applicant_interview_rounds:
                 if interview_round.interview_round == doc.interview_round:
                     # Mark the interview as completed upon submission
                     interview_round.interview_completed = 1
@@ -189,7 +189,7 @@ def mark_interview_completed(doc, method):
                     break
 
             all_interviews_completed = True
-            for interview_round in job_applicant_doc.applicant_interview_round:
+            for interview_round in job_applicant_doc.applicant_interview_rounds:
                 if not interview_round.interview_completed:
                     all_interviews_completed = False
                     break
