@@ -1,5 +1,11 @@
 frappe.ui.form.on('Training Event', {
     refresh: function(frm) {
+      if (frm.doc.docstatus !== 1) {
+        setTimeout(() => {
+          frm.remove_custom_button('Training Result');
+          frm.remove_custom_button('Training Feedback');
+        }, 5);
+      }
         if (!frm.is_new() && frappe.user.has_role("HR Manager")) {
             // Create the main group button "Training Request"
             frm.add_custom_button("Training Request", () => {
