@@ -33,7 +33,7 @@ def after_install():
     create_custom_fields(get_job_offer_custom_fields(), ignore_validate=True)
     create_custom_fields(get_company_custom_fields(), ignore_validate=True)
     create_custom_fields(get_training_event_employee_custom_fields(), ignore_validate=True)
-
+    create_custom_fields(get_attendance_request_custom_fields(),ignore_validate=True)
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -76,6 +76,7 @@ def before_uninstall():
     delete_custom_fields(get_job_offer_custom_fields())
     delete_custom_fields(get_company_custom_fields())
     delete_custom_fields(get_training_event_employee_custom_fields())
+    delete_custom_fields(get_attendance_request_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -92,6 +93,37 @@ def delete_custom_fields(custom_fields: dict):
             },
         )
         frappe.clear_cache(doctype=doctype)
+
+def get_attendance_request_custom_fields():
+    """
+    Custom fields that need to be added to the Attendance Request DocType.
+    """
+    return {
+        "Attendance Request": [
+            {
+                "fieldname": "reports_to",
+                "fieldtype": "Link",
+                "label": "Reports To",
+                "options": "Employee",
+                "insert_after": "reason"
+            },
+            {
+                "fieldname": "reports_to_name",
+                "fieldtype": "Data",
+                "label": "Reports To Name",
+                "insert_after": "reports_to",
+                "fetch_from": "reports_to.employee_name"
+            },
+            {
+                "fieldname": "reports_to_user",
+                "fieldtype": "Link",
+                "label": "Reports To User",
+                "options": "User",
+                "insert_after": "reports_to_name",
+                "fetch_from": "reports_to.user_id"
+            }
+        ]
+    }
 
 def get_customer_custom_fields():
     '''
@@ -1816,7 +1848,14 @@ def get_property_setters():
             "field_name": "required_for_employee_creation",
             "property": "hidden",
             "property_type": "Check",
-            "value": 1
+            "value":1
+        },
+        {
+            "doctype_or_field":"DocField",
+            "doc_type": "Attendance Request",
+            "field_name": "reason",
+            "property": "options",
+            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForget to Checkin\nForget to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
         }
     ]
 
@@ -2103,6 +2142,12 @@ def get_custom_translations():
             'source_text': 'Quotation',
             'translated_text': 'Release Order',
             'language': 'en'
+        },
+        {
+            'doctype': 'Translation',
+            'source_text':'Attendance Request',
+            'translated_text':'Attendance Regularisation',
+            'language':'en'
         }
     ]
 
