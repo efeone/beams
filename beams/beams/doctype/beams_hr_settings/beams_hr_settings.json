@@ -15,7 +15,11 @@
   "column_break_nlxx",
   "notification_to_it",
   "it_hod",
-  "column_break_qbue"
+  "column_break_qbue",
+  "tab_3_tab",
+  "penalty_leave_type",
+  "column_break_pjdi",
+  "compensatory_leave_type"
  ],
  "fields": [
   {
@@ -73,12 +77,36 @@
   {
    "fieldname": "column_break_qbue",
    "fieldtype": "Column Break"
+  },
+  {
+   "description": "Leave Type for Double Shift Compensatory Leave",
+   "fieldname": "tab_3_tab",
+   "fieldtype": "Tab Break",
+   "label": " Leave Settings"
+  },
+  {
+   "description": "Leave Type for Unplanned Leave",
+   "fieldname": "penalty_leave_type",
+   "fieldtype": "Link",
+   "label": "Penalty Leave Type",
+   "options": "Leave Type"
+  },
+  {
+   "description": "Leave Type for Double Shift Compensatory Leave",
+   "fieldname": "compensatory_leave_type",
+   "fieldtype": "Link",
+   "label": "Compensatory Leave Type",
+   "options": "Leave Type"
+  },
+  {
+   "fieldname": "column_break_pjdi",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-08 15:10:42.837861",
+ "modified": "2024-11-15 16:56:49.566987",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
