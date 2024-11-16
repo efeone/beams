@@ -40,7 +40,7 @@
    "options": "Leave Allocation"
   },
   {
-   "fetch_from": "employee.first_name",
+   "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "label": "Employee Name"
@@ -66,7 +66,7 @@
   }
  ],
  "links": [],
- "modified": "2024-11-15 17:09:00.364846",
+ "modified": "2024-11-16 09:54:06.701739",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Compensatory Leave Log",
