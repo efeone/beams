@@ -1810,6 +1810,14 @@ def get_property_setters():
             "property": "hidden",
             "value": 1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Boarding Activity",
+            "field_name": "required_for_employee_creation",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        }
     ]
 
 def get_material_request_custom_fields():
