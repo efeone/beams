@@ -34,50 +34,74 @@ class JobProposal(Document):
         self.create_todo_on_pending_approval()
 
     def create_offer_from_job_proposal(self):
-        '''
-        Create a Job Offer when the Job Proposal is approved.
-        '''
-        if self.workflow_state == "Applicant Accepted":
-            job_offer = frappe.new_doc('Job Offer')
-            job_offer.job_applicant = self.job_applicant
-            job_offer.designation = self.designation
-            job_offer.offer_date = getdate(today())
-            job_offer.job_proposal = self.name
-            job_offer.ctc = self.proposed_ctc
-            job_offer.job_offer_term_template = self.job_offer_term_template
-            job_offer.select_terms = self.terms_and_conditions
-            job_offer.flags.ignore_mandatory = True
-            job_offer.flags.ignore_validate = True
-            job_offer.insert()
-            job_offer.submit()
-            frappe.msgprint('Job Offer Created: <a href="{0}">{1}</a>'.format(get_url_to_form(job_offer.doctype, job_offer.name), job_offer.name), alert=True, indicator='green')
+	    '''
+	    Create a Job Offer when the Job Proposal is approved.
+	    '''
+	    if self.workflow_state == "Applicant Accepted":
+	        job_offer = frappe.new_doc('Job Offer')
+	        job_offer.job_applicant = self.job_applicant
+	        job_offer.designation = self.designation
+	        job_offer.offer_date = getdate(today())
+	        job_offer.job_proposal = self.name
+	        job_offer.ctc = self.proposed_ctc
+	        job_offer.job_offer_term_template = self.job_offer_term_template
+	        job_offer.select_terms = self.terms_and_conditions
 
-            beams_hr_settings = frappe.get_doc("Beams HR Settings")
-            job_applicant_doc = frappe.get_doc('Job Applicant', self.job_applicant)
-            context = get_context(job_applicant_doc)
-            if beams_hr_settings.admin_hod and beams_hr_settings.notification_to_admin:
-                # Admin HOD Assignment
-                if frappe.db.exists('Employee', beams_hr_settings.admin_hod):
-                    admin_user = frappe.db.get_value('Employee', beams_hr_settings.admin_hod, 'user_id')
-                    if admin_user:
-                        admin_message = frappe.render_template(beams_hr_settings.notification_to_admin, context)
-                        add_assign({
-                            "assign_to": [admin_user],
-                            "doctype": "Job Applicant",
-                            "name": self.job_applicant,
-                            "description": admin_message
-                        })
-                # IT HOD Assignment
-                if frappe.db.exists('Employee', beams_hr_settings.it_hod):
-                    it_user = frappe.db.get_value('Employee', beams_hr_settings.it_hod, 'user_id')
-                    if it_user:
-                        it_message = frappe.render_template(beams_hr_settings.notification_to_it, context)
-                        add_assign({
-                            "assign_to": [it_user],
-                            "doctype": "Job Applicant",
-                            "name": self.job_applicant,
-                            "description": it_message
-                        })
+	        if self.terms_and_conditions and frappe.db.exists('Terms and Conditions', self.terms_and_conditions):
+	            terms_template = frappe.db.get_value('Terms and Conditions', self.terms_and_conditions, "terms")
+	            job_applicant_doc = frappe.get_doc('Job Applicant', self.job_applicant)
+	            job_offer.terms = frappe.render_template(terms_template, get_context(job_applicant_doc))
+
+	        if self.job_offer_term_template and frappe.db.exists('Job Offer Term Template', self.job_offer_term_template):
+	            template = frappe.get_doc('Job Offer Term Template', self.job_offer_term_template)
+	            for term in template.offer_terms:
+	                job_offer.append('offer_terms', {
+	                    'offer_term': term.offer_term,
+	                    'value': term.value
+	                })
+
+	        job_offer.flags.ignore_mandatory = True
+	        job_offer.flags.ignore_validate = True
+	        job_offer.insert()
+	        job_offer.submit()
+
+	        frappe.msgprint(
+	            'Job Offer Created: <a href="{0}">{1}</a>'.format(
+	                get_url_to_form(job_offer.doctype, job_offer.name),
+	                job_offer.name
+	            ),
+	            alert=True,
+	            indicator='green'
+	        )
+
+	        beams_hr_settings = frappe.get_doc("Beams HR Settings")
+	        job_applicant_doc = frappe.get_doc('Job Applicant', self.job_applicant)
+	        context = get_context(job_applicant_doc)
+
+	        if beams_hr_settings.admin_hod and beams_hr_settings.notification_to_admin:
+	            # Admin HOD Assignment
+	            if frappe.db.exists('Employee', beams_hr_settings.admin_hod):
+	                admin_user = frappe.db.get_value('Employee', beams_hr_settings.admin_hod, 'user_id')
+	                if admin_user:
+	                    admin_message = frappe.render_template(beams_hr_settings.notification_to_admin, context)
+	                    add_assign({
+	                        "assign_to": [admin_user],
+	                        "doctype": "Job Applicant",
+	                        "name": self.job_applicant,
+	                        "description": admin_message
+	                    })
+
+	            # IT HOD Assignment
+	            if frappe.db.exists('Employee', beams_hr_settings.it_hod):
+	                it_user = frappe.db.get_value('Employee', beams_hr_settings.it_hod, 'user_id')
+	                if it_user:
+	                    it_message = frappe.render_template(beams_hr_settings.notification_to_it, context)
+	                    add_assign({
+	                        "assign_to": [it_user],
+	                        "doctype": "Job Applicant",
+	                        "name": self.job_applicant,
+	                        "description": it_message
+	                    })
 
     def on_update_after_submit(self):
         """
