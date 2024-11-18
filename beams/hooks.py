@@ -228,7 +228,8 @@ doc_events = {
 scheduler_events = {
     "daily": [
         "beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue",
-        "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder"
+        "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
+        "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder"
     ],
 # 	"all": [
 # 		"beams.tasks.all"
