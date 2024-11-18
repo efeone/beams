@@ -46,7 +46,6 @@
    "label": "Employee Name"
   },
   {
-   "fetch_from": "employee.first_name",
    "fieldname": "section_break_dskx",
    "fieldtype": "Section Break"
   },
