@@ -53,7 +53,6 @@ def send_absent_reminder():
         filters={"attendance_date": target_date, "status": "Absent"},
         fields=["employee", "employee_name", "attendance_date"]
     )
-    print("Absent employees:", absent_employees)
 
     if absent_employees:
         for employee in absent_employees:
@@ -67,7 +66,6 @@ def send_absent_reminder():
                     "docstatus": 1,  # Leave application should be submitted
                 }
             )
-            print("Leave exists:", leave_exists)
 
             if not leave_exists:
                 # Send a reminder to the employee who was absent
