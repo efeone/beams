@@ -51,7 +51,7 @@ def create_job_opening_from_job_requisition(doc, method):
             # Insert the Job Opening document
             job_opening.insert()
             frappe.msgprint(
-                'Journal Opening Created: <a href="{0}">{1}</a>'.format(get_url_to_form(job_opening.doctype, job_opening.name), job_opening.name),
+                'Job Opening Created: <a href="{0}">{1}</a>'.format(get_url_to_form(job_opening.doctype, job_opening.name), job_opening.name),
                 alert=True, indicator='green')
 
 @frappe.whitelist()
