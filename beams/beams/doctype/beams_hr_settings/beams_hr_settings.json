@@ -11,8 +11,6 @@
   "notification_to_admin",
   "admin_hod",
   "column_break_gvvx",
-  "notification_to_it_department_for_login_credentials_section",
-  "column_break_nlxx",
   "notification_to_it",
   "it_hod",
   "column_break_qbue",
@@ -35,28 +33,19 @@
   },
   {
    "fieldname": "notification_to_admin_department_to_create_id_card_section",
-   "fieldtype": "Section Break",
-   "label": "Notification to Admin Department to Create ID Card"
+   "fieldtype": "Section Break"
   },
   {
-   "fieldname": "notification_to_it_department_for_login_credentials_section",
-   "fieldtype": "Section Break",
-   "label": "Notification to IT Department to Login Credentials"
-  },
-  {
-   "description": " ",
-   "fieldname": "column_break_nlxx",
-   "fieldtype": "Column Break"
-  },
-  {
-   "description": "Based on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
+   "description": "Notification Message to Admin Department to Create ID Card.\n\nHelp:\nBased on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
    "fieldname": "notification_to_admin",
-   "fieldtype": "Small Text"
+   "fieldtype": "Small Text",
+   "label": "Admin Notification Message"
   },
   {
-   "description": "Based on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
+   "description": "Notification Message to IT Department to Create Login Credentials. Help:\nBased on Job Applicant you can apply jinja formatting like {{ doc.name }} ",
    "fieldname": "notification_to_it",
-   "fieldtype": "Small Text"
+   "fieldtype": "Small Text",
+   "label": "IT Notification Message"
   },
   {
    "fieldname": "admin_hod",
@@ -106,7 +95,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-15 16:56:49.566987",
+ "modified": "2024-11-14 16:15:26.260627",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
