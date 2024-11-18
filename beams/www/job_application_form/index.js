@@ -1,4 +1,42 @@
 $(document).ready(function () {
+    const fileInput = document.getElementById('resume_attachment');
+    const placeholder = document.querySelector('.placeholder');
+
+    placeholder.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', () => {
+        const fileName = fileInput.files.length > 0 ? fileInput.files[0].name : 'No file chosen';
+        placeholder.textContent = `Selected: ${fileName}`;
+    });
+
+    var $form = $("form[id='employment_form']")
+    $form.on("change", "[type='file']", function () {
+        var $input = $(this);
+        var input = $input.get(0);
+        if (input.files.length) {
+            input.filedata = { "files_data": [] };
+            window.file_reading = true;
+            $.each(input.files, function (key, value) {
+                setupReader(value, input);
+            });
+            window.file_reading = false;
+        }
+    });
+
+    function setupReader(file, input) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            input.filedata.files_data.push({
+                "__file_attachment": 1,
+                "filename": file.name,
+                "dataurl": reader.result
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
     $('#employment_form').on('submit', function (event) {
         event.preventDefault();
 
@@ -10,21 +48,13 @@ $(document).ready(function () {
         const min_education_qual = frappe.utils.xss_sanitise($("#min_education_qual").val().trim());
         const job_title = frappe.utils.xss_sanitise($("#job_title").val().trim());
         const location = frappe.utils.xss_sanitise($("#location").val().trim());
-        const resume_attachment = frappe.utils.xss_sanitise($("#resume_attachment").val().trim());
+        var resume_attachment = $('#resume_attachment').prop('filedata')
 
-        // Define skill array to capture skills and ratings
-        const skill = [];
-        $("#skill_proficiency tbody tr").each(function () {
-            const skill_name = $(this).find('select[name="language"]').val();
-            const rating = $(this).find('input[type="radio"]:checked').val();
-            if (skill_name && rating) {
-                skill.push({ skill: skill_name, rating: rating });
-            }
-        });
+        const skills = get_skills_data();
 
         // Send form data to backend
         frappe.call({
-            method: "beams.www.job_application_form.index.submit_job_application",
+            method: "beams.www.job_application_form.index.create_job_applicant",
             args: {
                 "applicant_name": applicant_name,
                 "email_id": email_id,
@@ -34,49 +64,33 @@ $(document).ready(function () {
                 "job_title": job_title,
                 "location": location,
                 "resume_attachment": resume_attachment,
-                "skill_proficiency": JSON.stringify(skill)  // Pass skill array as JSON
+                "skill_proficiency": skills
             },
             callback: function (r) {
-                if (r.message === "Job application submitted successfully") {
-                    alert('Job application submitted successfully!');
-                } else {
-                    alert('Job application submitted successfully!');
-                }
+                window.location.reload()
             },
             error: function (err) {
-                alert('Job application submitted successfully!');
+                alert('Something went wrong, Please try again');
             }
         });
     });
-
-    document.getElementById('add-row-lang').addEventListener('click', function () {
-        const table = document.getElementById('skill_proficiency').getElementsByTagName('tbody')[0];
-        const rowCount = table.rows.length + 1;
-        const row = table.insertRow();
-
-        row.innerHTML = `
-      <td>${rowCount}</td>
-      <td>
-          <select id="skill_${rowCount}" name="language" style="background-color: #fff;">
-              <option value="">Select Skill</option>
-              {% for skill in skill %}
-                  <option value="{{ skill.name }}">{{ skill.skill_name }}</option>
-              {% endfor %}
-          </select>
-      </td>
-      <td>
-          <div class="star-rating">
-              <input type="radio" id="speak-${rowCount}-5" name="speak_${rowCount}" value="5">
-              <label for="speak-${rowCount}-5">&#9733;</label>
-              <input type="radio" id="speak-${rowCount}-4" name="speak_${rowCount}" value="4">
-              <label for="speak-${rowCount}-4">&#9733;</label>
-              <input type="radio" id="speak-${rowCount}-3" name="speak_${rowCount}" value="3">
-              <label for="speak-${rowCount}-3">&#9733;</label>
-              <input type="radio" id="speak-${rowCount}-2" name="speak_${rowCount}" value="2">
-              <label for="speak-${rowCount}-2">&#9733;</label>
-              <input type="radio" id="speak-${rowCount}-1" name="speak_${rowCount}" value="1">
-              <label for="speak-${rowCount}-1">&#9733;</label>
-          </div>
-      </td>`;
-    });
 });
+
+function deleteRow(button) {
+    var row = button.parentNode.parentNode;
+    row.parentNode.removeChild(row);
+}
+
+function get_skills_data() {
+    let skills = [];
+    $('#skills tbody tr').each(function () {
+        const row = {
+            language: $(this).find('select[name="skill"]').val(),
+            rating: $(this).find('input[name^="rating"]:checked').val() || 0,
+        };
+        if (row.language) {
+            skills.push(row);
+        }
+    });
+    return skills
+}

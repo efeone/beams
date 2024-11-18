@@ -16,7 +16,9 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 style="color: black; flex: 1; margin: auto;margin-bottom: 20px;">{{ job.job_title }}</h4>
                     <div class="apply-button">
-                        <button class="btn" id="applyBtn">Apply Now</button>
+                        <a href="/job_application_form?job_opening={{job.name}}">
+                            <button class="btn" id="applyBtn">Apply Now</button>
+                        </a>
                     </div>
                 </div>
             </div>

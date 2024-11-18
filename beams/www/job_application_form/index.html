@@ -12,7 +12,7 @@
 
 <body>
     <div class="container">
-        <form id="employment_form" action="#" method="post" style="padding: 50px;">
+        <form id="employment_form" method="post" style="padding: 50px;">
             <div class="form-section active" id="tab-0">
                 <div class="row" style="width: 31%;">
                     <div class="column">
@@ -28,7 +28,7 @@
                 <div class="row">
                     <div class="column">
                         <label for="applicant-name">Applicant Name</label>
-                        <input type="text" id="applicant_name" name="applicant_name" placeholder="Full name" required>
+                        <input type="text" id="applicant_name" name="applicant_name" required>
                     </div>
                     <div class="column">
                         <label for="phone-number">Phone Number</label>
@@ -71,91 +71,111 @@
                             </select>
                         </div>
                     </div>
-
                 </div>
-
-
-                <h6><b>Skill Proficiency </b></h6>
-                <div class="row tax-details">
-                    <table id="skill_proficiency">
+                <br>
+                <div class="row">
+                    <label for="skills">Skill Proficiency</label>
+                    <table id="skills">
                         <thead>
                             <tr>
-                                <th>No.</th>
-                                <th>Skill</th>
-                                <th>Proficiency</th>
+                                <th class="idx-col">No</th>
+                                <th>Language</th>
+                                <th>Rating</th>
+                                <th class="delete-column"></th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>1</td>
+                                <td class="idx-col">1</td>
                                 <td>
-                                    {% set skill = frappe.get_all('Skill', fields=['name', 'skill_name']) %}
-                                    <select id="skill" name="language" style="background-color: #fff;">
+                                    <select name="skill" class="form-control tab-select">
                                         <option value="">Select Skill</option>
-                                        {% for skill in skill%}
+                                        {% for skill in skills %}
                                         <option value="{{ skill.name }}">{{ skill.skill_name }}</option>
                                         {% endfor %}
                                     </select>
                                 </td>
                                 <td>
                                     <div class="star-rating">
-                                        <input type="radio" id="speak-5" name="speak" value="1"><label
-                                            for="speak-5">&#9733;</label>
-                                        <input type="radio" id="speak-4" name="speak" value="0.8"><label
-                                            for="speak-4">&#9733;</label>
-                                        <input type="radio" id="speak-3" name="speak" value="0.6"><label
-                                            for="speak-3">&#9733;</label>
-                                        <input type="radio" id="speak-2" name="speak" value="0.4"><label
-                                            for="speak-2">&#9733;</label>
-                                        <input type="radio" id="speak-1" name="speak" value="0.2"><label
-                                            for="speak-1">&#9733;</label>
+                                        <input type="radio" id="rating-5" name="rating" value="1"><label
+                                            for="rating-5">&#9733;</label>
+                                        <input type="radio" id="rating-4" name="rating" value="0.8"><label
+                                            for="rating-4">&#9733;</label>
+                                        <input type="radio" id="rating-3" name="rating" value="0.6"><label
+                                            for="rating-3">&#9733;</label>
+                                        <input type="radio" id="rating-2" name="rating" value="0.4"><label
+                                            for="rating-2">&#9733;</label>
+                                        <input type="radio" id="rating-1" name="rating" value="0.2"><label
+                                            for="rating-1">&#9733;</label>
                                     </div>
+                                </td>
+                                <td class="delete-column">
+                                    &nbsp;&nbsp;<button type="button" class="delete-row-btn"
+                                        onclick="deleteRow(this)">Delete</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-
                     <div class="add-buttons">
-                        <button type="button" id="add-row-lang">Add Row</button>
+                        <button type="button" id="add-skills-row">Add Row</button>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="column">
-                        <input type="file" id="resume_attachment" class="sr-only" aria-label="resume_attachment">
-                        <label for="resume_attachment" class="btn" aria-hidden="true">Upload Resume</label>
+                    <div class="file-input-container">
+                        <label for="resume_attachment" class="placeholder">
+                            Click to upload Resume
+                        </label>
+                        <input type="file" id="resume_attachment" name="file">
                     </div>
                 </div>
                 <div class="row" style="text-align: center;">
                     <div class="column">
-                        <button type="submit">Submit Application</button>
+                        <button type="submit" class="submit-button">Submit Application</button>
                     </div>
                 </div>
-
             </div>
         </form>
 
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.min.js"></script>
+        <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
+        <script>
+            document.getElementById('add-skills-row').addEventListener('click', function () {
+                add_skills_row();
+            });
+            function add_skills_row() {
+                var table = document.getElementById('skills').getElementsByTagName('tbody')[0];
+                var rowCount = table.rows.length;
+                var row = table.insertRow(rowCount);
 
-        <div class="modal fade" id="successModal" tabindex="-1" role="dialog" aria-labelledby="successModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="successModalLabel">Success</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
+                // Insert cells and their contents
+                var cell1 = row.insertCell(0);
+                var cell2 = row.insertCell(1);
+                var cell3 = row.insertCell(2);
+                var cell4 = row.insertCell(3);
+
+                // Add content to cells
+                cell1.innerHTML = rowCount + 1;
+                cell1.className = "idx-col"
+                cell2.innerHTML = '<select name="language" class="form-control tab-select"> <option value="">Select Skill</option> {% for skill in skills %} <option value="{{ skill.name }}">{{ skill.skill_name }}</option> {% endfor %} </select>';
+                cell3.innerHTML = get_star_rating_html('rating' + (rowCount + 1));
+                cell4.innerHTML = '&nbsp;&nbsp;<button type="button" class="delete-row-btn" onclick="deleteRow(this)">Delete</button>'
+                cell4.className = "delete-column"
+            }
+
+            function get_star_rating_html(name) {
+                return `
+                    <div class="star-rating">
+                        <input type="radio" id="${name}_star5" name="${name}" value="1"><label for="${name}_star5">&#9733;</label>
+                        <input type="radio" id="${name}_star4" name="${name}" value="0.8"><label for="${name}_star4">&#9733;</label>
+                        <input type="radio" id="${name}_star3" name="${name}" value="0.6"><label for="${name}_star3">&#9733;</label>
+                        <input type="radio" id="${name}_star2" name="${name}" value="0.4"><label for="${name}_star2">&#9733;</label>
+                        <input type="radio" id="${name}_star1" name="${name}" value="0.2"><label for="${name}_star1">&#9733;</label>
                     </div>
-                    <div class="modal-body">
-                        <h3>Application <span id="docname"></span> Created Successfully.</h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+                `;
+            }
+        </script>
 </body>
 
 </html>
