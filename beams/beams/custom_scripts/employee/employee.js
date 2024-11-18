@@ -26,7 +26,7 @@ frappe.ui.form.on('Employee', {
                     }
                 });
             }, 'Create');
-        }
+
 
         // Check if employee name exists for the logged-in user and add 'Event' button if available
         frappe.call({
@@ -49,5 +49,6 @@ frappe.ui.form.on('Employee', {
                 }
             }
         });
+      }
     }
 });
