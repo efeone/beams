@@ -75,7 +75,7 @@ def send_reminder_email(employee):
     """Send an email reminder to the absent employee to submit a leave application."""
 
     # Prepare email content
-    subject = f"Reminder: Submit Leave Application for Absent on {format_date(employee['attendance_date'])}"
+    subject = f"Reminder: Submit Leave Application for Absence on {format_date(employee['attendance_date'])}"
     message = f"""
     <p>Dear {employee['employee_name']},</p>
     <p>You were marked as <strong>Absent</strong> on {format_date(employee['attendance_date'])}.
