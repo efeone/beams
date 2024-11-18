@@ -1,0 +1,97 @@
+{% extends "templates/base.html" %}
+
+{% block content %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<div class="container mt-5">
+    <h3>{{ _("Job Portal") }}</h3>
+
+    <form id="jobFilterForm">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="designation">Designation</label>
+                    <select name="designation" class="form-control" id="designation">
+                        <option value="">Select Designation</option>
+                        {% for designation in context.designations %}
+                        <option value="{{designation.designation}}" {% if context.designation==designation.designation
+                            %}selected{% endif %}>
+                            {{designation.designation}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="location">Location</label>
+                    <select name="location" class="form-control" id="location">
+                        <option value="">Select location</option>
+                        {% for location in context.job_locations %}
+                        <option value="{{location.location}}" {% if context.job_location==location.location %}selected{%
+                            endif %}>
+                            {{location.location}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="employment_type">Employment Type</label>
+                    <select name="employment_type" class="form-control" id="type">
+                        <option value="">Select type</option>
+                        {% for employment_type in context.employment_types %}
+                        <option value="{{employment_type.employment_type}}" {% if
+                            context.employment_type==employment_type.employment_type %}selected{% endif %}>
+                            {{employment_type.employment_type}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <hr>
+
+    <div class="card-grid row">
+        {% for job in jobs %}
+        <div class="card-grid-items col-md-4">
+            <div class="card job-interest-container job-interest-card">
+                <div class="card-body">
+                    <div class="card-title-location">
+                        <p class="card-title">{{ job.job_title }}</p>
+                        <p class="location" style="color: #437562">Location: {{ job.location or 'Not Specified' }}</p>
+                    </div>
+                    <p class="card-text"><i class="fas fa-briefcase"></i> Employment Type: {{ job.employment_type }}</p>
+                    {% if job.publish_salary_range and job.salary_range %}
+                    <p class="card-text"><i class="fas fa-coins"></i> {{ job.salary_range }}</p>
+                    {% endif %}
+                    {% if job.publish_applications_received %}
+                    <p class="card-text">
+                        <i class="fas fa-users"></i> Applications received: {{ job.no_of_applications}}
+                    </p>
+                    {% endif %}
+                    {% if job.closes_on %}
+                    <p class="card-text">
+                        <i class="fas fa-calendar-day"></i>
+                        Closes on: {{ frappe.format_date(job.closes_on, "d MMM, YYYY")}}
+                    </p>
+                    {% endif %}
+                    <div class="date-and-button">
+                        <div class="details-button">
+                            <button class="btn btn-info float-md-right">
+                                <a href="/job_portal/job?job_opening={{ job.name }}"
+                                    style="color: white;text-decoration: none;">
+                                    View Details
+                                </a>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="/index.js"></script>
+{%- endblock -%}
