@@ -1,0 +1,243 @@
+:root {
+    --ff-h-mt-text-rg: "HelveticaNowMTText", "HelveticaNowMTTextRegular", "Helvetica Now MT Text", Arial, sans-serif;
+}
+
+body {
+    background-color: #fff;
+    color: #333;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    padding: 10px;
+}
+
+h1,
+h2 {
+    text-align: center;
+    font-weight: 400;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.form-section {
+    display: none;
+    background-color: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 50px;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 22px;
+}
+
+.column {
+    flex: 1;
+    min-width: 30%;
+}
+
+label {
+    font-weight: 400;
+    margin-bottom: 10px;
+    display: block;
+    color: #444;
+    font-size: 13px;
+}
+
+input,
+textarea {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #fff;
+    border-radius: 10px;
+    background-color: #f7f7f7;
+    font-size: 13px;
+}
+
+.submit-button {
+    text-align: center;
+    width: 20%;
+    padding: 12px;
+    background-color: #000000;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 400;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.star-rating {
+    display: inline-flex;
+    direction: rtl;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    font-size: 25px;
+    color: lightgray;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.star-rating label:hover,
+.star-rating label:hover~label {
+    color: gold;
+}
+
+.star-rating input:checked~label {
+    color: gold;
+}
+
+.star-wrapper i {
+    cursor: pointer;
+    color: #ccc;
+}
+
+.star-wrapper i.selected {
+    color: #f39c12;
+}
+
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: 'Arial', sans-serif;
+    overflow: hidden;
+}
+
+table thead {
+    background-color: #f4f4f4;
+}
+
+th,
+td {
+    color: #000;
+    border: 1px solid #ddd;
+}
+
+th {
+    padding: 4px;
+    color: var(--gray-600);
+    background-color: #f7f7f7;
+    font-weight: bold;
+}
+
+button {
+    background-color: #f7f7f7;
+    border: none;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.delete-row-btn {
+    background-color: #f7f7f7;
+}
+
+.delete-row-btn:hover {
+    background-color: #f7f7f7;
+}
+
+
+@media (max-width: 600px) {
+
+    table,
+    th,
+    td {
+        display: block;
+        width: 100%;
+    }
+
+    thead {
+        display: none;
+    }
+
+    td {
+        text-align: right;
+        position: relative;
+        padding-left: 50%;
+    }
+
+    td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0;
+        padding-left: 10px;
+        font-weight: bold;
+        text-align: left;
+    }
+}
+
+.btn {
+    display: inline-block;
+    padding: .5rem 1rem;
+    border-radius: 10px;
+    color: black;
+    background-color: #f7f7f7;
+    cursor: pointer;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    color: #4C5A67;
+    background-color: #F4F5F6;
+    border: 1px solid #F4F5F6;
+    border-radius: 0.375rem;
+}
+
+form {
+    max-width: initial;
+    margin: 20px auto;
+}
+
+.idx-col {
+    text-align: center;
+    width: 5%;
+}
+
+.tab-select {
+    border: none !important;
+    background: transparent !important;
+}
+
+.delete-column {
+    width: 10%;
+    border-right: none;
+    border-top: none;
+    border-bottom: none;
+    background: #ffffff;
+}
+
+.file-input-container {
+    margin: 20px;
+}
+
+.placeholder {
+    padding: 10px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    text-align: center;
+    color: #666;
+    cursor: pointer;
+}
+
+input[type="file"] {
+    display: none;
+}
