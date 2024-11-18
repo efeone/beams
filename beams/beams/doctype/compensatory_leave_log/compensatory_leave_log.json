@@ -20,8 +20,10 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "start_date",
@@ -65,7 +67,7 @@
   }
  ],
  "links": [],
- "modified": "2024-11-16 09:54:06.701739",
+ "modified": "2024-11-18 15:41:30.615408",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Compensatory Leave Log",
