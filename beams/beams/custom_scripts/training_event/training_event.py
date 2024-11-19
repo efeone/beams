@@ -22,3 +22,12 @@ def on_update(doc,method):
     if doc.event_status in status_mapping:
         for row in doc.employees:
             frappe.db.set_value("Training Request", row.training_request, "status", status_mapping[doc.event_status])
+
+@frappe.whitelist()
+def on_cancel(doc, method):
+    """
+    Updates the status of linked Training Requests to 'Open' when a Training Event is canceled.
+    """
+    for row in doc.employees:
+        if row.training_request:
+            frappe.db.set_value("Training Request", row.training_request, "status", "Open")
