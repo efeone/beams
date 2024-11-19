@@ -19,10 +19,9 @@ app_license = "mit"
 
 # website_generators = ["Job Application"]
 
-website_route_rules = [
-    {"from_route": "/job_application/new", "to_route": "job_application"},
-    {"from_route": "/job_opening/<job_title>", "to_route": "job_opening"},
-]
+# website_route_rules = [
+#     {"from_route": "/job_application/new", "to_route": "job_application"}
+# ]
 
 
 # include custom scss in every website theme (without file extension ".scss")
