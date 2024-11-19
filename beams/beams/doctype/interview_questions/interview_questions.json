@@ -1,38 +1,41 @@
 {
  "actions": [],
  "allow_rename": 1,
- "creation": "2024-10-18 12:28:30.691639",
+ "creation": "2024-11-19 18:00:55.304107",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
   "question",
+  "answer",
   "weight"
  ],
  "fields": [
   {
-   "columns": 2,
-   "fieldname": "question",
+   "fieldname": "answer",
    "fieldtype": "Small Text",
+   "label": "Answer"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight"
+  },
+  {
+   "fieldname": "question",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Question",
    "reqd": 1
-  },
-  {
-   "columns": 2,
-   "fieldname": "weight",
-   "fieldtype": "Float",
-   "in_list_view": 1,
-   "label": "Weight"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-08 15:27:55.407234",
+ "modified": "2024-11-19 18:25:08.883158",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Expected Question Set",
+ "name": "Interview Questions",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
