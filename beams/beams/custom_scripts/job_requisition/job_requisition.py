@@ -27,6 +27,7 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.no_of_positions = doc.no_of_positions
             job_opening.no_of_days_off = doc.no_of_days_off
             job_opening.preffered_location = doc.location
+            job_opening.publish = 1
             #Setting Skill Proficiency
             for skill in doc.skill_proficiency:
                 job_opening.append('skill_proficiency', {
