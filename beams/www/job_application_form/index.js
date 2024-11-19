@@ -67,6 +67,7 @@ $(document).ready(function () {
                 "skill_proficiency": skills
             },
             callback: function (r) {
+                alert("Your Application has been submitted!");
                 window.location.reload()
             },
             error: function (err) {

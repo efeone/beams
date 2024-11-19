@@ -44,8 +44,6 @@ def create_job_applicant(applicant_name, email_id, phone_number, min_experience=
 	job_applicant_doc.save(ignore_permissions=True)
 	filename = upload_file(resume_attachment, job_applicant_doc.doctype, job_applicant_doc.name, 'resume_attachment')
 	frappe.db.set_value(job_applicant_doc.doctype, job_applicant_doc.name, 'resume_attachment', filename)
-
-	frappe.msgprint("Your Application has been submitted")
 	return 1
 
 @frappe.whitelist(allow_guest=True)
