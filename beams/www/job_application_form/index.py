@@ -41,7 +41,7 @@ def create_job_applicant(applicant_name, email_id, phone_number, min_experience=
 			pass
 
 	job_applicant_doc.flags.ignore_mandatory = True
-	job_applicant_doc.insert()
+	job_applicant_doc.save(ignore_permissions=True)
 	filename = upload_file(resume_attachment, job_applicant_doc.doctype, job_applicant_doc.name, 'resume_attachment')
 	frappe.db.set_value(job_applicant_doc.doctype, job_applicant_doc.name, 'resume_attachment', filename)
 
