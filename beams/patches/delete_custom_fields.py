@@ -32,6 +32,10 @@ fields_to_remove = [
     {
         'dt':'Job Applicant',
         'fieldname':'applicant_interview_round'
+    },
+    {
+        'dt':'Interview Round',
+        'fieldname':'expected_question_set'
     }
 ]
 

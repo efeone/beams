@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class ExpectedQuestionSet(Document):
+class InterviewQuestions(Document):
 	pass

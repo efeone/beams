@@ -7,8 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "question",
-  "weight",
   "answer",
+  "applicant_answer",
+  "weight",
   "score"
  ],
  "fields": [
@@ -27,19 +28,23 @@
   {
    "fieldname": "answer",
    "fieldtype": "Small Text",
-   "label": "Answer",
-   "reqd": 1
+   "label": "Answer"
   },
   {
    "fieldname": "score",
    "fieldtype": "Float",
    "label": "Score"
+  },
+  {
+   "fieldname": "applicant_answer",
+   "fieldtype": "Small Text",
+   "label": "Applicant Answer"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-22 14:20:28.447524",
+ "modified": "2024-11-19 18:18:32.235947",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Interview Question Result",
