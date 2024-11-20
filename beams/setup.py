@@ -34,6 +34,7 @@ def after_install():
     create_custom_fields(get_company_custom_fields(), ignore_validate=True)
     create_custom_fields(get_training_event_employee_custom_fields(), ignore_validate=True)
     create_custom_fields(get_attendance_request_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_shift_assignment_custom_fields(),ignore_validate=True)
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -77,6 +78,7 @@ def before_uninstall():
     delete_custom_fields(get_company_custom_fields())
     delete_custom_fields(get_training_event_employee_custom_fields())
     delete_custom_fields(get_attendance_request_custom_fields())
+    delete_custom_fields(get_shift_assignment_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -93,6 +95,23 @@ def delete_custom_fields(custom_fields: dict):
             },
         )
         frappe.clear_cache(doctype=doctype)
+
+def get_shift_assignment_custom_fields():
+    '''
+    Custom fields that need to be added to the Shift Assignment DocType
+    '''
+    return {
+        "Shift Assignment": [
+            {
+                "fieldname": "roster_type",
+                "fieldtype": "Select",
+                "label": "Roster Type",
+                "options":"\nRegular\nOT",
+                "insert_after": "shift_type"
+            }
+        ]
+    }
+
 
 def get_attendance_request_custom_fields():
     """
@@ -1653,6 +1672,13 @@ def get_property_setters():
             "doc_type": "Job Requisition",
             "field_name": "status",
             "property": "read_only",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Leave Allocation",
+            "field_name": "to_date",
+            "property": "allow_on_submit",
             "value": 1
         },
         {
