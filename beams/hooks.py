@@ -226,8 +226,14 @@ doc_events = {
     "Interview Feedback": {
         "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.after_insert",
         "validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate"
+    },
+    "Employee Checkin":{
+        "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
+    },
+    "Leave Allocation":{
+        "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
+        "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
     }
-
 }
 
 
