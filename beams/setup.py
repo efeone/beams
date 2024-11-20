@@ -1856,7 +1856,23 @@ def get_property_setters():
             "field_name": "reason",
             "property": "options",
             "value": "\nWork From Home\nOn Duty\nOn Deputation\nForget to Checkin\nForget to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Skill Assessment",
+            "field_name": "rating",
+            "property": "reqd",
+            "property_type": "Check",
+            "value":0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Skill Assessment",
+            "field_name": "rating",
+            "property": "read_only",
+            "property_type": "Check",
+            "value":1
+        },
     ]
 
 def get_material_request_custom_fields():
@@ -2085,7 +2101,8 @@ def get_skill_assessment_custom_fields():
                 "fieldtype": "Float",
                 "label": "Score",
                 "reqd": 1,
-                "insert_after":"skill"
+                "insert_after":"skill",
+                "in_list_view": 1
             },
             {
                 "fieldname": "remarks",
@@ -2096,7 +2113,7 @@ def get_skill_assessment_custom_fields():
             {
                 "fieldname": "weight",
                 "fieldtype": "Float",
-                "label": "weight",
+                "label": "Weight",
                 "insert_after":"remarks"
             }
         ]
