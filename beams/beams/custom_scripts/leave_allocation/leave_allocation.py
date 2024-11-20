@@ -44,7 +44,6 @@ def create_new_log_on_update(doc, method):
         })
         log_doc.insert()
 
-    frappe.db.commit()
 
 
 def create_new_compensatory_leave_log(doc, method):
@@ -83,5 +82,3 @@ def create_new_compensatory_leave_log(doc, method):
         "end_date": end_date,
     })
     log_doc.insert()
-
-    frappe.db.commit()

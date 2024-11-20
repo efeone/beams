@@ -60,5 +60,3 @@ def handle_employee_checkin_out(doc, method):
         })
         leave_allocation_doc.insert()
         leave_allocation_doc.submit()
-
-    frappe.db.commit()
