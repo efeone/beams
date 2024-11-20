@@ -1,49 +1,33 @@
 import frappe
+from frappe import _
 
-def on_interview_feedback_creation(doc, method):
-    '''
-    Update the Job Applicant's status to 'Interview Ongoing' when an Interview Feedback is created.
-    '''
-    if frappe.db.exists("Job Applicant", doc.job_applicant):
-        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
-        if job_applicant_doc.status != "Interview Ongoing":
-            job_applicant_doc.status = "Interview Ongoing"
-            job_applicant_doc.save()
+def after_insert(doc, method):
+	'''
+		Method which trigger on after insert of Interview Feedback
+	'''
+	on_interview_feedback_creation(doc)
+
+def validate(doc, method):
+	'''
+		Method which trigger on validate of Interview Feedback
+	'''
+	for row in doc.skill_assessment:
+		rating = 0
+		if row.score:
+			if row.score>10 or row.score<0:
+				frappe.throw(_("Score for skill {0} must be a number between 0 and 10.").format(frappe.bold(row.skill)))
+			rating = float(row.score)/10
+		row.rating = rating
+
+def on_interview_feedback_creation(doc):
+	'''
+		Update the Job Applicant's status to 'Interview Ongoing'
+	'''
+	if frappe.db.exists('Job Applicant', doc.job_applicant):
+		current_status = frappe.db.get_value('Job Applicant', doc.job_applicant, 'status')
+		if current_status != 'Interview Ongoing':
+			frappe.db.set_value('Job Applicant', doc.job_applicant, 'status', 'Interview Ongoing')
 
 @frappe.whitelist()
-def fetch_details_from_interview_round(interview_round):
-    '''
-    Fetches skills and questions from the specified Interview Round.
-    '''
-    if not interview_round:
-        frappe.throw("Please select a valid Interview Round.")
-
-    if not frappe.db.exists("Interview Round", interview_round):
-        frappe.throw(f"Interview Round '{interview_round}' does not exist.")    
-
-    interview_round_doc = frappe.get_doc("Interview Round", interview_round)
-
-    skills = []
-    if interview_round_doc.expected_skill_set:
-        for skill in interview_round_doc.expected_skill_set:
-            skills.append({
-                "skill": skill.skill,
-                "weight": skill.weight
-            })
-    else:
-        frappe.msgprint('No skills found in the selected Interview Round')
-
-    questions = []
-    if interview_round_doc.expected_question_set:
-        for question in interview_round_doc.expected_question_set:
-            questions.append({
-                "question": question.question,
-                "weight": question.weight
-            })
-    else:
-        frappe.msgprint('No questions found in the selected Interview Round')
-
-    return {
-        "skills": skills,
-        "questions": questions
-    }
+def get_interview_questions(interview_round):
+	return frappe.get_all('Interview Questions', filters ={'parent': interview_round}, fields=['question', 'answer', 'weight'])

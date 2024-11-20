@@ -224,7 +224,8 @@ doc_events = {
         "on_update": "beams.beams.custom_scripts.interview.interview.update_applicant_interview_round"
     },
     "Interview Feedback": {
-        "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.on_interview_feedback_creation"
+        "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.after_insert",
+        "validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate"
     }
 
 }
