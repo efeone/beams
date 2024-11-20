@@ -26,7 +26,7 @@
         <div class="row">
             <div class="col-md-6">
                 <p><i class="fas fa-briefcase"></i> Job ID: <span style="color: red;">{{ job.name }}</span></p>
-                <p><i class="fas fa-map-marker-alt"></i> Location: {{ job.location or 'Not Specified' }} </p>
+                <p><i class="fas fa-map-marker-alt"></i> Location: {{ job.preffered_location or 'Not Specified' }} </p>
                 <p><i class="fas fa-briefcase"></i> Employment type: {{ job.employment_type or 'Not Specified' }} </p>
                 {%- if job.posted_on -%}
                 <p><i class="far fa-calendar-alt"></i> Published date: {{ job.get_formatted("posted_on") }} </p>
@@ -36,8 +36,9 @@
                 {%- endif -%}
             </div>
             <div class="col-md-6">
-                <p><i class="fas fa-graduation-cap"></i> Qualification: {{ education_qualification or 'Not
-                    Specified' }}
+                <p>
+                    <i class="fas fa-graduation-cap"></i>
+                    Preffered Qualifications: {{ educational_qualifications or 'Not Specified' }}
                 </p>
                 <p><i class="fas fa-user-tie"></i>
                     Minimum Experience Required:

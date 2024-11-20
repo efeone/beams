@@ -31,8 +31,9 @@
                         <input type="text" id="applicant_name" name="applicant_name" required>
                     </div>
                     <div class="column">
-                        <label for="phone-number">Phone Number</label>
-                        <input type="text" id="phone_number" name="phone_number">
+                        <label for="phone-number">Mobile Number</label>
+                        <input type="tel" id="phone_number" name="phone_number" pattern="[0-9]{10}" maxlength="10"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
                     </div>
                     <div class="column">
                         <label for="email">Email ID</label>
