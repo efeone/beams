@@ -68,7 +68,7 @@ $(document).ready(function () {
             },
             callback: function (r) {
                 alert("Your Application has been submitted!");
-                window.location.reload()
+                window.location.href = '/job_portal';
             },
             error: function (err) {
                 alert('Something went wrong, Please try again');
@@ -77,19 +77,14 @@ $(document).ready(function () {
     });
 });
 
-function deleteRow(button) {
-    var row = button.parentNode.parentNode;
-    row.parentNode.removeChild(row);
-}
-
 function get_skills_data() {
     let skills = [];
     $('#skills tbody tr').each(function () {
         const row = {
-            language: $(this).find('select[name="skill"]').val(),
+            skill: $(this).find('select[name="skill"]').val(),
             rating: $(this).find('input[name^="rating"]:checked').val() || 0,
         };
-        if (row.language) {
+        if (row.skill) {
             skills.push(row);
         }
     });
