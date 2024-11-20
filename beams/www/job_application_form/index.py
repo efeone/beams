@@ -12,7 +12,7 @@ def get_context(context):
 		frappe.log_error(str(frappe.form_dict.job_opening), 'Invalid Job Application Link')
 		frappe.throw(_("Sorry, the link you were using is not valid."), frappe.PermissionError)
 	context.job_opening = job_opening
-	context.skills = frappe.db.get_all('Skill', ['name', 'skill_name'])
+	context.skills = get_skills_from_opening(opening)
 
 @frappe.whitelist(allow_guest=True)
 def create_job_applicant(applicant_name, email_id, phone_number, min_experience=None, min_education_qual=None, job_title=None, location=None, resume_attachment=None, skill_proficiency=None):
@@ -67,3 +67,13 @@ def upload_file(filedata, doctype, docname, docfield):
 				file_name = filedoc.file_url
 	frappe.db.commit()
 	return file_name
+
+@frappe.whitelist()
+def get_skills_from_opening(job_opening):
+	'''
+        Method to get Skills from Job Opening
+	'''
+	skills = []
+	if frappe.db.exists('Job Opening', job_opening):
+		skills = frappe.db.get_all('Skill Proficiency', { 'parent':job_opening }, 'skill')
+	return skills
