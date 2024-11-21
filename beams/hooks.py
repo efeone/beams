@@ -163,6 +163,10 @@ doc_events = {
     },
     "Purchase Invoice": {
         "before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
+
+    },
+    "Training Event": {
+         "on_update": "beams.beams.custom_scripts.training_event.training_event.on_update"
     },
     "Account": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
@@ -233,6 +237,9 @@ doc_events = {
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
+    },
+    "Leave Application": {
+        "validate":"beams.beams.custom_scripts.leave_application.leave_application.validate_leave_application"
     }
 }
 
