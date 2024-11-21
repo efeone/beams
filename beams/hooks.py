@@ -143,8 +143,10 @@ permission_query_conditions = {
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# "ToDo": "custom_app.overrides.CustomToDo"# }
+override_doctype_class = {
+    "Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
+    "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride"
+}
 
 # Document Events
 # ---------------
