@@ -1,7 +1,7 @@
 import json
 import frappe
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import nowdate, get_url_to_form
+from frappe.utils import now_datetime, get_url_to_form
 
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
@@ -14,7 +14,7 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.job_title = doc.job_title
             job_opening.designation = doc.designation
             job_opening.status = 'Open'
-            job_opening.posted_on = nowdate()
+            job_opening.posted_on = now_datetime()
             job_opening.department = doc.department
             job_opening.employment_type = doc.employment_type
             # Setting Minimum Educational Qualification
@@ -76,7 +76,7 @@ def close_job_openings(doc):
     job_openings = frappe.db.get_all('Job Opening', {'job_requisition': doc.name, 'status':['!=', 'Closed'] })
     for job_opening in job_openings:
         frappe.db.set_value('Job Opening', job_opening.name, 'status', 'Closed')
-        frappe.db.set_value('Job Opening', job_opening.name, 'closed_on',  nowdate())
+        frappe.db.set_value('Job Opening', job_opening.name, 'closed_on',  now_datetime())
         frappe.msgprint('Job Opening {0} has been closed'.format(job_opening.name), alert=True, indicator='green')
 
 @frappe.whitelist()

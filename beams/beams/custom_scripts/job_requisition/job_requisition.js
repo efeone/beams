@@ -13,6 +13,12 @@ frappe.ui.form.on('Job Requisition', {
         // To clear all custom buttons from the form
         frm.clear_custom_buttons();
         set_filters(frm);
+        if (frm.doc.status === 'Cancelled') {
+            const connections = frm.dashboard.links;
+            if (connections['Job Opening']) {
+                connections['Job Opening'].$link.find('.btn-new-doc').hide();
+            }
+        }
     },
     request_for: function (frm) {
         if (frm.doc.request_for) {
