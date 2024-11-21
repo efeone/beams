@@ -1564,7 +1564,7 @@ def get_job_opening_custom_fields():
             {
                "fieldname": "min_education_qual",
                 "fieldtype": "Table MultiSelect",
-                "label": "Minimum Educational Qualification",
+                "label": "Preferred Educational Qualification",
                 'options':"Educational Qualifications",
                 "insert_after": "qualification_details"
             },
