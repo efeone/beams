@@ -53,6 +53,7 @@ doctype_js = {
     "Event":"beams/custom_scripts/event/event.js",
     "Training Event":"beams/custom_scripts/training_event/training_event.js",
     "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js"
+
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -226,6 +227,7 @@ doc_events = {
     "Interview Feedback": {
         "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.after_insert",
         "validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate"
+
     },
     "Employee Checkin":{
         "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
@@ -233,6 +235,10 @@ doc_events = {
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
+
+    },
+    "Compensatory Leave Log" : {
+        "on_update": "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.process_expired_compensatory_leaves"
     }
 }
 
@@ -244,11 +250,14 @@ scheduler_events = {
     "daily": [
         "beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue",
         "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
-        "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder"
-    ],
+        "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.process_expired_compensatory_leaves"
+    ]
+
+
 # 	"all": [
 # 		"beams.tasks.all"
 # 	],
+
 # 	"daily": [
 # 		"beams.tasks.daily"
 # 	],
