@@ -126,7 +126,7 @@ def set_interview_rounds(doc, method):
 				doc.append('applicant_interview_rounds', {
 					'interview_round': round.interview_round
 				})
-			doc.save()					
+			doc.save()
 
 @frappe.whitelist()
 def get_job_opening_location(job_opening):
@@ -137,3 +137,24 @@ def get_job_opening_location(job_opening):
 	if frappe.db.exists('Job Opening', job_opening):
 		location = frappe.db.get_value('Job Opening', job_opening, 'preffered_location') or None
 	return location
+
+
+@frappe.whitelist()
+def validate_unique_application(doc, method):
+    '''
+    Method to validate that an applicant can only apply for a job opening once using the same email ID.
+
+    '''
+    if doc.email_id and doc.job_title:
+        existing_applicant = frappe.db.exists(
+            "Job Applicant",
+            {
+                "email_id": doc.email_id,
+                "job_title": doc.job_title,
+            }
+        )
+        if existing_applicant and existing_applicant != doc.name:
+            frappe.throw(
+                _("The applicant with email ID {0} has already applied for the job opening {1}.")
+                .format(doc.email_id, doc.job_title)
+            )
