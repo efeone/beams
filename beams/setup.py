@@ -80,6 +80,7 @@ def before_uninstall():
     delete_custom_fields(get_company_custom_fields())
     delete_custom_fields(get_training_event_employee_custom_fields())
     delete_custom_fields(get_attendance_request_custom_fields())
+    delete_custom_fields(get_shift_assignment_custom_fields())
     delete_custom_fields(get_leave_type_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
