@@ -29,3 +29,19 @@ def validate_casual_leave_application(from_date, leave_type):
             _("The From Date must be at least {0} days from today for the selected Leave Type.")
             .format(min_advance_days)
         )
+
+@frappe.whitelist()
+def validate_leave_application(doc, method):
+    """
+    Validation for Leave Application:
+    - Check if the leave_type in Leave Application has the is_sick_leave field checked.
+    - If the leave duration exceeds 2 days, ensure a medical certificate is attached.
+    - Display a validation error if the document is not attached when required.
+    """
+    is_sick_leave = frappe.db.get_value("Leave Type", doc.leave_type, "is_sick_leave")
+
+    if is_sick_leave:
+        if doc.total_leave_days > 2:
+            if not doc.medical_certificate:
+                frappe.throw(_("Medical certificate is required for sick leave exceeding 2 days."))
+                

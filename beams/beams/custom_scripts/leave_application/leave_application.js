@@ -3,18 +3,36 @@ frappe.ui.form.on('Leave Application', {
         if (frm.doc.leave_type === "Casual Leave") {
             validate_from_date(frm);
         }
+        if (frm.doc.leave_type) {
+            frappe.db.get_value('Leave Type', frm.doc.leave_type, 'is_sick_leave', function(value) {
+                if (value.is_sick_leave && frm.doc.from_date && frm.doc.to_date) {
+                    var duration = frappe.datetime.get_diff(frm.doc.to_date, frm.doc.from_date) + 1;
+                    frm.set_df_property('medical_certificate', 'hidden', duration <= 2);
+                } else {
+                    frm.set_df_property('medical_certificate', 'hidden', true);
+                }
+                frm.refresh_field('medical_certificate');
+            });
+        } else {
+            frm.set_df_property('medical_certificate', 'hidden', true);
+            frm.refresh_field('medical_certificate');
+        }
     },
 
     from_date: function(frm) {
         if (frm.doc.leave_type === "Casual Leave") {
             validate_from_date(frm);
         }
+        frm.trigger('leave_type');
+    },
+    to_date: function(frm) {
+        frm.trigger('leave_type');
     }
 });
 
 function validate_from_date(frm) {
     if (!frm.doc.from_date || !frm.doc.leave_type) {
-        return; 
+        return;
     }
 
     frappe.call({

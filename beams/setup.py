@@ -36,6 +36,7 @@ def after_install():
     create_custom_fields(get_attendance_request_custom_fields(),ignore_validate=True)
     create_custom_fields(get_shift_assignment_custom_fields(),ignore_validate=True)
     create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_leave_application_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -82,6 +83,7 @@ def before_uninstall():
     delete_custom_fields(get_attendance_request_custom_fields())
     delete_custom_fields(get_shift_assignment_custom_fields())
     delete_custom_fields(get_leave_type_custom_fields())
+    delete_custom_fields(get_leave_application_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -115,7 +117,22 @@ def get_shift_assignment_custom_fields():
         ]
     }
 
+def get_leave_application_custom_fields():
+    '''
+    Custom fields that need to be added to the Leave Application  Doctype
+    '''
+    return {
+        "Leave Application": [
+            {
+                "fieldname": "medical_certificate",
+                "fieldtype": "Attach",
+                "label": "Medical Certificate",
+                "hidden": 1,
+               "insert_after": "leave_type"
+            }
 
+        ]
+    }
 def get_attendance_request_custom_fields():
     """
     Custom fields that need to be added to the Attendance Request DocType.
@@ -1654,7 +1671,29 @@ def get_leave_type_custom_fields():
                 "label": "Minimum Advance Days",
                 "description": "Specifies the minimum number of days required to apply for this leave.",
                 "insert_after": "max_continuous_days_allowed"
+            },
+            {
+               "fieldname": "is_sick_leave",
+               "fieldtype": "Check",
+               "label": "Is Sick Leave",
+               "insert_after": "is_optional_leave"
+           },
+           {
+               "fieldname": "is_proof_document",
+               "fieldtype": "Check",
+               "label": "Is Proof Document Required",
+               "depends_on": "eval:doc.is_sick_leave",
+               "insert_after": "is_sick_leave"
+
+            },
+            {
+              "fieldname": "medical_leave_required",
+               "fieldtype": "Float",
+               "label": "Medical Leave Required for Days",
+               "depends_on": "eval:doc.is_proof_document && doc.is_sick_leave",
+               "insert_after": "is_proof_document"
             }
+
         ]
     }
 
