@@ -1,0 +1,50 @@
+{
+ "actions": [],
+ "autoname": "format:{gender}-{leave_type}",
+ "creation": "2024-11-25 10:58:10.505755",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "leave_type",
+  "gender"
+ ],
+ "fields": [
+  {
+   "fieldname": "leave_type",
+   "fieldtype": "Link",
+   "label": "Leave Type",
+   "options": "Leave Type"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-11-25 13:08:15.246496",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Gender Leave Type Mapping",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
