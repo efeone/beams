@@ -242,9 +242,6 @@ doc_events = {
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
 
     },
-    "Compensatory Leave Log" : {
-        "on_update": "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.process_expired_compensatory_leaves"
-    },
     "Leave Application" : {
         "validate":[
             "beams.beams.custom_scripts.leave_application.leave_application.validate_leave_type",
