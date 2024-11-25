@@ -26,7 +26,7 @@ def handle_employee_checkin_out(doc, method):
     shift_assignment = frappe.db.sql("""
         SELECT name FROM `tabShift Assignment`
         WHERE employee = %s
-          AND roster_type = 'OT'
+          AND roster_type = 'Double Shift'
           AND %s BETWEEN start_date AND end_date
     """, (doc.employee, today_date), as_dict=True)
 

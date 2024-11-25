@@ -5,7 +5,7 @@ from datetime import datetime
 def create_new_log_on_update(doc, method):
     """
     Automatically creates or updates Compensatory Leave Log based on Leave Allocation changes.
-    Only proceeds if the employee has a Shift Assignment with roster_type = 'OT'.
+    Only proceeds if the employee has a Shift Assignment with roster_type = 'Double shift'.
     """
     # Fetch the previous document state
     previous_doc = doc.get_doc_before_save()
@@ -42,7 +42,7 @@ def create_new_log_on_update(doc, method):
         shift_assignment = frappe.db.sql("""
             SELECT name FROM `tabShift Assignment`
             WHERE employee = %s
-              AND roster_type = 'OT'
+              AND roster_type = 'Double Shift'
               AND %s BETWEEN start_date AND end_date
         """, (doc.employee, start_date), as_dict=True)
 
@@ -65,7 +65,7 @@ def create_new_log_on_update(doc, method):
 def create_new_compensatory_leave_log(doc, method):
     """
     Automatically creates a Compensatory Leave Log based on Leave Allocation data.
-    Only proceeds if the employee has a Shift Assignment with roster_type = 'OT'.
+    Only proceeds if the employee has a Shift Assignment with roster_type = 'Double Shift'.
     """
     start_date = doc.from_date
     end_date = doc.to_date
@@ -97,7 +97,7 @@ def create_new_compensatory_leave_log(doc, method):
     shift_assignment = frappe.db.sql("""
         SELECT name FROM `tabShift Assignment`
         WHERE employee = %s
-          AND roster_type = 'OT'
+          AND roster_type = 'Double Shift'
           AND %s BETWEEN start_date AND end_date
     """, (doc.employee, start_date), as_dict=True)
 
