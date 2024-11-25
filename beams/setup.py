@@ -35,6 +35,8 @@ def after_install():
     create_custom_fields(get_training_event_employee_custom_fields(), ignore_validate=True)
     create_custom_fields(get_attendance_request_custom_fields(),ignore_validate=True)
     create_custom_fields(get_shift_assignment_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
+
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -79,6 +81,7 @@ def before_uninstall():
     delete_custom_fields(get_training_event_employee_custom_fields())
     delete_custom_fields(get_attendance_request_custom_fields())
     delete_custom_fields(get_shift_assignment_custom_fields())
+    delete_custom_fields(get_leave_type_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1639,6 +1642,21 @@ def get_company_custom_fields():
         ]
     }
 
+def get_leave_type_custom_fields():
+    '''
+        Custom fields that need to be added to the Leave Type Doctype
+     '''
+    return {
+        "Leave Type": [
+            {
+                "fieldname": "min_advance_days",
+                "fieldtype": "Float",
+                "label": "Minimum Advance Days",
+                "description": "Specifies the minimum number of days required to apply for this leave.",
+                "insert_after": "max_continuous_days_allowed"
+            }
+        ]
+    }
 
 def create_property_setters(property_setter_datas):
     '''

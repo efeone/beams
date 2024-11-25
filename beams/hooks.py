@@ -52,7 +52,9 @@ doctype_js = {
     "Employee":"beams/custom_scripts/employee/employee.js",
     "Event":"beams/custom_scripts/event/event.js",
     "Training Event":"beams/custom_scripts/training_event/training_event.js",
-    "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js"
+    "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
+    "Leave Application":"beams/custom_scripts/leave_application/leave_application.js"
+    
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -238,6 +240,13 @@ doc_events = {
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
+
+    },
+    "Compensatory Leave Log" : {
+        "on_update": "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.process_expired_compensatory_leaves"
+    },
+    "Leave Application" : {
+        "validate": "beams.beams.custom_scripts.leave_application.leave_application.validate_leave_type"
     }
 }
 
