@@ -315,3 +315,109 @@ def create_release_order():
 		frappe.log_error(frappe.get_traceback(), "Release Order Creation Error")
 		clean_exception_message = strip_html_tags(str(exception))
 		return response(f"An error occurred: {clean_exception_message}", {}, False, 400)
+
+@frappe.whitelist()
+def create_sales_order():
+	'''
+		API to create Sales Order
+		args:
+			JSON string of Sales Order data like
+			{
+				"date": "30-10-2024",
+				"invoice_no": "LB/138",
+				"client_id": "Dias Idea Incubators",
+				"currency": "INR",
+				"executive_id": "HR-EMP-00012",
+				"taxable_value": 170000,
+				"gst_rate": 18,
+				"sgst": 15300,
+				"cgst": 15300,
+				"igst": 0,
+				"ro_no": "CCPL/32/2024-25",
+				"ref_no": "M1/0139/2024-25",
+				"region": "Trivandrum"
+			}
+	'''
+	try:
+		input_data = frappe.form_dict
+		if input_data.get('cmd'):
+			input_data.pop('cmd')
+
+		albatross_service_item = frappe.db.get_single_value('Albatross Settings', 'albatross_service_item')
+		if not albatross_service_item:
+			return response('`albatross_service_item` is not configured in Albatross Settings', {}, False, 400)
+
+		# Checking Mandatory fields
+		if not input_data.get('date'):
+			return response('`date` is reuqired to create Release Order', {}, False, 400)
+
+		if not input_data.get('client_id'):
+			return response('`client_id` is reuqired to create Release Order', {}, False, 400)
+		else:
+			if not frappe.db.exists('Customer', input_data.get('client_id')):
+				return response('Client : `{0}` does not exists'.format(input_data.get('client_id')), {}, False, 404)
+
+		if not input_data.get('taxable_value'):
+			return response('`taxable_value` is reuqired to create Release Order', {}, False, 400)
+
+		if input_data.get('currency') and not frappe.db.exists('Currency', input_data.get('currency')):
+			return response('Currency : `{0}` does not exists'.format(input_data.get('currency')), {}, False, 400)
+
+		if input_data.get('region') and not frappe.db.exists('Region', input_data.get('region')):
+			return response('Region : `{0}` does not exists'.format(input_data.get('region')), {}, False, 400)
+
+		sales_taxes_and_charges_template = None
+		tax_category = None
+		if input_data.get('gst_rate'):
+			if input_data.get('igst_rate'):
+				tax_category_field_name = 'out_state_tax_category'
+			else:
+				tax_category_field_name = 'in_state_tax_category'
+			tax_category = frappe.db.get_single_value('Albatross Settings', tax_category_field_name)
+			tax_rate = float(input_data.get('gst_rate'))
+			sales_taxes_and_charges_template = get_sales_taxes_and_charges_template(tax_rate, tax_category)
+
+		# Creating Sales Order
+		ro_doc = frappe.new_doc('Sales Order')
+		ro_doc.transaction_date = getdate(input_data.get('date'))
+		ro_doc.delivery_date = getdate(input_data.get('date'))
+		ro_doc.customer = input_data.get('client_id')
+		ro_doc.region = input_data.get('region')
+		ro_doc.executive = input_data.get('executive_id') or ''
+		ro_doc.reference_id = get_quotation_from_ro_id(input_data.get('ref_no')) or ''
+		ro_item_row = ro_doc.append('items')
+		ro_item_row.qty = 1
+		ro_item_row.item_code = albatross_service_item
+		ro_item_row.rate = float(input_data.get('taxable_value'))
+		ro_item_row.base_rate = float(input_data.get('taxable_value'))
+		if sales_taxes_and_charges_template:
+			ro_doc.taxes_and_charges = sales_taxes_and_charges_template
+		else:
+			ro_doc.taxes_and_charges = ''
+		if tax_category:
+			ro_doc.tax_category = tax_category
+		else:
+			ro_doc.tax_category = ''
+		ro_doc.ignore_mandatory = True
+		ro_doc.save(ignore_permissions=True)
+		frappe.clear_messages()
+		return response('Created Sales Order Successfully', ro_doc.as_dict(), True, 201)
+
+	except frappe.exceptions.CharacterLengthExceededError as e:
+		frappe.log_error("Character Length Exceeded", "Error in Release Order creation: " + str(e)[:120])
+		return response('Character Length Exceeded in Error Log', {}, False, 400)
+
+	except Exception as exception:
+		frappe.log_error(frappe.get_traceback(), "Release Order Creation Error")
+		clean_exception_message = strip_html_tags(str(exception))
+		return response(f"An error occurred: {clean_exception_message}", {}, False, 400)
+
+@frappe.whitelist()
+def get_quotation_from_ro_id(albatross_ro_id):
+	'''
+		Method to get Quotation using albatross_ro_id
+	'''
+	quotation = None
+	if frappe.db.exists('Quotation', { 'albatross_ro_id':albatross_ro_id }):
+		quotation = frappe.db.get_value('Quotation', { 'albatross_ro_id':albatross_ro_id })
+	return quotation
