@@ -12,19 +12,23 @@
   {
    "fieldname": "leave_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Leave Type",
-   "options": "Leave Type"
+   "options": "Leave Type",
+   "reqd": 1
   },
   {
    "fieldname": "gender",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Gender",
-   "options": "Gender"
+   "options": "Gender",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-25 13:08:15.246496",
+ "modified": "2024-11-26 11:24:59.499399",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Gender Leave Type Mapping",
