@@ -144,8 +144,8 @@ function handle_custom_buttons(frm) {
                 }, __('Set Status'));
             }
 
-            // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", or "Job Proposal Accepted"
-            if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted'].includes(frm.doc.status)) {
+            // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", "Job Proposal Accepted or "Interview Completed"
+            if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted', 'Interview Completed'].includes(frm.doc.status)) {
                 frm.remove_custom_button(__('Interview'), __('Create'));
             }
 
