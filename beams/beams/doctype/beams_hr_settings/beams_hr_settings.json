@@ -119,14 +119,14 @@
  {
    "fieldname": "maternity_leave_type",
    "fieldtype": "Link",
-   "label": "Maternity Leave Type ",
+   "label": "Maternity Leave Type",
    "options": "Leave Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-25 16:30:19.777043",
+ "modified": "2024-11-26 15:02:40.794800",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
