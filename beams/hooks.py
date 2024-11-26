@@ -77,7 +77,7 @@ doctype_list_js = {
 
 # website user home page (by Role)
 # role_home_page = {
-# 	"Role": "home_page"
+# "Role": "home_page"
 # }
 
 # Generators
@@ -91,8 +91,8 @@ doctype_list_js = {
 
 # add methods and filters to jinja environment
 # jinja = {
-# 	"methods": "beams.utils.jinja_methods",
-# 	"filters": "beams.utils.jinja_filters"
+# "methods": "beams.utils.jinja_methods",
+# "filters": "beams.utils.jinja_filters"
 # }
 
 # Installation
@@ -134,7 +134,7 @@ before_uninstall = "beams.setup.before_uninstall"
 # Permissions evaluated in scripted ways
 
 permission_query_conditions = {
-	"Job Applicant": "beams.beams.custom_scripts.job_applicant.job_applicant.get_permission_query_conditions",
+"Job Applicant": "beams.beams.custom_scripts.job_applicant.job_applicant.get_permission_query_conditions",
 }
 
 # has_permission = {
@@ -239,7 +239,8 @@ doc_events = {
     },
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
-        "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update"
+        "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update",
+        "validate": "beams.beams.custom_scripts.leave_allocation.leave_allocation.validate"        
 
     },
     "Leave Application" : {
@@ -260,21 +261,21 @@ scheduler_events = {
         "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
         "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder"
     ],
-# 	"all": [
-# 		"beams.tasks.all"
-# 	],
-# 	"daily": [
-# 		"beams.tasks.daily"
-# 	],
-# 	"hourly": [
-# 		"beams.tasks.hourly"
-# 	],
-# 	"weekly": [
-# 		"beams.tasks.weekly"
-# 	],
-# 	"monthly": [
-# 		"beams.tasks.monthly"
-# 	],
+# "all": [
+# "beams.tasks.all"
+# ],
+# "daily": [
+# "beams.tasks.daily"
+# ],
+# "hourly": [
+# "beams.tasks.hourly"
+# ],
+# "weekly": [
+# "beams.tasks.weekly"
+# ],
+# "monthly": [
+# "beams.tasks.monthly"
+# ],
   }
 
 # Testing
@@ -286,14 +287,14 @@ scheduler_events = {
 # ------------------------------
 #
 # override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "beams.event.get_events"
+# "frappe.desk.doctype.event.event.get_events": "beams.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 override_doctype_dashboards = {
-	'Item': 'beams.beams.custom_scripts.item_dashboard.item_dashboard.get_data',
+'Item': 'beams.beams.custom_scripts.item_dashboard.item_dashboard.get_data',
     'Customer': 'beams.beams.custom_scripts.customer_dashboard.customer_dashboard.get_data',
     'Sales Invoice': 'beams.beams.custom_scripts.sales_invoice_dashboard.sales_invoice_dashboard.get_data',
     'Sales Order': 'beams.beams.custom_scripts.sales_order_dashboard.sales_order_dashboard.get_data',
@@ -324,45 +325,45 @@ override_doctype_dashboards = {
 # --------------------
 
 # user_data_fields = [
-# 	{
-# 		"doctype": "{doctype_1}",
-# 		"filter_by": "{filter_by}",
-# 		"redact_fields": ["{field_1}", "{field_2}"],
-# 		"partial": 1,
-# 	},
-# 	{
-# 		"doctype": "{doctype_2}",
-# 		"filter_by": "{filter_by}",
-# 		"partial": 1,
-# 	},
-# 	{
-# 		"doctype": "{doctype_3}",
-# 		"strict": False,
-# 	},
-# 	{
-# 		"doctype": "{doctype_4}"
-# 	}
+# {
+# "doctype": "{doctype_1}",
+# "filter_by": "{filter_by}",
+# "redact_fields": ["{field_1}", "{field_2}"],
+# "partial": 1,
+# },
+# {
+# "doctype": "{doctype_2}",
+# "filter_by": "{filter_by}",
+# "partial": 1,
+# },
+# {
+# "doctype": "{doctype_3}",
+# "strict": False,
+# },
+# {
+# "doctype": "{doctype_4}"
+# }
 # ]
 
 # Authentication and authorization
 # --------------------------------
 
 # auth_hooks = [
-# 	"beams.auth.validate"
+# "beams.auth.validate"
 # ]
 
 # Automatically update python controller files with type annotations for this app.
 # export_python_type_annotations = True
 
 # default_log_clearing_doctypes = {
-# 	"Logging DocType Name": 30  # days to retain logs
+# "Logging DocType Name": 30  # days to retain logs
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow","Maternity Leave Request"]]
     ]},
     {"dt": "Workflow State", "filters": [
-        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted","Applicant Rejected"]]
+        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted","Applicant Rejected","Pending HOD Approval","Pending Hr Approval"]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
         ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept"]]
