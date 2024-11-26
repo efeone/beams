@@ -417,10 +417,51 @@ def get_quotation_custom_fields():
     return {
         "Quotation": [
             {
+                "fieldname": "is_agent",
+                "fieldtype": "Check",
+                "label": "Is Agency",
+                "read_only":1,
+                "fetch_from": "party_name.is_agent",
+                "depends_on": "eval:doc.is_agent",
+                "insert_after": "party_name"
+            },
+            {
+                "fieldname": "actual_customer",
+                "fieldtype": "Link",
+                "label": "Actual Customer",
+                "options": "Customer",
+                "depends_on": "eval:doc.is_agent == 1",
+                "insert_after": "is_agent"
+            },
+            {
+                "fieldname": "actual_customer_group",
+                "fieldtype": "Link",
+                "label": "Actual Customer Group",
+                "options": "Customer Group",
+                "read_only": 1,
+                "fetch_from": "actual_customer.customer_group",
+                "insert_after": "actual_customer"
+            },
+            {
                 "fieldname": "customer_purchase_order_reference",
                 "fieldtype": "Data",
                 "label": "Customer Purchase Order Reference",
                 "insert_after": "valid_till"
+            },
+            {
+                "fieldname": "executive",
+                "fieldtype": "Link",
+                "label": "Executive",
+                "options":"Employee",
+                "insert_after": "customer_purchase_order_reference"
+            },
+            {
+                "fieldname": "executive_name",
+                "fieldtype": "Data",
+                "label": "Executive Name",
+                "insert_after": "executive",
+                "fetch_from": "executive.employee_name",
+                "read_only":1
             },
             {
                 "fieldname": "is_barter",
@@ -429,19 +470,19 @@ def get_quotation_custom_fields():
                 "insert_after": "amended_from"
             },
             {
-                "fieldname": "sales_type",
-                "fieldtype": "Link",
-                "label": "Default Sales Type",
-                "insert_after": "is_barter",
-                "options": "Sales Type"
-            },
-            {
                 "fieldname": "purchase_order",
                 "fieldtype": "Link",
                 "label": "Purchase Order",
-                "insert_after": "valid_till",
+                "insert_after": "is_barter",
                 "depends_on": "eval:doc.is_barter",
                 "options": "Purchase Order"
+            },
+            {
+                "fieldname": "sales_type",
+                "fieldtype": "Link",
+                "label": "Default Sales Type",
+                "insert_after": "purchase_order",
+                "options": "Sales Type"
             },
             {
                 "fieldname": "region",
@@ -449,7 +490,6 @@ def get_quotation_custom_fields():
                 "label": "Region",
                 "insert_after": "customer_name",
                 "options": "Region"
-
             },
             {
                 "fieldname": "albatross_details_section",
@@ -465,81 +505,74 @@ def get_quotation_custom_fields():
                 "read_only":1
             },
             {
-                "fieldname": "albatross_invoice_number",
+                "fieldname": "ro_no",
                 "fieldtype": "Data",
-                "label": "Albatross Invoice Number",
+                "label": "RO No",
                 "insert_after": "albatross_ro_id",
                 "read_only":1
             },
             {
-                "fieldname": "albatross_ref_number",
+                "fieldname": "ro_date",
+                "fieldtype": "Date",
+                "label": "RO Date",
+                "insert_after": "ro_no",
+                "read_only":1
+            },
+            {
+                "fieldname": "ro_option",
                 "fieldtype": "Data",
-                "label": "Albatross Ref Number",
-                "insert_after": "albatross_invoice_number",
+                "label": "RO Option",
+                "insert_after": "ro_date",
+                "read_only":1
+            },
+            {
+                "fieldname": "region_revenue_percentage",
+                "fieldtype": "Percent",
+                "label": "Region Revenue Percentage",
+                "insert_after": "ro_option",
                 "read_only":1
             },
             {
                 "fieldname": "albatross_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "albatross_ref_number"
+                "insert_after": "region_revenue_percentage"
             },
             {
-                "fieldname": "client_name",
+                "fieldname": "product_name",
                 "fieldtype": "Data",
-                "label": "Client Name",
+                "label": "Product Name",
                 "insert_after": "albatross_column_break",
                 "read_only":1
             },
             {
-                "fieldname": "actual_customer",
-                "fieldtype": "Link",
-                "label": "Actual Customer",
-                "options": "Customer",
-                "depends_on": "eval:doc.is_agent == 1",
-                "insert_after": "is_agent"
-            },
-            {
-                "fieldname": "is_agent",
-                "fieldtype": "Check",
-                "label": "Is Agency",
-                "read_only":1,
-                "fetch_from": "party_name.is_agent",
-                "depends_on": "eval:doc.is_agent",
-                "insert_after": "party_name"
-            },
-            {
-                "fieldname": "actual_customer_group",
-                "fieldtype": "Link",
-                "label": "Actual Customer Group",
-                "options": "Customer Group",
-                "read_only": 1,
-                "fetch_from": "actual_customer.customer_group",
-                "insert_after": "actual_customer"
-            },
-            {
-                "fieldname": "executive",
-                "fieldtype": "Link",
-                "label": "Executive",
-                "options":"Employee",
-                "insert_after": "customer_purchase_order_reference"
-            },
-            {
-                "fieldname": "executive_name_",
+                "fieldname": "program_name",
                 "fieldtype": "Data",
-                "label": "Executive Name",
-                "insert_after": "executive",
-                "fetch_from": "executive.employee_name",
-                "read_only": 1
+                "label": "Program Name",
+                "insert_after": "product_name",
+                "read_only":1
             },
             {
-                "fieldname": "executive_name",
+                "fieldname": "no_of_eps",
                 "fieldtype": "Data",
-                "label": "Executive Name",
-                "insert_after": "client_name",
+                "label": "No of Episodes",
+                "insert_after": "program_name",
+                "read_only":1
+            },
+            {
+                "fieldname": "commission_per",
+                "fieldtype": "Float",
+                "label": "Commission Per",
+                "insert_after": "no_of_eps",
+                "read_only":1
+            },
+            {
+                "fieldname": "fct_total",
+                "fieldtype": "Float",
+                "label": "FCT Total",
+                "insert_after": "commission_per",
                 "read_only":1
             }
-
         ],
         "Quotation Item": [
             {
