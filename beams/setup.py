@@ -693,6 +693,13 @@ def get_employee_custom_fields():
                 "options": "Stringer Type",
                 "label": "Stringer Type",
                 "insert_after": "salutation"
+            },
+            {
+                "fieldname": "leave_policy",
+                "fieldtype": "Link",
+                "options": "Leave Policy",
+                "label": "Leave Policy",
+                "insert_after": "attendance_device_id"
             }
         ]
     }

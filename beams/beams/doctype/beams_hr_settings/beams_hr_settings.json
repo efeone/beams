@@ -17,7 +17,11 @@
   "tab_3_tab",
   "penalty_leave_type",
   "column_break_pjdi",
-  "compensatory_leave_type"
+  "compensatory_leave_type",
+  "section_break_wu5q",
+  "default_leave_policy",
+  "column_break_laz7",
+  "leave_period"
  ],
  "fields": [
   {
@@ -90,12 +94,32 @@
   {
    "fieldname": "column_break_pjdi",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_wu5q",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "default_leave_policy",
+   "fieldtype": "Link",
+   "label": " Default Leave Policy",
+   "options": "Leave Policy"
+  },
+  {
+   "fieldname": "column_break_laz7",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "leave_period",
+   "fieldtype": "Link",
+   "label": "Leave Period",
+   "options": "Leave Period"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-19 16:56:49.566987",
+ "modified": "2024-11-25 15:45:40.757049",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
