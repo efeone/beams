@@ -16,6 +16,7 @@
   "column_break_qbue",
   "tab_3_tab",
   "penalty_leave_type",
+  "maternity_leave_type",
   "column_break_pjdi",
   "compensatory_leave_type",
   "section_break_wu5q",
@@ -114,12 +115,18 @@
    "fieldtype": "Link",
    "label": "Leave Period",
    "options": "Leave Period"
+ },
+ {
+   "fieldname": "maternity_leave_type",
+   "fieldtype": "Link",
+   "label": "Maternity Leave Type ",
+   "options": "Leave Type"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-25 15:45:40.757049",
+ "modified": "2024-11-25 16:30:19.777043",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
