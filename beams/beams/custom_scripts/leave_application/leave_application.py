@@ -2,13 +2,14 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, nowdate
 
+@frappe.whitelist()
 def validate_leave_type(doc, method):
-    validate_casual_leave_application(doc.from_date, doc.leave_type)
+    validate_leave_advance_days(doc.from_date, doc.leave_type)
 
 @frappe.whitelist()
-def validate_casual_leave_application(from_date, leave_type):
+def validate_leave_advance_days(from_date, leave_type):
     '''
-    Validates the `from_date` for Casual Leave based on the minimum advance days specified in the Leave Type.
+    Validates the `from_date` for Leave based on the minimum advance days specified in the Leave Type.
     '''
     if not leave_type:
         frappe.throw(_("Leave Type is required."))
@@ -29,6 +30,7 @@ def validate_casual_leave_application(from_date, leave_type):
             _("The From Date must be at least {0} days from today for the selected Leave Type.")
             .format(min_advance_days)
         )
+
 
 @frappe.whitelist()
 def validate_leave_application(doc, method):
