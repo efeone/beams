@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Maternity Leave Request', {
     setup: function (frm) {
+        // Set filter for employee field to only show Female employees
         frm.set_query('employee', function () {
             return {
                 filters: {

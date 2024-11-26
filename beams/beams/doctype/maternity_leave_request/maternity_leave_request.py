@@ -18,6 +18,9 @@ class MaternityLeaveRequest(Document):
 				self.create_leave_allocation()
 
 	def create_leave_allocation(self):
+		'''
+		Create a Leave Allocation for the employee when a Maternity Leave Request is approved.
+		'''
 		# Calculate the To Date as 365 days from the From Date
 		to_date = add_days(self.from_date, 365)
 
@@ -28,7 +31,7 @@ class MaternityLeaveRequest(Document):
 			"leave_type": self.leave_type,
 			"from_date": self.from_date,
 			"to_date": to_date,
-			"new_leaves_allocated": self.no_of_days,  
+			"new_leaves_allocated": self.no_of_days,
 		})
 		leave_allocation.insert(ignore_permissions=True)
 		leave_allocation.submit()
