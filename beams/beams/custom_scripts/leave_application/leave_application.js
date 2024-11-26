@@ -1,8 +1,6 @@
 frappe.ui.form.on('Leave Application', {
     leave_type: function(frm) {
-        if (frm.doc.leave_type === "Casual Leave") {
-            validate_from_date(frm);
-        }
+      validate_from_date(frm);
         if (frm.doc.leave_type) {
             frappe.db.get_value('Leave Type', frm.doc.leave_type,['is_sick_leave', 'medical_leave_required'], function(value) {
                 if (value.is_sick_leave && frm.doc.from_date && frm.doc.to_date) {
@@ -24,10 +22,8 @@ frappe.ui.form.on('Leave Application', {
     },
 
     from_date: function(frm) {
-        if (frm.doc.leave_type === "Casual Leave") {
-            validate_from_date(frm);
-        }
-        frm.trigger('leave_type');
+      validate_from_date(frm);
+      frm.trigger('leave_type');
     },
     to_date: function(frm) {
         frm.trigger('leave_type');
@@ -40,7 +36,7 @@ function validate_from_date(frm) {
     }
 
     frappe.call({
-        method: 'beams.beams.custom_scripts.leave_application.leave_application.validate_casual_leave_application',
+        method: 'beams.beams.custom_scripts.leave_application.leave_application.validate_leave_advance_days',
         args: {
             from_date: frm.doc.from_date,
             leave_type: frm.doc.leave_type
@@ -48,11 +44,6 @@ function validate_from_date(frm) {
         callback: function(response) {
             if (response.exc) {
                 frm.set_value('from_date', '');
-                frappe.msgprint({
-                    title: __('Validation Error'),
-                    indicator: 'red',
-                    message: __('The From Date is invalid for the selected Leave Type.')
-                });
             }
         }
     });
