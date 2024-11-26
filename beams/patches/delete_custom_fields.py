@@ -36,6 +36,22 @@ fields_to_remove = [
     {
         'dt':'Interview Round',
         'fieldname':'expected_question_set'
+    },
+    {
+        'dt':'Quotation',
+        'fieldname':'executive_name_'
+    },
+    {
+        'dt':'Quotation',
+        'fieldname':'albatross_invoice_number'
+    },
+    {
+        'dt':'Quotation',
+        'fieldname':'albatross_ref_number'
+    },
+    {
+        'dt':'Quotation',
+        'fieldname':'client_name'
     }
 ]
 
