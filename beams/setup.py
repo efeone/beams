@@ -733,6 +733,95 @@ def get_employee_custom_fields():
                 "options": "Leave Policy",
                 "label": "Leave Policy",
                 "insert_after": "attendance_device_id"
+            },
+            {
+                "fieldname": "name_of_father_or_husband",
+                "fieldtype": "Data",
+                "label": "Name of Father/Husband",
+                "insert_after": "date_of_birth"
+            },
+            {
+                "fieldname": "pincode",
+                "fieldtype": "Data",
+                "label": "Pincode",
+                "insert_after": "address_section"
+            },
+            {
+                "fieldname": "aadhar_id",
+                "fieldtype": "Data",
+                "label": "Aadhar Id",
+                "insert_after": "marital_status"
+            },
+            {
+                "fieldname": "date_of_appointment",
+                "fieldtype": "Date",
+                "label": "Date of Appointment",
+                "insert_after": "date_of_joining"
+            },
+            {
+                "fieldname": "nominee_details_section",
+                "fieldtype": "Section Break",
+                "label": "Nominee Details",
+                "insert_after": "iban"
+            },
+            {
+                "fieldname": "nominee_details",
+                "fieldtype": "Table",
+                "label": "Nominee Details",
+                "options":"Nominee Details",
+                "insert_after":"nominee_details_section"
+            },
+            {
+                "fieldname": "esi_tab",
+                "fieldtype": "Tab Break",
+                "label": "ESI",
+                "insert_after": "nominee_details"
+            },
+            {
+                "fieldname": "has_previous_employer_esi",
+                "fieldtype": "Check",
+                "label": "Do u have ESI with Previous Employer",
+                "insert_after": "esi_tab"
+            },
+            {
+                "fieldname": "esi_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "has_previous_employer_esi"
+            },
+            {
+                "fieldname": "if_yes_previous_insurance_no",
+                "fieldtype": "Data",
+                "label": "If yes,Previous Insurance No",
+                "depends_on": "eval:doc.has_previous_employer_esi == 1",
+                "insert_after": "esi_column_break"
+            },
+            {
+                "fieldname": "family_details_section",
+                "fieldtype": "Section Break",
+                "label": "Family Details",
+                "insert_after": "if_yes_previous_insurance_no"
+            },
+            {
+                "fieldname": "family_details",
+                "fieldtype": "Table",
+                "label": "Family Details",
+                "options":"Family Details",
+                "insert_after":"family_details_section"
+            },
+            {
+                "fieldname": "branch",
+                "fieldtype": "Data",
+                "label": "Branch",
+                "depends_on": "eval:doc.salary_mode == 'Bank'",
+                "insert_after":"bank_name"
+            },
+            {
+                "fieldname": "type_of_account",
+                "fieldtype": "Data",
+                "label": "Type of Account",
+                "depends_on": "eval:doc.salary_mode == 'Bank'",
+                "insert_after":"bank_ac_no"
             }
         ]
     }
