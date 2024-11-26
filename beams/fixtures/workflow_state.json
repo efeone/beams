@@ -3,6 +3,24 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
+  "modified": "2024-11-25 11:52:51.695037",
+  "name": "Pending HOD Approval",
+  "style": "",
+  "workflow_state_name": "Pending HOD Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-11-25 11:53:14.591745",
+  "name": "Pending Hr Approval",
+  "style": "",
+  "workflow_state_name": "Pending Hr Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
   "modified": "2024-08-21 10:32:58.704051",
   "name": "Pending Finance Verification",
   "style": "Info",
