@@ -6,10 +6,11 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "earlier_provident_fund",
-  "earlier_pension_scheme",
   "previous_employment_details_tab",
   "details_of_uan",
+  "earlier_provident_fund",
+  "earlier_pension_scheme",
+  "details_uan",
   "uan",
   "date_of_exit_for_previous_member_id",
   "is_schema_certificate",
@@ -30,44 +31,13 @@
    "label": "Whether earlier a member of the employee's Provident Fund scheme,1952?"
   },
   {
-   "default": "0",
-   "fieldname": "earlier_pension_scheme",
-   "fieldtype": "Check",
-   "label": "Whether earlier a member of the employee's Pension scheme,1995?"
-  },
-  {
    "fieldname": "previous_employment_details_tab",
    "fieldtype": "Tab Break",
    "label": "Previous Employment Details"
   },
   {
    "fieldname": "details_of_uan",
-   "fieldtype": "Section Break",
-   "label": "The details of the Universal Account Number(UAN) or Previous PF member ID"
-  },
-  {
-   "fieldname": "uan",
-   "fieldtype": "Data",
-   "label": "UAN/Previous Member ID",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
-  },
-  {
-   "fieldname": "date_of_exit_for_previous_member_id",
-   "fieldtype": "Date",
-   "label": "Date of Exit for Previous Member Id",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
-  },
-  {
-   "fieldname": "is_schema_certificate",
-   "fieldtype": "Data",
-   "label": " Scheme Certificate Number(If scheme certificate issued for previous employment)",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
-  },
-  {
-   "fieldname": "is_pension_payment_order",
-   "fieldtype": "Data",
-   "label": "PPO Number(If pension payment order(PPO) issued for previous employment)",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "other_details_tab",
@@ -110,11 +80,46 @@
    "fieldtype": "Table",
    "label": "KYC Details",
    "options": "KYC Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "earlier_pension_scheme",
+   "fieldtype": "Check",
+   "label": "Whether earlier a member of the employee's Pension Scheme,1995?"
+  },
+  {
+   "fieldname": "details_uan",
+   "fieldtype": "Section Break",
+   "label": " Details of the Universal Account Number(UAN) or previous PF member ID"
+  },
+  {
+   "fieldname": "uan",
+   "fieldtype": "Data",
+   "label": "UAN/Previous Member ID",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "date_of_exit_for_previous_member_id",
+   "fieldtype": "Date",
+   "label": "Date of Exit for previous member Id",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "is_schema_certificate",
+   "fieldtype": "Data",
+   "label": "Scheme Certificate Number(If scheme certificate issued for previous employment)",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "is_pension_payment_order",
+   "fieldtype": "Data",
+   "label": "PPO Number(If pension payment order(PPO) issued for previous employment)",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-27 11:48:03.700714",
+ "modified": "2024-11-27 12:20:30.902774",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
