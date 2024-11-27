@@ -735,10 +735,22 @@ def get_employee_custom_fields():
                 "insert_after": "attendance_device_id"
             },
             {
-                "fieldname": "name_of_father_or_husband",
+                "fieldname": "name_of_father_or_spouses",
                 "fieldtype": "Data",
-                "label": "Name of Father/Husband",
+                "label": "Name of Father/Spouse's",
                 "insert_after": "date_of_birth"
+            },
+            {
+                "fieldname": "height",
+                "fieldtype": "Float",
+                "label": "Height",
+                "insert_after": "blood_group"
+            },
+            {
+                "fieldname": "weight",
+                "fieldtype": "Float",
+                "label": "Weight",
+                "insert_after": "height"
             },
             {
                 "fieldname": "pincode",
