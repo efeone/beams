@@ -117,26 +117,45 @@ def create_new_compensatory_leave_log(doc, method):
     log_doc.insert()
 
 
-def validate(doc ,method):
+
+def validate(doc, method):
     """
-     Validation for Leave Allocation DocType
+    Validation for Leave Allocation DocType
 
     This function validates that the selected leave type in the Leave Allocation
-    DocType is permitted for the employee based on their gender. 
+    DocType is permitted for the employee based on their gender. If the leave type
+    is listed in the Gender Leave Type Mapping, it validates whether the leave type
+    is allowed for the employee's gender. If the leave type is not listed in the mapping,
+    no validation is performed.
     """
-    employee_gender = frappe.db.get_value("Employee", doc.employee, "gender")
+    
+    employee_gender = frappe.db.get_value('Employee', doc.employee, 'gender')
+    
     if not employee_gender:
-        frappe.throw(f"Gender not found for Employee {doc.employee}. Please ensure gender is set in the Employee record.")
+        frappe.throw("Gender not found for Employee {employee}. Please ensure gender is set in the Employee record.".format(employee=doc.employee ))
 
-    is_valid_mapping = frappe.db.exists(
-        "Gender Leave Type Mapping",
-        {
-            "leave_type": doc.leave_type,
-            "gender": employee_gender,
-        }
-    )
+    is_leave_type_mapped = frappe.db.exists('Gender Leave Type Mapping', {'leave_type': doc.leave_type})
 
-    if not is_valid_mapping: 
-        frappe.throw(f"The Selected Leave Type is not permitted for this Employee {doc.employee}")  
+    
+    if is_leave_type_mapped:
+        is_valid_mapping = frappe.db.exists(
+            'Gender Leave Type Mapping',
+            {
+                'leave_type': doc.leave_type,
+                'gender': employee_gender,
+            }
+        )
 
+        
+        if not is_valid_mapping:
+            frappe.throw(
+            "The Selected Leave Type '{leave_type}' is not permitted for Employee {employee} "
+            "with gender '{gender}'. Please select a valid leave type.".format(
+            leave_type=doc.leave_type,
+            employee=doc.employee,
+            gender=employee_gender
+                )
+            )
+
+           
 
