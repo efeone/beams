@@ -111,7 +111,7 @@ def get_shift_assignment_custom_fields():
                 "fieldname": "roster_type",
                 "fieldtype": "Select",
                 "label": "Roster Type",
-                "options":"\nRegular\nOT",
+                "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
             }
         ]
@@ -860,6 +860,64 @@ def get_employee_custom_fields():
                 "fieldtype": "Signature",
                 "label": "Signature",
                 "insert_after":"column_sign"
+            },
+            {
+                "fieldname": "documents_tab",
+                "fieldtype": "Tab Break",
+                "label": "Documents",
+                "insert_after": "internal_work_history"
+            },
+            {
+                "fieldname": "employee_documents",
+                "fieldtype": "Table",
+                "label": "Employee Documents",
+                "options":"Employee Documents",
+                "insert_after":"documents_tab"
+            }
+        ],
+
+        "Employee External Work History":[
+            {
+                "fieldname": "period_from",
+                "fieldtype": "Date",
+                "label": "Period From",
+                "insert_after": "designation"
+            },
+            {
+                "fieldname": "period_to",
+                "fieldtype": "Date",
+                "label": "Period To",
+                "insert_after": "period_from"
+            },
+            {
+                "fieldname": "last_position_held",
+                "fieldtype": "Data",
+                "label": "Last Position Held",
+                "insert_after": "period_to"
+            },
+            {
+                "fieldname": "job_responsibility",
+                "fieldtype": "Small Text",
+                "label": "Job Responsibility",
+                "insert_after": "last_position_held"
+            },
+            {
+                "fieldname": "designation_of_immediate_superior",
+                "fieldtype": "Data",
+                "label": "Designation Of Immediate Superior",
+                "insert_after": "job_responsibility"
+            },
+            {
+                "fieldname": "gross_salary_drawn",
+                "fieldtype": "Float",
+                "label": "Gross Salary Drawn ",
+                "insert_after": "designation_of_immediate_superior"
+            },
+            {
+                "fieldname": "reason_for_leaving",
+                "fieldtype": "Small Text",
+                "label": "Reason For Leaving",
+                "insert_after": "gross_salary_drown"
             }
         ]
     }
@@ -2123,6 +2181,13 @@ def get_property_setters():
             "property_type": "Check",
             "value":1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee External Work History",
+            "field_name": "designation",
+            "property": "label",
+            "value":"Designation At The Time Of Joining"
+        }
     ]
 
 def get_material_request_custom_fields():
