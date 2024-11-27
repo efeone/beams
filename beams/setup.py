@@ -834,6 +834,32 @@ def get_employee_custom_fields():
                 "label": "Type of Account",
                 "depends_on": "eval:doc.salary_mode == 'Bank'",
                 "insert_after":"bank_ac_no"
+            },
+            {
+                "fieldname": "section_break_date",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after":"family_details"
+            },
+            {
+                "fieldname": "date",
+                "fieldtype": "Date",
+                "label": "Date",
+                "insert_after":"section_break_date"
+
+            },
+
+            {
+                "fieldname": "column_sign",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after":"date"
+            },
+            {
+                "fieldname": "signature",
+                "fieldtype": "Signature",
+                "label": "Signature",
+                "insert_after":"column_sign"
             }
         ]
     }
