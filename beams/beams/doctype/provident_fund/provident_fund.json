@@ -1,0 +1,140 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format: PF-{YY}-{####}",
+ "creation": "2024-11-26 14:34:05.866299",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "earlier_provident_fund",
+  "earlier_pension_scheme",
+  "previous_employment_details_tab",
+  "details_of_uan",
+  "uan",
+  "date_of_exit_for_previous_member_id",
+  "is_schema_certificate",
+  "is_pension_payment_order",
+  "other_details_tab",
+  "international_worker",
+  "country_of_origin",
+  "specially_abled",
+  "category",
+  "educational_qualification",
+  "kyc_details"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "earlier_provident_fund",
+   "fieldtype": "Check",
+   "label": "Whether earlier a member of the employee's Provident Fund scheme,1952?"
+  },
+  {
+   "default": "0",
+   "fieldname": "earlier_pension_scheme",
+   "fieldtype": "Check",
+   "label": "Whether earlier a member of the employee's Pension scheme,1995?"
+  },
+  {
+   "fieldname": "previous_employment_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Previous Employment Details"
+  },
+  {
+   "fieldname": "details_of_uan",
+   "fieldtype": "Section Break",
+   "label": "The details of the Universal Account Number(UAN) or Previous PF member ID"
+  },
+  {
+   "fieldname": "uan",
+   "fieldtype": "Data",
+   "label": "UAN/Previous Member ID",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "date_of_exit_for_previous_member_id",
+   "fieldtype": "Date",
+   "label": "Date of Exit for Previous Member Id",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "is_schema_certificate",
+   "fieldtype": "Data",
+   "label": " Scheme Certificate Number(If scheme certificate issued for previous employment)",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "is_pension_payment_order",
+   "fieldtype": "Data",
+   "label": "PPO Number(If pension payment order(PPO) issued for previous employment)",
+   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "other_details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Other Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "international_worker",
+   "fieldtype": "Check",
+   "label": "International Worker"
+  },
+  {
+   "depends_on": "eval:doc.international_worker",
+   "fieldname": "country_of_origin",
+   "fieldtype": "Data",
+   "label": "Country of Origin"
+  },
+  {
+   "fieldname": "educational_qualification",
+   "fieldtype": "Select",
+   "label": "Educational Qualification",
+   "options": "Illiterate\nNon-Matric\nMatric\nSenior Secondary\nGraduate,\nPost Graduate\nDoctor\nTechnical/Professional"
+  },
+  {
+   "default": "0",
+   "fieldname": "specially_abled",
+   "fieldtype": "Check",
+   "label": "Specially Abled"
+  },
+  {
+   "depends_on": "eval:doc.specially_abled",
+   "fieldname": "category",
+   "fieldtype": "Select",
+   "label": "Category",
+   "options": "Locomotive\nVisual\nHearing"
+  },
+  {
+   "fieldname": "kyc_details",
+   "fieldtype": "Table",
+   "label": "KYC Details",
+   "options": "KYC Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-11-27 09:52:39.903497",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Provident Fund",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
