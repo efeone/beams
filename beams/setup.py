@@ -735,9 +735,9 @@ def get_employee_custom_fields():
                 "insert_after": "attendance_device_id"
             },
             {
-                "fieldname": "name_of_father_or_spouses",
+                "fieldname": "name_of_father_or_spouse",
                 "fieldtype": "Data",
-                "label": "Name of Father/Spouse's",
+                "label": "Name of Father/Spouse",
                 "insert_after": "date_of_birth"
             },
             {
