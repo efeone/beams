@@ -90,7 +90,7 @@
    "fieldname": "educational_qualification",
    "fieldtype": "Select",
    "label": "Educational Qualification",
-   "options": "Illiterate\nNon-Matric\nMatric\nSenior Secondary\nGraduate,\nPost Graduate\nDoctor\nTechnical/Professional"
+   "options": "Illiterate\nNon-Matric\nMatric\nSenior Secondary\nGraduate\nPost Graduate\nDoctor\nTechnical/Professional"
   },
   {
    "default": "0",
@@ -114,7 +114,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-27 09:52:39.903497",
+ "modified": "2024-11-27 11:48:03.700714",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
