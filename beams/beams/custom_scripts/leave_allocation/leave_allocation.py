@@ -129,20 +129,20 @@ def validate(doc, method):
     no validation is performed.
     """
     
-    employee_gender = frappe.db.get_value("Employee", doc.employee, "gender")
+    employee_gender = frappe.db.get_value('Employee', doc.employee, 'gender')
     
     if not employee_gender:
         frappe.throw(f"Gender not found for Employee {doc.employee}. Please ensure gender is set in the Employee record.")
 
-    is_leave_type_mapped = frappe.db.exists("Gender Leave Type Mapping", {"leave_type": doc.leave_type})
+    is_leave_type_mapped = frappe.db.exists('Gender Leave Type Mapping', {'leave_type': doc.leave_type})
 
     
     if is_leave_type_mapped:
         is_valid_mapping = frappe.db.exists(
-            "Gender Leave Type Mapping",
+            'Gender Leave Type Mapping',
             {
-                "leave_type": doc.leave_type,
-                "gender": employee_gender,
+                'leave_type': doc.leave_type,
+                'gender': employee_gender,
             }
         )
 
@@ -152,6 +152,5 @@ def validate(doc, method):
                 f"The Selected Leave Type '{doc.leave_type}' is not permitted for Employee {doc.employee} "
                 f"with gender '{employee_gender}'. Please select a valid leave type."
             )
-    else:
-        frappe.throw(f"The Selected Leave Type is not allowed")        
+           
 
