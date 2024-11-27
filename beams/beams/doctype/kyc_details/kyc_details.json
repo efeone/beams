@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-27 09:47:30.056570",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "kyc_document_type",
+  "name_as_on_kyc_document",
+  "number",
+  "remarksif_any"
+ ],
+ "fields": [
+  {
+   "fieldname": "kyc_document_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "KYC Document Type"
+  },
+  {
+   "fieldname": "name_as_on_kyc_document",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name as on KYC Document"
+  },
+  {
+   "fieldname": "number",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Number"
+  },
+  {
+   "fieldname": "remarksif_any",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks,if any"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-11-27 09:57:39.233652",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "KYC Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
