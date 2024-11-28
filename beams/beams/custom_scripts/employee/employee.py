@@ -38,25 +38,32 @@ def get_employee_name_for_user(user_id):
 
 @frappe.whitelist()
 def after_insert_employee(doc, method):
-    '''This function is triggered after an Employee record is created.
-       It fetches the default leave policy and leave period from the Beams HR Settings,
-    validates the configurations, and automatically creates and submits a Leave Policy Assignment.'''
-
-# Fetch default leave policy and leave period from Beams HR Settings using frappe.db.get_single_value
+    """
+    Triggered after an Employee record is created.
+    Fetches the default leave policy and leave period from Beams HR Settings,
+    validates the configurations, and creates & submits a Leave Policy Assignment.
+    """
+    # Fetch default leave policy and leave period from Beams HR Settings
     leave_policy = frappe.db.get_single_value('Beams HR Settings', 'default_leave_policy')
     leave_period = frappe.db.get_single_value('Beams HR Settings', 'leave_period')
-    if not leave_policy or not leave_period:
-        frappe.throw(_("Default Leave Policy or Leave Period is not configured in Beams HR Settings."))
 
+    if not leave_policy or not leave_period:
+        return
+
+    # Fetch leave period details
     leave_period_details = frappe.db.get_value(
         'Leave Period',
         leave_period,
         ['from_date', 'to_date'],
-        as_dict=True,
+        as_dict=True
     )
 
+    # Skip if leave period details are missing
     if not leave_period_details:
-        frappe.throw(_('Leave Period {0} does not exist.').format(leave_period))
+        return
+
+    if not doc.name:
+        return
 
     # Create Leave Policy Assignment
     leave_policy_assignment = frappe.get_doc({
@@ -65,9 +72,10 @@ def after_insert_employee(doc, method):
         'leave_policy': leave_policy,
         'leave_period': leave_period,
         'assignment_based_on': 'Leave Period',
-        'effective_from': leave_period_details.from_date,
-        'effective_to': leave_period_details.to_date,
+        'effective_from': leave_period_details['from_date'],
+        'effective_to': leave_period_details['to_date'],
     })
 
+    # Save and submit the leave policy assignment
     leave_policy_assignment.insert()
     leave_policy_assignment.submit()
