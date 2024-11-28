@@ -237,6 +237,9 @@ doc_events = {
     "Employee Checkin":{
         "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
     },
+    "Leave Application":{
+        "validate":"beams.beams.custom_scripts.leave_application.leave_application.validate_leave_application"
+    },
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update",
