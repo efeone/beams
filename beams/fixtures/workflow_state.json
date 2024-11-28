@@ -12,15 +12,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-11-25 11:53:14.591745",
-  "name": "Pending Hr Approval",
-  "style": "",
-  "workflow_state_name": "Pending Hr Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-08-21 10:32:58.704051",
   "name": "Pending Finance Verification",
   "style": "Info",
@@ -178,5 +169,14 @@
   "name": "Enquiry on Progress",
   "style": "Success",
   "workflow_state_name": "Enquiry on Progress"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-11-28 11:16:33.546485",
+  "name": "Pending HR Approval",
+  "style": "",
+  "workflow_state_name": "Pending HR Approval"
  }
 ]
