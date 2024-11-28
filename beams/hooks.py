@@ -240,7 +240,7 @@ doc_events = {
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
         "on_update_after_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_log_on_update",
-        "validate": "beams.beams.custom_scripts.leave_allocation.leave_allocation.validate"        
+        "validate": "beams.beams.custom_scripts.leave_allocation.leave_allocation.validate"
 
     },
     "Leave Application" : {
@@ -264,7 +264,8 @@ scheduler_events = {
     "daily": [
         "beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue",
         "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
-        "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder"
+        "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder",
+        "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation"
     ],
 # "all": [
 # "beams.tasks.all"
