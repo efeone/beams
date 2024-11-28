@@ -12,15 +12,18 @@
   "earlier_pension_scheme",
   "details_uan",
   "uan",
-  "date_of_exit_for_previous_member_id",
   "is_schema_certificate",
+  "column_break_tizj",
+  "date_of_exit_for_previous_member_id",
   "is_pension_payment_order",
   "other_details_tab",
   "international_worker",
   "country_of_origin",
+  "educational_qualification",
+  "column_break_xfjn",
   "specially_abled",
   "category",
-  "educational_qualification",
+  "section_break_rsiu",
   "kyc_details"
  ],
  "fields": [
@@ -115,11 +118,23 @@
    "fieldtype": "Data",
    "label": "PPO Number(If pension payment order(PPO) issued for previous employment)",
    "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+  },
+  {
+   "fieldname": "column_break_tizj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_xfjn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_rsiu",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-27 12:20:30.902774",
+ "modified": "2024-11-27 16:44:27.571190",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
