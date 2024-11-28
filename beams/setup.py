@@ -735,22 +735,16 @@ def get_employee_custom_fields():
                 "insert_after": "attendance_device_id"
             },
             {
-                "fieldname": "name_of_father_or_spouse",
+                "fieldname": "name_of_father",
                 "fieldtype": "Data",
-                "label": "Name of Father/Spouse",
+                "label": "Father's Name",
                 "insert_after": "date_of_birth"
             },
             {
-                "fieldname": "height",
-                "fieldtype": "Float",
-                "label": "Height",
-                "insert_after": "blood_group"
-            },
-            {
-                "fieldname": "weight",
-                "fieldtype": "Float",
-                "label": "Weight",
-                "insert_after": "height"
+                "fieldname": "name_of_spouse",
+                "fieldtype": "Data",
+                "label": "Spouse's Name",
+                "insert_after": "name_of_father"
             },
             {
                 "fieldname": "pincode",
@@ -784,6 +778,111 @@ def get_employee_custom_fields():
                 "insert_after":"nominee_details_section"
             },
             {
+                "fieldname": "additional_information_section",
+                "fieldtype": "Section Break",
+                "label": _("Additional Information"),
+                "insert_after": "place_of_issue",
+                "collapsible": 1
+            },
+            {
+                "fieldname": "have_you",
+                "fieldtype": "Check",
+                "label": _("Have You"),
+                "insert_after": "additional_information_section"
+            },
+            {
+                "fieldname": "physical_disabilities",
+                "fieldtype": "Data",
+                "label": "Physical Disabilities",
+                "depends_on": "eval:doc.have_you",
+                "insert_after": "have_you"
+            },
+            {
+                "fieldname": "marital_indebtness",
+                "fieldtype": "Data",
+                "label": "Marital Indebtness",
+                "depends_on": "eval:doc.have_you",
+                "insert_after": "physical_disabilities"
+            },
+            {
+                "fieldname": "court_proceedings",
+                "fieldtype": "Data",
+                "label": "Been Involved in Court Proceeding",
+                "depends_on": "eval:doc.have_you",
+                "insert_after": "marital_indebtness",
+            },
+            {
+                "fieldname": "languages_known",
+                "fieldtype": "Data",
+                "label": "Languages Known",
+                "insert_after": "court_proceedings",
+            },
+            {
+                "fieldname": "are_you_willing_to_travel",
+                "label": "Are you willing to travel",
+                "fieldtype": "Check",
+                "insert_after": "languages_known",
+            },
+            {
+                "fieldname": "in_india",
+                "label": "In India",
+                "fieldtype": "Select",
+                "options":"Yes\nNo",
+                "insert_after": "are_you_willing_to_travel",
+                "depends_on": "eval:doc.are_you_willing_to_travel == 1"
+            },
+            {
+                "fieldname": "abroad",
+                "label": "Abroad",
+                "fieldtype": "Select",
+                "options":"Yes\nNo",
+                "insert_after": "in_india",
+                "depends_on": "eval:doc.are_you_willing_to_travel == 1"
+            },
+            {
+                "fieldname": "state_restrictions_problems",
+                "label": "State Restrictions/Problems if any",
+                "fieldtype": "Data",
+                "insert_after": "abroad",
+                "depends_on": "eval:doc.are_you_willing_to_travel == 1"
+            },
+            {
+                "fieldname": "places_to_travel",
+                "label": "Places/Countries of your choice where you'd like to travel on job",
+                "fieldtype": "Data",
+                "insert_after": "state_restrictions_problems",
+            },
+            {
+                "fieldname": "column_break_after_places_to_travel",
+                "fieldtype": "Column Break",
+                "insert_after": "places_to_travel"
+            },
+            {
+                "fieldname": "are_you_related_to_employee",
+                "label": "Are you related to any of our employees",
+                "fieldtype": "Check",
+                "insert_after": "column_break_after_places_to_travel"
+            },
+            {
+                "fieldname": "employee_name",
+                "label": "His/Her Name",
+                "fieldtype": "Data",
+                "insert_after": "are_you_related_to_employee",
+                "depends_on": "eval:doc.are_you_related_to_employee == 1",
+            },
+            {
+                "fieldname": "specialized_training",
+                "label": "Any Specialized Training/Training Program Attended",
+                "fieldtype": "Small Text",
+                "insert_after": "are_you_related_to_employee"
+            },
+            {
+                "fieldname": "other_information",
+                "label": "Any Other Information/Suggestion",
+                "fieldtype": "Small Text",
+                "insert_after": "specialized_training"
+            },
+            {
                 "fieldname": "esi_tab",
                 "fieldtype": "Tab Break",
                 "label": "ESI",
@@ -802,9 +901,9 @@ def get_employee_custom_fields():
                 "insert_after": "has_previous_employer_esi"
             },
             {
-                "fieldname": "if_yes_previous_insurance_no",
+                "fieldname": "previous_insurance_no",
                 "fieldtype": "Data",
-                "label": "If yes,Previous Insurance No",
+                "label": "Previous Insurance No",
                 "depends_on": "eval:doc.has_previous_employer_esi == 1",
                 "insert_after": "esi_column_break"
             },
@@ -812,7 +911,7 @@ def get_employee_custom_fields():
                 "fieldname": "family_details_section",
                 "fieldtype": "Section Break",
                 "label": "Family Details",
-                "insert_after": "if_yes_previous_insurance_no"
+                "insert_after": "previous_insurance_no"
             },
             {
                 "fieldname": "family_details",
@@ -846,9 +945,7 @@ def get_employee_custom_fields():
                 "fieldtype": "Date",
                 "label": "Date",
                 "insert_after":"section_break_date"
-
             },
-
             {
                 "fieldname": "column_sign",
                 "fieldtype": "Column Break",
@@ -871,7 +968,7 @@ def get_employee_custom_fields():
                 "fieldname": "employee_documents",
                 "fieldtype": "Table",
                 "label": "Employee Documents",
-                "options":"Employee Documents",    
+                "options":"Employee Documents",
                 "insert_after":"documents_tab"
             },
             {
