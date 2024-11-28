@@ -83,11 +83,14 @@ def validate_leave_application(doc, method):
 
         # Check if penalty leave type exists in the leave allocation
         if penalty_leave_type not in leave_allocation:
-            frappe.throw(
-                "No allocation found for penalty leave type '{0}' for Employee '{1} ({2})'.".format(
-                    penalty_leave_type, employee_name, doc.employee
+            if doc.leave_type != "Leave Without Pay":
+                frappe.throw(
+                    "No allocation found for penalty leave type '{0}' for Employee '{1} ({2})'. "
+                    "Please apply for 'Leave Without Pay'.".format(
+                        penalty_leave_type, employee_name, doc.employee
+                    )
                 )
-            )
+            return
 
         leave_data = leave_allocation[penalty_leave_type]
 
