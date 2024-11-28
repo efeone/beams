@@ -871,8 +871,14 @@ def get_employee_custom_fields():
                 "fieldname": "employee_documents",
                 "fieldtype": "Table",
                 "label": "Employee Documents",
-                "options":"Employee Documents",
+                "options":"Employee Documents",    
                 "insert_after":"documents_tab"
+            },
+            {
+                "fieldname": "no_of_children",
+                "fieldtype": "Data",
+                "label": "No.of Children",
+                "insert_after":"marital_status"
             }
         ],
 
