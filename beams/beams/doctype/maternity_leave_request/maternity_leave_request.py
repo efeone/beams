@@ -3,7 +3,9 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils import add_days
+from frappe.utils.user import get_users_with_role
 
 class MaternityLeaveRequest(Document):
 
@@ -16,6 +18,15 @@ class MaternityLeaveRequest(Document):
 			# Check if the Leave Type matches the Maternity Leave Type
 			if self.leave_type == maternity_leave_type:
 				self.create_leave_allocation()
+
+
+		# Create ToDo for HOD when the request is created
+		if self.workflow_state == "Pending HOD Approval":
+			self.create_todo_for_hod()
+
+		# Create ToDo for HR Manager when the request is in "Pending HR Approval"
+		if self.workflow_state == "Pending HR Approval":
+			self.create_todo_for_hr_manager()
 
 	def create_leave_allocation(self):
 		'''
@@ -36,4 +47,57 @@ class MaternityLeaveRequest(Document):
 		leave_allocation.insert(ignore_permissions=True)
 		leave_allocation.submit()
 
-		frappe.msgprint(f"Leave Allocation created for {self.employee} ({self.leave_type}) from {self.from_date} to {to_date}.")
+		frappe.msgprint(f"Leave Allocation created for {self.employee} ({self.leave_type}) from {self.from_date} to {to_date}.",alert=True, indicator='green')
+
+
+	def create_todo_for_hod(self):
+		'''
+		Create a ToDo task for the HOD of the employee's department when a Maternity Leave Request is created.
+		'''
+		# Get the department of the employee
+		department = frappe.db.get_value("Employee", self.employee, "department")
+
+		if not department:
+			frappe.msgprint(f"No department found for employee {self.employee}.", alert=True)
+			return
+
+		# Get the HOD's user ID from the department
+		hod_user_id = frappe.db.get_value("Department", department, "head_of_department")
+		hod_user = frappe.db.get_value("Employee", hod_user_id, "user_id")
+
+		if not hod_user:
+			frappe.msgprint(f"No Head of Department found for department {department}.", alert=True)
+			return
+
+		# Create the ToDo task for HOD and assign it using add_assign
+		admin_message = f"A new Maternity Leave Request has been created for Employee {self.employee}. Please review it."
+		add_assign({
+			"assign_to": [hod_user],
+			"doctype": "Maternity Leave Request",
+			"name": self.name,
+			"description": admin_message
+		})
+
+
+	def create_todo_for_hr_manager(self):
+		'''
+		Create a ToDo task for the HR Manager when the workflow state is "Pending HR Approval".
+		'''
+		# Get the user(s) with the HR Manager role
+		hr_manager_users = get_users_with_role("HR Manager")
+
+		if not hr_manager_users:
+			frappe.msgprint("No HR Manager role user found.", alert=True)
+			return
+
+		# Assuming we want to assign the ToDo to the first HR Manager found
+		hr_manager_user = hr_manager_users[0]
+
+		# Create the ToDo task for HR Manager and assign it using add_assign
+		admin_message = f"The Maternity Leave Request for Employee {self.employee} is pending HR approval. Please review it."
+		add_assign({
+			"assign_to": [hr_manager_user],
+			"doctype": "Maternity Leave Request",
+			"name": self.name,
+			"description": admin_message
+		})
