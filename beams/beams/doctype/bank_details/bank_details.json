@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-11-29 10:51:56.107281",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "account_no",
+  "name_of_bank",
+  "type_of_account",
+  "branch",
+  "ifsc_code"
+ ],
+ "fields": [
+  {
+   "fieldname": "account_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Account No"
+  },
+  {
+   "fieldname": "name_of_bank",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name of Bank"
+  },
+  {
+   "fieldname": "type_of_account",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Type of Account"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Branch"
+  },
+  {
+   "fieldname": "ifsc_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "IFSC code"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-11-29 10:55:43.731959",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Bank Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

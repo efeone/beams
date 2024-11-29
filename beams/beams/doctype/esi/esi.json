@@ -1,0 +1,233 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ESI-EMP-{#####}",
+ "creation": "2024-11-29 09:32:53.373324",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_wjy2",
+  "full_name",
+  "name_of_father",
+  "name_of_spouses",
+  "marital_status",
+  "column_break_wuwn",
+  "pin_code",
+  "present_address",
+  "column_break_kfnl",
+  "mobile_number",
+  "email_id",
+  "amended_from",
+  "additional_information_section",
+  "aadhar_id",
+  "permanent_address",
+  "do_you_have_esi_with_previous_employer",
+  "previous_insurance_no",
+  "column_break_txtk",
+  "gender",
+  "date_of_birth",
+  "date_of_appointment",
+  "signature_section_section",
+  "date",
+  "column_break_gwmk",
+  "signature",
+  "family_details_section",
+  "family_details",
+  "nominee_details_section",
+  "nominee_details",
+  "bank_details_section",
+  "bank_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wjy2",
+   "fieldtype": "Section Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name"
+  },
+  {
+   "fieldname": "name_of_father",
+   "fieldtype": "Data",
+   "label": "Name of Father"
+  },
+  {
+   "fieldname": "name_of_spouses",
+   "fieldtype": "Data",
+   "label": "Name of Spouse"
+  },
+  {
+   "fieldname": "marital_status",
+   "fieldtype": "Select",
+   "label": "Marital Status",
+   "options": "Single\nMarried\nDivorced\nWidowed"
+  },
+  {
+   "fieldname": "present_address",
+   "fieldtype": "Small Text",
+   "label": "Present Address"
+  },
+  {
+   "fieldname": "pin_code",
+   "fieldtype": "Data",
+   "label": "Pin Code"
+  },
+  {
+   "fieldname": "mobile_number",
+   "fieldtype": "Phone",
+   "label": "Mobile Number"
+  },
+  {
+   "fieldname": "column_break_wuwn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_kfnl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "email_id",
+   "fieldtype": "Data",
+   "label": "Email ID"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "ESI",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "additional_information_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Information"
+  },
+  {
+   "fieldname": "aadhar_id",
+   "fieldtype": "Data",
+   "label": "Aadhar ID"
+  },
+  {
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fieldname": "date_of_appointment",
+   "fieldtype": "Date",
+   "label": "Date of Appointment"
+  },
+  {
+   "default": "0",
+   "fieldname": "do_you_have_esi_with_previous_employer",
+   "fieldtype": "Check",
+   "label": "Do You Have ESI with Previous Employer"
+  },
+  {
+   "depends_on": "eval:doc.do_you_have_esi_with_previous_employer == 1",
+   "fieldname": "previous_insurance_no",
+   "fieldtype": "Data",
+   "label": "Previous Insurance No"
+  },
+  {
+   "fieldname": "signature_section_section",
+   "fieldtype": "Section Break",
+   "label": "Signature Section"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "column_break_gwmk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "signature",
+   "fieldtype": "Attach",
+   "label": "Signature"
+  },
+  {
+   "fieldname": "family_details_section",
+   "fieldtype": "Section Break",
+   "label": "Family Details"
+  },
+  {
+   "fieldname": "family_details",
+   "fieldtype": "Table",
+   "label": "Family Details",
+   "options": "Family Details"
+  },
+  {
+   "fieldname": "column_break_txtk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "nominee_details_section",
+   "fieldtype": "Section Break",
+   "label": "Nominee Details"
+  },
+  {
+   "fieldname": "nominee_details",
+   "fieldtype": "Table",
+   "label": "Nominee Details",
+   "options": "Nominee Details"
+  },
+  {
+   "fieldname": "bank_details_section",
+   "fieldtype": "Section Break",
+   "label": "Bank Details"
+  },
+  {
+   "fieldname": "bank_details",
+   "fieldtype": "Table",
+   "label": "Bank Details",
+   "options": "Bank Details"
+  },
+  {
+   "fieldname": "permanent_address",
+   "fieldtype": "Small Text",
+   "label": "Permanent Address"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-11-29 11:36:26.538764",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "ESI",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
