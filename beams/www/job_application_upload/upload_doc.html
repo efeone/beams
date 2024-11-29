@@ -223,11 +223,29 @@
                     </div>
                     <div class="column">
                         <label for="current_designation">Designation</label>
-                        <input type="text" id="current_designation" name="current_designation" >
+                        {% set designations = frappe.get_all('Designation', fields=['designation_name', 'name']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="designation" name="designation"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Designation</option>
+                                {% for designation in designations %}
+                                <option value="{{ designation.name }}">{{ designation.designation_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="column">
                         <label for="current_department">Department</label>
-                        <input type="text" id="current_department" name="current_department" >
+                        {% set departments = frappe.get_all('Department', fields=['department_name', 'name']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="department" name="department"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Department</option>
+                                {% for department in departments %}
+                                <option value="{{ department.name }}">{{ department.department_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -360,7 +378,16 @@
                     </div>
                     <div class="column">
                         <label for="interviewed_location">Location </label>
-                        <input type="text" id="interviewed_location" name="interviewed_location" >
+                        {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="location" name="location"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Location</option>
+                                {% for location in locations %}
+                                <option value="{{ location.name }}">{{ location.location_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="column">
                     </div>
