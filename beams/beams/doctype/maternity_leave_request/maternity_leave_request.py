@@ -3,22 +3,17 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.desk.form.assign_to import add as add_assign
+from frappe.desk.form.assign_to import add as add_assign, remove as remove_assign
 from frappe.utils import add_days
 from frappe.utils.user import get_users_with_role
+
 
 class MaternityLeaveRequest(Document):
 
 	def on_update(self):
 		# Check if the workflow state is "Approved"
 		if self.workflow_state == "Approved":
-			# Fetch the Maternity Leave Type from HR Settings
-			maternity_leave_type = frappe.db.get_single_value("Beams HR Settings", "maternity_leave_type")
-
-			# Check if the Leave Type matches the Maternity Leave Type
-			if self.leave_type == maternity_leave_type:
-				self.create_leave_allocation()
-
+			self.create_leave_allocation()
 
 		# Create ToDo for HOD when the request is created
 		if self.workflow_state == "Pending HOD Approval":
@@ -26,12 +21,13 @@ class MaternityLeaveRequest(Document):
 
 		# Create ToDo for HR Manager when the request is in "Pending HR Approval"
 		if self.workflow_state == "Pending HR Approval":
+			self.remove_assignment_by_role("HOD")
 			self.create_todo_for_hr_manager()
 
 	def create_leave_allocation(self):
-		'''
+		"""
 		Create a Leave Allocation for the employee when a Maternity Leave Request is approved.
-		'''
+		"""
 		# Calculate the To Date as 365 days from the From Date
 		to_date = add_days(self.from_date, 365)
 
@@ -47,13 +43,15 @@ class MaternityLeaveRequest(Document):
 		leave_allocation.insert(ignore_permissions=True)
 		leave_allocation.submit()
 
-		frappe.msgprint(f"Leave Allocation created for {self.employee} ({self.leave_type}) from {self.from_date} to {to_date}.",alert=True, indicator='green')
-
+		frappe.msgprint(
+			f"Leave Allocation created for {self.employee} ({self.leave_type}) from {self.from_date} to {to_date}.",
+			alert=True, indicator='green'
+		)
 
 	def create_todo_for_hod(self):
-		'''
+		"""
 		Create a ToDo task for the HOD of the employee's department when a Maternity Leave Request is created.
-		'''
+		"""
 		# Get the department of the employee
 		department = frappe.db.get_value("Employee", self.employee, "department")
 
@@ -77,11 +75,10 @@ class MaternityLeaveRequest(Document):
 			"description": admin_message
 		})
 
-
 	def create_todo_for_hr_manager(self):
-		'''
+		"""
 		Create a ToDo task for the HR Manager when the workflow state is "Pending HR Approval".
-		'''
+		"""
 		hr_manager_users = get_users_with_role("HR Manager")
 
 		if not hr_manager_users:
@@ -95,3 +92,25 @@ class MaternityLeaveRequest(Document):
 			"name": self.name,
 			"description": admin_message
 		})
+
+		frappe.msgprint("ToDo created for HR Manager.", alert=True)
+
+	def remove_assignment_by_role(self, role):
+		"""
+		Removes ToDo assignments for users with a specific role for a given document.
+		"""
+		users = get_users_with_role(role)
+		if users:
+			for user in users:
+				if frappe.db.exists('ToDo', {
+					'reference_type': self.doctype,
+					'reference_name': self.name,
+					'allocated_to': user,
+					'status': 'Open'
+				}):
+					remove_assign(
+						doctype=self.doctype,
+						name=self.name,
+						assign_to=user
+					)
+					frappe.msgprint(f"Assignment for {user} removed.", alert=True)
