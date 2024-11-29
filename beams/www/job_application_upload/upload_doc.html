@@ -25,9 +25,10 @@
             <div class="form-section active" id="tab-0">
                 <div class="row" style="width: 31%;">
                     <div class="column">
-                        <label for="designation">Position Appplied For :</label>
+                        <label for="designation">Position Applied For :</label>
                         <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" readonly>
                     </div>
+
                 </div>
                 <div class="row">
                     <div class="column">
@@ -74,11 +75,13 @@
                     </div>
                     <div class="column">
                         <label for="current_period_from">Period of Stay From </label>
-                        <input type="number" id="current_period_from" name="current_period_from" min="1900" max="2100" placeholder="Year" >
+                        <input type="text" id="current_period_from" name="current_period_from"
+                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="current_period_to">To:</label>
-                        <input type="number" id="current_period_to" name="current_period_to" min="1900" max="2100" placeholder="Year" >
+                        <input type="text" id="current_period_to" name="current_period_to"
+                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="current_residence_no">Residence No.</label>
@@ -86,7 +89,7 @@
                     </div>
                     <div class="column">
                         <label for="current_mobile_no">Mobile Number</label>
-                        <input type="tel" id="current_mobile_no" name="current_mobile_no"  pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
+                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number }}" readonly>
                     </div>
                     <div class="column">
                         <label for="domain"></label>
@@ -101,21 +104,22 @@
                   </div>
                     <div class="column">
                         <label for="permanent_period_from">Period of Stay From</label>
-                        <input type="number" id="permanent_period_from" name="permanent_period_from" min="1900" max="2100" placeholder="Year" >
+                        <input type="text" id="permanent_period_from" name="permanent_period_from"
+                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="permanent_period_to">To: </label>
-                        <input type="number" id="permanent_period_to" name="permanent_period_to" min="1900" max="2100" placeholder="Year" >
+                        <input type="text" id="permanent_period_to" name="permanent_period_to"
+                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="permanent_residence_no">Residence No.</label>
                         <input type="text" id="permanent_residence_no" name="permanent_residence_no"  value="">
                     </div>
                     <div class="column">
-                        <label for="permananet_email_id">Email Id</label>
-                        <input type="text" id="permananet_email_id" name="permananet_email_id"  value="">
+                        <label for="domain"></label>
+                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
                     </div>
-
                     <div class="column">
                         <label for="domain"></label>
                         <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
@@ -155,8 +159,8 @@
                                     <td>1</td>
                                     <td><input type="text" name="course_university_1" class="name_of_course_university"></td>
                                     <td><input type="text" name="institution_location_1" class="name_location_of_institution"></td>
-                                    <td><input type="number" name="date_from_1" class="dates_attended_from" min="1900" max="2100" placeholder="Year"></td>
-                                    <td><input type="number" name="date_to_1" class="dates_attended_to" min="1900" max="2100" placeholder="Year"></td>
+                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)"></td>
+                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)"></td>
                                     <td><input type="Float" name="results_1" class="result"></td>
                                     <td><input type="file" id="qualification_file" class="home-textinput" /></td>
                                 </tr>
@@ -188,8 +192,8 @@
                                 <td>1</td>
                                 <td><input type="text" name="course_1" class="course" ></td>
                                 <td><input type="text" name="institute_name_1" class="institute_name" ></td>
-                                <td><input type="number" name="date_from_1" class="dates_attended_from" min="1900" max="2100" placeholder="Year" ></td>
-                                <td><input type="number" name="date_to_1" class="dates_attended_to" min="1900" max="2100" placeholder="Year" ></td>
+                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" ></td>
+                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" ></td>
                                 <td><input type="text" name="type_of_certification_1" class="type_of_certification" ></td>
                                 <td><input type="text" name="sub_major_1" class="subject_major" ></td>
                                 <td><input type="file" id="certification_file" class="home-textinput" /></td>
@@ -213,7 +217,7 @@
                     </div>
                     <div class="column">
                         <label for="telephone_no">Telephone No</label>
-                        <input type="tel" name="telphone" id="telephone_no" pattern="[0-9]{4} [0-9]{7}" />
+                        <input type="tel" name="telphone" id="telephone_number" pattern="[0-9]{4} [0-9]{7}" placeholder="eg : 0496 2839568" />
                     </div>
                 </div>
                 <div class="row">
@@ -251,11 +255,11 @@
                 <div class="row">
                     <div class="column">
                         <label for="employment_period_from">Employment Period From</label>
-                        <input type="number" id="employment_period_from" name="employment_period_from" min="1900" max="2100" placeholder="Year">
+                        <input type="text" id="employment_period_from" name="employment_period_from"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="employment_period_to">Employment Period To</label>
-                        <input type="number" id="employment_period_to" name="employment_period_to" min="1900" max="2100" placeholder="Year" >
+                        <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" >
                     </div>
                     <div class="column">
                         <label for="manager_name">Manager's Name</label>
@@ -351,15 +355,15 @@
                 <div class="row">
                     <div class="column">
                         <label for="current_salary">Current Salary</label>
-                        <input type="number" id="current_salary" name="current_salary" >
+                        <input type="text" id="current_salary" name="current_salary" >
                     </div>
                     <div class="column">
                         <label for="expected_salary">Expected Salary</label>
-                        <input type="number" id="expected_salary" name="expected_salary" >
+                        <input type="text" id="expected_salary" name="expected_salary" >
                     </div>
                     <div class="column">
                         <label for="telephone-no">Telephone No</label>
-                        <input type="tel" name="telphone" id="telephone_number" pattern="[0-9]{4} [0-9]{7}" />
+                        <input type="tel" name="telphone" id="telephone_number" pattern="[0-9]{4} [0-9]{7}" placeholder="eg : 0496 2839568" />
                     </div>
                 </div>
                 <div class="row">
@@ -553,7 +557,7 @@
                   submitBtn.addEventListener('click', validateSubmit);
                   }
             document.addEventListener('DOMContentLoaded', handleSubmitValidation);
-        
+
         // Function to show specific tab content based on index and set active class
         function showTab(index) {
             const sections = document.querySelectorAll('.form-section');
@@ -585,8 +589,8 @@
             cell1.innerHTML = rowCount + 1;
             cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" >';
             cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" >';
-            cell4.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_from" min="1900" max="2100" placeholder="Year" >';
-            cell5.innerHTML = '<input type="number" name="date_to_1[]" class="dates_attended_to" min="1900" max="2100" placeholder="Year">';
+            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" >';
+            cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
             cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result" >';
             cell7.innerHTML = '<input type="file" name=qualification_file[] class="file" >';
         }
@@ -611,8 +615,8 @@
             cell1.innerHTML = rowCount + 1;
             cell2.innerHTML = '<input type="text" name="course_1[]" class="course" >';
             cell3.innerHTML = '<input type="text" name="institute_name_1[]" class="institute_name" >';
-            cell4.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_from" min="1900" max="2100" placeholder="Year">';
-            cell5.innerHTML = '<input type="number" name="date_from_1[]" class="dates_attended_to" min="1900" max="2100" placeholder="Year">';
+            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
+            cell5.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_to"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
             cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" >';
             cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" >';
             cell8.innerHTML = '<input type="file" name=certification_file[] class="file" >';
@@ -666,6 +670,10 @@
               cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
               cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
               cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
+          }
+
+          function validateDigits(input) {
+              input.value = input.value.replace(/[^0-9]/g, ''); // Removes non-numeric characters
           }
 
          // Function to generate HTML for star rating input for language proficiency
