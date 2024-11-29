@@ -25,9 +25,9 @@ class MaternityLeaveRequest(Document):
 			self.create_todo_for_hr_manager()
 
 	def create_leave_allocation(self):
-		"""
+		'''
 		Create a Leave Allocation for the employee when a Maternity Leave Request is approved.
-		"""
+		'''
 		# Calculate the To Date as 365 days from the From Date
 		to_date = add_days(self.from_date, 365)
 
@@ -49,9 +49,9 @@ class MaternityLeaveRequest(Document):
 		)
 
 	def create_todo_for_hod(self):
-		"""
+		'''
 		Create a ToDo task for the HOD of the employee's department when a Maternity Leave Request is created.
-		"""
+		'''
 		# Get the department of the employee
 		department = frappe.db.get_value("Employee", self.employee, "department")
 
@@ -76,9 +76,9 @@ class MaternityLeaveRequest(Document):
 		})
 
 	def create_todo_for_hr_manager(self):
-		"""
+		'''
 		Create a ToDo task for the HR Manager when the workflow state is "Pending HR Approval".
-		"""
+		'''
 		hr_manager_users = get_users_with_role("HR Manager")
 
 		if not hr_manager_users:
@@ -96,9 +96,9 @@ class MaternityLeaveRequest(Document):
 		frappe.msgprint("ToDo created for HR Manager.", alert=True)
 
 	def remove_assignment_by_role(self, role):
-		"""
+		'''
 		Removes ToDo assignments for users with a specific role for a given document.
-		"""
+		'''
 		users = get_users_with_role(role)
 		if users:
 			for user in users:
