@@ -7,36 +7,36 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_wjy2",
+  "employee",
   "full_name",
+  "gender",
   "name_of_father",
   "name_of_spouses",
-  "marital_status",
-  "column_break_wuwn",
-  "pin_code",
-  "present_address",
-  "column_break_kfnl",
-  "mobile_number",
+  "column_break_grvo",
+  "date_of_birth",
   "email_id",
-  "amended_from",
+  "marital_status",
+  "date_of_appointment",
+  "mobile_number",
   "additional_information_section",
   "aadhar_id",
   "permanent_address",
   "do_you_have_esi_with_previous_employer",
   "previous_insurance_no",
   "column_break_txtk",
-  "gender",
-  "date_of_birth",
-  "date_of_appointment",
-  "signature_section_section",
-  "date",
-  "column_break_gwmk",
-  "signature",
+  "pin_code",
+  "present_address",
   "family_details_section",
   "family_details",
   "nominee_details_section",
   "nominee_details",
   "bank_details_section",
-  "bank_details"
+  "bank_details",
+  "signature_section_section",
+  "date",
+  "column_break_gwmk",
+  "column_break_alnc",
+  "signature"
  ],
  "fields": [
   {
@@ -45,6 +45,7 @@
    "label": "Details"
   },
   {
+   "fetch_from": "employee.employee_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Full Name"
@@ -81,27 +82,9 @@
    "label": "Mobile Number"
   },
   {
-   "fieldname": "column_break_wuwn",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_kfnl",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "email_id",
    "fieldtype": "Data",
    "label": "Email ID"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "ESI",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "additional_information_section",
@@ -201,12 +184,26 @@
    "fieldname": "permanent_address",
    "fieldtype": "Small Text",
    "label": "Permanent Address"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "column_break_grvo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_alnc",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-29 11:36:26.538764",
+ "modified": "2024-11-30 10:12:53.962239",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "ESI",
