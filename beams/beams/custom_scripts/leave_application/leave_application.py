@@ -32,17 +32,20 @@ def validate_leave_advance_days(from_date, leave_type):
         )
 
 @frappe.whitelist()
-def validate_leave_application(doc, method):
-    """
-    Validation for Leave Application:
+def validate_sick_leave(doc, method):
+    '''
+    Validation for Sick Leave Application:
     - Check if the leave_type in Leave Application has the is_sick_leave field checked.
     - Validate medical certificate requirement based on the 'medical_leave_required' threshold in Leave Type.
-    """
-    leave_type_details = frappe.db.get_value("Leave Type", doc.leave_type, ["is_sick_leave", "medical_leave_required"], as_dict=True)
+    '''
+    # Get leave type details
+    leave_type_details = frappe.db.get_value("Leave Type",doc.leave_type,["is_sick_leave", "medical_leave_required"],as_dict=True)
+
     if leave_type_details and leave_type_details.is_sick_leave:
         if leave_type_details.medical_leave_required and doc.total_leave_days > leave_type_details.medical_leave_required:
             if not doc.medical_certificate:
                 frappe.throw(_("Medical certificate is required for sick leave exceeding {0} days.").format(leave_type_details.medical_leave_required))
+
 
 def validate_leave_application(doc, method):
     """
