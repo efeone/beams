@@ -146,7 +146,7 @@
    "options": "\nSunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
   },
   {
-   "description": "When Scheduling Reminder Need to be Sent (In days).",
+   "description": "Days in advance to send shift scheduling reminders.",
    "fieldname": "send_shift_creation_reminder",
    "fieldtype": "Int",
    "label": "Send Shift Creation Reminder"
@@ -165,7 +165,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-02 12:54:43.187891",
+ "modified": "2024-12-02 13:27:24.641723",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
