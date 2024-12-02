@@ -1,13 +1,29 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format: PF-{YY}-{####}",
+ "autoname": "format: PF-{employee_id}",
  "creation": "2024-11-26 14:34:05.866299",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "employee_id",
+  "employee_name",
+  "name_of_father",
+  "gender",
+  "column_break_lwqx",
+  "date_of_birth",
+  "company",
+  "designation",
+  "department",
+  "address_and_contacts_section",
+  "mobile",
+  "user_id",
+  "permanent_address",
+  "column_break_fomp",
+  "company_email",
+  "personal_email",
+  "current_address",
   "previous_employment_details_tab",
-  "details_of_uan",
   "earlier_provident_fund",
   "earlier_pension_scheme",
   "details_uan",
@@ -19,6 +35,7 @@
   "other_details_tab",
   "international_worker",
   "country_of_origin",
+  "details_of_uan",
   "educational_qualification",
   "column_break_xfjn",
   "specially_abled",
@@ -130,11 +147,112 @@
   {
    "fieldname": "section_break_rsiu",
    "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "employee_id.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "employee_id",
+   "fieldtype": "Link",
+   "label": "Employee ID",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "employee_id.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "address_and_contacts_section",
+   "fieldtype": "Section Break",
+   "label": "Address and Contacts"
+  },
+  {
+   "fetch_from": "employee_id.personal_email",
+   "fieldname": "personal_email",
+   "fieldtype": "Data",
+   "label": "Personal Email"
+  },
+  {
+   "fetch_from": "employee_id.cell_number",
+   "fieldname": "mobile",
+   "fieldtype": "Data",
+   "label": "Mobile"
+  },
+  {
+   "fetch_from": "employee_id.company_email",
+   "fieldname": "company_email",
+   "fieldtype": "Data",
+   "label": " Company Email"
+  },
+  {
+   "fieldname": "column_break_lwqx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_id.designation",
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "column_break_fomp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_id.user_id",
+   "fieldname": "user_id",
+   "fieldtype": "Link",
+   "label": " User ID",
+   "options": "User"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fetch_from": "employee_id.name_of_father",
+   "fieldname": "name_of_father",
+   "fieldtype": "Data",
+   "label": "Father's Name"
+  },
+  {
+   "fetch_from": "employee_id.gender",
+   "fieldname": "gender",
+   "fieldtype": "Link",
+   "label": "Gender",
+   "options": "Gender"
+  },
+  {
+   "fetch_from": "employee_id.date_of_birth",
+   "fieldname": "date_of_birth",
+   "fieldtype": "Date",
+   "label": "Date of Birth"
+  },
+  {
+   "fetch_from": "employee_id.permanent_address",
+   "fieldname": "permanent_address",
+   "fieldtype": "Small Text",
+   "label": "Permanent Address"
+  },
+  {
+   "fetch_from": "employee_id.current_address",
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "Current Address"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-27 16:44:27.571190",
+ "modified": "2024-12-02 11:39:22.767430",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",

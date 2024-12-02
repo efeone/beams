@@ -1919,7 +1919,7 @@ def get_leave_type_custom_fields():
         "Leave Type": [
             {
                 "fieldname": "min_advance_days",
-                "fieldtype": "Float",
+                "fieldtype": "Int",
                 "label": "Minimum Advance Days",
                 "description": "Specifies the minimum number of days required to apply for this leave.",
                 "insert_after": "max_continuous_days_allowed"
