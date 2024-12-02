@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{SSR}-{YY}-{####}",
+ "creation": "2024-12-02 12:07:35.722762",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_pxjt",
+  "posting_date",
+  "employee",
+  "employee_name",
+  "shift_start_date",
+  "column_break_ayiq",
+  "department",
+  "hod_employee",
+  "hod_user",
+  "swap_with_employee",
+  "swap_with_employee_name",
+  "shift_end_date",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_pxjt",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.first_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name"
+  },
+  {
+   "fieldname": "shift_start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Shift Start Date ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "shift_end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Shift End Date",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "employee.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fetch_from": "department.head_of_department",
+   "fieldname": "hod_employee",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "ignore_user_permissions": 1,
+   "label": "HOD ",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "hod_employee.user_id",
+   "fieldname": "hod_user",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "ignore_user_permissions": 1,
+   "label": "HOD(user)",
+   "options": "User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "swap_with_employee",
+   "fieldtype": "Link",
+   "ignore_user_permissions": 1,
+   "label": "Swap With Employee",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "swap_with_employee.first_name",
+   "fieldname": "swap_with_employee_name",
+   "fieldtype": "Data",
+   "label": "Swap With Employee Name"
+  },
+  {
+   "fieldname": "column_break_ayiq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Shift Swap Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2024-12-02 12:32:55.052190",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Shift Swap Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
