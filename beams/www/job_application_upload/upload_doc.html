@@ -9,6 +9,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Styled Application for Employment</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 </head>
 <body>
   <div id="form_upload_doc">
@@ -548,6 +550,8 @@
     </div>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
     <script>
 
         // Function to handle form submission validation based on checkbox status
@@ -713,6 +717,17 @@
         document.getElementById('add-row-lang').addEventListener('click', function() {
             addRow_lang('table_3');
         });
+
+        <!-- change date format -->
+        flatpickr("#date_of_birth", {
+          dateFormat: "d-m-Y",  // Format as DD-MM-YYYY
+        });
+
+        flatpickr('#interviewed_date', {
+          dateFormat: "d-m-Y",
+        })
+
+
     </script>
 </body>
 </div>
