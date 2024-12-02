@@ -161,6 +161,7 @@
    "options": "Employee"
   },
   {
+   "fetch_from": "employee_id.department",
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
@@ -172,16 +173,19 @@
    "label": "Address and Contacts"
   },
   {
+   "fetch_from": "employee_id.personal_email",
    "fieldname": "personal_email",
    "fieldtype": "Data",
    "label": "Personal Email"
   },
   {
+   "fetch_from": "employee_id.cell_number",
    "fieldname": "mobile",
    "fieldtype": "Data",
    "label": "Mobile"
   },
   {
+   "fetch_from": "employee_id.company_email",
    "fieldname": "company_email",
    "fieldtype": "Data",
    "label": " Company Email"
@@ -191,6 +195,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "employee_id.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
@@ -201,6 +206,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "employee_id.user_id",
    "fieldname": "user_id",
    "fieldtype": "Link",
    "label": " User ID",
@@ -213,27 +219,32 @@
    "options": "Company"
   },
   {
+   "fetch_from": "employee_id.name_of_father",
    "fieldname": "name_of_father",
    "fieldtype": "Data",
    "label": "Father's Name"
   },
   {
+   "fetch_from": "employee_id.gender",
    "fieldname": "gender",
    "fieldtype": "Link",
    "label": "Gender",
    "options": "Gender"
   },
   {
+   "fetch_from": "employee_id.date_of_birth",
    "fieldname": "date_of_birth",
    "fieldtype": "Date",
    "label": "Date of Birth"
   },
   {
+   "fetch_from": "employee_id.permanent_address",
    "fieldname": "permanent_address",
    "fieldtype": "Small Text",
    "label": "Permanent Address"
   },
   {
+   "fetch_from": "employee_id.current_address",
    "fieldname": "current_address",
    "fieldtype": "Small Text",
    "label": "Current Address"
@@ -241,7 +252,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-11-30 10:01:01.418803",
+ "modified": "2024-12-02 11:39:22.767430",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
