@@ -55,7 +55,16 @@
                     </div>
                     <div class="column">
                         <label for="country">Country</label>
-                        <input type="text" id="country" name="country">
+                        {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
+                        <div class="col-14">
+                            <select class="form-control" id="country" name="country"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Country</option>
+                                {% for country in countries %}
+                                <option value="{{ country.name }}">{{ country.country_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
                     <div class="column">
                         <label for="marital_status">Maritial Status</label>

@@ -1,4 +1,3 @@
-
 $(document).ready(function () {
     const { get_query_params, get_query_string } = frappe.utils;
     const applicant_id = $("#docname").val();
@@ -15,6 +14,7 @@ $(document).ready(function () {
             });
         }
     });
+
     function setupReader(file, input) {
         var reader = new FileReader();
         reader.onload = function (e) {
@@ -26,6 +26,10 @@ $(document).ready(function () {
         };
         reader.readAsDataURL(file);
     }
+
+    // Safely sanitize values
+    const safeValue = (value) => value ? frappe.utils.xss_sanitise(String(value)) : "";
+
     $('#submit_application').on('submit', function (event) {
         event.preventDefault();
         const fields = [
@@ -39,72 +43,82 @@ $(document).ready(function () {
             "first_salary_drawn", "last_salary_drawn", "agency_details", "current_salary", "expected_salary",
             "telephone_number", "other_achievments", "position", "interviewed_location", "interviewed_date",
             "interviewed_outcome", "related_employee", "related_employee_org", "related_employee_pos",
-            "related_employee_rel", "professional_org", "political_org", "specialised_training", "reference_taken", "was_this_position", "state_restriction"
+            "related_employee_rel", "professional_org", "political_org", "specialised_training", 
+            "reference_taken", "was_this_position", "state_restriction"
         ];
+
+        // Constructing the main data object
         const data = fields.reduce((obj, field) => {
-            obj[field] = frappe.utils.xss_sanitise($(`#${field}`).val().trim());
+            obj[field] = safeValue($(`#${field}`).val());
             return obj;
         }, { docname: applicant_id });
 
+        // Handling checkbox values
         data.in_india = $('#in_india_checkbox').is(':checked') ? 1 : 0;
         data.abroad = $('#abroad_checkbox').is(':checked') ? 1 : 0;
         data.is_form_submitted = $('#confirm').is(':checked') ? 1 : 0;
 
+        // Handling educational qualifications
         data.educational_qualification = [];
-        const fileReadPromises = [];
-
         $('#educational_qualification_table tbody tr').each(function () {
             const fileInput = $(this).find('input[type="file"]')[0];
             const row = {
-                name_of_course_university: frappe.utils.xss_sanitise($(this).find('.name_of_course_university').val().trim()),
-                name_location_of_institution: frappe.utils.xss_sanitise($(this).find('.name_location_of_institution').val().trim()),
-                dates_attended_from: $(this).find('.dates_attended_from').val(),
-                dates_attended_to: $(this).find('.dates_attended_to').val(),
-                result: frappe.utils.xss_sanitise($(this).find('.result').val().trim()),
-                attachments: fileInput ? fileInput.filedata : null 
+                name_of_course_university: safeValue($(this).find('.name_of_course_university').val()),
+                name_location_of_institution: safeValue($(this).find('.name_location_of_institution').val()),
+                dates_attended_from: safeValue($(this).find('.dates_attended_from').val()),
+                dates_attended_to: safeValue($(this).find('.dates_attended_to').val()),
+                result: safeValue($(this).find('.result').val()),
+                attachments: fileInput ? fileInput.filedata : null
             };
             data.educational_qualification.push(row);
         });
+
+        // Handling professional certifications
         data.professional_certification = [];
         $('#professional_qualification_table tbody tr').each(function () {
             const fileInput = $(this).find('input[type="file"]')[0];
             const row = {
-                course: frappe.utils.xss_sanitise($(this).find('.course').val().trim()),
-                institute_name: frappe.utils.xss_sanitise($(this).find('.institute_name').val().trim()),
-                dates_attended_from: $(this).find('.dates_attended_from').val(),
-                dates_attended_to: $(this).find('.dates_attended_to').val(),
-                type_of_certification: frappe.utils.xss_sanitise($(this).find('.type_of_certification').val().trim()),
-                subject_major: frappe.utils.xss_sanitise($(this).find('.subject_major').val().trim()),
-                attachments: fileInput ? fileInput.filedata : null 
+                course: safeValue($(this).find('.course').val()),
+                institute_name: safeValue($(this).find('.institute_name').val()),
+                dates_attended_from: safeValue($(this).find('.dates_attended_from').val()),
+                dates_attended_to: safeValue($(this).find('.dates_attended_to').val()),
+                type_of_certification: safeValue($(this).find('.type_of_certification').val()),
+                subject_major: safeValue($(this).find('.subject_major').val()),
+                attachments: fileInput ? fileInput.filedata : null
             };
             data.professional_certification.push(row);
         });
+
+        // Handling previous employment history
         data.prev_emp_his = [];
         $('#previous_emplyoment_history_table tbody tr').each(function () {
             const fileInput = $(this).find('input[type="file"]')[0];
             const row = {
-                name_of_org: frappe.utils.xss_sanitise($(this).find('.name_of_org').val().trim()),
-                prev_designation: frappe.utils.xss_sanitise($(this).find('.prev_designation').val().trim()),
-                last_salary_drawn: frappe.utils.xss_sanitise($(this).find('.last_salary_drawn').val().trim()),
-                name_of_manager: frappe.utils.xss_sanitise($(this).find('.name_of_manager').val().trim()),
-                period_of_employment: frappe.utils.xss_sanitise($(this).find('.period_of_employment').val().trim()),
-                reason_for_leaving: frappe.utils.xss_sanitise($(this).find('.reason_for_leaving').val().trim()),
-                attachments: fileInput ? fileInput.filedata : null 
+                name_of_org: safeValue($(this).find('.name_of_org').val()),
+                prev_designation: safeValue($(this).find('.prev_designation').val()),
+                last_salary_drawn: safeValue($(this).find('.last_salary_drawn').val()),
+                name_of_manager: safeValue($(this).find('.name_of_manager').val()),
+                period_of_employment: safeValue($(this).find('.period_of_employment').val()),
+                reason_for_leaving: safeValue($(this).find('.reason_for_leaving').val()),
+                attachments: fileInput ? fileInput.filedata : null
             };
             data.prev_emp_his.push(row);
         });
+
+        // Handling language proficiency
         data.language_proficiency = [];
         $('#table_3 tbody tr').each(function () {
             const row = {
-                language: frappe.utils.xss_sanitise($(this).find('select[name="language"]').val().trim()),
-                speak: frappe.utils.xss_sanitise($(this).find('input[name^="speak"]:checked').val() || 0),
-                read: frappe.utils.xss_sanitise($(this).find('input[name^="read"]:checked').val() || 0),
-                write: frappe.utils.xss_sanitise($(this).find('input[name^="write"]:checked').val() || 0)
+                language: safeValue($(this).find('select[name="language"]').val()),
+                speak: safeValue($(this).find('input[name^="speak"]:checked').val() || 0),
+                read: safeValue($(this).find('input[name^="read"]:checked').val() || 0),
+                write: safeValue($(this).find('input[name^="write"]:checked').val() || 0)
             };
             if (row.language) {
                 data.language_proficiency.push(row);
             }
         });
+
         // Submit the form data with files included
         frappe.call({
             method: "beams.www.job_application_upload.upload_doc.update_register_form",
@@ -116,10 +130,9 @@ $(document).ready(function () {
                 alert(r.message === "success" ? 'Job Applicant updated successfully!' : 'Submission completed.');
             },
             error: function (err) {
-                console.log("Error:", err);
+                console.error("Error:", err);
                 alert('An error occurred during submission.');
             }
         });
     });
 });
-
