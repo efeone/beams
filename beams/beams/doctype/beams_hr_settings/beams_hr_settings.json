@@ -22,7 +22,13 @@
   "section_break_wu5q",
   "default_leave_policy",
   "column_break_laz7",
-  "leave_period"
+  "leave_period",
+  "shift_settings_tab",
+  "shift_publisher_role",
+  "shift_publication_day",
+  "column_break_vowd",
+  "send_shift_creation_reminder",
+  "shift_creation_reminder_template"
  ],
  "fields": [
   {
@@ -115,18 +121,51 @@
    "fieldtype": "Link",
    "label": "Leave Period",
    "options": "Leave Period"
- },
- {
+  },
+  {
    "fieldname": "maternity_leave_type",
    "fieldtype": "Link",
    "label": "Maternity Leave Type",
    "options": "Leave Type"
+  },
+  {
+   "fieldname": "shift_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Shift Settings"
+  },
+  {
+   "fieldname": "shift_publisher_role",
+   "fieldtype": "Link",
+   "label": "Shift Publisher Role",
+   "options": "Role"
+  },
+  {
+   "fieldname": "shift_publication_day",
+   "fieldtype": "Select",
+   "label": "Shift Publication Day ",
+   "options": "\nSunday\nMonday\nTuesday\nWednesday\nThursday\nFriday\nSaturday"
+  },
+  {
+   "description": "When Scheduling Reminder Need to be Sent (In days).",
+   "fieldname": "send_shift_creation_reminder",
+   "fieldtype": "Int",
+   "label": "Send Shift Creation Reminder"
+  },
+  {
+   "fieldname": "shift_creation_reminder_template",
+   "fieldtype": "Link",
+   "label": "Shift Creation Reminder Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "column_break_vowd",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-11-26 15:02:40.794800",
+ "modified": "2024-12-02 12:54:43.187891",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
