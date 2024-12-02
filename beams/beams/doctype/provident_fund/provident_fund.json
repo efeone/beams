@@ -9,25 +9,24 @@
   "employee_id",
   "employee_name",
   "name_of_father",
-  "gender",
-  "column_break_lwqx",
-  "date_of_birth",
   "company",
+  "column_break_lwqx",
+  "gender",
+  "date_of_birth",
   "designation",
   "department",
   "address_and_contacts_section",
   "mobile",
-  "user_id",
   "permanent_address",
   "column_break_fomp",
   "company_email",
-  "personal_email",
   "current_address",
   "previous_employment_details_tab",
   "earlier_provident_fund",
   "earlier_pension_scheme",
   "details_uan",
   "uan",
+  "previous_member_id",
   "is_schema_certificate",
   "column_break_tizj",
   "date_of_exit_for_previous_member_id",
@@ -35,11 +34,12 @@
   "other_details_tab",
   "international_worker",
   "country_of_origin",
+  "column_break_crbu",
+  "specially_abled",
+  "category",
   "details_of_uan",
   "educational_qualification",
   "column_break_xfjn",
-  "specially_abled",
-  "category",
   "section_break_rsiu",
   "kyc_details"
  ],
@@ -115,26 +115,22 @@
   {
    "fieldname": "uan",
    "fieldtype": "Data",
-   "label": "UAN/Previous Member ID",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+   "label": "UAN"
   },
   {
    "fieldname": "date_of_exit_for_previous_member_id",
    "fieldtype": "Date",
-   "label": "Date of Exit for previous member Id",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+   "label": "Date of Exit for previous member Id"
   },
   {
    "fieldname": "is_schema_certificate",
    "fieldtype": "Data",
-   "label": "Scheme Certificate Number(If scheme certificate issued for previous employment)",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+   "label": "Scheme Certificate Number(If scheme certificate issued for previous employment)"
   },
   {
    "fieldname": "is_pension_payment_order",
    "fieldtype": "Data",
-   "label": "PPO Number(If pension payment order(PPO) issued for previous employment)",
-   "mandatory_depends_on": "eval:doc.earlier_provident_fund && doc.earlier_pension_scheme"
+   "label": "PPO Number(If pension payment order(PPO) issued for previous employment)"
   },
   {
    "fieldname": "column_break_tizj",
@@ -152,13 +148,16 @@
    "fetch_from": "employee_id.first_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
-   "label": "Employee Name"
+   "label": "Employee Name",
+   "read_only": 1
   },
   {
    "fieldname": "employee_id",
    "fieldtype": "Link",
-   "label": "Employee ID",
-   "options": "Employee"
+   "in_list_view": 1,
+   "label": "Employee ",
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fetch_from": "employee_id.department",
@@ -173,22 +172,16 @@
    "label": "Address and Contacts"
   },
   {
-   "fetch_from": "employee_id.personal_email",
-   "fieldname": "personal_email",
-   "fieldtype": "Data",
-   "label": "Personal Email"
-  },
-  {
    "fetch_from": "employee_id.cell_number",
    "fieldname": "mobile",
    "fieldtype": "Data",
    "label": "Mobile"
   },
   {
-   "fetch_from": "employee_id.company_email",
+   "fetch_from": "employee_id.prefered_contact_email",
    "fieldname": "company_email",
    "fieldtype": "Data",
-   "label": " Company Email"
+   "label": " Email"
   },
   {
    "fieldname": "column_break_lwqx",
@@ -204,13 +197,6 @@
   {
    "fieldname": "column_break_fomp",
    "fieldtype": "Column Break"
-  },
-  {
-   "fetch_from": "employee_id.user_id",
-   "fieldname": "user_id",
-   "fieldtype": "Link",
-   "label": " User ID",
-   "options": "User"
   },
   {
    "fieldname": "company",
@@ -248,11 +234,20 @@
    "fieldname": "current_address",
    "fieldtype": "Small Text",
    "label": "Current Address"
+  },
+  {
+   "fieldname": "previous_member_id",
+   "fieldtype": "Data",
+   "label": "Previous Member ID"
+  },
+  {
+   "fieldname": "column_break_crbu",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 11:39:22.767430",
+ "modified": "2024-12-02 13:43:16.750727",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
