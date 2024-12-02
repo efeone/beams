@@ -42,6 +42,7 @@
    "fieldtype": "Link",
    "label": "Leave Type",
    "options": "Leave Type",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -78,7 +79,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-27 11:25:00.391202",
+ "modified": "2024-11-29 11:34:18.989409",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Maternity Leave Request",
