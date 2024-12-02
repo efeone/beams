@@ -2816,5 +2816,118 @@
   "workflow_data": null,
   "workflow_name": "Job Proposal Workflow",
   "workflow_state_field": "workflow_state"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow",
+  "document_type": "Shift Swap Request",
+  "is_active": 0,
+  "modified": "2024-12-02 13:35:03.947597",
+  "name": "Shift Swap Request",
+  "override_status": 0,
+  "send_email_alert": 0,
+  "states": [
+   {
+    "allow_edit": "Employee",
+    "avoid_status_override": 0,
+    "doc_status": "0",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Shift Swap Request",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Draft",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "HOD",
+    "avoid_status_override": 0,
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Shift Swap Request",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Pending Approval",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "HOD",
+    "avoid_status_override": 0,
+    "doc_status": "1",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Shift Swap Request",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Approved",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   },
+   {
+    "allow_edit": "HOD",
+    "avoid_status_override": 0,
+    "doc_status": "2",
+    "is_optional_state": 0,
+    "message": null,
+    "next_action_email_template": null,
+    "parent": "Shift Swap Request",
+    "parentfield": "states",
+    "parenttype": "Workflow",
+    "state": "Rejected",
+    "update_field": null,
+    "update_value": null,
+    "workflow_builder_id": null
+   }
+  ],
+  "transitions": [
+   {
+    "action": "Request for Approval",
+    "allow_self_approval": 1,
+    "allowed": "Employee",
+    "condition": null,
+    "next_state": "Pending Approval",
+    "parent": "Shift Swap Request",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Draft",
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Approve",
+    "allow_self_approval": 1,
+    "allowed": "HOD",
+    "condition": "frappe.session.user == frappe.db.get_value(\"Employee\", frappe.db.get_value(\"Department\", frappe.db.get_value(\"Employee\", doc.employee, \"department\"), \"head_of_department\"), \"user_id\")",
+    "next_state": "Approved",
+    "parent": "Shift Swap Request",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending Approval",
+    "workflow_builder_id": null
+   },
+   {
+    "action": "Reject",
+    "allow_self_approval": 1,
+    "allowed": "HOD",
+    "condition": "frappe.session.user == frappe.db.get_value(\"Employee\", frappe.db.get_value(\"Department\", frappe.db.get_value(\"Employee\", doc.employee, \"department\"), \"head_of_department\"), \"user_id\")",
+    "next_state": "Rejected",
+    "parent": "Shift Swap Request",
+    "parentfield": "transitions",
+    "parenttype": "Workflow",
+    "state": "Pending Approval",
+    "workflow_builder_id": null
+   }
+  ],
+  "workflow_data": null,
+  "workflow_name": "Shift Swap Request",
+  "workflow_state_field": "workflow_state"
  }
 ]
