@@ -158,3 +158,12 @@ def validate_unique_application(doc, method):
                 _("The applicant with email ID {0} has already applied for the job opening {1}.")
                 .format(doc.email_id, doc.job_title)
             )
+
+def fetch_designation(doc, method):
+    if doc.job_title:
+        # Fetch the designation from the Job Opening
+        designation = frappe.db.get_value('Job Opening', doc.job_title, 'designation')
+        if designation:
+            doc.designation = designation
+        else:
+            frappe.throw(f"Designation not found for the selected Job Opening: {doc.job_title}")
