@@ -219,7 +219,8 @@ doc_events = {
         "validate": [
             "beams.beams.custom_scripts.job_applicant.job_applicant.validate",
             "beams.beams.custom_scripts.job_applicant.job_applicant.validate_unique_application",
-            "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_designation"
+            "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_designation",
+            "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_department"
             ],
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
     },
