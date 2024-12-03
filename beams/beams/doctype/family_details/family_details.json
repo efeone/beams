@@ -8,8 +8,9 @@
  "field_order": [
   "nameas_per_adhar",
   "relationship_with_employee",
-  "date_of_birth",
   "whether_residing_with_employee",
+  "column_break_ldhk",
+  "date_of_birth",
   "state",
   "district"
  ],
@@ -55,12 +56,16 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "District"
+  },
+  {
+   "fieldname": "column_break_ldhk",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-25 14:49:33.447218",
+ "modified": "2024-12-02 13:36:31.733787",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Family Details",

@@ -36,7 +36,8 @@
   "date",
   "column_break_gwmk",
   "column_break_alnc",
-  "signature"
+  "signature",
+  "amended_from"
  ],
  "fields": [
   {
@@ -51,37 +52,44 @@
    "label": "Full Name"
   },
   {
+   "fetch_from": "employee.name_of_father",
    "fieldname": "name_of_father",
    "fieldtype": "Data",
    "label": "Name of Father"
   },
   {
+   "fetch_from": "employee.name_of_spouse",
    "fieldname": "name_of_spouses",
    "fieldtype": "Data",
    "label": "Name of Spouse"
   },
   {
+   "fetch_from": "employee.marital_status",
    "fieldname": "marital_status",
    "fieldtype": "Select",
    "label": "Marital Status",
    "options": "Single\nMarried\nDivorced\nWidowed"
   },
   {
+   "fetch_from": "employee.current_address",
    "fieldname": "present_address",
    "fieldtype": "Small Text",
    "label": "Present Address"
   },
   {
+   "fetch_from": "employee.pincode",
    "fieldname": "pin_code",
    "fieldtype": "Data",
    "label": "Pin Code"
   },
   {
+   "fetch_from": "employee.cell_number",
    "fieldname": "mobile_number",
-   "fieldtype": "Phone",
+   "fieldtype": "Data",
    "label": "Mobile Number"
   },
   {
+   "fetch_from": "employee.personal_email",
    "fieldname": "email_id",
    "fieldtype": "Data",
    "label": "Email ID"
@@ -92,22 +100,26 @@
    "label": "Additional Information"
   },
   {
+   "fetch_from": "employee.aadhar_id",
    "fieldname": "aadhar_id",
    "fieldtype": "Data",
    "label": "Aadhar ID"
   },
   {
+   "fetch_from": "employee.date_of_birth",
    "fieldname": "date_of_birth",
    "fieldtype": "Date",
    "label": "Date of Birth"
   },
   {
+   "fetch_from": "employee.gender",
    "fieldname": "gender",
    "fieldtype": "Link",
    "label": "Gender",
    "options": "Gender"
   },
   {
+   "fetch_from": "employee.date_of_appointment",
    "fieldname": "date_of_appointment",
    "fieldtype": "Date",
    "label": "Date of Appointment"
@@ -126,8 +138,7 @@
   },
   {
    "fieldname": "signature_section_section",
-   "fieldtype": "Section Break",
-   "label": "Signature Section"
+   "fieldtype": "Section Break"
   },
   {
    "fieldname": "date",
@@ -181,6 +192,7 @@
    "options": "Bank Details"
   },
   {
+   "fetch_from": "employee.permanent_address",
    "fieldname": "permanent_address",
    "fieldtype": "Small Text",
    "label": "Permanent Address"
@@ -188,8 +200,10 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_grvo",
@@ -198,12 +212,22 @@
   {
    "fieldname": "column_break_alnc",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "ESI",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-30 10:12:53.962239",
+ "modified": "2024-12-02 13:40:05.333767",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "ESI",
