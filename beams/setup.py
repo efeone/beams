@@ -785,49 +785,60 @@ def get_employee_custom_fields():
                 "collapsible": 1
             },
             {
-                "fieldname": "have_you",
-                "fieldtype": "Check",
-                "label": _("Have You"),
+                "fieldname": "physical_disabilities",
+                "fieldtype": "Select",
+                "label": "Do you have a physical disability",
+                "options":"Yes\nNo",
+                "default": "No",
                 "insert_after": "additional_information_section"
             },
             {
-                "fieldname": "physical_disabilities",
+                "fieldname": "disabilities",
                 "fieldtype": "Data",
-                "label": "Physical Disabilities",
-                "depends_on": "eval:doc.have_you",
-                "insert_after": "have_you"
+                "label": "Please specify the disability",
+                "insert_after": "physical_disabilities",
+                "depends_on": "eval:doc.physical_disabilities == 'Yes'"
             },
             {
                 "fieldname": "marital_indebtness",
-                "fieldtype": "Data",
-                "label": "Marital Indebtness",
-                "depends_on": "eval:doc.have_you",
-                "insert_after": "physical_disabilities"
+                "fieldtype": "Select",
+                "options":"Yes\nNo",
+                "default": "No",
+                "label": "Do you have marital indebtedness",
+                "insert_after": "disabilities"
             },
             {
                 "fieldname": "court_proceedings",
-                "fieldtype": "Data",
-                "label": "Been Involved in Court Proceeding",
-                "depends_on": "eval:doc.have_you",
+                "fieldtype": "Select",
+                "options":"Yes\nNo",
+                "default": "No",
+                "label": "Are there any ongoing court proceedings",
                 "insert_after": "marital_indebtness",
             },
             {
-                "fieldname": "languages_known",
-                "fieldtype": "Data",
-                "label": "Languages Known",
+                "fieldname": "court_proceedings_details",
+                "fieldtype": "Small Text",
+                "label": "Court Proceedings Details",
                 "insert_after": "court_proceedings",
+                "depends_on": "eval:doc.court_proceedings == 'Yes'"
+            },
+            {
+                "fieldname": "column_break_travel",
+                "fieldtype": "Column Break",
+                "insert_after": "court_proceedings_details"
             },
             {
                 "fieldname": "are_you_willing_to_travel",
                 "label": "Are you willing to travel",
                 "fieldtype": "Check",
-                "insert_after": "languages_known",
+                "insert_after": "column_break_travel",
             },
             {
                 "fieldname": "in_india",
                 "label": "In India",
                 "fieldtype": "Select",
                 "options":"Yes\nNo",
+                "default":"No",
                 "insert_after": "are_you_willing_to_travel",
                 "depends_on": "eval:doc.are_you_willing_to_travel == 1"
             },
@@ -836,6 +847,7 @@ def get_employee_custom_fields():
                 "label": "Abroad",
                 "fieldtype": "Select",
                 "options":"Yes\nNo",
+                "default":"No",
                 "insert_after": "in_india",
                 "depends_on": "eval:doc.are_you_willing_to_travel == 1"
             },
@@ -853,15 +865,10 @@ def get_employee_custom_fields():
                 "insert_after": "state_restrictions_problems",
             },
             {
-                "fieldname": "column_break_after_places_to_travel",
-                "fieldtype": "Column Break",
-                "insert_after": "places_to_travel"
-            },
-            {
                 "fieldname": "are_you_related_to_employee",
                 "label": "Are you related to any of our employees",
                 "fieldtype": "Check",
-                "insert_after": "column_break_after_places_to_travel"
+                "insert_after": "places_to_travel"
             },
             {
                 "fieldname": "employee_name",
@@ -869,18 +876,6 @@ def get_employee_custom_fields():
                 "fieldtype": "Data",
                 "insert_after": "are_you_related_to_employee",
                 "depends_on": "eval:doc.are_you_related_to_employee == 1",
-            },
-            {
-                "fieldname": "specialized_training",
-                "label": "Any Specialized Training/Training Program Attended",
-                "fieldtype": "Small Text",
-                "insert_after": "are_you_related_to_employee"
-            },
-            {
-                "fieldname": "other_information",
-                "label": "Any Other Information/Suggestion",
-                "fieldtype": "Small Text",
-                "insert_after": "specialized_training"
             },
             {
                 "fieldname": "documents_tab",
