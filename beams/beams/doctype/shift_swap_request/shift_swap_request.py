@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import today, getdate
 from frappe.model.document import Document
+from frappe.desk.form.assign_to import add as add_assign
 
 class ShiftSwapRequest(Document):
     def validate(self):
@@ -41,3 +42,62 @@ class ShiftSwapRequest(Document):
                 'end_date': ['>=', self.shift_start_date],
             }
         )
+
+    def on_update(self):
+        """
+        Triggered when the document is updated. Creates a ToDo for the HOD if the workflow state is "Pending Approval".
+        """
+        if self.workflow_state == "Pending Approval":
+            self.create_todo_for_hod()
+
+    def create_todo_for_hod(self):
+        """
+        Create a ToDo task for the HOD of the employee's department when a Shift Swap Request is in "Pending Approval".
+        """
+        
+        department = frappe.db.get_value("Employee", self.employee, "department")
+        if not department:
+            frappe.msgprint(
+                f"No department found for employee {self.employee}.", alert=True
+            )
+            return
+
+        hod_employee = frappe.db.get_value("Department", department, "head_of_department")
+        if not hod_employee:
+            frappe.msgprint(
+                f"No Head of Department assigned for department {department}.", alert=True
+            )
+            return
+
+        hod_user = frappe.db.get_value("Employee", hod_employee, "user_id")
+        if not hod_user:
+            frappe.msgprint(
+                f"The Head of Department ({hod_employee}) does not have a linked user ID.",
+                alert=True,
+            )
+            return
+
+        admin_message = (
+            f"A new Shift Swap Request ({self.name}) has been created by Employee "
+            f"{self.employee}. Please review and take appropriate action."
+        )
+
+        try:
+            add_assign(
+				{
+					"assign_to": [hod_user],
+					"doctype": "Shift Swap Request",
+					"name": self.name,
+					"description": admin_message,
+				}
+			)
+            frappe.msgprint(
+                f"Task successfully assigned to HOD ({hod_user}) for Shift Swap Request {self.name}.",
+                alert=True,
+            )
+        except Exception as e:
+            frappe.log_error(message=f"Failed to create ToDo for HOD: {str(e)}", title="Shift Swap Request")
+            frappe.msgprint(
+                "An error occurred while assigning the task to the HOD. Please check the logs for more details.",
+                alert=True,
+            )
