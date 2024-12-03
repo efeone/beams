@@ -29,5 +29,25 @@ def on_interview_feedback_creation(doc):
 			frappe.db.set_value('Job Applicant', doc.job_applicant, 'status', 'Interview Ongoing')
 
 @frappe.whitelist()
-def get_interview_questions(interview_round):
-	return frappe.get_all('Interview Questions', filters ={'parent': interview_round}, fields=['question', 'answer', 'weight'])
+def get_interview_details(interview_round):
+	'''
+		Fetch Questions and Skills
+	'''
+    # Fetch questions
+    questions = frappe.get_all(
+        'Interview Questions',
+        filters={'parent': interview_round},
+        fields=['question', 'answer', 'weight']
+    )
+
+    # Fetch expected skill set for skill assessment
+    skill_assessment = frappe.get_all(
+        'Expected Skill Set',
+        filters={'parent': interview_round},
+        fields=['skill','weight']
+    )
+
+    return {
+        "questions": questions,
+        "skill_assessment": skill_assessment
+    }

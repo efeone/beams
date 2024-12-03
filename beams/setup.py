@@ -144,6 +144,7 @@ def get_attendance_request_custom_fields():
                 "fieldtype": "Link",
                 "label": "Reports To",
                 "options": "Employee",
+                "fetch_from":"employee.reports_to",
                 "insert_after": "reason"
             },
             {
