@@ -26,6 +26,7 @@
   "shift_settings_tab",
   "shift_publisher_role",
   "shift_publication_day",
+  "enable_shift_notification",
   "column_break_vowd",
   "send_shift_creation_reminder",
   "shift_creation_reminder_template"
@@ -160,12 +161,18 @@
   {
    "fieldname": "column_break_vowd",
    "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_shift_notification",
+   "fieldtype": "Check",
+   "label": "Enable Shift Notification"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-02 13:27:24.641723",
+ "modified": "2024-12-03 16:23:04.815166",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",

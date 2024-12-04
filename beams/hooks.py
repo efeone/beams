@@ -255,12 +255,10 @@ doc_events = {
     },
     "Employee" : {
         "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert_employee"
-
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
     }
-
 }
 
 
@@ -272,7 +270,9 @@ scheduler_events = {
         "beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue",
         "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
         "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder",
-        "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation"
+        "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation",
+        "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications"
+
     ],
 # "all": [
 # "beams.tasks.all"
