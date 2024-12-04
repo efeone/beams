@@ -54,7 +54,7 @@ class ShiftSwapRequest(Document):
         """
         Create a ToDo task for the HOD of the employee's department when a Shift Swap Request is in "Pending Approval".
         """
-        
+
         department = frappe.db.get_value("Employee", self.employee, "department")
         if not department:
             frappe.msgprint(
@@ -101,3 +101,73 @@ class ShiftSwapRequest(Document):
                 "An error occurred while assigning the task to the HOD. Please check the logs for more details.",
                 alert=True,
             )
+
+    def on_update_after_submit(self):
+        '''
+        Triggered after the Shift Swap Request is updated.
+        Initiates the shift swap if the workflow state is "Approved".
+        '''
+        if self.workflow_state == "Approved":
+            self.swap_shifts()
+
+    def swap_shifts(self):
+        '''
+        Swaps shifts between two employees by:
+        1. Cancelling existing shifts for both employees.
+        2. Creating new shift assignments with swapped details.
+        '''
+        employee_shift = frappe.get_all(
+            "Shift Assignment",
+            filters={
+                "employee": self.employee,
+                "start_date": ["<=", self.shift_start_date],
+                "end_date": [">=", self.shift_end_date],
+                "docstatus": 1
+            },
+            fields=["name", "shift_type","roster_type"]
+        )
+
+        swap_with_shift = frappe.get_all(
+            "Shift Assignment",
+            filters={
+                "employee": self.swap_with_employee,
+                "start_date":["<=", self.shift_start_date],
+                "end_date": [">=", self.shift_end_date],
+                "docstatus": 1
+            },
+            fields=["name", "shift_type","roster_type"]
+        )
+
+        for shift in employee_shift:
+            shift_doc = frappe.get_doc("Shift Assignment", shift["name"])
+            shift_doc.cancel()
+
+        for shift in swap_with_shift:
+            shift_doc = frappe.get_doc("Shift Assignment", shift["name"])
+            shift_doc.cancel()
+
+        if employee_shift:
+            new_shift = frappe.new_doc("Shift Assignment")
+            new_shift.update({
+                "employee": self.swap_with_employee,
+                "shift_type": employee_shift[0]["shift_type"],
+                "roster_type": employee_shift[0]["roster_type"],
+                "start_date": self.shift_start_date,
+                "end_date": self.shift_end_date,
+                "status": "Active"
+            })
+            new_shift.insert(ignore_permissions=True)
+            new_shift.submit()
+
+        if swap_with_shift:
+            new_shift = frappe.new_doc("Shift Assignment")
+            new_shift.update({
+                "employee": self.employee,
+                "shift_type": swap_with_shift[0]["shift_type"],
+                "roster_type": swap_with_shift[0]["roster_type"],
+                "start_date": self.shift_start_date,
+                "end_date": self.shift_end_date,
+                "status": "Active"
+            })
+            new_shift.insert(ignore_permissions=True)
+            new_shift.submit()
