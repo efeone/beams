@@ -107,7 +107,7 @@ class ShiftSwapRequest(Document):
         Triggered after the Shift Swap Request is updated.
         Initiates the shift swap if the workflow state is "Approved".
         '''
-        if self.workflow_state == "Approved":
+        if self.workflow_state == "Approved" and self.get_db_value("workflow_state") == "Pending Approval":
             self.swap_shifts()
 
     def swap_shifts(self):
