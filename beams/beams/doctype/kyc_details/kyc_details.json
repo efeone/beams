@@ -14,11 +14,13 @@
  "fields": [
   {
    "fieldname": "kyc_document_type",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "KYC Document Type"
+   "label": "KYC Document Type",
+   "options": "KYC Document"
   },
   {
+   "fetch_from": "kyc_document_type.document_name",
    "fieldname": "name_as_on_kyc_document",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -40,7 +42,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-27 09:57:39.233652",
+ "modified": "2024-12-04 16:06:41.683312",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "KYC Details",
