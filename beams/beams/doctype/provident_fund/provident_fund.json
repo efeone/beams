@@ -19,7 +19,7 @@
   "mobile",
   "permanent_address",
   "column_break_fomp",
-  "company_email",
+  "email",
   "current_address",
   "previous_employment_details_tab",
   "earlier_provident_fund",
@@ -178,12 +178,6 @@
    "label": "Mobile"
   },
   {
-   "fetch_from": "employee_id.prefered_contact_email",
-   "fieldname": "company_email",
-   "fieldtype": "Data",
-   "label": " Email"
-  },
-  {
    "fieldname": "column_break_lwqx",
    "fieldtype": "Column Break"
   },
@@ -243,11 +237,17 @@
   {
    "fieldname": "column_break_crbu",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "employee_id.prefered_email",
+   "fieldname": "email",
+   "fieldtype": "Data",
+   "label": " Email"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-02 13:43:16.750727",
+ "modified": "2024-12-04 12:57:05.600934",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
