@@ -144,8 +144,8 @@ function handle_custom_buttons(frm) {
                 }, __('Set Status'));
             }
 
-            // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", "Job Proposal Accepted or "Interview Completed"
-            if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted', 'Interview Completed'].includes(frm.doc.status)) {
+            // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", "Job Proposal Accepted ,"Interview Completed" or "Selected"
+            if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted', 'Interview Completed', 'Selected'].includes(frm.doc.status)) {
                 frm.remove_custom_button(__('Interview'), __('Create'));
             }
 
@@ -181,6 +181,26 @@ frappe.ui.form.on('Applicant Interview Round', {
                 new_interview.status = 'Pending';
                 frappe.set_route('Form', 'Interview', new_interview.name);
             });
+        }
+    }
+});
+
+frappe.ui.form.on('Job Applicant', {
+    refresh: function(frm) {
+        const statuses = [
+            'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
+            'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
+            'Local Enquiry Rejected', 'Local Enquiry Completed'
+        ];
+
+        if (statuses.includes(frm.doc.status)) {
+          // Remove "Local Enquiry Report" button for the specified statuses
+            frm.remove_custom_button(__('Local Enquiry Report'), __('Create'));
+
+            if (frm.doc.status !== 'Document Uploaded') {
+          // Additionally remove "Interview" button except for "Document Uploaded" status
+                frm.remove_custom_button(__('Interview'), __('Create'));
+            }
         }
     }
 });
