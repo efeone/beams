@@ -38,5 +38,6 @@ def make_employee(source_name, target_doc=None):
         doc.designation         = applicant_data.designation
         doc.marital_status      = applicant_data.marital_status
         doc.permanent_address   = applicant_data.permanent_address
+        doc.current_address     = applicant_data.current_address
 
     return doc
