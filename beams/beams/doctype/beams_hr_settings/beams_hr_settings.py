@@ -104,11 +104,4 @@ def send_inapp_notification(user):
         'content': notification_message,
         'is_seen': 0
     })
-
     notification.insert(ignore_permissions=True)
-
-    frappe.publish_realtime(
-        event='new_notification',
-        message=notification_message,
-        user=user.name
-    )
