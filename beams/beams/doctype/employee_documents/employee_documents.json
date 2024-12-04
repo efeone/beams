@@ -12,9 +12,10 @@
  "fields": [
   {
    "fieldname": "document_name",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Document "
+   "label": "Document ",
+   "options": "Document Type"
   },
   {
    "fieldname": "attachment",
@@ -26,7 +27,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-27 12:20:32.644004",
+ "modified": "2024-12-03 16:38:37.629574",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Documents",
