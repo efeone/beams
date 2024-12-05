@@ -66,8 +66,9 @@
    "fieldtype": "Column Break"
   }
  ],
+ "in_create": 1,
  "links": [],
- "modified": "2024-11-18 15:41:30.615408",
+ "modified": "2024-12-05 09:57:44.791248",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Compensatory Leave Log",
