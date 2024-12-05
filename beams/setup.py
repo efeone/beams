@@ -726,7 +726,7 @@ def get_employee_custom_fields():
                 "fieldtype": "Link",
                 "options": "Stringer Type",
                 "label": "Stringer Type",
-                "insert_after": "salutation"
+                "insert_after": "Bureau"
             },
             {
                 "fieldname": "leave_policy",
