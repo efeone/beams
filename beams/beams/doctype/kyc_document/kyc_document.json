@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:document_type",
  "creation": "2024-12-04 16:00:20.859974",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,7 +13,8 @@
   {
    "fieldname": "document_type",
    "fieldtype": "Data",
-   "label": "Document Type"
+   "label": "Document Type",
+   "unique": 1
   },
   {
    "fieldname": "document_name",
@@ -22,10 +24,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-04 16:06:12.816439",
+ "modified": "2024-12-05 10:45:04.817150",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "KYC Document",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
