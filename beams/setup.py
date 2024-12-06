@@ -2203,7 +2203,7 @@ def get_property_setters():
             "field_name": "designation",
             "property": "label",
             "value":"Designation At The Time Of Joining"
-        },
+        }
     ]
 
 def get_material_request_custom_fields():
