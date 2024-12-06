@@ -1921,24 +1921,17 @@ def get_leave_type_custom_fields():
                 "insert_after": "max_continuous_days_allowed"
             },
             {
-               "fieldname": "is_sick_leave",
-               "fieldtype": "Check",
-               "label": "Is Sick Leave",
-               "insert_after": "is_optional_leave"
-           },
-           {
                "fieldname": "is_proof_document",
                "fieldtype": "Check",
                "label": "Is Proof Document Required",
-               "depends_on": "eval:doc.is_sick_leave",
-               "insert_after": "is_sick_leave"
+               "insert_after": "is_optional_leave"
 
             },
             {
               "fieldname": "medical_leave_required",
                "fieldtype": "Float",
                "label": "Medical Leave Required for Days",
-               "depends_on": "eval:doc.is_proof_document && doc.is_sick_leave",
+               "depends_on": "eval:doc.is_proof_document",
                "insert_after": "is_proof_document"
             }
 
@@ -2210,7 +2203,7 @@ def get_property_setters():
             "field_name": "designation",
             "property": "label",
             "value":"Designation At The Time Of Joining"
-        }
+        },
     ]
 
 def get_material_request_custom_fields():
