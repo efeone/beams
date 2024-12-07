@@ -16,18 +16,32 @@ class ShiftSwapRequest(Document):
 
         # Validate shift assignments
         if not self.has_valid_shift_assignment():
-            frappe.throw(f'Employee {self.employee} does not have a valid shift assignment in the given date range.')
+            employee_name = frappe.db.get_value('Employee', self.employee, 'employee_name')
+            employee_link = f'<a href="/app/employee/{self.employee}" target="_blank">{employee_name}</a>'
+            frappe.throw(f'Employee {employee_link} does not have a valid shift assignment in the given date range.')
+
         if not self.has_valid_shift_assignment(swap=1):
-            frappe.throw(f'Swap With Employee {self.swap_with_employee} does not have a valid shift assignment in the given date range.')
+            swap_employee_name = frappe.db.get_value('Employee', self.swap_with_employee, 'employee_name')
+            swap_employee_link = f'<a href="/app/employee/{self.swap_with_employee}" target="_blank">{swap_employee_name}</a>'
+            frappe.throw(f'Swap With Employee {swap_employee_link} does not have a valid shift assignment in the given date range.')
 
         # Validate department
         employee_department = frappe.db.get_value('Employee', self.employee, 'department')
         swap_employee_department = frappe.db.get_value('Employee', self.swap_with_employee, 'department')
 
         if employee_department != swap_employee_department:
+            # Fetch employee names
+            employee_name = frappe.db.get_value('Employee', self.employee, 'employee_name')
+            swap_employee_name = frappe.db.get_value('Employee', self.swap_with_employee, 'employee_name')
+
+            employee_link = f'<a href="/app/employee/{self.employee}" target="_blank">{employee_name}</a>'
+            swap_employee_link = f'<a href="/app/employee/{self.swap_with_employee}" target="_blank">{swap_employee_name}</a>'
+
             frappe.throw(
-                f'Employee {self.employee} and Swap With Employee {self.swap_with_employee} must belong to the same department.'
+                f'Employee {employee_link} and Swap With Employee {swap_employee_link} must belong to the same department.',
+                title="Department Mismatch"
             )
+
 
     def has_valid_shift_assignment(self, swap=0):
         '''
