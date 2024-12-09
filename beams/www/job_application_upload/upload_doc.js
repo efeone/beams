@@ -29,6 +29,8 @@ $(document).ready(function () {
 
     // Safely sanitize values
     const safeValue = (value) => value ? frappe.utils.xss_sanitise(String(value)) : "";
+    const date_of_birth = safeValue($('#date_of_birth').val());
+    const interviewed_date = safeValue($('#interviewed_date').val());
 
     $('#submit_application').on('submit', function (event) {
         event.preventDefault();
@@ -44,14 +46,20 @@ $(document).ready(function () {
             "telephone_number", "other_achievments", "position", "interviewed_location", "interviewed_date",
             "interviewed_outcome", "related_employee", "related_employee_org", "related_employee_pos",
             "related_employee_rel", "professional_org", "political_org", "specialised_training", 
-            "reference_taken", "was_this_position", "state_restriction"
+            "reference_taken", "was_this_position", "state_restriction", "achievements_checkbox", 
+            "interviewed_before_checkbox", "related_to_employee_checkbox", "professional_org_checkbox", 
+            "political_org_checkbox", "specialised_training_checkbox"
         ];
 
         // Constructing the main data object
         const data = fields.reduce((obj, field) => {
             obj[field] = safeValue($(`#${field}`).val());
             return obj;
-        }, { docname: applicant_id });
+        }, { 
+            docname: applicant_id ,
+            date_of_birth: date_of_birth, 
+            interviewed_date: interviewed_date
+        });
 
         // Handling checkbox values
         data.in_india = $('#in_india_checkbox').is(':checked') ? 1 : 0;
