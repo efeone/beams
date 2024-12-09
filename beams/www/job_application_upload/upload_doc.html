@@ -28,14 +28,14 @@
                 <div class="row" style="width: 31%;">
                     <div class="column">
                         <label for="designation">Position Applied For :</label>
-                        <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" readonly>
+                        <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" {% if doc.designation %} readonly {% endif %}>
                     </div>
 
                 </div>
                 <div class="row">
                     <div class="column">
                         <label for="applicant_name">Full Name</label>
-                        <input type="text" id="applicant_name" name="applicant_name"  value="{{ doc.applicant_name }}" readonly>
+                        <input type="text" id="applicant_name" name="applicant_name"  value="{{ doc.applicant_name }}" {% if doc.applicant_name %} readonly {% endif %}>
                     </div>
                     <div class="column">
                         <label for="father_name">Father's Name</label>
@@ -49,12 +49,16 @@
                 <div class="row">
                     <div class="column">
                         <label for="gender">Gender</label>
-                        <select id="gender" name="gender" >
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
-                    </div>
+                        {% set genders = frappe.get_all('Gender', fields=['gender', 'name']) %}
+                        <div class="col-14"></div>
+                            <select class="form-control" id="gender" name="gender"
+                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                <option value="">Select Gender</option>
+                                {% for gender in genders %}
+                                <option value="{{ gender.name }}">{{ gender.gender }}</option>
+                                {% endfor %}=
+                            </select>
+                        </div>
                     <div class="column">
                         <label for="country">Country</label>
                         {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
@@ -87,12 +91,12 @@
                     <div class="column">
                         <label for="current_period_from">Period of Stay From </label>
                         <input type="text" id="current_period_from" name="current_period_from"
-                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
+                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="current_period_to">To:</label>
                         <input type="text" id="current_period_to" name="current_period_to"
-                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
+                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="current_residence_no">Residence No.</label>
@@ -100,8 +104,8 @@
                     </div>
                     <div class="column">
                         <label for="current_mobile_no">Mobile Number</label>
-                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number }}" readonly>
-                    </div>
+                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number or '' }}" {% if doc.phone_number %} readonly {% endif %}>
+                    </div> 
                     <div class="column">
                         <label for="domain"></label>
                         <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
@@ -116,12 +120,12 @@
                     <div class="column">
                         <label for="permanent_period_from">Period of Stay From</label>
                         <input type="text" id="permanent_period_from" name="permanent_period_from"
-                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
+                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="permanent_period_to">To: </label>
                         <input type="text" id="permanent_period_to" name="permanent_period_to"
-                          maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
+                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="permanent_residence_no">Residence No.</label>
@@ -141,7 +145,7 @@
                 <div class="row tax-details">
                     <div class="column">
                         <label for="email_id_1">Email Id</label>
-                        <input type="text" id="email_id_1" name="email_id_1"  value="{{ doc.email_id }}" readonly>
+                        <input type="text" id="email_id_1" name="email_id_1"  value="{{ doc.email_id }}" {% if doc.email_id %} readonly {% endif %}>
                     </div>
 
                     <div class="column">
@@ -170,8 +174,8 @@
                                     <td>1</td>
                                     <td><input type="text" name="course_university_1" class="name_of_course_university"></td>
                                     <td><input type="text" name="institution_location_1" class="name_location_of_institution"></td>
-                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)"></td>
-                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)"></td>
+                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"></td>
+                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"></td>
                                     <td><input type="Float" name="results_1" class="result"></td>
                                     <td><input type="file" id="qualification_file" class="home-textinput" /></td>
                                 </tr>
@@ -203,8 +207,8 @@
                                 <td>1</td>
                                 <td><input type="text" name="course_1" class="course" ></td>
                                 <td><input type="text" name="institute_name_1" class="institute_name" ></td>
-                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" ></td>
-                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" ></td>
+                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" ></td>
+                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" ></td>
                                 <td><input type="text" name="type_of_certification_1" class="type_of_certification" ></td>
                                 <td><input type="text" name="sub_major_1" class="subject_major" ></td>
                                 <td><input type="file" id="certification_file" class="home-textinput" /></td>
@@ -238,39 +242,21 @@
                     </div>
                     <div class="column">
                         <label for="current_designation">Designation</label>
-                        {% set designations = frappe.get_all('Designation', fields=['designation_name', 'name']) %}
-                        <div class="col-14">
-                            <select class="form-control" id="designation" name="designation"
-                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
-                                <option value="">Select Designation</option>
-                                {% for designation in designations %}
-                                <option value="{{ designation.name }}">{{ designation.designation_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                        <input type="text" id="current_designation" name="current_designation" >
                     </div>
                     <div class="column">
                         <label for="current_department">Department</label>
-                        {% set departments = frappe.get_all('Department', fields=['department_name', 'name']) %}
-                        <div class="col-14">
-                            <select class="form-control" id="department" name="department"
-                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
-                                <option value="">Select Department</option>
-                                {% for department in departments %}
-                                <option value="{{ department.name }}">{{ department.department_name }}</option>
-                                {% endfor %}
-                            </select>
-                        </div>
+                        <input type="text" id="current_department" name="current_department" >
                     </div>
                 </div>
                 <div class="row">
                     <div class="column">
                         <label for="employment_period_from">Employment Period From</label>
-                        <input type="text" id="employment_period_from" name="employment_period_from"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">
+                        <input type="text" id="employment_period_from" name="employment_period_from"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
                         <label for="employment_period_to">Employment Period To</label>
-                        <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" >
+                        <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" >
                     </div>
                     <div class="column">
                         <label for="manager_name">Manager's Name</label>
@@ -379,13 +365,25 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <label for="other_achievments">Please add details of Professional and other Acheivements, Awards and Accomplishments, if any </label>
+                        <label>
+                            <input type="checkbox" id="achievements_checkbox">
+                            Do you have any Professional or other Achievements, Awards, or Accomplishments? </label>
+                    </div>
+                </div>
+                <div class="row" id="achievements_row" style="display: none;">
+                    <div class="column">
+                        <label for="other_achievments">
+                        </label>
                         <textarea id="other_achievments" name="other_achievments" rows="4" cols="50"></textarea>
                     </div>
                 </div>
                 <div class="row">
-                    <label for="address">Have you been interviewed before by Madhyamam Group? If yes, Please give details below</label>
+                    <label>
+                        <input type="checkbox" id="interviewed_before_checkbox">
+                        Have you been interviewed before by Madhyamam Group?
+                    </label>
                 </div>
+                <div id="interview_details_section" style="display: none;">
                 <div class="row">
                     <div class="column">
                         <label for="position">Position</label>
@@ -395,7 +393,7 @@
                         <label for="interviewed_location">Location </label>
                         {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
                         <div class="col-14">
-                            <select class="form-control" id="location" name="location"
+                            <select class="form-control" id="interviewed_location" name="location"
                                 style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
                                 <option value="">Select Location</option>
                                 {% for location in locations %}
@@ -404,21 +402,18 @@
                             </select>
                         </div>
                     </div>
-                    <div class="column">
-                    </div>
                   </div>
                   <div class="row">
-                  <div class="column">
+                    <div class="column">
                         <label for="interviewed_date">Date</label>
-                        <input type="date" id="interviewed_date" name="interviewed_date" >
+                        <input type="date" id="interviewed_date" name="interviewed_date">
                     </div>
                     <div class="column">
                         <label for="interviewed_outcome">Outcome</label>
-                        <input type="text" id="interviewed_outcome" name="interviewed_outcome" >
+                        <input type="text" id="interviewed_outcome" name="interviewed_outcome">
                     </div>
-                    <div class="column">
                     </div>
-                  </div>
+                </div>
                 <h3>Languages Known :</h3>
                 <div class="row tax-details">
                   <table id="table_3">
@@ -492,48 +487,58 @@
                 </table>
               </div>
               <div class="row">
-                  <label for="address">Are you related to any of the Madhyamam Group? If yes, please give details : </label>
+                  <label>
+                    <input type="checkbox" id="related_to_employee_checkbox">
+                    Are you related to any of the Madhyamam Group?
+                  </label>
+              </div>
+              <div id="relationship_details_section" style="display: none;">
+                <div class="row">
+                    <div class="column">
+                        <label for="related_employee">Name</label>
+                        <input type="text" id="related_employee" name="related_employee" >
+                    </div>
+                    <div class="column">
+                        <label for="related_employee_org">Organization</label>
+                        <input type="text" id="related_employee_org" name="related_employee_org" >
+                    </div>
               </div>
               <div class="row">
                 <div class="column">
-                <label for="related_employee">Name</label>
-                <input type="text" id="related_employee" name="related_employee" >
-              </div>
-              <div class="column">
-                <label for="related_employee_org">Organization</label>
-                <input type="text" id="related_employee_org" name="related_employee_org" >
-              </div>
-              <div class="column">
-              </div>
-            </div>
-              <div class="row">
+                    <label for="related_employee_pos">Position</label>
+                    <input type="text" id="related_employee_pos" name="related_employee_pos" >
+                </div>
                 <div class="column">
-                <label for="related_employee_pos">Position</label>
-                <input type="text" id="related_employee_pos" name="related_employee_pos" >
-              </div>
-              <div class="column">
-                <label for="related_employee_rel">Relationship</label>
-                <input type="text" id="related_employee_rel" name="related_employee_rel" >
-              </div>
-              <div class="column">
+                    <label for="related_employee_rel">Relationship</label>
+                    <input type="text" id="related_employee_rel" name="related_employee_rel" >
+                </div>
               </div>
             </div>
             <div class="row">
-                <div class="column">
-                    <label for="professional_org">Are you a member of any Professional Organization? If yes, please give details </label>
-                    <textarea id="professional_org" name="professional_org" rows="4" cols="50"></textarea>
+                <label>
+                    <input type="checkbox" id="professional_org_checkbox">
+                    Are you a member of any Professional Organization? 
+                </label>
+                <div id="professional_org_section" style="display: none;">
+                    <textarea id="professional_org" name="professional_org" rows="4" cols="90"></textarea>
                 </div>
             </div>
             <div class="row">
-                <div class="column">
-                    <label for="political_org">Are you a member of any Political Organization? If yes, please give details </label>
-                    <textarea id="political_org" name="political_org" rows="4" cols="50"></textarea>
+                <label>
+                    <input type="checkbox" id="political_org_checkbox">
+                    Are you a member of any Political Organization? 
+                </label>
+                <div id="political_org_section" style="display: none;">
+                    <textarea id="political_org" name="political_org" rows="4" cols="90"></textarea>
                 </div>
             </div>
             <div class="row">
-                <div class="column">
-                    <label for="specialised_training">Have you attended any specialized training program? If yes, please give details </label>
-                    <textarea id="specialised_training" name="specialised_training" rows="4" cols="50"></textarea>
+                <label>
+                    <input type="checkbox" id="specialised_training_checkbox">
+                    Have you attended any specialized training program? 
+                </label>
+                <div id="specialised_training_section" style="display: none;">
+                    <textarea id="specialised_training" name="specialised_training" rows="4" cols="90"></textarea>
                 </div>
             </div>
             <h3>Declaration and Authorization </h3>
@@ -553,6 +558,42 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+        // Function to toggle visibility based on checkbox state
+        function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
+            const checkbox = document.getElementById(checkboxId);
+            const section = document.getElementById(sectionId);
+            checkbox.addEventListener('change', function() {
+                if (checkbox.checked) {
+                    section.style.display = 'block'; // Show section
+                } else {
+                    section.style.display = 'none'; // Hide section
+                    // Clear input values
+                    textareaOrInputIds.forEach(id => document.getElementById(id).value = '');
+                }
+            });
+        }
+        // Add toggle for Achievements section
+        toggleSection('achievements_checkbox', 'achievements_row', ['other_achievments']);
+
+        // Add toggle for Interviewed Before section
+        toggleSection('interviewed_before_checkbox', 'interview_details_section', [
+            'position',
+            'location',
+            'interviewed_date',
+            'interviewed_outcome'
+        ]);
+
+        // Initialize toggles for all sections
+        toggleSection('related_to_employee_checkbox', 'relationship_details_section', [
+            'related_employee', 
+            'related_employee_org', 
+            'related_employee_pos', 
+            'related_employee_rel'
+        ]);
+        toggleSection('professional_org_checkbox', 'professional_org_section', ['professional_org']);
+        toggleSection('political_org_checkbox', 'political_org_section', ['political_org']);
+        toggleSection('specialised_training_checkbox', 'specialised_training_section', ['specialised_training']);
 
         // Function to handle form submission validation based on checkbox status
         function handleSubmitValidation() {

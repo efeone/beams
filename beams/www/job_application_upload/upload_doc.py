@@ -1,9 +1,10 @@
 import frappe
 import json
 from frappe import _
-from frappe.utils import escape_html, getdate
+from frappe.utils import escape_html, getdate, get_datetime
 from frappe.utils.password import decrypt, encrypt
 from frappe.utils.file_manager import save_file
+import datetime
 
 def get_context(context):
     '''
@@ -60,7 +61,11 @@ def update_register_form(docname, data):
         if frappe.db.exists('Job Applicant', docname):
             doc = frappe.get_doc('Job Applicant', docname)
             for field, value in data.items():
-                setattr(doc, field, escape_html(value))
+                if field in ["date_of_birth", "interviewed_date"] and value:
+                    converted_date = datetime.datetime.strptime(value, "%d-%m-%Y").strftime("%Y-%m-%d")
+                    setattr(doc, field, converted_date)
+                else:
+                    setattr(doc, field, escape_html(value))
             doc.in_india = bool(data.get("in_india"))
             doc.abroad = bool(data.get("abroad"))
             doc.is_form_submitted = bool(data.get("is_form_submitted"))
