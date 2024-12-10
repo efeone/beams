@@ -11,5 +11,16 @@ frappe.ui.form.on('Shift Swap Request', {
                 }
             };
         };
+    },
+    onload: function (frm) {
+      // Only fetch employee if the field is not set
+      if (!frm.doc.employee) {
+        frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name')
+        .then(response => {
+          if (response.message) {
+            frm.set_value('employee', response.message.name);
+          }
+        });
+      }
     }
 });
