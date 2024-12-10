@@ -37,6 +37,7 @@ def after_install():
     create_custom_fields(get_shift_assignment_custom_fields(),ignore_validate=True)
     create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_leave_application_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_employee_performance_feedback(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -84,6 +85,8 @@ def before_uninstall():
     delete_custom_fields(get_shift_assignment_custom_fields())
     delete_custom_fields(get_leave_type_custom_fields())
     delete_custom_fields(get_leave_application_custom_fields())
+    delete_custom_fields(get_employee_performance_feedback())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1906,6 +1909,55 @@ def get_company_custom_fields():
             }
         ]
     }
+
+def get_employee_performance_feedback():
+    '''Custom fields that need to be added to
+        Employee Performance Feedback doctype
+    '''
+    return  {
+        "Employee Performance Feedback" : [
+        {
+            "fieldname": "remarks",
+            "fieldtype": "Long Text",
+            "label": "Remarks by Assessing Officer",
+            "insert_after": "feedback_tab"
+        },
+        {
+            "fieldname": "areas_of_improvement",
+            "fieldtype": "Long Text",
+            "label": "Areas of Improvement",
+            "insert_after": "remarks"
+        },
+        {
+            "fieldname": "promotion_eligibility",
+            "fieldtype": "Long Text",
+            "label": "Promotion Eligibility",
+            "insert_after": "areas_of_improvement"
+
+        },
+        {
+            "fieldname": "meeting_section_break",
+            "fieldtype": "Section Break",
+            "label": "Meeting Details",
+            "insert_after": "total_score"
+        },
+        {
+            "fieldname": "date",
+            "fieldtype": "Date",
+            "label": "Date of the Meeting with Employee",
+            "insert_after": "meeting_section_break"
+        },
+        {
+            "fieldname": "sign_of_officer",
+            "fieldtype": "Attach",
+            "label": "Signature of Assessing Officer",
+            "insert_after": "date"
+        }
+
+
+    ]
+}
+
 
 def get_leave_type_custom_fields():
     '''
