@@ -1,12 +1,12 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:{PA}-{#####}",
  "creation": "2024-12-09 09:46:25.327553",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_nbtl",
-  "column_break_vach",
+  "details_tab",
   "employee",
   "name_of_employee",
   "designation",
@@ -17,17 +17,18 @@
   "date_of_last_promotion",
   "mode_of_employment",
   "appraisal_cycle",
-  "amended_from"
+  "amended_from",
+  "tab_kra",
+  "employee_appraisal_template",
+  "department_appraisal_template",
+  "column_break_dkmi",
+  "company_appraisal_template",
+  "section_break_3wqv",
+  "employee_kra",
+  "department_kra",
+  "company_kra"
  ],
  "fields": [
-  {
-   "fieldname": "section_break_nbtl",
-   "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "column_break_vach",
-   "fieldtype": "Column Break"
-  },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
@@ -98,15 +99,70 @@
   {
    "fieldname": "column_break_qqkw",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "details_tab",
+   "fieldtype": "Tab Break",
+   "label": "Details"
+  },
+  {
+   "fieldname": "employee_kra",
+   "fieldtype": "Table",
+   "label": "Employee KRA",
+   "options": "Employee KRA"
+  },
+  {
+   "fieldname": "department_kra",
+   "fieldtype": "Table",
+   "label": "Department KRA",
+   "options": "Department KRA"
+  },
+  {
+   "fieldname": "company_kra",
+   "fieldtype": "Table",
+   "label": "Company KRA",
+   "options": "Company KRA"
+  },
+  {
+   "fieldname": "tab_kra",
+   "fieldtype": "Tab Break",
+   "label": "KRA"
+  },
+  {
+   "fieldname": "employee_appraisal_template",
+   "fieldtype": "Link",
+   "label": "Employee Appraisal Template",
+   "options": "Appraisal Template"
+  },
+  {
+   "fieldname": "company_appraisal_template",
+   "fieldtype": "Link",
+   "label": "Company Appraisal Template",
+   "options": "Appraisal Template"
+  },
+  {
+   "fieldname": "department_appraisal_template",
+   "fieldtype": "Link",
+   "label": "Department Appraisal Template",
+   "options": "Appraisal Template"
+  },
+  {
+   "fieldname": "section_break_3wqv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_dkmi",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-09 11:10:11.894427",
+ "modified": "2024-12-10 16:19:43.720668",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Performance Appraisal",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
