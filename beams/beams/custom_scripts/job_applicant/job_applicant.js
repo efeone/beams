@@ -186,21 +186,45 @@ frappe.ui.form.on('Applicant Interview Round', {
 });
 
 frappe.ui.form.on('Job Applicant', {
-    refresh: function(frm) {
+    refresh: function (frm) {
         const statuses = [
             'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
             'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
-            'Local Enquiry Rejected', 'Local Enquiry Completed'
+            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted',
+            'Training Completed', 'Job Proposal Accepted', 'Job Proposal Created'
         ];
 
-        if (statuses.includes(frm.doc.status)) {
-          // Remove "Local Enquiry Report" button for the specified statuses
-            frm.remove_custom_button(__('Local Enquiry Report'), __('Create'));
+        const removeButtons = (buttons) => buttons.forEach(([label, group]) => frm.remove_custom_button(label, group));
+        const removeInnerButtons = (buttons) => buttons.forEach(([label, group]) => frm.page.remove_inner_button(label, group));
 
+        // Remove buttons for specified statuses
+        if (statuses.includes(frm.doc.status)) {
+            removeButtons([['Local Enquiry Report', 'Create']]);
             if (frm.doc.status !== 'Document Uploaded') {
-          // Additionally remove "Interview" button except for "Document Uploaded" status
-                frm.remove_custom_button(__('Interview'), __('Create'));
+                removeButtons([['Interview', 'Create']]);
             }
+        }
+
+        // Remove additional buttons for specific statuses
+        if (['Accepted', 'Training Completed'].includes(frm.doc.status)) {
+            removeButtons([['View'], ['Send Magic Link'], ['Job Offer', 'Create']]);
+            removeInnerButtons([['Job Offer', 'View'], ['Rejected', 'Set Status'], ['Hold', 'Set Status']]);
+        }
+
+        // Remove "Send Magic Link" for various statuses
+        if (['Interview Completed', 'Local Enquiry Approved', 'Selected', 'Job Proposal Created',
+            'Job Proposal Accepted', 'Interview Scheduled', 'Interview Ongoing', 'Pending Document Upload', 'Document Uploaded'].includes(frm.doc.status)) {
+            removeButtons([['Send Magic Link']]);
+        }
+
+        // Remove inner buttons for Job Proposal statuses
+        if (['Job Proposal Created', 'Job Proposal Accepted'].includes(frm.doc.status)) {
+            removeInnerButtons([['Rejected', 'Set Status'], ['Hold', 'Set Status']]);
+        }
+
+        // Remove "Local Enquiry Report" button for Interview statuses
+        if (['Interview Scheduled', 'Interview Ongoing'].includes(frm.doc.status)) {
+            removeInnerButtons([['Local Enquiry Report', 'Create']]);
         }
     }
 });
