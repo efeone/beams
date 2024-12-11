@@ -29,7 +29,12 @@
   "enable_shift_notification",
   "column_break_vowd",
   "send_shift_creation_reminder",
-  "shift_creation_reminder_template"
+  "shift_creation_reminder_template",
+  "appraisal_settings_tab",
+  "appraisal_creation_period",
+  "enable_appraisal_reminder",
+  "column_break_rcin",
+  "appraisal_reminder_template"
  ],
  "fields": [
   {
@@ -167,12 +172,39 @@
    "fieldname": "enable_shift_notification",
    "fieldtype": "Check",
    "label": "Enable Shift Notification"
+  },
+  {
+   "description": "The timeframe in which the appraisal should be sent.",
+   "fieldname": "appraisal_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Appraisal Settings"
+  },
+  {
+   "fieldname": "appraisal_creation_period",
+   "fieldtype": "Int",
+   "label": " Appraisal Creation Period"
+  },
+  {
+   "fieldname": "column_break_rcin",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "appraisal_reminder_template",
+   "fieldtype": "Link",
+   "label": "Appraisal reminder Template",
+   "options": "Email Template"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_appraisal_reminder",
+   "fieldtype": "Check",
+   "label": "Enable Appraisal Reminder"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-03 16:23:04.815166",
+ "modified": "2024-12-11 12:46:46.347731",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
