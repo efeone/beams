@@ -258,6 +258,9 @@ doc_events = {
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
+    },
+    "Interview": {
+        "on_submit": "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
     }
 }
 
