@@ -75,24 +75,6 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-10-02 11:07:13.425158",
-  "name": "On Hold",
-  "style": "",
-  "workflow_state_name": "On Hold"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
-  "modified": "2024-08-27 12:10:51.168269",
-  "name": "Cancelled",
-  "style": "Danger",
-  "workflow_state_name": "Cancelled"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow State",
-  "icon": "",
   "modified": "2024-11-05 12:11:26.754828",
   "name": "Applicant Accepted",
   "style": "",
@@ -138,10 +120,19 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-11-28 11:16:33.546485",
-  "name": "Pending HR Approval",
+  "modified": "2024-08-20 14:52:12.123094",
+  "name": "Pending Approval",
+  "style": "Info",
+  "workflow_state_name": "Pending Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-10-02 11:07:13.425158",
+  "name": "On Hold",
   "style": "",
-  "workflow_state_name": "Pending HR Approval"
+  "workflow_state_name": "On Hold"
  },
  {
   "docstatus": 0,
@@ -151,6 +142,33 @@
   "name": "Rejected",
   "style": "Danger",
   "workflow_state_name": "Rejected"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-12-11 12:11:44.251806",
+  "name": "Pending CEO Final Approval",
+  "style": "",
+  "workflow_state_name": "Pending CEO Final Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-27 12:10:51.168269",
+  "name": "Cancelled",
+  "style": "Danger",
+  "workflow_state_name": "Cancelled"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2024-08-17 14:26:48.530305",
+  "name": "Draft",
+  "style": "",
+  "workflow_state_name": "Draft"
  },
  {
   "docstatus": 0,
@@ -165,18 +183,18 @@
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-17 14:26:48.530305",
-  "name": "Draft",
+  "modified": "2024-11-28 11:16:33.546485",
+  "name": "Pending HR Approval",
   "style": "",
-  "workflow_state_name": "Draft"
+  "workflow_state_name": "Pending HR Approval"
  },
  {
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
-  "modified": "2024-08-20 14:52:12.123094",
-  "name": "Pending Approval",
-  "style": "Info",
-  "workflow_state_name": "Pending Approval"
+  "modified": "2024-12-11 11:45:34.360225",
+  "name": "Pending CEO Approval",
+  "style": "",
+  "workflow_state_name": "Pending CEO Approval"
  }
 ]
