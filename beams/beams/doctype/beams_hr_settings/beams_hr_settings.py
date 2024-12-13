@@ -105,8 +105,11 @@ def send_inapp_notification(user):
         'is_seen': 0
     })
     notification.insert(ignore_permissions=True)
+import frappe
+from frappe import _
+from frappe.utils import get_url, now_datetime
+import datetime
 
-@frappe.whitelist()
 def send_appraisal_reminders():
     '''
     Send notifications to HR Managers based on the configured Appraisal Creation Period
@@ -146,13 +149,13 @@ def send_appraisal_reminders():
                     user = frappe.get_doc('User', hr_manager.name)
 
                     # Send reminder email and in-app notification
-                    send_appraisal_email_notification(user, appraisal_reminder_template, today, appraisal_creation_period)
-                    send_appraisal_inapp_notification(user, appraisal_reminder_template, today, appraisal_creation_period)
+                    send_appraisal_email_notification(user, appraisal_reminder_template, today, appraisal_creation_period, employee.employee_name)
+                    send_appraisal_inapp_notification(user, appraisal_reminder_template, today, appraisal_creation_period, employee.employee_name)
 
                     notified_hr_managers.add(hr_manager.name)
     return
 
-def send_appraisal_email_notification(user, appraisal_reminder_template, today, appraisal_creation_period):
+def send_appraisal_email_notification(user, appraisal_reminder_template, today, appraisal_creation_period, employee):
     '''
     Send email notification to the HR Manager about the appraisal reminder.
     '''
@@ -167,7 +170,17 @@ def send_appraisal_email_notification(user, appraisal_reminder_template, today, 
     if not subject or not email_content:
         return
 
-    email_content = email_content.format(user_full_name=user.full_name)
+    # Render the email content using frappe.render_template
+    try:
+        email_content = frappe.render_template(email_content, {
+            'user_full_name': user.full_name,
+            'today': today,
+            'appraisal_creation_period': appraisal_creation_period,
+            'employee': employee
+        })
+    except Exception as e:
+        frappe.log_error(f"Error rendering email template: {e}", "Appraisal Email Notification")
+        return
 
     # Send the email
     frappe.sendmail(
@@ -179,8 +192,7 @@ def send_appraisal_email_notification(user, appraisal_reminder_template, today, 
         now=True
     )
 
-
-def send_appraisal_inapp_notification(user, appraisal_reminder_template, today, appraisal_creation_period):
+def send_appraisal_inapp_notification(user, appraisal_reminder_template, today, appraisal_creation_period, employee):
     '''
     Send in-app notification to the HR Manager about the appraisal reminder.
     '''
@@ -196,7 +208,17 @@ def send_appraisal_inapp_notification(user, appraisal_reminder_template, today, 
     if not subject or not notification_message:
         return
 
-    notification_message = notification_message.format(user_full_name=user.full_name)
+    # Render the in-app notification message using frappe.render_template
+    try:
+        notification_message = frappe.render_template(notification_message, {
+            'user_full_name': user.full_name,
+            'today': today,
+            'appraisal_creation_period': appraisal_creation_period,
+            'employee': employee
+        })
+    except Exception as e:
+        frappe.log_error(f"Error rendering in-app notification template: {e}", "Appraisal In-App Notification")
+        return
 
     # Create the Notification Log for the user
     notification = frappe.get_doc({

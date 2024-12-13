@@ -180,6 +180,7 @@
    "label": "Appraisal Settings"
   },
   {
+   "depends_on": "eval:doc.enable_appraisal_reminder;",
    "fieldname": "appraisal_creation_period",
    "fieldtype": "Int",
    "label": " Appraisal Creation Period"
@@ -189,6 +190,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "depends_on": "eval:doc.enable_appraisal_reminder;",
    "fieldname": "appraisal_reminder_template",
    "fieldtype": "Link",
    "label": "Appraisal reminder Template",
@@ -204,7 +206,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-11 12:46:46.347731",
+ "modified": "2024-12-12 17:15:36.533065",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
