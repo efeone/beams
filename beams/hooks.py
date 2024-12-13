@@ -274,7 +274,8 @@ scheduler_events = {
         "beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
         "beams.beams.custom_scripts.attendance.attendance.send_absent_reminder",
         "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation",
-        "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications"
+        "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
+        "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders"
 
     ],
 # "all": [
