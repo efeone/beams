@@ -247,11 +247,7 @@ doc_events = {
 
     },
     "Leave Application" : {
-        "validate":[
-            "beams.beams.custom_scripts.leave_application.leave_application.validate_leave_type",
-            "beams.beams.custom_scripts.leave_application.leave_application.validate_sick_leave",
-            "beams.beams.custom_scripts.leave_application.leave_application.validate_leave_application",
-         ]
+        "validate": "beams.beams.custom_scripts.leave_application.leave_application.validate"
     },
     "Employee" : {
         "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert_employee"

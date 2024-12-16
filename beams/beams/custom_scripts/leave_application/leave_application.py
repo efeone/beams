@@ -1,11 +1,14 @@
 import frappe
 from frappe import _
 from frappe.utils import add_days, nowdate
+from frappe.utils import getdate
 from hrms.hr.doctype.leave_application.leave_application import get_leave_details
 
-@frappe.whitelist()
-def validate_leave_type(doc, method):
+def validate(doc, method):
+    validate_notice_period(doc)
     validate_leave_advance_days(doc.from_date, doc.leave_type)
+    validate_sick_leave(doc)
+    validate_leave_application(doc)
 
 @frappe.whitelist()
 def validate_leave_advance_days(from_date, leave_type):
@@ -31,8 +34,7 @@ def validate_leave_advance_days(from_date, leave_type):
             .format(min_advance_days)
         )
 
-@frappe.whitelist()
-def validate_sick_leave(doc, method):
+def validate_sick_leave(doc):
     '''
     Validation for Sick Leave Application:
     - Check if the leave_type in Leave Application has the is_sick_leave field checked.
@@ -47,7 +49,7 @@ def validate_sick_leave(doc, method):
                 frappe.throw(_("Medical certificate is required for sick leave exceeding {0} days.").format(leave_type_details.medical_leave_required))
 
 
-def validate_leave_application(doc, method):
+def validate_leave_application(doc):
     """
         Validates the leave application based on the penalty leave type in HR settings
         only if:
@@ -107,3 +109,17 @@ def validate_leave_application(doc, method):
                 frappe.throw(
                     "As per the penalty policy, only '<b>{0}</b>' can be applied for Employee '<b>{1}:{2}</b>'".format(penalty_leave_type, doc.employee, doc.employee_name)
                 )
+
+def validate_notice_period(doc):
+    '''
+        Validate that an employee cannot take certain leave types during notice period
+        if the leave type is not allowed in the notice period.
+    '''
+    resignation_letter_date = frappe.db.get_value("Employee", doc.employee, "resignation_letter_date")
+    if resignation_letter_date:
+        resignation_letter_date = getdate(resignation_letter_date)
+        from_date = getdate(doc.from_date)
+        if from_date >= resignation_letter_date:
+            leave_type = frappe.db.get_value("Leave Type", doc.leave_type, "allow_in_notice_period")
+            if not leave_type:
+                frappe.throw(_("You are not allowed to apply for {0} during the <b>Notice Period</b>.").format(frappe.bold(doc.leave_type)))
