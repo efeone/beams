@@ -59,7 +59,7 @@
   {
    "fetch_from": "employee.relieving_date",
    "fieldname": "relieving_date",
-   "fieldtype": "Data",
+   "fieldtype": "Date",
    "label": "Relieving Date"
   },
   {
@@ -92,7 +92,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-16 13:32:38.697899",
+ "modified": "2024-12-16 17:06:38.865894",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Exit Clearance",
