@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2024-12-16 10:47:43.001937",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_exit_clearance",
+  "department",
+  "status"
+ ],
+ "fields": [
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department ",
+   "options": "Department"
+  },
+  {
+   "fieldname": "employee_exit_clearance",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee Exit Clearance",
+   "options": "Employee Exit Clearance"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "\nPending\nCompleted"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-12-16 11:35:39.515276",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Clearance",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
