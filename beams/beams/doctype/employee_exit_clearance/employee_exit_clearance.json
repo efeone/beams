@@ -40,14 +40,16 @@
   {
    "fetch_from": "employee.department",
    "fieldname": "department",
-   "fieldtype": "Data",
-   "label": "Department"
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
   },
   {
    "fetch_from": "employee.designation",
    "fieldname": "designation",
-   "fieldtype": "Data",
-   "label": "Designation"
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
   },
   {
    "fieldname": "employee_separation_begins_on",
@@ -69,7 +71,7 @@
   {
    "depends_on": "eval:doc.pending_dues;",
    "fieldname": "amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "label": "Amount"
   },
   {
@@ -90,7 +92,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-16 11:16:12.593540",
+ "modified": "2024-12-16 13:32:38.697899",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Exit Clearance",
