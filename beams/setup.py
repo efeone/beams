@@ -87,7 +87,6 @@ def before_uninstall():
     delete_custom_fields(get_leave_application_custom_fields())
     delete_custom_fields(get_employee_performance_feedback())
 
-
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -1985,8 +1984,14 @@ def get_leave_type_custom_fields():
                "label": "Medical Leave Required for Days",
                "depends_on": "eval:doc.is_proof_document",
                "insert_after": "is_proof_document"
-            }
+            },
+            {
+               "fieldname": "allow_in_notice_period",
+               "fieldtype": "Check",
+               "label": "Allow in Notice Period",
+               "insert_after": "is_compensatory"
 
+            }
         ]
     }
 
