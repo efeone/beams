@@ -1121,7 +1121,8 @@ def get_job_requisition_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Minimum Experience Required",
-                "insert_after": "education_column_break"
+                "insert_after": "education_column_break",
+                "permlevel": 1
             },
             {
                 "fieldname": "reset_column",
@@ -1204,7 +1205,6 @@ def get_job_requisition_custom_fields():
                 "label": "Job Title",
                 "insert_after": "job_description_template",
                 "reqd": 1,
-                "permlevel": 1
             },
             {
                 "fieldname": "suggested_designation",
@@ -1222,7 +1222,6 @@ def get_job_requisition_custom_fields():
                 "insert_after": "description",
                 "permlevel": 3
             },
-
         ]
     }
 
@@ -1391,7 +1390,8 @@ def get_job_applicant_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Work Experience(in years)",
-                "insert_after": "details_column_break"
+                "insert_after": "details_column_break",
+                "permlevel": 1
             },
 
             {
@@ -1887,7 +1887,7 @@ def get_job_opening_custom_fields():
                 "fieldname": "qualification_details",
                 "fieldtype": "Section Break",
                 "label": "Education and Qualification Details",
-                "insert_after": "license_type"
+                "insert_after": "license_type",
             },
             {
                "fieldname": "min_education_qual",
@@ -2496,6 +2496,14 @@ def get_property_setters():
             "property": "fetch_from",
             "property_type": "Link",
             "value":"employee_left.designation"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "fetch_from",
+            "property_type": "Link",
+            "value":"employee_left.department"
         },
         {
             "doctype_or_field": "DocField",
