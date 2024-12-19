@@ -258,7 +258,11 @@ doc_events = {
     },
     "Interview": {
         "on_submit": "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
+    },
+    "Employee Separation": {
+        "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
     }
+
 }
 
 
