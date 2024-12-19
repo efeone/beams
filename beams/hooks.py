@@ -261,10 +261,11 @@ doc_events = {
     },
     "Employee Separation": {
         "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
+        },
+    "Task":{
+        "on_update":"beams.beams.custom_scripts.task.task.on_task_update"
     }
-
 }
-
 
 # Scheduled Tasks
 # ---------------
