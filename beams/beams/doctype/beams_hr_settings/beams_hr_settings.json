@@ -15,7 +15,6 @@
   "it_hod",
   "column_break_qbue",
   "tab_3_tab",
-  "penalty_leave_type",
   "maternity_leave_type",
   "column_break_pjdi",
   "compensatory_leave_type",
@@ -89,13 +88,6 @@
    "fieldname": "tab_3_tab",
    "fieldtype": "Tab Break",
    "label": " Leave Settings"
-  },
-  {
-   "description": "Leave Type for Unplanned Leave",
-   "fieldname": "penalty_leave_type",
-   "fieldtype": "Link",
-   "label": "Penalty Leave Type",
-   "options": "Leave Type"
   },
   {
    "description": "Leave Type for Double Shift Compensatory Leave",
@@ -206,7 +198,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-12 17:15:36.533065",
+ "modified": "2024-12-17 13:51:39.311320",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",

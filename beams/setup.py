@@ -38,6 +38,7 @@ def after_install():
     create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_leave_application_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_performance_feedback(),ignore_validate=True)
+    create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -86,6 +87,7 @@ def before_uninstall():
     delete_custom_fields(get_leave_type_custom_fields())
     delete_custom_fields(get_leave_application_custom_fields())
     delete_custom_fields(get_employee_performance_feedback())
+    delete_custom_fields(get_employment_type_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -115,6 +117,22 @@ def get_shift_assignment_custom_fields():
                 "label": "Roster Type",
                 "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
+            }
+        ]
+    }
+
+def get_employment_type_custom_fields():
+    '''
+    Custom fields that need to be added to the Employment Type DocType
+    '''
+    return {
+        "Employment Type": [
+            {
+                "fieldname": "penalty_leave_type",
+                "fieldtype": "Link",
+                "label": "Penalty Leave Type",
+                "options": "Leave Type",
+                "insert_after": "employee_type_name"
             }
         ]
     }
@@ -2205,6 +2223,13 @@ def get_property_setters():
         {
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
+            "field_name": "posting_date",
+            "property": "read_only",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Leave Application",
             "field_name": "posting_date",
             "property": "read_only",
             "value": 1
