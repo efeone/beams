@@ -1,7 +1,7 @@
 import frappe
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import getdate, nowdate
+from frappe.utils import getdate, nowdate, add_days
 
 @frappe.whitelist()
 def create_event(employee_id=None, hod_user=None, target_doc=None):
@@ -79,3 +79,11 @@ def after_insert_employee(doc, method):
     # Save and submit the leave policy assignment
     leave_policy_assignment.insert()
     leave_policy_assignment.submit()
+
+
+def set_employee_relieving_date(doc, method):
+    """
+    Automatically set the relieving_date based on resignation_letter_date and notice_number_of_days.
+    """
+    if doc.resignation_letter_date and doc.notice_number_of_days:
+        doc.relieving_date = add_days(getdate(doc.resignation_letter_date), doc.notice_number_of_days)
