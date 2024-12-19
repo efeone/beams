@@ -40,7 +40,8 @@ def after_install():
     create_custom_fields(get_employee_performance_feedback(),ignore_validate=True)
     create_custom_fields(get_employment_type(),ignore_validate=True)
     create_custom_fields(get_appointment_letter(),ignore_validate=True)
-
+    create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_employee_separation_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -91,6 +92,8 @@ def before_uninstall():
     delete_custom_fields(get_employee_performance_feedback())
     delete_custom_fields(get_employment_type())
     delete_custom_fields(get_appointment_letter())
+    delete_custom_fields(get_employment_type_custom_fields())
+    delete_custom_fields(get_employee_separation_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2012,6 +2015,29 @@ def get_leave_type_custom_fields():
                "label": "Allow in Notice Period",
                "insert_after": "is_compensatory"
 
+            }
+        ]
+    }
+def get_employee_separation_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Separation Doctype
+    '''
+    return {
+        "Employee Separation": [
+            {
+                "fieldname": "employee_clearance",
+                "fieldtype": "Table",
+                "label": "Employee Clearance",
+                "options": "Employee Clearance",
+                "insert_after": "activities"
+
+            },
+            {
+                "fieldname": "employee_exit_status",
+                "fieldtype": "Select",
+                "label": "Employee Exit Clearance Status",
+                "options":"Pending\nCompleted",
+                "insert_after": "employee_clearance"
             }
         ]
     }

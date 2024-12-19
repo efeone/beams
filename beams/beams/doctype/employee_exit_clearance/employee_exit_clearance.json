@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{EEC}-{employee}",
+ "autoname": "format:{EEC}-{#####}",
  "creation": "2024-12-16 10:36:25.532854",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -12,8 +12,11 @@
   "department",
   "designation",
   "column_break_hpbb",
-  "employee_separation_begins_on",
+  "date_of__joining",
   "relieving_date",
+  "employee_separation_begins_on",
+  "notice_period",
+  "section_break_xyib",
   "pending_dues",
   "amount",
   "amended_from"
@@ -79,6 +82,22 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "employee.notice_number_of_days",
+   "fieldname": "notice_period",
+   "fieldtype": "Int",
+   "label": "Notice Period"
+  },
+  {
+   "fetch_from": "employee.date_of_joining",
+   "fieldname": "date_of__joining",
+   "fieldtype": "Date",
+   "label": "Date of  Joining"
+  },
+  {
+   "fieldname": "section_break_xyib",
+   "fieldtype": "Section Break"
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -92,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-12-16 17:06:38.865894",
+ "modified": "2024-12-19 10:12:44.011757",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Exit Clearance",
