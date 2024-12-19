@@ -89,13 +89,8 @@ def before_uninstall():
     delete_custom_fields(get_leave_type_custom_fields())
     delete_custom_fields(get_leave_application_custom_fields())
     delete_custom_fields(get_employee_performance_feedback())
-<<<<<<< HEAD
-    delete_custom_fields(get_employment_type_custom_fields())
-=======
-    delete__custom_fields(get_employment_type())
-    delete__custom_fields(get_appointment_letter())
-
->>>>>>> 8f9c88e (feat:Fetched notice period based on Employment Type and Appointment Letter)
+    delete_custom_fields(get_employment_type())
+    delete_custom_fields(get_appointment_letter())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2607,6 +2602,7 @@ def get_email_templates():
                            HR Manager"""
         }
 ]
+
 def get_employment_type():
     '''
     Custom fields to be added to the Employment Type Doctype
@@ -2621,6 +2617,7 @@ def get_employment_type():
             }
         ]
     }
+
 def get_appointment_letter():
     '''
     Custom fields that need to be added to the Appointment Letter DocType
