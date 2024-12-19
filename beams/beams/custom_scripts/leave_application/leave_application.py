@@ -1,14 +1,15 @@
 import frappe
 from frappe import _
-from frappe.utils import add_days, nowdate
-from frappe.utils import getdate
+from frappe.utils import add_days, nowdate, getdate
 from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+
 
 def validate(doc, method):
     validate_notice_period(doc)
     validate_leave_advance_days(doc.from_date, doc.leave_type)
     validate_sick_leave(doc)
     validate_leave_application(doc)
+
 
 @frappe.whitelist()
 def validate_leave_advance_days(from_date, leave_type):
@@ -41,20 +42,28 @@ def validate_sick_leave(doc):
     - Validate medical certificate requirement based on the 'medical_leave_required' threshold in Leave Type.
     '''
     # Get leave type details
-    leave_type_details = frappe.db.get_value("Leave Type",doc.leave_type,["is_sick_leave", "medical_leave_required"],as_dict=True)
+    leave_type_details = frappe.db.get_value(
+        "Leave Type",
+        doc.leave_type,
+        ["is_sick_leave", "medical_leave_required"],
+        as_dict=True,
+    )
 
     if leave_type_details and leave_type_details.is_sick_leave:
         if leave_type_details.medical_leave_required and doc.total_leave_days > leave_type_details.medical_leave_required:
             if not doc.medical_certificate:
-                frappe.throw(_("Medical certificate is required for sick leave exceeding {0} days.").format(leave_type_details.medical_leave_required))
+                frappe.throw(
+                    _("Medical certificate is required for sick leave exceeding {0} days.")
+                    .format(leave_type_details.medical_leave_required)
+                )
 
 def validate_leave_application(doc):
-    """
+    '''
     Validates the leave application based on the penalty leave type in Employment Type doctype
     only if:
     1. The employee is marked absent on the leave application dates.
     2. The posting date of the leave application is after the absent date(s).
-    """
+    '''
     # Fetch all absences for the employee within the leave application date range
     absences = frappe.get_all(
         'Attendance',
@@ -66,7 +75,7 @@ def validate_leave_application(doc):
         },
         fields=["attendance_date"],
     )
-    
+
     valid_absent_dates = [
         absence["attendance_date"]
         for absence in absences
@@ -79,7 +88,7 @@ def validate_leave_application(doc):
         employment_type = frappe.get_value("Employee", doc.employee, "employment_type")
 
         if not employment_type:
-            frappe.throw("Employment type is not set for Employee: {0}".format(employee_name))
+            frappe.throw(_("Employment type is not set for Employee: {0}").format(employee_name))
 
         penalty_leave_type = frappe.get_value('Employment Type', employment_type, 'penalty_leave_type')
 
@@ -87,9 +96,8 @@ def validate_leave_application(doc):
             # If penalty_leave_type is not set, allow only 'Leave Without Pay'
             if doc.leave_type != 'Leave Without Pay':
                 frappe.throw(
-                    "As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{0}</b>".format(
-                        employee_name
-                    )
+                    _("As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{0}</b>")
+                    .format(employee_name)
                 )
             return
 
@@ -102,9 +110,8 @@ def validate_leave_application(doc):
         if penalty_leave_type not in leave_allocations:
             if doc.leave_type not in lwps:
                 frappe.throw(
-                    "As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{0}</b>".format(
-                        employee_name
-                    )
+                    _("As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{0}</b>")
+                    .format(employee_name)
                 )
             return
 
@@ -116,28 +123,27 @@ def validate_leave_application(doc):
         if available_leaves <= 0:
             if doc.leave_type not in lwps:
                 frappe.throw(
-                    "Available balance for '<b>{0}</b>' is 0. "
-                    "As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{1}</b>".format(
-                        penalty_leave_type, employee_name
-                    )
+                    _("Available balance for '<b>{0}</b>' is 0. "
+                      "As per the penalty policy, only 'Leave Without Pay' can be applied for Employee: <b>{1}</b>")
+                    .format(penalty_leave_type, employee_name)
                 )
         elif available_leaves < doc.total_leave_days:
             frappe.throw(
-                "Insufficient leave balance for '<b>{0}</b>'. "
-                "You have only '<b>{1}</b>' leaves remaining.".format(penalty_leave_type, available_leaves)
+                _("Insufficient leave balance for '<b>{0}</b>'. "
+                  "You have only '<b>{1}</b>' leaves remaining.")
+                .format(penalty_leave_type, available_leaves)
             )
         else:
             if doc.leave_type != penalty_leave_type:
                 frappe.throw(
-                    "As per the penalty policy, only '<b>{0}</b>' can be applied for Employee: <b>{1}</b>".format(
-                        penalty_leave_type, employee_name
-                    )
+                    _("As per the penalty policy, only '<b>{0}</b>' can be applied for Employee: <b>{1}</b>")
+                    .format(penalty_leave_type, employee_name)
                 )
 
 def validate_notice_period(doc):
     '''
-        Validate that an employee cannot take certain leave types during notice period
-        if the leave type is not allowed in the notice period.
+    Validate that an employee cannot take certain leave types during notice period
+    if the leave type is not allowed in the notice period.
     '''
     resignation_letter_date = frappe.db.get_value("Employee", doc.employee, "resignation_letter_date")
     if resignation_letter_date:
@@ -146,4 +152,7 @@ def validate_notice_period(doc):
         if from_date >= resignation_letter_date:
             leave_type = frappe.db.get_value("Leave Type", doc.leave_type, "allow_in_notice_period")
             if not leave_type:
-                frappe.throw(_("You are not allowed to apply for {0} during the <b>Notice Period</b>.").format(frappe.bold(doc.leave_type)))
+                frappe.throw(
+                    _("You are not allowed to apply for {0} during the <b>Notice Period</b>.")
+                    .format(frappe.bold(doc.leave_type))
+                )
