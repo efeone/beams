@@ -87,3 +87,39 @@ def set_employee_relieving_date(doc, method):
     """
     if doc.resignation_letter_date and doc.notice_number_of_days:
         doc.relieving_date = add_days(getdate(doc.resignation_letter_date), doc.notice_number_of_days)
+@frappe.whitelist()
+def get_notice_period(employment_type, job_applicant=None, current_notice_period=None):
+    '''
+    Fetch the notice period based on the employment type and Beams HR Settings.
+
+    Conditions:
+    - If current notice_number_of_days is set, return the existing notice period
+    - If employment type matches Permanent Employment Type in Beams HR Settings:
+      - First check Appointment Letter
+      - If no Appointment Letter, fetch from Employment Type
+    - For other employment types :
+      - Fetch notice period directly from Employment Type
+    '''
+
+    # Get Permanent Employment Type from Beams HR Settings
+    permanent_emp_type = frappe.db.get_single_value('Beams HR Settings', 'permanent_employment_type')
+
+    notice_period = None
+
+    # Check if the employment type matches Permanent Employment Type
+    if employment_type == permanent_emp_type and job_applicant:
+        # Check if an Appointment Letter exists for the Job Applicant
+        appointment_letter = frappe.get_value('Appointment Letter',
+            {'job_applicant': job_applicant}, 'notice_period')
+
+        if appointment_letter:
+            # Fetch the notice period from the Appointment Letter
+            notice_period = appointment_letter
+
+    # If no Appointment Letter notice period found or not Permanent Employment Type,
+    # fetch from Employment Type
+    if not notice_period:
+        notice_period = frappe.get_value('Employment Type',
+            {'name': employment_type}, 'notice_period')
+
+    return notice_period

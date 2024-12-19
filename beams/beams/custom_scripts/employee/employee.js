@@ -42,6 +42,7 @@ frappe.ui.form.on('Employee', {
                 training_requested_by: response.message // Set training_requested_by to the fetched employee ID
               });
             } else {
+
               // Show a message if no employee record is found for the user
               frappe.msgprint(__('No employee record found for the current user.'));
             }
@@ -72,5 +73,24 @@ frappe.ui.form.on('Employee', {
         }
       });
     }
-  }
+  },
+ employment_type: function(frm) {
+		 frappe.call({
+				 method: "beams.beams.custom_scripts.employee.employee.get_notice_period",
+				 args: {
+						 employment_type: frm.doc.employment_type,
+						 job_applicant: frm.doc.job_applicant
+				 },
+				 callback: function(response) {
+						 if (response.message !== undefined && response.message !== null) {
+								 // Update the notice period if it's different or currently None/empty
+								 if (response.message !== frm.doc.notice_number_of_days) {
+										 frm.set_value('notice_number_of_days', response.message);
+										 frm.refresh_field('notice_number_of_days');
+								 }
+						 }
+				 },
+
+		 });
+ }
 });

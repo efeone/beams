@@ -38,7 +38,9 @@ def after_install():
     create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_leave_application_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_performance_feedback(),ignore_validate=True)
-    create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_employment_type(),ignore_validate=True)
+    create_custom_fields(get_appointment_letter(),ignore_validate=True)
+
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -87,7 +89,13 @@ def before_uninstall():
     delete_custom_fields(get_leave_type_custom_fields())
     delete_custom_fields(get_leave_application_custom_fields())
     delete_custom_fields(get_employee_performance_feedback())
+<<<<<<< HEAD
     delete_custom_fields(get_employment_type_custom_fields())
+=======
+    delete__custom_fields(get_employment_type())
+    delete__custom_fields(get_appointment_letter())
+
+>>>>>>> 8f9c88e (feat:Fetched notice period based on Employment Type and Appointment Letter)
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2599,3 +2607,31 @@ def get_email_templates():
                            HR Manager"""
         }
 ]
+def get_employment_type():
+    '''
+    Custom fields to be added to the Employment Type Doctype
+    '''
+    return {
+        "Employment Type": [
+            {
+                "fieldname": "notice_period",
+                "fieldtype": "Int",
+                "label": "Notice Period",
+                "insert_after": "employment_type"
+            }
+        ]
+    }
+def get_appointment_letter():
+    '''
+    Custom fields that need to be added to the Appointment Letter DocType
+    '''
+    return {
+        "Appointment Letter": [
+            {
+                "fieldname": "notice_period",
+                "fieldtype": "Int",
+                "label": "Notice Period",
+                "insert_after": "applicant_name"
+            }
+        ]
+    }
