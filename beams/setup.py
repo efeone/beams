@@ -835,6 +835,13 @@ def get_employee_custom_fields():
                 "insert_after": "disabilities"
             },
             {
+                "fieldname": "training_status",
+                "fieldtype": "Select",
+                "options":"Not Started\nIn Progress\nCompleted\nNot Completed\nPartially Completed",
+                "label": "Training Status",
+                "insert_after": "status"
+            },
+            {
                 "fieldname": "court_proceedings",
                 "fieldtype": "Select",
                 "options":"Yes\nNo",
