@@ -27,22 +27,24 @@ def send_absence_reminder():
 
             # If no leave exists, create a leave application
             if not leave_exists:
-                # Fetch the leave type from the leave allocation
-                leave_type = frappe.db.get_value(
-                    "Leave Allocation",
-                    {
-                        "employee": employee["employee"],
-                        "from_date": ("<=", employee["attendance_date"]),
-                        "to_date": (">=", employee["attendance_date"]),
-                        "docstatus": 1
-                    },
-                    "leave_type"
+                # Fetch the Employment Type for the employee
+                employment_type = frappe.db.get_value(
+                    "Employee", employee["employee"], "employment_type"
                 )
+
+                # Fetch the penalty_leave_type from Employment Type doctype
+                leave_type = frappe.db.get_value(
+                    "Employment Type", employment_type, "penalty_leave_type"
+                )
+
+                # If no penalty_leave_type is found, set leave type to Leave Without Pay (LWOP)
+                if not leave_type:
+                    leave_type = "Leave Without Pay"  # Default to LWOP if no penalty leave type is set
 
                 # Create a new Leave Application document
                 leave_application = frappe.new_doc("Leave Application")
                 leave_application.employee = employee["employee"]
-                leave_application.leave_type = leave_type   # Default to Casual Leave if no allocation found
+                leave_application.leave_type = leave_type
                 leave_application.from_date = employee["attendance_date"]
                 leave_application.to_date = employee["attendance_date"]
                 leave_application.save()
@@ -56,7 +58,7 @@ def send_absence_reminder():
                         message = f"""
                         <p>Dear {reports_to},</p>
                         <p>{employee['employee_name']} ({employee['employee']}) was absent on {employee['attendance_date']}
-                        and has not submitted a leave application. A leave application has been created automatically.</p>
+                        and has not submitted a leave application.</p>
                         <p>Please follow up with {employee['employee_name']} for further actions.</p>
                         <p>Best regards,<br>HR Team</p>
                         """
