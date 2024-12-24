@@ -4,6 +4,7 @@ from frappe.utils import nowdate, add_days, format_date
 def send_absence_reminder():
     '''
     Send a reminder to the reports_to if an employee was absent but did not apply for leave.
+    If the employee was absent and did not apply for leave, a leave application is created automatically.
     '''
     target_date = add_days(nowdate(), -2)
     absent_employees = frappe.get_all(
@@ -11,6 +12,7 @@ def send_absence_reminder():
         filters={"attendance_date": target_date, "status": "Absent"},
         fields=["employee", "employee_name", "attendance_date"]
     )
+
     if absent_employees:
         for employee in absent_employees:
             leave_exists = frappe.db.exists(
@@ -22,17 +24,40 @@ def send_absence_reminder():
                     "docstatus": 1,
                 }
             )
+
+            # If no leave exists, create a leave application
             if not leave_exists:
+                # Fetch the leave type from the leave allocation
+                leave_type = frappe.db.get_value(
+                    "Leave Allocation",
+                    {
+                        "employee": employee["employee"],
+                        "from_date": ("<=", employee["attendance_date"]),
+                        "to_date": (">=", employee["attendance_date"]),
+                        "docstatus": 1
+                    },
+                    "leave_type"
+                )
+
+                # Create a new Leave Application document
+                leave_application = frappe.new_doc("Leave Application")
+                leave_application.employee = employee["employee"]
+                leave_application.leave_type = leave_type   # Default to Casual Leave if no allocation found
+                leave_application.from_date = employee["attendance_date"]
+                leave_application.to_date = employee["attendance_date"]
+                leave_application.save()
+
+                # Notify the supervisor
                 reports_to = frappe.db.get_value("Employee", employee["employee"], "reports_to")
                 if reports_to:
                     reports_to_email = frappe.db.get_value("Employee", reports_to, "user_id")
                     if reports_to_email:
-                        subject = f"Reminder:No Leave Application for Absent Employee"
+                        subject = f"Reminder: No Leave Application for Absent Employee"
                         message = f"""
                         <p>Dear {reports_to},</p>
                         <p>{employee['employee_name']} ({employee['employee']}) was absent on {employee['attendance_date']}
-                        and has not submitted a leave application.</p>
-                        <p>Please follow up with the {employee['employee_name']} and make a Necessary Action</p>
+                        and has not submitted a leave application. A leave application has been created automatically.</p>
+                        <p>Please follow up with {employee['employee_name']} for further actions.</p>
                         <p>Best regards,<br>HR Team</p>
                         """
                         frappe.sendmail(
