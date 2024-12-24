@@ -4,9 +4,26 @@ from frappe.utils import nowdate, add_days, format_date
 def send_absence_reminder():
     '''
     Send a reminder to the reports_to if an employee was absent but did not apply for leave.
-    If the employee was absent and did not apply for leave, a leave application is created automatically.
+    The reminder is based on the value in Absence Reminder Duration and only if Enable Absence Reminders is checked.
     '''
-    target_date = add_days(nowdate(), -2)
+    # Fetch HR Settings to check if reminders are enabled
+    hr_settings = frappe.get_single("Beams HR Settings")
+
+    # Check if absence reminders are enabled
+    if not hr_settings.enable_absence_reminders:
+        return  # Do nothing if reminders are not enabled
+
+    # Get the absence reminder duration from settings
+    absence_reminder_duration = hr_settings.absence_reminder_duration
+
+    # If no duration is set, don't proceed
+    if not absence_reminder_duration:
+        return
+
+    # Calculate the target date based on the configured duration
+    target_date = add_days(nowdate(), -absence_reminder_duration)
+
+    # Fetch all absent employees for the calculated target date
     absent_employees = frappe.get_all(
         "Attendance",
         filters={"attendance_date": target_date, "status": "Absent"},
@@ -15,6 +32,7 @@ def send_absence_reminder():
 
     if absent_employees:
         for employee in absent_employees:
+            # Check if a leave application exists for the absent date
             leave_exists = frappe.db.exists(
                 "Leave Application",
                 {
