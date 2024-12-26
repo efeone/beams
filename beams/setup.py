@@ -43,6 +43,7 @@ def after_install():
     create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_separation_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_template_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -96,6 +97,7 @@ def before_uninstall():
     delete_custom_fields(get_employment_type_custom_fields())
     delete_custom_fields(get_employee_separation_custom_fields())
     delete_custom_fields(get_appraisal_template_custom_fields())
+    delete_custom_fields(get_employee_feedback_rating_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -1977,9 +1979,63 @@ def get_employee_performance_feedback():
             "fieldtype": "Attach",
             "label": "Signature of Assessing Officer",
             "insert_after": "date"
+        },
+        {
+            "fieldname": "date",
+            "fieldtype": "Date",
+            "label": "Date of the Meeting with Employee",
+            "insert_after": "meeting_section_break"
+        },
+        {
+            "fieldname": "employee_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "feedback_ratings"
+        },
+        {
+            "fieldname": "employee_total_score",
+            "fieldtype": "Float",
+            "label": "Total Score",
+            "insert_after": "employee_average_score"
+        },
+        {
+            "fieldname": "company_criteria",
+            "fieldtype": "Table",
+            "options": "Employee Feedback Rating",
+            "label": "Company Criteria",
+            "insert_after": "employee_total_score"
+        },
+        {
+            "fieldname": "company_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "company_criteria"
+        },
+        {
+            "fieldname": "company_total_score",
+            "fieldtype": "Float",
+            "label": "Total Score",
+            "insert_after": "company_average_score"
+        },
+        {
+            "fieldname": "department_criteria",
+            "fieldtype": "Table",
+            "options": "Employee Feedback Rating",
+            "label": "Department Criteria",
+            "insert_after": "company_total_score"
+        },
+        {
+            "fieldname": "department_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "department_criteria"
+        },
+        {
+            "fieldname": "department_total_score",
+            "fieldtype": "Float",
+            "label": "Total Score",
+            "insert_after": "department_average_score"
         }
-
-
     ]
 }
 
@@ -2067,6 +2123,23 @@ def get_appraisal_template_custom_fields():
             }
         ]
     }
+
+def get_employee_feedback_rating_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Feedback Rating doctype
+    '''
+    return {
+        "Employee Feedback Rating": [
+            {
+                "fieldname": "marks",
+                "fieldtype": " Float",
+                "label": "Marks",
+                "in_list_view":1,
+                "insert_after": "rating"
+            }
+        ]
+    }
+
 
 def create_property_setters(property_setter_datas):
     '''
@@ -2348,6 +2421,30 @@ def get_property_setters():
             "property": "fetch_from",
             "property_type": "Link",
             "value":"employee_left.designation"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Performance Feedback",
+            "field_name": "total_score",
+            "property": "hidden",
+            "property_type": "Float",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "Rating",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Performance Feedback",
+            "field_name": "feedback_ratings",
+            "property": "label",
+            "property_type": "Table",
+            "value":"Employee Criteria"
         }
     ]
 
