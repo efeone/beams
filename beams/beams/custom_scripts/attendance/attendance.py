@@ -65,7 +65,10 @@ def send_absence_reminder():
                 leave_application.leave_type = leave_type
                 leave_application.from_date = employee["attendance_date"]
                 leave_application.to_date = employee["attendance_date"]
+                leave_application.status = "Approved"
                 leave_application.save()
+
+                leave_application.submit()
 
                 # Notify the supervisor
                 reports_to = frappe.db.get_value("Employee", employee["employee"], "reports_to")
