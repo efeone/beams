@@ -42,6 +42,7 @@ def after_install():
     create_custom_fields(get_appointment_letter(),ignore_validate=True)
     create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_separation_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_appraisal_template_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -94,6 +95,8 @@ def before_uninstall():
     delete_custom_fields(get_appointment_letter())
     delete_custom_fields(get_employment_type_custom_fields())
     delete_custom_fields(get_employee_separation_custom_fields())
+    delete_custom_fields(get_appraisal_template_custom_fields())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -1148,25 +1151,17 @@ def get_job_requisition_custom_fields():
             {
                 "fieldname": "employee_left",
                 "label": "Employees Who Left",
-                "fieldtype": "Table MultiSelect",
-                "options": "Employees Left",
+                "fieldtype": "Link",
+                "options": "Employee",
                 "insert_after": "request_for",
                 "depends_on": "eval:doc.request_for == 'Employee Exit'"
-            },
-            {
-                "fieldname": "staffing_plan",
-                "label": "Staffing Plan",
-                "fieldtype": "Link",
-                "options": "Staffing Plan",
-                "insert_after": "employee_left",
-                "depends_on": "eval:doc.request_for == 'Staffing Plan'"
             },
             {
                 "fieldname": "requested_by",
                 "label": "Requested By",
                 "fieldtype": "Link",
                 "options": "Employee",
-                "insert_after": "staffing_plan",
+                "insert_after": "employee_left"
             },
             {
                 "fieldname": "interview",
@@ -2025,6 +2020,7 @@ def get_leave_type_custom_fields():
             }
         ]
     }
+
 def get_employee_separation_custom_fields():
     '''
     Custom fields that need to be added to the Employee Separation Doctype
@@ -2045,6 +2041,29 @@ def get_employee_separation_custom_fields():
                 "label": "Employee Exit Clearance Status",
                 "options":"Pending\nCompleted",
                 "insert_after": "employee_clearance"
+            }
+        ]
+    }
+
+def get_appraisal_template_custom_fields():
+    '''
+    Custom fields that need to be added to the Appraisal Template doctype
+    '''
+    return {
+        "Appraisal Template": [
+            {
+                "fieldname": "department_rating_criteria",
+                "fieldtype": " Table",
+                "options": "Employee Feedback Rating",
+                "label": "Department Rating Criteria",
+                "insert_after": "rating_criteria"
+            },
+            {
+                "fieldname": "company_rating_criteria",
+                "fieldtype": " Table",
+                "options": "Employee Feedback Rating",
+                "label": "Company Rating Criteria",
+                "insert_after": "department_rating_criteria"
             }
         ]
     }
@@ -2321,6 +2340,14 @@ def get_property_setters():
             "field_name": "designation",
             "property": "label",
             "value":"Designation At The Time Of Joining"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "fetch_from",
+            "property_type": "Link",
+            "value":"employee_left.designation"
         }
     ]
 

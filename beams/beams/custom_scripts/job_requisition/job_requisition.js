@@ -23,14 +23,9 @@ frappe.ui.form.on('Job Requisition', {
     request_for: function (frm) {
         if (frm.doc.request_for) {
             frm.set_value('employee_left',);
-            frm.set_value('staffing_plan',);
-            frm.set_df_property('staffing_plan', 'reqd', 0);
             frm.set_df_property('employee_left', 'reqd', 0);
             if (frm.doc.request_for == 'Employee Exit') {
                 frm.set_df_property('employee_left', 'reqd', 1);
-            }
-            if (frm.doc.request_for == 'Staffing Plan') {
-                frm.set_df_property('staffing_plan', 'reqd', 1);
             }
         }
     },
