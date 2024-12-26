@@ -6,8 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "default_local_enquiry_duration",
+  "absence_reminder_duration",
   "column_break_lmqd",
   "permanent_employment_type",
+  "enable_absence_reminders",
   "notification_settings_tab",
   "notification_to_admin_department_to_create_id_card_section",
   "notification_to_admin",
@@ -205,12 +207,24 @@
   {
    "fieldname": "column_break_lmqd",
    "fieldtype": "Column Break"
+  },
+  {
+   "description": "Days after absence without leave to notify the Reporting Manager",
+   "fieldname": "absence_reminder_duration",
+   "fieldtype": "Int",
+   "label": "Absence Reminder Duration"
+  },
+  {
+   "default": "0",
+   "fieldname": "enable_absence_reminders",
+   "fieldtype": "Check",
+   "label": "Absence Reminders"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-12-18 15:20:39.547250",
+ "modified": "2024-12-24 15:54:22.187120",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
