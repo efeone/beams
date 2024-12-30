@@ -2036,6 +2036,14 @@ def get_employee_performance_feedback():
             "label": "Total Score",
             "insert_after": "department_average_score"
         }
+    ],
+    "Employee Feedback Rating": [
+        {
+            "fieldname": "marks",
+            "fieldtype": "Float",
+            "label": "Marks",
+            "insert_after": "per_weightage"
+        }
     ]
 }
 
@@ -2416,6 +2424,7 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+<<<<<<< Updated upstream
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "fetch_from",
@@ -2445,6 +2454,13 @@ def get_property_setters():
             "property": "label",
             "property_type": "Table",
             "value":"Employee Criteria"
+=======
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "rating",
+            "property": "read_only",
+            "property_type": "Check",
+            "value": 1
+>>>>>>> Stashed changes
         }
     ]
 
