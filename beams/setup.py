@@ -44,6 +44,7 @@ def after_install():
     create_custom_fields(get_employee_separation_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_template_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -98,7 +99,7 @@ def before_uninstall():
     delete_custom_fields(get_employee_separation_custom_fields())
     delete_custom_fields(get_appraisal_template_custom_fields())
     delete_custom_fields(get_employee_feedback_rating_custom_fields())
-
+    delete_custom_fields(get_appraisal_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2119,7 +2120,19 @@ def get_appraisal_template_custom_fields():
                 "fieldtype": " Table",
                 "options": "Employee Feedback Rating",
                 "label": "Company Rating Criteria",
+                "insert_after": "label_for_department_kra"
+            },
+            {
+                "fieldname": "label_for_department_kra",
+                "fieldtype": "Data",
+                "label": "Label for Department KRA",
                 "insert_after": "department_rating_criteria"
+            },
+            {
+                "fieldname": "label_for_company_kra",
+                "fieldtype": "Data",
+                "label": "Label for Company KRA",
+                "insert_after": "company_rating_criteria"
             }
         ]
     }
@@ -2140,6 +2153,26 @@ def get_employee_feedback_rating_custom_fields():
         ]
     }
 
+def get_appraisal_custom_fields():
+    '''
+    Custom fields that need to be added to the Appraisal doctype
+    '''
+    return {
+        "Appraisal": [
+            {
+                "fieldname": "appraisal_summary_tab_break",
+                "fieldtype": "Tab Break",
+                "label": "Appraisal Summary",
+                "insert_after": "amended_from"
+            },
+            {
+                "fieldname": "appraisal_summary",
+                "fieldtype": "HTML",
+                "label": "Appraisal Summary",
+                "insert_after": "appraisal_summary_tab_break"
+            }
+        ]
+    }
 
 def create_property_setters(property_setter_datas):
     '''
@@ -2445,6 +2478,63 @@ def get_property_setters():
             "property": "label",
             "property_type": "Table",
             "value":"Employee Criteria"
+        },
+
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "rate_goals_manually",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "goal_score_percentage",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "total_score",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal KRA",
+            "field_name": "goal_completion",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal KRA",
+            "field_name": "goal_score",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "goals",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "appraisal_kra",
+            "property": "label",
+            "property_type": "Table",
+            "value":"KRA's"
         }
     ]
 
