@@ -55,7 +55,6 @@ doctype_js = {
     "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
     "Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
     "Job Offer": "beams/custom_scripts/job_offer/job_offer.js"
-
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -264,6 +263,9 @@ doc_events = {
         },
     "Task":{
         "on_update":"beams.beams.custom_scripts.task.task.on_task_update"
+    },
+    "Appraisal Template" : {
+        "before_save": "beams.beams.custom_scripts.appraisal_template.appraisal_template.create_feedback_criteria",
     }
 }
 
