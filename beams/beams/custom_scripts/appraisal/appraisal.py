@@ -5,11 +5,12 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     '''
         This function generates an appraisal summary in the form of an HTML table.
     '''
-    if not appraisal_template:
-        return ""
+    if not frappe.db.exists("Appraisal Template", appraisal_template):
+        return "Appraisal Template does not exist."
 
     template_doc = frappe.get_doc("Appraisal Template", appraisal_template)
-    feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback) if employee_feedback else None
+    if employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback):
+        feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback)
 
     key_results = []
     total_marks = 0 
@@ -85,7 +86,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
 
 @frappe.whitelist()
 def get_feedback_for_appraisal(appraisal_name):
-    if not appraisal_name:
-        return None
+    if not frappe.db.exists("Appraisal", appraisal_name):
+        return "Appraisal does not exist."
     feedback_name = frappe.db.get_value("Employee Performance Feedback",{"appraisal": appraisal_name},"name")
     return feedback_name
