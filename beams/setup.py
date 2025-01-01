@@ -1944,55 +1944,103 @@ def get_employee_performance_feedback():
     return  {
         "Employee Performance Feedback" : [
         {
-            "fieldname": "employee_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
-            "insert_after": "employee_total_score"
+            "fieldname": "employee_section",
+            "fieldtype": "Section Break",
+            "label": "",
+            "insert_after": "feedback_ratings"
         },
         {
             "fieldname": "employee_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
-            "insert_after": "feedback_ratings"
+            "insert_after": "employee_section"
+        },
+        {
+            "fieldname": "employee_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "employee_total_score"
+        },
+        {
+            "fieldname": "employee_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "employee_column"
+        },
+        {
+            "fieldname": "emp_section",
+            "fieldtype": "Section Break",
+            "label": "",
+            "insert_after": "employee_average_score"
         },
         {
             "fieldname": "company_criteria",
             "fieldtype": "Table",
             "options": "Employee Feedback Rating",
             "label": "Company Criteria",
-            "insert_after": "employee_average_score"
+            "insert_after": "emp_section"
         },
         {
-            "fieldname": "company_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
-            "insert_after": "company_total_score"
+            "fieldname": "company_section",
+            "fieldtype": "Section Break",
+            "label": "",
+            "insert_after": "company_criteria"
         },
         {
             "fieldname": "company_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
-            "insert_after": "company_criteria"
+            "insert_after": "company_section"
+        },
+        {
+            "fieldname": "company_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "company_total_score"
+        },
+        {
+            "fieldname": "company_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "company_column"
+        },
+        {
+            "fieldname": "dept_section",
+            "fieldtype": "Section Break",
+            "label": "",
+            "insert_after": "company_average_score"
         },
         {
             "fieldname": "department_criteria",
             "fieldtype": "Table",
             "options": "Employee Feedback Rating",
             "label": "Department Criteria",
-            "insert_after": "company_average_score"
+            "insert_after": "dept_section"
         },
         {
-            "fieldname": "department_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
-            "insert_after": "department_total_score"
+            "fieldname": "dept_section1",
+            "fieldtype": "Section Break",
+            "label": "",
+            "insert_after": "department_criteria"
         },
         {
             "fieldname": "department_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
-            "insert_after": "department_criteria"
-        }
+            "insert_after": "dept_section1"
+        },
+        {
+            "fieldname": "dept_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "department_total_score"
+        },
+        {
+            "fieldname": "department_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "dept_column"
+        },
     ]
 }
 
