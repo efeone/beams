@@ -54,7 +54,8 @@ doctype_js = {
     "Training Event":"beams/custom_scripts/training_event/training_event.js",
     "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
     "Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
-    "Job Offer": "beams/custom_scripts/job_offer/job_offer.js"
+    "Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
+    "Appraisal": "beams/custom_scripts/appraisal/appraisal.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
