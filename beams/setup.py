@@ -1944,58 +1944,33 @@ def get_employee_performance_feedback():
     return  {
         "Employee Performance Feedback" : [
         {
-            "fieldname": "remarks",
-            "fieldtype": "Long Text",
-            "label": "Remarks by Assessing Officer",
-            "insert_after": "feedback_tab"
-        },
-        {
-            "fieldname": "areas_of_improvement",
-            "fieldtype": "Long Text",
-            "label": "Areas of Improvement",
-            "insert_after": "remarks"
-        },
-        {
-            "fieldname": "promotion_eligibility",
-            "fieldtype": "Long Text",
-            "label": "Promotion Eligibility",
-            "insert_after": "areas_of_improvement"
-
-        },
-        {
-            "fieldname": "meeting_section_break",
+            "fieldname": "employee_section",
             "fieldtype": "Section Break",
-            "label": "Meeting Details",
-            "insert_after": "total_score"
-        },
-        {
-            "fieldname": "date",
-            "fieldtype": "Date",
-            "label": "Date of the Meeting with Employee",
-            "insert_after": "meeting_section_break"
-        },
-        {
-            "fieldname": "sign_of_officer",
-            "fieldtype": "Attach",
-            "label": "Signature of Assessing Officer",
-            "insert_after": "date"
-        },
-        {
-            "fieldname": "date",
-            "fieldtype": "Date",
-            "label": "Date of the Meeting with Employee",
-            "insert_after": "meeting_section_break"
-        },
-        {
-            "fieldname": "employee_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
+            "label": "",
             "insert_after": "feedback_ratings"
         },
         {
             "fieldname": "employee_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
+            "insert_after": "employee_section"
+        },
+        {
+            "fieldname": "employee_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "employee_total_score"
+        },
+        {
+            "fieldname": "employee_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "employee_column"
+        },
+        {
+            "fieldname": "emp_section",
+            "fieldtype": "Section Break",
+            "label": "",
             "insert_after": "employee_average_score"
         },
         {
@@ -2003,18 +1978,36 @@ def get_employee_performance_feedback():
             "fieldtype": "Table",
             "options": "Employee Feedback Rating",
             "label": "Company Criteria",
-            "insert_after": "employee_total_score"
+            "insert_after": "emp_section"
         },
         {
-            "fieldname": "company_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
+            "fieldname": "company_section",
+            "fieldtype": "Section Break",
+            "label": "",
             "insert_after": "company_criteria"
         },
         {
             "fieldname": "company_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
+            "insert_after": "company_section"
+        },
+        {
+            "fieldname": "company_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "company_total_score"
+        },
+        {
+            "fieldname": "company_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "company_column"
+        },
+        {
+            "fieldname": "dept_section",
+            "fieldtype": "Section Break",
+            "label": "",
             "insert_after": "company_average_score"
         },
         {
@@ -2022,20 +2015,32 @@ def get_employee_performance_feedback():
             "fieldtype": "Table",
             "options": "Employee Feedback Rating",
             "label": "Department Criteria",
-            "insert_after": "company_total_score"
+            "insert_after": "dept_section"
         },
         {
-            "fieldname": "department_average_score",
-            "fieldtype": "Float",
-            "label": "Average Score",
+            "fieldname": "dept_section1",
+            "fieldtype": "Section Break",
+            "label": "",
             "insert_after": "department_criteria"
         },
         {
             "fieldname": "department_total_score",
             "fieldtype": "Float",
             "label": "Total Score",
-            "insert_after": "department_average_score"
-        }
+            "insert_after": "dept_section1"
+        },
+        {
+            "fieldname": "dept_column",
+            "fieldtype": "Column Break",
+            "label": "",
+            "insert_after": "department_total_score"
+        },
+        {
+            "fieldname": "department_average_score",
+            "fieldtype": "Float",
+            "label": "Average Score",
+            "insert_after": "dept_column"
+        },
     ]
 }
 
