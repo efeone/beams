@@ -13,7 +13,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
         feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback)
 
     key_results = []
-    total_marks = 0 
+    total_marks = 0
 
     for row in template_doc.rating_criteria:
         marks = ""
@@ -23,7 +23,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
                     marks = feedback_row.marks
                     break
         if marks:
-            total_marks += float(marks)  
+            total_marks += float(marks)
         key_results.append({"key_result": row.criteria, "marks": marks})
 
     label_for_department_kra = template_doc.label_for_department_kra or "Quality and Development Assessment"
@@ -67,7 +67,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
                 <td><center>{row.get('marks', '')}</center></td>
             </tr>
         """
-    
+
     # Add final rows for Total Marks and Final Average Score
     table_html += f"""
         <tr>
@@ -81,7 +81,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     """
 
     table_html += "</tbody></table>"
-    
+
     return table_html
 
 @frappe.whitelist()
@@ -90,3 +90,36 @@ def get_feedback_for_appraisal(appraisal_name):
         return "Appraisal does not exist."
     feedback_name = frappe.db.get_value("Employee Performance Feedback",{"appraisal": appraisal_name},"name")
     return feedback_name
+
+@frappe.whitelist()
+def map_appraisal_to_event(source_name):
+    """
+    Map fields from Appraisal to a new Event.
+    """
+    source_doc = frappe.get_doc("Appraisal", source_name)
+
+    # Create a new Event document
+    event_doc = frappe.new_doc("Event")
+
+    # Add participants
+    event_doc.append("event_participants", {
+        "reference_doctype": "Employee",
+        "reference_docname": source_doc.employee
+    })
+
+    # Optionally, add the logged-in user as a participant
+    user_employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+    if user_employee:
+        # If the logged-in user has an Employee ID, add them as a participant
+        event_doc.append("event_participants", {
+            "reference_doctype": "Employee",
+            "reference_docname": user_employee
+        })
+    else:
+        # If the logged-in user doesn't have an Employee ID, use their User ID
+        event_doc.append("event_participants", {
+            "reference_doctype": "User",
+            "reference_docname": frappe.session.user
+        })
+
+    return event_doc
