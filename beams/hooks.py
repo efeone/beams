@@ -11,8 +11,9 @@ app_license = "mit"
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/beams/css/beams.css"
-# app_include_js = "/assets/beams/js/beams.js"
-
+# app_include_js = [
+#     "/beams/beams/custom_scripts/Performance/performance_feedback.js"
+# ]
 # include js, css files in header of web template
 # web_include_css = "/assets/beams/css/beams.css"
 # web_include_js = "/assets/beams/js/beams.js"
@@ -55,7 +56,7 @@ doctype_js = {
     "Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
     "Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
     "Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
-    "Appraisal": "beams/custom_scripts/appraisal/appraisal.js"
+    "Appraisal":"beams/custom_scripts/appraisal/appraisal.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
