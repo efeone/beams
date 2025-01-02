@@ -2042,6 +2042,13 @@ def get_employee_performance_feedback():
             "label": "Average Score",
             "insert_after": "dept_column"
         },
+        "Employee Feedback Rating": [
+            {
+                "fieldname": "marks",
+                "fieldtype": "Float",
+                "label": "Marks",
+                "insert_after": "per_weightage"
+            }
     ]
 }
 
@@ -2484,6 +2491,7 @@ def get_property_setters():
             "property_type": "Table",
             "value":"Employee Criteria"
         },
+<<<<<<< Updated upstream
 
         {
             "doctype_or_field": "DocField",
@@ -2522,12 +2530,20 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
+=======
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "rating",
+            "property": "read_only",
+>>>>>>> Stashed changes
             "property_type": "Check",
             "value": 1
         },
         {
             "doctype_or_field": "DocField",
             "doc_type": "Appraisal",
+<<<<<<< Updated upstream
             "field_name": "goals",
             "property": "hidden",
             "property_type": "Check",
@@ -2540,8 +2556,15 @@ def get_property_setters():
             "property": "label",
             "property_type": "Table",
             "value":"KRA's"
+=======
+            "field_name": "feedback_html",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+>>>>>>> Stashed changes
         }
     ]
+
 
 def get_material_request_custom_fields():
     '''
