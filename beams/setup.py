@@ -2491,8 +2491,6 @@ def get_property_setters():
             "property_type": "Table",
             "value":"Employee Criteria"
         },
-<<<<<<< Updated upstream
-
         {
             "doctype_or_field": "DocField",
             "doc_type": "Appraisal",
@@ -2530,20 +2528,17 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
-=======
         {
             "doctype_or_field": "DocField",
             "doc_type": "Employee Feedback Rating",
             "field_name": "rating",
             "property": "read_only",
->>>>>>> Stashed changes
             "property_type": "Check",
             "value": 1
         },
         {
             "doctype_or_field": "DocField",
             "doc_type": "Appraisal",
-<<<<<<< Updated upstream
             "field_name": "goals",
             "property": "hidden",
             "property_type": "Check",
@@ -2555,13 +2550,15 @@ def get_property_setters():
             "field_name": "appraisal_kra",
             "property": "label",
             "property_type": "Table",
-            "value":"KRA's"
-=======
+            "value":"KRA's",
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
             "field_name": "feedback_html",
             "property": "hidden",
             "property_type": "Check",
             "value": 1
->>>>>>> Stashed changes
         }
     ]
 
