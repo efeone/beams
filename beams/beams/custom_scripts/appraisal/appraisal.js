@@ -1,5 +1,24 @@
 frappe.ui.form.on('Appraisal', {
     refresh: function (frm) {
+        if (!frm.is_new() && frm.doc.employee) {
+            // Fetch `reports_to` and check if logged-in user matches
+            frappe.db.get_value('Employee', frm.doc.employee, 'reports_to').then((result) => {
+                let reports_to_employee = result.message.reports_to;
+
+                if (reports_to_employee) {
+                    frappe.db.get_value('Employee', reports_to_employee, 'user_id').then((user_result) => {
+                        let reports_to_user = user_result.message.user_id;
+
+                        if (reports_to_user === frappe.session.user) {
+                            frm.add_custom_button(__('New Feedback'), function () {
+                                frm.events.show_feedback_dialog(frm);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+
         if (frm.doc.name) {
             // Fetch the Employee Performance Feedback related to the Appraisal
             frappe.call({
@@ -48,7 +67,127 @@ frappe.ui.form.on('Appraisal', {
                 }
             });
         }
-    }
-});
+    },
 
-  
+    show_feedback_dialog: function (frm) {
+        let dialog = new frappe.ui.Dialog({
+            title: 'New Feedback',
+            fields: [
+                {
+                    label: 'Feedback',
+                    fieldname: 'feedback',
+                    fieldtype: 'Text Editor', // For richer feedback
+                    reqd: true,
+                    enable_mentions: true,
+                },
+                {
+                    label: 'Employee Criteria',
+                    fieldname: 'employee_criteria',
+                    fieldtype: 'Table',
+                    fields: [
+                        {
+                            label: 'Criteria',
+                            fieldname: 'criteria',
+                            fieldtype: 'Link',
+                            options: 'Employee Feedback Criteria',
+                            in_list_view: 1,
+                            reqd: 1,
+                        },
+                        {
+                            label: 'Marks',
+                            fieldname: 'marks',
+                            fieldtype: 'Float',
+                            in_list_view: 1,
+                            reqd: 1,
+                            description: 'Enter Marks (0 - 5)',
+                        }
+                    ],
+                },
+                {
+                    label: 'Department Criteria',
+                    fieldname: 'department_criteria',
+                    fieldtype: 'Table',
+                    fields: [
+                        {
+                            label: 'Criteria',
+                            fieldname: 'criteria',
+                            fieldtype: 'Link',
+                            options: 'Employee Feedback Criteria',
+                            in_list_view: 1,
+                            reqd: 1,
+                        },
+                        {
+                            label: 'Marks',
+                            fieldname: 'marks',
+                            fieldtype: 'Float',
+                            in_list_view: 1,
+                            reqd: 1,
+                            description: 'Enter Marks (0 - 5)',
+                        }
+                    ],
+                },
+                {
+                    label: 'Company Criteria',
+                    fieldname: 'company_criteria',
+                    fieldtype: 'Table',
+                    fields: [
+                        {
+                            label: 'Criteria',
+                            fieldname: 'criteria',
+                            fieldtype: 'Link',
+                            options: 'Employee Feedback Criteria',
+                            in_list_view: 1,
+                            reqd: 1,
+                        },
+                        {
+                            label: 'Marks',
+                            fieldname: 'marks',
+                            fieldtype: 'Float',
+                            in_list_view: 1,
+                            reqd: 1,
+                            description: 'Enter Marks (0 - 5)',
+                        }
+                    ],
+                },
+            ],
+            primary_action_label: 'Submit',
+            primary_action(values) {
+                // Validate Marks (should be between 0 and 5)
+                const validate_marks = (table) => {
+                    let isValid = true;
+                    table.forEach(row => {
+                        if (row.marks < 0 || row.marks > 5) {
+                            frappe.msgprint(__('Marks should be between 0 and 5.'));
+                            isValid = false;
+                        }
+                    });
+                    return isValid;
+                };
+
+                if (
+                    validate_marks(values.employee_criteria) &&
+                    validate_marks(values.department_criteria) &&
+                    validate_marks(values.company_criteria)
+                ) {
+                    // Push feedback if all marks are valid
+                    if (!frm.doc.feedback_list) {
+                        frm.doc.feedback_list = [];
+                    }
+
+                    frm.doc.feedback_list.push({
+                        feedback: values.feedback,
+                        employee_criteria: values.employee_criteria,
+                        department_criteria: values.department_criteria,
+                        company_criteria: values.company_criteria,
+                    });
+
+                    frm.refresh_field('feedback_list');
+                    frappe.msgprint(__('Your feedback has been submitted.'));
+                    dialog.hide();
+                }
+            },
+        });
+
+        dialog.show();
+    },
+});
