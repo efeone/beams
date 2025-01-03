@@ -91,6 +91,52 @@ def get_feedback_for_appraisal(appraisal_name):
     feedback_name = frappe.db.get_value("Employee Performance Feedback",{"appraisal": appraisal_name},"name")
     return feedback_name
 
+
+@frappe.whitelist()
+def get_categories_table():
+    '''
+         Fetches and sorts all categories from the Category doctype, then generates an HTML table displaying category names and descriptions.
+    '''
+    categories = frappe.get_all('Category', fields=['category', 'category_description'])
+    categories.sort(key=lambda x: x['category'])
+
+    categories_html = """
+        <br><table border="1" style="width: 100%; text-align: center; border-collapse: collapse;">
+            <thead>
+                <tr>"""
+
+    for category in categories:
+        categories_html += f"<th>{category['category']}</th>"
+
+    categories_html += "</tr></thead><tbody><tr>"
+
+    for category in categories:
+        categories_html += f"<td>{category['category_description']}</td>"
+
+    categories_html += "</tr></tbody></table><br>"
+
+    return categories_html
+
+@frappe.whitelist()
+def add_to_category_details(parent_docname, category, remarks, employee, designation):
+    '''
+        Adds a new row with category details (category, remarks, employee, designation) to the category_details child table of an Appraisal document and saves it.
+    '''
+    try:
+        parent_doc = frappe.get_doc("Appraisal", parent_docname)    
+        child_row = parent_doc.append("category_details", {
+            "category": category,
+            "remarks": remarks,
+            "employee": employee, 
+            "designation": designation 
+        })
+        parent_doc.save()
+
+        return "Success"
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), "Add to Category Details Error")
+        return "Failed"
+
 @frappe.whitelist()
 def map_appraisal_to_event(source_name):
     """

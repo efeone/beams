@@ -45,6 +45,7 @@ def after_install():
     create_custom_fields(get_appraisal_template_custom_fields(),ignore_validate=True)
     create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -100,6 +101,7 @@ def before_uninstall():
     delete_custom_fields(get_appraisal_template_custom_fields())
     delete_custom_fields(get_employee_feedback_rating_custom_fields())
     delete_custom_fields(get_appraisal_custom_fields())
+    delete_custom_fields(get_appraisal_kra_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2212,9 +2214,45 @@ def get_appraisal_custom_fields():
                 "fieldtype": "HTML",
                 "label": "Appraisal Summary",
                 "insert_after": "appraisal_summary_tab_break"
-            }
+            },
+            {
+				"fieldname": "final_assesment_tab_break",
+				"fieldtype": "Tab Break",
+				"label": "Final Assesment",
+				"insert_after": "appraisal_summary"
+			},
+			{
+				"fieldname": "category_html",
+				"fieldtype": "HTML",
+				"label": "Appraisal Summary",
+				"insert_after": "final_assesment_tab_break"
+			},
+			{
+				"fieldname": "category_details",
+				"fieldtype": "Table",
+				"label": "Category Details",
+				"options": "Category Details",
+				"insert_after": "category_html",
+				"allow_on_submit": 1
+			}
         ]
     }
+
+def get_appraisal_kra_custom_fields():
+	'''
+	Custom fields that need to be added to the Appraisal KRA doctype
+	'''
+	return {
+		"Appraisal KRA":[
+            {
+                "fieldname": "kra_goals",
+                "fieldtype": "Text Editor",
+                "label": "Goals",
+                "insert_after": "goal_score",
+                "in_list_view":1
+            }
+        ]
+	}
 
 def create_property_setters(property_setter_datas):
     '''
