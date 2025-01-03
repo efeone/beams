@@ -1048,7 +1048,8 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Link",
                 "options": "Employment Type",
                 "label": "Employment Type",
-                "insert_after": "work_details"
+                "insert_after": "work_details",
+                "permlevel": 1
             },
 
             {
@@ -1056,7 +1057,8 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
                 "description": " number of days off within a 30-day period",
-                "insert_after": "employment_type"
+                "insert_after": "employment_type",
+                "permlevel": 1
             },
             {
                 "fieldname": "work_details_column_break",
@@ -1068,20 +1070,23 @@ def get_job_requisition_custom_fields():
                 "fieldname": "travel_required",
                 "fieldtype": "Check",
                 "label": "Travel required for the position",
-                "insert_after": "work_details_column_break"
+                "insert_after": "work_details_column_break",
+                "permlevel": 1
             },
             {
                 "fieldname": "is_work_shift_needed",
                 "fieldtype": "Check",
                 "label": "Is Shift Work Needed",
-                "insert_after": "travel_required"
+                "insert_after": "travel_required",
+                "permlevel": 1
             },
             {
                 "fieldname": "driving_license_needed",
                 "fieldtype": "Check",
                 "label": "Driving License Needed for this Position",
                 "depends_on": "eval:doc.travel_required == 1",
-                "insert_after": "is_work_shift_needed"
+                "insert_after": "is_work_shift_needed",
+                "permlevel": 1
             },
             {
                 "fieldname": "license_type",
@@ -1089,7 +1094,8 @@ def get_job_requisition_custom_fields():
                 "label": "License Type",
                 "options": "License Type",
                 "depends_on": "eval:doc.driving_license_needed == 1",
-                "insert_after": "driving_license_needed"
+                "insert_after": "driving_license_needed",
+                "permlevel": 1
             },
             {
                 "fieldname": "education",
@@ -1102,7 +1108,8 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Table MultiSelect",
                 "label": "Preferred Educational Qualification",
                 'options':"Educational Qualifications",
-                "insert_after": "education"
+                "insert_after": "education",
+                "permlevel": 1
             },
             {
                 "fieldname": "education_column_break",
@@ -1114,7 +1121,8 @@ def get_job_requisition_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Minimum Experience Required",
-                "insert_after": "education_column_break"
+                "insert_after": "education_column_break",
+                "permlevel": 1
             },
             {
                 "fieldname": "reset_column",
@@ -1127,7 +1135,8 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Table",
                 "options": "Language Proficiency",
                 "label": "Language Proficiency",
-                "insert_after": "min_experience"
+                "insert_after": "min_experience",
+                "permlevel": 1
             },
             {
                 "fieldname": "skill_proficiency",
@@ -1142,22 +1151,23 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Link",
                 "label": "Job Description Template",
                 "options": "Job Description Template",
-                "insert_after": "job_description_tab"
+                "insert_after": "job_description_tab",
+                "permlevel": 1
             },
             {
                 "fieldname": "request_for",
                 "label": "Request For",
                 "fieldtype": "Select",
-                "options": "Employee Exit\nStaffing Plan\nUnplanned",
+                "options": "Employee Replacement\nExisting Vacancy\nNew Vacancy",
                 "insert_after": "naming_series"
             },
             {
                 "fieldname": "employee_left",
-                "label": "Employees Who Left",
+                "label": "Employees Who Replaced",
                 "fieldtype": "Link",
                 "options": "Employee",
                 "insert_after": "request_for",
-                "depends_on": "eval:doc.request_for == 'Employee Exit'"
+                "depends_on": "eval:doc.request_for == 'Employee Replacement'"
             },
             {
                 "fieldname": "requested_by",
@@ -1177,7 +1187,8 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Table MultiSelect",
                 "options": "Interview Rounds",
                 "label": "Interview Rounds",
-                "insert_after": "interview"
+                "insert_after": "interview",
+                "permlevel": 1
             },
 
              {
@@ -1185,15 +1196,32 @@ def get_job_requisition_custom_fields():
                 "label": "Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "no_of_days_off"
+                "insert_after": "no_of_days_off",
+                "permlevel": 1
             },
             {
                 "fieldname": "job_title",
                 "fieldtype": "Data",
                 "label": "Job Title",
                 "insert_after": "job_description_template",
-                "reqd": 1
-            }
+                "reqd": 1,
+            },
+            {
+                "fieldname": "suggested_designation",
+                "fieldtype": "Link",
+                "label": "Suggested Designation",
+                "options": "Designation",
+                "insert_after": "request_for",
+                "permlevel": 2,
+                "depends_on": "eval:doc.request_for == 'Existing Vacancy'"
+            },
+            {
+                "fieldname": "suggestions",
+                "fieldtype": "Small Text",
+                "label": "Suggestions",
+                "insert_after": "description",
+                "permlevel": 3
+            },
         ]
     }
 
@@ -1362,7 +1390,8 @@ def get_job_applicant_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Work Experience(in years)",
-                "insert_after": "details_column_break"
+                "insert_after": "details_column_break",
+                "permlevel": 1
             },
 
             {
@@ -1858,7 +1887,7 @@ def get_job_opening_custom_fields():
                 "fieldname": "qualification_details",
                 "fieldtype": "Section Break",
                 "label": "Education and Qualification Details",
-                "insert_after": "license_type"
+                "insert_after": "license_type",
             },
             {
                "fieldname": "min_education_qual",
@@ -2042,6 +2071,7 @@ def get_employee_performance_feedback():
             "label": "Average Score",
             "insert_after": "dept_column"
         },
+        ],
         "Employee Feedback Rating": [
             {
                 "fieldname": "marks",
@@ -2469,6 +2499,14 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "fetch_from",
+            "property_type": "Link",
+            "value":"employee_left.department"
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Employee Performance Feedback",
             "field_name": "total_score",
             "property": "hidden",
@@ -2528,6 +2566,7 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
+        },
         {
             "doctype_or_field": "DocField",
             "doc_type": "Employee Feedback Rating",

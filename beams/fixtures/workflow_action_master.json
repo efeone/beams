@@ -44,27 +44,6 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-08-16 14:50:26.425434",
-  "name": "Submit for Approval",
-  "workflow_action_name": "Submit for Approval"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
-  "modified": "2024-10-02 11:08:42.938069",
-  "name": "Put On Hold",
-  "workflow_action_name": "Put On Hold"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
-  "modified": "2024-08-26 16:23:42.399000",
-  "name": "Cancel",
-  "workflow_action_name": "Cancel"
- },
- {
-  "docstatus": 0,
-  "doctype": "Workflow Action Master",
   "modified": "2024-10-21 12:26:15.665204",
   "name": "Assign to Admin",
   "workflow_action_name": "Assign to Admin"
@@ -100,9 +79,30 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
+  "modified": "2024-12-02 13:32:13.050785",
+  "name": "Request for Approval",
+  "workflow_action_name": "Request for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-16 14:50:26.425434",
+  "name": "Submit for Approval",
+  "workflow_action_name": "Submit for Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
   "modified": "2024-08-12 10:10:50.428635",
   "name": "Approve",
   "workflow_action_name": "Approve"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-10-02 11:08:42.938069",
+  "name": "Put On Hold",
+  "workflow_action_name": "Put On Hold"
  },
  {
   "docstatus": 0,
@@ -114,8 +114,29 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
-  "modified": "2024-12-02 13:32:13.050785",
-  "name": "Request for Approval",
-  "workflow_action_name": "Request for Approval"
+  "modified": "2024-12-11 11:49:03.249788",
+  "name": "Send to CEO for Final Approval",
+  "workflow_action_name": "Send to CEO for Final Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-12-11 11:45:09.858171",
+  "name": "Send to CEO for Initial Approval",
+  "workflow_action_name": "Send to CEO for Initial Approval"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-08-26 16:23:42.399000",
+  "name": "Cancel",
+  "workflow_action_name": "Cancel"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2024-12-11 11:46:59.724487",
+  "name": "Send to HR Approval",
+  "workflow_action_name": "Send to HR Approval"
  }
 ]
