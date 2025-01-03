@@ -20,33 +20,38 @@ frappe.ui.form.on('Appraisal', {
         }
 
         if (frm.doc.name) {
-            // Fetch the Employee Performance Feedback related to the Appraisal
-            frappe.call({
-                method: "beams.beams.custom_scripts.appraisal.appraisal.get_feedback_for_appraisal",
-                args: {
-                    appraisal_name: frm.doc.name
-                },
-                callback: function (res) {
-                    if (res.message) {
-                        const employee_feedback = res.message;
+            // Check if appraisal_template is set before calling get_appraisal_summary
+            if (frm.doc.appraisal_template) {
+                // Fetch the Employee Performance Feedback related to the Appraisal
+                frappe.call({
+                    method: "beams.beams.custom_scripts.appraisal.appraisal.get_feedback_for_appraisal",
+                    args: {
+                        appraisal_name: frm.doc.name
+                    },
+                    callback: function (res) {
+                        if (res.message) {
+                            const employee_feedback = res.message;
 
-                        frappe.call({
-                            method: "beams.beams.custom_scripts.appraisal.appraisal.get_appraisal_summary",
-                            args: {
-                                appraisal_template: frm.doc.appraisal_template,
-                                employee_feedback: employee_feedback
-                            },
-                            callback: function (r) {
-                                if (r.message) {
-                                    $(frm.fields_dict['appraisal_summary'].wrapper).html(r.message);
+                            frappe.call({
+                                method: "beams.beams.custom_scripts.appraisal.appraisal.get_appraisal_summary",
+                                args: {
+                                    appraisal_template: frm.doc.appraisal_template,
+                                    employee_feedback: employee_feedback
+                                },
+                                callback: function (r) {
+                                    if (r.message) {
+                                        $(frm.fields_dict['appraisal_summary'].wrapper).html(r.message);
+                                    }
                                 }
-                            }
-                        });
-                    } else {
-                        $(frm.fields_dict['appraisal_summary'].wrapper).html('<p>No Employee Performance Feedback found for this appraisal.</p>');
+                            });
+                        } else {
+                            $(frm.fields_dict['appraisal_summary'].wrapper).html('<p>No Employee Performance Feedback found for this appraisal.</p>');
+                        }
                     }
-                }
-            });
+                });
+            } else {
+                $(frm.fields_dict['appraisal_summary'].wrapper).html('<p>No Employee Performance Feedback is found.</p>');
+            }
         } else {
             $(frm.fields_dict['appraisal_summary'].wrapper).html('<p>Please save the Appraisal to view the summary.</p>');
         }
@@ -65,6 +70,31 @@ frappe.ui.form.on('Appraisal', {
                         });
                     }, __('Create'));
                 }
+            });
+        }
+
+        frappe.call({
+            method: "beams.beams.custom_scripts.appraisal.appraisal.get_categories_table",
+            callback: function (res) {
+                if (res.message) {
+                    frm.set_df_property('category_html', 'options', res.message);
+                } else {
+                    frm.set_df_property('category_html', 'options', '<p>No categories found.</p>');
+                }
+            }
+        });
+
+        // Dynamically add the "Add Category" button only once
+        if (!frm.category_button_added) {
+            const button_html = `
+                <button class="btn btn-primary" id="add_category_button" style="margin-top: 10px;">Add Category</button><br><br>
+            `;
+            $(frm.fields_dict['category_html'].wrapper).after(button_html);
+            frm.category_button_added = true;
+
+            // Button click event for adding a category
+            $('#add_category_button').on('click', function () {
+                frm.events.open_add_category_dialog(frm);
             });
         }
     },
@@ -190,4 +220,55 @@ frappe.ui.form.on('Appraisal', {
 
         dialog.show();
     },
+    // Function to open the Add Category dialog
+    open_add_category_dialog: function (frm) {
+        const dialog = new frappe.ui.Dialog({
+            title: 'Add Category',
+            fields: [
+                { label: 'Select Category', fieldname: 'select_category', fieldtype: 'Link', options: 'Category', reqd: 1 },
+                { label: 'Remarks', fieldname: 'remarks', fieldtype: 'Text', reqd: 1 },
+            ],
+            primary_action_label: 'Submit',
+            primary_action: function (data) {
+                if (data.select_category && data.remarks) {
+                    let user_id = frappe.session.user;
+                    frappe.call({
+                        method: "frappe.client.get_list",
+                        args: { doctype: "Employee", filters: { user_id: user_id }, fields: ["name", "designation"] },
+                        callback: function (response) {
+                            if (response.message && response.message.length > 0) {
+                                let employee_doc = response.message[0];
+                                frappe.call({
+                                    method: "beams.beams.custom_scripts.appraisal.appraisal.add_to_category_details",
+                                    args: {
+                                        parent_docname: frm.doc.name,
+                                        category: data.select_category,
+                                        remarks: data.remarks,
+                                        employee: employee_doc.name,
+                                        designation: employee_doc.designation,
+                                    },
+                                    callback: function (res) {
+                                        if (res.message) {
+                                            frappe.msgprint(__('Category successfully added to Category Details.'));
+                                            frm.reload_doc();
+                                            dialog.hide();
+                                        } else {
+                                            frappe.msgprint(__('Failed to add category.'));
+                                        }
+                                    },
+                                });
+                            } else {
+                                frappe.msgprint(__('Employee details not found for the logged-in user.'));
+                            }
+                        },
+                    });
+                } else {
+                    frappe.msgprint(__('Please fill all mandatory fields.'));
+                }
+            },
+        });
+
+        dialog.show();
+    },
 });
+   
