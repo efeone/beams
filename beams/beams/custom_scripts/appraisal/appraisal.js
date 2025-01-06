@@ -130,6 +130,13 @@ frappe.ui.form.on('Appraisal', {
                             in_list_view: 1,
                             reqd: 1,
                             description: 'Enter Marks (0 - 5)',
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          reqd: 1,
                         }
                     ],
                 },
@@ -153,6 +160,13 @@ frappe.ui.form.on('Appraisal', {
                             in_list_view: 1,
                             reqd: 1,
                             description: 'Enter Marks (0 - 5)',
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          reqd: 1,
                         }
                     ],
                 },
@@ -176,6 +190,13 @@ frappe.ui.form.on('Appraisal', {
                             in_list_view: 1,
                             reqd: 1,
                             description: 'Enter Marks (0 - 5)',
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          reqd: 1,
                         }
                     ],
                 },
@@ -199,21 +220,19 @@ frappe.ui.form.on('Appraisal', {
                     validate_marks(values.department_criteria) &&
                     validate_marks(values.company_criteria)
                 ) {
-                    // Push feedback if all marks are valid
-                    if (!frm.doc.feedback_list) {
-                        frm.doc.feedback_list = [];
-                    }
-
-                    frm.doc.feedback_list.push({
-                        feedback: values.feedback,
-                        employee_criteria: values.employee_criteria,
-                        department_criteria: values.department_criteria,
-                        company_criteria: values.company_criteria,
+                    frappe.call({
+                        method: "beams.beams.custom_scripts.appraisal.appraisal.create_employee_feedback",
+                        args: {
+                            data: values,
+                            appraisal_name: frm.doc.name,
+                            employee: frm.doc.employee,
+                        },
+                        callback: function () {
+                            frappe.msgprint(__('Feedback has been submitted successfully.'));
+                            frm.refresh();
+                            dialog.hide();
+                        }
                     });
-
-                    frm.refresh_field('feedback_list');
-                    frappe.msgprint(__('Your feedback has been submitted.'));
-                    dialog.hide();
                 }
             },
         });
@@ -271,4 +290,3 @@ frappe.ui.form.on('Appraisal', {
         dialog.show();
     },
 });
-   
