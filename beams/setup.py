@@ -2604,6 +2604,8 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
+            "property_type": "Check",
+            "value": 1
         },
         {
             "doctype_or_field": "DocField",

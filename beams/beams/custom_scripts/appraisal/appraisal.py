@@ -1,4 +1,70 @@
 import frappe
+import json
+from frappe import _
+from six import string_types
+from frappe.utils import get_link_to_form
+
+@frappe.whitelist()
+def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
+    '''
+    Method to create or update Employee Performance Feedback.
+    If feedback_exists is provided, it will update the existing feedback document.
+    Otherwise, it creates a new one.
+    '''
+    # If the data is a string, convert it to a dictionary
+    if isinstance(data, string_types):
+        data = frappe._dict(json.loads(data))
+
+    # Fetch the feedback document if it exists, otherwise create a new one
+    if feedback_exists:
+        feedback_doc = frappe.get_doc('Employee Performance Feedback', feedback_exists)
+    else:
+        feedback_doc = frappe.new_doc('Employee Performance Feedback')
+        feedback_doc.employee = employee
+        feedback_doc.appraisal = appraisal_name
+        feedback_doc.reviewer = frappe.session.user  # Set reviewer as the current user
+    # Append data to the child tables (employee, department, company feedback)
+    if "employee_criteria" in data:
+        for criterion in data["employee_criteria"]:
+            feedback_doc.append('feedback_ratings', {
+                'criteria': criterion.get("criteria"),
+                'marks': criterion.get("marks"),
+                'per_weightage':criterion.get("per_weightage")
+            })
+
+    if "department_criteria" in data:
+        for criterion in data["department_criteria"]:
+            feedback_doc.append('department_criteria', {
+                'criteria': criterion.get("criteria"),
+                'marks': criterion.get("marks"),
+                'per_weightage':criterion.get("per_weightage")
+            })
+
+    if "company_criteria" in data:
+        for criterion in data["company_criteria"]:
+            feedback_doc.append('company_criteria', {
+                'criteria': criterion.get("criteria"),
+                'marks': criterion.get("marks"),
+                'per_weightage':criterion.get("per_weightage")
+            })
+
+    # Add general feedback and result
+    feedback_doc.feedback = data.get("feedback")
+    feedback_doc.result = data.get("result")
+
+    # Save or submit based on the method parameter
+    if method == 'save':
+        feedback_doc.flags.ignore_mandatory = True
+        feedback_doc.save()
+    elif method == 'submit':
+        feedback_doc.submit()
+
+    # Send a message to confirm the action
+    frappe.msgprint(_('{1} Employee Performance Feedback {0} successfully!').format(
+        get_link_to_form('Employee Performance Feedback', feedback_doc.name), method.title()))
+
+    return feedback_doc.name  # Return the name of the created/updated feedback document
+
 
 @frappe.whitelist()
 def get_appraisal_summary(appraisal_template, employee_feedback=None):
@@ -123,12 +189,12 @@ def add_to_category_details(parent_docname, category, remarks, employee, designa
         Adds a new row with category details (category, remarks, employee, designation) to the category_details child table of an Appraisal document and saves it.
     '''
     try:
-        parent_doc = frappe.get_doc("Appraisal", parent_docname)    
+        parent_doc = frappe.get_doc("Appraisal", parent_docname)
         child_row = parent_doc.append("category_details", {
             "category": category,
             "remarks": remarks,
-            "employee": employee, 
-            "designation": designation 
+            "employee": employee,
+            "designation": designation
         })
         parent_doc.save()
 
