@@ -46,6 +46,7 @@ def after_install():
     create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_event_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -102,6 +103,7 @@ def before_uninstall():
     delete_custom_fields(get_employee_feedback_rating_custom_fields())
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
+    delete_custom_fields(get_event_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -147,6 +149,58 @@ def get_employment_type_custom_fields():
                 "label": "Penalty Leave Type",
                 "options": "Leave Type",
                 "insert_after": "employee_type_name"
+            }
+        ]
+    }
+
+def get_event_custom_fields():
+    '''
+    Custom fields to be added to the Event Doctype
+    '''
+    return {
+        "Event": [
+            {
+                "fieldname": "contribution_of_employee",
+                "fieldtype": "Small Text",
+                "label": "Contribution of Employee",
+                "insert_after": "description",
+                "depends_on": "eval:doc.event_category == 'One to One Meeting'"
+            },
+            {
+                "fieldname": "improvement_of_employee",
+                "fieldtype": "Small Text",
+                "label": "Areas of Improvement of Employee",
+                "insert_after": "contribution_of_employee",
+                "depends_on": "eval:doc.event_category == 'One to One Meeting'"
+            },
+            {
+                "fieldname": "training_needs_of_employee",
+                "fieldtype": "Small Text",
+                "label": "Training Needs of Employee",
+                "insert_after": "improvement_of_employee",
+                "depends_on": "eval:doc.event_category == 'One to One Meeting'"
+            },
+            {
+                "fieldname": "is_employee_eligible_for_promotion",
+                "fieldtype": "Select",
+                "label": "Is Employee Eligible for Promotion",
+                "options": "\nYes\nNo",
+                "insert_after": "training_needs_of_employee",
+                "depends_on": "eval:doc.event_category == 'One to One Meeting'"
+            },
+            {
+                "fieldname": "remarks_for_promotion",
+                "fieldtype": "Small Text",
+                "label": "Remarks",
+                "insert_after": "is_employee_eligible_for_promotion",
+                "depends_on": "eval:(doc.is_employee_eligible_for_promotion == 'Yes' || doc.is_employee_eligible_for_promotion == 'No') && doc.event_category == 'One to One Meeting'"
+            },
+            {
+                "fieldname": "appraisal_reference",
+                "fieldtype": "Link",
+                "label": "Appraisal Reference",
+                "options": "Appraisal",
+                "insert_after": "status",
             }
         ]
     }
@@ -2234,7 +2288,14 @@ def get_appraisal_custom_fields():
 				"options": "Category Details",
 				"insert_after": "category_html",
 				"allow_on_submit": 1
-			}
+			},
+            {
+                "fieldname": "event_reference",
+                "fieldtype": "Link",
+                "label": "Event Reference",
+                "insert_after": "appraisal_cycle",
+                "options": "Event",
+            }
         ]
     }
 
@@ -2484,6 +2545,13 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Event",
+            "field_name": "event_category",
+            "property": "options",
+            "value": "Event\nMeeting\nCall\nSent/Received Email\nOne to One Meeting\nOther"
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Job Opening",
             "field_name": "location",
             "property": "hidden",
@@ -2636,6 +2704,14 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Check",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0
         }
     ]
 
