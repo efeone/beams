@@ -1,22 +1,9 @@
 frappe.ui.form.on('Appraisal', {
     refresh: function (frm) {
-        if (!frm.is_new() && frm.doc.employee) {
-            // Fetch `reports_to` and check if logged-in user matches
-            frappe.db.get_value('Employee', frm.doc.employee, 'reports_to').then((result) => {
-                let reports_to_employee = result.message.reports_to;
-
-                if (reports_to_employee) {
-                    frappe.db.get_value('Employee', reports_to_employee, 'user_id').then((user_result) => {
-                        let reports_to_user = user_result.message.user_id;
-
-                        if (reports_to_user === frappe.session.user) {
-                            frm.add_custom_button(__('New Feedback'), function () {
-                                frm.events.show_feedback_dialog(frm);
-                            });
-                        }
-                    });
-                }
-            });
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('New Feedback'), function () {
+                frm.events.show_feedback_dialog(frm);
+                });
         }
 
         if (frm.doc.name) {
