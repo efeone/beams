@@ -270,8 +270,7 @@ doc_events = {
         "before_save": "beams.beams.custom_scripts.appraisal_template.appraisal_template.create_feedback_criteria",
     },
     "Employee Performance Feedback":{
-        "before_save": "beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.update_criteria",
-        "validate":"beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.validate"
+        "before_save": "beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.update_criteria"
     }
 }
 

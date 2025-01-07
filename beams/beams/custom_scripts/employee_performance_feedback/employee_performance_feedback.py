@@ -41,27 +41,3 @@ def update_company_criteria(doc, method):
     total_score, average_score = calculate_total_and_average(doc.company_criteria)
     doc.company_total_score = total_score
     doc.company_average_score = average_score
-
-def validate(doc, method):
-    """
-    Method which triggers on validate of Employee Performance Feedback.
-    Ensures marks are between 0-5 and assigns them to the rating field in all child tables.
-    """
-    def validate_and_set_rating(child_table):
-        """
-        Helper function to validate marks and set them as ratings in a child table.
-        """
-        for row in child_table:
-            if row.marks is not None:
-                if row.marks < 0 or row.marks > 5:
-                    frappe.throw(
-                        _("Marks for criteria {0} must be a number between 0 and 5.").format(
-                            frappe.bold(row.criteria)
-                        )
-                    )
-                rating = (float(row.marks) / 10) * 2
-            row.rating = rating
-    # Validate and set ratings in all child tables
-    validate_and_set_rating(doc.feedback_ratings)  # For employee criteria
-    validate_and_set_rating(doc.department_criteria)  # For department criteria
-    validate_and_set_rating(doc.company_criteria)  # For company criteria
