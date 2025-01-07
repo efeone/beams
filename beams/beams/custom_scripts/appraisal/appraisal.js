@@ -1,9 +1,15 @@
 frappe.ui.form.on('Appraisal', {
     refresh: function (frm) {
+        // Remove the button by targeting its full class list
+        setTimeout(() => {
+            $('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
+        }, 500); 
+
         if (!frm.is_new()) {
+            // Add custom button to trigger the feedback dialog
             frm.add_custom_button(__('New Feedback'), function () {
                 frm.events.show_feedback_dialog(frm);
-                });
+            });
         }
 
         if (frm.doc.name) {

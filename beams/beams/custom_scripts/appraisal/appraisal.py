@@ -52,12 +52,12 @@ def create_employee_feedback(data, employee , appraisal_name , feedback_exists=F
     feedback_doc.feedback = data.get("feedback")
     feedback_doc.result = data.get("result")
 
-    # Save or submit based on the method parameter
-    if method == 'save':
-        feedback_doc.flags.ignore_mandatory = True
-        feedback_doc.save()
-    elif method == 'submit':
-        feedback_doc.submit()
+    # Save the document
+    feedback_doc.flags.ignore_mandatory = True  # Allow ignoring mandatory fields
+    feedback_doc.save()
+
+    # Submit the document
+    feedback_doc.submit()
 
     # Send a message to confirm the action
     frappe.msgprint(_('{1} Employee Performance Feedback {0} successfully!').format(
