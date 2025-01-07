@@ -2701,14 +2701,6 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "feedback_html",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "reqd",
