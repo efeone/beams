@@ -123,12 +123,12 @@ def add_to_category_details(parent_docname, category, remarks, employee, designa
         Adds a new row with category details (category, remarks, employee, designation) to the category_details child table of an Appraisal document and saves it.
     '''
     try:
-        parent_doc = frappe.get_doc("Appraisal", parent_docname)    
+        parent_doc = frappe.get_doc("Appraisal", parent_docname)
         child_row = parent_doc.append("category_details", {
             "category": category,
             "remarks": remarks,
-            "employee": employee, 
-            "designation": designation 
+            "employee": employee,
+            "designation": designation
         })
         parent_doc.save()
 
@@ -139,13 +139,16 @@ def add_to_category_details(parent_docname, category, remarks, employee, designa
 
 @frappe.whitelist()
 def map_appraisal_to_event(source_name):
-    """
+    '''
     Map fields from Appraisal to a new Event.
-    """
+    '''
     source_doc = frappe.get_doc("Appraisal", source_name)
 
     # Create a new Event document
     event_doc = frappe.new_doc("Event")
+    event_doc.appraisal_reference = source_doc.name
+    event_doc.subject = "Appraisal Event for {}".format(source_doc.employee)
+    event_doc.starts_on = frappe.utils.now_datetime()
 
     # Add participants
     event_doc.append("event_participants", {
@@ -167,5 +170,15 @@ def map_appraisal_to_event(source_name):
             "reference_doctype": "User",
             "reference_docname": frappe.session.user
         })
+
+    # Insert the Event document
+    event_doc.insert()
+
+    # Link the Event to the Appraisal
+    if source_doc.docstatus == 1:  # Check if the Appraisal is submitted
+        frappe.db.set_value("Appraisal", source_name, "event_reference", event_doc.name)
+    else:
+        source_doc.event_reference = event_doc.name
+        source_doc.save()
 
     return event_doc
