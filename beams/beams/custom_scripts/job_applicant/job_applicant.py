@@ -5,6 +5,7 @@ from frappe.utils import get_url, now_datetime
 from frappe.utils import nowdate
 from frappe.utils import get_url_to_form
 from frappe.utils.password import encrypt
+import os
 
 def get_permission_query_conditions(user):
 	if not user:
@@ -176,3 +177,12 @@ def fetch_department(doc, method):
             doc.department = department
         else:
             frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
+
+def validate_resume_attachment(doc, method):
+    if doc.resume_attachment:
+        file_doc = frappe.get_doc("File", {"file_url": doc.resume_attachment})
+        file_name = file_doc.file_name
+        file_extension = os.path.splitext(file_name)[1].lower()
+
+        if file_extension != '.pdf':
+            frappe.throw("Only PDF files are allowed for Resume Attachment.")

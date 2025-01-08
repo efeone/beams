@@ -2706,7 +2706,15 @@ def get_property_setters():
             "property": "reqd",
             "property_type": "Check",
             "value": 0
-        }
+        },
+            {
+                "doctype_or_field": "DocField",
+                "doc_type": "Job Applicant",
+                "field_name": "resume_link",
+                "property": "hidden",
+                "property_type": "Data",
+                "value": 1
+            }
     ]
 
 
