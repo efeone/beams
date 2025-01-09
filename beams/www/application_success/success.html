@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Submitted Successfully</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .success-container {
+            background-color: #ffffff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 30px;
+            width: 500px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        .success-icon {
+            width: 100px;
+            height: 100px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            animation: scaleUp 0.8s ease-out; /* Adding animation */
+        }
+        .success-icon .checkmark {
+            font-size: 60px;
+            color: #ffffff;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out 0.4s forwards; /* Checkmark fade-in animation */
+        }
+        .success-title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #333333;
+            margin-bottom: 10px;
+        }
+        .success-message {
+            font-size: 16px;
+            color: #555555;
+            margin-bottom: 20px;
+        }
+        .redirect-message {
+            font-size: 14px;
+            color: #777777;
+        }
+        a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Animation Keyframes */
+        @keyframes scaleUp {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+    <script>
+    setTimeout(function() {
+        window.location.href = "/job_portal";  // Full URL for redirection
+    }, 3000); // 3 seconds delay
+</script>
+
+</head>
+<body>
+    <div class="success-container">
+        <!-- Circular Icon with Checkmark -->
+        <div class="success-icon">
+            <div class="checkmark">✔</div>
+        </div>
+        <!-- Success Content -->
+        <div class="success-title">Application Submitted Successfully</div>
+        <div class="success-message">
+            Thank you for submitting your application. Our team has received your details and will review them shortly.
+        </div>
+        <div class="redirect-message">
+            <p>You will be redirected shortly. If not, <a href="/job_portal">click here</a> to return to the homepage.</p>
+
+        </div>
+    </div>
+</body>
+</html>
