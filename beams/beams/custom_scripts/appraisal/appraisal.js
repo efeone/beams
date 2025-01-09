@@ -250,9 +250,9 @@ frappe.ui.form.on('Appraisal', {
             },
         });
 
-        const employeeCriteriaTable = [];
+        const employee_criteria_table = [];
         frm.doc.appraisal_kra.forEach(row => {
-            employeeCriteriaTable.push({
+            employee_criteria_table.push({
                 criteria: row.kra,
                 goals: row.kra_goals,
                 per_weightage: row.per_weightage,
@@ -260,10 +260,8 @@ frappe.ui.form.on('Appraisal', {
         });
 
         // Set the data and refresh the table in the dialog
-        dialog.fields_dict.employee_criteria.df.data = employeeCriteriaTable;
+        dialog.fields_dict.employee_criteria.df.data = employee_criteria_table;
         dialog.fields_dict.employee_criteria.refresh();
-
-
 
         // Fetch data from `appraisal_template`
         if (frm.doc.appraisal_template) {
@@ -273,21 +271,21 @@ frappe.ui.form.on('Appraisal', {
                     doctype: "Appraisal Template",
                     name: frm.doc.appraisal_template
                 },
-                callback: function (r) {
-                    if (r.message) {
+                callback: function (response) {
+                    if (response.message) {
                         // Populate department_criteria from department_rating_criteria
-                        const departmentCriteriaTable = r.message.department_rating_criteria.map(row => ({
+                        const department_criteria_table = response.message.department_rating_criteria.map(row => ({
                             criteria: row.criteria,
                             per_weightage: row.per_weightage
                         }));
-                        dialog.fields_dict.department_criteria.df.data = departmentCriteriaTable;
+                        dialog.fields_dict.department_criteria.df.data = department_criteria_table;
 
                         // Populate company_criteria from company_rating_criteria
-                        const companyCriteriaTable = r.message.company_rating_criteria.map(row => ({
+                        const company_criteria_table = response.message.company_rating_criteria.map(row => ({
                             criteria: row.criteria,
                             per_weightage: row.per_weightage
                         }));
-                        dialog.fields_dict.company_criteria.df.data = companyCriteriaTable;
+                        dialog.fields_dict.company_criteria.df.data = company_criteria_table;
 
                         dialog.fields_dict.department_criteria.refresh();
                         dialog.fields_dict.company_criteria.refresh();
