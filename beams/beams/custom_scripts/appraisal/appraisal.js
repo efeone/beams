@@ -121,13 +121,6 @@ frappe.ui.form.on('Appraisal', {
             title: 'New Feedback',
             fields: [
                 {
-                    label: 'Feedback',
-                    fieldname: 'feedback',
-                    fieldtype: 'Text Editor', // For richer feedback
-                    reqd: true,
-                    enable_mentions: true,
-                },
-                {
                     label: 'Employee Criteria',
                     fieldname: 'employee_criteria',
                     fieldtype: 'Table',
@@ -139,6 +132,25 @@ frappe.ui.form.on('Appraisal', {
                             options: 'Employee Feedback Criteria',
                             in_list_view: 1,
                             reqd: 1,
+                            read_only: 1,
+                            columns: 3
+                        },
+                        {
+                            label: 'Goals',
+                            fieldname: 'goals',
+                            fieldtype: 'Text Editor',
+                            in_list_view: 1,
+                            read_only: 1,
+                            columns: 3
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          columns: 2,
+                          read_only: 1,
+                          reqd: 1
                         },
                         {
                             label: 'Marks',
@@ -146,16 +158,11 @@ frappe.ui.form.on('Appraisal', {
                             fieldtype: 'Float',
                             in_list_view: 1,
                             reqd: 1,
-                            description: 'Enter Marks (0 - 5)',
+                            columns: 2,
+                            description: 'Enter Marks (0 - 5)'
                         },
-                        {
-                          label:'Weightage(%)',
-                          fieldname:'per_weightage',
-                          fieldtype:'Percent',
-                          in_list_view: 1,
-                          reqd: 1,
-                        }
                     ],
+                    cannot_add_rows: true, // Disable adding rows manually
                 },
                 {
                     label: 'Department Criteria',
@@ -168,7 +175,16 @@ frappe.ui.form.on('Appraisal', {
                             fieldtype: 'Link',
                             options: 'Employee Feedback Criteria',
                             in_list_view: 1,
+                            read_only: 1,
                             reqd: 1,
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          read_only: 1,
+                          reqd: 1,
                         },
                         {
                             label: 'Marks',
@@ -178,14 +194,8 @@ frappe.ui.form.on('Appraisal', {
                             reqd: 1,
                             description: 'Enter Marks (0 - 5)',
                         },
-                        {
-                          label:'Weightage(%)',
-                          fieldname:'per_weightage',
-                          fieldtype:'Percent',
-                          in_list_view: 1,
-                          reqd: 1,
-                        }
                     ],
+                    cannot_add_rows: true, // Disable adding rows manually
                 },
                 {
                     label: 'Company Criteria',
@@ -198,7 +208,16 @@ frappe.ui.form.on('Appraisal', {
                             fieldtype: 'Link',
                             options: 'Employee Feedback Criteria',
                             in_list_view: 1,
+                            read_only: 1,
                             reqd: 1,
+                        },
+                        {
+                          label:'Weightage(%)',
+                          fieldname:'per_weightage',
+                          fieldtype:'Percent',
+                          in_list_view: 1,
+                          read_only: 1,
+                          reqd: 1,
                         },
                         {
                             label: 'Marks',
@@ -208,16 +227,18 @@ frappe.ui.form.on('Appraisal', {
                             reqd: 1,
                             description: 'Enter Marks (0 - 5)',
                         },
-                        {
-                          label:'Weightage(%)',
-                          fieldname:'per_weightage',
-                          fieldtype:'Percent',
-                          in_list_view: 1,
-                          reqd: 1,
-                        }
-                    ],
+                  ],
+                  cannot_add_rows: true, // Disable adding rows manually
+                },
+                {
+                    label: 'Feedback',
+                    fieldname: 'feedback',
+                    fieldtype: 'Text Editor', // For richer feedback
+                    reqd: true,
+                    enable_mentions: true,
                 },
             ],
+            size: 'extra-large',
             primary_action_label: 'Submit',
             primary_action(values) {
                 // Validate Marks (should be between 0 and 5)
@@ -231,7 +252,6 @@ frappe.ui.form.on('Appraisal', {
                     });
                     return isValid;
                 };
-
                 if (
                     validate_marks(values.employee_criteria) &&
                     validate_marks(values.department_criteria) &&
@@ -253,6 +273,50 @@ frappe.ui.form.on('Appraisal', {
                 }
             },
         });
+
+        const employee_criteria_table = [];
+        frm.doc.appraisal_kra.forEach(row => {
+            employee_criteria_table.push({
+                criteria: row.kra,
+                goals: row.kra_goals,
+                per_weightage: row.per_weightage,
+            });
+        });
+
+        // Set the data and refresh the table in the dialog
+        dialog.fields_dict.employee_criteria.df.data = employee_criteria_table;
+        dialog.fields_dict.employee_criteria.refresh();
+
+        // Fetch data from `appraisal_template`
+        if (frm.doc.appraisal_template) {
+            frappe.call({
+                method: "frappe.client.get",
+                args: {
+                    doctype: "Appraisal Template",
+                    name: frm.doc.appraisal_template
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        // Populate department_criteria from department_rating_criteria
+                        const department_criteria_table = response.message.department_rating_criteria.map(row => ({
+                            criteria: row.criteria,
+                            per_weightage: row.per_weightage
+                        }));
+                        dialog.fields_dict.department_criteria.df.data = department_criteria_table;
+
+                        // Populate company_criteria from company_rating_criteria
+                        const company_criteria_table = response.message.company_rating_criteria.map(row => ({
+                            criteria: row.criteria,
+                            per_weightage: row.per_weightage
+                        }));
+                        dialog.fields_dict.company_criteria.df.data = company_criteria_table;
+
+                        dialog.fields_dict.department_criteria.refresh();
+                        dialog.fields_dict.company_criteria.refresh();
+                    }
+                }
+            });
+        }
 
         dialog.show();
     },
