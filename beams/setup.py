@@ -2358,6 +2358,21 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Appraisal Template",
+            "field_name": "rating_criteria",
+            "property": "label",
+            "value": "Employee Criteria"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "rating_criteria",
+            "property": "read_only",
+            "property_type": "Table",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "status",
             "property": "read_only",
