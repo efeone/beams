@@ -27,7 +27,22 @@ frappe.ui.form.on('Job Applicant', {
             // Clear location if checkbox is unchecked
             frm.set_value('location', '');
         }
-    }
+    },
+    validate: function (frm) {
+      const resume_attachment = frm.doc.resume_attachment;
+      if (resume_attachment) {
+          const file_extension = resume_attachment.split('.').pop().toLowerCase();
+          if (file_extension !== 'pdf') {
+              frappe.msgprint({
+                  title: __('Validation for Resume '),
+                  message: __('Only PDF files are allowed for Resume Attachment.'),
+                  indicator: 'red'
+              });
+              frappe.validated = false;
+          }
+      }
+  }
+
 });
 
 function handle_custom_buttons(frm) {

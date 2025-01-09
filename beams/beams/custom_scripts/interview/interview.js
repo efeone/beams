@@ -32,6 +32,25 @@ frappe.ui.form.on('Interview', {
                 });
             }
         }
+        if (frm.doc.job_applicant && !frm.is_new()) {
+            frm.add_custom_button(__('Job Applicant'), function () {
+                frappe.set_route('Form', 'Job Applicant', frm.doc.job_applicant);
+            }, 'View');
+
+            frm.add_custom_button(__('Resume'), function () {
+                frappe.db.get_value('Job Applicant', frm.doc.job_applicant, 'resume_attachment')
+                .then(r => {
+                    let site_url = frappe.urllib.get_base_url();
+                    let resume_path = r.message.resume_attachment;
+                    if (!resume_path) {
+                        frappe.msgprint("No Attached Resume");
+                    } else {
+                        let file_url = `${site_url}${resume_path}`;
+                        window.open(file_url, '_blank');
+                    }
+                });
+            }, 'View');
+        }
     },
     show_custom_feedback_dialog: function (frm, data, question_data, feedback_exists) {
         let fields = frm.events.get_fields_for_custom_feedback();
