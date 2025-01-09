@@ -46,6 +46,8 @@ def after_install():
     create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_event_custom_fields(),ignore_validate=True)
+
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -102,6 +104,8 @@ def before_uninstall():
     delete_custom_fields(get_employee_feedback_rating_custom_fields())
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
+    delete_custom_fields(get_event_custom_fields())
+
 
 def delete_custom_fields(custom_fields: dict):
     '''
