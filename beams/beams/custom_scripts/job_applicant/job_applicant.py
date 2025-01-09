@@ -101,6 +101,7 @@ def send_magic_link(applicant_id):
 		else:
 			frappe.msgprint('Email Template "Job Applicant Follow Up" does not exist.', alert=True)
 
+@frappe.whitelist
 def generate_magic_link(applicant_id):
 	'''
         Generates and returns a magic link URL for the specified job applicant
@@ -177,7 +178,6 @@ def fetch_department(doc, method):
             doc.department = department
         else:
             frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
-
 def validate_resume_attachment(doc, method):
     if doc.resume_attachment:
         file_doc = frappe.get_doc("File", {"file_url": doc.resume_attachment})
@@ -185,4 +185,8 @@ def validate_resume_attachment(doc, method):
         file_extension = os.path.splitext(file_name)[1].lower()
 
         if file_extension != '.pdf':
-            frappe.throw("Only PDF files are allowed for Resume Attachment.")
+            frappe.msgprint(
+                msg=_('Only PDF files are allowed for Resume Attachment'),
+                title=_('Validation for Resume'),
+                indicator="red"
+            )
