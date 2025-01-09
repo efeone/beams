@@ -3,6 +3,8 @@ import json
 from frappe import _
 from six import string_types
 from frappe.utils import get_link_to_form
+import datetime
+from frappe.desk.form.assign_to import add as add_assign
 
 @frappe.whitelist()
 def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
@@ -208,43 +210,140 @@ def map_appraisal_to_event(source_name):
     '''
     Map fields from Appraisal to a new Event.
     '''
-    source_doc = frappe.get_doc("Appraisal", source_name)
+    try:
+        # Fetch the Appraisal document
+        source_doc = frappe.get_doc("Appraisal", source_name)
 
-    # Create a new Event document
-    event_doc = frappe.new_doc("Event")
-    event_doc.appraisal_reference = source_doc.name
-    event_doc.subject = "Appraisal Event for {}".format(source_doc.employee)
-    event_doc.starts_on = frappe.utils.now_datetime()
+        # Create a new Event document
+        event_doc = frappe.new_doc("Event")
+        event_doc.appraisal_reference = source_doc.name
+        event_doc.subject = "Appraisal Event for {}".format(source_doc.employee)
+        event_doc.starts_on = datetime.datetime.now()
 
-    # Add participants
-    event_doc.append("event_participants", {
-        "reference_doctype": "Employee",
-        "reference_docname": source_doc.employee
-    })
-
-    # Optionally, add the logged-in user as a participant
-    user_employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
-    if user_employee:
-        # If the logged-in user has an Employee ID, add them as a participant
+        # Add participants
         event_doc.append("event_participants", {
             "reference_doctype": "Employee",
-            "reference_docname": user_employee
-        })
-    else:
-        # If the logged-in user doesn't have an Employee ID, use their User ID
-        event_doc.append("event_participants", {
-            "reference_doctype": "User",
-            "reference_docname": frappe.session.user
+            "reference_docname": source_doc.employee
         })
 
-    # Insert the Event document
-    event_doc.insert()
+        # Optionally, add the logged-in user as a participant
+        user_employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+        if user_employee:
+            # If the logged-in user has an Employee ID, add them as a participant
+            event_doc.append("event_participants", {
+                "reference_doctype": "Employee",
+                "reference_docname": user_employee
+            })
+        else:
+            # If the logged-in user doesn't have an Employee ID, use their User ID
+            event_doc.append("event_participants", {
+                "reference_doctype": "User",
+                "reference_docname": frappe.session.user
+            })
 
-    # Link the Event to the Appraisal
-    if source_doc.docstatus == 1:  # Check if the Appraisal is submitted
-        frappe.db.set_value("Appraisal", source_name, "event_reference", event_doc.name)
-    else:
-        source_doc.event_reference = event_doc.name
-        source_doc.save()
+        # Insert the Event document
+        event_doc.insert()
 
-    return event_doc
+        # Link the Event to the Appraisal
+        if source_doc.docstatus == 1:  # Check if the Appraisal is submitted
+            frappe.db.set_value("Appraisal", source_name, "event_reference", event_doc.name)
+        else:
+            source_doc.event_reference = event_doc.name
+            source_doc.save()
+
+        return event_doc
+
+    except Exception as e:
+        # Log the error and raise it
+        frappe.log_error(message=str(e), title="Error in mapping Appraisal to Event")
+        raise frappe.exceptions.ValidationError(f"Error: {str(e)}")
+
+@frappe.whitelist()
+def assign_tasks_sequentially(doc=None, method=None):
+    """
+    Assign tasks sequentially to assessment officers listed in the Appraisal Template.
+
+    Args:
+        doc (dict): The Appraisal document instance (JSON or dict format).
+        method (str): The method context in which the function is called (e.g., "on_update").
+    """
+    try:
+        if not doc:
+            frappe.throw("Missing document data.")
+
+        # If the doc is an ID string, fetch the full document
+        if isinstance(doc, str) and not doc.startswith('{'):
+            appraisal_doc = frappe.get_doc("Appraisal", doc)
+        else:
+            appraisal_doc = doc
+
+        if not appraisal_doc:
+            frappe.throw("Invalid Appraisal document.")
+
+        if not appraisal_doc.event_reference:
+            return
+
+        # Fetch the Event document using event_reference from the Appraisal document
+        event_doc = frappe.get_doc("Event", appraisal_doc.event_reference)
+
+        appraisal_template_name = appraisal_doc.appraisal_template
+
+        if not appraisal_template_name:
+            return
+
+        # Fetch Appraisal Template and assessment officers
+        appraisal_template_doc = frappe.get_doc("Appraisal Template", appraisal_template_name)
+        assessment_officers = appraisal_template_doc.get("assessment_officers")
+
+        if not assessment_officers:
+            frappe.log_error("No assessment officers defined in the appraisal template.")
+            return
+
+        # Sequential assignment
+        task_assigned = False  # Track whether a task was assigned
+        for officer in assessment_officers:
+            designation = officer.designation
+
+            # Check if a task is already completed for this designation
+            if any(row.designation == designation for row in appraisal_doc.category_details):
+                frappe.log_error(f"Task already completed for designation: {designation}", "Task Assignment")
+                continue
+
+            # Fetch employees for the designation
+            employees = frappe.get_all(
+                "Employee",
+                filters={"designation": designation, "status": "Active"},
+                fields=["name", "user_id", "employee_name"]
+            )
+
+            if not employees:
+                frappe.log_error(f"No active employees found for designation: {designation}", "Task Assignment")
+                continue
+
+            # Assign task to the first employee with a user ID
+            for employee in employees:
+                if employee.get("user_id"):
+                    try:
+                        add_assign({
+                            "assign_to": [employee.user_id],
+                            "doctype": appraisal_doc.doctype,
+                            "name": appraisal_doc.name,
+                            "description": f"Please add Category for {employee.user_id} with Designation {designation}.",
+                        })
+                        task_assigned = True
+                        break
+                    except Exception as e:
+                        frappe.log_error(f"Failed to assign task to {employee.user_id}: {str(e)}", "Task Assignment")
+
+            if task_assigned:
+                break  # Exit after assigning a task to the current officer
+
+        if not task_assigned:
+            frappe.log_error("No tasks were assigned. Ensure valid employees and designations.")
+
+    except Exception as e:
+        if isinstance(doc, dict):
+            frappe.log_error(f"Error in task assignment for Appraisal {doc.get('name', 'Unknown')}: {str(e)}", "Task Assignment")
+        else:
+            frappe.log_error(f"Error in task assignment: {str(e)}", "Task Assignment")
+        frappe.throw(str(e))

@@ -46,7 +46,6 @@ def after_install():
     create_custom_fields(get_employee_feedback_rating_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_event_custom_fields(),ignore_validate=True)
 
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
@@ -103,7 +102,6 @@ def before_uninstall():
     delete_custom_fields(get_employee_feedback_rating_custom_fields())
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
-    delete_custom_fields(get_event_custom_fields())
 
 def delete_custom_fields(custom_fields: dict):
     '''
@@ -2126,7 +2124,7 @@ def get_employee_performance_feedback():
             "fieldtype": "Float",
             "label": "Average Score",
             "insert_after": "dept_column"
-        },
+        }
         ],
         "Employee Feedback Rating": [
             {
@@ -2135,9 +2133,8 @@ def get_employee_performance_feedback():
                 "label": "Marks",
                 "insert_after": "per_weightage"
             }
-    ]
-}
-
+            ]
+        }
 
 def get_leave_type_custom_fields():
     '''
@@ -2231,6 +2228,19 @@ def get_appraisal_template_custom_fields():
                 "fieldtype": "Data",
                 "label": "Label for Company KRA",
                 "insert_after": "company_rating_criteria"
+            },
+            {
+                "fieldname": "designation_section",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "label_for_company_kra"
+            },
+            {
+                "fieldname": "assessment_officers",
+                "fieldtype": "Table",
+                "options": "Assessment Officer",
+                "label": "Assessment Officers",
+                "insert_after": "designation_section"
             }
         ]
     }

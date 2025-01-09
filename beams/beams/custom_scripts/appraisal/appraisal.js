@@ -3,7 +3,7 @@ frappe.ui.form.on('Appraisal', {
         // Remove the button by targeting its full class list
         setTimeout(() => {
             $('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
-        }, 500); 
+        }, 500);
 
         if (!frm.is_new()) {
             // Add custom button to trigger the feedback dialog
@@ -50,21 +50,45 @@ frappe.ui.form.on('Appraisal', {
         }
 
         // Add Custom Button for One to One Meeting
-        if (frm.doc.docstatus === 1 && frm.doc.employee) {
-            frappe.db.get_value('Employee Performance Feedback',
-                { employee: frm.doc.employee, docstatus: 1 },
-                'feedback'
-            ).then(response => {
-                if (response && response.message && response.message.feedback) {
-                    frm.add_custom_button(__('One to One Meeting'), function () {
-                        frappe.model.open_mapped_doc({
-                            method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
-                            frm: frm
-                        });
-                    }, __('Create'));
-                }
-            });
-        }
+      if (frm.doc.docstatus === 1 && frm.doc.employee) {
+          frappe.db.get_value('Employee Performance Feedback',
+              { employee: frm.doc.employee, docstatus: 1 },
+              'feedback').then(response => {
+
+              if (response && response.message && response.message.feedback) {
+                  frm.add_custom_button(__('One to One Meeting'), function () {
+
+                      // Call the method to map the appraisal to event
+                      frappe.call({
+                          method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
+                          args: {
+                              source_name: frm.doc.name
+                          },
+                          callback: function (r) {
+                              if (r.message) {
+                                  const event_name = r.message;
+
+                                  // Use open_mapped_doc to map and open the Event form
+                                  frappe.model.open_mapped_doc({
+                                      method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event", // Mapping method
+                                      args: { source_name: frm.doc.name },
+                                      frm: frm
+                                  });
+
+                                  // call the assign tasks sequentially function after mapping
+                                  frappe.call({
+                                      method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
+                                      args: {
+                                          doc: frm.doc.name
+                                      }
+                                  });
+                              }
+                          }
+                      });
+                  }, __('Create'));
+              }
+          });
+      }
 
         frappe.call({
             method: "beams.beams.custom_scripts.appraisal.appraisal.get_categories_table",

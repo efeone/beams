@@ -271,7 +271,11 @@ doc_events = {
     },
     "Employee Performance Feedback":{
         "before_save": "beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.update_criteria",
-        "validate":"beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.validate"
+        "validate":"beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.validate",
+        "before_save": "beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.update_criteria"
+    },
+    "Appraisal":{
+        "on_update_after_submit":"beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially"
     }
 }
 
