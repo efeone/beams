@@ -2129,16 +2129,8 @@ def get_employee_performance_feedback():
             "label": "Average Score",
             "insert_after": "dept_column"
         }
-        ],
-        "Employee Feedback Rating": [
-            {
-                "fieldname": "marks",
-                "fieldtype": "Float",
-                "label": "Marks",
-                "insert_after": "per_weightage"
-            }
-            ]
-        }
+        ]
+     }
 
 def get_leave_type_custom_fields():
     '''
@@ -2258,7 +2250,7 @@ def get_employee_feedback_rating_custom_fields():
             {
                 "fieldname": "marks",
                 "fieldtype": " Float",
-                "label": "Marks",
+                "label": "Marks out of 5",
                 "in_list_view":1,
                 "insert_after": "rating"
             }
@@ -2309,6 +2301,69 @@ def get_appraisal_custom_fields():
                 "label": "Event Reference",
                 "insert_after": "appraisal_cycle",
                 "options": "Event",
+            },
+            {
+                "fieldname": "employee_self_kra_rating",
+                "fieldtype": "Table",
+                "label": "Employee Rating",
+                "options": "Employee Feedback Rating",
+                "insert_after": "self_score",
+            },
+            {
+                "fieldname": "total_employee_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Total Employee Self Score",
+                "insert_after": "employee_self_kra_rating",
+                "read_only": 1
+            },
+            {
+                "fieldname": "avg_employee_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Average Employee Self Score",
+                "insert_after": "total_employee_self_kra_rating",
+                "read_only": 1
+            },
+            {
+                "fieldname": "dept_self_kra_rating",
+                "fieldtype": "Table",
+                "label": "Department Rating",
+                "options": "Employee Feedback Rating",
+                "insert_after": "avg_employee_self_kra_rating",
+            },
+            {
+                "fieldname": "total_dept_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Total Department Self Score",
+                "insert_after": "dept_self_kra_rating",
+                "read_only": 1
+            },
+            {
+                "fieldname": "avg_dept_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Average Department Self Score",
+                "insert_after": "total_dept_self_kra_rating",
+                "read_only": 1
+            },
+            {
+                "fieldname": "company_self_kra_rating",
+                "fieldtype": "Table",
+                "label": "Company Rating",
+                "options": "Employee Feedback Rating",
+                "insert_after": "avg_dept_self_kra_rating",
+            },
+            {
+                "fieldname": "total_company_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Total Company Self Score",
+                "insert_after": "company_self_kra_rating",
+                "read_only": 1
+            },
+            {
+                "fieldname": "avg_company_self_kra_rating",
+                "fieldtype": "Float",
+                "label": "Average Company Self Score",
+                "insert_after": "total_company_self_kra_rating",
+                "read_only": 1
             }
         ]
     }
@@ -2736,14 +2791,30 @@ def get_property_setters():
             "property_type": "Check",
             "value": 0
         },
-            {
-                "doctype_or_field": "DocField",
-                "doc_type": "Job Applicant",
-                "field_name": "resume_link",
-                "property": "hidden",
-                "property_type": "Data",
-                "value": 1
-            }
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Applicant",
+            "field_name": "resume_link",
+            "property": "hidden",
+            "property_type": "Data",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "self_ratings",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Appraisal",
+            "field_name": "self_score",
+            "property": "hidden",
+            "property_type": "Check",
+            "value": 1
+        }
     ]
 
 
