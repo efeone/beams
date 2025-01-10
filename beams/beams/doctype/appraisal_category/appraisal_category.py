@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class Category(Document):
+class AppraisalCategory(Document):
 	pass
