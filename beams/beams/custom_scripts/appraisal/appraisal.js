@@ -8,6 +8,13 @@ frappe.ui.form.on('Appraisal', {
         setTimeout(() => {
             $('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
         }, 500);
+        // Hide dashboard
+        $('.form-dashboard-section').hide();
+        setTimeout(() => {
+            $('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
+        }, 500);
+
+        frm.set_df_property('final_score', 'hidden', 1);
 
         if (!frm.is_new()) {
             // Add custom button to trigger the feedback dialog
@@ -57,19 +64,11 @@ frappe.ui.form.on('Appraisal', {
         if (frm.doc.employee) {
         // Always add the custom button
         frm.add_custom_button(__('One to One Meeting'), function () {
-            // Directly map appraisal to event without checking Employee Performance Feedback
+
             frappe.model.open_mapped_doc({
-                method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event", // Mapping method
+                method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
                 args: { source_name: frm.doc.name },
                 frm: frm
-            });
-
-            // Call assign tasks sequentially function after mapping
-            frappe.call({
-                method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
-                args: {
-                    doc: frm.doc.name
-                }
             });
         }, __('Create'));
     }
@@ -98,6 +97,11 @@ frappe.ui.form.on('Appraisal', {
                 frm.events.open_add_category_dialog(frm);
             });
         }
+		// Hide the chart by targeting its container
+		if (frm.dashboard.wrapper) {
+			frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
+		}
+
     },
 
     show_feedback_dialog: function (frm) {

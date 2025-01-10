@@ -257,11 +257,10 @@ def map_appraisal_to_event(source_name):
         # Log the error and raise it
         frappe.log_error(message=str(e), title="Error in mapping Appraisal to Event")
         raise frappe.exceptions.ValidationError(f"Error: {str(e)}")
-
 @frappe.whitelist()
 def assign_tasks_sequentially(doc=None, method=None):
     """
-    Assign tasks sequentially to assessment officers listed in the Appraisal Template.
+    Assign tasks sequentially to assessment officers listed in the Appraisal Template,
 
     Args:
         doc (dict): The Appraisal document instance (JSON or dict format).
@@ -271,8 +270,8 @@ def assign_tasks_sequentially(doc=None, method=None):
         if not doc:
             frappe.throw("Missing document data.")
 
-        # If the doc is an ID string, fetch the full document
         if isinstance(doc, str) and not doc.startswith('{'):
+            # Fetch the full Appraisal document if passed as ID string
             appraisal_doc = frappe.get_doc("Appraisal", doc)
         else:
             appraisal_doc = doc
@@ -280,31 +279,25 @@ def assign_tasks_sequentially(doc=None, method=None):
         if not appraisal_doc:
             frappe.throw("Invalid Appraisal document.")
 
-        if not appraisal_doc.event_reference:
-            return
-
-        # Fetch the Event document using event_reference from the Appraisal document
-        event_doc = frappe.get_doc("Event", appraisal_doc.event_reference)
-
-        appraisal_template_name = appraisal_doc.appraisal_template
-
-        if not appraisal_template_name:
+        if not appraisal_doc.appraisal_template:
             return
 
         # Fetch Appraisal Template and assessment officers
-        appraisal_template_doc = frappe.get_doc("Appraisal Template", appraisal_template_name)
+        appraisal_template_doc = frappe.get_doc("Appraisal Template", appraisal_doc.appraisal_template)
         assessment_officers = appraisal_template_doc.get("assessment_officers")
 
         if not assessment_officers:
             frappe.log_error("No assessment officers defined in the appraisal template.")
-            return
 
-        # Sequential assignment
+
+        officers_to_process = assessment_officers[1:]
         task_assigned = False  # Track whether a task was assigned
-        for officer in assessment_officers:
+
+        # Loop through  assessment officers and assign tasks sequentially
+        for officer in officers_to_process:
             designation = officer.designation
 
-            # Check if a task is already completed for this designation
+            # Check if a task is already completed for this designation in category details
             if any(row.designation == designation for row in appraisal_doc.category_details):
                 frappe.log_error(f"Task already completed for designation: {designation}", "Task Assignment")
                 continue
