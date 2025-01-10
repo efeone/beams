@@ -222,17 +222,21 @@ frappe.ui.form.on('Appraisal', {
             size: 'extra-large',
             primary_action_label: 'Submit',
             primary_action(values) {
-                // Validate Marks (should be between 0 and 5)
+                // Validate Marks (should be between 0 and 5 and not null)
                 const validate_marks = (table) => {
-                    let isValid = true;
+                    let is_valid = true;
                     table.forEach(row => {
-                        if (row.marks < 0 || row.marks > 5) {
+                        if (row.marks === null || row.marks === undefined || row.marks === '') {
+                            frappe.msgprint(__('Marks cannot be empty.'));
+                            is_valid = false;
+                        } else if (row.marks < 0 || row.marks > 5) {
                             frappe.msgprint(__('Marks should be between 0 and 5.'));
-                            isValid = false;
+                            is_valid = false;
                         }
                     });
-                    return isValid;
+                    return is_valid;
                 };
+
                 if (
                     validate_marks(values.employee_criteria) &&
                     validate_marks(values.department_criteria) &&
