@@ -347,3 +347,65 @@ def assign_tasks_sequentially(doc=None, method=None):
         else:
             frappe.log_error(f"Error in task assignment: {str(e)}", "Task Assignment")
         frappe.throw(str(e))
+    return event_doc
+
+@frappe.whitelist()
+def get_appraisal_template_criteria(appraisal_template_name):
+    '''
+        Fetch rating criteria details for a given Appraisal Template.
+    '''
+    if not frappe.db.exists('Appraisal Template', appraisal_template_name):
+        return "Appraisal Template does not exist."
+    template = frappe.get_doc('Appraisal Template', appraisal_template_name)
+    employee_criteria = [
+        {'criteria': row.criteria, 'per_weightage': row.per_weightage or 0}
+        for row in (template.get('rating_criteria') or [])
+    ]
+    department_criteria = [
+        {'criteria': row.criteria, 'per_weightage': row.per_weightage or 0}
+        for row in (template.get('department_rating_criteria') or [])
+    ]
+    company_criteria = [
+        {'criteria': row.criteria, 'per_weightage': row.per_weightage or 0}
+        for row in (template.get("company_rating_criteria") or [])
+    ]
+    if not (employee_criteria or department_criteria or company_criteria):
+        return {'success': False, 'message': _('No rating criteria found in the selected template.')}
+
+    return {
+        'success': True,
+        'employee_criteria': employee_criteria,
+        'department_criteria': department_criteria,
+        'company_criteria': company_criteria,
+    }
+
+@frappe.whitelist()
+def validate_appraisal(doc, method):
+    '''
+    Validate the Appraisal document and calculate totals and averages.
+    '''
+    employee_total, employee_average = calculate_total_and_average(doc, 'employee_self_kra_rating')
+    doc.total_employee_self_kra_rating = employee_total
+    doc.avg_employee_self_kra_rating = employee_average
+
+    dept_total, dept_average = calculate_total_and_average(doc, 'dept_self_kra_rating')
+    doc.total_dept_self_kra_rating = dept_total
+    doc.avg_dept_self_kra_rating = dept_average
+
+    company_total, company_average = calculate_total_and_average(doc, 'company_self_kra_rating')
+    doc.total_company_self_kra_rating = company_total
+    doc.avg_company_self_kra_rating = company_average
+
+def calculate_total_and_average(doc, table):
+    '''
+    Function to calculate total and average
+    '''
+    total = 0
+    count = 0
+    for row in doc.get(table, []):  
+        if row.marks: 
+            total += float(row.marks)
+            count += 1
+            row.rating = (float(row.marks) / 5)  
+    average = total / count if count > 0 else 0
+    return total, average

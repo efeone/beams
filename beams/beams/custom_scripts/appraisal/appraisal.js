@@ -1,6 +1,9 @@
 frappe.ui.form.on('Appraisal', {
     refresh: function (frm) {
         frm.remove_custom_button(__('View Goals'));
+        set_table_properties(frm, 'employee_self_kra_rating');
+        set_table_properties(frm, 'dept_self_kra_rating');
+        set_table_properties(frm, 'company_self_kra_rating');
         // Remove the button by targeting its full class list
         setTimeout(() => {
             $('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
@@ -311,6 +314,7 @@ frappe.ui.form.on('Appraisal', {
 
         dialog.show();
     },
+    
     // Function to open the Add Category dialog
     open_add_category_dialog: function (frm) {
         const dialog = new frappe.ui.Dialog({
@@ -361,4 +365,64 @@ frappe.ui.form.on('Appraisal', {
 
         dialog.show();
     },
+
+    //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data 
+    appraisal_template: function (frm) {
+        if (frm.doc.appraisal_template) {
+            frappe.call({
+                method: "beams.beams.custom_scripts.appraisal.appraisal.get_appraisal_template_criteria",
+                args: {
+                    appraisal_template_name: frm.doc.appraisal_template
+                },
+                callback: function (response) {
+                    if (response.message.success) {
+                        const { employee_criteria, department_criteria, company_criteria } = response.message;
+                        // Clear existing rows in all child tables
+                        frm.clear_table("employee_self_kra_rating");
+                        frm.clear_table("dept_self_kra_rating");
+                        frm.clear_table("company_self_kra_rating");
+                        // Populate Employee criteria
+                        employee_criteria.forEach(item => {
+                            const new_row = frm.add_child("employee_self_kra_rating");
+                            new_row.criteria = item.criteria;
+                            new_row.per_weightage = item.per_weightage;
+                        });
+                        // Populate Department criteria
+                        department_criteria.forEach(item => {
+                            const new_row = frm.add_child("dept_self_kra_rating");
+                            new_row.criteria = item.criteria;
+                            new_row.per_weightage = item.per_weightage;
+                        });``
+                        // Populate Company criteria
+                        company_criteria.forEach(item => {
+                            const new_row = frm.add_child("company_self_kra_rating");
+                            new_row.criteria = item.criteria;
+                            new_row.per_weightage = item.per_weightage;
+                        });
+                        frm.refresh_field("employee_self_kra_rating");
+                        frm.refresh_field("dept_self_kra_rating");
+                        frm.refresh_field("company_self_kra_rating");
+                    } 
+                }
+            });
+        } else {
+            // Clear all child tables if no template is selected
+            frm.clear_table("employee_self_kra_rating");
+            frm.clear_table("dept_self_kra_rating");
+            frm.clear_table("company_self_kra_rating");
+            frm.refresh_field("employee_self_kra_rating");
+            frm.refresh_field("dept_self_kra_rating");
+            frm.refresh_field("company_self_kra_rating");
+        }
+    }
 });
+
+function set_table_properties(frm, table_name) {
+    const fields = ['criteria', 'per_weightage', 'rating'];
+    fields.forEach(field => {
+        frm.fields_dict[table_name].grid.update_docfield_property(field, 'read_only', 1);
+    });
+    frm.set_df_property(table_name, 'cannot_add_rows', true);
+    frm.set_df_property(table_name, 'cannot_delete_rows', true);
+    frm.set_df_property(table_name, 'cannot_delete_all_rows', true);   
+}
