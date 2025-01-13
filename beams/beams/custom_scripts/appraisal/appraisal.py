@@ -113,6 +113,11 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     total_criteria = len([result for result in key_results if result.get('marks')])
     final_average_score = total_marks / total_criteria if total_criteria > 0 else 0
 
+
+    if feedback_doc and feedback_doc.appraisal:
+        appraisal_doc = frappe.get_doc("Appraisal", feedback_doc.appraisal)
+        appraisal_doc.final_average_score = final_average_score
+        appraisal_doc.save()
     # Generate the HTML table
     table_html = """
         <table class="table table-bordered" style="width:100%;">
@@ -165,7 +170,7 @@ def get_categories_table():
     '''
          Fetches and sorts all categories from the Category doctype, then generates an HTML table displaying category names and descriptions.
     '''
-    categories = frappe.get_all('Category', fields=['category', 'category_description'])
+    categories = frappe.get_all('Appraisal Category', fields=['category', 'category_description'])
     categories.sort(key=lambda x: x['category'])
 
     categories_html = """
@@ -257,6 +262,7 @@ def map_appraisal_to_event(source_name):
         # Log the error and raise it
         frappe.log_error(message=str(e), title="Error in mapping Appraisal to Event")
         raise frappe.exceptions.ValidationError(f"Error: {str(e)}")
+
 @frappe.whitelist()
 def assign_tasks_sequentially(doc=None, method=None):
     """
@@ -395,10 +401,39 @@ def calculate_total_and_average(doc, table):
     '''
     total = 0
     count = 0
-    for row in doc.get(table, []):  
-        if row.marks: 
+    for row in doc.get(table, []):
+        if row.marks:
             total += float(row.marks)
             count += 1
-            row.rating = (float(row.marks) / 5)  
+            row.rating = (float(row.marks) / 5)
     average = total / count if count > 0 else 0
     return total, average
+
+
+@frappe.whitelist()
+def get_category_based_on_marks(final_average_score):
+    '''
+    This method will return the best applicable category based on the final average score from the appraisal.
+    '''
+    category = None
+    filters = {
+        'appraisal_threshold': ['<=', final_average_score]
+    }
+
+    categories = frappe.db.get_all('Appraisal Category', filters=filters, order_by='appraisal_threshold desc', fields=['name'])
+
+    if categories:
+        category = categories[0].get('name')
+
+    return category
+
+@frappe.whitelist()
+def set_category_based_on_marks(doc, method):
+    '''
+    Set the category_based_on_marks field in the Appraisal DocType based on the final_average_score.
+    '''
+    category = get_category_based_on_marks(doc.final_average_score)
+
+    # Update the Appraisal document
+    if category:
+        doc.category_based_on_marks = category

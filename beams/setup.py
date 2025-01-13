@@ -2287,13 +2287,22 @@ def get_appraisal_custom_fields():
 				"label": "Appraisal Summary",
 				"insert_after": "final_assesment_tab_break"
 			},
+        	{
+				"fieldname": "category_based_on_marks",
+				"fieldtype": "Link",
+                "options": "Category",
+				"label": "Category based on marks",
+				"insert_after": "category_html",
+                "read_only": 1
+			},
 			{
 				"fieldname": "category_details",
 				"fieldtype": "Table",
 				"label": "Category Details",
 				"options": "Category Details",
-				"insert_after": "category_html",
-				"allow_on_submit": 1
+				"insert_after": "category_based_on_marks",
+				"allow_on_submit": 1,
+                "read_only": 1
 			},
             {
                 "fieldname": "event_reference",
@@ -2364,7 +2373,13 @@ def get_appraisal_custom_fields():
                 "label": "Average Company Self Score",
                 "insert_after": "total_company_self_kra_rating",
                 "read_only": 1
-            }
+            },
+            {
+                "fieldname": "final_average_score",
+                "fieldtype": "Float",
+                "label": "Final Average Score",
+                "insert_after": "employee_image"
+            },
         ]
     }
 
