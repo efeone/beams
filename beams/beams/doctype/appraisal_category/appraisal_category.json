@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "category",
+  "appraisal_threshold",
   "category_description"
  ],
  "fields": [
@@ -20,14 +21,19 @@
    "fieldname": "category_description",
    "fieldtype": "Small Text",
    "label": "Description"
+  },
+  {
+   "fieldname": "appraisal_threshold",
+   "fieldtype": "Float",
+   "label": "Appraisal Threshold"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-01 17:21:38.167032",
+ "modified": "2025-01-08 13:30:50.693446",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Category",
+ "name": "Appraisal Category",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
