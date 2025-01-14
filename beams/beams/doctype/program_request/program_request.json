@@ -1,0 +1,145 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{PR}-{YY}-{####}",
+ "creation": "2025-01-14 14:35:12.394152",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_tzpl",
+  "amended_from",
+  "posting_date",
+  "program_details_section",
+  "program_name",
+  "program_type",
+  "generates_revenue",
+  "column_break_teaq",
+  "start_date",
+  "end_date",
+  "location",
+  "section_break_fdx9",
+  "description",
+  "column_break_yulj",
+  "requirements"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_tzpl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Program Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "program_details_section",
+   "fieldtype": "Section Break",
+   "label": "Program Details"
+  },
+  {
+   "fieldname": "program_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Program Name ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Start Date ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": " End Date ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "program_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Program Type ",
+   "options": "Program Type",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "program_type.generates_revenue",
+   "fieldname": "generates_revenue",
+   "fieldtype": "Check",
+   "label": "Generates Revenue",
+   "read_only": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "requirements",
+   "fieldtype": "Text Editor",
+   "label": "Requirements "
+  },
+  {
+   "fieldname": "section_break_fdx9",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_teaq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_yulj",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-14 15:58:10.172857",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Program Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
