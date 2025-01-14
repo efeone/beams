@@ -22,8 +22,13 @@
           margin-bottom: 20px;
       }
 
+      h3{
+            FONT-FAMILY: cursive;
+        
+      }
+
       hr{
-        border-top:: 1px solid #e0e0e0;
+        border-top: 1px solid #e0e0e0;
 
       }
 
@@ -89,7 +94,7 @@
           padding: 10px;
           border: 1px solid #fff;
           border-radius: 10px;
-          background-color: #f7f7f7;
+          background-color: #004eff17;
           font-size: 14px;
       }
 
@@ -156,20 +161,23 @@
       }
 
       th, td {
-          padding: 10px;
+          padding: 2px;
           text-align: left;
           font-size: 14px;
-          border: 1px solid #ddd;
+          border: 0.5px solid #1a28596e;
       }
       th {
-          background-color: #f7f7f7;
-          font-weight: bold;
-      }
+        background-color: #6a9eff2b;
+        font-weight: 500;
+        font-family: sans-serif;
+        text-align: center;
+    }
+    
 
       button {
           padding: 10px 20px;
           /* margin: 5px; */
-          background-color: #f7f7f7;
+          background-color: #004eff17;
           border: none;
           color: rgb(0, 0, 0);
           cursor: pointer;

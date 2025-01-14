@@ -19,18 +19,18 @@
     <div class="container">
         <div class="tabs">
             <button class="tab-button active" onclick="showTab(0)">Personal Information</button>
-            <button class="tab-button" onclick="showTab(1)">Current Employer / Immediate Previous Employer</button>
-            <button class="tab-button" onclick="showTab(2)">More details</button>
+            <button class="tab-button" id="currentEmployerTab" onclick="showTab(1)">Current Employer / Immediate Previous Employer</button>
+            <button class="tab-button" onclick="showTab(2)">More Details</button>
         </div>
         <form id="submit_application" method="post">
           <input type="hidden" id="docname" value="{{ doc.name }}">
             <div class="form-section active" id="tab-0">
-                <div class="row" style="width: 31%;">
+                <h5><b>General Details</b></h5>
+                <div class="row tax-details" style="width: 31%;">
                     <div class="column">
-                        <label for="designation">Position Applied For :</label>
+                        <label for="designation">Position Applied For</label>
                         <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" {% if doc.designation %} readonly {% endif %}>
                     </div>
-
                 </div>
                 <div class="row">
                     <div class="column">
@@ -52,7 +52,7 @@
                         {% set genders = frappe.get_all('Gender', fields=['gender', 'name']) %}
                         <div class="col-14"></div>
                             <select class="form-control" id="gender" name="gender"
-                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
                                 <option value="">Select Gender</option>
                                 {% for gender in genders %}
                                 <option value="{{ gender.name }}">{{ gender.gender }}</option>
@@ -64,7 +64,7 @@
                         {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
                         <div class="col-14">
                             <select class="form-control" id="country" name="country"
-                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
                                 <option value="">Select Country</option>
                                 {% for country in countries %}
                                 <option value="{{ country.name }}">{{ country.country_name }}</option>
@@ -81,8 +81,8 @@
                             <option value="Widowed">Widowed</option>
                         </select>
                     </div>
-                </div><br>
-                <h3>Current Address</h3>
+                </div>
+                <h5><b>Current Address</b></h5>
                 <div class="row tax-details">
                     <div class="column">
                         <label for="current_address">Current Address</label>
@@ -94,25 +94,19 @@
                           maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
-                        <label for="current_period_to">To:</label>
-                        <input type="text" id="current_period_to" name="current_period_to"
-                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
-                    </div>
-                    <div class="column">
-                        <label for="current_residence_no">Residence No.</label>
+                        <label for="current_residence_no">Residence No</label>
                         <input type="text" id="current_residence_no" name="current_residence_no" >
                     </div>
-                    <div class="column">
-                        <label for="current_mobile_no">Mobile Number</label>
-                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number or '' }}" {% if doc.phone_number %} readonly {% endif %}>
-                    </div> 
-                    <div class="column">
-                        <label for="domain"></label>
-                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
-                    </div>
-                </div><br>
-                <h3>Permanent Address</h3>
+                </div>
+                <h5><b>Permanent Address</b></h5>
                 <div class="row tax-details">
+                    <div>
+                        <label>
+                            <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as Current Address
+                        </label>
+                    </div>
+                    <div class="column"></div>
+                    <div class="column"></div>
                   <div class="column">
                       <label for="permanent_address">Permanent Address</label>
                       <textarea id="permanent_address" name="permanent_address" rows="4" cols="50"></textarea>
@@ -123,61 +117,46 @@
                           maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                     </div>
                     <div class="column">
-                        <label for="permanent_period_to">To: </label>
-                        <input type="text" id="permanent_period_to" name="permanent_period_to"
-                          maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
-                    </div>
-                    <div class="column">
-                        <label for="permanent_residence_no">Residence No.</label>
+                        <label for="permanent_residence_no">Residence No</label>
                         <input type="text" id="permanent_residence_no" name="permanent_residence_no"  value="">
                     </div>
-                    <div class="column">
-                        <label for="domain"></label>
-                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
-                    </div>
-                    <div class="column">
-                        <label for="domain"></label>
-                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
-                    </div>
-                    <div class="column">
-                    </div>
                 </div>
+                <h5><b>Contact Details</h5></b>
                 <div class="row tax-details">
                     <div class="column">
                         <label for="email_id_1">Email Id</label>
                         <input type="text" id="email_id_1" name="email_id_1"  value="{{ doc.email_id }}" {% if doc.email_id %} readonly {% endif %}>
                     </div>
-
                     <div class="column">
-                        <label for="domain"></label>
-                        <input type="text" id="domain" name="domain" style="background-color: #ffffff;">
-                    </div>
+                        <label for="current_mobile_no">Mobile Number</label>
+                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number or '' }}" {% if doc.phone_number %} readonly {% endif %}>
+                    </div> 
                     <div class="column">
                     </div>
                 </div>
-                <h3>Educational Qualification</h3>
+                <h5><b>Educational Qualification</h5></b>
                     <div class="row tax-details">
                         <table id="educational_qualification_table">
                             <thead>
                                 <tr>
-                                    <th>No.</th>
-                                    <th>Name Of Course & University</th>
-                                    <th>Name & Location Of Institute</th>
+                                    <th>No</th>
+                                    <th>Name of Course & University</th>
+                                    <th>Name & Location of Institute</th>
                                     <th>Date Attended From</th>
                                     <th>Date Attended To</th>
                                     <th>Result(%)</th>
-                                    <th>Attachments</th>
+                                    <th>Attachment</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td><input type="text" name="course_university_1" class="name_of_course_university"></td>
-                                    <td><input type="text" name="institution_location_1" class="name_location_of_institution"></td>
-                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"></td>
-                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"></td>
-                                    <td><input type="Float" name="results_1" class="result"></td>
-                                    <td><input type="file" id="qualification_file" class="home-textinput" /></td>
+                                    <td><input type="text" name="course_university_1" class="name_of_course_university" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="institution_location_1" class="name_location_of_institution" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
+                                    <td><input type="Float" name="results_1" class="result" style="background-color: #fff;"></td>
+                                    <td><input type="file" id="qualification_file" class="home-textinput" style="background-color: #fff;"/></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -185,19 +164,19 @@
                             <button type="button" id="add-row">Add Row</button>
                         </div>
                     </div>
-            <h3>Professional Certification</h3>
+            <h5><b>Professional Certification</h5></b>
                 <div class="row tax-details">
                     <table id="professional_qualification_table">
                         <thead>
                             <tr>
-                                <th>No.</th>
+                                <th>No</th>
                                 <th>Course</th>
                                 <th>Institute Name</th>
                                 <th>Date Attended From</th>
                                 <th>Date Attended To</th>
                                 <th> Type of Cerfificate</th>
                                 <th>Subject Major</th>
-                                <th>Attachments</th>
+                                <th>Attachment</th>
                             </tr>
                             <tr>
                   </tr>
@@ -205,13 +184,13 @@
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td><input type="text" name="course_1" class="course" ></td>
-                                <td><input type="text" name="institute_name_1" class="institute_name" ></td>
-                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" ></td>
-                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" ></td>
-                                <td><input type="text" name="type_of_certification_1" class="type_of_certification" ></td>
-                                <td><input type="text" name="sub_major_1" class="subject_major" ></td>
-                                <td><input type="file" id="certification_file" class="home-textinput" /></td>
+                                <td><input type="text" name="course_1" class="course" style="background-color: #fff;"></td>
+                                <td><input type="text" name="institute_name_1" class="institute_name" style="background-color: #fff;" ></td>
+                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
+                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
+                                <td><input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;"></td>
+                                <td><input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;"></td>
+                                <td><input type="file" id="certification_file" class="home-textinput" style="background-color: #fff;"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -223,12 +202,12 @@
             <div class="form-section" id="tab-1">
                 <div class="row">
                     <div class="column">
-                        <label for="name_of_employer">Name Of Employer</label>
+                        <label for="name_of_employer">Name of Employer</label>
                         <input type="text" id="name_of_employer" name="name_of_employer" >
                     </div>
                     <div class="column">
-                        <label for="address_of_employer">Address of Employer</label>
-                        <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                        <label for="employee_code">Employee Code/No</label>
+                        <input type="text" id="employee_code" name="employee_code" >
                     </div>
                     <div class="column">
                         <label for="telephone_no">Telephone No</label>
@@ -237,8 +216,8 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <label for="employee_code">Employee Code/No.</label>
-                        <input type="text" id="employee_code" name="employee_code" >
+                        <label for="manager_name">Manager's Name</label>
+                        <input type="text" id="manager_name" name="manager_name" >
                     </div>
                     <div class="column">
                         <label for="current_designation">Designation</label>
@@ -258,10 +237,8 @@
                         <label for="employment_period_to">Employment Period To</label>
                         <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" >
                     </div>
-                    <div class="column">
-                        <label for="manager_name">Manager's Name</label>
-                        <input type="text" id="manager_name" name="manager_name" >
-                    </div>
+                     <div class="column">
+                    </div> 
                 </div>
                 <div class="row">
                     <div class="column">
@@ -273,11 +250,15 @@
                         <input type="email" id="manager_email" name="manager_email" >
                     </div>
                     <div class="column">
-                        <label for="reference_taken">Can a Reference taken now?(Yes/No)</label>
+                        <label for="reference_taken">Can a Reference taken now?</label>
                         <select id="reference_taken" name="reference_taken" >
                             <option value="Yes">Yes</option>
                             <option value="No">No</option>
                         </select>
+                    </div>
+                    <div class="column">
+                        <label for="address_of_employer">Address of Employer</label>
+                        <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
                     </div>
                     <div class="column">
                         <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
@@ -298,48 +279,50 @@
                         <label for="last_salary_drawn">Last Salary Drawn </label>
                         <input type="currency" id="last_salary_drawn" name="last_salary_drawn" 69>
                     </div>
-                  </div>
-                  <div class="row">
                      <div class="column">
-                        <label for="was_this_position">Was this Position (Permanent, Temporary,Contractual)?</label>
-                        <select id="was_this_position" name="was_this_position" >
+                        <label for="was_this_position">Current Employement Type</label>
+                        <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()">
                             <option value="Permanent">Permanent</option>
                             <option value="Temporary">Temporary</option>
                             <option value="Contractual">Contractual</option>
                         </select>
                     </div>
-                    <div class="column">
-                        <label for="agency_details">Agency Deatils(If temporary or contractual),provide details </label>
+                    </div>
+                    <div class="row">
+                    <div class="column" id="agencies_details" style="display: none;">
+                        <label for="agency_details">Agency Details</label>
                         <textarea id="agency_details" name="agency_details" rows="4" cols="50"></textarea>
                     </div>
+                    <div class="column"></div>
+
                   </div>
                     <div class="column">
                     </div>
-                <h3>Previous Employment History</h3>
+                <h5><b>Previous Employment History</h3></b>
                 <div class="row tax-details">
                     <table id="previous_emplyoment_history_table">
                         <thead>
                             <tr>
-                                <th>No.</th>
-                                <th>Name Of Organization(With Location)</th>
+                                <th>No</th>
+                                <th>Organization Name</th>
                                 <th>Designation</th>
                                 <th>Last Salary Drawn</th>
-                                <th>Name Of Manager/Reporting Head</th>
-                                <th>Period Of Employment</th>
+                                <th>Name of Manager/Reporting Head</th>
+                                <th>Period of Employment</th>
                                 <th>Reason for Leaving</th>
-                                <th>Attachments</th>
+                                <th>Attachment</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td>1</td>
-                                <td><input type="text" name="name_of_org" class="name_of_org" ></td>
-                                <td><input type="text" name="designation" class="prev_designation" ></td>
-                                <td><input type="text" name="last_sal" class="last_salary_drawn" ></td>
-                                <td><input type="text" name="name_of_manager" class="name_of_manager" ></td>
-                                <td><input type="text" name="prd_of_emp" class="period_of_employment" ></td>
-                                <td><input type="text" name="reason_for_leaving" class="reason_for_leaving" ></td>
-                                <td><input type="file" id="prev_emp_file" class="home-textinput" /></td>
+                                <td><input type="text" name="name_of_org" class="name_of_org" style="background-color: #fff;" ></td>
+                                <td><input type="text" name="designation" class="prev_designation" style="background-color: #fff;"></td>
+                                <td><input type="text" name="last_sal" class="last_salary_drawn" style="background-color: #fff;" ></td>
+                                <td><input type="text" name="name_of_manager" class="name_of_manager" style="background-color: #fff;"></td>
+                                <td><input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;"></td>
+                                <td><input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;"></td>
+                                <td><input type="file" id="prev_emp_file" class="home-textinput" style="background-color: #fff;"/></td>
                             </tr>
                         </tbody>
                     </table>
@@ -350,10 +333,6 @@
             </div>
             <div class="form-section" id="tab-2">
                 <div class="row">
-                    <div class="column">
-                        <label for="current_salary">Current Salary</label>
-                        <input type="text" id="current_salary" name="current_salary" >
-                    </div>
                     <div class="column">
                         <label for="expected_salary">Expected Salary</label>
                         <input type="text" id="expected_salary" name="expected_salary" >
@@ -394,7 +373,7 @@
                         {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
                         <div class="col-14">
                             <select class="form-control" id="interviewed_location" name="location"
-                                style="height:30px; width: 90%; font-size:13px;background-color: #f7f7f7;">
+                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
                                 <option value="">Select Location</option>
                                 {% for location in locations %}
                                 <option value="{{ location.name }}">{{ location.location_name }}</option>
@@ -414,7 +393,7 @@
                     </div>
                     </div>
                 </div>
-                <h3>Languages Known :</h3>
+                <h5><b>Languages Known</h5></b>
                 <div class="row tax-details">
                   <table id="table_3">
                   <thead>
@@ -430,7 +409,7 @@
                           <tr>
                               <td>1</td>
                               <td>
-                              <select name="language" class="form-control">
+                              <select name="language" class="form-control"  style="background-color: #fff;" >
                                   <option value="">Select language</option>
                                   {% for language in languages %}
                                   <option value="{{ language.name }}">{{ language.language_name }}</option>
@@ -482,7 +461,7 @@
                           <td>Abroad</td>
                           <td><input type="checkbox" id="abroad_checkbox"></td>
                           <td>State Restrictions if any</td>
-                          <td colspan="3"><input type="text" id="state_restriction"></td>
+                          <td colspan="3"><input type="text" id="state_restriction"  style="background-color: #fff;" ></td>
                       </tr>
                 </table>
               </div>
@@ -541,7 +520,7 @@
                     <textarea id="specialised_training" name="specialised_training" rows="4" cols="90"></textarea>
                 </div>
             </div>
-            <h3>Declaration and Authorization </h3>
+            <h5><b>Declaration and Authorization </h3></b>
             <hr></hr>
             <div class="row">
               <p class="declaration">
@@ -551,6 +530,9 @@
       </p> </div>
 <p id="error-message" style="color: red; display: none;">Please check the checkbox to proceed.</p>
 <button id="submitBtn" type="submit">Submit</button>
+<div class="row">
+    <input type="hidden" id="min_experience" name="min_experience" value="{{ doc.min_experience }}">
+  </div>
     </form>
     </div>
   </div>
@@ -558,6 +540,77 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const minExperience = parseInt(document.getElementById("min_experience").value, 10);
+            const currentEmployerTab = document.getElementById("currentEmployerTab");
+
+            // Hide the tab if min_experience is not greater than 0
+            if (minExperience <= 0) {
+                currentEmployerTab.style.display = "none";
+            }
+        });
+
+        // Change button color based on checkbox state
+        document.getElementById("confirm").addEventListener("change", function () {
+                const submitBtn = document.getElementById("submitBtn");
+                if (this.checked) {
+                    submitBtn.style.backgroundColor = "black"; 
+                    submitBtn.style.color = "white";
+                } else {
+                    submitBtn.style.backgroundColor = "gray"; 
+                }
+            });
+        // Redirect on submit button click
+        document.getElementById("submitBtn").addEventListener("click", function () {
+            const checkbox = document.getElementById("confirm");
+            const errorMessage = document.getElementById("error-message");
+
+            if (checkbox.checked) {
+                window.location.href = "/application_success/success.html";
+            } else {
+                errorMessage.style.display = "block";
+            }
+        });
+        function toggleAgencyDetails() {
+                const employmentType = document.getElementById("was_this_position").value;
+                const agencyDetailsWrapper = document.getElementById("agencies_details");
+
+                // Show or hide the Agency Details field based on the selected value
+                if (employmentType === "Temporary" || employmentType === "Contractual") {
+                    agencies_details.style.display = "block";
+                } else {
+                    agencies_details.style.display = "none";
+                }
+            }
+            window.onload = function() {
+                toggleAgencyDetails();
+            };
+
+            function copyCurrentAddress() {
+                const checkbox = document.getElementById("same_as_current");
+
+                // Get the current address section fields
+                const currentAddress = document.getElementById("current_address").value;
+                const currentPeriodFrom = document.getElementById("current_period_from").value;
+                const currentResidenceNo = document.getElementById("current_residence_no").value;
+
+                // Get the permanent address section fields
+                const permanentAddress = document.getElementById("permanent_address");
+                const permanentPeriodFrom = document.getElementById("permanent_period_from");
+                const permanentResidenceNo = document.getElementById("permanent_residence_no");
+
+                // If the checkbox is checked, copy values from current address fields
+                if (checkbox.checked) {
+                    permanentAddress.value = currentAddress;
+                    permanentPeriodFrom.value = currentPeriodFrom;
+                    permanentResidenceNo.value = currentResidenceNo;
+                } else {
+                    // Clear the permanent address fields if unchecked
+                    permanentAddress.value = "";
+                    permanentPeriodFrom.value = "";
+                    permanentResidenceNo.value = "";
+                }
+            }
 
         // Function to toggle visibility based on checkbox state
         function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
@@ -641,12 +694,12 @@
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
-            cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" >';
-            cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" >';
-            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)" >';
-            cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
-            cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result" >';
-            cell7.innerHTML = '<input type="file" name=qualification_file[] class="file" >';
+            cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" style="background-color: #fff;" >';
+            cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" style="background-color: #fff;">';
+            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
+            cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
+            cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result"  style="background-color: #fff;">';
+            cell7.innerHTML = '<input type="file" name=qualification_file[] class="file"  style="background-color: #fff;">';
         }
 
          // Function to add a new row in the Professional Qualifications table
@@ -667,13 +720,13 @@
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
-            cell2.innerHTML = '<input type="text" name="course_1[]" class="course" >';
-            cell3.innerHTML = '<input type="text" name="institute_name_1[]" class="institute_name" >';
-            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from" maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
-            cell5.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_to"  maxlength="4" placeholder="Enter up to 4 digits" oninput="validateDigits(this)">';
-            cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" >';
-            cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" >';
-            cell8.innerHTML = '<input type="file" name=certification_file[] class="file" >';
+            cell2.innerHTML = '<input type="text" name="course_1[]" class="course" style="background-color: #fff;">';
+            cell3.innerHTML = '<input type="text" name="institute_name_1[]" class="institute_name" style="background-color: #fff;">';
+            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
+            cell5.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
+            cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;">';
+            cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;">';
+            cell8.innerHTML = '<input type="file" name=certification_file[] class="file" style="background-color: #fff;">';
 
         }
 
@@ -695,13 +748,13 @@
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
-            cell2.innerHTML = '<input type="text" name="name_of_org" class="name_of_org" >';
-            cell3.innerHTML = '<input type="text" name="designation" class="prev_designation" >';
-            cell4.innerHTML = '<input type="text" name="last_sal" class="last_salary_drawn" >';
-            cell5.innerHTML = '<input type="text" name="name_of_manager" class="name_of_manager" >';
-            cell6.innerHTML = '<input type="text" name="prd_of_emp" class="period_of_employment" >';
-            cell7.innerHTML = '<input type="text" name="reason_for_leaving" class="reason_for_leaving" >';
-            cell8.innerHTML = '<input type="file" name="prev_emp_file" class="experience_file" >';
+            cell2.innerHTML = '<input type="text" name="name_of_org" class="name_of_org" style="background-color: #fff;">';
+            cell3.innerHTML = '<input type="text" name="designation" class="prev_designation" style="background-color: #fff;">';
+            cell4.innerHTML = '<input type="text" name="last_sal" class="last_salary_drawn" style="background-color: #fff;">';
+            cell5.innerHTML = '<input type="text" name="name_of_manager" class="name_of_manager" style="background-color: #fff;">';
+            cell6.innerHTML = '<input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;">';
+            cell7.innerHTML = '<input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;">';
+            cell8.innerHTML = '<input type="file" name="prev_emp_file" class="experience_file" style="background-color: #fff;">';
 
         }
 
