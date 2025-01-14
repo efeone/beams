@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.model.document import Document
 from frappe.utils.user import get_users_with_role
@@ -13,6 +14,9 @@ class AdhocBudget(Document):
 
     def on_update_after_submit(self):
         self.create_todo_on_verified_by_finance()
+
+    def validate(self):
+        self.validate_expected_revenue()
 
     def create_todo_on_creation_for_adhoc_budget(self):
         """
@@ -124,3 +128,13 @@ class AdhocBudget(Document):
 
         budget.insert()
         budget.submit()
+
+    def validate_expected_revenue(self):
+        """
+        Validate the 'expected_revenue' field in the Adhoc Budget.
+        """
+        if not self.expected_revenue:
+            frappe.throw(_("Expected Revenue is required."))
+
+        if  not self.expected_revenue > 0:
+            frappe.throw(_("Expected Revenue should be greater than zero."))
