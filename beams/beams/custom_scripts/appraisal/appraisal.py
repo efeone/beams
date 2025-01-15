@@ -401,14 +401,19 @@ def calculate_total_and_average(doc, table):
     '''
     total = 0
     count = 0
-    for row in doc.get(table, []):
+    rows = doc.get(table, [])
+    if not rows:
+        return total, 0  # No rows to calculate, return total 0 and average 0
+
+    for row in rows:
         if row.marks:
             total += float(row.marks)
             count += 1
             row.rating = (float(row.marks) / 5)
+
+    # Calculate average if count > 0
     average = total / count if count > 0 else 0
     return total, average
-
 
 @frappe.whitelist()
 def get_category_based_on_marks(final_average_score):
