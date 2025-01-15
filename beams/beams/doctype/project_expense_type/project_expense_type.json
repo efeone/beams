@@ -1,0 +1,33 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-15 09:26:28.916893",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "budget_expense_type"
+ ],
+ "fields": [
+  {
+   "fieldname": "budget_expense_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Budget Expense Type",
+   "options": "Budget Expense Type",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-15 09:51:40.701899",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Project Expense Type",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

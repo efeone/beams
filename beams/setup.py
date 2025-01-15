@@ -47,6 +47,8 @@ def after_install():
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
     create_custom_fields(get_event_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
+
 
 
     #Creating BEAMS specific Property Setters
@@ -105,6 +107,7 @@ def before_uninstall():
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
     delete_custom_fields(get_event_custom_fields())
+    delete_custom_fields(get_Project_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -135,6 +138,58 @@ def get_shift_assignment_custom_fields():
                 "label": "Roster Type",
                 "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
+            }
+        ]
+    }
+
+def get_Project_custom_fields():
+    '''
+    Custom fields that need to be added to the Project Doctype
+    '''
+    return {
+        "Project": [
+            {
+                "fieldname": "program_section",
+                "fieldtype": "Section Break",
+                "label": "Program Details",
+                "collapsible": 1,
+                "insert_after": "sales_order"
+            },
+            {
+                "fieldname": "program",
+                "label": "Program",
+                "fieldtype": "Link",
+                "options": "Program Request",
+                "insert_after": "program_section"
+            },
+            {
+                "fieldname": "column_break_program",
+                "fieldtype": "Column Break",
+                "insert_after": "generates_revenue"
+            },
+            {
+                "fieldname": "program_type",
+                "label": "Program Type",
+                "fieldtype": "Link",
+                "options": "Program Type",
+                "insert_after": "column_break_program",
+                "fetch_from": "program.program_type",
+                "read_only": 1
+            },
+            {
+                "fieldname": "budget_expense_types",
+                "fieldtype": "Table MultiSelect",
+                "label": "Budget Expense Types",
+                'options':"Project Expense Type",
+                "insert_after": "program_type"
+            },
+            {
+                "fieldname": "generates_revenue",
+                "fieldtype": "Check",
+                "label": "Generates Revenue",
+                "read_only": 1,
+                "fetch_from": "program.generates_revenue",
+                "insert_after": "program"
             }
         ]
     }
