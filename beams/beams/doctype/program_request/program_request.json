@@ -6,21 +6,20 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_tzpl",
-  "amended_from",
-  "posting_date",
   "program_details_section",
   "program_name",
   "program_type",
   "generates_revenue",
+  "location",
   "column_break_teaq",
+  "posting_date",
   "start_date",
   "end_date",
-  "location",
   "section_break_fdx9",
   "description",
-  "column_break_yulj",
-  "requirements"
+  "requirements",
+  "section_break_tzpl",
+  "amended_from"
  ],
  "fields": [
   {
@@ -109,16 +108,12 @@
   {
    "fieldname": "column_break_teaq",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_yulj",
-   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-14 15:58:10.172857",
+ "modified": "2025-01-15 14:33:05.263807",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",
