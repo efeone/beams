@@ -17,8 +17,9 @@ frappe.ui.form.on('Program Request', {
                                 args: { program_request_id: frm.doc.name },
                                 callback: function (r) {
                                     if (r.message) {
-                                        frm.reload_doc(); // Reload the form to reflect changes
-                                    }
+                                        // Redirect to the created project after successful creation
+                                        frappe.set_route('Form', 'Project', r.message);
+                                    } 
                                 }
                             });
                         }).addClass('btn-primary');

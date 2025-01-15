@@ -31,12 +31,6 @@ def create_project_from_program_request(program_request_id):
     })
     project.insert(ignore_permissions=True)  # Insert the new Project
 
-    # Send a message to confirm the action
-    message = _('Project created successfully! {0}').format(
-        frappe.utils.get_link_to_form('Project', project.name)
-    )
-    frappe.msgprint(message)
-
     # Return the name of the created Project
     return project.name
 
