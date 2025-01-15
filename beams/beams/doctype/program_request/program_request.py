@@ -5,6 +5,8 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
+from frappe.utils import getdate
+from frappe import _
 
 class ProgramRequest(Document):
     def validate(self):
@@ -12,11 +14,21 @@ class ProgramRequest(Document):
 
     @frappe.whitelist()
     def validate_start_date_and_end_dates(self):
-        '''
-        Validates that the start date is not later than the end date
-        '''
-        if self.start_date > self.end_date:
-            frappe.throw(msg="Start Date cannot be after End Date", title="Message")
+        """
+        Validates that start_date and end_date are properly set and checks
+        if start_date is not later than end_date.
+        """
+        if not self.start_date or not self.end_date:
+            return
+        # Convert dates to proper date objects
+        start_date = getdate(self.start_date)
+        end_date = getdate(self.end_date)
+
+        if start_date > end_date:
+            frappe.throw(
+                msg=_("Start Date cannot be after End Date."),
+                title=_("Validation Error")
+            )
 
 @frappe.whitelist()
 def create_project_from_program_request(program_request_id):
