@@ -41,6 +41,7 @@
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -113,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-15 14:33:05.263807",
+ "modified": "2025-01-15 16:42:51.035022",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",

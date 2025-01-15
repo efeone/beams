@@ -17,9 +17,8 @@ frappe.ui.form.on('Program Request', {
                                 args: { program_request_id: frm.doc.name },
                                 callback: function (r) {
                                     if (r.message) {
-                                        // Redirect to the created project after successful creation
                                         frappe.set_route('Form', 'Project', r.message);
-                                    } 
+                                    }
                                 }
                             });
                         }).addClass('btn-primary');
@@ -27,5 +26,11 @@ frappe.ui.form.on('Program Request', {
                 }
             });
         }
+    },
+    start_date: function (frm) {
+        frm.call("validate_start_date_and_end_dates");
+    },
+    end_date: function (frm) {
+        frm.call("validate_start_date_and_end_dates");
     }
 });
