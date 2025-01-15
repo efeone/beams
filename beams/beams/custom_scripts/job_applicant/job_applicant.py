@@ -97,7 +97,7 @@ def send_magic_link(applicant_id):
 			)
 			frappe.msgprint(f'Magic link sent to {email_id}')
 			frappe.db.set_value('Job Applicant', applicant_id, 'status', 'Pending Document Upload')
-			return 1
+			return link
 		else:
 			frappe.msgprint('Email Template "Job Applicant Follow Up" does not exist.', alert=True)
 
