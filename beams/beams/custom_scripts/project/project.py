@@ -15,7 +15,6 @@ def create_adhoc_budget(source_name, target_doc=None):
                     "name": "project",  
                     "expected_start_date": "expected_start_date",
                     "expected_end_date": "expected_end_date",
-                    "project_name": "project_name",
                     "generates_revenue": "generates_revenue"
                 }
             }
