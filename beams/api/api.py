@@ -94,7 +94,7 @@ def get_agency_list(start=0, page_length=20, agency_name=None):
 	'''
 		API to get List of Agency
 	'''
-	agency_fields = ['name as agency_id', 'customer_name as agency_name', 'region', 'gstin', 'pan as pan_no', 'default_currency as currency']
+	agency_fields = ['name as agency_id', 'customer_name as agency_name', 'region', 'gstin', 'pan as pan_no', 'default_currency as currency', 'is_edited']
 	filters = { 'is_agent':1 }
 	if agency_name:
 		filters = { 'is_agent':1, 'customer_name':['like', '%{0}%'.format(agency_name)] }
@@ -109,7 +109,7 @@ def get_client_list(start=0, page_length=20, client_name=None):
 	'''
 		API to get List of Client
 	'''
-	client_fields = ['name as client_id', 'customer_name as client_name', 'region', 'gstin', 'pan as pan_no', 'default_currency as currency']
+	client_fields = ['name as client_id', 'customer_name as client_name', 'region', 'gstin', 'pan as pan_no', 'default_currency as currency', 'is_edited']
 	filters = { 'is_agent':0 }
 	if client_name:
 		filters = { 'is_agent':0, 'customer_name':['like', '%{0}%'.format(client_name)] }
