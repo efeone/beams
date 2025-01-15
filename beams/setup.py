@@ -328,6 +328,7 @@ def get_customer_custom_fields():
                 "fieldtype": "Link",
                 "label": "Region",
                 "options": "Region",
+                "mandatory_depends_on": "eval:doc.is_agent",
                 "insert_after": "msme_status"
             },
             {
@@ -335,6 +336,13 @@ def get_customer_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Agency",
                 "insert_after": "region"
+            },
+            {
+                "fieldname": "is_edited",
+                "fieldtype": "Check",
+                "label": "Is Edited",
+                "hidden": 1,
+                "insert_after": "is_agent"
             }
         ]
     }
