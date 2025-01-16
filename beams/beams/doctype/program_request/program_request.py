@@ -29,38 +29,40 @@ class ProgramRequest(Document):
                 msg=_("Start Date cannot be after End Date."),
                 title=_("Validation Error")
             )
+    def on_update_after_submit(self):
+        self.create_project_from_program_request()
 
-@frappe.whitelist()
-def create_project_from_program_request(program_request_id):
-    '''
-    Create a Project from the Program Request.
-    '''
-    # Fetch the Program Request document
-    program_request = frappe.get_doc('Program Request', program_request_id)
 
-    # Check if a Project already exists
-    if frappe.db.exists("Project", {"program": program_request_id}):
-        frappe.throw(_("A Project is already linked to this Program Request."))
+    @frappe.whitelist()
+    def create_project_from_program_request(self):
+        '''
+        Create a Project from the Program Request.
+        '''
+        #  Get the current Program Request ID
+        program_request_id = self.name
 
-    # Create a new Project document
-    project = frappe.get_doc({
-        'doctype': 'Project',
-        'project_name': program_request.program_name,
-        'program': program_request.name,
-        'expected_start_date': program_request.start_date,
-        'expected_end_date': program_request.end_date
-    })
-    project.insert(ignore_permissions=True)  # Insert the new Project
+        # Fetch the Program Request document
+        program_request = frappe.get_doc('Program Request', program_request_id)
 
-    # Return the name of the created Project
-    return project.name
+        # Check if a Project already exists
+        if frappe.db.exists("Project", {"program": program_request_id}):
+            frappe.throw(_("A Project is already linked to this Program Request."))
 
-@frappe.whitelist()
-def check_project_exists(program_request_id):
-    '''
-    Check if a Project exists for the given Program Request.
-    '''
-    program_request = frappe.get_doc('Program Request', program_request_id)
-    program_name = program_request.program_name
+        # Create a new Project document
+        project = frappe.get_doc({
+            'doctype': 'Project',
+            'project_name': program_request.program_name,
+            'program': program_request.name,
+            'expected_start_date': program_request.start_date,
+            'expected_end_date': program_request.end_date
+        })
+        project.insert(ignore_permissions=True)  # Insert the new Project
 
-    return frappe.db.exists("Project", {"project_name": program_name})
+        frappe.msgprint(
+            _("Project <b>" + project.project_name + "</b> has been created successfully."),
+            indicator="green",
+            alert=1,
+        )
+
+        # Return the name of the created Project
+        return project.name
