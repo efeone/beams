@@ -1,12 +1,10 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
-
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 from frappe.utils import getdate
-from frappe import _
 
 class ProgramRequest(Document):
     def validate(self):
@@ -29,38 +27,47 @@ class ProgramRequest(Document):
                 msg=_("Start Date cannot be after End Date."),
                 title=_("Validation Error")
             )
+    def on_update_after_submit(self):
+        self.create_project_from_program_request()
 
-@frappe.whitelist()
-def create_project_from_program_request(program_request_id):
-    '''
-    Create a Project from the Program Request.
-    '''
-    # Fetch the Program Request document
-    program_request = frappe.get_doc('Program Request', program_request_id)
+    def create_project_from_program_request(self):
+        """
+        Create a Project from the Program Request if the workflow state is 'Approved'.
+        """
 
-    # Check if a Project already exists
-    if frappe.db.exists("Project", {"program": program_request_id}):
-        frappe.throw(_("A Project is already linked to this Program Request."))
+        # Get current Program Request details
+        program_request_id = self.name
+        program_request = frappe.get_doc('Program Request', program_request_id)
 
-    # Create a new Project document
-    project = frappe.get_doc({
-        'doctype': 'Project',
-        'project_name': program_request.program_name,
-        'program': program_request.name,
-        'expected_start_date': program_request.start_date,
-        'expected_end_date': program_request.end_date
-    })
-    project.insert(ignore_permissions=True)  # Insert the new Project
+        doc_before_save = self.get_doc_before_save()
 
-    # Return the name of the created Project
-    return project.name
+        # Check if the workflow state is 'Approved'
+        if not (doc_before_save.workflow_state == "Pending Approval" and program_request.workflow_state == 'Approved'):
+            return
 
-@frappe.whitelist()
-def check_project_exists(program_request_id):
-    '''
-    Check if a Project exists for the given Program Request.
-    '''
-    program_request = frappe.get_doc('Program Request', program_request_id)
-    program_name = program_request.program_name
+        # Check if a Project already exists for this Program Request
+        if frappe.db.exists("Project", {"program": program_request_id}):
+            frappe.msgprint(_("A Project already exists for this Program Request."))
+            return
 
-    return frappe.db.exists("Project", {"project_name": program_name})
+        if frappe.db.exists("Project", {'project_name': program_request.program_name}):
+            frappe.msgprint(_("A Project already exists for this Program."))
+            return
+
+        # Attempt to create a new Project
+        try:
+            project = frappe.get_doc({
+                'doctype': 'Project',
+                'project_name': program_request.program_name,
+                'program': program_request_id,
+                'expected_start_date': program_request.start_date,
+                'expected_end_date': program_request.end_date,
+            })
+            project.insert(ignore_permissions=True)
+
+            frappe.msgprint(_("Project <b>{0}</b> has been created successfully.").format(project.project_name),indicator="green",alert=1,)
+
+            return project.name
+
+        except Exception as e:
+            frappe.msgprint(_("Error creating project: {0}").format(str(e)))

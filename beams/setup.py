@@ -217,8 +217,8 @@ def get_Project_custom_fields():
                 "insert_after": "sales_order"
             },
             {
-                "fieldname": "program",
-                "label": "Program",
+                "fieldname": "program_request",
+                "label": "Program Request",
                 "fieldtype": "Link",
                 "options": "Program Request",
                 "insert_after": "program_section"
@@ -865,14 +865,6 @@ def get_purchase_invoice_custom_fields():
                 "read_only": 1,
                 "options": "Bureau",
                 "insert_after": "supplier"
-            },
-            {
-                "fieldname": "cost_center",
-                "fieldtype": "Link",
-                "label": "Cost Center",
-                "read_only": 1,
-                "options": "Cost Center",
-                "insert_after": "bureau"
             }
         ]
     }
