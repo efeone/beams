@@ -175,10 +175,7 @@ doc_events = {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
     },
     "Customer": {
-        "after_insert": [
-        "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer",
-        "beams.beams.custom_scripts.customer.customer.set_is_edited_after_insert"
-        ],
+        "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer",
         "validate": "beams.beams.custom_scripts.customer.customer.validate_customer_workflow"
     },
     "Training Event": {

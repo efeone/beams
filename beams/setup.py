@@ -403,6 +403,8 @@ def get_customer_custom_fields():
                 "fieldtype": "Check",
                 "label": "Is Edited",
                 "hidden": 1,
+                "default": 0,
+                "no_copy":1,
                 "insert_after": "is_agent"
             }
         ]
