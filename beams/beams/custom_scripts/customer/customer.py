@@ -7,8 +7,8 @@ def mark_as_edited_if_approved(doc, method):
     Marks the document as edited if approved and modified after its creation date
     '''
     if doc.workflow_state == "Approved":
-        creation_date = frappe.utils.get_date(doc.creation)
-        current_date = frappe.utils.get_date(frappe.utils.now())
+        creation_date = frappe.utils.getdate(doc.creation)
+        current_date = frappe.utils.getdate()
 
         if creation_date != current_date:
             if hasattr(doc, 'is_edited'):
