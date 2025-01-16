@@ -318,13 +318,13 @@ frappe.ui.form.on('Appraisal', {
 
         dialog.show();
     },
-    
+
     // Function to open the Add Category dialog
     open_add_category_dialog: function (frm) {
         const dialog = new frappe.ui.Dialog({
             title: 'Add Category',
             fields: [
-                { label: 'Select Category', fieldname: 'select_category', fieldtype: 'Link', options: 'Category', only_select: 1, reqd: 1 },
+                { label: 'Select Category', fieldname: 'select_category', fieldtype: 'Link', options: 'Appraisal Category', only_select: 1, reqd: 1 },
                 { label: 'Remarks', fieldname: 'remarks', fieldtype: 'Text', reqd: 1 },
             ],
             primary_action_label: 'Submit',
@@ -370,7 +370,7 @@ frappe.ui.form.on('Appraisal', {
         dialog.show();
     },
 
-    //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data 
+    //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
     appraisal_template: function (frm) {
         if (frm.doc.appraisal_template) {
             frappe.call({
@@ -406,7 +406,7 @@ frappe.ui.form.on('Appraisal', {
                         frm.refresh_field("employee_self_kra_rating");
                         frm.refresh_field("dept_self_kra_rating");
                         frm.refresh_field("company_self_kra_rating");
-                    } 
+                    }
                 }
             });
         } else {
@@ -428,5 +428,5 @@ function set_table_properties(frm, table_name) {
     });
     frm.set_df_property(table_name, 'cannot_add_rows', true);
     frm.set_df_property(table_name, 'cannot_delete_rows', true);
-    frm.set_df_property(table_name, 'cannot_delete_all_rows', true);   
+    frm.set_df_property(table_name, 'cannot_delete_all_rows', true);
 }
