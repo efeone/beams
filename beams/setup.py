@@ -48,6 +48,8 @@ def after_install():
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
     create_custom_fields(get_event_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
+
 
 
 
@@ -108,6 +110,8 @@ def before_uninstall():
     delete_custom_fields(get_appraisal_kra_custom_fields())
     delete_custom_fields(get_event_custom_fields())
     delete_custom_fields(get_Project_custom_fields())
+    delete_custom_fields(get_Payroll_Settings_custom_fields())
+
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -138,6 +142,63 @@ def get_shift_assignment_custom_fields():
                 "label": "Roster Type",
                 "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
+            }
+        ]
+    }
+
+def get_Payroll_Settings_custom_fields():
+    '''
+    Custom fields that need to be added to the Payroll Settings Doctype
+    '''
+    return {
+        "Payroll Settings": [
+            {
+                "fieldname": "provident_fund_section",
+                "fieldtype": "Section Break",
+                "label": "Provident Fund",
+                "insert_after": "show_leave_balances_in_salary_slip"
+            },
+            {
+                "fieldname": "employer_pf_contribution",
+                "label": "Employer PF Contribution",
+                "fieldtype": "Percent",
+                "insert_after": "provident_fund_section"
+            },
+             {
+                "fieldname": "column_break_pf",
+                "fieldtype": "Column Break",
+                "insert_after": "employer_pf_contribution"
+            },
+            {
+                "fieldname": "pf_expense_account",
+                "label": "PF Expense Account",
+                "fieldtype": "Link",
+                "options": "Account",
+                "insert_after": "column_break_pf"
+            },
+            {
+                "fieldname": "esi_section",
+                "fieldtype": "Section Break",
+                "label": "Employees State Insurance",
+                "insert_after": "pf_expense_account"
+            },
+            {
+                "fieldname": "esi_employer_contribution",
+                "label": "ESI Employer Contribution",
+                "fieldtype": "Percent",
+                "insert_after": "esi_section"
+            },
+            {
+                "fieldname": "column_break_esi",
+                "fieldtype": "Column Break",
+                "insert_after": "esi_employer_contribution"
+            },
+            {
+                "fieldname": "esi_expense_account",
+                "label": "ESI Expense Account",
+                "fieldtype": "Link",
+                "options": "Account",
+                "insert_after": "column_break_esi"
             }
         ]
     }
