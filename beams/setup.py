@@ -53,8 +53,6 @@ def after_install():
 
 
 
-
-
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -114,8 +112,6 @@ def before_uninstall():
     delete_custom_fields(get_Project_custom_fields())
     delete_custom_fields(get_Payroll_Settings_custom_fields())
     delete_custom_fields(get_asset_custom_fields())
-
-
 
 
 
@@ -2505,6 +2501,25 @@ def get_employee_feedback_rating_custom_fields():
         ]
     }
 
+<<<<<<< Updated upstream
+=======
+def get_employee_feedback_rating_custom_fields():
+    '''
+    Custom fields that need to be added to the Employee Feedback Rating doctype
+    '''
+    return {
+        "Employee Feedback Rating": [
+            {
+                "fieldname": "marks",
+                "fieldtype": " Float",
+                "label": "Marks",
+                "in_list_view":1,
+                "insert_after": "rating"
+            }
+        ]
+    }
+
+>>>>>>> Stashed changes
 def get_appraisal_custom_fields():
     '''
     Custom fields that need to be added to the Appraisal doctype
@@ -2535,6 +2550,7 @@ def get_appraisal_custom_fields():
 				"label": "Appraisal Summary",
 				"insert_after": "final_assesment_tab_break"
 			},
+<<<<<<< Updated upstream
         	{
 				"fieldname": "category_based_on_marks",
 				"fieldtype": "Link",
@@ -2543,14 +2559,21 @@ def get_appraisal_custom_fields():
 				"insert_after": "category_html",
                 "read_only": 1
 			},
+=======
+>>>>>>> Stashed changes
 			{
 				"fieldname": "category_details",
 				"fieldtype": "Table",
 				"label": "Category Details",
 				"options": "Category Details",
+<<<<<<< Updated upstream
 				"insert_after": "category_based_on_marks",
 				"allow_on_submit": 1,
                 "read_only": 1
+=======
+				"insert_after": "category_html",
+				"allow_on_submit": 1
+>>>>>>> Stashed changes
 			},
             {
                 "fieldname": "event_reference",
@@ -2558,6 +2581,7 @@ def get_appraisal_custom_fields():
                 "label": "Event Reference",
                 "insert_after": "appraisal_cycle",
                 "options": "Event",
+<<<<<<< Updated upstream
             },
             {
                 "fieldname": "employee_self_kra_rating",
@@ -2628,6 +2652,9 @@ def get_appraisal_custom_fields():
                 "label": "Final Average Score",
                 "insert_after": "employee_image"
             },
+=======
+            }
+>>>>>>> Stashed changes
         ]
     }
 
@@ -3019,8 +3046,11 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
+<<<<<<< Updated upstream
             "property_type": "Check",
             "value": 1
+=======
+>>>>>>> Stashed changes
         },
         {
             "doctype_or_field": "DocField",
@@ -3048,6 +3078,7 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+<<<<<<< Updated upstream
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "reqd",
@@ -3066,12 +3097,17 @@ def get_property_setters():
             "doctype_or_field": "DocField",
             "doc_type": "Appraisal",
             "field_name": "self_ratings",
+=======
+            "doc_type": "Appraisal",
+            "field_name": "feedback_html",
+>>>>>>> Stashed changes
             "property": "hidden",
             "property_type": "Check",
             "value": 1
         },
         {
             "doctype_or_field": "DocField",
+<<<<<<< Updated upstream
             "doc_type": "Appraisal",
             "field_name": "self_score",
             "property": "hidden",
@@ -3085,6 +3121,13 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Link",
             "value": 1
+=======
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0
+>>>>>>> Stashed changes
         }
     ]
 

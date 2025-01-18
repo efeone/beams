@@ -1,0 +1,109 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ERR-{YYYY}-{#####}",
+ "creation": "2025-01-18 13:46:43.214388",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ed5d",
+  "amended_from",
+  "project",
+  "bureau",
+  "column_break_fhpe",
+  "posting_date",
+  "required_from",
+  "required_to",
+  "section_break_ihzk",
+  "required_resources"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ed5d",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "External Resource Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project ",
+   "options": "Project"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": " Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "required_from",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Required From"
+  },
+  {
+   "fieldname": "required_to",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Required To "
+  },
+  {
+   "fieldname": "section_break_ihzk",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "required_resources",
+   "fieldtype": "Table",
+   "label": "Required Resources",
+   "options": "External Resources Detail"
+  },
+  {
+   "fieldname": "column_break_fhpe",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-18 13:59:53.829300",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "External Resource Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
