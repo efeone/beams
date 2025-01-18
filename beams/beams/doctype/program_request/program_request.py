@@ -35,6 +35,11 @@ class ProgramRequest(Document):
         Create a Project from the Program Request if the workflow state is 'Approved'.
         """
 
+        # Check if the Program Request already has a linked Project
+        if self.project:
+            frappe.msgprint(_("A Project is already linked to this Program Request: <b>{0}</b>").format(self.project), alert=True)
+            return
+
         # Get current Program Request details
         program_request_id = self.name
         program_request = frappe.get_doc('Program Request', program_request_id)
@@ -65,6 +70,7 @@ class ProgramRequest(Document):
             })
             project.insert(ignore_permissions=True)
 
+            self.db_set('project', project.name)
             frappe.msgprint(_("Project <b>{0}</b> has been created successfully.").format(project.project_name),indicator="green",alert=1,)
 
             return project.name
