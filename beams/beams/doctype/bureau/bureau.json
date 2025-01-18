@@ -10,7 +10,8 @@
   "bureau_name",
   "cost_center",
   "amended_from",
-  "company"
+  "company",
+  "location"
  ],
  "fields": [
   {
@@ -26,6 +27,12 @@
    "unique": 1
   },
   {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -36,21 +43,21 @@
    "search_index": 1
   },
   {
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center"
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
    "options": "Company"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location ",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-03 10:30:55.280684",
+ "modified": "2025-01-18 11:38:59.252359",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
