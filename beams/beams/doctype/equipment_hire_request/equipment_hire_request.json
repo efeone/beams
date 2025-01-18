@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:EHP-{YY}-{####}",
  "creation": "2025-01-18 12:01:22.530499",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -76,10 +77,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-18 12:15:55.420300",
+ "modified": "2025-01-18 13:28:12.615351",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Hire Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
