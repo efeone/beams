@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:TSR-{YY}-{####}",
  "creation": "2025-01-18 11:21:52.053280",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -15,7 +16,8 @@
   "required_from",
   "required_to",
   "section_break_wqez",
-  "remarks"
+  "remarks",
+  "amended_from"
  ],
  "fields": [
   {
@@ -75,15 +77,26 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Technical Support Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-18 13:51:12.679541",
+ "modified": "2025-01-18 15:26:08.724484",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Support Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
