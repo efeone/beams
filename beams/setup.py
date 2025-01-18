@@ -49,6 +49,8 @@ def after_install():
     create_custom_fields(get_event_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
+
 
 
 
@@ -111,6 +113,9 @@ def before_uninstall():
     delete_custom_fields(get_event_custom_fields())
     delete_custom_fields(get_Project_custom_fields())
     delete_custom_fields(get_Payroll_Settings_custom_fields())
+    delete_custom_fields(get_asset_custom_fields())
+
+
 
 
 
@@ -456,6 +461,22 @@ def get_driver_custom_fields():
                 "insert_after": "transporter",
                 "reqd": 0
             },
+        ]
+    }
+
+def get_asset_custom_fields():
+    '''
+    Custom fields that need to be added to the Asset DocType
+    '''
+    return {
+        "Asset": [
+            {
+                "fieldname": "bureau",
+                "fieldtype": "Link",
+                "options":"Bureau",
+                "label": "Bureau",
+                "insert_after": "location"
+            }
         ]
     }
 
