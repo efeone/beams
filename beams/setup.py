@@ -430,14 +430,6 @@ def get_department_custom_fields():
                 "reqd":1,
                 "unique":1,
                 "insert_after": "head_of_department"
-            },
-            {
-                "fieldname": "cost_center",
-                "fieldtype": "Link",
-                "label": "Cost Center",
-                "options":"Cost Center",
-                "insert_after": "company",
-                "reqd":1
             }
 
         ]
@@ -514,6 +506,21 @@ def get_budget_custom_fields():
                 "label": "Department",
                 "options":"Department",
                 "insert_after": "monthly_distribution"
+            },
+            {
+                "fieldname": "division",
+                "fieldtype": "Link",
+                "label": "Division",
+                "options":"Division",
+                "reqd": 1,
+                "insert_after": "company"
+            },
+            {
+                "fieldname": "region",
+                "fieldtype": "Link",
+                "label": "Region",
+                "options":"Region",
+                "insert_after": "department"
             }
         ],
         "Budget Account": [
@@ -522,7 +529,7 @@ def get_budget_custom_fields():
                 "fieldtype": "Link",
                 "label": "Cost Sub Head",
                 "options":"Cost Subhead",
-                "insert_after": "cost_description"
+                "insert_before": "account"
             },
             {
                 "fieldname": "cost_category",
@@ -532,11 +539,113 @@ def get_budget_custom_fields():
                 "insert_after": "account"
             },
             {
-                "fieldname": "cost_description",
-                "fieldtype": "Data",
-                "label": "Cost Description",
+                "fieldname": "column_break_cd",
+                "fieldtype": "Column Break",
+                "label": " ",
                 "insert_after": "cost_category"
             },
+            {
+                "fieldname": "cost_description",
+                "fieldtype": "Small Text",
+                "label": "Cost Description",
+                "insert_after": "column_break_cd"
+            },
+            {
+                "fieldname": "equal_monthly_distribution",
+                "fieldtype": "Check",
+                "label": "Equal Monthly Distribution ",
+                "insert_after": "cost_description"
+            },
+            {
+                "fieldname": "section_break_ab",
+                "fieldtype": "Section Break",
+                "label": "Monthly Amount Distribution",
+                "insert_after": "budget_amount"
+            },
+            {
+                "fieldname": "january",
+                "fieldtype": "Currency",
+                "label": "January",
+                "insert_after": "section_break_ab"
+            },
+            {
+                "fieldname": "february",
+                "fieldtype": "Currency",
+                "label": "February",
+                "insert_after": "january"
+            },
+            {
+                "fieldname": "march",
+                "fieldtype": "Currency",
+                "label": "March",
+                "insert_after": "february"
+            },
+            {
+                "fieldname": "april",
+                "fieldtype": "Currency",
+                "label": "April",
+                "insert_after": "march"
+            },
+            {
+                "fieldname": "column_break_bc",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "april"
+            },
+            {
+                "fieldname": "may",
+                "fieldtype": "Currency",
+                "label": "May",
+                "insert_after": "column_break_bc"
+            },
+            {
+                "fieldname": "june",
+                "fieldtype": "Currency",
+                "label": "June",
+                "insert_after": "may"
+            },
+            {
+                "fieldname": "july",
+                "fieldtype": "Currency",
+                "label": "July",
+                "insert_after": "june"
+            },
+            {
+                "fieldname": "august",
+                "fieldtype": "Currency",
+                "label": "August",
+                "insert_after": "july"
+            },
+            {
+                "fieldname": "column_break_ab",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "august"
+            },
+            {
+                "fieldname": "september",
+                "fieldtype": "Currency",
+                "label": "September",
+                "insert_after": "column_break_ab"
+            },
+            {
+                "fieldname": "october",
+                "fieldtype": "Currency",
+                "label": "October",
+                "insert_after": "september"
+            },
+            {
+                "fieldname": "november",
+                "fieldtype": "Currency",
+                "label": "November",
+                "insert_after": "october"
+            },
+            {
+                "fieldname": "december",
+                "fieldtype": "Currency",
+                "label": "December",
+                "insert_after": "november"
+            }
         ]
     }
 
@@ -2946,6 +3055,14 @@ def get_property_setters():
             "field_name": "self_score",
             "property": "hidden",
             "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "monthly_distribution",
+            "property": "hidden",
+            "property_type": "Link",
             "value": 1
         }
     ]
