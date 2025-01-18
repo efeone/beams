@@ -12,13 +12,15 @@
   {
    "fieldname": "vehicle_type",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": " Vehicle Type",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-18 09:41:48.460800",
+ "modified": "2025-01-18 12:25:12.187462",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Type",
