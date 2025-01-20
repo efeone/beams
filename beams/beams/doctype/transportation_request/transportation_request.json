@@ -17,7 +17,9 @@
   "section_break_yjlc",
   "requirements",
   "vehicles",
-  "no_of_own_vehicles"
+  "no_of_own_vehicles",
+  "reason_for_rejection",
+  "amended_from"
  ],
  "fields": [
   {
@@ -27,12 +29,14 @@
    "options": "Project"
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
    "options": "Bureau"
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": "Posting Date"
@@ -83,11 +87,28 @@
   {
    "fieldname": "section_break_yjlc",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Transportation Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection"
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-01-20 11:47:36.035239",
+ "modified": "2025-01-20 13:21:57.993618",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",
