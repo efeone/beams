@@ -165,7 +165,7 @@ def get_Payroll_Settings_custom_fields():
                 "fieldtype": "Percent",
                 "insert_after": "provident_fund_section"
             },
-             {
+            {
                 "fieldname": "column_break_pf",
                 "fieldtype": "Column Break",
                 "insert_after": "employer_pf_contribution"
@@ -2491,22 +2491,6 @@ def get_employee_feedback_rating_custom_fields():
                 "fieldname": "marks",
                 "fieldtype": " Float",
                 "label": "Marks out of 5",
-                "in_list_view":1,
-                "insert_after": "rating"
-            }
-        ]
-    }
-
-def get_employee_feedback_rating_custom_fields():
-    '''
-    Custom fields that need to be added to the Employee Feedback Rating doctype
-    '''
-    return {
-        "Employee Feedback Rating": [
-            {
-                "fieldname": "marks",
-                "fieldtype": " Float",
-                "label": "Marks",
                 "in_list_view":1,
                 "insert_after": "rating"
             }
