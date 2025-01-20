@@ -5,7 +5,7 @@ frappe.ui.form.on("Vehicle Hire Request", {
 	refresh(frm) {
     frm.add_custom_button(__('Purchase Invoice'), function (){
 
-    }, __("create"));
+    }, __("Create"));
 
 	},
 });

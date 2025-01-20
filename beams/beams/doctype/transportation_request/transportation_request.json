@@ -1,17 +1,20 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:TR-{YY}-{####}",
  "creation": "2025-01-20 10:39:20.127836",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "project",
   "bureau",
-  "posting_date",
-  "required_on",
   "from",
   "to",
+  "column_break_wsxs",
+  "posting_date",
+  "required_on",
   "noof_travallers",
+  "section_break_yjlc",
   "requirements",
   "vehicles",
   "no_of_own_vehicles"
@@ -72,14 +75,23 @@
    "fieldtype": "Int",
    "label": "No.of Own Vehicles",
    "read_only": 1
+  },
+  {
+   "fieldname": "column_break_wsxs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_yjlc",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-20 10:51:04.299550",
+ "modified": "2025-01-20 11:47:36.035239",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

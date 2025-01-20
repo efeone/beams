@@ -1,18 +1,21 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:VHR-{YY}-{####}",
  "creation": "2025-01-18 15:54:25.022771",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_czk4",
-  "amended_from",
   "transportation_request",
   "project",
   "bureau",
+  "column_break_iqrb",
   "posting_date",
   "required_on",
-  "required_vehicles"
+  "section_break_liay",
+  "required_vehicles",
+  "amended_from"
  ],
  "fields": [
   {
@@ -63,15 +66,24 @@
    "fieldtype": "Table",
    "label": "Required Vehicles",
    "options": "Required Hired Vehicle Detail"
+  },
+  {
+   "fieldname": "column_break_iqrb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_liay",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-18 16:05:48.713854",
+ "modified": "2025-01-20 11:50:22.590135",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Hire Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
