@@ -225,6 +225,16 @@ def get_Project_custom_fields():
                 "insert_after": "program_section"
             },
             {
+                "fieldname": "bureau",
+                "label": "Bureau",
+                "fieldtype": "Link",
+                "options":"Bureau",
+                "insert_after": "generates_revenue",
+                "fetch_from": "program_request.bureau",
+                "read_only": 1
+
+            },
+            {
                 "fieldname": "column_break_program",
                 "fieldtype": "Column Break",
                 "insert_after": "generates_revenue"
@@ -235,7 +245,7 @@ def get_Project_custom_fields():
                 "fieldtype": "Link",
                 "options": "Program Type",
                 "insert_after": "column_break_program",
-                "fetch_from": "program.program_type",
+                "fetch_from": "program_request.program_type",
                 "read_only": 1
             },
             {
@@ -250,8 +260,38 @@ def get_Project_custom_fields():
                 "fieldtype": "Check",
                 "label": "Generates Revenue",
                 "read_only": 1,
-                "fetch_from": "program.generates_revenue",
-                "insert_after": "program"
+                "fetch_from": "program_request.generates_revenue",
+                "insert_after": "program_request"
+            },
+            {
+                "fieldname": "allocated_resources_details_section",
+                "fieldtype": "Section Break",
+                "label": " Allocated Resource Details",
+                "collapsible": 1,
+                "insert_after": "program_request"
+            },
+            {
+                "fieldname": "allocated_resources_details",
+                "fieldtype": "Table",
+                "label": "Allocated Resource Detail",
+                "options":"Allocated Resource Detail",
+                "insert_after":"allocated_resources_details_section"
+            },
+            {
+                "fieldname": "estimated_budget",
+                "fieldtype": "Currency",
+                "label": "Estimated Budget",
+                "options":"Estimated Budget",
+                "fetch_from": "program_request.estimated_budget",
+                "insert_after":"generates_revenue",
+                "read_only": 1
+            },
+            {
+                "fieldname": "approved_budget",
+                "fieldtype": "Currency",
+                "label": "Approved Budget",
+                "options":"approved_budget",
+                "insert_after":"budget_expense_types"
             }
         ]
     }
