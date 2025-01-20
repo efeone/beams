@@ -267,7 +267,7 @@ def get_Project_custom_fields():
                 "fetch_from": "program_request.generates_revenue",
                 "insert_after": "program_request"
             },
-                        {
+            {
                 "fieldname": "allocated_resources_details_section",
                 "fieldtype": "Section Break",
                 "label": " Allocated Resource Details",
@@ -297,8 +297,6 @@ def get_Project_custom_fields():
                 "options":"approved_budget",
                 "insert_after":"budget_expense_types"
             }
-
-
         ]
     }
 
