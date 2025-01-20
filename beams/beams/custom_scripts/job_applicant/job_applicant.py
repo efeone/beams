@@ -101,7 +101,7 @@ def send_magic_link(applicant_id):
 		else:
 			frappe.msgprint('Email Template "Job Applicant Follow Up" does not exist.', alert=True)
 
-@frappe.whitelist
+@frappe.whitelist()
 def generate_magic_link(applicant_id):
 	'''
         Generates and returns a magic link URL for the specified job applicant
