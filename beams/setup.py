@@ -1672,14 +1672,12 @@ def get_job_applicant_custom_fields():
                 'options':"Educational Qualification",
                 "insert_after": "details"
             },
-
             {
                 "fieldname": "details",
                 "fieldtype": "Section Break",
                 "label": "Qualification Details",
                 "insert_after": "applicant_rating"
             },
-
             {
                 "fieldname": "department",
                 "fieldtype": "Link",
@@ -1687,7 +1685,6 @@ def get_job_applicant_custom_fields():
                 "options": "Department",
                 "insert_after": "designation"
             },
-
             {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
@@ -1695,7 +1692,6 @@ def get_job_applicant_custom_fields():
                 "insert_after": "details_column_break",
                 "permlevel": 1
             },
-
             {
                 "fieldname": "details_column_break",
                 "fieldtype": "Column Break",
@@ -2501,8 +2497,6 @@ def get_employee_feedback_rating_custom_fields():
         ]
     }
 
-<<<<<<< Updated upstream
-=======
 def get_employee_feedback_rating_custom_fields():
     '''
     Custom fields that need to be added to the Employee Feedback Rating doctype
@@ -2519,7 +2513,6 @@ def get_employee_feedback_rating_custom_fields():
         ]
     }
 
->>>>>>> Stashed changes
 def get_appraisal_custom_fields():
     '''
     Custom fields that need to be added to the Appraisal doctype
@@ -2550,7 +2543,6 @@ def get_appraisal_custom_fields():
 				"label": "Appraisal Summary",
 				"insert_after": "final_assesment_tab_break"
 			},
-<<<<<<< Updated upstream
         	{
 				"fieldname": "category_based_on_marks",
 				"fieldtype": "Link",
@@ -2559,29 +2551,21 @@ def get_appraisal_custom_fields():
 				"insert_after": "category_html",
                 "read_only": 1
 			},
-=======
->>>>>>> Stashed changes
 			{
 				"fieldname": "category_details",
 				"fieldtype": "Table",
 				"label": "Category Details",
 				"options": "Category Details",
-<<<<<<< Updated upstream
 				"insert_after": "category_based_on_marks",
 				"allow_on_submit": 1,
                 "read_only": 1
-=======
-				"insert_after": "category_html",
-				"allow_on_submit": 1
->>>>>>> Stashed changes
 			},
             {
                 "fieldname": "event_reference",
                 "fieldtype": "Link",
                 "label": "Event Reference",
                 "insert_after": "appraisal_cycle",
-                "options": "Event",
-<<<<<<< Updated upstream
+                "options": "Event"
             },
             {
                 "fieldname": "employee_self_kra_rating",
@@ -2651,10 +2635,7 @@ def get_appraisal_custom_fields():
                 "fieldtype": "Float",
                 "label": "Final Average Score",
                 "insert_after": "employee_image"
-            },
-=======
             }
->>>>>>> Stashed changes
         ]
     }
 
@@ -3046,11 +3027,8 @@ def get_property_setters():
             "doc_type": "Appraisal KRA",
             "field_name": "goal_score",
             "property": "hidden",
-<<<<<<< Updated upstream
             "property_type": "Check",
             "value": 1
-=======
->>>>>>> Stashed changes
         },
         {
             "doctype_or_field": "DocField",
@@ -3078,7 +3056,6 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
-<<<<<<< Updated upstream
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "reqd",
@@ -3097,17 +3074,12 @@ def get_property_setters():
             "doctype_or_field": "DocField",
             "doc_type": "Appraisal",
             "field_name": "self_ratings",
-=======
-            "doc_type": "Appraisal",
-            "field_name": "feedback_html",
->>>>>>> Stashed changes
             "property": "hidden",
             "property_type": "Check",
             "value": 1
         },
         {
             "doctype_or_field": "DocField",
-<<<<<<< Updated upstream
             "doc_type": "Appraisal",
             "field_name": "self_score",
             "property": "hidden",
@@ -3121,16 +3093,16 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Link",
             "value": 1
-=======
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "reqd",
             "property_type": "Check",
             "value": 0
->>>>>>> Stashed changes
         }
     ]
-
 
 def get_material_request_custom_fields():
     '''
