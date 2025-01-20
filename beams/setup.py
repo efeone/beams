@@ -53,8 +53,6 @@ def after_install():
 
 
 
-
-
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -117,8 +115,6 @@ def before_uninstall():
 
 
 
-
-
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -169,7 +165,7 @@ def get_Payroll_Settings_custom_fields():
                 "fieldtype": "Percent",
                 "insert_after": "provident_fund_section"
             },
-             {
+            {
                 "fieldname": "column_break_pf",
                 "fieldtype": "Column Break",
                 "insert_after": "employer_pf_contribution"
@@ -1676,14 +1672,12 @@ def get_job_applicant_custom_fields():
                 'options':"Educational Qualification",
                 "insert_after": "details"
             },
-
             {
                 "fieldname": "details",
                 "fieldtype": "Section Break",
                 "label": "Qualification Details",
                 "insert_after": "applicant_rating"
             },
-
             {
                 "fieldname": "department",
                 "fieldtype": "Link",
@@ -1691,7 +1685,6 @@ def get_job_applicant_custom_fields():
                 "options": "Department",
                 "insert_after": "designation"
             },
-
             {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
@@ -1699,7 +1692,6 @@ def get_job_applicant_custom_fields():
                 "insert_after": "details_column_break",
                 "permlevel": 1
             },
-
             {
                 "fieldname": "details_column_break",
                 "fieldtype": "Column Break",
@@ -2557,7 +2549,7 @@ def get_appraisal_custom_fields():
                 "fieldtype": "Link",
                 "label": "Event Reference",
                 "insert_after": "appraisal_cycle",
-                "options": "Event",
+                "options": "Event"
             },
             {
                 "fieldname": "employee_self_kra_rating",
@@ -2627,7 +2619,7 @@ def get_appraisal_custom_fields():
                 "fieldtype": "Float",
                 "label": "Final Average Score",
                 "insert_after": "employee_image"
-            },
+            }
         ]
     }
 
@@ -3085,9 +3077,16 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Link",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0
         }
     ]
-
 
 def get_material_request_custom_fields():
     '''
