@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VHR-{YY}-{####}",
+ "creation": "2025-01-18 15:54:25.022771",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_czk4",
+  "transportation_request",
+  "project",
+  "bureau",
+  "column_break_iqrb",
+  "posting_date",
+  "required_on",
+  "section_break_liay",
+  "required_vehicles",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_czk4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Hire Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "transportation_request",
+   "fieldtype": "Link",
+   "label": "Transportation Request",
+   "options": "Transportation Request"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "required_on",
+   "fieldtype": "Datetime",
+   "label": "Required On"
+  },
+  {
+   "fieldname": "required_vehicles",
+   "fieldtype": "Table",
+   "label": "Required Vehicles",
+   "options": "Required Hired Vehicle Detail"
+  },
+  {
+   "fieldname": "column_break_iqrb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_liay",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-20 11:50:22.590135",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Hire Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
