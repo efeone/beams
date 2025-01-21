@@ -1,9 +1,42 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
-
-# import frappe
+import frappe
 from frappe.model.document import Document
 
-
 class VehicleHireRequest(Document):
-	pass
+    def on_submit(self):
+        self.update_hired_vehicles_on_submit()
+
+    def on_cancel(self):
+        self.update_hired_vehicles_on_cancel()
+
+    def update_hired_vehicles_on_submit(self):
+        '''
+        Calculate the total number of vehicles from the required_vehicles child table
+        and update the linked Transportation Request.
+        '''
+        if self.required_vehicles:
+            # Calculate the total number of vehicles
+            total_vehicles = sum(row.no_of_vehicles or 0 for row in self.required_vehicles)
+
+            # Update the Transportation Request
+            if self.transportation_request:
+                frappe.db.set_value(
+                    "Transportation Request",
+                    self.transportation_request,
+                    "no_of_hired_vehicles",
+                    total_vehicles
+                )
+
+    def update_hired_vehicles_on_cancel(self):
+        '''
+        On  cancellation of Transportation Request reset the number of hired vehicles
+
+		'''
+        if self.transportation_request:
+            frappe.db.set_value(
+                "Transportation Request",
+                self.transportation_request,
+                "no_of_hired_vehicles",
+                0
+            )
