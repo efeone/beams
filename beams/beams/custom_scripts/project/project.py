@@ -30,6 +30,31 @@ def create_adhoc_budget(source_name, target_doc=None):
     return adhoc_budget
 
 @frappe.whitelist()
+def create_equipment_hire_request(source_name, target_doc=None):
+    """
+    Maps fields from the Project doctype to the Equipment Hire Request doctype.
+    """
+    from frappe.model.mapper import get_mapped_doc
+
+    return get_mapped_doc(
+        "Project",
+        source_name,
+        {
+            "Project": {
+                "doctype": "Equipment Hire Request",
+                "field_map": {
+                    "name": "project",
+                    "expected_start_date": "required_from",
+                    "expected_end_date": "required_to",
+                    "bureau": "bureau"
+                }
+            }
+        },
+        target_doc
+    )
+
+
+@frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
     """
     Maps fields from the Project doctype to the Transportation Request doctype'.

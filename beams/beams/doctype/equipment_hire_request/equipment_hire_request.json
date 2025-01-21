@@ -47,6 +47,7 @@
    "options": "Bureau"
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "label": " Posting Date"
@@ -89,7 +90,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-20 11:18:53.832670",
+ "modified": "2025-01-21 15:40:28.875040",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Hire Request",
