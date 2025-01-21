@@ -64,7 +64,7 @@ class ProgramRequest(Document):
             project = frappe.get_doc({
                 'doctype': 'Project',
                 'project_name': program_request.program_name,
-                'program': program_request_id,
+                'program_request': program_request_id,
                 'expected_start_date': program_request.start_date,
                 'expected_end_date': program_request.end_date,
             })
