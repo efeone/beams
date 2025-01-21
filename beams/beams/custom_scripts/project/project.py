@@ -26,3 +26,19 @@ def create_adhoc_budget(source_name, target_doc=None):
         })
     return adhoc_budget
 
+@frappe.whitelist()
+def create_transportation_request(source_name, target_doc=None):
+    """
+    Maps fields from the Project doctype to the Transportation Request doctype'.
+    """
+    transportation_request = get_mapped_doc("Project", source_name, {
+        "Project": {  
+                "doctype": "Transportation Request",  
+                "field_map": {
+                    "name": "project",  
+                    "bureau": "bureau"
+                }
+            }
+    }, target_doc)
+    return transportation_request
+
