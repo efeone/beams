@@ -21,8 +21,8 @@ frappe.ui.form.on('Job Requisition', {
         }
         if (frm.doc.workflow_state === 'Pending CEO Final Approval') {
             frm.set_df_property('designation', 'reqd', 1);
+            frm.set_df_property('description', 'reqd', 1);
         }
-
     },
     request_for: function (frm) {
         if (frm.doc.request_for) {
