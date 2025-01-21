@@ -8,6 +8,14 @@ frappe.ui.form.on('Project', {
             });
         }, __("Create"));
 
+        // Add a button to create an Equipment Hire Request
+        frm.add_custom_button(__('Equipment Hire Request'), function () {
+            frappe.model.open_mapped_doc({
+                method: "beams.beams.custom_scripts.project.project.create_equipment_hire_request",
+                frm: frm,
+            });
+        }, __("Create"));
+
         // Adds a button to the 'Project' form to create an Transportation Request.
         frm.add_custom_button(__('Transportation Request'), function () {
             frappe.model.open_mapped_doc({
