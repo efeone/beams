@@ -65,6 +65,7 @@ class AdhocBudget(Document):
                     })
 
     def on_submit(self):
+        self.update_project_budget_on_approval()
         if self.workflow_state == 'Approved':
             self.create_budget_from_adhoc_budget()
 
@@ -138,3 +139,17 @@ class AdhocBudget(Document):
 
         if  not self.expected_revenue > 0:
             frappe.throw(_("Expected Revenue should be greater than zero."))
+
+    def update_project_budget_on_approval(self):
+        """
+         Update the approved budget in the associated Project when the Adhoc Budget workflow state is 'Approved'.
+        """
+        if self.workflow_state == 'Approved':
+            project = self.project
+            if frappe.db.exists('Project', project):
+                project_doc = frappe.get_doc('Project', project)
+                current_approved_budget = project_doc.approved_budget or 0
+                new_approved_budget = current_approved_budget + self.total_budget_amount
+                project_doc.approved_budget = new_approved_budget
+                project_doc.save()
+                
