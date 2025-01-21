@@ -14,13 +14,24 @@
   "travel_details_section",
   "is_unplanned",
   "travel_type",
+  "mode_of_travel",
   "source",
   "destination",
+  "accommodation_required",
+  "inside_kerala",
+  "batta_policy",
+  "room_criteria",
   "column_break_xmae",
   "start_date",
   "end_date",
+  "expected_check_in_time",
+  "expected_check_out_time",
   "total_days",
-  "amended_from"
+  "amended_from",
+  "section_break_ktsj",
+  "mark_attendance",
+  "reference_documents",
+  "reason_for_rejection"
  ],
  "fields": [
   {
@@ -124,12 +135,77 @@
   {
    "fieldname": "column_break_ooli",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:(!doc.is_group);",
+   "fieldname": "batta_policy",
+   "fieldtype": "Link",
+   "label": "Batta Policy",
+   "options": "Batta Policy"
+  },
+  {
+   "fieldname": "mode_of_travel",
+   "fieldtype": "Link",
+   "label": "Mode of Travel",
+   "options": "Mode of Travel"
+  },
+  {
+   "default": "0",
+   "fieldname": "accommodation_required",
+   "fieldtype": "Check",
+   "label": "Accommodation Required "
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "room_criteria",
+   "fieldtype": "Link",
+   "label": " Room Criteria",
+   "options": "Room Criteria"
+  },
+  {
+   "default": "0",
+   "fieldname": "mark_attendance",
+   "fieldtype": "Check",
+   "label": "Mark Attendance"
+  },
+  {
+   "fieldname": "reference_documents",
+   "fieldtype": "Table",
+   "label": "Reference Documents",
+   "options": "Reference Document"
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "expected_check_in_time",
+   "fieldtype": "Datetime",
+   "label": "Expected Check-in Time "
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "expected_check_out_time",
+   "fieldtype": "Datetime",
+   "label": "Expected Check-out Time "
+  },
+  {
+   "fieldname": "section_break_ktsj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "inside_kerala",
+   "fieldtype": "Check",
+   "label": "Inside Kerala"
+  },
+  {
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection "
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 15:28:23.876625",
+ "modified": "2025-01-21 16:42:00.171884",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
