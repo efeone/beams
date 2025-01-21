@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:ETR-{YY}-{####}",
  "creation": "2025-01-21 15:03:16.620880",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -205,10 +206,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 16:42:00.171884",
+ "modified": "2025-01-21 17:37:29.018097",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
