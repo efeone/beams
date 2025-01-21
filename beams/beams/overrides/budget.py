@@ -11,10 +11,11 @@ from erpnext.accounts.doctype.accounting_dimension.accounting_dimension import (
 )
 from erpnext.accounts.utils import get_fiscal_year
 
-def validate_expense_against_budget(args, expense_amount=0):
+def validate_expense_against_budget(args, expense_amount=0, for_check=0):
 	args = frappe._dict(args)
 	if not frappe.get_all("Budget", limit=1):
 		return
+
 
 	if args.get("company") and not args.fiscal_year:
 		args.fiscal_year = get_fiscal_year(args.get("posting_date"), company=args.get("company"))[0]
@@ -22,8 +23,11 @@ def validate_expense_against_budget(args, expense_amount=0):
 			"Company", args.get("company"), "exception_budget_approver_role"
 		)
 
+
 	if not frappe.get_cached_value("Budget", {"fiscal_year": args.fiscal_year, "company": args.company}):  # nosec
 		return
+
+
 
 	if not args.account:
 		args.account = args.get("expense_account")
@@ -34,6 +38,7 @@ def validate_expense_against_budget(args, expense_amount=0):
 	if not args.account:
 		return
 
+
 	default_dimensions = [
 		{
 			"fieldname": "project",
@@ -43,10 +48,10 @@ def validate_expense_against_budget(args, expense_amount=0):
 			"fieldname": "cost_center",
 			"document_type": "Cost Center",
 		},
-        {
-            "fieldname": "department",
-            "document_type": "Department",
-        },
+		{
+			"fieldname": "department",
+			"document_type": "Department",
+		},
 	]
 
 	for dimension in default_dimensions + get_accounting_dimensions(as_list=False):
@@ -74,7 +79,7 @@ def validate_expense_against_budget(args, expense_amount=0):
 			budget_records = frappe.db.sql(
 				f"""
 				select
-					b.{budget_against} as budget_against, ba.budget_amount, b.monthly_distribution,
+					b.name, b.{budget_against} as budget_against, ba.budget_amount, b.monthly_distribution,
 					ifnull(b.applicable_on_material_request, 0) as for_material_request,
 					ifnull(applicable_on_purchase_order, 0) as for_purchase_order,
 					ifnull(applicable_on_booking_actual_expenses,0) as for_actual_expenses,
@@ -92,11 +97,12 @@ def validate_expense_against_budget(args, expense_amount=0):
 				as_dict=True,
 			)  # nosec
 
+
 			if budget_records:
-				validate_budget_records(args, budget_records, expense_amount)
+				validate_budget_records(args, budget_records, expense_amount, for_check)
 
 
-def validate_budget_records(args, budget_records, expense_amount):
+def validate_budget_records(args, budget_records, expense_amount, for_check):
 	for budget in budget_records:
 		if flt(budget.budget_amount):
 			yearly_action, monthly_action = get_actions(args, budget)
@@ -115,7 +121,7 @@ def validate_budget_records(args, budget_records, expense_amount):
 
 			if monthly_action in ["Stop", "Warn"]:
 				budget_amount = get_accumulated_monthly_budget(
-					budget.monthly_distribution, args.posting_date, args.fiscal_year, budget.budget_amount
+					budget.name, args.posting_date, args.fiscal_year, budget.budget_amount
 				)
 
 				args["month_end_date"] = get_last_day(args.posting_date)
@@ -127,13 +133,14 @@ def validate_budget_records(args, budget_records, expense_amount):
 					monthly_action,
 					budget.budget_against,
 					expense_amount,
+					for_check
 				)
 
 
-def compare_expense_with_budget(args, budget_amount, action_for, action, budget_against, amount=0):
+def compare_expense_with_budget(args, budget_amount, action_for, action, budget_against, amount=0, for_check=0):
 	args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
 	if not amount:
-		args.requested_amount, args.ordered_amount = get_requested_amount(args), get_ordered_amount(args)
+		args.requested_amount, args.ordered_amount = get_requested_amount(args), get_ordered_amount(args, for_check)
 
 		if args.get("doctype") == "Material Request" and args.for_material_request:
 			amount = args.requested_amount + args.ordered_amount
@@ -142,6 +149,7 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 			amount = args.ordered_amount
 
 	total_expense = args.actual_expense + amount
+
 
 	if total_expense > budget_amount:
 		if args.actual_expense > budget_amount:
@@ -170,18 +178,24 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 		):
 			action = "Warn"
 
-		# Set is_budget_exceed field in the Purchase Order doctype before showing warning or error
-		if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
-			args.get("object").is_budget_exceed = 1
-		elif args.get("doctype") == "Material Request" and args.for_material_request:
-			args.get("object").budget_exceeded = 1
+		if for_check:
+			# Set is_budget_exceed field in the Purchase Order doctype before showing warning or error
+			if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
+				args.get("object").is_budget_exceed = 1
+			elif args.get("doctype") == "Material Request" and args.for_material_request:
+				args.get("object").budget_exceeded = 1
+		else:
+			if action == "Stop":
+				frappe.throw(msg, BudgetError, title=_("Budget Exceeded"))
+			else:
+				frappe.msgprint(msg, indicator="orange", title=_("Budget Exceeded"))
 	else:
-
-		# If total_expense is less than or equal to budget_amount, reset the is_budget_exceed field
-		if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
-			args.get("object").is_budget_exceed = 0
-		elif args.get("doctype") == "Material Request" and args.for_material_request:
-			args.get("object").budget_exceeded = 0
+		if for_check:
+			# If total_expense is less than or equal to budget_amount, reset the is_budget_exceed field
+			if args.get("doctype") == "Purchase Order" and args.for_purchase_order:
+				args.get("object").is_budget_exceed = 0
+			elif args.get("doctype") == "Material Request" and args.for_material_request:
+				args.get("object").budget_exceeded = 0
 
 
 
@@ -300,7 +314,7 @@ def get_requested_amount(args):
 		return data[0][0] if data else 0
 
 
-def get_ordered_amount(args):
+def get_ordered_amount(args, for_check):
 	item_code = args.get("item_code")
 	condition = get_other_condition(args, "Purchase Order")
 
@@ -313,7 +327,7 @@ def get_ordered_amount(args):
 		as_list=1,
 	)
 
-	if args.get("doctype") == "Purchase Order":
+	if args.get("doctype") == "Purchase Order" and for_check:
 		unsubmitted_ordered_amount = 0
 		for item in args.get("object").items:
 			unsubmitted_ordered_amount += item.amount - item.billed_amt
@@ -385,30 +399,24 @@ def get_actual_expense(args):
 
 
 def get_accumulated_monthly_budget(monthly_distribution, posting_date, fiscal_year, annual_budget):
-	distribution = {}
-	if monthly_distribution:
-		for d in frappe.db.sql(
-			"""select mdp.month, mdp.percentage_allocation
-			from `tabMonthly Distribution Percentage` mdp, `tabMonthly Distribution` md
-			where mdp.parent=md.name and md.fiscal_year=%s""",
-			fiscal_year,
-			as_dict=1,
-		):
-			distribution.setdefault(d.month, d.percentage_allocation)
+	# List of months explicitly defined
+	months = [
+		"january", "february", "march", "april", "may", "june",
+		"july", "august", "september", "october", "november", "december"
+	]
 
 	dt = frappe.get_cached_value("Fiscal Year", fiscal_year, "year_start_date")
 	accumulated_percentage = 0.0
 
+	accummulated_budget = 0
+
 	while dt <= getdate(posting_date):
-		if monthly_distribution:
-			accumulated_percentage += distribution.get(getdate(dt).strftime("%B"), 0)
-		else:
-			accumulated_percentage += 100.0 / 12
+		accummulated_budget += frappe.db.get_value("Budget Account", {"parent":monthly_distribution}, months[dt.month - 1])
 
 		dt = add_months(dt, 1)
 
-	return annual_budget * accumulated_percentage / 100
-
+	# accummulated_budget = 0
+	return accummulated_budget
 
 def get_item_details(args):
 	cost_center, expense_account = None, None
@@ -452,3 +460,33 @@ def get_expense_cost_center(doctype, args):
 		return frappe.db.get_value(
 			doctype, args.get(frappe.scrub(doctype)), ["cost_center", "default_expense_account"]
 		)
+
+def get_dimension_account_month_map(filters):
+	dimension_target_details = get_dimension_target_details(filters)
+	tdd = get_target_distribution_details(filters)
+
+	cam_map = {}
+
+	for ccd in dimension_target_details:
+		actual_details = get_actual_details(ccd.budget_against, filters)
+
+		for month_id in range(1, 13):
+			month = datetime.date(2013, month_id, 1).strftime("%B")
+			cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.account, {}).setdefault(
+				ccd.fiscal_year, {}
+			).setdefault(month, frappe._dict({"target": 0.0, "actual": 0.0}))
+
+			tav_dict = cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year][month]
+			month_percentage = (
+				tdd.get(ccd.monthly_distribution, {}).get(month, 0)
+				if ccd.monthly_distribution
+				else 100.0 / 12
+			)
+
+			tav_dict.target = flt(ccd.budget_amount) * month_percentage / 100
+
+			for ad in actual_details.get(ccd.account, []):
+				if ad.month_name == month and ad.fiscal_year == ccd.fiscal_year:
+					tav_dict.actual += flt(ad.debit) - flt(ad.credit)
+
+	return cam_map
