@@ -1,47 +1,32 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 frappe.ui.form.on("Transportation Request", {
-	refresh(frm) {
-    frm.add_custom_button(__('Purchase Invoice'), function (){
-
-    }, __("Create"));
-
-	},
-});
-
-
-frappe.ui.form.on("Transportation Request", {
     refresh(frm) {
+        // Show the "Purchase Invoice" button only if the status is "Approved"
+        if (frm.doc.workflow_state === "Approved") {
+            frm.add_custom_button(__('Purchase Invoice'), function () {
+                var invoice = frappe.model.get_new_doc("Purchase Invoice");
+                invoice.posting_date = frm.doc.posting_date;
+                frappe.set_route("form", "Purchase Invoice", invoice.name);
+            }, __("Create"));
+        }
+
+        // Show the "Vehicle Hire Request" button only if the status is "Approved"
+        if (frm.doc.workflow_state === "Approved") {
+            frm.add_custom_button(__('Vehicle Hire Request'), function () {
+                frappe.model.open_mapped_doc({
+                    method: 'beams.beams.doctype.transportation_request.transportation_request.map_transportation_to_vehicle',
+                    frm: frm,
+                });
+            }, __("Create"));
+        }
+
+        // Show or hide the child table "vehicles" based on whether the form is new
         if (!frm.is_new()) {
-            // Show the child table if the form is saved
             frm.set_df_property("vehicles", "hidden", false);
         } else {
-            // Hide the child table if the form is new
             frm.set_df_property("vehicles", "hidden", true);
         }
 
-        // Update the count of "No. of Own Vehicles"
-        update_no_of_own_vehicles(frm);
-    }
-});
-
-frappe.ui.form.on("Vehicles", {
-    // Trigger when a row is added to the "Vehicles" child table
-    vehicles_add(frm) {
-        update_no_of_own_vehicles(frm);
     },
-    // Trigger when a row is removed from the "Vehicles" child table
-    vehicles_remove(frm) {
-        update_no_of_own_vehicles(frm);
-    }
 });
-
-// to update the "No. of Own Vehicles" field
-function update_no_of_own_vehicles(frm) {
-    // Calculate the total number of rows in the "Vehicles" table
-    const count = frm.doc.vehicles ? frm.doc.vehicles.length : 0;
-
-    // Update the "No. of Own Vehicles" field
-    frm.set_value("no_of_own_vehicles", count);
-    frm.refresh_field("no_of_own_vehicles");
-}
