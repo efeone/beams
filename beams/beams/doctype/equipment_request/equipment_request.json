@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ER-{YY}-{####}",
+ "creation": "2025-01-20 08:38:12.932909",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_uoyn",
+  "project",
+  "bureau",
+  "column_break_dsby",
+  "posting_date",
+  "required_from",
+  "required_to",
+  "section_break_mztz",
+  "required_equipments",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_uoyn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fetch_from": "project.bureau",
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "required_from",
+   "fieldtype": "Datetime",
+   "label": "Required From"
+  },
+  {
+   "fieldname": "required_to",
+   "fieldtype": "Datetime",
+   "label": "Required To"
+  },
+  {
+   "fieldname": "required_equipments",
+   "fieldtype": "Table",
+   "label": "Required Equipments",
+   "options": "Required Items Detail"
+  },
+  {
+   "fieldname": "column_break_dsby",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_mztz",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Equipment Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-21 09:57:07.824502",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Equipment Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
