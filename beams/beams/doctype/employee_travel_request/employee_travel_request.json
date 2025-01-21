@@ -1,0 +1,155 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-21 15:03:16.620880",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_zi7v",
+  "requested_by",
+  "is_group",
+  "travellers",
+  "column_break_ooli",
+  "posting_date",
+  "travel_details_section",
+  "is_unplanned",
+  "travel_type",
+  "source",
+  "destination",
+  "column_break_xmae",
+  "start_date",
+  "end_date",
+  "total_days",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_zi7v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Travel Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "depends_on": "eval:doc.is_group;",
+   "fieldname": "travellers",
+   "fieldtype": "Table MultiSelect",
+   "label": "Travellers",
+   "options": "Traveller"
+  },
+  {
+   "fieldname": "travel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Travel Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_unplanned",
+   "fieldtype": "Check",
+   "label": "Is Unplanned "
+  },
+  {
+   "fieldname": "travel_type",
+   "fieldtype": "Link",
+   "label": "Travel Type",
+   "options": "Purpose of Travel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_days",
+   "fieldtype": "Float",
+   "label": "Total Days "
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Destination",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_xmae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ooli",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-21 15:28:23.876625",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Travel Request",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
