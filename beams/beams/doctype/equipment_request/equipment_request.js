@@ -1,5 +1,5 @@
-// Copyright (c) 2025, efeone and contributors
-// For license information, please see license.txt
+// // Copyright (c) 2025, efeone and contributors
+// // For license information, please see license.txt
 
 frappe.ui.form.on('Equipment Request', {
     bureau: function (frm) {
@@ -31,5 +31,23 @@ frappe.ui.form.on('Equipment Request', {
                 }
             });
         }
+    },
+    required_from: function (frm) {
+        validate_dates(frm);
+    },
+    required_to: function (frm) {
+        validate_dates(frm);
+    },
+    validate: function (frm) {
+        validate_dates(frm);
     }
 });
+
+// Helper function to validate dates
+function validate_dates(frm) {
+    if (frm.doc.required_from && frm.doc.required_to) {
+        if (frm.doc.required_from > frm.doc.required_to) {
+            frappe.throw(__('The "Required From" date cannot be after the "Required To" date.'));
+        }
+    }
+}

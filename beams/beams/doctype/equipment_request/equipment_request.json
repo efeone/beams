@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:ER-{YY}-{####}",
  "creation": "2025-01-20 08:38:12.932909",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -78,10 +79,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-20 12:28:17.163511",
+ "modified": "2025-01-21 09:57:07.824502",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
