@@ -415,7 +415,6 @@ def get_accumulated_monthly_budget(monthly_distribution, posting_date, fiscal_ye
 
 		dt = add_months(dt, 1)
 
-	# accummulated_budget = 0
 	return accummulated_budget
 
 def get_item_details(args):
@@ -460,33 +459,3 @@ def get_expense_cost_center(doctype, args):
 		return frappe.db.get_value(
 			doctype, args.get(frappe.scrub(doctype)), ["cost_center", "default_expense_account"]
 		)
-
-def get_dimension_account_month_map(filters):
-	dimension_target_details = get_dimension_target_details(filters)
-	tdd = get_target_distribution_details(filters)
-
-	cam_map = {}
-
-	for ccd in dimension_target_details:
-		actual_details = get_actual_details(ccd.budget_against, filters)
-
-		for month_id in range(1, 13):
-			month = datetime.date(2013, month_id, 1).strftime("%B")
-			cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.account, {}).setdefault(
-				ccd.fiscal_year, {}
-			).setdefault(month, frappe._dict({"target": 0.0, "actual": 0.0}))
-
-			tav_dict = cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year][month]
-			month_percentage = (
-				tdd.get(ccd.monthly_distribution, {}).get(month, 0)
-				if ccd.monthly_distribution
-				else 100.0 / 12
-			)
-
-			tav_dict.target = flt(ccd.budget_amount) * month_percentage / 100
-
-			for ad in actual_details.get(ccd.account, []):
-				if ad.month_name == month and ad.fiscal_year == ccd.fiscal_year:
-					tav_dict.actual += flt(ad.debit) - flt(ad.credit)
-
-	return cam_map
