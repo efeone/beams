@@ -155,6 +155,8 @@
    "reqd": 1
   },
   {
+   "fetch_from": "vehicle.last_odometer",
+   "fetch_if_empty": 1,
    "fieldname": "initial_odometer_reading",
    "fieldtype": "Int",
    "label": "Initial Odometer Reading",
@@ -192,7 +194,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 11:11:26.479731",
+ "modified": "2025-01-22 14:44:47.923975",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
