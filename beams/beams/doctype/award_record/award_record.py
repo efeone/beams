@@ -5,7 +5,7 @@ import frappe
 from frappe.model.document import Document
 
 class AwardRecord(Document):
-    def validate(self):
+    def before_save(self):
         self.update_total_amount()
 
     @frappe.whitelist()
