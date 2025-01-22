@@ -25,11 +25,11 @@ frappe.ui.form.on('Project', {
         }, __("Create"));
 
 
-      // Add "Technical Support Request" button under the "Create" group
-      frm.add_custom_button(__('Technical Support Request'), function () {
+      // Add "Technical Request" button under the "Create" group
+      frm.add_custom_button(__('Technical Request'), function () {
           // Open a dialog with the specified fields
           let dialog = new frappe.ui.Dialog({
-              title: 'Technical Support Request',
+              title: 'Technical Request',
               fields: [
                   {
                       fieldtype: 'Table',
