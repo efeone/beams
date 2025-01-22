@@ -397,12 +397,12 @@ override_doctype_dashboards = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow","Maternity Leave Request", "Shift Swap Request","Program Request Workflow","Transportation Request Workflow","Equipment Hire Request","Technical Request Workflow"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow","Maternity Leave Request", "Shift Swap Request","Program Request Workflow","Transportation Request Workflow","Equipment Hire Request","Trip Sheet","Technical Request Workflow"]]
     ]},
     {"dt": "Workflow State", "filters": [
-        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted","Applicant Rejected","Pending HOD Approval","Pending HR Approval","Pending CEO Approval", "Pending CEO Final Approval","Closed"]]
+        ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted","Applicant Rejected","Pending HOD Approval","Pending HR Approval","Pending CEO Approval", "Pending CEO Final Approval","Closed","Reviewed","pending" ]]
     ]},
     {"dt": "Workflow Action Master", "filters": [
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept", "Request for Approval", "Send to CEO for Initial Approval", "Send to CEO for Final Approval", "Send to HR Approval","Close"]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept", "Request for Approval", "Send to CEO for Initial Approval", "Send to CEO for Final Approval", "Send to HR Approval","Close","Request for Review","Review"]]
     ]}
 ]

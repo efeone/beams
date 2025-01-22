@@ -2,6 +2,24 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2024-10-15 10:12:10.427741",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-01-21 16:33:33.382335",
+  "name": "Reviewed",
+  "style": "",
+  "workflow_state_name": "Reviewed"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
   "modified": "2025-01-15 09:37:27.694768",
   "name": "Closed",
