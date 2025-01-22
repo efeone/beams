@@ -19,7 +19,6 @@ frappe.ui.form.on('Technical Request', {
         toggle_reason_for_rejection_field(frm);
     },
     employee: function(frm) {
-      console.log("here");
        set_employee_query(frm);
     },
     designation: function(frm) {
