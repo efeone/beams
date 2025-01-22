@@ -229,9 +229,9 @@ doc_events = {
             ],
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
     },
-    # "Department": {
-    #    "validate": "beams.beams.custom_scripts.department.department.validate"
-    # },
+    "Department": {
+       "validate": "beams.beams.custom_scripts.department.department.validate"
+    },
     "Interview": {
         "on_submit": "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
         "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
