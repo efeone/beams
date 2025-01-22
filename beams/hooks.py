@@ -229,9 +229,9 @@ doc_events = {
             ],
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
     },
-    "Department": {
-       "validate": "beams.beams.custom_scripts.department.department.validate"
-    },
+    # "Department": {
+    #    "validate": "beams.beams.custom_scripts.department.department.validate"
+    # },
     "Interview": {
         "on_submit": "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
         "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
@@ -397,7 +397,7 @@ override_doctype_dashboards = {
 # }
 fixtures = [
     {"dt": "Workflow", "filters": [
-        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow","Maternity Leave Request", "Shift Swap Request","Program Request Workflow","Transportation Request Workflow","Equipment Hire Request"]]
+        ["name", "in", ["Customer Approval", "Account Approval", "Adhoc Budget","Supplier Approval", "Purchase Order Approval" , "Budget Approval" , "Batta Claim Approval","Purchase Invoice Workflow","Sales Invoice Approval","Stringer Bill Approval","Material Request Approval","Substitute Booking","Contract","Job Requisition Workflow","Enquiry Workflow","Job Proposal Workflow","Maternity Leave Request", "Shift Swap Request","Program Request Workflow","Transportation Request Workflow","Equipment Hire Request","Technical Request Workflow"]]
     ]},
     {"dt": "Workflow State", "filters": [
         ["name", "in", ["Draft", "Pending Approval", "Approved", "Rejected", "Pending Finance Verification", "Verified By Finance","Rejected By Finance", "Pending Finance Approval", "Approved by Finance","Submitted","Cancelled","Completed","On Hold","Assigned to Enquiry Officer","Assigned to Admin","Enquiry on Progress","Applicant Accepted","Applicant Rejected","Pending HOD Approval","Pending HR Approval","Pending CEO Approval", "Pending CEO Final Approval","Closed"]]

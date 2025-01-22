@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:TSR-{YY}-{####}",
+ "autoname": "format:TR-{YY}-{####}",
  "creation": "2025-01-18 11:21:52.053280",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -17,46 +17,48 @@
   "required_to",
   "section_break_wqez",
   "remarks",
+  "reason_for_rejection",
   "amended_from"
  ],
  "fields": [
   {
    "fieldname": "project",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "reqd": 1
   },
   {
    "fieldname": "bureau",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Bureau ",
-   "options": "Bureau"
-  },
-  {
-   "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Posting Date"
-  },
-  {
-   "fieldname": "required_from",
-   "fieldtype": "Datetime",
-   "label": "Required From"
-  },
-  {
-   "fieldname": "required_to",
-   "fieldtype": "Datetime",
-   "label": "Required To"
+   "options": "Bureau",
+   "reqd": 1
   },
   {
    "fieldname": "department",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "reqd": 1
   },
   {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Designation",
+   "options": "Designation",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
    "fieldname": "employee",
    "fieldtype": "Link",
    "label": "Employee ",
+   "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
    "options": "Employee"
   },
   {
@@ -64,10 +66,23 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "designation",
-   "fieldtype": "Link",
-   "label": "Designation",
-   "options": "Designation"
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_from",
+   "fieldtype": "Datetime",
+   "label": "Required From",
+   "reqd": 1
+  },
+  {
+   "fieldname": "required_to",
+   "fieldtype": "Datetime",
+   "label": "Required To",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_wqez",
@@ -79,11 +94,18 @@
    "label": "Remarks"
   },
   {
+   "allow_on_submit": 1,
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection",
+   "read_only": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Technical Support Request",
+   "options": "Technical Request",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -92,10 +114,10 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 09:45:31.484787",
+ "modified": "2025-01-22 14:40:16.380805",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Technical Support Request",
+ "name": "Technical Request",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

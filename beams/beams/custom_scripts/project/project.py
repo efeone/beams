@@ -72,7 +72,7 @@ def create_transportation_request(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_technical_support_request(project_id, requirements):
-    ''' Create Technical Support Request document '''
+    ''' Create Technical Request document '''
 
     # Parse the JSON input
     requirements = json.loads(requirements)
@@ -84,7 +84,7 @@ def create_technical_support_request(project_id, requirements):
     # Fetch Project details
     project = frappe.get_doc('Project', project_id)
 
-    # Iterate over the requirements and create Technical Support Requests
+    # Iterate over the requirements and create Technical Requests
     for req in requirements:
         department = frappe.db.get_value("Department", req['department'], "name")
         designation = frappe.db.get_value("Designation", req['designation'], "name")
@@ -97,9 +97,9 @@ def create_technical_support_request(project_id, requirements):
         if not department or not designation:
             frappe.throw(_("Both Department and Designation are required."))
 
-        # Create the Technical Support Request document
+        # Create the Technical Request document
         doc = frappe.get_doc({
-            'doctype': 'Technical Support Request',
+            'doctype': 'Technical Request',
             'project': project_id,
             'department': department,
             'designation': designation,
@@ -110,6 +110,6 @@ def create_technical_support_request(project_id, requirements):
             'required_to': required_to
         })
         doc.insert(ignore_permissions=True)
-        frappe.msgprint(_("Technical Support Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
+        frappe.msgprint(_("Technical Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
 
     return
