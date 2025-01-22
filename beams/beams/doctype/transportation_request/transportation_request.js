@@ -20,9 +20,8 @@ frappe.ui.form.on("Transportation Request", {
                 });
             }, __("Create"));
         }
-
         // Show or hide the child table "vehicles" based on whether the form is new
-        if (!frm.is_new()) {
+        if (!frm.is_new() || frm.doc.workflow_state === "Pending Approval") {
             frm.set_df_property("vehicles", "hidden", false);
         } else {
             frm.set_df_property("vehicles", "hidden", true);
