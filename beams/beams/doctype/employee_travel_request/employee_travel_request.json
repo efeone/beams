@@ -1,0 +1,233 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ETR-{YY}-{####}",
+ "creation": "2025-01-21 15:03:16.620880",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_zi7v",
+  "requested_by",
+  "is_group",
+  "travellers",
+  "column_break_ooli",
+  "posting_date",
+  "travel_details_section",
+  "is_unplanned",
+  "travel_type",
+  "mode_of_travel",
+  "source",
+  "destination",
+  "accommodation_required",
+  "inside_kerala",
+  "batta_policy",
+  "room_criteria",
+  "column_break_xmae",
+  "start_date",
+  "end_date",
+  "expected_check_in_time",
+  "expected_check_out_time",
+  "total_days",
+  "amended_from",
+  "section_break_ktsj",
+  "mark_attendance",
+  "reference_documents",
+  "reason_for_rejection"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_zi7v",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Employee Travel Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_group",
+   "fieldtype": "Check",
+   "label": "Is Group"
+  },
+  {
+   "depends_on": "eval:doc.is_group;",
+   "fieldname": "travellers",
+   "fieldtype": "Table MultiSelect",
+   "label": "Travellers",
+   "options": "Traveller"
+  },
+  {
+   "fieldname": "travel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Travel Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_unplanned",
+   "fieldtype": "Check",
+   "label": "Is Unplanned "
+  },
+  {
+   "fieldname": "travel_type",
+   "fieldtype": "Link",
+   "label": "Travel Type",
+   "options": "Purpose of Travel",
+   "reqd": 1
+  },
+  {
+   "fieldname": "start_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "end_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "End Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "total_days",
+   "fieldtype": "Float",
+   "label": "Total Days "
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Source",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Destination",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_xmae",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_ooli",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:(!doc.is_group);",
+   "fieldname": "batta_policy",
+   "fieldtype": "Link",
+   "label": "Batta Policy",
+   "options": "Batta Policy"
+  },
+  {
+   "fieldname": "mode_of_travel",
+   "fieldtype": "Link",
+   "label": "Mode of Travel",
+   "options": "Mode of Travel"
+  },
+  {
+   "default": "0",
+   "fieldname": "accommodation_required",
+   "fieldtype": "Check",
+   "label": "Accommodation Required "
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "room_criteria",
+   "fieldtype": "Link",
+   "label": " Room Criteria",
+   "options": "Room Criteria"
+  },
+  {
+   "default": "0",
+   "fieldname": "mark_attendance",
+   "fieldtype": "Check",
+   "label": "Mark Attendance"
+  },
+  {
+   "fieldname": "reference_documents",
+   "fieldtype": "Table",
+   "label": "Reference Documents",
+   "options": "Reference Document"
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "expected_check_in_time",
+   "fieldtype": "Datetime",
+   "label": "Expected Check-in Time "
+  },
+  {
+   "depends_on": "eval:doc.accommodation_required;",
+   "fieldname": "expected_check_out_time",
+   "fieldtype": "Datetime",
+   "label": "Expected Check-out Time "
+  },
+  {
+   "fieldname": "section_break_ktsj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "inside_kerala",
+   "fieldtype": "Check",
+   "label": "Inside Kerala"
+  },
+  {
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection "
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-21 17:37:29.018097",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Travel Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
