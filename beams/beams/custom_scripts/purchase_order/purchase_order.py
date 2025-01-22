@@ -94,7 +94,7 @@ def validate_budget(self, method=None):
 				}
 			)
 
-			validate_expense_against_budget(args)
+			validate_expense_against_budget(args, 0, 1)
 
 @frappe.whitelist()
 def fetch_department_from_cost_center(doc, method):
