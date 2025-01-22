@@ -1,0 +1,31 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-22 10:02:46.321356",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_travel_request"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_travel_request",
+   "fieldtype": "Link",
+   "label": "Employee Travel Request",
+   "options": "Employee Travel Request"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-22 10:04:17.635655",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Travel Request Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -1,0 +1,221 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:TS-{YY}-{####}",
+ "creation": "2025-01-21 15:20:04.923788",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_wyyd",
+  "driver",
+  "vehicle",
+  "column_break_abgb",
+  "date",
+  "section_break_ziua",
+  "references_column",
+  "travel_requests",
+  "column_break_zgya",
+  "transportation_requests",
+  "pre_trip_checklist_section",
+  "clean_vehicle",
+  "safety_inspection",
+  "remarks",
+  "trip_details_section",
+  "departure_location",
+  "destination_location",
+  "initial_odometer_reading",
+  "final_odometer_reading",
+  "distance_traveledkm",
+  "column_break_anpp",
+  "starting_date_and_time",
+  "ending_date_and_time",
+  "fuel_consumed",
+  "fuel_consumption_per_km",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_wyyd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Trip Sheet",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "driver",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Driver",
+   "options": "Driver",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": " Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ziua",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "references_column",
+   "fieldtype": "Column Break",
+   "label": "References"
+  },
+  {
+   "fieldname": "travel_requests",
+   "fieldtype": "Table MultiSelect",
+   "label": "Travel Requests",
+   "options": "Employee Travel Request Details"
+  },
+  {
+   "fieldname": "transportation_requests",
+   "fieldtype": "Table MultiSelect",
+   "label": "Transportation Requests",
+   "options": "Transportation Request Details"
+  },
+  {
+   "fieldname": "pre_trip_checklist_section",
+   "fieldtype": "Section Break",
+   "label": "Pre Trip Checklist "
+  },
+  {
+   "default": "0",
+   "fieldname": "clean_vehicle",
+   "fieldtype": "Check",
+   "label": "Clean Vehicle"
+  },
+  {
+   "default": "0",
+   "fieldname": "safety_inspection",
+   "fieldtype": "Check",
+   "label": "Safety Inspection"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks "
+  },
+  {
+   "fieldname": "column_break_abgb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_zgya",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "trip_details_section",
+   "fieldtype": "Section Break",
+   "label": "Trip Details "
+  },
+  {
+   "fieldname": "starting_date_and_time",
+   "fieldtype": "Datetime",
+   "label": "Starting Date and Time ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "ending_date_and_time",
+   "fieldtype": "Datetime",
+   "label": " Ending Date and Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "departure_location",
+   "fieldtype": "Link",
+   "label": "Departure Location ",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "destination_location",
+   "fieldtype": "Link",
+   "label": "Destination Location ",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "vehicle.last_odometer",
+   "fetch_if_empty": 1,
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Initial Odometer Reading",
+   "read_only": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Final Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "distance_traveledkm",
+   "fieldtype": "Float",
+   "label": "Distance Traveled(Km)",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fuel_consumed",
+   "fieldtype": "Float",
+   "label": "Fuel Consumed",
+   "reqd": 1
+  },
+  {
+   "fieldname": "fuel_consumption_per_km",
+   "fieldtype": "Float",
+   "label": "Fuel Consumption per Km ",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_anpp",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-22 14:44:47.923975",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Trip Sheet",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
