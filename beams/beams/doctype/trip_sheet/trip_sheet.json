@@ -51,20 +51,26 @@
   {
    "fieldname": "driver",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Driver",
-   "options": "Driver"
+   "options": "Driver",
+   "reqd": 1
   },
   {
    "fieldname": "vehicle",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": " Vehicle",
-   "options": "Vehicle"
+   "options": "Vehicle",
+   "reqd": 1
   },
   {
    "default": "Today",
    "fieldname": "date",
    "fieldtype": "Date",
-   "label": "Date"
+   "in_list_view": 1,
+   "label": "Date",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ziua",
@@ -178,7 +184,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 10:46:17.014832",
+ "modified": "2025-01-22 11:01:47.063070",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
