@@ -1,7 +1,7 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 frappe.ui.form.on("Transportation Request", {
-    refresh(frm) {
+    refresh: function (frm) {
         // Show the "Purchase Invoice" button only if the status is "Approved"
         if (frm.doc.workflow_state === "Approved") {
             frm.add_custom_button(__('Purchase Invoice'), function () {
@@ -21,12 +21,19 @@ frappe.ui.form.on("Transportation Request", {
             }, __("Create"));
         }
 
-        // Show or hide the child table "vehicles" based on whether the form is new
-        if (!frm.is_new()) {
-            frm.set_df_property("vehicles", "hidden", false);
+        // Toggle read-only state of "vehicles" child table based on workflow state
+        if (frm.doc.workflow_state === "Pending Approval") {
+            frm.set_df_property("vehicles", "read_only", false);
         } else {
-            frm.set_df_property("vehicles", "hidden", true);
+            frm.set_df_property("vehicles", "read_only", true);
         }
+    },
 
+    // Event handlers for the child table "vehicles"
+    vehicles_add: function (frm, cdt, cdn) {
+        frm.set_value("no_of_own_vehicles", frm.doc.vehicles.length);
+    },
+    vehicles_remove: function (frm, cdt, cdn) {
+        frm.set_value("no_of_own_vehicles", frm.doc.vehicles.length);
     },
 });

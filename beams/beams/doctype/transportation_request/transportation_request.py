@@ -6,7 +6,13 @@ from frappe.model.mapper import get_mapped_doc
 
 
 class TransportationRequest(Document):
-    def validate(self):
+
+    def on_cancel(self):
+        # Validate that "Reason for Rejection" is filled if the status is "Rejected"
+        if self.workflow_state == "Rejected" and not self.reason_for_rejection:
+            frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
+    def before_update_after_submit(self):
         self.update_no_of_own_vehicles()
 
     def update_no_of_own_vehicles(self):
@@ -14,10 +20,8 @@ class TransportationRequest(Document):
         Calculate the total number of rows in the "Vehicles" child table
         and update the "No. of Own Vehicles" field.
         '''
-        # Count the rows in the "vehicles" child table
+        # Always calculate and update the value regardless of the state
         total_vehicles = len(self.vehicles or [])
-
-        # Update the "no_of_own_vehicles" field
         self.no_of_own_vehicles = total_vehicles
 
 
