@@ -131,24 +131,28 @@
   {
    "fieldname": "starting_date_and_time",
    "fieldtype": "Datetime",
-   "label": "Starting Date and Time "
+   "label": "Starting Date and Time ",
+   "reqd": 1
   },
   {
    "fieldname": "ending_date_and_time",
    "fieldtype": "Datetime",
-   "label": " Ending Date and Time"
+   "label": " Ending Date and Time",
+   "reqd": 1
   },
   {
    "fieldname": "departure_location",
    "fieldtype": "Link",
    "label": "Departure Location ",
-   "options": "Location"
+   "options": "Location",
+   "reqd": 1
   },
   {
    "fieldname": "destination_location",
    "fieldtype": "Link",
    "label": "Destination Location ",
-   "options": "Location"
+   "options": "Location",
+   "reqd": 1
   },
   {
    "fieldname": "initial_odometer_reading",
@@ -159,22 +163,26 @@
   {
    "fieldname": "final_odometer_reading",
    "fieldtype": "Int",
-   "label": "Final Odometer Reading"
+   "label": "Final Odometer Reading",
+   "reqd": 1
   },
   {
    "fieldname": "distance_traveledkm",
    "fieldtype": "Float",
-   "label": "Distance Traveled(Km)"
+   "label": "Distance Traveled(Km)",
+   "reqd": 1
   },
   {
    "fieldname": "fuel_consumed",
    "fieldtype": "Float",
-   "label": "Fuel Consumed"
+   "label": "Fuel Consumed",
+   "reqd": 1
   },
   {
    "fieldname": "fuel_consumption_per_km",
    "fieldtype": "Float",
-   "label": "Fuel Consumption per Km "
+   "label": "Fuel Consumption per Km ",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_anpp",
@@ -184,7 +192,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 11:01:47.063070",
+ "modified": "2025-01-22 11:11:26.479731",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
