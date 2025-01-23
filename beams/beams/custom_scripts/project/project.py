@@ -113,3 +113,11 @@ def create_technical_support_request(project_id, requirements):
         frappe.msgprint(_("Technical Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
 
     return
+
+@frappe.whitelist()
+def get_assigned_resources(cur_project, assigned_from=None, assigned_to=None):
+    if not assigned_from and not assigned_to:
+        
+    project_list = frappe.db.get_all("Project", {"status":"Open", "name":["!=", cur_project]}, pluck="name")
+    assigned_employees = list(set(frappe.db.get_all("Allocated Resource Detail", {"parent":["in", project_list], "assigned_to":[">=", assigned_to], "assigned_from":["<=", assigned_from]}, or_filters={"parent":["in", project_list], "assigned_to":["<=", assigned_to], "assigned_from":[">=", assigned_from]}, pluck="employee")))
+    return assigned_employees

@@ -120,3 +120,59 @@ frappe.ui.form.on('Project', {
         }, __("Create"));
      }
   });
+
+frappe.ui.form.on('Project', {
+    refresh: function(frm) {
+      console.log("in refresh")
+        frm.fields_dict['allocated_resources_details'].grid.get_field('employee').get_query = function(doc, cdt, cdn) {
+            let allocated_employees = [];
+            let row = locals[cdt][cdn]
+
+            // Check if the child table is populated
+            if (doc.allocated_resources_details) {
+                console.log("Allocated Resources Details: ", doc.allocated_resources_details); // Log the child table data
+
+                doc.allocated_resources_details.forEach(function(d) {
+                    if (d.employee && d.assigned_from && d.assigned_to) {
+                        let assigned_from = d.assigned_from;
+                        let assigned_to = d.assigned_to;
+
+                        // Log to ensure the dates are captured correctly
+                        console.log("Employee: ", d.employee, " Assigned From: ", assigned_from, " Assigned To: ", assigned_to);
+
+                        // Ensure dates are in the correct format (just focusing on comparison)
+                        if (assigned_from && assigned_to && (assigned_from <= assigned_to)) {
+                            allocated_employees.push(d.employee);  // Push the employee to exclude them from the list
+                        }
+                    }
+                });
+            }
+
+            frappe.call('beams.beams.custom_scripts.project.project.get_assigned_resources', {
+            cur_project: frm.doc.name,
+             assigned_from: row.assigned_from,
+             assigned_to: row.assigned_to
+            }).then(r => {
+              r.message.forEach((item) => {
+                allocated_employees.push(item)
+                console.log("in py loop")
+                console.log(item)
+              });
+
+            })
+
+
+            // Log the list of allocated employees to ensure they are being captured
+            console.log("Allocated Employees: ", allocated_employees);
+            console.log(typeof(allocated_employees))
+
+            // Return the query with the filter to exclude already allocated employees
+            return {
+                filters: {
+                    'name': ['not in', allocated_employees],  // Exclude employees already allocated in other projects
+                    // Additional filter can be applied for other criteria like project status or designation if needed
+                }
+            };
+        };
+    }
+});
