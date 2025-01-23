@@ -23,13 +23,7 @@ frappe.ui.form.on('Employee Travel Request', {
     },
 
     requested_by: function (frm) {
-        // Reset fields if requested_by is empty
-        if (!frm.doc.requested_by) {
-            frm.set_value('batta_policy', null);
-            frm.set_df_property('room_criteria', 'options', []);
-            return;
-        }
-
+      
         // Fetch the Batta Policy for the selected employee
         frappe.call({
             method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
