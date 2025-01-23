@@ -406,6 +406,6 @@ fixtures = [
     ]},
     {"dt": "Workflow Action Master", "filters": [
 
-        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept", "Request for Approval", "Send to CEO for Initial Approval", "Send to CEO for Final Approval", "Send to HR Approval","Close","Request for Review","Review","Apply","Nominate for Award","Grant Award"]]]]
+        ["name", "in", ["Submit for Approval","Reopen", "Approve", "Reject", "Send For Finance Verification", "Verify", "Send for Approval","Submit","Cancel","Send Email To Party","Put On Hold","Assign to Admin","Assign to Enquiry Officer","Start Enquiry","Enquiry Completed","Accept", "Request for Approval", "Send to CEO for Initial Approval", "Send to CEO for Final Approval", "Send to HR Approval","Close","Request for Review","Review","Apply","Nominate for Award","Grant Award"]]
     ]}
 ]
