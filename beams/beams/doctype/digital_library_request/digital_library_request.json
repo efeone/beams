@@ -38,7 +38,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "requested_by.first_name",
+   "fetch_from": "requested_by.employee_name",
    "fieldname": "employee_full_name",
    "fieldtype": "Data",
    "label": "Employee Full Name ",
@@ -63,7 +63,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 17:58:47.259142",
+ "modified": "2025-01-23 09:37:58.259819",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Digital Library Request",
