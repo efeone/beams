@@ -563,7 +563,8 @@ def get_budget_custom_fields():
                 "fieldtype": "Link",
                 "label": "Department",
                 "options":"Department",
-                "insert_after": "monthly_distribution"
+                "reqd": 1,
+                "insert_after": "company"
             },
             {
                 "fieldname": "division",
@@ -571,14 +572,21 @@ def get_budget_custom_fields():
                 "label": "Division",
                 "options":"Division",
                 "reqd": 1,
-                "insert_after": "company"
+                "insert_after": "monthly_distribution"
             },
             {
                 "fieldname": "region",
                 "fieldtype": "Link",
                 "label": "Region",
                 "options":"Region",
-                "insert_after": "department"
+                "insert_after": "budget_template"
+            },
+            {
+                "fieldname": "budget_template",
+                "fieldtype": "Link",
+                "label": "Budget Template",
+                "options":"Budget Template",
+                "insert_after": "division"
             }
         ],
         "Budget Account": [

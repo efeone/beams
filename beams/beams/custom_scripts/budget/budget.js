@@ -21,14 +21,79 @@ frappe.ui.form.on('Budget', {
                     }
                 });
         }
+
+        // Apply filter to the budget_template field based on the selected division
+        if (frm.doc.division) {
+            frm.set_query('budget_template', function() {
+                return {
+                    filters: {
+                        division: frm.doc.division
+                    }
+                };
+            });
+        } else {
+            // Clear the filter if no division is selected
+            frm.set_query('budget_template', function() {
+                return {};
+            });
+        }
     },
+
+    department: function(frm) {
+        // Check if a department is selected
+        if (frm.doc.department) {
+            // Apply filter to the division field based on the selected department
+            frm.set_query('division', function() {
+                return {
+                    filters: {
+                        department: frm.doc.department
+                    }
+                };
+            });
+        } else {
+            // Clear the filter if no department is selected
+            frm.set_query('division', function() {
+                return {};
+            });
+        }
+    },
+
+    budget_template: function(frm) {
+        if (frm.doc.budget_template) {
+            frappe.call({
+                method: 'frappe.client.get',
+                args: {
+                    doctype: 'Budget Template',
+                    name: frm.doc.budget_template
+                },
+                callback: function(response) {
+                    let budget_template_items = response.message.budget_template_item || [];
+
+                    frm.clear_table('accounts');
+
+                    budget_template_items.forEach(function(item) {
+                        let row = frm.add_child('accounts');
+                        row.cost_subhead = item.cost_sub_head;
+                        row.account = item.account;
+                        row.cost_category = item.cost_category;
+                    });
+
+                    frm.refresh_field('accounts');
+                }
+            });
+        } else {
+            frm.clear_table('accounts');
+            frm.refresh_field('accounts');
+        }
+    },
+
     refresh: function(frm) {
         set_filters(frm);
     }
 });
 
+// Function to apply filters in the cost subhead field in Budget Account
 function set_filters(frm) {
-    // Apply filters in the cost subhead field in Budget Account
     frm.set_query('cost_subhead', 'accounts', (doc, cdt, cdn) => {
         var child = locals[cdt][cdn];
         return {
@@ -150,3 +215,90 @@ function distribute_budget_equally(frm, cdt, cdn, budget_amount) {
 
     frm.refresh_field('budget_account');
 }
+
+
+
+
+
+
+
+
+
+
+
+
+//
+// frappe.ui.form.on('Budget', {
+//     department: function(frm) {
+//         // Check if a department is selected
+//         if (frm.doc.department) {
+//             // Apply filter to the division field based on the selected department
+//             frm.set_query('division', function() {
+//                 return {
+//                     filters: {
+//                         department: frm.doc.department
+//                     }
+//                 };
+//             });
+//         } else {
+//             // Clear the filter if no department is selected
+//             frm.set_query('division', function() {
+//                 return {};
+//             });
+//         }
+//     },
+//
+//     division: function(frm) {
+//         // Check if a division is selected
+//         if (frm.doc.division) {
+//             // Apply filter to the budget_template field based on the selected division
+//             frm.set_query('budget_template', function() {
+//                 return {
+//                     filters: {
+//                         division: frm.doc.division
+//                     }
+//                 };
+//             });
+//         } else {
+//             // Clear the filter if no division is selected
+//             frm.set_query('budget_template', function() {
+//                 return {};
+//             });
+//         }
+//     },
+//
+//     budget_template: function(frm) {
+//         // Check if a budget_template is selected
+//         if (frm.doc.budget_template) {
+//             // Get the budget_template_items from the selected budget template
+//             frappe.call({
+//                 method: 'frappe.client.get',
+//                 args: {
+//                     doctype: 'Budget Template',
+//                     name: frm.doc.budget_template
+//                 },
+//                 callback: function(response) {
+//                     let budget_template_items = response.message.budget_template_item || [];
+//
+//                     // Clear existing rows in the accounts child table
+//                     frm.clear_table('accounts');
+//
+//                     // Loop through the fetched budget_template_items and add them to the accounts table
+//                     budget_template_items.forEach(function(item) {
+//                         let row = frm.add_child('accounts');
+//                         row.cost_subhead = item.cost_sub_head;
+//                         row.account = item.account;
+//                         row.cost_category = item.cost_category;
+//                     });
+//
+//                     // Refresh the child table to show the updated rows
+//                     frm.refresh_field('accounts');
+//                 }
+//             });
+//         } else {
+//             // Clear the accounts child table if no budget_template is selected
+//             frm.clear_table('accounts');
+//             frm.refresh_field('accounts');
+//         }
+//     }
+// });
