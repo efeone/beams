@@ -1,6 +1,3 @@
-# Copyright (c) 2025, efeone and contributors
-# For license information, please see license.txt
-
 import frappe
 from frappe.model.document import Document
 from frappe.utils import get_datetime
@@ -9,6 +6,7 @@ from frappe import _  # Import _ for translation and localization
 class TripSheet(Document):
     def validate(self):
         self.validate_start_datetime_and_end_datetime()
+        self.calculate_and_validate_fuel_data()
 
     @frappe.whitelist()
     def validate_start_datetime_and_end_datetime(self):
@@ -27,7 +25,32 @@ class TripSheet(Document):
             frappe.throw(
                 msg=_("Starting Date and Time cannot be after Ending Date and Time."),
                 title=_("Validation Error")
-            )
+                )
+
+    @frappe.whitelist()
+    def calculate_and_validate_fuel_data(self):
+        """
+        Validate odometer readings and calculate distance traveled and fuel consumption per km.
+        Automatically updates the fields on the same document.
+        """
+        # Validate odometer readings
+        if self.initial_odometer_reading > self.final_odometer_reading:
+            frappe.throw(_("Initial Odometer Reading must be less than  Final Odometer Reading"))
+
+        # Calculate distance traveled
+        if self.final_odometer_reading and self.initial_odometer_reading:
+            self.distance_traveledkm = self.final_odometer_reading - self.initial_odometer_reading
+        else:
+            self.distance_traveledkm = 0
+
+        # Calculate fuel consumption per km
+        if self.fuel_consumed and self.fuel_consumed != 0 and self.distance_traveledkm:
+            self.fuel_consumption_per_km = self.distance_traveledkm / self.fuel_consumed
+        else:
+            self.fuel_consumption_per_km = 0
+
+
+
 @frappe.whitelist()
 def get_last_odometer(vehicle):
     if not vehicle:
