@@ -1,0 +1,45 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-23 13:11:16.274521",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "recharge_amount",
+  "recharged_date",
+  "voucher_no"
+ ],
+ "fields": [
+  {
+   "fieldname": "recharge_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Recharge Amount "
+  },
+  {
+   "fieldname": "recharged_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Recharged Date"
+  },
+  {
+   "fieldname": "voucher_no",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Voucher No."
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-01-23 13:12:57.907373",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Recharge History",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
