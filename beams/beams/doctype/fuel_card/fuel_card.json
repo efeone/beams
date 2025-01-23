@@ -57,7 +57,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-23 14:18:09.432196",
+ "modified": "2025-01-23 14:39:31.388603",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card",
@@ -79,5 +79,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "track_changes": 1
 }
