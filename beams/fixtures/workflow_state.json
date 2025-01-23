@@ -2,6 +2,15 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
+  "icon": "question-sign",
+  "modified": "2024-10-15 10:12:10.427741",
+  "name": "Pending",
+  "style": "",
+  "workflow_state_name": "Pending"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
   "icon": "",
   "modified": "2025-01-15 09:37:27.694768",
   "name": "Closed",
@@ -214,6 +223,24 @@
   "name": "Pending",
   "style": "",
   "workflow_state_name": "Pending"
+},
+{
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-01-22 16:48:02.996096",
+  "name": "Applied",
+  "style": "",
+  "workflow_state_name": "Applied"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-01-22 16:48:21.356677",
+  "name": "Nominated",
+  "style": "",
+  "workflow_state_name": "Nominated"
  },
  {
   "docstatus": 0,
@@ -223,5 +250,14 @@
   "name": "Reviewed",
   "style": "",
   "workflow_state_name": "Reviewed"
+},
+{
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-01-22 16:48:45.856752",
+  "name": "Awarded",
+  "style": "",
+  "workflow_state_name": "Awarded"
  }
 ]
