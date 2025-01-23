@@ -7,13 +7,14 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_ue5d",
-  "amended_from",
   "trip_sheet",
   "offense_type",
-  "posting_date",
-  "offense_date_and_time",
   "employee",
-  "employee_name"
+  "employee_name",
+  "amended_from",
+  "column_break_hwrj",
+  "posting_date",
+  "offense_date_and_time"
  ],
  "fields": [
   {
@@ -70,12 +71,16 @@
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "label": "Employee Name"
+  },
+  {
+   "fieldname": "column_break_hwrj",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 16:53:34.587728",
+ "modified": "2025-01-23 10:59:07.444716",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",
