@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:FC-{YY}-{####}",
  "creation": "2025-01-23 13:06:13.346228",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -56,10 +57,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-23 13:16:40.709946",
+ "modified": "2025-01-23 14:18:09.432196",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
