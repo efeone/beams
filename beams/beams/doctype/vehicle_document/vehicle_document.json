@@ -1,0 +1,98 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VD-{YY}-{####}",
+ "creation": "2025-01-22 16:38:52.623911",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "document_name",
+  "send_reminder",
+  "notification_details_section",
+  "notification_template",
+  "reminder_before",
+  "allow_repeat",
+  "repeat_on",
+  "send_overdue_reminder"
+ ],
+ "fields": [
+  {
+   "fieldname": "document_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Document Name",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "send_reminder",
+   "fieldtype": "Check",
+   "label": "Send Reminder"
+  },
+  {
+   "depends_on": "eval:doc.send_reminder;",
+   "fieldname": "notification_template",
+   "fieldtype": "Link",
+   "label": "Notification Template",
+   "options": "Email Template"
+  },
+  {
+   "depends_on": "eval:doc.send_reminder;",
+   "description": "No.of Days",
+   "fieldname": "reminder_before",
+   "fieldtype": "Int",
+   "label": "Reminder Before"
+  },
+  {
+   "depends_on": "eval:doc.allow_repeat;",
+   "fieldname": "repeat_on",
+   "fieldtype": "Select",
+   "label": "Repeat On",
+   "options": "Yearly\nMonthly\nWeekly\nDaily"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.send_reminder",
+   "fieldname": "allow_repeat",
+   "fieldtype": "Check",
+   "label": "Allow Repeat"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.send_reminder;",
+   "fieldname": "send_overdue_reminder",
+   "fieldtype": "Check",
+   "label": "Send Overdue Reminder"
+  },
+  {
+   "fieldname": "notification_details_section",
+   "fieldtype": "Section Break",
+   "label": "Notification Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-22 17:25:06.314686",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Document",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
