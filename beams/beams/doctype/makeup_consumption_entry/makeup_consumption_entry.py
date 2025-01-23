@@ -3,7 +3,6 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import get_link_to_form
 from frappe import _
 
 
@@ -35,6 +34,4 @@ class MakeupConsumptionEntry(Document):
         stock_entry.submit()
 
         # Notify user
-        frappe.msgprint(
-            _(f'Stock Entry {get_link_to_form("Stock Entry", stock_entry.name)} created successfully!')
-        )
+        frappe.msgprint("Stock entry created successfully.", alert=True)
