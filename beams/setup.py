@@ -50,6 +50,7 @@ def after_install():
     create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_vehicle_custom_fields(),ignore_validate=True)
 
 
 
@@ -112,7 +113,7 @@ def before_uninstall():
     delete_custom_fields(get_Project_custom_fields())
     delete_custom_fields(get_Payroll_Settings_custom_fields())
     delete_custom_fields(get_asset_custom_fields())
-
+    delete_custom_fields(get_vehicle_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -3467,5 +3468,27 @@ def get_appointment_letter():
                 "label": "Notice Period",
                 "insert_after": "applicant_name"
             }
+        ]
+    }
+
+def get_vehicle_custom_fields():
+    '''
+    Custom fields that need to be added to the Vehicle DocType
+    '''
+    return {
+        "Vehicle": [
+        {
+            "fieldname": "vehicle_section_break",
+            "fieldtype": "Section Break",
+            "label": "Vehicle Details",
+            "insert_after": "doors"
+        },
+        {
+            "fieldname": "vehicle_documents",
+            "fieldtype": "Table",
+            "label": "Vehicle Documents",
+            "options": "Vehicle Documents",
+            "insert_after": "vehicle_section_break"
+        }
         ]
     }
