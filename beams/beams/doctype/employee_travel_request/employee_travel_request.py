@@ -20,8 +20,6 @@ class EmployeeTravelRequest(Document):
         batta_policy = get_batta_policy(self.requested_by)
         if batta_policy:
             self.batta_policy = batta_policy.get("name")
-            # Filter the room_criteria based on the selected Batta Policy
-            self.room_criteria = filter_room_criteria(batta_policy.get("name"))
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):
