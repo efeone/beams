@@ -16,7 +16,7 @@ frappe.ui.form.on('Trip Sheet', {
     vehicle: function(frm) {
         if (frm.doc.vehicle) {
             frappe.call({
-                method: "beams.beams.doctype.trip_sheet.trip_sheet.get_last_odometer",
+                method: 'beams.beams.doctype.trip_sheet.trip_sheet.get_last_odometer',
                 args: {
                     vehicle: frm.doc.vehicle
                 },
@@ -31,5 +31,18 @@ frappe.ui.form.on('Trip Sheet', {
         } else {
             frm.set_value("initial_odometer_reading", null);
         }
-    }
+    },
+    refresh: function (frm) {
+      // Check if the Trip Sheet is saved
+      if (!frm.is_new()) {
+          // Add "Vehicle Incident Record" button
+          frm.add_custom_button(__('Vehicle Incident Record'), function () {
+              let vehicle_incident_record = frappe.model.get_new_doc("Vehicle Incident Record");
+              vehicle_incident_record.trip_sheet = frm.doc.name; // Link the current Trip Sheet              
+              // Redirect to the new Vehicle Incident Record
+              frappe.set_route("form", "Vehicle Incident Record", vehicle_incident_record.name);
+          }, __("Create"));
+      }
+  }
+
 });
