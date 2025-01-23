@@ -1,0 +1,84 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FC-{YY}-{####}",
+ "creation": "2025-01-23 13:06:13.346228",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "provider",
+  "card_no",
+  "column_break_nhyn",
+  "current_holder",
+  "issued_to_current_holder_on",
+  "section_break_xlnl",
+  "recharge_history"
+ ],
+ "fields": [
+  {
+   "fieldname": "provider",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Provider",
+   "options": "Fuel Card Provider",
+   "reqd": 1
+  },
+  {
+   "fieldname": "card_no",
+   "fieldtype": "Data",
+   "label": "Card No.",
+   "reqd": 1
+  },
+  {
+   "fieldname": "current_holder",
+   "fieldtype": "Link",
+   "label": "Current Holder",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "issued_to_current_holder_on",
+   "fieldtype": "Date",
+   "label": "Issued to Current Holder On"
+  },
+  {
+   "fieldname": "recharge_history",
+   "fieldtype": "Table",
+   "label": "Recharge History",
+   "options": "Recharge History"
+  },
+  {
+   "fieldname": "column_break_nhyn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_xlnl",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-23 14:39:31.388603",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Fuel Card",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}
