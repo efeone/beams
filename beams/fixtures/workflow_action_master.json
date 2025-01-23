@@ -2,6 +2,20 @@
  {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
+  "modified": "2025-01-23 11:09:40.835777",
+  "name": "Transfer",
+  "workflow_action_name": "Transfer"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
+  "modified": "2025-01-23 11:10:11.757399",
+  "name": "Return",
+  "workflow_action_name": "Return"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow Action Master",
   "modified": "2025-01-15 09:44:47.933959",
   "name": "Close",
   "workflow_action_name": "Close"
@@ -152,8 +166,8 @@
   "modified": "2024-10-15 10:12:10.454930",
   "name": "Review",
   "workflow_action_name": "Review"
-},
-{
+ },
+ {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
   "modified": "2025-01-22 16:56:02.799287",
@@ -166,8 +180,8 @@
   "modified": "2025-01-21 17:17:45.293764",
   "name": "Request for Review",
   "workflow_action_name": "Request for Review"
-},
-{
+ },
+ {
   "docstatus": 0,
   "doctype": "Workflow Action Master",
   "modified": "2025-01-22 16:56:48.003319",

@@ -2,11 +2,20 @@
  {
   "docstatus": 0,
   "doctype": "Workflow State",
-  "icon": "question-sign",
-  "modified": "2024-10-15 10:12:10.427741",
-  "name": "Pending",
+  "icon": "",
+  "modified": "2025-01-23 11:06:17.599294",
+  "name": "Transferred",
   "style": "",
-  "workflow_state_name": "Pending"
+  "workflow_state_name": "Transferred"
+ },
+ {
+  "docstatus": 0,
+  "doctype": "Workflow State",
+  "icon": "",
+  "modified": "2025-01-23 11:06:41.962164",
+  "name": "Returned",
+  "style": "",
+  "workflow_state_name": "Returned"
  },
  {
   "docstatus": 0,
@@ -223,8 +232,8 @@
   "name": "Pending",
   "style": "",
   "workflow_state_name": "Pending"
-},
-{
+ },
+ {
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
@@ -250,8 +259,8 @@
   "name": "Reviewed",
   "style": "",
   "workflow_state_name": "Reviewed"
-},
-{
+ },
+ {
   "docstatus": 0,
   "doctype": "Workflow State",
   "icon": "",
