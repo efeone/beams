@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:VD-{YY}-{####}",
+ "autoname": "field:document_name",
  "creation": "2025-01-22 16:38:52.623911",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -21,7 +21,8 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Document Name",
-   "reqd": 1
+   "reqd": 1,
+   "unique": 1
   },
   {
    "default": "0",
@@ -72,11 +73,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-22 17:25:06.314686",
+ "modified": "2025-01-23 09:37:09.050460",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Document",
- "naming_rule": "Expression",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
