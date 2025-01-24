@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:division",
+ "autoname": "format:{department} - {division}",
  "creation": "2025-01-23 15:24:52.064169",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -18,7 +18,8 @@
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "reqd": 1
   },
   {
    "fieldname": "template_title",
@@ -52,11 +53,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-23 16:12:26.841717",
+ "modified": "2025-01-24 12:58:49.533157",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
