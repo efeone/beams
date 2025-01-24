@@ -1521,13 +1521,6 @@ def get_job_requisition_custom_fields():
                 "depends_on": "eval:doc.request_for == 'Employee Replacement'"
             },
             {
-                "fieldname": "requested_by",
-                "label": "Requested By",
-                "fieldtype": "Link",
-                "options": "Employee",
-                "insert_after": "employee_left"
-            },
-            {
                 "fieldname": "interview",
                 "fieldtype": "Section Break",
                 "label": "Interview Details",
