@@ -31,5 +31,5 @@ class TechnicalRequest(Document):
         if required_from > required_to:
             frappe.throw(
                 msg=_("Required From cannot be after Required To."),
-                title=_("Validation Error")
+                title=_("Message")
             )
