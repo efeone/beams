@@ -15,7 +15,4 @@ frappe.ui.form.on("Visitor Pass", {
 
   }
 
-	// refresh(frm) {
-  //
-	// },
 });
