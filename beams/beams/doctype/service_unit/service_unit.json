@@ -1,0 +1,70 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:service_unit_name",
+ "creation": "2025-01-24 11:12:03.923791",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "service_unit_name",
+  "type",
+  "allow_appointment",
+  "allow_multiple_appointments"
+ ],
+ "fields": [
+  {
+   "fieldname": "service_unit_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Service Unit Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "\nMeeting Room\nGuest Room",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_appointment",
+   "fieldtype": "Check",
+   "label": "Allow Appointment"
+  },
+  {
+   "default": "\n",
+   "depends_on": "eval:doc.allow_appointment == 1",
+   "fieldname": "allow_multiple_appointments",
+   "fieldtype": "Check",
+   "label": "Allow Multiple Appointments"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-01-24 11:18:49.330174",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Service Unit",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
