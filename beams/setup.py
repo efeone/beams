@@ -360,10 +360,39 @@ def get_event_custom_fields():
                 "fieldtype": "Link",
                 "label": "Appraisal Reference",
                 "options": "Appraisal",
-                "insert_after": "status",
+                "insert_after": "status"
+            },
+            {
+                "fieldname": "assign_service_unit",
+                "fieldtype": "Check",
+                "label": "Assign Service Unit",
+                "insert_after": "add_video_conferencing"
+            },
+            {
+                "fieldname": "meeting_room",
+                "fieldtype": "Link",
+                "label": "Meeting Room",
+                "options": "Service Unit",
+                "depends_on": "eval:doc.assign_service_unit == 1",
+                "mandatory_depends_on": "eval:doc.assign_service_unit == 1",
+                "insert_after": "assign_service_unit"
+            },
+            {
+                "fieldname": "section_break_epd",
+                "fieldtype": "Section Break",
+                "label": " ",
+                "insert_after": "sunday"
+            },
+            {
+                "fieldname": "external_participants",
+                "fieldtype": "Table",
+                "label": "External Participants",
+                "options": "External Participants Detail",
+                "insert_after": "section_break_epd"
             }
         ]
     }
+
 
 def get_leave_application_custom_fields():
     '''
