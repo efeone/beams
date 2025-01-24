@@ -1,7 +1,6 @@
 frappe.ui.form.on('Budget', {
     division: function(frm) {
         frm.set_value('cost_center', null);
-        frm.set_value('department', null);
 
         if (frm.doc.division) {
             // Fetch cost center and department based on selected division
@@ -13,11 +12,8 @@ frappe.ui.form.on('Budget', {
                         if (cost_center) {
                             frm.set_value('cost_center', cost_center);
                         }
-                        if (department) {
-                            frm.set_value('department', department);
-                        }
                     } else {
-                        frappe.msgprint(__('No cost center or department found for the selected division.'));
+                        frappe.msgprint(__('No cost center found for the selected division.'));
                     }
                 });
         }
