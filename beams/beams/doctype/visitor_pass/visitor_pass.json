@@ -1,0 +1,112 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VS-{YY}-{#####}",
+ "creation": "2025-01-24 10:53:50.771157",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_nrae",
+  "inward_register",
+  "issued_date",
+  "issued_time",
+  "issued_to",
+  "column_break_eucm",
+  "expire_on",
+  "returned_date",
+  "returned_time",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_nrae",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Visitor Pass",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "inward_register",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inward Register ",
+   "options": "Inward Register",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "issued_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Issued Date",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "issued_time",
+   "fieldtype": "Time",
+   "in_list_view": 1,
+   "label": "Issued Time",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "inward_register.vistor_name",
+   "fieldname": "issued_to",
+   "fieldtype": "Data",
+   "label": "Issued To"
+  },
+  {
+   "fieldname": "expire_on",
+   "fieldtype": "Datetime",
+   "label": "Expire on "
+  },
+  {
+   "fieldname": "returned_date",
+   "fieldtype": "Date",
+   "label": "Returned Date "
+  },
+  {
+   "fieldname": "returned_time",
+   "fieldtype": "Time",
+   "label": "Returned Time "
+  },
+  {
+   "fieldname": "column_break_eucm",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-24 13:32:13.778424",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Visitor Pass",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
