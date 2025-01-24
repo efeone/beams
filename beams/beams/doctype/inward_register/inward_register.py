@@ -3,4 +3,6 @@
 
 import frappe
 from frappe.model.document import Document
- pass
+
+class FuelCard(Document):
+    pass  
