@@ -11,6 +11,7 @@
   "cost_center",
   "column_break_tabr",
   "posting_date",
+  "stock_entry",
   "section_break_rqhw",
   "items",
   "remarks",
@@ -67,12 +68,19 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "stock_entry",
+   "fieldtype": "Link",
+   "label": "Stock Entry",
+   "options": "Stock Entry",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 15:49:50.198242",
+ "modified": "2025-01-24 10:24:04.549004",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Makeup Consumption Entry",
