@@ -30,6 +30,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -114,7 +115,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 14:40:16.380805",
+ "modified": "2025-01-24 09:48:25.425153",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",

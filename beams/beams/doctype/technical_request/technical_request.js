@@ -27,6 +27,13 @@ frappe.ui.form.on('Technical Request', {
     workflow_state: function(frm) {
         // Trigger visibility logic when the workflow state changes
         toggle_reason_for_rejection_field(frm);
+    },
+    // Trigger validation when the "required_from" field is updated
+    required_from: function (frm) {
+        frm.call("validate_required_from_and_required_to");
+    },
+    required_to: function (frm) {
+        frm.call("validate_required_from_and_required_to");
     }
 });
 
