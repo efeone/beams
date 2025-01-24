@@ -75,3 +75,23 @@ def get_last_odometer(vehicle):
         return final_odometer or 0  # Return the final odometer or 0 if not found
     else:
         return 0  # Return 0 if no trip sheet exists for the vehicle
+
+
+
+
+
+# import frappe
+#
+# @frappe.whitelist()
+# def filter_unassigned_travel_requests(employee):
+#     # Fetch Travel Requests for the given employee with 'Draft' status and not linked to any Trip Sheet
+#     travel_requests = frappe.db.get_all(
+#         'Travel Request',
+#         filters={
+#             'employee': employee,
+#             'status': 'Draft',  # Only show Draft requests
+#             'trip_sheet': None  # Only show requests that are not already assigned to a Trip Sheet
+#         },
+#         fields=['name', 'status', 'employee']
+#     )
+#     return travel_requests
