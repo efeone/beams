@@ -1,0 +1,133 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:IR-{YY}-{####}",
+ "creation": "2025-01-24 11:45:37.638876",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_65yf",
+  "vistor_type",
+  "vistor_name",
+  "column_break_weuy",
+  "posting_date",
+  "posting_time",
+  "section_break_zgfs",
+  "received_by",
+  "purpose_of_visit",
+  "section_break_eufq",
+  "vehicles_keys",
+  "vehicle_key_remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_65yf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Inward Register",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vistor_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Vistor Type ",
+   "options": "Visitor Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vistor_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vistor Name ",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_weuy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_zgfs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "purpose_of_visit",
+   "fieldtype": "Small Text",
+   "label": "Purpose of Visit",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_eufq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "received_by",
+   "fieldtype": "Link",
+   "label": "Received By",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicles_keys",
+   "fieldtype": "Check",
+   "label": "Vehicle Key "
+  },
+  {
+   "depends_on": "eval:doc.vehicles_keys;",
+   "fieldname": "vehicle_key_remarks",
+   "fieldtype": "Small Text",
+   "label": "Vehicle Key Remarks ",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-24 12:32:56.666531",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Inward Register",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
