@@ -2,8 +2,8 @@ frappe.ui.form.on('Leave Application', {
     leave_type: function(frm) {
         validate_from_date(frm);
         if (frm.doc.leave_type) {
-            frappe.db.get_value('Leave Type', frm.doc.leave_type,['is_sick_leave', 'medical_leave_required'], function(value) {
-                if (value.is_sick_leave && frm.doc.from_date && frm.doc.to_date) {
+            frappe.db.get_value('Leave Type', frm.doc.leave_type,['is_proof_document', 'medical_leave_required'], function(value) {
+                if (value.is_proof_document && frm.doc.from_date && frm.doc.to_date) {
                     var duration = frappe.datetime.get_diff(frm.doc.to_date, frm.doc.from_date) + 1;
                     if (value.medical_leave_required && duration > value.medical_leave_required) {
                         frm.set_df_property('medical_certificate', 'hidden', false);
