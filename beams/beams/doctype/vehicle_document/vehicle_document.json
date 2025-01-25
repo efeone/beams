@@ -9,7 +9,6 @@
   "document_name",
   "send_reminder",
   "notification_details_section",
-  "notification_template",
   "reminder_before",
   "allow_repeat",
   "repeat_on",
@@ -29,13 +28,6 @@
    "fieldname": "send_reminder",
    "fieldtype": "Check",
    "label": "Send Reminder"
-  },
-  {
-   "depends_on": "eval:doc.send_reminder;",
-   "fieldname": "notification_template",
-   "fieldtype": "Link",
-   "label": "Notification Template",
-   "options": "Email Template"
   },
   {
    "depends_on": "eval:doc.send_reminder;",
@@ -73,7 +65,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-23 09:37:09.050460",
+ "modified": "2025-01-24 14:18:20.147624",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Document",
