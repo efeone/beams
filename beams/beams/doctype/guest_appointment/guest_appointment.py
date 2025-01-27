@@ -70,13 +70,13 @@ class GuestAppointment(Document):
             "name": self.name,
             "description": todo_message,
         })
-        
+
 @frappe.whitelist()
 def create_inward_register(guest_appointment):
     appointment = frappe.get_doc("Guest Appointment", guest_appointment)
 
     inward_register = frappe.new_doc("Inward Register")
-    inward_register.vistor_name = appointment.guest_name
+    inward_register.visitor_name = appointment.guest_name
     inward_register.received_by = appointment.received_by
     inward_register.purpose_of_visit = appointment.purpose_of_visit
     inward_register.insert(ignore_mandatory=True)
