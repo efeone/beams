@@ -1,5 +1,6 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
+
 frappe.ui.form.on('Trip Sheet', {
     starting_date_and_time: function(frm) {
         frm.call({
@@ -32,24 +33,57 @@ frappe.ui.form.on('Trip Sheet', {
             frm.set_value("initial_odometer_reading", null);
         }
     },
-    final_odometer_reading: function (frm) {
+    final_odometer_reading: function(frm) {
         frm.call("calculate_and_validate_fuel_data");
     },
-    fuel_consumed: function (frm) {
+    fuel_consumed: function(frm) {
         frm.call("calculate_and_validate_fuel_data");
     },
 
-    refresh: function (frm) {
-      // Check if the Trip Sheet is saved
-      if (!frm.is_new()) {
-          // Add "Vehicle Incident Record" button
-          frm.add_custom_button(__('Vehicle Incident Record'), function () {
-              let vehicle_incident_record = frappe.model.get_new_doc("Vehicle Incident Record");
-              vehicle_incident_record.trip_sheet = frm.doc.name; // Link the current Trip Sheet
-              // Redirect to the new Vehicle Incident Record
-              frappe.set_route("form", "Vehicle Incident Record", vehicle_incident_record.name);
-          }, __("Create"));
-      }
-  }
+    refresh: function(frm) {
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Vehicle Incident Record'), function() {
+                let vehicle_incident_record = frappe.model.get_new_doc("Vehicle Incident Record");
+                vehicle_incident_record.trip_sheet = frm.doc.name;
+                frappe.set_route("form", "Vehicle Incident Record", vehicle_incident_record.name);
+            }, __("Create"));
+        }
+    },
 
+    onload: function(frm) {
+        frm.set_query('transportation_requests', function() {
+            return {
+                filters: {
+                    name: ['not in', get_selected_requests('Transportation Request Details', 'transportation_request')]
+                }
+            };
+        });
+        frm.set_query('travel_requests', function() {
+            return {
+                filters: {
+                    name: ['not in', get_selected_requests('Employee Travel Request Details', 'employee_travel_request')]
+                }
+            };
+        });
+
+
+        function get_selected_requests(child_table, fieldname) {
+            let selected_requests = [];
+            frappe.call({
+                method: 'beams.beams.doctype.trip_sheet.trip_sheet.get_selected_requests',
+                args: {
+                    child_table: child_table,
+                    fieldname: fieldname
+                },
+                async: false,
+                callback: function(response) {
+                    if (response && response.message) {
+                        selected_requests = response.message;
+                    }
+                }
+            });
+
+            return selected_requests;
+        }
+    }
 });

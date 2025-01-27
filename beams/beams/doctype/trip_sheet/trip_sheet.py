@@ -47,9 +47,9 @@ class TripSheet(Document):
 
         # Calculate fuel consumption per km
         if self.fuel_consumed and self.fuel_consumed != 0 and self.distance_traveledkm:
-            self.fuel_consumption_per_km = self.distance_traveledkm / self.fuel_consumed
+            self.mileage = self.distance_traveledkm / self.fuel_consumed
         else:
-            self.fuel_consumption_per_km = 0
+            self.mileage = 0
 
 
 
@@ -75,3 +75,16 @@ def get_last_odometer(vehicle):
         return final_odometer or 0  # Return the final odometer or 0 if not found
     else:
         return 0  # Return 0 if no trip sheet exists for the vehicle
+
+@frappe.whitelist()
+def get_selected_requests(child_table, fieldname):
+    selected_requests = []
+
+    eligible_parents = frappe.db.get_all("Trip Sheet", {"docstatus":1}, pluck="name")
+    result = frappe.db.get_all(child_table, filters={"parent":["in", eligible_parents]}, fields=[fieldname])
+
+    for doc in result:
+        if doc.get(fieldname):
+            selected_requests.append(doc.get(fieldname))
+
+    return selected_requests
