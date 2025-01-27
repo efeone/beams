@@ -501,8 +501,13 @@ def get_department_custom_fields():
                 "reqd":1,
                 "unique":1,
                 "insert_after": "head_of_department"
+            },
+            {
+                "fieldname": "threshold_amount",
+                "fieldtype": "Float",
+                "label": "Threshold Amount",
+                "insert_after": "parent_department"
             }
-
         ]
     }
 
