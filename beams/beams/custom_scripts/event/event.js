@@ -101,8 +101,6 @@ frappe.ui.form.on('Event', {
                             message: __('The selected Service Unit is already assigned to another Event during this time. Please choose a different time or Service Unit.'),
                             indicator: 'red'
                         });
-                        // Prevent the document from being saved
-                        frappe.validated = false;
                     }
                 }
             });
