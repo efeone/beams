@@ -288,6 +288,9 @@ doc_events = {
                     "beams.beams.custom_scripts.event.event.validate_event_conflict",
                     "beams.beams.custom_scripts.event.event.validate_event_before_approval"
         ],
+    },
+    "Salary Slip": {
+        "on_submit": "beams.beams.custom_scripts.salary_slip.salary_slip.create_journal_entry"
     }
 }
 
