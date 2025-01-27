@@ -16,7 +16,7 @@
   "received_by",
   "purpose_of_visit",
   "section_break_eufq",
-  "vehicles_keys",
+  "vehicle_key",
   "vehicle_key_remarks",
   "amended_from"
  ],
@@ -90,23 +90,23 @@
    "reqd": 1
   },
   {
-   "default": "0",
-   "fieldname": "vehicles_keys",
-   "fieldtype": "Check",
-   "label": "Vehicle Key "
-  },
-  {
-   "depends_on": "eval:doc.vehicles_keys;",
+   "depends_on": "eval:doc.vehicle_key;",
    "fieldname": "vehicle_key_remarks",
    "fieldtype": "Small Text",
    "label": "Vehicle Key Remarks ",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.vehicle_key;"
+  },
+  {
+   "default": "0",
+   "fieldname": "vehicle_key",
+   "fieldtype": "Check",
+   "label": "Vehicle Key "
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-24 12:32:56.666531",
+ "modified": "2025-01-24 15:21:07.300465",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",
