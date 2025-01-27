@@ -78,11 +78,27 @@ def get_last_odometer(vehicle):
 
 @frappe.whitelist()
 def get_selected_requests(child_table, fieldname):
+    '''
+    Retrieve specific field values from a child table for submitted Trip Sheet documents.
+
+    This function collects values from the specified field in a child table where the parent
+    document belongs to the "Trip Sheet" doctype and is in the submitted state (docstatus=1).
+    The values are returned as a list.
+
+    Args:
+        child_table (str): The name of the child table to retrieve data from.
+        fieldname (str): The field in the child table whose values need to be fetched.
+    Returns:
+        list: A list of values from the specified field. If no matching records are found or the field is empty, an empty list is returned..
+    '''
     selected_requests = []
-
-    eligible_parents = frappe.db.get_all("Trip Sheet", {"docstatus":1}, pluck="name")
-    result = frappe.db.get_all(child_table, filters={"parent":["in", eligible_parents]}, fields=[fieldname])
-
+    eligible_parents = frappe.db.get_all("Trip Sheet", {"docstatus": 1}, pluck="name")
+    result = frappe.db.get_all(
+        child_table,
+        filters={"parent": ["in", eligible_parents]},
+        fields=[fieldname]
+    )
+    
     for doc in result:
         if doc.get(fieldname):
             selected_requests.append(doc.get(fieldname))
