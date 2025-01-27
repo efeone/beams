@@ -30,7 +30,7 @@
   "starting_date_and_time",
   "ending_date_and_time",
   "fuel_consumed",
-  "fuel_consumption_per_km",
+  "mileage",
   "amended_from"
  ],
  "fields": [
@@ -181,20 +181,20 @@
    "reqd": 1
   },
   {
-   "fieldname": "fuel_consumption_per_km",
-   "fieldtype": "Float",
-   "label": "Fuel Consumption per Km ",
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_anpp",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "mileage",
+   "fieldtype": "Float",
+   "label": "Mileage",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 14:44:47.923975",
+ "modified": "2025-01-27 15:57:44.019794",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
