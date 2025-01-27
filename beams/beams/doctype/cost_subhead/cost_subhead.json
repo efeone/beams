@@ -8,6 +8,7 @@
  "field_order": [
   "section_break_9os0",
   "cost_subhead",
+  "cost_head",
   "account"
  ],
  "fields": [
@@ -30,11 +31,18 @@
    "label": "Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "fieldname": "cost_head",
+   "fieldtype": "Link",
+   "label": "Cost Head",
+   "options": "Cost Head",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-27 10:26:55.945443",
+ "modified": "2025-01-27 11:03:53.549279",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Cost Subhead",
