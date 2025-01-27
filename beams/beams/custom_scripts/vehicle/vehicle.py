@@ -6,6 +6,22 @@ from frappe.email.doctype.email_account.email_account import EmailAccount
 
 @frappe.whitelist()
 def send_vehicle_document_reminders():
+
+    """
+    Sends email reminders for vehicle document expiry.
+
+    This method checks all vehicles and their associated documents to identify:
+    1. Documents that are due for a reminder based on the `reminder_before` field.
+    2.Documents that are overdue (past their expiry date).
+    It compiles the details into an HTML table and sends an email to all users with the "Admin" role.
+    Email includes:
+        - License Plate
+        - Model
+        - Document Name
+        - Expiry Date
+
+    Emails are sent only if there are documents that meet the criteria for reminders.
+    """
     # Fetch all Vehicle documents
     vehicles = frappe.get_all("Vehicle", fields=["name", "license_plate", "model"])
 
@@ -23,7 +39,6 @@ def send_vehicle_document_reminders():
 
                 # Calculate the reminder date
                 reminder_date = add_days(doc.expiry_date, -reminder_before)
-
                 # Check if today matches the reminder date or the document is overdue
                 if getdate(today()) == reminder_date or doc.expiry_date <= getdate(today()):
                     # Add details to the list
@@ -57,14 +72,10 @@ def send_vehicle_document_reminders():
                 </tbody>
             </table>
             """
-
+            
             # Get admin users
-            admin_users = get_users_with_role("Admin")
+            email_recipients = get_users_with_role("Admin")
 
-            # Filter only enabled admin users
-            email_recipients = [
-                user for user in admin_users if frappe.db.get_value("User", user, "enabled")
-            ]
 
             # Send email to all admin users
             if email_recipients:
