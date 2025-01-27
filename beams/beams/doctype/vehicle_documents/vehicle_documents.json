@@ -18,16 +18,18 @@
    "options": "Vehicle Document"
   },
   {
+   "default": "Today",
    "fieldname": "expiry_date",
    "fieldtype": "Date",
    "in_list_view": 1,
-   "label": "Expiry Date"
+   "label": "Expiry Date",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-23 11:23:17.744169",
+ "modified": "2025-01-27 14:05:20.746137",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Documents",
