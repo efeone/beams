@@ -12,6 +12,16 @@ class VisitorPass(Document):
     def validate(self):
         self.validate_issued_date_and_expire_on()
         self.validate_issued_date_and_returned_date()
+        self.validate_returned_date_and_returned_time()
+
+
+    def validate_returned_date_and_returned_time(self):
+            '''
+                Ensure  Returned Date and Time selection based on workflow state
+            '''
+            if self.workflow_state == 'Issued':
+                if not self.returned_date or not self.returned_time:
+                    frappe.throw(_('Please select an Returned Date and Time.'))
 
     @frappe.whitelist()
     def validate_issued_date_and_expire_on(self):
