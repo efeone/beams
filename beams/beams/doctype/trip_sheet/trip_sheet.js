@@ -53,18 +53,3 @@ frappe.ui.form.on('Trip Sheet', {
   }
 
 });
-
-
-
-// frappe.ui.form.on('Trip Sheet', {
-//     refresh: function(frm) {
-//         frm.fields_dict['travel_request'].get_query = function(doc) {
-//             return {
-//                 query: 'beams.beams.doctype.trip_sheet.trip_sheet.filter_unassigned_travel_requests',
-//                 filters: {
-//                     employee: frm.doc.employee  // Pass the employee to filter the Travel Requests
-//                 }
-//             };
-//         };
-//     }
-// });
