@@ -1,0 +1,146 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:OR-{YY}-{####}",
+ "creation": "2025-01-24 15:09:12.865393",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_amaj",
+  "inward_register",
+  "vistor_type",
+  "vistor_name",
+  "column_break_pghe",
+  "posting_date",
+  "posting_time",
+  "section_break_szqc",
+  "received_by",
+  "purpose_of_visit",
+  "vehicles_keys_handover",
+  "vehicle_key_remarks",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_amaj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Outward Register",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "inward_register",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inward Register",
+   "options": "Inward Register",
+   "reqd": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date ",
+   "reqd": 1
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time ",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "inward_register.vistor_type",
+   "fieldname": "vistor_type",
+   "fieldtype": "Link",
+   "label": "Vistor Type",
+   "options": "Visitor Type",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "inward_register.vistor_name",
+   "fieldname": "vistor_name",
+   "fieldtype": "Data",
+   "label": " Vistor Name",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_pghe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_szqc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "inward_register.purpose_of_visit",
+   "fieldname": "purpose_of_visit",
+   "fieldtype": "Small Text",
+   "label": "Purpose of Visit",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "inward_register.received_by",
+   "fieldname": "received_by",
+   "fieldtype": "Link",
+   "label": " Received By ",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fetch_from": "inward_register.vehicle_key",
+   "fieldname": "vehicles_keys_handover",
+   "fieldtype": "Check",
+   "label": "Vehicles Keys Handover",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "inward_register.vehicle_key_remarks",
+   "fieldname": "vehicle_key_remarks",
+   "fieldtype": "Small Text",
+   "label": "Vehicle Key Remarks ",
+   "mandatory_depends_on": "eval:doc.vehicle_key;",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-24 15:38:25.749164",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Outward Register",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
