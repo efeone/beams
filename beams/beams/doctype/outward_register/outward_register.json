@@ -8,8 +8,8 @@
  "field_order": [
   "section_break_amaj",
   "inward_register",
-  "vistor_type",
-  "vistor_name",
+  "visitor_type",
+  "visitor_name",
   "column_break_pghe",
   "posting_date",
   "posting_time",
@@ -59,23 +59,6 @@
    "reqd": 1
   },
   {
-   "fetch_from": "inward_register.vistor_type",
-   "fieldname": "vistor_type",
-   "fieldtype": "Link",
-   "label": "Vistor Type",
-   "options": "Visitor Type",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
-   "fetch_from": "inward_register.vistor_name",
-   "fieldname": "vistor_name",
-   "fieldtype": "Data",
-   "label": " Vistor Name",
-   "read_only": 1,
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_pghe",
    "fieldtype": "Column Break"
   },
@@ -114,12 +97,29 @@
    "label": "Vehicle Key Remarks ",
    "mandatory_depends_on": "eval:doc.vehicle_key;",
    "read_only": 1
+  },
+  {
+   "fetch_from": "inward_register.visitor_type",
+   "fieldname": "visitor_type",
+   "fieldtype": "Link",
+   "label": "Visitor Type",
+   "options": "Visitor Type",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "inward_register.visitor_name",
+   "fieldname": "visitor_name",
+   "fieldtype": "Data",
+   "label": " Visitor Name",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-24 15:38:25.749164",
+ "modified": "2025-01-27 11:21:00.644844",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",

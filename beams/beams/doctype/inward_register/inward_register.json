@@ -7,8 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_65yf",
-  "vistor_type",
-  "vistor_name",
+  "visitor_type",
+  "visitor_name",
   "column_break_weuy",
   "posting_date",
   "posting_time",
@@ -34,21 +34,6 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
-  },
-  {
-   "fieldname": "vistor_type",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Vistor Type ",
-   "options": "Visitor Type",
-   "reqd": 1
-  },
-  {
-   "fieldname": "vistor_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Vistor Name ",
-   "reqd": 1
   },
   {
    "default": "Today",
@@ -101,12 +86,27 @@
    "fieldname": "vehicle_key",
    "fieldtype": "Check",
    "label": "Vehicle Key "
+  },
+  {
+   "fieldname": "visitor_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Visitor Type ",
+   "options": "Visitor Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "visitor_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Visitor Name ",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-24 15:21:07.300465",
+ "modified": "2025-01-27 11:15:43.490320",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",
