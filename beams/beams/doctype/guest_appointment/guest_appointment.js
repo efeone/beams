@@ -25,9 +25,9 @@ frappe.ui.form.on('Guest Appointment', {
                     frappe.set_route('Form', 'Inward Register', r.message.name);
                 }
             }
-        });
-    }, __("Create"));
-}
+            });
+            },__("Create"));
+          }
 
-}
+    }
 });
