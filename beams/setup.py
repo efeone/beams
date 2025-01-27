@@ -389,6 +389,12 @@ def get_event_custom_fields():
                 "label": "External Participants",
                 "options": "External Participants Detail",
                 "insert_after": "section_break_epd"
+            },
+            {
+                "fieldname": "reason_for_rejection",
+                "fieldtype": "Small Text",
+                "label": "Reason for Rejection",
+                "insert_after": "repeat_this_event"
             }
         ]
     }
