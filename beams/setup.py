@@ -625,18 +625,28 @@ def get_budget_custom_fields():
         ],
         "Budget Account": [
             {
+                "fieldname": "cost_head",
+                "fieldtype": "Link",
+                "label": "Cost Head",
+                "options":"Cost Head",
+                "insert_before": "cost_subhead",
+                "in_list_view":1
+            },
+            {
                 "fieldname": "cost_subhead",
                 "fieldtype": "Link",
                 "label": "Cost Sub Head",
                 "options":"Cost Subhead",
-                "insert_before": "account"
+                "insert_after": "cost_head",
+                "in_list_view":1
             },
             {
                 "fieldname": "cost_category",
                 "fieldtype": "Link",
                 "label": "Cost Category",
                 "options":"Cost Category",
-                "insert_after": "account"
+                "insert_after": "account",
+                "in_list_view":1
             },
             {
                 "fieldname": "column_break_cd",

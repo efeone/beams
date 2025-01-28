@@ -5,13 +5,6 @@ frappe.ui.form.on('Budget Template', {
     department: function(frm) {
         let selected_department = frm.doc.department;
         if (selected_department) {
-            frm.fields_dict['budget_template_item'].grid.get_field('cost_sub_head').get_query = function(doc, cdt, cdn) {
-                return {
-                    filters: {
-                        department: selected_department
-                    }
-                };
-            };
             frm.set_query('division', function() {
                 return {
                     filters: {
@@ -20,10 +13,6 @@ frappe.ui.form.on('Budget Template', {
                 };
             });
         } else {
-            frm.fields_dict['budget_template_item'].grid.get_field('cost_sub_head').get_query = function(doc, cdt, cdn) {
-                return {};
-            };
-
             frm.set_query('division', function() {
                 return {};
             });

@@ -69,6 +69,7 @@ frappe.ui.form.on('Budget', {
 
                     budget_template_items.forEach(function(item) {
                         let row = frm.add_child('accounts');
+                        row.cost_head = item.cost_head
                         row.cost_subhead = item.cost_sub_head;
                         row.account = item.account;
                         row.cost_category = item.cost_category;
