@@ -345,7 +345,8 @@ override_doctype_dashboards = {
     'Sales Invoice': 'beams.beams.custom_scripts.sales_invoice_dashboard.sales_invoice_dashboard.get_data',
     'Sales Order': 'beams.beams.custom_scripts.sales_order_dashboard.sales_order_dashboard.get_data',
     'Employee':'beams.beams.custom_scripts.employee_dashboard.employee_dashboard.get_data',
-    'Job Applicant': 'beams.beams.custom_scripts.job_applicant.job_applicant_dashboard.get_data'
+    'Job Applicant': 'beams.beams.custom_scripts.job_applicant.job_applicant_dashboard.get_data',
+    'Project':'beams.beams.custom_scripts.project_dashboard.project_dashboard.get_data'
 }
 
 # exempt linked doctypes from being automatically cancelled
