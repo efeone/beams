@@ -291,6 +291,10 @@ doc_events = {
     },
     "Salary Slip": {
         "on_submit": "beams.beams.custom_scripts.salary_slip.salary_slip.create_journal_entry"
+    },
+
+    "Project": {
+         "on_update": "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion"
     }
 }
 
