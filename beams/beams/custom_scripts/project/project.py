@@ -70,6 +70,23 @@ def create_transportation_request(source_name, target_doc=None):
     }, target_doc)
     return transportation_request
 
+
+@frappe.whitelist()
+def create_equipment_request(source_name, target_doc=None):
+    """
+    Maps fields from the Equipment Request doctype to the Project doctype'.
+    """
+    equipment_request = get_mapped_doc("Project", source_name, {
+        "Project": {
+                "doctype": "Equipment Request",
+                "field_map": {
+                    "name": "project",
+                    "bureau": "bureau"
+                }
+            }
+    }, target_doc)
+    return equipment_request
+
 @frappe.whitelist()
 def create_technical_support_request(project_id, requirements):
     ''' Create Technical Request document '''

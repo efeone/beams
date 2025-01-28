@@ -292,7 +292,9 @@ def get_Project_custom_fields():
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
                 "options":"approved_budget",
-                "insert_after":"budget_expense_types"
+                "insert_after":"budget_expense_types",
+                "read_only": 1
+
             }
         ]
     }

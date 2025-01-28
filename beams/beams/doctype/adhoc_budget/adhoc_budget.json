@@ -146,13 +146,14 @@
    "default": "0",
    "fieldname": "generates_revenue",
    "fieldtype": "Check",
-   "label": "Generates Revenue"
+   "label": "Generates Revenue",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-14 14:25:27.931877",
+ "modified": "2025-01-28 12:43:05.529583",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",
