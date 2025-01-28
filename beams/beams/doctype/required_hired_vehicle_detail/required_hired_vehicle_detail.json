@@ -6,10 +6,10 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_iy51",
-  "amended_from",
   "vehicle_type",
   "no_of_vehicles",
-  "license_plates"
+  "license_plates",
+  "amended_from"
  ],
  "fields": [
   {
@@ -31,27 +31,31 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle Type",
-   "options": "Vehicle Type"
+   "options": "Vehicle Type",
+   "reqd": 1
   },
   {
    "allow_on_submit": 1,
    "fieldname": "license_plates",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "License Plate(s)"
+   "label": "License Plate(s)",
+   "reqd": 1
   },
   {
    "fieldname": "no_of_vehicles",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "No. of Vehicles"
+   "label": "No. of Vehicles",
+   "non_negative": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-21 15:07:05.956872",
+ "modified": "2025-01-28 15:26:40.256048",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Hired Vehicle Detail",
