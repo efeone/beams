@@ -83,23 +83,7 @@ frappe.ui.form.on('Budget', {
             frm.refresh_field('accounts');
         }
     },
-
-    refresh: function(frm) {
-        set_filters(frm);
-    }
 });
-
-// Function to apply filters in the cost subhead field in Budget Account
-function set_filters(frm) {
-    frm.set_query('cost_subhead', 'accounts', (doc, cdt, cdn) => {
-        var child = locals[cdt][cdn];
-        return {
-            filters: {
-                'department': frm.doc.department || ''
-            }
-        };
-    });
-}
 
 frappe.ui.form.on('Budget Account', {
     cost_subhead: function(frm, cdt, cdn) {
