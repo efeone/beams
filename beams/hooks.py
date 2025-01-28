@@ -279,6 +279,15 @@ doc_events = {
             "beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
             "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks"
         ]
+    },
+    "Event" :{
+        "on_update":[
+                    "beams.beams.custom_scripts.event.event.validate_reason_for_rejection"
+        ],
+        "validate":[
+                    "beams.beams.custom_scripts.event.event.validate_event_conflict",
+                    "beams.beams.custom_scripts.event.event.validate_event_before_approval"
+        ],
     }
 }
 
