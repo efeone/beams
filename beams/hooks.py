@@ -282,14 +282,12 @@ doc_events = {
     },
     "Event" :{
         "on_update":[
-                    "beams.beams.custom_scripts.event.event.set_status",
-                    "beams.beams.custom_scripts.event.event.set_workflowstate_pending",
                     "beams.beams.custom_scripts.event.event.validate_reason_for_rejection"
         ],
         "validate":[
                     "beams.beams.custom_scripts.event.event.validate_event_conflict",
                     "beams.beams.custom_scripts.event.event.validate_event_before_approval"
-        ]
+        ],
     }
 }
 

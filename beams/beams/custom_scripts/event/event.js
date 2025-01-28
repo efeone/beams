@@ -72,7 +72,7 @@ frappe.ui.form.on('Event', {
                 }))
             });
         }, 'Create'); // Add the button under the 'Create' group
-        
+
         if (frm.doc.meeting_room && frm.doc.starts_on && frm.doc.ends_on) {
             // Check for conflicting events with the selected meeting room and date range
             frappe.call({
@@ -90,6 +90,7 @@ frappe.ui.form.on('Event', {
                 },
                 callback: function (response) {
                     if (response.message && response.message.length > 0) {
+                        frm.dashboard.clear_headline()
                         frm.dashboard.set_headline(`The selected Meeting Room <b>${frm.doc.meeting_room}</b> is already assigned to another Event during this time.`, 'red')
                     }
                 }

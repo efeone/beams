@@ -14,24 +14,13 @@ def set_status(doc, method):
         doc.save()
 
 @frappe.whitelist()
-def set_workflowstate_pending(doc, method):
-    '''
-    checks if the document has a meeting room assigned and the
-    workflow state is "Draft". If true, it changes the workflow state to "Pending"
-    and saves the document.
-    '''
-    if doc.meeting_room and doc.workflow_state == 'Draft':
-        doc.workflow_state = "Pending"
-        doc.save()
-
-@frappe.whitelist()
 def validate_event_conflict(doc, method):
     '''
     checks for conflicting events in the same meeting room
     by comparing the event's start and end times. If another event exists
     in the same room during the selected time, it displays a warning message.
     '''
-    if doc.meeting_room and doc.starts_on and doc.ends_on:
+    if doc.meeting_room and doc.starts_on and doc.ends_on and doc.workflow_state == "Draft":
         conflicting_events = frappe.get_all("Event", filters={
             "meeting_room": doc.meeting_room,
             "starts_on": ["<=", doc.ends_on],
@@ -39,7 +28,7 @@ def validate_event_conflict(doc, method):
             "name": ["!=", doc.name]
         }, fields=["name", "starts_on", "ends_on"])
         if conflicting_events:
-            frappe.msgprint(_(f"The selected Service Unit <b>{doc.meeting_room}</b> is already assigned to another Event during this time."), title="Warning", indicator="red")
+            frappe.msgprint(_(f"The selected Service Unit <b>{doc.meeting_room}</b> is already assigned to another Event during this time. Send to Admin for Approval."), title="Warning", indicator="red")
 
 
 @frappe.whitelist()
