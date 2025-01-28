@@ -2,16 +2,6 @@ import frappe
 from frappe.model.document import Document
 from frappe import _
 
-@frappe.whitelist()
-def set_status(doc, method):
-    '''
-    checks if the workflow state of the document is "Rejected"
-    and the status is not already "Cancelled". If true, it sets the status to
-    "Cancelled" and saves the document.
-    '''
-    if doc.workflow_state == "Rejected" and doc.status != "Cancelled":
-        doc.status = "Cancelled"
-        doc.save()
 
 @frappe.whitelist()
 def validate_event_conflict(doc, method):
