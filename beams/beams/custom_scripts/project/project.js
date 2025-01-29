@@ -126,5 +126,14 @@ frappe.ui.form.on('Project', {
           });
           dialog.show();
         }, __("Create"));
+
+        // Add a button to the 'Project' form to create an External Resource Request
+        frm.add_custom_button("External Resource Request", function() {
+            frappe.new_doc("External Resource Request", {
+                project: frm.doc.name,  // Auto-fill Project
+                bureau: frm.doc.bureau  // Auto-fill Bureau (assuming it exists)
+            });
+        }, "Create");  // Group under "Create" button
+
      }
   });
