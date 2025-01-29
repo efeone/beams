@@ -152,10 +152,3 @@ def update_program_request_status_on_project_completion(doc, method):
             if program_request.workflow_state != "Closed":
                 program_request.workflow_state = "Closed"
                 program_request.save()  # Save the document
-                frappe.db.commit()  # Commit changes to the database
-
-                frappe.msgprint(f"Program Request {request['name']} has been updated to 'Closed' in the workflow.")
-                print(f"Program Request {request['name']} has been updated to 'Closed' in the workflow.")
-
-            else:
-                frappe.msgprint(f"Program Request {request['name']} is already in 'Closed' state.")
