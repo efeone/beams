@@ -19,6 +19,12 @@ frappe.ui.form.on("External Resource Request", {
 
     required_to(frm) {
         update_required_resources(frm, 'required_to');
+    },
+    required_from: function (frm) {
+        frm.call("validate_required_from_and_required_to");
+    },
+    required_to: function (frm) {
+        frm.call("validate_required_from_and_required_to");
     }
 });
 
