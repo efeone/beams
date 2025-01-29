@@ -5,6 +5,12 @@
             // Set the posting date to today if not already set
               frm.set_value('posting_date', frappe.datetime.nowdate());
           }
+          frm.call('get_fiscal_year_for_adhoc_budget',)
+          .then(r => {
+              if (r.message) {
+                frm.set_value('fiscal_year', r.message);
+                frm.refresh_field('fiscal_year');}
+          })
       },
       refresh: function(frm) {
           if (!frm.doc.posting_date) {

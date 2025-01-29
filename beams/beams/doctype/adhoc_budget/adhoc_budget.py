@@ -4,7 +4,7 @@ from frappe.desk.form.assign_to import add as add_assign
 from frappe.model.document import Document
 from frappe.utils.user import get_users_with_role
 from frappe.utils import getdate
-
+from erpnext.accounts.utils import get_fiscal_year
 
 
 class AdhocBudget(Document):
@@ -172,3 +172,11 @@ class AdhocBudget(Document):
                 msg=_("Start Date cannot be after End Date."),
                 title=_("Validation Error")
             )
+
+    @frappe.whitelist()
+    def get_fiscal_year_for_adhoc_budget(self):
+        """
+        Fetches the current fiscal year name.
+        """
+        fiscal_year = get_fiscal_year()["name"]
+        return fiscal_year
