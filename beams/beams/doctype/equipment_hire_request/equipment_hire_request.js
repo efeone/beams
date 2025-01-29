@@ -20,5 +20,11 @@ frappe.ui.form.on("Equipment Hire Request", {
                 frappe.set_route("form", "Asset Movement", asset_movement.name); // Redirect to the new Asset Movement form
             }, __("Create"));
         }
+    },
+    required_from: function (frm) {
+        frm.call("validate_required_from_and_required_to");
+    },
+    required_to: function (frm) {
+        frm.call("validate_required_from_and_required_to");
     }
 });

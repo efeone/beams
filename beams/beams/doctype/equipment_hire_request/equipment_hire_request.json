@@ -41,6 +41,7 @@
    "options": "Project"
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
@@ -90,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-21 15:40:28.875040",
+ "modified": "2025-01-29 09:42:02.363503",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Hire Request",
