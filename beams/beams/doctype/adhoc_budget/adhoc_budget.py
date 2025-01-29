@@ -3,6 +3,9 @@ from frappe import _
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.model.document import Document
 from frappe.utils.user import get_users_with_role
+from frappe.utils import getdate
+
+
 
 class AdhocBudget(Document):
 
@@ -134,11 +137,12 @@ class AdhocBudget(Document):
         """
         Validate the 'expected_revenue' field in the Adhoc Budget.
         """
-        if not self.expected_revenue:
-            frappe.throw(_("Expected Revenue is required."))
+        if self.generates_revenue == 1:
+            if not self.expected_revenue:
+                frappe.throw(_("Expected Revenue is required."))
 
-        if  not self.expected_revenue > 0:
-            frappe.throw(_("Expected Revenue should be greater than zero."))
+            if  not self.expected_revenue > 0:
+                frappe.throw(_("Expected Revenue should be greater than zero."))
 
     def update_project_budget_on_approval(self):
         """
@@ -152,4 +156,19 @@ class AdhocBudget(Document):
                 new_approved_budget = current_approved_budget + self.total_budget_amount
                 project_doc.approved_budget = new_approved_budget
                 project_doc.save()
-                
+
+    @frappe.whitelist()
+    def validate_start_date_and_end_dates(self):
+        """
+        Validates that start_date and end_date are properly set and checks
+        if start_date is not later than end_date.
+        """
+        if not self.expected_start_date or not self.expected_end_date:
+            return
+        expected_start_date = getdate(self.expected_start_date)
+        expected_end_date = getdate(self.expected_end_date)
+        if expected_start_date  > expected_end_date:
+            frappe.throw(
+                msg=_("Start Date cannot be after End Date."),
+                title=_("Validation Error")
+            )

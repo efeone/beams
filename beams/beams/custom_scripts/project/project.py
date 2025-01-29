@@ -3,6 +3,7 @@ from frappe.model.mapper import get_mapped_doc
 import json
 from frappe import _
 from frappe.utils import nowdate
+from erpnext.accounts.utils import get_fiscal_year
 
 @frappe.whitelist()
 def create_adhoc_budget(source_name, target_doc=None):
@@ -11,6 +12,7 @@ def create_adhoc_budget(source_name, target_doc=None):
     selected values from the 'budget_expense_types' field into the child table 'Budget Expense'.
     """
     project_doc = frappe.get_doc('Project', source_name)
+    fiscal_year = get_fiscal_year()["name"]
     adhoc_budget = get_mapped_doc("Project", source_name, {
         "Project": {
                 "doctype": "Adhoc Budget",
@@ -22,7 +24,8 @@ def create_adhoc_budget(source_name, target_doc=None):
                 }
             }
     }, target_doc)
-
+    if fiscal_year:
+        adhoc_budget.fiscal_year = fiscal_year
     for expense_type in project_doc.budget_expense_types:
         adhoc_budget.append('budget_expense', {
             'budget_expense_type': expense_type.budget_expense_type

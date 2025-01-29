@@ -53,12 +53,21 @@
 
           // Refresh the field to apply the filter
           frm.fields_dict['budget_expense'].grid.refresh_field('budget_expense_type');
+      },
+      expected_start_date: function (frm) {
+          frm.call("validate_start_date_and_end_dates");
+      },
+      expected_end_date: function (frm) {
+          frm.call("validate_start_date_and_end_dates");
       }
   });
 
   frappe.ui.form.on('Budget Expense', {
       budget_amount: function(frm, cdt, cdn) {
           calculate_total_budget_amount(frm);
+      },
+      budget_expense_remove: function(frm) {
+        calculate_total_budget_amount(frm);
       }
   });
 
