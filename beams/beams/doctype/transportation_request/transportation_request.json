@@ -45,19 +45,24 @@
   {
    "fieldname": "required_on",
    "fieldtype": "Datetime",
-   "label": "Required On"
+   "label": "Required On",
+   "reqd": 1
   },
   {
    "fieldname": "from",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "From",
-   "options": "Location"
+   "options": "Location",
+   "reqd": 1
   },
   {
    "fieldname": "to",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "To",
-   "options": "Location"
+   "options": "Location",
+   "reqd": 1
   },
   {
    "fieldname": "noof_travallers",
@@ -117,7 +122,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 10:31:51.454439",
+ "modified": "2025-01-29 11:21:41.638300",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",
