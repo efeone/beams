@@ -33,21 +33,9 @@ frappe.ui.form.on('Equipment Request', {
         }
     },
     required_from: function (frm) {
-        validate_dates(frm);
+        frm.call("validate_required_from_and_required_to");
     },
     required_to: function (frm) {
-        validate_dates(frm);
-    },
-    validate: function (frm) {
-        validate_dates(frm);
+        frm.call("validate_required_from_and_required_to");
     }
 });
-
-// Helper function to validate dates
-function validate_dates(frm) {
-    if (frm.doc.required_from && frm.doc.required_to) {
-        if (frm.doc.required_from > frm.doc.required_to) {
-            frappe.throw(__('The "Required From" date cannot be after the "Required To" date.'));
-        }
-    }
-}
