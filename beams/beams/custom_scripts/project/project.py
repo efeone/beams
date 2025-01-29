@@ -130,3 +130,25 @@ def create_technical_support_request(project_id, requirements):
         frappe.msgprint(_("Technical Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
 
     return
+
+@frappe.whitelist()
+def update_program_request_status_on_project_completion(doc, method):
+    """
+    Update related Program Request workflow state to 'Closed' when the Project status becomes 'Completed'.
+    """
+    if doc.status == "Completed":
+        # Fetch all related Program Requests linked to this Project
+        program_requests = frappe.get_all(
+            "Program Request",
+            filters={"project": doc.name, "workflow_state": ("!=", "Closed")},  # Exclude already "Closed" state
+            fields=["name"]
+        )
+
+        # Update the workflow state of each Program Request to 'Closed'
+        for request in program_requests:
+            program_request = frappe.get_doc("Program Request", request["name"])
+
+            # Update the workflow state to 'Closed' if not already in 'Closed'
+            if program_request.workflow_state != "Closed":
+                program_request.workflow_state = "Closed"
+                program_request.save()  # Save the document
