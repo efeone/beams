@@ -7,7 +7,6 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_ed5d",
-  "amended_from",
   "project",
   "bureau",
   "column_break_fhpe",
@@ -15,7 +14,8 @@
   "required_from",
   "required_to",
   "section_break_ihzk",
-  "required_resources"
+  "required_resources",
+  "amended_from"
  ],
  "fields": [
   {
@@ -40,6 +40,7 @@
    "options": "Project"
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -47,6 +48,7 @@
    "options": "Bureau"
   },
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -56,13 +58,15 @@
    "fieldname": "required_from",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Required From"
+   "label": "Required From",
+   "reqd": 1
   },
   {
    "fieldname": "required_to",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Required To "
+   "label": "Required To ",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ihzk",
@@ -72,7 +76,8 @@
    "fieldname": "required_resources",
    "fieldtype": "Table",
    "label": "Required Resources",
-   "options": "External Resources Detail"
+   "options": "External Resources Detail",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_fhpe",
@@ -82,7 +87,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-18 13:59:53.829300",
+ "modified": "2025-01-29 15:23:11.280247",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Resource Request",
