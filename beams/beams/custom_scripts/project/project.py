@@ -7,10 +7,10 @@ from erpnext.accounts.utils import get_fiscal_year
 
 @frappe.whitelist()
 def create_adhoc_budget(source_name, target_doc=None):
-    """
+    '''
     Maps fields from the Project doctype to the Adhoc Budget doctype, including the
     selected values from the 'budget_expense_types' field into the child table 'Budget Expense'.
-    """
+    '''
     project_doc = frappe.get_doc('Project', source_name)
     fiscal_year = get_fiscal_year()["name"]
     adhoc_budget = get_mapped_doc("Project", source_name, {
@@ -33,10 +33,10 @@ def create_adhoc_budget(source_name, target_doc=None):
     return adhoc_budget
 
 @frappe.whitelist()
-def create_equipment_hire_request(source_name, target_doc=None):
-    """
+def map_equipment_hire_request(source_name, target_doc=None):
+    '''
     Maps fields from the Project doctype to the Equipment Hire Request doctype.
-    """
+    '''
     from frappe.model.mapper import get_mapped_doc
 
     return get_mapped_doc(
@@ -56,12 +56,34 @@ def create_equipment_hire_request(source_name, target_doc=None):
         target_doc
     )
 
+@frappe.whitelist()
+def map_equipment_request(source_name, target_doc=None):
+    '''
+    Maps fields from the Project doctype to the Equipment Request doctype.
+    '''
+
+    return get_mapped_doc(
+        "Project",
+        source_name,
+        {
+            "Project": {
+                "doctype": "Equipment Hire Request",
+                "field_map": {
+                    "name": "project",
+                    "expected_start_date": "required_from",
+                    "expected_end_date": "required_to",
+                    "bureau": "bureau"
+                }
+            }
+        },
+        target_doc
+    )
 
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
-    """
+    '''
     Maps fields from the Project doctype to the Transportation Request doctype'.
-    """
+    '''
     transportation_request = get_mapped_doc("Project", source_name, {
         "Project": {
                 "doctype": "Transportation Request",
@@ -73,22 +95,110 @@ def create_transportation_request(source_name, target_doc=None):
     }, target_doc)
     return transportation_request
 
+@frappe.whitelist()
+def get_available_quantities(items, bureau=None):
+    '''
+    Get available quantities for items at locations matching the bureau.
+    Returns a dictionary with item codes as keys and their available quantities as values.
+    '''
+    if isinstance(items, str):
+        items = json.loads(items)
+
+    available_quantities = {}
+
+    if bureau:
+        location = frappe.db.get_value("Bureau", bureau, "location")
+
+        if location:
+            for item in items:
+                total_quantity = frappe.db.count(
+                    "Asset",
+                    filters={
+                        "item_code": item,
+                        "bureau": bureau,
+                        "location": location
+                    }
+                ) or 0
+                available_quantities[item] = total_quantity
+        else:
+            for item in items:
+                available_quantities[item] = 0
+
+    else:
+
+        available_quantities = {item: 0 for item in items}
+
+    return available_quantities
 
 @frappe.whitelist()
-def create_equipment_request(source_name, target_doc=None):
-    """
-    Maps fields from the Equipment Request doctype to the Project doctype'.
-    """
-    equipment_request = get_mapped_doc("Project", source_name, {
-        "Project": {
-                "doctype": "Equipment Request",
-                "field_map": {
-                    "name": "project",
-                    "bureau": "bureau"
-                }
+def create_equipment_request(source_name, equipment_data, required_from, required_to):
+    '''Creates an Equipment Request for a project with multiple items.'''
+    equipment_data = json.loads(equipment_data)
+
+    if not frappe.db.exists('Project', source_name):
+        frappe.throw(_("Invalid Project ID: {0}").format(source_name))
+
+    request_doc = frappe.get_doc({
+        'doctype': "Equipment Request",
+        'project': source_name,
+        'required_from': required_from,
+        'required_to': required_to,
+        'required_equipments': [
+            {
+                'required_item': data['item'],
+                'quantity': data['quantity'],
+                'available_item_quantity': data['available_quantity']
             }
-    }, target_doc)
-    return equipment_request
+            for data in equipment_data
+        ]
+    })
+
+    request_doc.insert(ignore_permissions=True)
+    project_name = frappe.db.get_value('Project', source_name, 'project_name')
+    frappe.msgprint(_("Equipment Request created successfully for project: {}.").format(project_name),indicator="green",alert=1)
+
+    return True
+
+@frappe.whitelist()
+def create_equipment_hire_request(source_name, equipment_data, required_from, required_to):
+    '''Creates an Equipment Hire Request for a project with multiple items.'''
+    equipment_data = json.loads(equipment_data)
+
+    if not frappe.db.exists('Project', source_name):
+        frappe.throw(_("Invalid Project ID: {0}").format(source_name))
+
+    hire_doc = frappe.get_doc({
+        'doctype': "Equipment Hire Request",
+        'project': source_name,
+        'required_from': required_from,
+        'required_to': required_to,
+        'required_items': [
+            {
+                'item': data['item'],
+                'quantity': data['required_quantity']
+            }
+            for data in equipment_data
+        ]
+    })
+
+    hire_doc.insert(ignore_permissions=True)
+    project_name = frappe.db.get_value('Project', source_name, 'project_name')
+    frappe.msgprint(_("Equipment Hire Request created successfully for project: {}.").format(project_name),indicator="green",alert=1)
+
+    return True
+
+@frappe.whitelist()
+def get_assets_by_bureau(bureau):
+    '''Fetch item codes of Assets linked to the given Bureau.'''
+    if not bureau:
+        return []
+
+    return frappe.get_all(
+        "Asset",
+        filters={"bureau": bureau},
+        pluck="item_code",
+        distinct=True
+    ) or []
 
 @frappe.whitelist()
 def create_technical_support_request(project_id, requirements):

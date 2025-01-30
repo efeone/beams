@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "required_item",
+  "available_item_quantity",
   "quantity"
  ],
  "fields": [
@@ -22,15 +23,22 @@
    "fieldname": "quantity",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Quantity",
+   "label": "Required Quantity",
    "non_negative": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "available_item_quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Available Quantity",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-29 09:44:16.088141",
+ "modified": "2025-01-30 11:29:58.783994",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
