@@ -153,7 +153,8 @@ class AdhocBudget(Document):
             if frappe.db.exists('Project', project):
                 project_doc = frappe.get_doc('Project', project)
                 current_approved_budget = project_doc.approved_budget or 0
-                project_doc.approved_budget = self.total_budget_amount
+                new_approved_budget = current_approved_budget + self.total_budget_amount
+                project_doc.approved_budget = new_approved_budget
                 project_doc.save()
 
     @frappe.whitelist()
