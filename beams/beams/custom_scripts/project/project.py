@@ -155,3 +155,25 @@ def update_program_request_status_on_project_completion(doc, method):
             if program_request.workflow_state != "Closed":
                 program_request.workflow_state = "Closed"
                 program_request.save()  # Save the document
+
+@frappe.whitelist()
+def validate_employee_assignment(doc, method):
+    """
+    Validate that an employee is not assigned to multiple projects during the same time period.
+    """
+    for row in doc.allocated_resources_details:
+        if not row.employee:
+            continue
+        overlapping_projects = frappe.get_all(
+            "Allocated Resource Detail",
+            filters={
+                "employee": row.employee,
+                "parent": ["!=", doc.name],
+                "assigned_from": ["<=", row.assigned_to],
+                "assigned_to": [">=", row.assigned_from]
+            },
+            pluck="parent"
+        )
+        if overlapping_projects:
+            employee_name = frappe.get_value("Employee", row.employee, "employee_name")
+            frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another project ({', '.join(overlapping_projects)}) within the same time period.")

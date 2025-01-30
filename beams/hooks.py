@@ -294,7 +294,8 @@ doc_events = {
     },
 
     "Project": {
-         "on_update": "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion"
+         "on_update": "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion",
+         "validate":"beams.beams.custom_scripts.project.project.validate_employee_assignment"
     }
 }
 
