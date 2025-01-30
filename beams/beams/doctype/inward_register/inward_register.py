@@ -19,7 +19,7 @@ class InwardRegister(Document):
 	    if self.vehicle_key:
 	        driver_users = get_users_with_role("Driver")
 	        if driver_users:
-	            description = f"Vehicle key handed over in Inward for {self.vistor_name}."
+	            description = f"Vehicle key handed over in Inward for {self.visitor_name}."
 	            if not frappe.db.exists('ToDo', {
 	                'reference_name': self.name,
 	                'reference_type': 'Inward Register',
