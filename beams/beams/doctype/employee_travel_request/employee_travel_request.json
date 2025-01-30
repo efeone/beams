@@ -111,7 +111,8 @@
   {
    "fieldname": "total_days",
    "fieldtype": "Float",
-   "label": "Total Days "
+   "label": "Total Days ",
+   "read_only": 1
   },
   {
    "fieldname": "source",
@@ -207,7 +208,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-23 11:25:45.768338",
+ "modified": "2025-01-30 13:03:14.377232",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
