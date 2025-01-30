@@ -3,6 +3,7 @@
 
 import frappe
 from frappe.model.document import Document
+from frappe.utils import date_diff, today,getdate
 import json
 
 
@@ -12,6 +13,10 @@ class EmployeeTravelRequest(Document):
         if self.workflow_state == "Rejected" and not self.reason_for_rejection:
             frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
+    def validate(self):
+        self.validate_dates()
+        self.calculate_total_days()
+
     def before_save(self):
         if not self.requested_by:
             return
@@ -20,6 +25,16 @@ class EmployeeTravelRequest(Document):
         batta_policy = get_batta_policy(self.requested_by)
         if batta_policy:
             self.batta_policy = batta_policy.get("name")
+    def validate_dates(self):
+        if self.start_date and self.end_date:
+            if self.start_date > self.end_date:
+                frappe.throw("End Date cannot be earlier than Start Date.")
+                if self.start_date < today():
+                    frappe.throw("Start Date cannot be in the past.")
+
+    def calculate_total_days(self):
+        if self.start_date and self.end_date:
+            self.total_days = date_diff(self.end_date, self.start_date) 
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):

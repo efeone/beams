@@ -14,21 +14,19 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Remarks",
-   "reqd": 1
+   "label": "Remarks"
   },
   {
    "fieldname": "document",
    "fieldtype": "Attach",
    "in_list_view": 1,
-   "label": "Document",
-   "reqd": 1
+   "label": "Document"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-21 16:07:23.243521",
+ "modified": "2025-01-30 11:07:25.369841",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Reference Document",
