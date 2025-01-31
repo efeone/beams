@@ -2,6 +2,9 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Trip Sheet', {
+    posting_date:function (frm){
+        frm.call("validate_posting_date");
+      },
     starting_date_and_time: function(frm) {
         frm.call({
             method: "validate_start_datetime_and_end_datetime",
@@ -41,16 +44,23 @@ frappe.ui.form.on('Trip Sheet', {
     },
 
     refresh: function(frm) {
-        if (!frm.is_new()) {
-            frm.add_custom_button(__('Vehicle Incident Record'), function() {
-                let vehicle_incident_record = frappe.model.get_new_doc("Vehicle Incident Record");
-                vehicle_incident_record.trip_sheet = frm.doc.name;
-                frappe.set_route("form", "Vehicle Incident Record", vehicle_incident_record.name);
-            }, __("Create"));
-        }
-    },
-
-    onload: function(frm) {
+     if (!frm.is_new()) {
+         frm.add_custom_button(__('Vehicle Incident Record'), function() {
+             frappe.call({
+                 method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
+                 args: {
+                     trip_sheet: frm.doc.name
+                 },
+                 callback: function(r) {
+                     if (r.message) {
+                         frappe.set_route("form", "Vehicle Incident Record", r.message);
+                     }
+                 }
+             });
+         }, __("Create"));
+     }
+ },
+   onload: function(frm) {
         frm.set_query('transportation_requests', function() {
             return {
                 filters: {
