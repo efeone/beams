@@ -4,6 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.utils import today
 
 class MakeupConsumptionEntry(Document):
 
@@ -52,3 +53,7 @@ class MakeupConsumptionEntry(Document):
             if stock_entry.docstatus == 1:  # 1 means Submitted
                 stock_entry.cancel()
                 frappe.msgprint(_("Linked Stock Entry {0} has been canceled.").format(self.stock_entry), alert=True)
+
+    def validate(self):
+        if self.posting_date != today():
+            frappe.throw("Posting Date must be today's date.")
