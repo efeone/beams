@@ -1,7 +1,14 @@
 frappe.ui.form.on('Budget', {
-    division: function(frm) {
+    refresh: function (frm) {
+        set_filters(frm);
+        if (!frm.is_new()) {
+            frm.add_custom_button('Open Budget Tool', () => {
+                frappe.set_route('Form', 'Budget Tool', 'Budget Tool');
+            });
+        }
+    },
+    division: function (frm) {
         frm.set_value('cost_center', null);
-
         if (frm.doc.division) {
             // Fetch cost center and department based on selected division
             frappe.db.get_value('Division', { 'name': frm.doc.division }, ['cost_center', 'department'])
@@ -20,7 +27,7 @@ frappe.ui.form.on('Budget', {
 
         // Apply filter to the budget_template field based on the selected division
         if (frm.doc.division) {
-            frm.set_query('budget_template', function() {
+            frm.set_query('budget_template', function () {
                 return {
                     filters: {
                         division: frm.doc.division
@@ -29,17 +36,16 @@ frappe.ui.form.on('Budget', {
             });
         } else {
             // Clear the filter if no division is selected
-            frm.set_query('budget_template', function() {
+            frm.set_query('budget_template', function () {
                 return {};
             });
         }
     },
-
-    department: function(frm) {
+    department: function (frm) {
         // Check if a department is selected
         if (frm.doc.department) {
             // Apply filter to the division field based on the selected department
-            frm.set_query('division', function() {
+            frm.set_query('division', function () {
                 return {
                     filters: {
                         department: frm.doc.department
@@ -48,13 +54,12 @@ frappe.ui.form.on('Budget', {
             });
         } else {
             // Clear the filter if no department is selected
-            frm.set_query('division', function() {
+            frm.set_query('division', function () {
                 return {};
             });
         }
     },
-
-    budget_template: function(frm) {
+    budget_template: function (frm) {
         if (frm.doc.budget_template) {
             frappe.call({
                 method: 'frappe.client.get',
@@ -62,12 +67,12 @@ frappe.ui.form.on('Budget', {
                     doctype: 'Budget Template',
                     name: frm.doc.budget_template
                 },
-                callback: function(response) {
+                callback: function (response) {
                     let budget_template_items = response.message.budget_template_item || [];
 
                     frm.clear_table('accounts');
 
-                    budget_template_items.forEach(function(item) {
+                    budget_template_items.forEach(function (item) {
                         let row = frm.add_child('accounts');
                         row.cost_head = item.cost_head
                         row.cost_subhead = item.cost_sub_head;
@@ -82,10 +87,6 @@ frappe.ui.form.on('Budget', {
             frm.clear_table('accounts');
             frm.refresh_field('accounts');
         }
-    },
-
-    refresh: function(frm) {
-        set_filters(frm);
     }
 });
 
@@ -102,11 +103,11 @@ function set_filters(frm) {
 }
 
 frappe.ui.form.on('Budget Account', {
-    cost_subhead: function(frm, cdt, cdn) {
+    cost_subhead: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         if (row.cost_subhead) {
             // Fetch the related account and department from the selected cost_subhead
-            frappe.db.get_value('Cost Subhead', row.cost_subhead, ['account', 'department'], function(value) {
+            frappe.db.get_value('Cost Subhead', row.cost_subhead, ['account', 'department'], function (value) {
                 if (value) {
                     // Set the account in the child table
                     frappe.model.set_value(cdt, cdn, 'account', value.account);
@@ -116,52 +117,52 @@ frappe.ui.form.on('Budget Account', {
             });
         }
     },
-    budget_amount: function(frm, cdt, cdn) {
+    budget_amount: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         if (row.equal_monthly_distribution && row.budget_amount) {
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
         }
     },
-    equal_monthly_distribution: function(frm, cdt, cdn) {
+    equal_monthly_distribution: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         if (row.equal_monthly_distribution && row.budget_amount) {
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
         }
     },
-    january: function(frm, cdt, cdn) {
+    january: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    february: function(frm, cdt, cdn) {
+    february: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    march: function(frm, cdt, cdn) {
+    march: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    april: function(frm, cdt, cdn) {
+    april: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    may: function(frm, cdt, cdn) {
+    may: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    june: function(frm, cdt, cdn) {
+    june: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    july: function(frm, cdt, cdn) {
+    july: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    august: function(frm, cdt, cdn) {
+    august: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    september: function(frm, cdt, cdn) {
+    september: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    october: function(frm, cdt, cdn) {
+    october: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    november: function(frm, cdt, cdn) {
+    november: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     },
-    december: function(frm, cdt, cdn) {
+    december: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
     }
 });

@@ -1,0 +1,67 @@
+{
+ "actions": [],
+ "allow_copy": 1,
+ "allow_rename": 1,
+ "creation": "2025-01-30 21:01:16.925533",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "budget",
+  "column_break_vmmp",
+  "has_unsaved_changes",
+  "section_break_ybxp",
+  "budget_html"
+ ],
+ "fields": [
+  {
+   "fieldname": "budget",
+   "fieldtype": "Link",
+   "label": "Budget",
+   "options": "Budget"
+  },
+  {
+   "fieldname": "section_break_ybxp",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "budget_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "default": "0",
+   "fieldname": "has_unsaved_changes",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Has Unsaved Changes",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vmmp",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-01-30 23:13:53.552763",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Budget Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
