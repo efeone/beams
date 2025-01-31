@@ -3,12 +3,15 @@
 import frappe
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import today
+from frappe import _
 
 
 class TransportationRequest(Document):
+    def before_save(self):
+        self.validate_posting_date()
 
     def on_cancel(self):
-        # Validate that "Reason for Rejection" is filled if the status is "Rejected"
         if self.workflow_state == "Rejected" and not self.reason_for_rejection:
             frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
@@ -20,9 +23,15 @@ class TransportationRequest(Document):
         Calculate the total number of rows in the "Vehicles" child table
         and update the "No. of Own Vehicles" field.
         '''
-        # Always calculate and update the value regardless of the state
+
         total_vehicles = len(self.vehicles or [])
         self.no_of_own_vehicles = total_vehicles
+        
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))
 
 
 @frappe.whitelist()
