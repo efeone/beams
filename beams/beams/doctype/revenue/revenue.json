@@ -1,0 +1,137 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{cost_center}{project}/{fiscal_year}/{###}",
+ "creation": "2025-01-29 09:40:07.549966",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_epzm",
+  "revenue_against",
+  "company",
+  "cost_center",
+  "project",
+  "fiscal_year",
+  "column_break_wemo",
+  "department",
+  "division",
+  "region",
+  "section_break",
+  "revenue_accounts",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_epzm",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "revenue_against",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Revenue Against",
+   "options": "Cost Center\nProject",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.revenue_against == 'Cost Center'",
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "mandatory_depends_on": "eval:doc.revenue_against == 'Cost Center'",
+   "options": "Cost Center"
+  },
+  {
+   "depends_on": "eval:doc.revenue_against == 'Project'",
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "mandatory_depends_on": "eval:doc.revenue_against == 'Project'",
+   "options": "Project"
+  },
+  {
+   "fieldname": "fiscal_year",
+   "fieldtype": "Link",
+   "label": "Fiscal Year",
+   "options": "Fiscal Year",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Region"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "division",
+   "fieldtype": "Link",
+   "label": "Division",
+   "options": "Division"
+  },
+  {
+   "fieldname": "column_break_wemo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "revenue_accounts",
+   "fieldtype": "Table",
+   "label": "Revenue Accounts",
+   "options": "Revenue Account",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Revenue",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-01-31 15:04:20.076305",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Revenue",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
