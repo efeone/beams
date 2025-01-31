@@ -7,7 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "document",
-  "expiry_date"
+  "reference_no",
+  "expiry_date",
+  "remarks"
  ],
  "fields": [
   {
@@ -15,7 +17,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Document",
-   "options": "Vehicle Document"
+   "options": "Vehicle Document",
+   "reqd": 1
   },
   {
    "default": "Today",
@@ -24,12 +27,26 @@
    "in_list_view": 1,
    "label": "Expiry Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "reference_no",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Reference No",
+   "non_negative": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Remarks"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-27 14:05:20.746137",
+ "modified": "2025-01-31 12:28:36.819061",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Documents",

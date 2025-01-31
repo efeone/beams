@@ -3179,6 +3179,14 @@ def get_property_setters():
             "property": "reqd",
             "property_type": "Check",
             "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Vehicle",
+            "field_name": "insurance_details",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value": 1
         }
     ]
 
