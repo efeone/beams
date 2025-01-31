@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Pradan Budget</title>
+    <script type="text/javascript">
+        $(".allownumeric").on("keypress keyup blur", function (event) {
+            $(this).val($(this).val().replace(/[^\d].+/, ""));
+            if ((event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
+
+        $(".budget_notes").on("input", function (event) {
+            cur_frm.set_value('has_unsaved_changes', 1);
+        });
+
+        function calculate_totals(row) {
+            cur_frm.set_value('has_unsaved_changes', 1);
+            // Year wise budget validation
+            var month_inputs = document.querySelectorAll('.month_input');
+            var total_budget_cells = document.querySelectorAll('.total_budget');
+            var row_count = total_budget_cells.length || 0;
+
+            var total_budget = 0;
+            for (var i = row * 12; i < (row + 1) * 12; i++) {
+                var month_value = parseFloat(month_inputs[i].innerHTML) || 0;
+                total_budget += month_value;
+            }
+            total_budget_cells[row].innerText = total_budget;
+        }
+
+        function clear_cell_value(cell) {
+            if (cell.innerHTML === '0') {
+                cell.innerHTML = '';
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="tableFixHead">
+        <table id="data-table" class="div1">
+            <thead>
+                <tr>
+                    <th class="text-center">
+                        No
+                    </th>
+                    {% for column in columns %}
+                    {% if column == 'Cost Description' %}
+                    <th style="width: 200px !important; max-width: 200px !important;">Cost Description</th>
+                    {% else %}
+                    <th>{{column}}</th>
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% set table_row = {'id': 0} %}
+                {% for row in data %}
+                <tr>
+                    <td class="text-center">{{loop.index}}</td>
+                    {% for col in row %}
+                    {% if col.primary %}
+                    {% if col.ref_link %}
+                    <td><a href="{{col.ref_link}}" target="_blank">{{col.value}}</a></td>
+                    {% else %}
+                    <td>{{col.value}}</td>
+                    {% endif %}
+                    {% else %}
+                    {% if col.read_only %}
+                    {% if col.class_name %}
+                    <td class="{{ col.class_name }}">{{col.value}}</td>
+                    {% else %}
+                    <td>{{col.value}}</td>
+                    {% endif %}
+                    {% else %}
+                    {% if col.type == 'text' %}
+                    {% if col.class_name %}
+                    <td class="{{ col.class_name }}" contenteditable="true">{{col.value}}</td>
+                    {% else %}
+                    <td contenteditable="true">{{col.value}}</td>
+                    {% endif %}
+                    {% endif %}
+                    {% if col.type == 'number' %}
+                    {% if col.class_name %}
+                    <td class="allownumeric {{ col.class_name }}" contenteditable="true"
+                        oninput="calculate_totals({{table_row.id}})" onclick=clear_cell_value(this)
+                        onfocus=clear_cell_value(this)>{{col.value}}</td>
+                    {% else %}
+                    <td class="allownumeric" contenteditable="true" oninput="calculate_totals({{table_row.id}})"
+                        onclick=clear_cell_value(this) onfocus=clear_cell_value(this)>{{col.value}}</td>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                </tr>
+                {% if table_row.update({'id': table_row.id + 1}) %} {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+        <br><br>
+    </div>
+</body>
+
+</html>

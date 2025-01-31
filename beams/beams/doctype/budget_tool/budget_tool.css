@@ -1,0 +1,107 @@
+.tableFixHead {
+    max-height: 500px;
+    overflow-y: scroll;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+.div1 {
+    height: 80px;
+    width: 100%;
+    overflow: scroll;
+    border: 1px solid #c0c6cc !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    table-layout: fixed;
+    font-family: arial, sans-serif;
+    font-size: 12px !important;
+    margin: 0;
+}
+
+.div1 th {
+    position: sticky;
+    top: 0;
+    background: white !important;
+    font-weight: bold;
+    border: 1px solid #c0c6cc !important;
+    border-collapse: separate !important;
+    min-width: 100px;
+    width: 100px;
+    max-width: 110px;
+    word-wrap: break-word !important;
+    padding-left: 5px;
+}
+
+.div1 td {
+    border: 1px solid #c0c6cc !important;
+    border-collapse: separate !important;
+    word-wrap: break-word !important;
+    min-width: 100px;
+    width: 100px;
+    max-width: 110px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.div1 th:nth-child(1),
+.div1 td:nth-child(1) {
+    position: sticky;
+    left: 0;
+    width: 35px !important;
+    min-width: 35px !important;
+    max-width: 35px !important;
+    background: #ffffff;
+}
+
+.div1 th:nth-child(2),
+.div1 td:nth-child(2) {
+    position: sticky;
+    left: 35px;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    background: #ffffff;
+}
+
+.div1 th:nth-child(3),
+.div1 td:nth-child(3) {
+    position: sticky;
+    left: 185px;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    background: #ffffff;
+}
+
+.div1 th:nth-child(4),
+.div1 td:nth-child(4) {
+    position: sticky;
+    left: 335px;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    background: #ffffff;
+}
+
+.div1 th:nth-child(5),
+.div1 td:nth-child(5) {
+    position: sticky;
+    left: 485px;
+    width: 150px !important;
+    min-width: 150px !important;
+    max-width: 150px !important;
+    background: #ffffff;
+}
+
+.div1 th:nth-child(1),
+.div1 th:nth-child(2),
+.div1 th:nth-child(3),
+.div1 th:nth-child(4),
+.div1 th:nth-child(5) {
+    z-index: 1;
+}
+
+.saveBtn {
+    background-color: #000000 !important;
+    color: white !important;
+}
