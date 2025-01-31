@@ -29,7 +29,8 @@
    "fetch_from": "employee.first_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
-   "label": "Full Name "
+   "label": "Employee Name",
+   "read_only": 1
   },
   {
    "default": "Today",
@@ -53,7 +54,8 @@
   {
    "fieldname": "total_amount",
    "fieldtype": "Currency",
-   "label": "Total Amount"
+   "label": "Total Amount",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_imvy",
@@ -77,7 +79,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-22 14:35:43.757509",
+ "modified": "2025-01-31 10:56:57.949795",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Award Record",
