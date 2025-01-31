@@ -4,6 +4,14 @@
 frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
+        // Show the 'Asset Movement' button only if the document is submitted (docstatus == 1) and approved
+        if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
+            frm.add_custom_button(__('Asset Movement'), function () {
+                let asset_movement = frappe.model.get_new_doc("Asset Movement");
+                asset_movement.posting_date = frm.doc.posting_date; // Set posting date from the current document
+                frappe.set_route("form", "Asset Movement", asset_movement.name); // Redirect to the new Asset Movement form
+            }, __("Create"));
+        }
     },
     bureau: function (frm) {
         set_item_query(frm)

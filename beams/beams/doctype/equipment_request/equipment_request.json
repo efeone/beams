@@ -15,7 +15,8 @@
   "required_to",
   "section_break_mztz",
   "required_equipments",
-  "amended_from"
+  "amended_from",
+  "reason_for_rejection"
  ],
  "fields": [
   {
@@ -78,12 +79,18 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-29 11:05:30.542836",
+ "modified": "2025-01-31 10:39:23.412156",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",

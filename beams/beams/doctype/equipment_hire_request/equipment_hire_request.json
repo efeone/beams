@@ -15,9 +15,7 @@
   "required_from",
   "required_to",
   "section_break_ozsg",
-  "required_items",
-  "section_break_tmmn",
-  "reason_for_rejection"
+  "required_items"
  ],
  "fields": [
   {
@@ -76,22 +74,12 @@
    "fieldtype": "Table",
    "label": "Required Items ",
    "options": "Required Hire Items Detail"
-  },
-  {
-   "fieldname": "section_break_tmmn",
-   "fieldtype": "Section Break"
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "reason_for_rejection",
-   "fieldtype": "Small Text",
-   "label": "Reason for Rejection"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-29 09:42:02.363503",
+ "modified": "2025-01-31 11:00:37.894591",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Hire Request",
