@@ -4,11 +4,15 @@
 import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate
+from frappe.utils import today
 from frappe import _
 
 class EquipmentRequest(Document):
     def validate(self):
         self.validate_required_from_and_required_to()
+
+    def before_save(self):
+        self.validate_posting_date()
 
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
@@ -26,3 +30,8 @@ class EquipmentRequest(Document):
                 msg=_('The "Required From" date cannot be after the "Required To" date.'),
                 title=_('Validation Error')
             )
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))

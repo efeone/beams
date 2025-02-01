@@ -28,5 +28,8 @@ frappe.ui.form.on('Guest Appointment', {
         });
         }, __("Create"));
         }
-      }
+      },
+      posting_date:function (frm){
+        frm.call("validate_posting_date");
+      }      
 });

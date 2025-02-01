@@ -21,6 +21,9 @@ frappe.ui.form.on('Equipment Request', {
     },
     required_to: function (frm) {
         frm.call("validate_required_from_and_required_to");
+    },
+    posting_date:function (frm){
+      frm.call("validate_posting_date");
     }
 });
 
