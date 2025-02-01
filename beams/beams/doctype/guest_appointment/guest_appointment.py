@@ -5,12 +5,17 @@ import frappe
 from frappe.model.document import Document
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils import today, add_days
+from frappe.utils import today
+from frappe import _
 
 class GuestAppointment(Document):
     def on_update_after_submit(self):
         self.validate_employee_availability()
         if self.workflow_state == "Approved":
             self.send_appointment_notifications()
+
+    def before_save(self):
+        self.validate_posting_date()
 
     def validate_employee_availability(self):
         '''
@@ -70,6 +75,13 @@ class GuestAppointment(Document):
             "name": self.name,
             "description": todo_message,
         })
+        
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))
+
 
 @frappe.whitelist()
 def create_inward_register(guest_appointment):
