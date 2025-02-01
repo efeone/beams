@@ -2,6 +2,8 @@
 # For license information, please see license.txt
 import frappe
 from frappe.model.document import Document
+from frappe.utils import today
+from frappe import _
 
 class VehicleHireRequest(Document):
     def on_submit(self):
@@ -9,6 +11,9 @@ class VehicleHireRequest(Document):
 
     def on_cancel(self):
         self.update_hired_vehicles_on_cancel()
+
+    def before_save(self):
+        self.validate_posting_date()
 
     def update_hired_vehicles_on_submit(self):
         '''
@@ -40,3 +45,9 @@ class VehicleHireRequest(Document):
                 "no_of_hired_vehicles",
                 0
             )
+
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))

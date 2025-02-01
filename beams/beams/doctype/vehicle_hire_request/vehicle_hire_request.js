@@ -8,4 +8,7 @@ frappe.ui.form.on("Vehicle Hire Request", {
     }, __("Create"));
 
 	},
+	posting_date:function (frm){
+	frm.call("validate_posting_date");
+}
 });
