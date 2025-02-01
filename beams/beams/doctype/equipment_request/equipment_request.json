@@ -27,7 +27,8 @@
    "fieldname": "project",
    "fieldtype": "Link",
    "label": "Project",
-   "options": "Project"
+   "options": "Project",
+   "reqd": 1
   },
   {
    "fetch_from": "project.bureau",
@@ -90,7 +91,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-31 10:39:23.412156",
+ "modified": "2025-02-01 13:23:41.358161",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",
