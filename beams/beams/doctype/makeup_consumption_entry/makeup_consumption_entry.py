@@ -4,7 +4,7 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
-from frappe.utils import today
+from frappe.utils import today , getdate
 
 class MakeupConsumptionEntry(Document):
 
@@ -22,6 +22,11 @@ class MakeupConsumptionEntry(Document):
         # Create a new Stock Entry
         stock_entry = frappe.new_doc("Stock Entry")
         stock_entry.stock_entry_type = "Material Issue"
+
+        # Set the posting date from Makeup Consumption Entry
+        stock_entry.posting_date = self.posting_date
+        stock_entry.set("set_posting_time", 1) 
+
 
         # Add items from Makeup Consumption Entry to Stock Entry
         for item in self.items:
@@ -55,5 +60,5 @@ class MakeupConsumptionEntry(Document):
                 frappe.msgprint(_("Linked Stock Entry {0} has been canceled.").format(self.stock_entry), alert=True)
 
     def validate(self):
-        if self.posting_date != today():
-            frappe.throw("Posting Date must be today's date.")
+        if getdate(self.posting_date) > getdate(today()):
+            frappe.throw("Posting Date cannot be a future date.")
