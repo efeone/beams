@@ -51,7 +51,7 @@ def after_install():
     create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
     create_custom_fields(get_vehicle_custom_fields(),ignore_validate=True)
-
+    create_custom_fields(get_interview_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -114,6 +114,7 @@ def before_uninstall():
     delete_custom_fields(get_Payroll_Settings_custom_fields())
     delete_custom_fields(get_asset_custom_fields())
     delete_custom_fields(get_vehicle_custom_fields())
+    delete_custom_fields(get_interview_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -502,12 +503,20 @@ def get_department_custom_fields():
                 "insert_after": "department_name"
             },
             {
+                "fieldname": "head_of_department_name",
+                "fieldtype": "Data",
+                "label": "Head Of Department(Name)",
+                "insert_after": "head_of_department",
+                "fetch_from": "head_of_department.employee_name",
+                "read_only": 1
+            },
+            {
                 "fieldname": "abbreviation",
                 "fieldtype": "Data",
                 "label": "Abbreviation",
                 "reqd":1,
                 "unique":1,
-                "insert_after": "head_of_department"
+                "insert_after": "head_of_department_name"
             },
             {
                 "fieldname": "threshold_amount",
@@ -1429,6 +1438,23 @@ def get_interview_round_custom_fields():
                 "label": "Interview Questions",
                 "options":"Interview Questions",
                 "insert_after":"expected_skill_set"
+            }
+        ]
+    }
+
+def get_interview_custom_fields():
+    '''
+    Custom fields that need to be added to the Interview Doctype
+    '''
+    return {
+        "Interview": [
+            {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "options": "Department",
+                "label": "Department",
+                "insert_after": "job_applicant",
+                "fetch_from": "job_applicant.department"
             }
         ]
     }
@@ -3186,7 +3212,15 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Section Break",
             "value": 1
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Interview",
+            "field_name": "resume_link",
+            "property": "hidden",
+            "property_type": "",
+            "value": 1
+        },
     ]
 
 def get_material_request_custom_fields():
