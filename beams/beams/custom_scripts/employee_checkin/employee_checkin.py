@@ -14,7 +14,7 @@ def handle_employee_checkin_out(doc, method):
     # Fetch Compensatory Leave Type
     compensatory_leave_type = frappe.db.get_single_value("Beams HR Settings", "compensatory_leave_type")
     if not compensatory_leave_type:
-        frappe.throw("Compensatory Leave Type is not configured in Beams HR Settings.")
+        return
 
     # Parse time from the Employee Checkin log
     doc_time = datetime.strptime(doc.time, "%Y-%m-%d %H:%M:%S") if isinstance(doc.time, str) else doc.time
