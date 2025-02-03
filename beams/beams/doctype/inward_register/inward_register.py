@@ -5,10 +5,13 @@ from frappe.model.document import Document
 from frappe.utils import nowdate, nowtime
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils import today
+from frappe import _
 
 
 class InwardRegister(Document):
-
+	def before_save(self):
+		self.validate_posting_date()
 
 
 	def on_submit(self, method=None):
@@ -31,3 +34,8 @@ class InwardRegister(Document):
 	                    "name": self.name,
 	                    "description": description
 	                })
+	@frappe.whitelist()
+	def validate_posting_date(self):
+		if self.posting_date:
+			if self.posting_date > today():
+				frappe.throw(_("Posting Date cannot be set after today's date."))

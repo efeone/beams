@@ -9,12 +9,12 @@
   "section_break_ue5d",
   "trip_sheet",
   "offense_type",
-  "employee",
-  "employee_name",
-  "amended_from",
+  "driver",
+  "driver_name",
   "column_break_hwrj",
   "posting_date",
-  "offense_date_and_time"
+  "offense_date_and_time",
+  "amended_from"
  ],
  "fields": [
   {
@@ -51,7 +51,8 @@
    "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
-   "label": "Posting Date "
+   "label": "Posting Date ",
+   "reqd": 1
   },
   {
    "fieldname": "offense_date_and_time",
@@ -60,27 +61,30 @@
    "reqd": 1
   },
   {
-   "fieldname": "employee",
+   "fieldname": "column_break_hwrj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "trip_sheet.driver",
+   "fieldname": "driver",
    "fieldtype": "Link",
-   "label": "Employee",
-   "options": "Employee",
+   "label": "Driver",
+   "options": "Driver",
    "reqd": 1
   },
   {
-   "fetch_from": "employee.employee_name",
-   "fieldname": "employee_name",
+   "fetch_from": "driver.full_name",
+   "fieldname": "driver_name",
    "fieldtype": "Data",
-   "label": "Employee Name"
-  },
-  {
-   "fieldname": "column_break_hwrj",
-   "fieldtype": "Column Break"
+   "label": "Driver Name",
+   "read_only": 1,
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-23 10:59:07.444716",
+ "modified": "2025-01-31 15:12:22.481381",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",

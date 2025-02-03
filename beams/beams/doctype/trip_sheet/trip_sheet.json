@@ -10,7 +10,7 @@
   "driver",
   "vehicle",
   "column_break_abgb",
-  "date",
+  "posting_date",
   "section_break_ziua",
   "references_column",
   "travel_requests",
@@ -62,14 +62,6 @@
    "in_list_view": 1,
    "label": " Vehicle",
    "options": "Vehicle",
-   "reqd": 1
-  },
-  {
-   "default": "Today",
-   "fieldname": "date",
-   "fieldtype": "Date",
-   "in_list_view": 1,
-   "label": "Date",
    "reqd": 1
   },
   {
@@ -166,19 +158,18 @@
    "fieldname": "final_odometer_reading",
    "fieldtype": "Int",
    "label": "Final Odometer Reading",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.docstatus==\"Saved\" "
   },
   {
    "fieldname": "distance_traveledkm",
    "fieldtype": "Float",
    "label": "Distance Traveled(Km)",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "fuel_consumed",
    "fieldtype": "Float",
-   "label": "Fuel Consumed",
-   "reqd": 1
+   "label": "Fuel Consumed"
   },
   {
    "fieldname": "column_break_anpp",
@@ -188,13 +179,21 @@
    "fieldname": "mileage",
    "fieldtype": "Float",
    "label": "Mileage",
+   "read_only": 1
+  },
+  {
+   "default": "Today",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-27 15:57:44.019794",
+ "modified": "2025-01-31 13:52:37.720123",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
