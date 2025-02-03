@@ -5,6 +5,10 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import date_diff, today,getdate
 import json
+from frappe.utils import get_url_to_form
+from frappe.utils import today
+from frappe import _
+
 
 
 class EmployeeTravelRequest(Document):
@@ -18,6 +22,7 @@ class EmployeeTravelRequest(Document):
         self.calculate_total_days()
 
     def before_save(self):
+        self.validate_posting_date()
         if not self.requested_by:
             return
 
@@ -34,7 +39,34 @@ class EmployeeTravelRequest(Document):
 
     def calculate_total_days(self):
         if self.start_date and self.end_date:
-            self.total_days = date_diff(self.end_date, self.start_date) 
+            self.total_days = date_diff(self.end_date, self.start_date)
+
+    def on_update_after_submit(self):
+        """
+        Create an Attendance Regularization record in 'Draft' when mark_attendance is checked.
+        """
+        if self.mark_attendance == 1 and self.workflow_state == "Approved":
+                attn_reg = frappe.new_doc("Attendance Request")
+                attn_reg.employee = self.requested_by
+                attn_reg.reason = "On Duty"
+                attn_reg.from_date = self.start_date
+                attn_reg.to_date = self.end_date
+                attn_reg.explanation = "From Travel Request: {}".format(self.name)
+                attn_reg.insert()
+                self.db_set("attendance_request", attn_reg.name)
+                frappe.msgprint(
+                    'Attendance Request Created: <a href="{0}">{1}</a>'.format(
+                        get_url_to_form(attn_reg.doctype, attn_reg.name), attn_reg.name
+                    ),
+                    alert=True, indicator="green"
+                )
+
+
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):
@@ -60,11 +92,12 @@ def filter_room_criteria(batta_policy_name):
     '''
     Fetch and return the room criteria for the given Batta Policy.
     '''
-
-    # Fetch the Room Criteria based on the parent
-    room_criteria_records = frappe.db.get_all('Room Criteria Table', filters={'parent': batta_policy_name}, pluck='room_criteria')
-    if room_criteria_records:
-        return room_criteria_records
+    if  batta_policy_name:
+        room_criteria_records = frappe.db.get_all('Room Criteria Table', filters={'parent': batta_policy_name}, pluck='room_criteria')
+        if room_criteria_records:
+            return room_criteria_records
+        else:
+            return []
     else:
         return []
 

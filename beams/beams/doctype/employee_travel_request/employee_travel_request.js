@@ -23,7 +23,7 @@ frappe.ui.form.on('Employee Travel Request', {
     },
 
     requested_by: function (frm) {
-      
+
         // Fetch the Batta Policy for the selected employee
         frappe.call({
             method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
@@ -38,6 +38,9 @@ frappe.ui.form.on('Employee Travel Request', {
                         set_room_criteria_filter(frm)
                     }
                 }
+                else {
+                  frm.set_value('batta_policy', '');
+              }
             },
         });
     },
@@ -46,26 +49,31 @@ frappe.ui.form.on('Employee Travel Request', {
     },
     batta_policy: function(frm) {
       set_mode_of_travel_filter(frm)
+    },
+    posting_date:function (frm){
+      frm.call("validate_posting_date");
     }
 });
 
 function set_room_criteria_filter(frm) {
-  frappe.call({
-      method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_room_criteria",
-      args: {
-        batta_policy_name: frm.doc.batta_policy
-      },
-      callback: function (filter_response) {
-          let room_criteria = filter_response.message || [];
-          frm.set_query("room_criteria", function() {
-            return {
-              filters: {
-                name: ["in", room_criteria]
-              }
-            }
-          })
-      },
-  });
+  if (frm.doc.batta_policy){
+      frappe.call({
+          method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_room_criteria",
+          args: {
+            batta_policy_name: frm.doc.batta_policy
+          },
+          callback: function (filter_response) {
+              let room_criteria = filter_response.message || [];
+              frm.set_query("room_criteria", function() {
+                return {
+                  filters: {
+                    name: ["in", room_criteria]
+                  }
+                }
+              })
+          },
+      });
+    }
 }
 
 function set_mode_of_travel_filter(frm) {
