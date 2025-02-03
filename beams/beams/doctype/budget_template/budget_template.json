@@ -53,7 +53,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-24 12:58:49.533157",
+ "modified": "2025-02-03 16:06:00.882855",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",
@@ -75,5 +75,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "template_title"
 }

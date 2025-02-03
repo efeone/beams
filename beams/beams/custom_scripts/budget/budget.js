@@ -7,59 +7,27 @@ frappe.ui.form.on('Budget', {
             });
         }
     },
-    division: function (frm) {
-        frm.set_value('cost_center', null);
-        if (frm.doc.division) {
-            // Fetch cost center and department based on selected division
-            frappe.db.get_value('Division', { 'name': frm.doc.division }, ['cost_center', 'department'])
-                .then(r => {
-                    if (r && r.message) {
-                        const { cost_center, department } = r.message;
-
-                        if (cost_center) {
-                            frm.set_value('cost_center', cost_center);
-                        }
-                    } else {
-                        frappe.msgprint(__('No cost center found for the selected division.'));
-                    }
-                });
-        }
-
-        // Apply filter to the budget_template field based on the selected division
-        if (frm.doc.division) {
-            frm.set_query('budget_template', function () {
-                return {
-                    filters: {
-                        division: frm.doc.division
-                    }
-                };
-            });
-        } else {
-            // Clear the filter if no division is selected
-            frm.set_query('budget_template', function () {
-                return {};
-            });
+    department: function (frm) {
+        set_filters(frm);
+        if (!frm.doc.department) {
+            frm.set_value('division', null)
         }
     },
-    department: function (frm) {
-        // Check if a department is selected
-        if (frm.doc.department) {
-            // Apply filter to the division field based on the selected department
-            frm.set_query('division', function () {
-                return {
-                    filters: {
-                        department: frm.doc.department
-                    }
-                };
+    division: function (frm) {
+        set_filters(frm);
+        if (frm.doc.division) {
+            // Fetch cost center based on selected division
+            frappe.db.get_value('Division', frm.doc.division, 'cost_center').then(r => {
+                frm.set_value('cost_center', r.message.cost_center);
             });
-        } else {
-            // Clear the filter if no department is selected
-            frm.set_query('division', function () {
-                return {};
-            });
+        }
+        else {
+            frm.set_value('cost_center', null);
+            frm.set_value('budget_template', null);
         }
     },
     budget_template: function (frm) {
+        frm.clear_table('accounts');
         if (frm.doc.budget_template) {
             frappe.call({
                 method: 'frappe.client.get',
@@ -69,9 +37,6 @@ frappe.ui.form.on('Budget', {
                 },
                 callback: function (response) {
                     let budget_template_items = response.message.budget_template_item || [];
-
-                    frm.clear_table('accounts');
-
                     budget_template_items.forEach(function (item) {
                         let row = frm.add_child('accounts');
                         row.cost_head = item.cost_head
@@ -79,12 +44,10 @@ frappe.ui.form.on('Budget', {
                         row.account = item.account;
                         row.cost_category = item.cost_category;
                     });
-
                     frm.refresh_field('accounts');
                 }
             });
         } else {
-            frm.clear_table('accounts');
             frm.refresh_field('accounts');
         }
     }
@@ -92,11 +55,17 @@ frappe.ui.form.on('Budget', {
 
 // Function to apply filters in the cost subhead field in Budget Account
 function set_filters(frm) {
-    frm.set_query('cost_subhead', 'accounts', (doc, cdt, cdn) => {
-        var child = locals[cdt][cdn];
+    frm.set_query('division', function () {
         return {
             filters: {
-                'department': frm.doc.department || ''
+                department: frm.doc.department
+            }
+        };
+    });
+    frm.set_query('budget_template', function () {
+        return {
+            filters: {
+                division: frm.doc.division
             }
         };
     });
@@ -106,15 +75,10 @@ frappe.ui.form.on('Budget Account', {
     cost_subhead: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
         if (row.cost_subhead) {
-            // Fetch the related account and department from the selected cost_subhead
-            frappe.db.get_value('Cost Subhead', row.cost_subhead, ['account', 'department'], function (value) {
-                if (value) {
-                    // Set the account in the child table
-                    frappe.model.set_value(cdt, cdn, 'account', value.account);
-                    // Set the department in the parent Budget form
-                    frm.set_value('department', value.department);
-                }
-            });
+            // Fetch the related account from the selected cost_subhead
+            frappe.db.get_value('Cost Subhead', row.cost_sub_head, 'account').then(r => {
+                frappe.model.set_value(cdt, cdn, 'account', r.message.account);
+            })
         }
     },
     budget_amount: function (frm, cdt, cdn) {
@@ -169,7 +133,6 @@ frappe.ui.form.on('Budget Account', {
 
 function calculate_budget_amount(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
-
     // Calculate the total of all monthly amounts
     let total =
         (row.january || 0) +
