@@ -38,6 +38,9 @@ frappe.ui.form.on("Budget Tool", {
     has_unsaved_changes: function (frm) {
         make_buttons(frm);
     },
+    add_row: function (frm) {
+        show_add_row_popup(frm);
+    }
 });
 
 function set_budget_html(frm, budget) {
@@ -53,6 +56,7 @@ function set_budget_html(frm, budget) {
                 var data = r.message;
                 $(frm.fields_dict['budget_html'].wrapper).html(data.html);
                 frm.set_value('has_unsaved_changes', 0);
+                frm.set_value('is_editable', data.is_editable);
                 frm.refresh_fields();
                 make_buttons(frm);
             }
@@ -131,8 +135,88 @@ frappe.ui.keys.on("ctrl+s", function (frm) {
     }
     else {
         frappe.show_alert({
-            message: __('Nothing to save, Please select Project'),
+            message: __('Nothing to save, Please select Budget'),
             indicator: 'red'
         }, 5);
     }
 });
+
+frappe.ui.keys.on("ctrl+i", function (frm) {
+    if (cur_frm.doc.budget) {
+        show_add_row_popup(cur_frm);
+    }
+    else {
+        frappe.show_alert({
+            message: __('Please select Budget'),
+            indicator: 'red'
+        }, 5);
+    }
+});
+
+function show_add_row_popup(frm) {
+    let d = new frappe.ui.Dialog({
+        title: 'Add Budget Row',
+        fields: [
+            {
+                label: 'Cost Head',
+                fieldname: 'cost_head',
+                fieldtype: 'Link',
+                options: 'Cost Head',
+                reqd: 1
+            },
+            {
+                label: 'Cost Sub Head',
+                fieldname: 'cost_subhead',
+                fieldtype: 'Link',
+                options: 'Cost Subhead',
+                get_query: function () {
+                    return {
+                        filters: {
+                            "cost_head": d.get_value('cost_head')
+                        }
+                    };
+                },
+                reqd: 1
+            },
+            {
+                label: 'Cost Category',
+                fieldname: 'cost_category',
+                fieldtype: 'Link',
+                options: 'Cost Category',
+                reqd: 1
+            }
+        ],
+        primary_action_label: 'Add',
+        primary_action(values) {
+            add_row_primary_action(frm, values);
+            d.hide();
+        }
+    });
+    d.show();
+}
+
+function add_row_primary_action(frm, values) {
+    if (frm.doc.budget && values.cost_head && values.cost_subhead && values.cost_category) {
+        frappe.call({
+            method: 'beams.beams.doctype.budget_tool.budget_tool.add_budget_row',
+            args: {
+                'budget': frm.doc.budget,
+                'cost_head': values.cost_head,
+                'cost_subhead': values.cost_subhead,
+                'cost_category': values.cost_category,
+            },
+            freeze: true,
+            freeze_message: __("Adding row..."),
+            callback: (r) => {
+                if (r.message) {
+                    frappe.msgprint({
+                        title: __('Notification'),
+                        indicator: 'green',
+                        message: __('Row added successfully')
+                    });
+                    set_budget_html(frm, frm.doc.budget);
+                }
+            }
+        });
+    }
+}
