@@ -41,32 +41,26 @@ class EmployeeTravelRequest(Document):
         if self.start_date and self.end_date:
             self.total_days = date_diff(self.end_date, self.start_date)
 
-    def create_attendance(self):
+    def on_update_after_submit(self):
         """
         Create an Attendance Regularization record in 'Draft' when mark_attendance is checked.
         """
-        if self.mark_attendance == 1 and self.workflow_state == 'Draft':
-            if not frappe.db.exists("Attendance Request", {"employee_travel_request": self.name}):
+        if self.mark_attendance == 1 and self.workflow_state == "Approved":
                 attn_reg = frappe.new_doc("Attendance Request")
                 attn_reg.employee = self.requested_by
                 attn_reg.reason = "On Duty"
                 attn_reg.from_date = self.start_date
                 attn_reg.to_date = self.end_date
-                attn_reg.explanation = f"From Travel Request: {self.name}"
+                attn_reg.explanation = "From Travel Request: {}".format(self.name)
                 attn_reg.insert()
+                self.db_set("attendance_request", attn_reg.name)
                 frappe.msgprint(
                     'Attendance Request Created: <a href="{0}">{1}</a>'.format(
                         get_url_to_form(attn_reg.doctype, attn_reg.name), attn_reg.name
                     ),
                     alert=True, indicator="green"
                 )
-    def on_update(self):
-        """
-        Method triggered after the is draft is
-        It checks if the workflow state has changed to "Completed".
-        """
-        if self.workflow_state == "Draft":
-            self.create_attendance()
+
 
     @frappe.whitelist()
     def validate_posting_date(self):

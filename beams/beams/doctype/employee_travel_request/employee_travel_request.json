@@ -31,6 +31,7 @@
   "amended_from",
   "section_break_ktsj",
   "mark_attendance",
+  "attendance_request",
   "reference_documents",
   "reason_for_rejection"
  ],
@@ -203,12 +204,19 @@
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
    "label": "Reason for Rejection "
+  },
+  {
+   "fieldname": "attendance_request",
+   "fieldtype": "Link",
+   "label": "Attendance Request",
+   "options": "Attendance Request",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-01 11:41:29.691575",
+ "modified": "2025-02-03 14:24:57.552521",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
