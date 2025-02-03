@@ -401,7 +401,6 @@ def get_event_custom_fields():
         ]
     }
 
-
 def get_leave_application_custom_fields():
     '''
     Custom fields that need to be added to the Leave Application  Doctype
