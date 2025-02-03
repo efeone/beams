@@ -4,10 +4,19 @@
 frappe.ui.form.on('Award Record', {
     refresh: function (frm) {
         if (!frm.is_new() && frm.doc.total_amount > 0) {
-            frm.add_custom_button(__('Create Journal Voucher'), function () {
+            frm.add_custom_button(__('Journal Voucher'), function () {
                 create_jv(frm);
-            }, __('Actions'));
+            }, __('Create'));
         }
+        // Show button only if workflow_state is "Awarded"
+        if (frm.doc.workflow_state === "Awarded") {
+            frm.add_custom_button(__('Travel Request'), function() {
+                create_travel_request(frm);
+            }, __('Create'));
+        }
+    },
+    posting_date:function (frm){
+      frm.call("validate_posting_date");
     }
 });
 
@@ -40,8 +49,18 @@ function create_jv(frm) {
     });
 }
 
+function create_travel_request(frm) {
+    frappe.new_doc('Travel Request', {
+        employee: frm.doc.employee  // Prefill the Employee field
+    });
+}
+
+
 frappe.ui.form.on("Award Expense Detail", {
     amount: function (frm) {
         frm.call("update_total_amount");
+    },
+    expenses_remove: function(frm){
+      frm.call("update_total_amount");
     }
 });
