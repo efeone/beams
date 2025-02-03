@@ -49,6 +49,7 @@
    "fieldtype": "Currency",
    "label": "Expected Revenue",
    "precision": "2",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -153,7 +154,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-28 12:43:05.529583",
+ "modified": "2025-02-01 09:54:43.713123",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Adhoc Budget",

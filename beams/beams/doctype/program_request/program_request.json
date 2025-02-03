@@ -10,6 +10,7 @@
   "program_name",
   "program_type",
   "generates_revenue",
+  "expected_revenue",
   "location",
   "column_break_teaq",
   "posting_date",
@@ -139,12 +140,17 @@
    "fieldname": "estimated_budget",
    "fieldtype": "Currency",
    "label": "Estimated Budget"
+  },
+  {
+   "fieldname": "expected_revenue",
+   "fieldtype": "Float",
+   "label": "Expected Revenue"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-18 13:19:00.061148",
+ "modified": "2025-01-31 12:36:15.817621",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",
