@@ -138,7 +138,7 @@ def mark_interview_completed(doc, method):
                 job_applicant_doc.status = "Interview Completed"
 
             job_applicant_doc.save(ignore_permissions=True)
-			
+
 @frappe.whitelist()
 def update_job_applicant_status(doc, method=None):
     # Extract job applicant from the submitted document
@@ -166,3 +166,27 @@ def update_job_applicant_status(doc, method=None):
     else:
         # Default case: If interviews are pending or under review
         frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
+
+@frappe.whitelist()
+def get_permission_query_conditions(user):
+    if not user:
+        user = frappe.session.user
+
+    user_roles = frappe.get_roles(user)
+
+    # Allow Administrator to see all interviews
+    if "Administrator" in user_roles:
+        return None
+
+    # Restrict Interviewers to see only scheduled interviews where they are assigned
+    if "Interviewer" in user_roles:
+        conditions = """
+            EXISTS (
+                SELECT 1 FROM `tabInterview Detail` id
+                WHERE id.parent = `tabInterview`.name
+                AND id.interviewer = '{user}'
+            )
+        """.format(user=user)
+        return conditions
+
+    return None
