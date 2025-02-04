@@ -10,7 +10,7 @@ frappe.ui.form.on('Budget', {
     department: function (frm) {
         set_filters(frm);
         if (!frm.doc.department) {
-            frm.set_value('division', null)
+            frm.set_value('division', null);
         }
     },
     division: function (frm) {
@@ -20,8 +20,20 @@ frappe.ui.form.on('Budget', {
             frappe.db.get_value('Division', frm.doc.division, 'cost_center').then(r => {
                 frm.set_value('cost_center', r.message.cost_center);
             });
-        }
-        else {
+
+            // Fetch and set budget_template if only one exists for the selected division
+            frappe.db.count('Budget Template', { division: frm.doc.division }).then(count => {
+                if (count === 1) {
+                    frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
+                        if (r.message) {
+                            frm.set_value('budget_template', r.message.name);
+                        }
+                    });
+                } else {
+                    frm.set_value('budget_template', null);
+                }
+            });
+        } else {
             frm.set_value('cost_center', null);
             frm.set_value('budget_template', null);
         }
@@ -39,7 +51,7 @@ frappe.ui.form.on('Budget', {
                     let budget_template_items = response.message.budget_template_item || [];
                     budget_template_items.forEach(function (item) {
                         let row = frm.add_child('accounts');
-                        row.cost_head = item.cost_head
+                        row.cost_head = item.cost_head;
                         row.cost_subhead = item.cost_sub_head;
                         row.account = item.account;
                         row.cost_category = item.cost_category;
