@@ -175,7 +175,7 @@ def get_permission_query_conditions(user):
     user_roles = frappe.get_roles(user)
 
     # Allow Administrator to see all interviews
-    if "Administrator" in user_roles:
+    if "System Manager" in user_roles:
         return None
 
     # Restrict Interviewers to see only scheduled interviews where they are assigned
