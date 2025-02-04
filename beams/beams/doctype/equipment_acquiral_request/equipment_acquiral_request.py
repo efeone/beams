@@ -5,10 +5,12 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import getdate  # Import getdate function
 from frappe import _  # Import _ for translations
+from frappe.utils import today
 
 class EquipmentAcquiralRequest(Document):
     def validate(self):
         self.validate_required_from_and_required_to()
+        self.validate_posting_date()
 
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
