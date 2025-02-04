@@ -122,7 +122,24 @@ frappe.ui.form.on('Interview', {
                 d.hide();
             }
         });
+
         d.show();
+        frappe.after_ajax(() => {
+            let skill_grid = d.fields_dict.skill_set.grid;
+            skill_grid.wrapper.on('change', 'input[data-fieldname="score"]', function () {
+                let row = skill_grid.get_selected();
+                if (!row) return;
+
+                let value = parseFloat($(this).val()) || 0;
+                if (value > 10) {
+                    frappe.msgprint(__('Score cannot be greater than 10'));
+                } else if (value < 0) {
+                    frappe.msgprint(__('Score cannot be less than 0'));
+                }
+                skill_grid.refresh();
+            });
+        });
+
     },
     get_fields_for_questions: function () {
         return [{
