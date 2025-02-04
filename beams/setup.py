@@ -622,6 +622,23 @@ def get_purchase_order_custom_fields():
                 "depends_on": "eval:doc.is_budget_exceed == 1"
 
             }
+        ],
+        "Purchase Order Item": [
+            {
+                "fieldname": "reference_doctype",
+                "fieldtype": "Link",
+                "label": "Reference DocType",
+                "options":"DocType",
+                "insert_after": "blanket_order_rate"
+            },
+            {
+
+                "fieldname": "reference_document",
+                "fieldtype": "Dynamic Link",
+                "label": "Reference Document",
+                "options":"reference_doctype",
+                "insert_after": "reference_doctype"
+            }
         ]
     }
 
