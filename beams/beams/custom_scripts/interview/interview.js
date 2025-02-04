@@ -133,12 +133,10 @@ frappe.ui.form.on('Interview', {
                 let value = parseFloat($(this).val()) || 0;
                 if (value > 10) {
                     frappe.msgprint(__('Score cannot be greater than 10'));
-                    row.score = 10;
                 } else if (value < 0) {
                     frappe.msgprint(__('Score cannot be less than 0'));
-                    row.score = 0;
                 }
-                skill_grid.refresh(); 
+                skill_grid.refresh();
             });
         });
 
