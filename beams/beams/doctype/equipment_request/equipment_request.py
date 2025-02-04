@@ -8,11 +8,19 @@ from frappe.model.mapper import get_mapped_doc
 from frappe import _
 
 class EquipmentRequest(Document):
+    
+    def on_cancel(self):
+        # Validate that "Reason for Rejection" is provided if the status is "Rejected"
+        if self.workflow_state == "Rejected" and not self.reason_for_rejection:
+            frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
     def validate(self):
         self.validate_required_from_and_required_to()
 
     def before_save(self):
         self.validate_posting_date()
+
+
 
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
