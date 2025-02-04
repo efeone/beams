@@ -22,7 +22,7 @@ frappe.ui.form.on('Equipment Request', {
             });
         }, __("Create"));
     },
-    
+
     bureau: function (frm) {
         set_item_query(frm)
     },
