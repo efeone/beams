@@ -144,7 +144,8 @@
    "fieldname": "batta_policy",
    "fieldtype": "Link",
    "label": "Batta Policy",
-   "options": "Batta Policy"
+   "options": "Batta Policy",
+   "read_only": 1
   },
   {
    "fieldname": "mode_of_travel",
@@ -167,6 +168,7 @@
   },
   {
    "default": "0",
+   "description": "To mark Attendance for Travel Days",
    "fieldname": "mark_attendance",
    "fieldtype": "Check",
    "label": "Mark Attendance"
@@ -201,9 +203,11 @@
   },
   {
    "allow_on_submit": 1,
+   "depends_on": "eval: doc.workflow_state == \"Pending\" || doc.workflow_state == \"Rejected\" || doc.workflow_state == \"Approved by HOD\";",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
-   "label": "Reason for Rejection "
+   "label": "Reason for Rejection ",
+   "read_only_depends_on": "eval: doc.workflow_state == \"Rejected\";"
   },
   {
    "fieldname": "attendance_request",
@@ -216,7 +220,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-03 14:24:57.552521",
+ "modified": "2025-02-04 10:00:59.408535",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
