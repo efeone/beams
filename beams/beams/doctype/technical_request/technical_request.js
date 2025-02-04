@@ -17,18 +17,26 @@ frappe.ui.form.on('Technical Request', {
         set_employee_query(frm);
         toggle_reason_for_rejection_field(frm);
 
-        if (!frm.is_new()) {  
+        if (!frm.is_new()) {
             frm.add_custom_button("External Resource Request", function() {
-                frappe.new_doc("External Resource Request", {
-                    project: frm.doc.project,
-                    bureau: frm.doc.bureau
+                frappe.call({
+                    method: "beams.beams.doctype.technical_request.technical_request.map_external_resource_request",
+                    args: {
+                        "technical_request": frm.doc.name
+                    },
+                    callback: function(response) {
+                        if (response.message) {
+                            frappe.set_route("Form", "External Resource Request", response.message);
+                        }
+                    },
                 });
             }, "Create");
         }
-    },
+      },
 
-    employee: function(frm) {
+    required_employees: function(frm) {
         set_employee_query(frm);
+        validate_employee_selection(frm);
     },
 
     designation: function(frm) {
@@ -50,15 +58,34 @@ frappe.ui.form.on('Technical Request', {
     }
 });
 
+
+// Function to validate the number of selected employees
+function validate_employee_selection(frm) {
+    let selected_employees = frm.doc.required_employees || [];
+    let max_allowed = frm.doc.no_of_employees || 0;
+
+    if (selected_employees.length > max_allowed) {
+        frappe.msgprint({
+            title: __('Message'),
+            message: __('You can select a maximum of {0} employees.', [max_allowed])
+        });
+
+        while (selected_employees.length > max_allowed) {
+            selected_employees.pop();
+        }
+        frm.refresh_field('required_employees');
+    }
+}
+
 function set_employee_query(frm) {
-    frm.set_query('employee', () => {
+    frm.fields_dict['required_employees'].get_query = function() {
         return {
             filters: {
                 department: frm.doc.department,
                 designation: frm.doc.designation
             }
         };
-    });
+    };
 }
 
 function toggle_reason_for_rejection_field(frm) {

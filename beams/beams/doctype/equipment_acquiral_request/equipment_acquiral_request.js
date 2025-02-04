@@ -1,7 +1,7 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on("Equipment Hire Request", {
+frappe.ui.form.on("Equipment Acquiral Request", {
     refresh(frm) {
         // Show the 'Purchase Invoice' button only if the document is submitted (docstatus == 1) and approved
         if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
@@ -11,6 +11,13 @@ frappe.ui.form.on("Equipment Hire Request", {
                 let invoice = frappe.model.get_new_doc("Purchase Invoice");
                 invoice.posting_date = frm.doc.posting_date; // Set posting date from the current document
                 frappe.set_route("form", "Purchase Invoice", invoice.name); // Redirect to the new Purchase Invoice form
+            }, __("Create"));
+
+            // Create 'Asset Movement' button
+            frm.add_custom_button(__('Asset Movement'), function () {
+                let asset_movement = frappe.model.get_new_doc("Asset Movement");
+                asset_movement.posting_date = frm.doc.posting_date; // Set posting date from the current document
+                frappe.set_route("form", "Asset Movement", asset_movement.name); // Redirect to the new Asset Movement form
             }, __("Create"));
         }
     },
@@ -22,5 +29,5 @@ frappe.ui.form.on("Equipment Hire Request", {
     },
     posting_date:function (frm){
       frm.call("validate_posting_date");
-    }
+    },
 });

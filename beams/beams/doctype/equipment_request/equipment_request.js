@@ -4,6 +4,7 @@
 frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
+
         // Show the 'Asset Movement' button only if the document is submitted (docstatus == 1) and approved
         if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
             frm.add_custom_button(__('Asset Movement'), function () {
@@ -12,7 +13,16 @@ frappe.ui.form.on('Equipment Request', {
                 frappe.set_route("form", "Asset Movement", asset_movement.name); // Redirect to the new Asset Movement form
             }, __("Create"));
         }
+
+        // Add a button to create an Equipment Acquiral Request
+        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
+            frappe.model.open_mapped_doc({
+                method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
+                frm: frm,
+            });
+        }, __("Create"));
     },
+    
     bureau: function (frm) {
         set_item_query(frm)
     },

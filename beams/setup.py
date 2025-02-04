@@ -231,7 +231,7 @@ def get_Project_custom_fields():
                 "label": "Bureau",
                 "fieldtype": "Link",
                 "options":"Bureau",
-                "insert_after": "generates_revenue",
+                "insert_after": "expected_revenue",
                 "fetch_from": "program_request.bureau",
                 "read_only": 1
 
@@ -266,6 +266,14 @@ def get_Project_custom_fields():
                 "insert_after": "program_request"
             },
             {
+                "fieldname": "expected_revenue",
+                "fieldtype": "Float",
+                "label": "Expected Revenue",
+                "read_only": 1,
+                "fetch_from": "program_request.expected_revenue",
+                "insert_after": "generates_revenue"
+            },
+            {
                 "fieldname": "allocated_resources_details_section",
                 "fieldtype": "Section Break",
                 "label": " Allocated Resource Details",
@@ -280,15 +288,6 @@ def get_Project_custom_fields():
                 "insert_after":"allocated_resources_details_section"
             },
             {
-                "fieldname": "estimated_budget",
-                "fieldtype": "Currency",
-                "label": "Estimated Budget",
-                "options":"Estimated Budget",
-                "fetch_from": "program_request.estimated_budget",
-                "insert_after":"generates_revenue",
-                "read_only": 1
-            },
-            {
                 "fieldname": "approved_budget",
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
@@ -296,7 +295,31 @@ def get_Project_custom_fields():
                 "insert_after":"budget_expense_types",
                 "read_only": 1
 
+            },
+            {
+                "fieldname": "estimated_budget",
+                "fieldtype": "Currency",
+                "label": "Estimated Budget",
+                "options":"Estimated Budget",
+                "fetch_from": "program_request.estimated_budget",
+                "insert_after":"approved_budget",
+                "read_only": 1
+            },
+            {
+                "fieldname": "description",
+                "fieldtype": "Small Text",
+                "label": "Description",
+                "fetch_from":"program_request.description",
+                "insert_after": "requirements"
+            },
+            {
+                "fieldname": "requirements",
+                "fieldtype": "Small Text",
+                "label": "Requirements",
+                "fetch_from":"program_request.requirements",
+                "insert_after": "bureau"
             }
+
         ]
     }
 

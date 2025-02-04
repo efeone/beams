@@ -3,9 +3,9 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate
-from frappe import _  # Import _ for translations
-
+from frappe.utils import getdate,format_date
+from frappe import _
+from frappe.model.mapper import get_mapped_doc
 
 class TechnicalRequest(Document):
     def on_cancel(self):
@@ -33,3 +33,37 @@ class TechnicalRequest(Document):
                 msg=_("Required From cannot be after Required To."),
                 title=_("Message")
             )
+
+@frappe.whitelist()
+def map_external_resource_request(technical_request):
+    """
+    Map Technical Request to External Resource Request and manually add a child table row.
+    """
+    mapped_doc = get_mapped_doc(
+        "Technical Request",
+        technical_request,
+        {
+            "Technical Request": {
+                "doctype": "External Resource Request",
+                "field_map": {
+                    "name": "technical_request",
+                    "project": "project",
+                    "bureau": "bureau",
+                    "designation": "designation",
+                    "required_from": "required_from",
+                    "required_to": "required_to"
+                }
+            }
+        }
+    )
+
+    mapped_doc.append("required_resources", {
+        "designation": mapped_doc.designation,
+        "required_from": mapped_doc.required_from,
+        "required_to": mapped_doc.required_to
+        })
+
+    new_doc = frappe.get_doc(mapped_doc)
+    new_doc.insert(ignore_permissions=True)
+
+    return new_doc.name

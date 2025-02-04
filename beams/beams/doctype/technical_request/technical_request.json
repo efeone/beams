@@ -10,7 +10,8 @@
   "bureau",
   "department",
   "designation",
-  "employee",
+  "no_of_employees",
+  "required_employees",
   "column_break_cgox",
   "posting_date",
   "required_from",
@@ -53,14 +54,6 @@
    "label": "Designation",
    "options": "Designation",
    "reqd": 1
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "employee",
-   "fieldtype": "Link",
-   "label": "Employee ",
-   "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
-   "options": "Employee"
   },
   {
    "fieldname": "column_break_cgox",
@@ -110,12 +103,24 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "no_of_employees",
+   "fieldtype": "Int",
+   "label": "No of Employees"
+  },
+  {
+   "fieldname": "required_employees",
+   "fieldtype": "Table MultiSelect",
+   "label": "Required Employees",
+   "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
+   "options": "Employees"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-24 09:48:25.425153",
+ "modified": "2025-02-03 12:44:20.517584",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",

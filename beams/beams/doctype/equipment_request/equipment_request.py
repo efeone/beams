@@ -3,8 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate
-from frappe.utils import today
+from frappe.utils import today,getdate
+from frappe.model.mapper import get_mapped_doc
 from frappe import _
 
 class EquipmentRequest(Document):
@@ -30,8 +30,32 @@ class EquipmentRequest(Document):
                 msg=_('The "Required From" date cannot be after the "Required To" date.'),
                 title=_('Validation Error')
             )
+
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
             if self.posting_date > today():
                 frappe.throw(_("Posting Date cannot be set after today's date."))
+
+
+@frappe.whitelist()
+def map_equipment_acquiral_request(source_name, target_doc=None):
+    '''
+    Maps fields from the Equipment Request doctype to the Equipment Acquiral Request doctype.
+    '''
+    return get_mapped_doc(
+        "Equipment Request",
+        source_name,
+        {
+            "Equipment Request": {
+                "doctype": "Equipment Acquiral Request",
+                "field_map": {
+                    "name": "equipment_request",
+                    "expected_start_date": "required_from",
+                    "expected_end_date": "required_to",
+                    "bureau": "bureau"
+                }
+            }
+        },
+        target_doc
+    )
