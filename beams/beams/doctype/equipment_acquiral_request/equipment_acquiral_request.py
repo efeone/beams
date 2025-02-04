@@ -28,3 +28,10 @@ class EquipmentAcquiralRequest(Document):
                 msg=_('The "Required From" date cannot be after the "Required To" date.'),
                 title=_('Validation Error')
             )
+
+
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))
