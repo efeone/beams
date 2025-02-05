@@ -75,7 +75,11 @@ def save_budget_data(budget, data):
 			cost_description = data[row_idx][4] or ''
 			budget_row.cost_description = cost_description
 			for month in month_fields:
-				value = int(data[row_idx][month_idx]) or 0
+				value = 0
+				try:
+					value = int(data[row_idx][month_idx]) or 0
+				except:
+					pass
 				budget_total += value
 				budget_row.set(month, value)
 				month_idx += 1
