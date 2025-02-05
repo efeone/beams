@@ -132,86 +132,84 @@ frappe.ui.form.on('Project', {
         }, "Create");
 
         frm.add_custom_button(__('Equipment Request'), function () {
-    const dialog = new frappe.ui.Dialog({
-        title: 'Equipments',
-        fields: [
-            {
+          const dialog = new frappe.ui.Dialog({
+            title: 'Equipments',
+            fields: [
+              {
                 label: 'Required From',
                 fieldtype: 'Datetime',
                 fieldname: 'required_from',
                 in_list_view: 1,
                 reqd: 1
-            },
-            {
+              },
+              {
                 label: 'Required To',
                 fieldtype: 'Datetime',
                 fieldname: 'required_to',
                 in_list_view: 1,
                 reqd: 1
-            },
-            {
+              },
+              {
                 fieldtype: 'Table',
                 label: 'Equipments',
                 fieldname: 'equipments',
                 reqd: 1,
                 fields: [
-                    {
-                        label: 'Item',
-                        fieldtype: 'Link',
-                        fieldname: 'item',
-                        options: 'Item',
-                        in_list_view: 1,
-                        reqd: 1,
-                        onchange: function() {
-                            let data = [];
-                            let promises = [];
+                  {
+                    label: 'Item',
+                    fieldtype: 'Link',
+                    fieldname: 'item',
+                    options: 'Item',
+                    in_list_view: 1,
+                    reqd: 1,
+                    onchange: function() {
+                      let data = [];
+                      let promises = [];
+                      dialog.fields_dict.equipments.df.data.forEach((item, i) => {
+                      let promise = frappe.call({
+                        method: "beams.beams.custom_scripts.project.project.get_available_quantities",
+                        args: {
+                          items: [item.item],
+                          bureau: frm.doc.bureau
+                        },
+                        callback: function(r) {
+                          if (r.message) {
+                            const available_qty = r.message[item.item] || 0;
+                            item["available_quantity"] = available_qty;
+                            data.push(item);
+                          }
+                          }
+                        });
+                        promises.push(promise);
+                        });
 
-                            dialog.fields_dict.equipments.df.data.forEach((item, i) => {
-                                let promise = frappe.call({
-                                    method: "beams.beams.custom_scripts.project.project.get_available_quantities",
-                                    args: {
-                                        items: [item.item],
-                                        bureau: frm.doc.bureau
-                                    },
-                                    callback: function(r) {
-                                        if (r.message) {
-                                            const available_qty = r.message[item.item] || 0;
-                                            item["available_quantity"] = available_qty;
-                                            data.push(item);
-                                        }
-                                    }
-                                });
-
-                                promises.push(promise);
-                            });
-
-                            Promise.all(promises).then(() => {
-                                dialog.fields_dict.equipments.df.data = data;
-                                dialog.fields_dict.equipments.grid.refresh();
-                            });
-                        }
+                      Promise.all(promises).then(() => {
+                        dialog.fields_dict.equipments.df.data = data;
+                        dialog.fields_dict.equipments.grid.refresh();
+                      });
+                    }
                     },
                     {
-                        label: 'Available Quantity',
-                        fieldtype: 'Int',
-                        fieldname: 'available_quantity',
-                        in_list_view: 1,
-                        read_only: 1,
-                        default: 0
+                      label: 'Available Quantity',
+                      fieldtype: 'Int',
+                      fieldname: 'available_quantity',
+                      in_list_view: 1,
+                      read_only: 1,
+                      default: 0
                     },
                     {
-                        label: 'Required Quantity',
-                        fieldtype: 'Int',
-                        fieldname: 'required_quantity',
-                        in_list_view: 1,
-                        reqd: 1
+                      label: 'Required Quantity',
+                      fieldtype: 'Int',
+                      fieldname: 'required_quantity',
+                      in_list_view: 1,
+                      reqd: 1
                     },
                 ]
             }
-        ],
-        size: 'large',
-        primary_action_label: 'Submit',
-        primary_action(values) {
+          ],
+          size: 'large',
+          primary_action_label: 'Submit',
+          primary_action(values) {
             const equipment_data = values?.equipments || [];
 
             // Validate if required dates are provided and if "Required From" is before "Required To"
@@ -271,19 +269,20 @@ frappe.ui.form.on('Project', {
                 });
         }
     });
-
     // Set the item filter based on bureau's assets
     frappe.call({
-        method: "beams.beams.custom_scripts.project.project.get_assets_by_bureau",
-        args: { bureau: frm.doc.bureau },
-        callback: function(r) {
-            if (r.message?.length) {
-                dialog.fields_dict.equipments.grid.get_field("item").get_query = () => ({
-                    filters: { name: ["in", r.message] }
-                });
-                dialog.show();
-            } else {
-                frappe.msgprint(__('No available items found for the selected Bureau.'));
+      method: "beams.beams.custom_scripts.project.project.get_assets_by_bureau",
+      args: { bureau: frm.doc.bureau },
+      callback: function(r) {
+        if (r.message?.length) {
+          dialog.fields_dict.equipments.grid.get_field("item").get_query = () => ({
+            filters: {
+              name: ["in", r.message]
+            }
+          });
+          dialog.show();
+        } else {
+          frappe.msgprint(__('No available items found for the selected Bureau.'));
             }
         }
     });
