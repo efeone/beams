@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class RequiredHireItemsDetail(Document):
+class RequiredAcquiralItemsDetail(Document):
 	pass

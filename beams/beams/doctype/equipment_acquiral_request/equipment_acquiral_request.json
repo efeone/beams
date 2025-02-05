@@ -75,7 +75,7 @@
    "fieldname": "required_items",
    "fieldtype": "Table",
    "label": "Required Items ",
-   "options": "Required Hire Items Detail"
+   "options": "Required Acquiral Items Detail"
   },
   {
    "fieldname": "section_break_tmmn",
@@ -83,15 +83,17 @@
   },
   {
    "allow_on_submit": 1,
+   "depends_on": "eval: doc.workflow_state == \"Pending Approval\" || doc.workflow_state == \"Rejected\";",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
-   "label": "Reason for Rejection"
+   "label": "Reason for Rejection",
+   "read_only_depends_on": "eval: doc.workflow_state != \"Pending Approval\";"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-31 16:12:14.240194",
+ "modified": "2025-02-05 13:43:31.160610",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Acquiral Request",

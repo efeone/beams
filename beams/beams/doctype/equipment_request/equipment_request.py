@@ -48,8 +48,12 @@ class EquipmentRequest(Document):
 def map_equipment_acquiral_request(source_name, target_doc=None):
     '''
     Maps fields from the Equipment Request doctype to the Equipment Acquiral Request doctype.
+    Calculates acquired_qty as Required Qty - Issued Qty in the child table.
+    Only maps the required_item (item) to the child table.
     '''
-    return get_mapped_doc(
+    equipment_request = frappe.get_doc("Equipment Request", source_name)
+
+    target_doc = get_mapped_doc(
         "Equipment Request",
         source_name,
         {
@@ -65,3 +69,12 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
         },
         target_doc
     )
+
+    for item in equipment_request.required_equipments:
+        acquired_qty = item.quantity - item.issued_quantity
+        target_item = target_doc.append("required_items", {
+            "item": item.required_item,
+            "quantity": acquired_qty
+        })
+
+    return target_doc

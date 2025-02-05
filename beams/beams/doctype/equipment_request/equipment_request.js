@@ -5,16 +5,14 @@ frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
 
-        // Show the 'Asset Movement' button only if the document is submitted (docstatus == 1) and approved
         if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
             frm.add_custom_button(__('Asset Movement'), function () {
                 let asset_movement = frappe.model.get_new_doc("Asset Movement");
-                asset_movement.posting_date = frm.doc.posting_date; // Set posting date from the current document
-                frappe.set_route("form", "Asset Movement", asset_movement.name); // Redirect to the new Asset Movement form
+                asset_movement.posting_date = frm.doc.posting_date;
+                frappe.set_route("form", "Asset Movement", asset_movement.name);
             }, __("Create"));
         }
 
-        // Add a button to create an Equipment Acquiral Request
         frm.add_custom_button(__('Equipment Acquiral Request'), function () {
             frappe.model.open_mapped_doc({
                 method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
@@ -68,7 +66,6 @@ function validate_dates(frm) {
 
 function set_item_query(frm) {
   if (frm.doc.bureau) {
-      // Fetch all assets with the same bureau
       frappe.call({
           method: 'frappe.client.get_list',
           args: {
@@ -83,7 +80,6 @@ function set_item_query(frm) {
               if (response.message && response.message.length > 0) {
                   const item_codes = response.message.map(asset => asset.item_code);
 
-                  // Set the filter for the child table's Required Item field
                   frm.fields_dict['required_equipments'].grid.get_field('required_item').get_query = function () {
                       return {
                           filters: {
