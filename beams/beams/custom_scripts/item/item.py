@@ -1,10 +1,9 @@
 import frappe
 
-@frappe.whitelist()
 def before_insert(doc, method):
     """Before inserting an Item, fetch 'Hireable' from Item Group if not set and create a Service Item if required."""
 
-    if not doc.hireable and doc.item_group:
+    if not doc.hireable:
         doc.hireable = frappe.db.get_value("Item Group", doc.item_group, "hireable")
 
     if doc.hireable and "-Service" not in doc.item_code:
