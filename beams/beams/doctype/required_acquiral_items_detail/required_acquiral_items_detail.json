@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "item",
-  "quantity"
+  "quantity",
+  "acquired_qty"
  ],
  "fields": [
   {
@@ -24,15 +25,21 @@
    "in_list_view": 1,
    "label": "Quantity",
    "reqd": 1
+  },
+  {
+   "fieldname": "acquired_qty",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Acquired Quantity"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-29 09:53:12.785405",
+ "modified": "2025-02-04 12:38:48.534795",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Required Hire Items Detail",
+ "name": "Required Acquiral Items Detail",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",
