@@ -1362,8 +1362,8 @@ def get_employee_custom_fields():
                 "insert_after": "places_to_travel"
             },
             {
-                "fieldname": "employee_name",
-                "label": "His/Her Name",
+                "fieldname": "related_employee_name",
+                "label": "Related Employee Name",
                 "fieldtype": "Data",
                 "insert_after": "are_you_related_to_employee",
                 "depends_on": "eval:doc.are_you_related_to_employee == 1",
