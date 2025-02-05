@@ -52,6 +52,7 @@ def after_install():
     create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
     create_custom_fields(get_vehicle_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_item_group_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -115,6 +116,7 @@ def before_uninstall():
     delete_custom_fields(get_asset_custom_fields())
     delete_custom_fields(get_vehicle_custom_fields())
     delete_custom_fields(get_interview_custom_fields())
+    delete_custom_fields(get_item_group_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -1168,6 +1170,25 @@ def get_supplier_custom_fields():
         ]
     }
 
+def get_item_group_custom_fields():
+    '''
+    Custom fields that need to be added to the Quotation Item Doctype
+    '''
+    return {
+        "Item Group": [
+            {
+                "fieldname": "hireable",
+                "fieldtype": "Check",
+                "label": "Hireable",
+                "fetch_from":"parent_item_group.hireable",
+                "set_only_once":1,
+                "fetch_if_empty":1,
+                "insert_after": "gst_hsn_code"
+            }
+
+        ]
+    }
+
 def get_item_custom_fields():
     '''
     Custom fields that need to be added to the Quotation Item Doctype
@@ -1186,8 +1207,23 @@ def get_item_custom_fields():
                 "label": "Sales Type",
                 "options": "Sales Type",
                 "insert_after": "is_production_item"
+           },
+           {
+               "fieldname": "hireable",
+               "fieldtype": "Check",
+               "label": "Hireable",
+               "fetch_from":"item_group.hireable",
+               "set_only_once":1,
+               "insert_after": "gst_hsn_code"
+           },
+           {
+               "fieldname": "service_item",
+               "fieldtype": "Link",
+               "label": "Service Item",
+               "options": "Item",
+               "read_only":1,
+               "insert_after": "item_group"
            }
-
         ]
     }
 
