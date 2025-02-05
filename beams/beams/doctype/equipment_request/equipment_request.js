@@ -22,7 +22,7 @@ frappe.ui.form.on('Equipment Request', {
             });
         }, __("Create"));
     },
-    
+
     bureau: function (frm) {
         set_item_query(frm)
     },
@@ -31,10 +31,10 @@ frappe.ui.form.on('Equipment Request', {
     },
     required_to: function (frm) {
         frm.call("validate_required_from_and_required_to");
-    },
-    posting_date:function (frm){
-      frm.call("validate_posting_date");
     }
+    // posting_date:function (frm){
+    //   frm.call("validate_posting_date");
+    // }
 });
 
 frappe.ui.form.on('Required Items Detail', {

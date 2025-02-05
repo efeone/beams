@@ -10,8 +10,10 @@ from frappe.utils import today
 class EquipmentAcquiralRequest(Document):
     def validate(self):
         self.validate_required_from_and_required_to()
-        self.validate_posting_date()
 
+    def before_save(self):
+        self.validate_posting_date()
+        
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
         """
