@@ -6,12 +6,11 @@ frappe.ui.form.on('Equipment Request', {
         set_item_query(frm)
 
         if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
-            frm.add_custom_button(__('Asset Movement'), function () {
-                let asset_movement = frappe.model.get_new_doc("Asset Movement");
-                asset_movement.posting_date = frm.doc.posting_date;
-                frappe.set_route("form", "Asset Movement", asset_movement.name);
-            }, __("Create"));
-        }
+        frm.add_custom_button(__('Asset Movement'), function () {
+            let asset_movement = frappe.model.get_new_doc("Asset Movement");
+            asset_movement.posting_date = frm.doc.posting_date;
+            frappe.set_route("form", "Asset Movement", asset_movement.name);
+        }, __("Create"));
 
         frm.add_custom_button(__('Equipment Acquiral Request'), function () {
             frappe.model.open_mapped_doc({
@@ -19,6 +18,8 @@ frappe.ui.form.on('Equipment Request', {
                 frm: frm,
             });
         }, __("Create"));
+    }
+
     },
 
     bureau: function (frm) {
