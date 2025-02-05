@@ -1,5 +1,6 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
+
 frappe.ui.form.on("Equipment Acquiral Request", {
     refresh(frm) {
         if (frm.doc.docstatus === 1 && frm.doc.workflow_state === 'Approved') {
