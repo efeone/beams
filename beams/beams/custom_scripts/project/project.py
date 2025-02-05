@@ -184,3 +184,81 @@ def validate_employee_assignment(doc, method):
         if overlapping_projects:
             employee_name = frappe.get_value("Employee", row.employee, "employee_name")
             frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another project ({', '.join(overlapping_projects)}) within the same time period.")
+
+@frappe.whitelist()
+def get_available_quantities(items, bureau=None):
+    '''
+    Get available quantities for items at locations matching the bureau.
+    Returns a dictionary with item codes as keys and their available quantities as values.
+    '''
+    if isinstance(items, str):
+        items = json.loads(items)
+
+    available_quantities = {}
+
+    if bureau:
+        location = frappe.db.get_value("Bureau", bureau, "location")
+
+        if location:
+            for item in items:
+                total_quantity = frappe.db.count(
+                    "Asset",
+                    filters={
+                        "item_code": item,
+                        "bureau": bureau,
+                        "location": location
+                    }
+                ) or 0
+                available_quantities[item] = total_quantity
+        else:
+            for item in items:
+                available_quantities[item] = 0
+
+    else:
+        available_quantities = {item: 0 for item in items}
+
+    return available_quantities
+
+
+@frappe.whitelist()
+def create_equipment_request(source_name, equipment_data, required_from, required_to):
+    '''Creates an Equipment Request for a project with multiple items.'''
+    equipment_data = json.loads(equipment_data)
+
+    if not frappe.db.exists('Project', source_name):
+        frappe.throw(_("Invalid Project ID: {0}").format(source_name))
+
+    request_doc = frappe.get_doc({
+        'doctype': "Equipment Request",
+        'project': source_name,
+        'required_from': required_from,
+        'required_to': required_to,
+        'required_equipments': [
+            {
+                'required_item': data['item'],
+                'quantity': data['quantity'],
+                'available_item_quantity': data['available_quantity']
+            }
+            for data in equipment_data
+        ]
+    })
+
+    request_doc.insert(ignore_permissions=True)
+    project_name = frappe.db.get_value('Project', source_name, 'project_name')
+    frappe.msgprint(_("Equipment Request created successfully for project: {}.").format(project_name), indicator="green", alert=1)
+
+    return True
+
+
+@frappe.whitelist()
+def get_assets_by_bureau(bureau):
+    '''Fetch item codes of Assets linked to the given Bureau.'''
+    if not bureau:
+        return []
+
+    return frappe.get_all(
+        "Asset",
+        filters={"bureau": bureau},
+        pluck="item_code",
+        distinct=True
+    ) or []
