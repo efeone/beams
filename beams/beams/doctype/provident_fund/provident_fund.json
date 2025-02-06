@@ -145,7 +145,7 @@
    "fieldtype": "Section Break"
   },
   {
-   "fetch_from": "employee_id.first_name",
+   "fetch_from": "employee_id.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "label": "Employee Name",
@@ -247,7 +247,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-12-04 12:57:05.600934",
+ "modified": "2025-02-06 10:53:43.780076",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Provident Fund",
