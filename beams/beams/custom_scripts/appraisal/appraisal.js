@@ -103,11 +103,12 @@ frappe.ui.form.on('Appraisal', {
                }
 
         // Bind the change event to the 'marks' input field in 'employee_self_kra_rating'
+        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.off('change', 'input[data-fieldname="marks"]'); // Remove existing handlers
         frm.fields_dict['employee_self_kra_rating'].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
             let value = Number($(this).val());
             if (value > 5) {
-                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));                
-          }
+                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
+            }
         });
     },
 
