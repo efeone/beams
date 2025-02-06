@@ -106,9 +106,8 @@ frappe.ui.form.on('Appraisal', {
         frm.fields_dict['employee_self_kra_rating'].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
             let value = Number($(this).val());
             if (value > 5) {
-                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
-                $(this).val(5);  // Reset the input value to 5 to prevent further issues
-            }
+                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));                
+          }
         });
     },
 
@@ -118,7 +117,7 @@ frappe.ui.form.on('Appraisal', {
             if (row.marks > 5 && !invalid) {
                 frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
                 frappe.validated = false;
-                invalid = true;  
+                invalid = true;
             }
         });
 },
