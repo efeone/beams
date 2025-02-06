@@ -104,6 +104,9 @@ frappe.ui.form.on('Budget Account', {
         if (row.equal_monthly_distribution && row.budget_amount) {
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
         }
+        else {
+          clear_monthly_values(frm,cdt,cdn);
+        }
     },
     january: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
@@ -188,3 +191,22 @@ function distribute_budget_equally(frm, cdt, cdn, budget_amount) {
 
     frm.refresh_field('budget_account');
 }
+
+function clear_monthly_values(frm, cdt, cdn) {
+    let fields = [
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'
+    ];
+
+    fields.forEach(field => frappe.model.set_value(cdt, cdn, field, 0));
+
+    frm.refresh_field('budget_account');
+}
+
+frappe.ui.form.on("Rejection Feedback", {
+    rejection_feedback_add: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        row.user = frappe.session.user;
+        frm.refresh_field("rejection_feedback");
+    }
+});
