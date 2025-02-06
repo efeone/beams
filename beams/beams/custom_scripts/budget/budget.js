@@ -206,7 +206,7 @@ function clear_monthly_values(frm, cdt, cdn) {
 frappe.ui.form.on("Rejection Feedback", {
     rejection_feedback_add: function(frm, cdt, cdn) {
         let row = frappe.get_doc(cdt, cdn);
-        row.user = frappe.session.user;
+        row.user = frappe.session.user_fullname;
         frm.refresh_field("rejection_feedback");
     }
 });
