@@ -679,6 +679,14 @@ def get_budget_custom_fields():
                 "label": "Budget Template",
                 "options":"Budget Template",
                 "insert_after": "monthly_distribution"
+            },
+            {
+                "fieldname": "rejection_feedback",
+                "fieldtype": "Table",
+                "label": "Rejection Feedback",
+                "options":"Rejection Feedback",
+                "insert_after": "december",
+                "depends_on": "eval: doc.workflow_state.includes('Rejected')"
             }
         ],
         "Budget Account": [
