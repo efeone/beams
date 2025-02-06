@@ -12,7 +12,7 @@
  "fields": [
   {
    "fieldname": "user",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "User",
    "options": "User"
@@ -27,7 +27,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-06 10:15:54.046825",
+ "modified": "2025-02-06 14:24:22.984810",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Rejection Feedback",
