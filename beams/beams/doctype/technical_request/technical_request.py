@@ -6,8 +6,12 @@ from frappe.model.document import Document
 from frappe.utils import getdate,format_date
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import today
 
 class TechnicalRequest(Document):
+    def before_save(self):
+        self.validate_posting_date()
+
     def on_cancel(self):
         # Validate that "Reason for Rejection" is filled if the status is "Rejected"
         if self.workflow_state == "Rejected" and not self.reason_for_rejection:
@@ -33,6 +37,13 @@ class TechnicalRequest(Document):
                 msg=_("Required From cannot be after Required To."),
                 title=_("Message")
             )
+            
+    @frappe.whitelist()
+    def validate_posting_date(self):
+        if self.posting_date:
+            if self.posting_date > today():
+                frappe.throw(_("Posting Date cannot be set after today's date."))
+
 
 @frappe.whitelist()
 def map_external_resource_request(technical_request):

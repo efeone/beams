@@ -33,6 +33,9 @@ frappe.ui.form.on('Technical Request', {
             }, "Create");
         }
       },
+    posting_date:function (frm){
+        frm.call("validate_posting_date");
+      },
 
     required_employees: function(frm) {
         set_employee_query(frm);

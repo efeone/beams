@@ -32,7 +32,7 @@ class ExternalResourceRequest(Document):
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
-            if self.posting_date > today():
+            if self.posting_date > getdate(today()):
                 frappe.throw(_("Posting Date cannot be set after today's date."))
 
     @frappe.whitelist()
