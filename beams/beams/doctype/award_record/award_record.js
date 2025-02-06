@@ -1,5 +1,6 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
+//
 
 frappe.ui.form.on('Award Record', {
     refresh: function (frm) {
@@ -8,15 +9,17 @@ frappe.ui.form.on('Award Record', {
                 create_jv(frm);
             }, __('Create'));
         }
-        // Show button only if workflow_state is "Awarded"
-        if (frm.doc.workflow_state === "Awarded") {
-            frm.add_custom_button(__('Travel Request'), function() {
+
+        // Show button only if workflow_state is "Awarded", "Applied", or "Nominated"
+        if (["Awarded", "Applied", "Nominated"].includes(frm.doc.workflow_state)) {
+            frm.add_custom_button(__('Employee Travel Request'), function() {
                 create_travel_request(frm);
             }, __('Create'));
         }
     },
-    posting_date:function (frm){
-      frm.call("validate_posting_date");
+
+    posting_date: function (frm) {
+        frm.call("validate_posting_date");
     }
 });
 
@@ -50,17 +53,18 @@ function create_jv(frm) {
 }
 
 function create_travel_request(frm) {
-    frappe.new_doc('Travel Request', {
-        employee: frm.doc.employee  // Prefill the Employee field
-    });
-}
+  frappe.model.open_mapped_doc({
+          method: "beams.beams.doctype.award_record.award_record.map_award_record_to_travel_request",
+          frm: frm,
+  });
 
+}
 
 frappe.ui.form.on("Award Expense Detail", {
     amount: function (frm) {
         frm.call("update_total_amount");
     },
-    expenses_remove: function(frm){
-      frm.call("update_total_amount");
+    expenses_remove: function(frm) {
+        frm.call("update_total_amount");
     }
 });
