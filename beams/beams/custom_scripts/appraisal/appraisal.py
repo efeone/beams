@@ -77,6 +77,8 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
         return "Appraisal Template does not exist."
 
     template_doc = frappe.get_doc("Appraisal Template", appraisal_template)
+    feedback_doc = None
+
     if employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback):
         feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback)
 
@@ -113,11 +115,11 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     total_criteria = len([result for result in key_results if result.get('marks')])
     final_average_score = total_marks / total_criteria if total_criteria > 0 else 0
 
-
     if feedback_doc and feedback_doc.appraisal:
         appraisal_doc = frappe.get_doc("Appraisal", feedback_doc.appraisal)
         appraisal_doc.final_average_score = final_average_score
         appraisal_doc.save()
+
     # Generate the HTML table
     table_html = """
         <table class="table table-bordered" style="width:100%;">

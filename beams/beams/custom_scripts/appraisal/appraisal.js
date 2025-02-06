@@ -97,11 +97,28 @@ frappe.ui.form.on('Appraisal', {
                 frm.events.open_add_category_dialog(frm);
             });
         }
-		// Hide the chart by targeting its container
-		if (frm.dashboard.wrapper) {
-			frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
-		}
+               // Hide the chart by targeting its container
+               if (frm.dashboard.wrapper) {
+                       frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
+               }
 
+        // Bind the change event to the 'marks' input field in 'employee_self_kra_rating'
+        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
+            if (Number($(this).val()) > 5) {
+                frappe.msgprint(__('Marks cannot be greater than 5.'));
+            }
+        });
+    },
+
+    validate: function(frm) {
+        // Validate all rows in 'employee_self_kra_rating' before form submission
+        frm.doc.employee_self_kra_rating.forEach(function(row) {
+            if (row.marks > 5) {
+                frappe.msgprint(__('Marks cannot be greater than 5.'));
+                frappe.validated = false; // Prevent form submission
+                return false;
+            }
+        });
     },
 
     show_feedback_dialog: function (frm) {
