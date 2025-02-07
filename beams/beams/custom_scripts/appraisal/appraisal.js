@@ -97,12 +97,32 @@ frappe.ui.form.on('Appraisal', {
                 frm.events.open_add_category_dialog(frm);
             });
         }
-		// Hide the chart by targeting its container
-		if (frm.dashboard.wrapper) {
-			frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
-		}
+               // Hide the chart by targeting its container
+               if (frm.dashboard.wrapper) {
+                       frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
+               }
 
+        // Bind the change event to the 'marks' input field in 'employee_self_kra_rating'
+        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.off('change', 'input[data-fieldname="marks"]'); // Remove existing handlers
+        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
+            let value = Number($(this).val());
+            if (value > 5) {
+                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
+            }
+        });
     },
+
+    validate: function(frm) {
+        let invalid = false;
+        frm.doc.employee_self_kra_rating.forEach(function(row) {
+            if (row.marks > 5 && !invalid) {
+                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
+                frappe.validated = false;
+                invalid = true;
+            }
+        });
+},
+
 
     show_feedback_dialog: function (frm) {
         let dialog = new frappe.ui.Dialog({
@@ -396,7 +416,7 @@ frappe.ui.form.on('Appraisal', {
                             const new_row = frm.add_child("dept_self_kra_rating");
                             new_row.criteria = item.criteria;
                             new_row.per_weightage = item.per_weightage;
-                        });``
+                          });``
                         // Populate Company criteria
                         company_criteria.forEach(item => {
                             const new_row = frm.add_child("company_self_kra_rating");
