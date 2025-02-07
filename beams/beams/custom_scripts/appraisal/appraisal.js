@@ -102,7 +102,24 @@ frappe.ui.form.on('Appraisal', {
 			frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
 		}
 
-    },
+    ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating'].forEach(field => {
+             frm.fields_dict[field].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
+                 if ($(this).val() > 5) frappe.msgprint(__('Marks cannot be greater than 5.'));
+             });
+         });
+     },
+
+     validate: function(frm) {
+         for (let field of ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']) {
+             for (let row of frm.doc[field]) {
+                 if (row.marks > 5) {
+                     frappe.msgprint(__('Marks cannot be greater than 5.'));
+                     frappe.validated = false;
+                     return;
+                 }
+             }
+         }
+     },
 
     show_feedback_dialog: function (frm) {
         let dialog = new frappe.ui.Dialog({
