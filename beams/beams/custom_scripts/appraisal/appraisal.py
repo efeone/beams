@@ -79,7 +79,8 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     template_doc = frappe.get_doc("Appraisal Template", appraisal_template)
     feedback_doc = None
 
-    if employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback):
+    feedback_exists = employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback)
+    if feedback_exists:
         feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback)
 
     key_results = []
