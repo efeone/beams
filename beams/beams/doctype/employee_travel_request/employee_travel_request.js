@@ -54,7 +54,7 @@ frappe.ui.form.on('Employee Travel Request', {
       frm.call("validate_posting_date");
     },
     end_date:function (frm){
-    frm.call("validate_dates");
+      frm.call("validate_dates");
     }
 });
 
