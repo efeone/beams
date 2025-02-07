@@ -63,7 +63,8 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
                     "name": "equipment_request",
                     "expected_start_date": "required_from",
                     "expected_end_date": "required_to",
-                    "bureau": "bureau"
+                    "bureau": "bureau",
+                    "location": "location"
                 }
             }
         },

@@ -49,7 +49,8 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
                     "name": "project",
                     "expected_start_date": "required_from",
                     "expected_end_date": "required_to",
-                    "bureau": "bureau"
+                    "bureau": "bureau",
+                    "location": "location"
                 }
             }
         },
@@ -89,7 +90,8 @@ def create_transportation_request(source_name, target_doc=None):
                 "doctype": "Transportation Request",
                 "field_map": {
                     "name": "project",
-                    "bureau": "bureau"
+                    "bureau": "bureau",
+                    "location": "location"
                 }
             }
     }, target_doc)
@@ -114,6 +116,7 @@ def create_technical_support_request(project_id, requirements):
         department = frappe.db.get_value("Department", req['department'], "name")
         designation = frappe.db.get_value("Designation", req['designation'], "name")
         bureau =frappe.db.get_value("Project", project_id, "bureau")
+        location=frappe.db.get_value("Project", project_id, "location")
         remarks = req.get('remarks', "")
         no_of_employees = req.get('no_of_employees')
         required_from = req.get('required_from')
@@ -132,6 +135,7 @@ def create_technical_support_request(project_id, requirements):
             'remarks': remarks,
             'posting_date': nowdate(),
             'bureau':bureau,
+            'location':location,
             'no_of_employees': no_of_employees,
             'required_from': required_from,
             'required_to': required_to
