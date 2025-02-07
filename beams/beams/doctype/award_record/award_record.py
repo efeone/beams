@@ -1,11 +1,8 @@
-# Copyright (c) 2025, efeone and contributors
-# For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
 from frappe.utils import today
 from frappe import _
-import json
 from frappe.model.mapper import get_mapped_doc
 
 class AwardRecord(Document):

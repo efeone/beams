@@ -226,13 +226,14 @@
   },
   {
    "fieldname": "section_break_fdom",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Links"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-06 10:35:30.732459",
+ "modified": "2025-02-07 10:36:23.805117",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
