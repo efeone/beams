@@ -255,14 +255,22 @@ def create_equipment_request(source_name, equipment_data, required_from, require
 
 
 @frappe.whitelist()
-def get_assets_by_bureau(bureau):
-    '''Fetch item codes of Assets linked to the given Bureau.'''
-    if not bureau:
+def get_items_by_asset_location(location):
+    """Fetch item codes linked to the Asset's location."""
+
+    # Get location from the Asset
+    # location = frappe.db.get_value("Asset", asset, "location")
+
+    if not location:
         return []
 
+    assets = frappe.db.get_all("Asset",{"location":location}, pluck="name")
+
+
+    # Fetch item codes where the location matches
     return frappe.get_all(
         "Asset",
-        filters={"bureau": bureau},
+        filters={"name": ["in", assets]},
         pluck="item_code",
         distinct=True
     ) or []

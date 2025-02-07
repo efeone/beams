@@ -269,10 +269,10 @@ frappe.ui.form.on('Project', {
                 });
         }
     });
-    // Set the item filter based on bureau's assets
+    // Set the item filter based on asset location
     frappe.call({
-      method: "beams.beams.custom_scripts.project.project.get_assets_by_bureau",
-      args: { bureau: frm.doc.bureau },
+      method: "beams.beams.custom_scripts.project.project.get_items_by_asset_location",
+      args: { location: frm.doc.location },
       callback: function(r) {
         if (r.message?.length) {
           dialog.fields_dict.equipments.grid.get_field("item").get_query = () => ({
@@ -282,7 +282,7 @@ frappe.ui.form.on('Project', {
           });
           dialog.show();
         } else {
-          frappe.msgprint(__('No available items found for the selected Bureau.'));
+          frappe.msgprint(__('No available items found for the selected location.'));
             }
         }
     });
