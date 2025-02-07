@@ -92,6 +92,7 @@
   },
   {
    "fetch_from": "project.location",
+   "fetch_if_empty": 1,
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
@@ -101,7 +102,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 10:22:11.454071",
+ "modified": "2025-02-07 10:59:45.982870",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",

@@ -85,6 +85,7 @@
   },
   {
    "fetch_from": "project.location",
+   "fetch_if_empty": 1,
    "fieldname": "loacation",
    "fieldtype": "Link",
    "label": "Loacation",
@@ -94,7 +95,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 10:21:06.188257",
+ "modified": "2025-02-07 11:01:57.765589",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Hire Request",

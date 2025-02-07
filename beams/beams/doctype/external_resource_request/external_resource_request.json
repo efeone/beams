@@ -86,6 +86,7 @@
   },
   {
    "fetch_from": "project.location",
+   "fetch_if_empty": 1,
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
@@ -95,7 +96,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 10:14:56.272915",
+ "modified": "2025-02-07 11:02:17.202599",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Resource Request",
