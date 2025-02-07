@@ -320,6 +320,15 @@ def get_Project_custom_fields():
                 "label": "Requirements",
                 "fetch_from":"program_request.requirements",
                 "insert_after": "bureau"
+            },
+            {
+                "fieldname": "location",
+                "fieldtype": "Link",
+                "label": "location",
+                "options":"Location",
+                "fetch_from":"program_request.location",
+                "insert_after": "department",
+                "fetch_on_save_if_empty":1
             }
 
         ]
