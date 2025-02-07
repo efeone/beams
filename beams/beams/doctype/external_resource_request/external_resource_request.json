@@ -9,6 +9,7 @@
   "section_break_ed5d",
   "project",
   "bureau",
+  "location",
   "column_break_fhpe",
   "posting_date",
   "required_from",
@@ -82,12 +83,19 @@
   {
    "fieldname": "column_break_fhpe",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "project.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-29 15:23:11.280247",
+ "modified": "2025-02-07 10:14:56.272915",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Resource Request",

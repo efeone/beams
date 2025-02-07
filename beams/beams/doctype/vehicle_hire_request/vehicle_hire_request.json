@@ -10,6 +10,7 @@
   "transportation_request",
   "project",
   "bureau",
+  "loacation",
   "column_break_iqrb",
   "posting_date",
   "required_on",
@@ -49,6 +50,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
@@ -80,12 +82,19 @@
   {
    "fieldname": "section_break_liay",
    "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "project.location",
+   "fieldname": "loacation",
+   "fieldtype": "Link",
+   "label": "Loacation",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-28 09:48:06.485803",
+ "modified": "2025-02-07 10:21:06.188257",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Hire Request",

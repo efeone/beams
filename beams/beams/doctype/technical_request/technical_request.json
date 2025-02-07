@@ -8,6 +8,7 @@
  "field_order": [
   "project",
   "bureau",
+  "location",
   "department",
   "designation",
   "no_of_employees",
@@ -115,12 +116,19 @@
    "label": "Required Employees",
    "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
    "options": "Employees"
+  },
+  {
+   "fetch_from": "project.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-03 12:44:20.517584",
+ "modified": "2025-02-07 10:29:28.739217",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
