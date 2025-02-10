@@ -131,9 +131,11 @@ def update_equipment_quantities(doc, method):
 					)
 				equipment_a_request = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "parent")
 				ea_item = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "item")
-				equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
-				er_doc = frappe.get_doc("Equipment Request", equipment_request)
-				for e_item in er_doc.required_equipments:
-					if e_item.required_item == ea_item:
-						e_item.issued_quantity = (e_item.issued_quantity + item.qty)
-						e_item.save()
+				if equipment_a_request:
+					equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
+					if equipment_request:
+						er_doc = frappe.get_doc("Equipment Request", equipment_request)
+						for e_item in er_doc.required_equipments:
+							if e_item.required_item == ea_item:
+								e_item.issued_quantity = (e_item.issued_quantity + item.qty)
+						er_doc.save()
