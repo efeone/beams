@@ -259,7 +259,6 @@ def create_equipment_request(source_name, equipment_data, required_from, require
     })
 
     request_doc.insert(ignore_permissions=True)
-
     project_name = frappe.db.get_value('Project', source_name, 'project_name')
     frappe.msgprint(_("Equipment Request created successfully for project: {}.").format(project_name),indicator="green",alert=1)
     return True
