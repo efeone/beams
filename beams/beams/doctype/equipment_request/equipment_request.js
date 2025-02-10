@@ -48,7 +48,7 @@ frappe.ui.form.on('Required Items Detail', {
             callback: function(r) {
                 if (r.message) {
                     const available_qty = r.message[row.required_item] || 0;
-                    row.available_item_quantity = available_qty;
+                    row.available_quantity = available_qty;
                     frm.refresh_field('required_equipments');
                 }
             }
