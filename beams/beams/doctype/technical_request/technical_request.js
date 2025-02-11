@@ -17,7 +17,7 @@ frappe.ui.form.on('Technical Request', {
         set_employee_query(frm);
         toggle_reason_for_rejection_field(frm);
 
-        if (!frm.is_new()) {
+        if (!frm.is_new() && frm.doc.workflow_state === "Approved") {
             frm.add_custom_button("External Resource Request", function() {
                 frappe.call({
                     method: "beams.beams.doctype.technical_request.technical_request.map_external_resource_request",
