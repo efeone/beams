@@ -102,27 +102,24 @@ frappe.ui.form.on('Appraisal', {
                        frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
                }
 
-        // Bind the change event to the 'marks' input field in 'employee_self_kra_rating'
-        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.off('change', 'input[data-fieldname="marks"]'); // Remove existing handlers
-        frm.fields_dict['employee_self_kra_rating'].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function() {
-            let value = Number($(this).val());
-            if (value > 5) {
-                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
-            }
-        });
-    },
+     ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating'].forEach(field => {
+         frm.fields_dict[field].grid.wrapper.on('change', 'input[data-fieldname="marks"]', function () {
+             let value = parseFloat($(this).val());
+             if (value > 5) {
+                 frappe.msgprint(__('Marks cannot be greater than 5.'));
+                 $(this).val('');  // Reset invalid value
+             }
+         });
+     });
+ },
 
-    validate: function(frm) {
-        let invalid = false;
-        frm.doc.employee_self_kra_rating.forEach(function(row) {
-            if (row.marks > 5 && !invalid) {
-                frappe.msgprint(__('Marks cannot be greater than 5.'), __("Message"));
-                frappe.validated = false;
-                invalid = true;
-            }
-        });
-},
-
+ validate: function(frm) {
+     for (let field of ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']) {
+         if (frm.doc[field] && frm.doc[field].some(row => row.marks > 5)) {
+             frappe.throw(__('Marks cannot be greater than 5.'));
+         }
+     }
+ },
 
     show_feedback_dialog: function (frm) {
         let dialog = new frappe.ui.Dialog({
