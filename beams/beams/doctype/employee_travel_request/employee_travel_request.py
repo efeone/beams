@@ -30,6 +30,8 @@ class EmployeeTravelRequest(Document):
         batta_policy = get_batta_policy(self.requested_by)
         if batta_policy:
             self.batta_policy = batta_policy.get("name")
+
+    @frappe.whitelist()
     def validate_dates(self):
         if self.start_date and self.end_date:
             if self.start_date > self.end_date:

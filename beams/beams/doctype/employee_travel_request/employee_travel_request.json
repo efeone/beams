@@ -225,6 +225,7 @@
    "options": "Dynamic Link"
   },
   {
+   "collapsible": 1,
    "fieldname": "section_break_fdom",
    "fieldtype": "Section Break",
    "label": "Links"
@@ -233,7 +234,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 10:36:23.805117",
+ "modified": "2025-02-07 15:07:23.281161",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

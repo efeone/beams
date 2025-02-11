@@ -70,8 +70,13 @@ frappe.ui.form.on("Equipment Acquiral Request", {
                                 let child = frappe.model.add_child(po, 'Purchase Order Item', 'items');
                                 child.item_code = item.item_code;
                                 child.qty = item.qty;
+                                frm.doc.required_items.forEach(required_item => {
+                                if (required_item.item === item.item_code) {
+                                    child.reference_doctype = "Required Acquiral Items Detail";
+                                    child.reference_document = required_item.name;
+                                }
                             });
-
+                            });
                             frappe.db.insert(po).then(doc => {
                                 frappe.show_alert({
                                     message: __('Purchase Order created successfully'),
@@ -150,6 +155,12 @@ frappe.ui.form.on("Equipment Acquiral Request", {
                                 let child = frappe.model.add_child(po, 'Purchase Order Item', 'items');
                                 child.item_code = service_item.item_code;
                                 child.qty = service_item.qty;
+                                frm.doc.required_items.forEach(required_item => {
+                                if (required_item.service_item === service_item.item_code) {
+                                    child.reference_doctype = "Required Acquiral Items Detail";
+                                    child.reference_document = required_item.name;
+                                }
+                            });
                             });
 
                             frappe.db.insert(po).then(doc => {

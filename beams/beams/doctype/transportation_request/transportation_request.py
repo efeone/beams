@@ -26,7 +26,7 @@ class TransportationRequest(Document):
 
         total_vehicles = len(self.vehicles or [])
         self.no_of_own_vehicles = total_vehicles
-        
+
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
@@ -49,6 +49,7 @@ def map_transportation_to_vehicle(source_name, target_doc=None):
                 "field_map": {
                     "project": "project",
                     "bureau": "bureau",
+                    "location": "location",
                     "required_on": "required_on"
                 }
             }
