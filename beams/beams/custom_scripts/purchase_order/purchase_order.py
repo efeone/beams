@@ -118,7 +118,7 @@ def update_equipment_quantities(doc, method):
 	Update the 'acquired_quantity' field in the 'Required Acquiral Items' child table
 	of the linked Equipment Acquiral Request when the Purchase Order is submitted.
 	"""
-	if doc.per_received == 100 and doc.workflow_state == "Approved":
+	if doc.per_received == 100 and doc.workflow_state == "Approved" and doc.per_billed == 0:
 		if doc.items:
 			for item in doc.items:
 				if hasattr(item, 'reference_document') and item.reference_document:
