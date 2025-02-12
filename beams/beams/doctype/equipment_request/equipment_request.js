@@ -5,14 +5,6 @@ frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
 
-        if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
-            frm.add_custom_button(__('Asset Movement'), function () {
-                let asset_movement = frappe.model.get_new_doc("Asset Movement");
-                asset_movement.posting_date = frm.doc.posting_date;
-                frappe.set_route("form", "Asset Movement", asset_movement.name);
-            }, __("Create"));
-        }
-
         frm.add_custom_button(__('Equipment Acquiral Request'), function () {
             frappe.model.open_mapped_doc({
                 method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
@@ -43,7 +35,7 @@ frappe.ui.form.on('Required Items Detail', {
             method: "beams.beams.custom_scripts.project.project.get_available_quantities",
             args: {
                 items: [row.required_item],
-                bureau: frm.doc.bureau
+                location: frm.doc.location
             },
             callback: function(r) {
                 if (r.message) {
@@ -54,7 +46,50 @@ frappe.ui.form.on('Required Items Detail', {
             }
         });
     },
-});
+
+    asset_movement: function (frm, cdt, cdn) {
+       let row = locals[cdt][cdn];
+       frappe.db.get_value('Item', row.required_item, 'item_code', function(r) {
+           if (r && r.item_code) {
+               // Open the prompt dialog with employee and asset fields
+               frappe.prompt([
+                   {
+                       label: 'Employee',
+                       fieldname: 'employee',
+                       fieldtype: 'Link',
+                       options: 'Employee',
+                       reqd: 1
+                   },
+                   {
+                       label: 'Asset',
+                       fieldname: 'asset',
+                       fieldtype: 'Link',
+                       options: 'Asset',
+                       reqd: 1,
+                       get_query: function () {
+                           return {
+                               filters: { item_code: r.item_code }  // Filter assets by item_code
+                           };
+                       }
+                   }
+               ],
+               function(values) {
+                   // Call backend method to map the asset movement
+                   frappe.model.open_mapped_doc({
+                       method: "beams.beams.doctype.equipment_request.equipment_request.map_asset_movement",
+                       frm: frm,
+                       args: {
+                         to_employee: values.employee,
+           							 asset: values.asset
+           						}
+                   });
+               }, __('Asset Movement'), __('Create'));
+           } else {
+               frappe.msgprint(__('Invalid required item selected.'));
+           }
+       });
+      }
+    });
 
 function validate_dates(frm) {
     if (frm.doc.required_from && frm.doc.required_to) {
@@ -71,7 +106,7 @@ function set_item_query(frm) {
           args: {
               doctype: 'Asset',
               filters: {
-                  bureau: frm.doc.bureau
+                  location: frm.doc.location
               },
               fields: ['item_code'],
               limit_page_length: 0

@@ -79,3 +79,25 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
         })
 
     return target_doc
+
+
+@frappe.whitelist()
+def map_asset_movement(source_name, target_doc=None):
+    to_employee = frappe.flags.get("args", {}).get("to_employee", '')
+    asset = frappe.flags.get("args", {}).get("asset", '')
+    asset_movement = get_mapped_doc("Equipment Request", source_name, {
+        "Equipment Request": {
+            "doctype": "Asset Movement",
+            "field_map": {
+
+            }
+        }
+    }, target_doc)
+    asset_movement.purpose = 'Issue'
+    asset_movement.append('assets', {
+            'asset': asset,
+            'to_employee': to_employee
+        })
+    asset_movement.flags.ignore_mandatory = True
+    asset_movement.save(ignore_permissions=True)
+    return asset_movement
