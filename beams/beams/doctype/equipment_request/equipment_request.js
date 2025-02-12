@@ -24,13 +24,19 @@ frappe.ui.form.on('Equipment Request', {
     },
     posting_date:function (frm){
       frm.call("validate_posting_date");
+    },
+    location: function(frm) {
+      frm.clear_table("required_equipments");
     }
 });
 
 frappe.ui.form.on('Required Items Detail', {
     required_item: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-
+        if (!frm.doc.location) {
+            frappe.msgprint(__('Please select a location first.'));
+            return;
+        }
         frappe.call({
             method: "beams.beams.custom_scripts.project.project.get_available_quantities",
             args: {
