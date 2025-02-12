@@ -281,5 +281,33 @@ frappe.ui.form.on('Project', {
                         }
                     });
                 }, __("Create"));
+                // Ensure filtering is applied when form loads
+                frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+                    let row = locals[cdt][cdn];
+                    return {
+                        filters: {
+                            designation: row.designation || ""
+                        }
+                    };
+                };
               }
             });
+
+            // Apply filter dynamically when Designation field changes in child table
+          frappe.ui.form.on('Allocated Resource Detail', {
+              designation: function(frm, cdt, cdn) {
+                  let row = locals[cdt][cdn];
+                  frappe.model.set_value(cdt, cdn, 'employee', '');
+                  if (row.designation) {
+                      frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+                          let child_row = locals[cdt][cdn];
+                          return {
+                              filters: {
+                                  designation: child_row.designation
+                              }
+                          };
+                      };
+                  }
+                  frm.refresh_field("allocated_resources_details");
+              }
+          });
