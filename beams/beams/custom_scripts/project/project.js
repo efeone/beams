@@ -261,7 +261,6 @@ frappe.ui.form.on('Project', {
                       });
                         }
                     });
-
                     // Fetch assets filtered by location
                       frappe.call({
                         method: "beams.beams.custom_scripts.project.project.get_assets_by_location",

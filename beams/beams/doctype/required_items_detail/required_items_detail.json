@@ -10,6 +10,10 @@
   "available_quantity",
   "required_quantity",
   "issued_quantity"
+  "available_item_quantity",
+  "quantity",
+  "issued_quantity",
+  "asset_movement"
  ],
  "fields": [
   {
@@ -40,12 +44,20 @@
    "label": "Required Quantity",
    "non_negative": 1,
    "reqd": 1
+   "label": "Issued Quantity",
+   "read_only": 1
+  },
+  {
+   "fieldname": "asset_movement",
+   "fieldtype": "Button",
+   "label": "Asset Movement"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
  "modified": "2025-02-10 12:10:22.977461",
+ "modified": "2025-02-07 12:28:25.754847",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
