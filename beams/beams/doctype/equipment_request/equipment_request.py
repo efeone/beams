@@ -72,7 +72,7 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
     )
 
     for item in equipment_request.required_equipments:
-        acquired_qty = item.quantity - item.issued_quantity
+        acquired_qty = item.required_quantity - item.issued_quantity
         target_item = target_doc.append("required_items", {
             "item": item.required_item,
             "quantity": acquired_qty

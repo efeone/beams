@@ -111,31 +111,33 @@ def fetch_department_from_cost_center(doc, method):
 				frappe.msgprint(_("No department found for the selected Cost Center {0}.").format(row.cost_center))
 
 
-
 @frappe.whitelist()
 def update_equipment_quantities(doc, method):
-	"""
-	Update the 'acquired_quantity' field in the 'Required Acquiral Items' child table
-	of the linked Equipment Acquiral Request when the Purchase Order is submitted.
-	"""
-	if doc.per_received == 100 and doc.workflow_state == "Approved" and doc.per_billed == 0:
-		if doc.items:
-			for item in doc.items:
-				if hasattr(item, 'reference_document') and item.reference_document:
-					ea_a_qty = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "acquired_qty")
-					frappe.db.set_value(
-						"Required Acquiral Items Detail",
-						item.reference_document,
-						"acquired_qty",
-						(ea_a_qty + item.qty)
-					)
-				equipment_a_request = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "parent")
-				ea_item = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "item")
-				if equipment_a_request:
-					equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
-					if equipment_request:
-						er_doc = frappe.get_doc("Equipment Request", equipment_request)
-						for e_item in er_doc.required_equipments:
-							if e_item.required_item == ea_item:
-								e_item.issued_quantity = (e_item.issued_quantity + item.qty)
-						er_doc.save()
+    """
+    Update the 'acquired_quantity' field in the 'Required Acquiral Items' child table
+    of the linked Equipment Acquiral Request when the Purchase Order is submitted.
+    """
+    old_doc = doc.get_doc_before_save()
+    if old_doc and old_doc.per_received != 100:
+        if doc.workflow_state == "Approved":
+            if doc.items:
+                for item in doc.items:
+                    if hasattr(item, 'reference_document') and item.reference_document:
+                        ea_a_qty = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "acquired_qty")
+                        frappe.db.set_value(
+                            "Required Acquiral Items Detail",
+                            item.reference_document,
+                            "acquired_qty",
+                            (ea_a_qty + item.qty)
+                        )
+                    equipment_a_request = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "parent")
+                    ea_item = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "item")
+
+                    if equipment_a_request:
+                        equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
+                        if equipment_request:
+                            er_doc = frappe.get_doc("Equipment Request", equipment_request)
+                            for e_item in er_doc.required_equipments:
+                                if e_item.required_item == ea_item:
+                                    e_item.issued_quantity = (e_item.issued_quantity + item.qty)
+                            er_doc.save()
