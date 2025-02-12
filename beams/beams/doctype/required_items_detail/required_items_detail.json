@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "format:ER-{YY}-{####}",
  "creation": "2025-01-20 08:36:23.098895",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -25,7 +26,8 @@
    "fieldname": "issued_quantity",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "Issued Quantity"
+   "label": "Issued Quantity",
+   "read_only": 1
   },
   {
    "fieldname": "available_quantity",
@@ -52,10 +54,11 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-12 11:23:47.202723",
+ "modified": "2025-02-12 16:10:33.688889",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

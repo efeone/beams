@@ -80,10 +80,13 @@ frappe.ui.form.on('Required Items Detail', {
                        frm: frm,
                        args: {
                          to_employee: values.employee,
-           							 asset: values.asset
+           							 asset: values.asset,
+                         ref_type: row["doctype"],
+                         ref_name: row["name"]
            						}
                    });
                }, __('Asset Movement'), __('Create'));
+
            } else {
                frappe.msgprint(__('Invalid required item selected.'));
            }
