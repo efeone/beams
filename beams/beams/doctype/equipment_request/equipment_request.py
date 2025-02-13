@@ -85,6 +85,9 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
 def map_asset_movement(source_name, target_doc=None):
     to_employee = frappe.flags.get("args", {}).get("to_employee", '')
     asset = frappe.flags.get("args", {}).get("asset", '')
+    ref_type = frappe.flags.get("args", {}).get("ref_type", '')
+    ref_name = frappe.flags.get("args", {}).get("ref_name", '')
+    print(ref_type, ref_name)
     asset_movement = get_mapped_doc("Equipment Request", source_name, {
         "Equipment Request": {
             "doctype": "Asset Movement",
@@ -98,6 +101,8 @@ def map_asset_movement(source_name, target_doc=None):
             'asset': asset,
             'to_employee': to_employee
         })
+    asset_movement.reference_doctype = ref_type
+    asset_movement.reference_name = ref_name
     asset_movement.flags.ignore_mandatory = True
     asset_movement.save(ignore_permissions=True)
     return asset_movement

@@ -85,23 +85,24 @@ frappe.ui.form.on('Required Items Detail', {
                        }
                    }
                ],
-               function(values) {
-                   // Call backend method to map the asset movement
-                   frappe.model.open_mapped_doc({
-                       method: "beams.beams.doctype.equipment_request.equipment_request.map_asset_movement",
-                       frm: frm,
-                       args: {
-                         to_employee: values.employee,
-           							 asset: values.asset
-           						}
-                   });
-               }, __('Asset Movement'), __('Create'));
-           } else {
-               frappe.msgprint(__('Invalid required item selected.'));
-           }
-       });
+               function (values) {
+                      frappe.model.open_mapped_doc({
+                          method: "beams.beams.doctype.equipment_request.equipment_request.map_asset_movement",
+                          frm: frm,
+                          args: {
+                              to_employee: values.employee,
+                              asset: values.asset,
+                              ref_type: row["doctype"],
+                              ref_name: row["name"]
+                          }
+                      });
+                  }, __('Asset Movement'), __('Create'));
+              } else {
+                  frappe.msgprint(__('Invalid required item selected.'));
+              }
+          });
       }
-    });
+  });
 
 function validate_dates(frm) {
     if (frm.doc.required_from && frm.doc.required_to) {
