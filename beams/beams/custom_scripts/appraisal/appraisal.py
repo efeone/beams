@@ -6,6 +6,16 @@ from frappe.utils import get_link_to_form
 import datetime
 from frappe.desk.form.assign_to import add as add_assign
 
+
+def validate_kra_marks(doc, method):
+    fields = ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']
+
+    for field in fields:
+        if doc.get(field):  # Check if the child table has data
+            for row in doc.get(field):
+                if row.marks and float(row.marks) > 5:
+                    frappe.throw(_("Marks cannot be greater than 5."))
+
 @frappe.whitelist()
 def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
     '''
