@@ -312,14 +312,14 @@ def get_Project_custom_fields():
                 "fieldtype": "Small Text",
                 "label": "Description",
                 "fetch_from":"program_request.description",
-                "insert_after": "requirements"
+                "insert_after": "bureau"
             },
             {
                 "fieldname": "requirements",
                 "fieldtype": "Text Editor",
                 "label": "Requirements",
                 "fetch_from":"program_request.requirements",
-                "insert_after": "bureau"
+                "insert_after": "description"
             },
             {
                 "fieldname": "location",
