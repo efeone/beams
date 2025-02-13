@@ -5,13 +5,13 @@ frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
         if (frm.doc.workflow_state === "Approved"){
-        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
-                frm: frm,
-            });
-        }, __("Create"));
-      }
+          frm.add_custom_button(__('Equipment Acquiral Request'), function () {
+              frappe.model.open_mapped_doc({
+                  method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
+                  frm: frm,
+              });
+          }, __("Create"));
+        }
     },
 
     bureau: function (frm) {
