@@ -33,6 +33,7 @@ frappe.ui.form.on('Technical Request', {
             }, "Create");
         }
       },
+
     posting_date:function (frm){
         frm.call("validate_posting_date");
       },
@@ -58,6 +59,12 @@ frappe.ui.form.on('Technical Request', {
 
     required_to: function(frm) {
         frm.call("validate_required_from_and_required_to");
+    },
+
+    validate: function(frm) {
+        if (!frm.doc.required_employees || frm.doc.required_employees.length === 0) {
+            frappe.throw(__('Required Employees field cannot be empty.'));
+        }
     }
 });
 
