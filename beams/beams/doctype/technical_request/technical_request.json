@@ -37,8 +37,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Bureau ",
-   "options": "Bureau",
-   "reqd": 1
+   "options": "Bureau"
   },
   {
    "fieldname": "department",
@@ -115,8 +114,7 @@
    "fieldtype": "Table MultiSelect",
    "label": "Required Employees",
    "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
-   "options": "Employees",
-   "reqd": 1
+   "options": "Employees"
   },
   {
    "fetch_from": "project.location",
@@ -130,7 +128,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-13 09:26:57.081388",
+ "modified": "2025-02-13 12:53:13.499201",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
