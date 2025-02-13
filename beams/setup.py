@@ -312,19 +312,19 @@ def get_Project_custom_fields():
                 "fieldtype": "Small Text",
                 "label": "Description",
                 "fetch_from":"program_request.description",
-                "insert_after": "requirements"
+                "insert_after": "bureau"
             },
             {
                 "fieldname": "requirements",
-                "fieldtype": "Small Text",
+                "fieldtype": "Text Editor",
                 "label": "Requirements",
                 "fetch_from":"program_request.requirements",
-                "insert_after": "bureau"
+                "insert_after": "description"
             },
             {
                 "fieldname": "location",
                 "fieldtype": "Link",
-                "label": "location",
+                "label": "Location",
                 "options":"Location",
                 "fetch_from":"program_request.location",
                 "insert_after": "department",

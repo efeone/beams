@@ -234,7 +234,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 15:07:23.281161",
+ "modified": "2025-02-12 17:16:14.451010",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
@@ -255,6 +255,7 @@
    "write": 1
   }
  ],
+ "search_fields": "requested_by",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
