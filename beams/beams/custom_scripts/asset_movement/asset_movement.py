@@ -6,7 +6,7 @@ def update_issued_quantity(doc, method):
     # Ensure reference doctype is "Equipment Request"
     if doc.reference_doctype != "Required Items Detail":
         return
-
+    # Check if the referenced Required Items Detail exists
     if not frappe.db.exists("Required Items Detail", doc.reference_name):
         frappe.throw("Referenced Required Items Detail Not Found")
 
