@@ -261,25 +261,7 @@ frappe.ui.form.on('Project', {
                       });
                         }
                     });
-
-                    // Fetch assets filtered by location
-                      frappe.call({
-                        method: "beams.beams.custom_scripts.project.project.get_assets_by_location",
-                        args: {
-                          location: frm.doc.location },
-                        callback: function(r) {
-                            if (r.message?.length) {
-                                dialog.fields_dict.equipments.grid.get_field("item").get_query = () => ({
-                                    filters: {
-                                        name: ["in", r.message]
-                                    }
-                                });
-                                dialog.show();
-                            } else {
-                                frappe.msgprint(__('No available items found for the selected Location.'));
-                            }
-                        }
-                    });
+                    dialog.show();
                 }, __("Create"));
                 // Ensure filtering is applied when form loads
                 frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
