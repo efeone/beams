@@ -8,129 +8,105 @@ frappe.ui.form.on('Project', {
             });
         }, __("Create"));
 
+        // Add "Technical Request" button under the "Create" group
+        frm.add_custom_button(__('Technical Request'), function () {
+            // Open a dialog with the specified fields
+            let dialog = new frappe.ui.Dialog({
+                title: 'Technical Request',
+                fields: [
+                    {
+                        fieldtype: 'Table',
+                        label: 'Requirements',
+                        fieldname: 'requirements',
+                        reqd: 1,
+                        fields: [
+                            {
+                                label: 'Department',
+                                fieldtype: 'Link',
+                                fieldname: 'department',
+                                options: 'Department',
+                                in_list_view: 1,
+                                reqd: 1
+                            },
+                            {
+                                label: 'Designation',
+                                fieldtype: 'Link',
+                                fieldname: 'designation',
+                                options: 'Designation',
+                                in_list_view: 1,
+                                reqd: 1
+                            },
+                            {
+                                label: 'No of Employees',
+                                fieldtype: 'Int',
+                                fieldname: 'no_of_employees',
+                                in_list_view: 1
+                            },
+                            {
+                                label: 'Required From',
+                                fieldtype: 'Datetime',
+                                fieldname: 'required_from',
+                                in_list_view: 1,
+                                reqd: 1
+                            },
+                            {
+                                label: 'Required To',
+                                fieldtype: 'Datetime',
+                                fieldname: 'required_to',
+                                in_list_view: 1,
+                                reqd: 1
+                            },
+                            {
+                                label: 'Remarks',
+                                fieldtype: 'Small Text',
+                                fieldname: 'remarks',
+                                in_list_view: 1
+                            }
+                        ]
+                    }
+                ],
+                size: 'large',
+                primary_action_label: 'Submit',
+                primary_action: function () {
+                    let values = dialog.get_values();
+                    if (values && values.requirements) {
+                        // Perform validation for each row
+                        for (let i = 0; i < values.requirements.length; i++) {
+                            let row = values.requirements[i];
 
-        // Adds a button to the 'Project' form to create an Transportation Request.
-        frm.add_custom_button(__('Transportation Request'), function () {
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.custom_scripts.project.project.create_transportation_request",
-                frm: frm,
+                            if (!row.required_from || !row.required_to) {
+                                frappe.msgprint({
+                                    title: __('Validation Error'),
+                                    message: __('Please fill both "Required From" and "Required To" in #row  {0}.', [i + 1]),
+                                    indicator: 'red'
+                                });
+                                return;
+                            }
+
+                            // Ensure Required To is later than Required From
+                            if (row.required_to <= row.required_from) {
+                                frappe.msgprint({
+                                    title: __('Validation Error'),
+                                    message: __('"Required To" must be later than "Required From" in # row {0}.', [i + 1]),
+                                    indicator: 'red'
+                                });
+                                return;
+                            }
+                        }
+
+                        frappe.call({
+                            method: 'beams.beams.custom_scripts.project.project.create_technical_support_request',
+                            args: {
+                                project_id: frm.doc.name,
+                                requirements: JSON.stringify(values.requirements)
+                            },
+                        });
+                        dialog.hide();
+                    }
+                }
             });
-        }, __("Create"));
-
-      // Add "Technical Request" button under the "Create" group
-      frm.add_custom_button(__('Technical Request'), function () {
-          // Open a dialog with the specified fields
-          let dialog = new frappe.ui.Dialog({
-              title: 'Technical Request',
-              fields: [
-                  {
-                      fieldtype: 'Table',
-                      label: 'Requirements',
-                      fieldname: 'requirements',
-                      reqd: 1,
-                      fields: [
-                          {
-                              label: 'Department',
-                              fieldtype: 'Link',
-                              fieldname: 'department',
-                              options: 'Department',
-                              in_list_view: 1,
-                              reqd: 1
-                          },
-                          {
-                              label: 'Designation',
-                              fieldtype: 'Link',
-                              fieldname: 'designation',
-                              options: 'Designation',
-                              in_list_view: 1,
-                              reqd: 1
-                          },
-                          {
-                              label: 'No of Employees',
-                              fieldtype: 'Int',
-                              fieldname: 'no_of_employees',
-                              in_list_view: 1
-                          },
-                          {
-                              label: 'Required From',
-                              fieldtype: 'Datetime',
-                              fieldname: 'required_from',
-                              in_list_view: 1,
-                              reqd: 1
-                          },
-                          {
-                              label: 'Required To',
-                              fieldtype: 'Datetime',
-                              fieldname: 'required_to',
-                              in_list_view: 1,
-                              reqd: 1
-                          },
-                          {
-                              label: 'Remarks',
-                              fieldtype: 'Small Text',
-                              fieldname: 'remarks',
-                              in_list_view: 1
-                          }
-                      ]
-                  }
-              ],
-              size: 'large',
-              primary_action_label: 'Submit',
-              primary_action: function () {
-                  let values = dialog.get_values();
-                  if (values && values.requirements) {
-                      // Perform validation for each row
-                      for (let i = 0; i < values.requirements.length; i++) {
-                          let row = values.requirements[i];
-
-                          if (!row.required_from || !row.required_to) {
-                              frappe.msgprint({
-                                  title: __('Validation Error'),
-                                  message: __('Please fill both "Required From" and "Required To" in #row  {0}.', [i + 1]),
-                                  indicator: 'red'
-                              });
-                              return;
-                          }
-
-                          // Ensure Required To is later than Required From
-                          if (row.required_to <= row.required_from) {
-                              frappe.msgprint({
-                                  title: __('Validation Error'),
-                                  message: __('"Required To" must be later than "Required From" in # row {0}.', [i + 1]),
-                                  indicator: 'red'
-                              });
-                              return;
-                          }
-                      }
-
-                      frappe.call({
-                          method: 'beams.beams.custom_scripts.project.project.create_technical_support_request',
-                          args: {
-                              project_id: frm.doc.name,
-                              requirements: JSON.stringify(values.requirements)
-                          },
-                      });
-                      dialog.hide();
-                  }
-              }
-          });
-          dialog.show();
-        }, __("Create"));
-
-        frm.add_custom_button("External Resource Request", function() {
-            frappe.new_doc("External Resource Request", {
-                project: frm.doc.name,
-                bureau: frm.doc.bureau
-            });
-        }, "Create");
-
-        // Add a button to create an Equipment Acquiral Request
-        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
-          frappe.model.open_mapped_doc({
-            method: "beams.beams.custom_scripts.project.project.map_equipment_acquiral_request",
-            frm: frm,
-          });
-        }, __("Create"));
+            dialog.show();
+          }, __("Create"));
 
         // Add "Equipment Request" button under the "Create" group
         frm.add_custom_button(__('Equipment Request'), function () {
@@ -263,33 +239,55 @@ frappe.ui.form.on('Project', {
                     });
                     dialog.show();
                 }, __("Create"));
-                // Ensure filtering is applied when form loads
-                frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
-                    let row = locals[cdt][cdn];
-                    return {
-                        filters: {
-                            designation: row.designation || ""
-                        }
-                    };
-                };
-              }
-            });
 
-            // Apply filter dynamically when Designation field changes in child table
-          frappe.ui.form.on('Allocated Resource Detail', {
-              designation: function(frm, cdt, cdn) {
-                  let row = locals[cdt][cdn];
-                  frappe.model.set_value(cdt, cdn, 'employee', '');
-                  if (row.designation) {
-                      frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
-                          let child_row = locals[cdt][cdn];
-                          return {
-                              filters: {
-                                  designation: child_row.designation
-                              }
-                          };
-                      };
-                  }
-                  frm.refresh_field("allocated_resources_details");
-              }
+        // Add a button to create an Equipment Acquiral Request
+        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
+          frappe.model.open_mapped_doc({
+            method: "beams.beams.custom_scripts.project.project.map_equipment_acquiral_request",
+            frm: frm,
           });
+        }, __("Create"));
+
+        frm.add_custom_button("External Resource Request", function() {
+            frappe.new_doc("External Resource Request", {
+                project: frm.doc.name,
+                bureau: frm.doc.bureau
+            });
+        }, "Create");
+        // Adds a button to the 'Project' form to create an Transportation Request.
+        frm.add_custom_button(__('Transportation Request'), function () {
+            frappe.model.open_mapped_doc({
+                method: "beams.beams.custom_scripts.project.project.create_transportation_request",
+                frm: frm,
+            });
+        }, __("Create"));
+        // Ensure filtering is applied when form loads
+        frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+            let row = locals[cdt][cdn];
+            return {
+                filters: {
+                    designation: row.designation || ""
+                }
+            };
+        };
+      }
+    });
+
+    // Apply filter dynamically when Designation field changes in child table
+  frappe.ui.form.on('Allocated Resource Detail', {
+      designation: function(frm, cdt, cdn) {
+          let row = locals[cdt][cdn];
+          frappe.model.set_value(cdt, cdn, 'employee', '');
+          if (row.designation) {
+              frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+                  let child_row = locals[cdt][cdn];
+                  return {
+                      filters: {
+                          designation: child_row.designation
+                      }
+                  };
+              };
+          }
+          frm.refresh_field("allocated_resources_details");
+      }
+  });
