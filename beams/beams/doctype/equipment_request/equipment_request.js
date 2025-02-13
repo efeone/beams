@@ -32,6 +32,11 @@ frappe.ui.form.on('Equipment Request', {
 });
 
 frappe.ui.form.on('Required Items Detail', {
+    form_render: function(frm, cdt, cdn) {
+        if (frm.doc.workflow_state != "Approved") {
+            $(".btn.btn-xs.btn-default").hide();
+        }
+    },
     required_item: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         if (!frm.doc.location) {
