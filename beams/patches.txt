@@ -1,6 +1,7 @@
 [pre_model_sync]
 beams.patches.rename_hod_role #30-10-2024
 beams.patches.delete_custom_fields  #26-11-2024-1
+beams.patches.update_account  #13-02-20250
 
 [post_model_sync]
 # Patches added in this section will be executed after doctypes are migrated

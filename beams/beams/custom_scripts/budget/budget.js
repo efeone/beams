@@ -77,7 +77,8 @@ function set_filters(frm) {
     frm.set_query('budget_template', function () {
         return {
             filters: {
-                division: frm.doc.division
+                division: frm.doc.division,
+                company: frm.doc.company
             }
         };
     });

@@ -3323,7 +3323,15 @@ def get_property_setters():
             "property": "depends_on",
             "property_type": "Code",
             "value": "eval: doc.employee_naming_by_department === 0 "
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget Account",
+            "field_name": "account",
+            "property": "read_only",
+            "property_type": "Link",
+            "value": 1
+        },
     ]
 
 def get_material_request_custom_fields():
