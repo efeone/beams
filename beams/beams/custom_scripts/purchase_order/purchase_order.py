@@ -139,5 +139,5 @@ def update_equipment_quantities(doc, method):
                             er_doc = frappe.get_doc("Equipment Request", equipment_request)
                             for e_item in er_doc.required_equipments:
                                 if e_item.required_item == ea_item:
-                                    e_item.issued_quantity = (e_item.issued_quantity + item.qty)
+                                    e_item.acquired_quantity = (e_item.acquired_quantity + item.qty)
                             er_doc.save()

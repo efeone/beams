@@ -10,6 +10,7 @@
   "available_quantity",
   "required_quantity",
   "issued_quantity",
+  "acquired_quantity",
   "asset_movement"
  ],
  "fields": [
@@ -48,12 +49,20 @@
    "fieldname": "asset_movement",
    "fieldtype": "Button",
    "label": "Asset Movement"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "acquired_quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Acquired Quantity",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-12 11:23:47.202723",
+ "modified": "2025-02-13 09:43:47.778466",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
