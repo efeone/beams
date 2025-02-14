@@ -254,8 +254,9 @@ doc_events = {
         "validate": "beams.beams.custom_scripts.leave_application.leave_application.validate"
     },
     "Employee" : {
-        "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert_employee",
-        "validate": "beams.beams.custom_scripts.employee.employee.set_employee_relieving_date"
+        "autoname": "beams.beams.custom_scripts.employee.employee.autoname",
+        "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert",
+        "validate": "beams.beams.custom_scripts.employee.employee.validate"
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
