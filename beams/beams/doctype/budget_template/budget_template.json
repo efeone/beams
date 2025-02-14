@@ -10,6 +10,7 @@
   "department",
   "column_break",
   "division",
+  "company",
   "section_break",
   "budget_template_item"
  ],
@@ -28,6 +29,7 @@
    "unique": 1
   },
   {
+   "depends_on": "eval:doc.company",
    "fieldname": "budget_template_item",
    "fieldtype": "Table",
    "label": "Budget Template Item",
@@ -49,11 +51,18 @@
   {
    "fieldname": "section_break",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-03 16:06:00.882855",
+ "modified": "2025-02-13 10:50:51.981266",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",

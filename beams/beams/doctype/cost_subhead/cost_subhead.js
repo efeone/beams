@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Cost Subhead", {
     refresh(frm) {
-        frm.set_query('account', () => {
+        frm.set_query('default_account','accounts', () => {
             return {
                 filters: {
                     is_group: 0
