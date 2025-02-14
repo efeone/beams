@@ -22,15 +22,9 @@ frappe.ui.form.on('Budget', {
             });
 
             // Fetch and set budget_template if only one exists for the selected division
-            frappe.db.count('Budget Template', { division: frm.doc.division }).then(count => {
-                if (count === 1) {
-                    frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
-                        if (r.message) {
-                            frm.set_value('budget_template', r.message.name);
-                        }
-                    });
-                } else {
-                    frm.set_value('budget_template', null);
+            frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
+                if (r.message) {
+                    frm.set_value('budget_template', r.message.name);
                 }
             });
         } else {
