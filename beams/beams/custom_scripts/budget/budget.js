@@ -14,23 +14,19 @@ frappe.ui.form.on('Budget', {
         }
     },
     division: function (frm) {
+        console.log("divi");
         set_filters(frm);
         if (frm.doc.division) {
+            console.log(frm.doc.division);
             // Fetch cost center based on selected division
             frappe.db.get_value('Division', frm.doc.division, 'cost_center').then(r => {
                 frm.set_value('cost_center', r.message.cost_center);
             });
 
             // Fetch and set budget_template if only one exists for the selected division
-            frappe.db.count('Budget Template', { division: frm.doc.division }).then(count => {
-                if (count === 1) {
-                    frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
-                        if (r.message) {
-                            frm.set_value('budget_template', r.message.name);
-                        }
-                    });
-                } else {
-                    frm.set_value('budget_template', null);
+            frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
+                if (r.message) {
+                    frm.set_value('budget_template', r.message.name);
                 }
             });
         } else {
