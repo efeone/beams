@@ -110,6 +110,7 @@
    "label": "No of Employees"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "required_employees",
    "fieldtype": "Table MultiSelect",
    "label": "Required Employees",
@@ -128,7 +129,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-13 12:53:13.499201",
+ "modified": "2025-02-14 12:02:09.724554",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
