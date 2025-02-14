@@ -47,12 +47,13 @@ def after_install():
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
     create_custom_fields(get_event_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_project_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
     create_custom_fields(get_vehicle_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_custom_fields(),ignore_validate=True)
     create_custom_fields(get_item_group_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_hr_settings_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -111,12 +112,13 @@ def before_uninstall():
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
     delete_custom_fields(get_event_custom_fields())
-    delete_custom_fields(get_Project_custom_fields())
+    delete_custom_fields(get_project_custom_fields())
     delete_custom_fields(get_Payroll_Settings_custom_fields())
     delete_custom_fields(get_asset_custom_fields())
     delete_custom_fields(get_vehicle_custom_fields())
     delete_custom_fields(get_interview_custom_fields())
     delete_custom_fields(get_item_group_custom_fields())
+    delete_custom_fields(get_hr_settings_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -208,7 +210,7 @@ def get_Payroll_Settings_custom_fields():
         ]
     }
 
-def get_Project_custom_fields():
+def get_project_custom_fields():
     '''
     Custom fields that need to be added to the Project Doctype
     '''
@@ -3314,6 +3316,14 @@ def get_property_setters():
             "property_type": "",
             "value": 1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "HR Settings",
+            "field_name": "emp_created_by",
+            "property": "depends_on",
+            "property_type": "Code",
+            "value": "eval: doc.employee_naming_by_department === 0 "
+        }
     ]
 
 def get_material_request_custom_fields():
@@ -3677,5 +3687,20 @@ def get_vehicle_custom_fields():
             "options": "Vehicle Documents",
             "insert_after": "vehicle_section_break"
         }
+        ]
+    }
+
+def get_hr_settings_custom_fields():
+    '''
+        Custom fields that need to be added to the HR Settings DocType
+    '''
+    return {
+        "HR Settings": [
+            {
+                "fieldname": "employee_naming_by_department",
+                "fieldtype": "Check",
+                "label": "Employee Naming By Department",
+                "insert_after": "employee_settings"
+            }
         ]
     }
