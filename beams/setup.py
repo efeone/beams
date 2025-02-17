@@ -54,6 +54,7 @@ def after_install():
     create_custom_fields(get_interview_custom_fields(),ignore_validate=True)
     create_custom_fields(get_item_group_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hr_settings_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_asset_category_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -119,6 +120,7 @@ def before_uninstall():
     delete_custom_fields(get_interview_custom_fields())
     delete_custom_fields(get_item_group_custom_fields())
     delete_custom_fields(get_hr_settings_custom_fields())
+    delete_custom_fields(get_asset_category_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -3709,6 +3711,22 @@ def get_hr_settings_custom_fields():
                 "fieldtype": "Check",
                 "label": "Employee Naming By Department",
                 "insert_after": "employee_settings"
+            }
+        ]
+    }
+
+def get_asset_category_custom_fields():
+    '''
+        Custom fields that need to be added to the Asset Category DocType
+    '''
+    return {
+        "Asset Category": [
+            {
+                "fieldname": "parent_asset_category",
+                "fieldtype": "Link",
+                "label": "Parent Asset Category",
+                "options": "Asset Category",
+                "insert_after": "asset_category_name"
             }
         ]
     }
