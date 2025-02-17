@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{ACC}-{ASS}-{YYYY}",
+ "autoname": "format:{ACC}-{YYYY}-{####}",
  "creation": "2025-02-17 10:05:17.344093",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -48,7 +48,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-17 11:02:18.279652",
+ "modified": "2025-02-17 11:42:08.794282",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Bundle",

@@ -20,7 +20,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "item.item_name",
+   "fetch_from": "item.stock_uom",
    "fieldname": "uom",
    "fieldtype": "Link",
    "in_list_view": 1,
@@ -39,7 +39,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-17 10:14:45.001638",
+ "modified": "2025-02-17 11:36:45.969402",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Bundle Stock Item",

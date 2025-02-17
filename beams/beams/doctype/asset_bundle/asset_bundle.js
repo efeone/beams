@@ -12,7 +12,7 @@ frappe.ui.form.on("Asset Bundle", {
   };
 },
 validate: function(frm) {
-    if (!frm.doc.asset_bundle_stock_items?.length && !frm.doc.assets?.length && !frm.doc.bundles?.length) {
+    if (!frm.doc.stock_items?.length && !frm.doc.assets?.length && !frm.doc.bundles?.length) {
         frappe.msgprint(__('At least one of Stock Items, Assets, or Bundles must be filled in.'));
         frappe.validated = false;
     }
