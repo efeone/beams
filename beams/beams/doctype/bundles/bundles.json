@@ -1,0 +1,33 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-17 10:19:43.491850",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "asset_bundle"
+ ],
+ "fields": [
+  {
+   "fieldname": "asset_bundle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Bundle",
+   "options": "Asset Bundle",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-02-17 10:20:10.025430",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Bundles",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
