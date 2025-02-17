@@ -115,7 +115,8 @@
    "fieldtype": "Table MultiSelect",
    "label": "Required Employees",
    "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
-   "options": "Employees"
+   "options": "Employees",
+   "reqd": 1
   },
   {
    "fetch_from": "project.location",
