@@ -591,6 +591,34 @@ def get_asset_custom_fields():
                 "options":"Bureau",
                 "label": "Bureau",
                 "insert_after": "location"
+            },
+            {
+                "fieldname": "in_transit",
+                "fieldtype": "Check",
+                "label": "In Transit",
+                "insert_after": "is_composite_asset",
+                "allow_on_submit": 1,
+                "read_only":1
+
+            },
+            {
+                "fieldname": "warranty_details_section",
+                "fieldtype": "Section Break",
+                "label": "Warranty Details Section",
+                "insert_after": "comprehensive_insurance",
+                "collapsible": 1
+            },
+            {
+                "fieldname": "warranty_reference_no",
+                "fieldtype": "Data",
+                "label": "Warranty Reference No",
+                "insert_after": "warranty_details_section"
+            },
+            {
+                "fieldname": "warranty_till",
+                "fieldtype": "Date",
+                "label": "Warranty Till",
+                "insert_after": "warranty_reference_no"
             }
         ]
     }
