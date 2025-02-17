@@ -9,6 +9,7 @@
   "section_break_rev9",
   "amended_from",
   "asset",
+  "employee",
   "asset_photos",
   "location",
   "remarks",
@@ -61,12 +62,19 @@
    "fieldname": "has_damage",
    "fieldtype": "Check",
    "label": "Has Damage"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-17 10:48:50.096377",
+ "modified": "2025-02-17 11:32:44.935636",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing",
@@ -87,7 +95,8 @@
    "write": 1
   }
  ],
- "sort_field": "modified",
+ "search_fields": "asset",
+ "sort_field": "creation",
  "sort_order": "DESC",
  "states": []
 }
