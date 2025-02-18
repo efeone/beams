@@ -277,6 +277,15 @@ def map_appraisal_to_event(source_name):
         raise frappe.exceptions.ValidationError(f"Error: {str(e)}")
 
 @frappe.whitelist()
+def check_existing_event(appraisal_reference):
+    """
+    Check if an Event exists for the given Appraisal.
+
+    """
+    event = frappe.db.get_value("Event", {"appraisal_reference": appraisal_reference}, "name")
+    return event if event else None
+
+@frappe.whitelist()
 def assign_tasks_sequentially(doc=None, method=None):
     """
     Assign tasks sequentially to assessment officers listed in the Appraisal Template,

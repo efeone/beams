@@ -2759,13 +2759,6 @@ def get_appraisal_custom_fields():
                 "read_only": 1
 			},
             {
-                "fieldname": "event_reference",
-                "fieldtype": "Link",
-                "label": "Event Reference",
-                "insert_after": "appraisal_cycle",
-                "options": "Event"
-            },
-            {
                 "fieldname": "employee_self_kra_rating",
                 "fieldtype": "Table",
                 "label": "Employee Rating",

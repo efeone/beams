@@ -60,18 +60,32 @@ frappe.ui.form.on('Appraisal', {
             $(frm.fields_dict['appraisal_summary'].wrapper).html('<p>Please save the Appraisal to view the summary.</p>');
         }
 
-        // Add Custom Button for One to One Meeting
         if (frm.doc.employee) {
-        // Always add the custom button
-        frm.add_custom_button(__('One to One Meeting'), function () {
+            frappe.call({
+                method: "beams.beams.custom_scripts.appraisal.appraisal.check_existing_event",
+                args: { appraisal_reference: frm.doc.name },
+                callback: function(r) {
+                    if (r.message) {
+                        // Remove existing "View Event" button before adding a new one
+                        frm.fields_dict["view_event_button"]?.$wrapper.find('button').remove();
 
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
-                args: { source_name: frm.doc.name },
-                frm: frm
+                        // Add "View Event" as a separate button
+                        frm.add_custom_button(__('View Event'), function () {
+                            frappe.set_route('Form', 'Event', r.message);
+                        });
+                    }
+                }
             });
-        }, __('Create'));
-    }
+
+            // Add "One to One Meeting" inside the "Create" dropdown
+            frm.add_custom_button(__('One to One Meeting'), function () {
+                frappe.model.open_mapped_doc({
+                    method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
+                    args: { source_name: frm.doc.name },
+                    frm: frm
+                });
+            }, __('Create'));
+        }
 
         frappe.call({
             method: "beams.beams.custom_scripts.appraisal.appraisal.get_categories_table",
