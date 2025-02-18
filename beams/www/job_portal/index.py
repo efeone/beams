@@ -2,6 +2,7 @@ import frappe
 from frappe.utils import fmt_money
 
 def get_context(context):
+	context.no_cache = 1
 	# Get designation, location, and job_type from the request form data
 	designation, location, employment_type = frappe.form_dict.get('designation'), frappe.form_dict.get('location'), frappe.form_dict.get('employment_type')
 
