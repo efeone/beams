@@ -15,7 +15,6 @@
   "asset_photos",
   "remarks",
   "has_damage",
-  "damage_remarks",
   "amended_from"
  ],
  "fields": [
@@ -49,6 +48,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "asset.location",
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
@@ -74,12 +74,6 @@
    "reqd": 1
   },
   {
-   "depends_on": "\n",
-   "fieldname": "damage_remarks",
-   "fieldtype": "Small Text",
-   "label": "Damage Remarks"
-  },
-  {
    "default": "Now",
    "fieldname": "posting_date",
    "fieldtype": "Date",
@@ -93,7 +87,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-18 15:07:48.796779",
+ "modified": "2025-02-18 16:10:52.558484",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing",

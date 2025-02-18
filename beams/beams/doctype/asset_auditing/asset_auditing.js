@@ -10,5 +10,8 @@ frappe.ui.form.on('Asset Auditing', {
                 }
             });
         }
+    },
+    posting_date:function (frm){
+      frm.call("validate_posting_date");
     }
 });
