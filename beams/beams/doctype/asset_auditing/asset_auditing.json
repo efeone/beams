@@ -6,14 +6,17 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_rev9",
-  "amended_from",
   "asset",
   "employee",
-  "asset_photos",
+  "column_break_bgwn",
+  "posting_date",
   "location",
+  "section_break_rev9",
+  "asset_photos",
   "remarks",
-  "has_damage"
+  "has_damage",
+  "damage_remarks",
+  "amended_from"
  ],
  "fields": [
   {
@@ -69,12 +72,28 @@
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
+  },
+  {
+   "depends_on": "\n",
+   "fieldname": "damage_remarks",
+   "fieldtype": "Small Text",
+   "label": "Damage Remarks"
+  },
+  {
+   "default": "Now",
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "label": "Posting Date"
+  },
+  {
+   "fieldname": "column_break_bgwn",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-17 11:32:44.935636",
+ "modified": "2025-02-18 15:07:48.796779",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing",
