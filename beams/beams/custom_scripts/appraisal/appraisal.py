@@ -127,9 +127,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     final_average_score = total_marks / total_criteria if total_criteria > 0 else 0
 
     if feedback_doc and feedback_doc.appraisal:
-        appraisal_doc = frappe.get_doc("Appraisal", feedback_doc.appraisal)
-        appraisal_doc.final_average_score = final_average_score
-        appraisal_doc.save()
+        frappe.db.set_value("Appraisal", feedback_doc.appraisal, "final_average_score", final_average_score)
 
     # Generate the HTML table
     table_html = """
