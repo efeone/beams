@@ -4,6 +4,7 @@ from frappe import _
 from frappe.utils.file_manager import save_file
 
 def get_context(context):
+	context.no_cache = 1
 	opening = frappe.form_dict.job_opening
 	job_opening = {}
 	if frappe.db.exists('Job Opening', opening):
