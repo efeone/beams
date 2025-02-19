@@ -9,30 +9,36 @@ frappe.ui.form.on('Job Requisition', {
             });
         }
     },
+
     refresh: function (frm) {
         // To clear all custom buttons from the form
         frm.clear_custom_buttons();
         set_filters(frm);
+
         if (frm.doc.status === 'Cancelled') {
             const connections = frm.dashboard.links;
             if (connections['Job Opening']) {
                 connections['Job Opening'].$link.find('.btn-new-doc').hide();
             }
         }
+
         if (frm.doc.workflow_state === 'Pending CEO Final Approval') {
             frm.set_df_property('designation', 'reqd', 1);
             frm.set_df_property('description', 'reqd', 1);
         }
     },
+
     request_for: function (frm) {
         if (frm.doc.request_for) {
-            frm.set_value('employee_left',);
+            frm.set_value('employee_left', '');
             frm.set_df_property('employee_left', 'reqd', 0);
-            if (frm.doc.request_for == 'Employee Exit') {
+
+            if (frm.doc.request_for === 'Employee Exit') {
                 frm.set_df_property('employee_left', 'reqd', 1);
             }
         }
     },
+
     job_description_template: function (frm) {
         // To fetch the Template Content from master
         if (frm.doc.job_description_template) {
@@ -50,24 +56,15 @@ frappe.ui.form.on('Job Requisition', {
             });
         }
     },
+
+    setup: function (frm) {
+        // Set Designation filter for Job Description Template
+        frm.set_query('job_description_template', function () {
+            return {
+                filters: {
+                    'designation': frm.doc.designation
+                }
+            };
+        });
+    }
 });
-
-function set_filters(frm) {
-    // Set the query for employee_left based on request_for
-    frm.set_query('employee_left', function () {
-        return {
-            filters: {
-                status: 'Left'
-            }
-        };
-    });
-
-    // Set Designation filter for Job Description Template
-    frm.set_query('job_description_template', function () {
-        return {
-            filters: {
-                'designation': frm.doc.designation
-            }
-        };
-    });
-}
