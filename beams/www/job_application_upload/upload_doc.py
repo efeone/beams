@@ -13,6 +13,7 @@ def get_context(context):
             context (dict)
         Return : None
     '''
+    context.no_cache = 1
     context.doc = {  }
     encrypted_applicant_id = frappe.form_dict.applicant_id
     applicant_id = authorize_applicant_id(encrypted_applicant_id)
@@ -144,4 +145,3 @@ def update_file(filedata, doctype, docname):
                 file_name = filedoc.file_url
     frappe.db.commit()
     return file_name
-
