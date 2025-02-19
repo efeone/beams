@@ -11,6 +11,8 @@
   "asset_type",
   "bundle",
   "assets",
+  "asset",
+  "bundles",
   "items",
   "asset_return_checklist_template",
   "asset_return_checklist",
@@ -38,10 +40,11 @@
    "reqd": 1
   },
   {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
    "fieldname": "assets",
-   "fieldtype": "Link",
+   "fieldtype": "Table MultiSelect",
    "label": "Assets",
-   "options": "Asset Bundle Stock Item"
+   "options": "Assets"
   },
   {
    "depends_on": "eval:doc.asset_type == \"Bundle\"",
@@ -79,12 +82,26 @@
    "fieldtype": "Link",
    "label": "Bundle",
    "options": "Asset Bundle"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "bundles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Bundles",
+   "options": "Bundles"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Single Asset\"",
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "label": "Asset",
+   "options": "Asset Bundle"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-17 22:25:34.505747",
+ "modified": "2025-02-18 14:57:01.792366",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",
