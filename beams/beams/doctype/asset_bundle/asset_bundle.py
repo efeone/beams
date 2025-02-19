@@ -43,27 +43,14 @@ class AssetBundle(Document):
 		self.db_set("qr_code", _file.file_url)
 
 	def get_si_json(self):
-		essential_fields = ["assets", "bundles","stock_items"]
-		item_data = {}
-		for field in essential_fields:
-			if not field in ["assets", "bundles","stock_items"]:
-				value = self.get(field)
-			else:
-				values = []
-				for row in self.get(field):
-					row_data = {}
-					if field == "assets":
-						row_data["asset"] = row.asset
-						values.append(row_data)
-					elif field == "bundles":
-						row_data["asset_bundle"] = row.asset_bundle
-						values.append(row_data)
-					elif field == "stock_items":
-						row_data["item"] = row.item
-						row_data["uom"] = row.uom
-						row_data["qty"] = row.qty
-						values.append(row_data)
-				value = values
-			item_data[field] = value
-		json_data = json.dumps(item_data, indent=4)
-		return json_data
+	    essential_fields = {"assets": "asset", "bundles": "asset_bundle", "stock_items": ["item", "uom", "qty"]}
+	    item_data = {}
+	    for field, keys in essential_fields.items():
+	        values = []
+	        for row in self.get(field, []):
+	            if isinstance(keys, list):
+	                values.append({key: getattr(row, key) for key in keys})
+	            else:
+	                values.append({keys: getattr(row, keys)})
+	        item_data[field] = values
+	    return json.dumps(item_data, indent=4)
