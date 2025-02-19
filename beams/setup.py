@@ -621,6 +621,12 @@ def get_asset_custom_fields():
                 "fieldtype": "Date",
                 "label": "Warranty Till",
                 "insert_after": "warranty_reference_no"
+            },
+            {
+                "fieldname": "qr_code",
+                "fieldtype": "Attach Image",
+                "label": "QR code",
+                "insert_after": "department"
             }
         ]
     }
