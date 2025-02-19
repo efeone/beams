@@ -313,7 +313,10 @@ doc_events = {
         "on_submit": [
             "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity"
             ]
-    }
+    },
+    "Asset":{
+        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
+    },
 }
 
 # Scheduled Tasks
