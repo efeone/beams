@@ -3361,6 +3361,63 @@ def get_property_setters():
             "property_type": "Link",
             "value": 1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "no_of_positions",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "reqd",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "default",
+            "value": 0.0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "mandatory_depends_on",
+            "value": "eval: frappe.user_roles.includes('HR Manager')"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "depends_on",
+            "value": "eval: frappe.user_roles.includes('HR Manager')"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "employee_left",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "requested_by",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "reqd",
+            "value": 1
+        },
     ]
 
 def get_material_request_custom_fields():
