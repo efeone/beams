@@ -15,3 +15,9 @@ class AssetTransferRequest(Document):
         if self.posting_date:
             if self.posting_date > today():
                 frappe.throw(_("Posting Date cannot be set after today's date."))
+@frappe.whitelist()
+def get_stock_items_from_bundle(bundle):
+    # Fetch the stock items from the 'Asset Bundle Stock Item' table based on the 'bundle'
+    stock_items = frappe.get_all('Asset Bundle Stock Item', filters={'parent': bundle}, fields=['item', 'uom', 'qty'])
+
+    return stock_items
