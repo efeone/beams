@@ -5,7 +5,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "default_award_expense_account"
+  "default_award_expense_account",
+  "asset_auditing_notification",
+  "notify_after",
+  "asset_auditing_notification_template"
  ],
  "fields": [
   {
@@ -15,12 +18,34 @@
    "label": " Default Award Expense Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_auditing_notification",
+   "description": "In Days",
+   "fieldname": "notify_after",
+   "fieldtype": "Int",
+   "label": "Notify After",
+   "mandatory_depends_on": "eval:doc.asset_auditing_notification"
+  },
+  {
+   "depends_on": "eval:doc.asset_auditing_notification",
+   "fieldname": "asset_auditing_notification_template",
+   "fieldtype": "Link",
+   "label": "Asset Auditing Notification Template",
+   "mandatory_depends_on": "eval:doc.asset_auditing_notification",
+   "options": "Email Template"
+  },
+  {
+   "default": "0",
+   "fieldname": "asset_auditing_notification",
+   "fieldtype": "Check",
+   "label": "Asset Auditing Notification"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-23 16:30:33.927575",
+ "modified": "2025-02-19 12:19:45.614542",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
