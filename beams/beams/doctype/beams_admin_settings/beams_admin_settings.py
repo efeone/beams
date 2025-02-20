@@ -3,6 +3,8 @@
 import frappe
 from frappe.utils import nowdate, add_days
 from frappe.model.document import Document
+from frappe.utils.user import get_users_with_role
+
 
 class BEAMSAdminSettings(Document):
     pass
@@ -14,68 +16,64 @@ def send_asset_audit_reminder():
     '''
     settings = frappe.get_single("BEAMS Admin Settings")
 
-    if settings.asset_auditing_notification:
-        notify_days = settings.notify_after
-        template_name = settings.asset_auditing_notification_template
+    if not settings or not settings.asset_auditing_notification:
+        return
 
-        if not notify_days or not template_name:
-            frappe.log_error("Asset Audit Notification: Configuration missing", "Asset Auditing")
-            return
+    notify_days = settings.notify_after
+    template_name = settings.asset_auditing_notification_template
 
-        # Get Email Template
-        email_template = frappe.get_doc("Email Template", template_name)
-        if not email_template:
-            frappe.log_error("Asset Audit Notification: Email Template not found", "Asset Auditing")
-            return
+    if not notify_days or not template_name:
+        frappe.log_error("Asset Audit Notification: Configuration missing", "Asset Auditing")
+        return
 
-        audit_due_date = add_days(nowdate(), -notify_days)
+    # Get Email Template
+    email_template = frappe.get_doc("Email Template", template_name)
+    if not email_template:
+        frappe.log_error("Asset Audit Notification: Email Template not found", "Asset Auditing")
+        return
 
-        assets = frappe.get_all("Asset Auditing",
-            filters={"posting_date": ["<=", audit_due_date]},
-            fields=["asset", "posting_date"])
+    audit_due_date = add_days(nowdate(), -notify_days)
 
-        asset_names = list(set([a["asset"] for a in assets]))
+    assets = frappe.get_all("Asset Auditing",
+        filters={"posting_date": ["<=", audit_due_date]},
+        fields=["asset", "posting_date"])
 
-        if asset_names:
-            asset_details = frappe.get_all("Asset",
-                filters={"name": ["in", asset_names]},
-                fields=["name", "asset_name", "asset_owner", "company"])
+    asset_names = list(set(a["asset"] for a in assets if "asset" in a))
 
-            for asset in asset_details:
-                recipients = get_asset_notification_recipients(asset)
-                if recipients:
-                    subject = f"Asset Audit Reminder: {asset.asset_name}"
-                    message = f"""
-                    <p>Reminder: The asset <b>{asset.asset_name}</b> was last audited on {next(a['posting_date'] for a in assets if a['asset'] == asset['name'])}.<br>
-                    Please ensure it is audited again.</p>
-                    <p>Thank you,<br>
-                    Technical Store Department</p>
-                    """
-                    frappe.sendmail(
-                        recipients=recipients,
-                        subject=subject,
-                        message=message,
-                    )
-                    send_inapp_notification(recipients, subject, message)
+    if asset_names:
+        asset_details = frappe.get_all("Asset",
+            filters={"name": ["in", asset_names]},
+            fields=["name", "asset_name", "asset_owner", "company"])
 
-def get_users_with_role(role):
-    users = frappe.get_all(
-        "Has Role",
-        filters={"role": role, "parenttype": "User"},
-        fields=["parent"]
-    )
-    return [user["parent"] for user in users]
+        for asset in asset_details:
+            recipients = get_asset_notification_recipients(asset)
+            if recipients:
+                subject = f"Asset Audit Reminder: {asset['asset_name']}"
+                last_audited = next((a['posting_date'] for a in assets if a['asset'] == asset['name']), "Unknown Date")
+                message = f"""
+                <p>Reminder: The asset <b>{asset['asset_name']}</b> was last audited on {last_audited}.<br>
+                Please ensure it is audited again.</p>
+                <p>Thank you,<br>
+                Technical Store Department</p>
+                """
+                frappe.sendmail(
+                    recipients=recipients,
+                    subject=subject,
+                    message=message,
+                )
+                send_inapp_notification(recipients, subject, message)
 
 def get_asset_notification_recipients(asset):
     recipients = set()
 
     # Get Users with "Technical Store Head" Role
     technical_store_users = get_users_with_role("Technical Store Head")
-    recipients.update(technical_store_users)
+    if technical_store_users:
+        recipients.update(technical_store_users)
 
     # Add Asset Owner
-    if asset.asset_owner:
-        recipients.add(asset.asset_owner)
+    if asset.get("asset_owner"):
+        recipients.add(asset["asset_owner"])
 
     return list(recipients)
 
