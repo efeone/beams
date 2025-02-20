@@ -3,18 +3,15 @@
 import frappe
 from frappe.utils import nowdate, add_days
 from frappe.model.document import Document
-from frappe.email.doctype.email_account.email_account import EmailAccount
 
 class BEAMSAdminSettings(Document):
     pass
-
 
 @frappe.whitelist()
 def send_asset_audit_reminder():
     '''
     If Asset Auditing Notification is checked, Send Notification to users with "Technical Store Head" role and Current asset owner.
     '''
-
     settings = frappe.get_single("BEAMS Admin Settings")
 
     if settings.asset_auditing_notification:
@@ -49,38 +46,38 @@ def send_asset_audit_reminder():
                 if recipients:
                     subject = f"Asset Audit Reminder: {asset.asset_name}"
                     message = f"""
-                    <p>Reminder : The asset <b>{asset.asset_name}</b> was last audited on {next(a['posting_date'] for a in assets if a['asset'] == asset['name'])}.<br>
+                    <p>Reminder: The asset <b>{asset.asset_name}</b> was last audited on {next(a['posting_date'] for a in assets if a['asset'] == asset['name'])}.<br>
                     Please ensure it is audited again.</p>
                     <p>Thank you,<br>
                     Technical Store Department</p>
                     """
                     frappe.sendmail(
-                    recipients=recipients,
-                    subject=subject,
-                    message=message,
+                        recipients=recipients,
+                        subject=subject,
+                        message=message,
                     )
-
                     send_inapp_notification(recipients, subject, message)
 
+def get_users_with_role(role):
+    users = frappe.get_all(
+        "Has Role",
+        filters={"role": role, "parenttype": "User"},
+        fields=["parent"]
+    )
+    return [user["parent"] for user in users]
 
 def get_asset_notification_recipients(asset):
     recipients = set()
 
     # Get Users with "Technical Store Head" Role
-    it_users = frappe.get_all("User",
-        filters={"enabled": 1},
-        fields=["name", "email"])
-
-    for user in it_users:
-        if frappe.get_all("Has Role", filters={"parent": user.name, "role": "Technical Store Head"}):
-            recipients.add(user.email)
+    technical_store_users = get_users_with_role("Technical Store Head")
+    recipients.update(technical_store_users)
 
     # Add Asset Owner
     if asset.asset_owner:
         recipients.add(asset.asset_owner)
 
     return list(recipients)
-
 
 def send_inapp_notification(recipients, subject, message):
     '''
