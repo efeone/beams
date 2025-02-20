@@ -3413,6 +3413,20 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "swap_with_employee",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "employee",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "department",
             "property": "reqd",
