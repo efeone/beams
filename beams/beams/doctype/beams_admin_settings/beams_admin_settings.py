@@ -1,3 +1,5 @@
+# Copyright (c) 2024, efeone and contributors
+# For license information, please see license.txt
 import frappe
 from frappe.utils import nowdate, add_days
 from frappe.model.document import Document
@@ -15,7 +17,7 @@ def send_asset_audit_reminder():
 
     settings = frappe.get_single("BEAMS Admin Settings")
 
-    if settings.asset_auditing_notificaton:
+    if settings.asset_auditing_notification:
         notify_days = settings.notify_after
         template_name = settings.asset_auditing_notification_template
 
