@@ -45,7 +45,7 @@ frappe.ui.form.on('Employee Onboarding', {
                     frm.fields_dict["job_applicant"].get_query = function () {
                         return {
                             filters: {
-                                name: ["not in", " "]
+                                name: ["not in", excluded_applicants]
                             }
                         };
                     };
