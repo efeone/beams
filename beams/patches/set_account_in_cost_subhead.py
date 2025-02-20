@@ -9,5 +9,6 @@ def execute():
             'company': default_company,
             'default_account': cost_subhead_doc.account
         })
+        cost_subhead_doc.flags.ignore_mandatory = True
         cost_subhead_doc.save()
     frappe.db.commit()
