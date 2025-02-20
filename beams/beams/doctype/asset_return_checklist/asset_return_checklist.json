@@ -15,6 +15,7 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Checklist Item",
+   "options": "Asset Return Check",
    "reqd": 1
   },
   {
@@ -28,7 +29,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-17 09:34:31.892092",
+ "modified": "2025-02-20 09:32:08.248699",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Return Checklist",
