@@ -17,8 +17,9 @@ frappe.ui.form.on('Budget', {
         set_filters(frm);
         if (frm.doc.division) {
             // Fetch cost center based on selected division
-            frappe.db.get_value('Division', frm.doc.division, 'cost_center').then(r => {
+            frappe.db.get_value('Division', frm.doc.division, ['region','cost_center']).then(r => {
                 frm.set_value('cost_center', r.message.cost_center);
+                frm.set_value('region', r.message.region);
             });
 
             // Fetch and set budget_template if only one exists for the selected division
