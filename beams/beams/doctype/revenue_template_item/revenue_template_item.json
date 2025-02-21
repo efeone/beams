@@ -32,7 +32,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Revenue Centre",
-   "options": "Account"
+   "options": "Account",
+   "reqd": 1
   },
   {
    "fieldname": "revenue_region",
@@ -49,7 +50,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-21 12:06:14.540973",
+ "modified": "2025-02-21 13:33:45.317169",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Template Item",

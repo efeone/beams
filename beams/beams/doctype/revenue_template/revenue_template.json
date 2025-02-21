@@ -16,6 +16,7 @@
    "fieldname": "template_title",
    "fieldtype": "Data",
    "label": "Template Title",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -39,7 +40,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-21 12:50:57.966377",
+ "modified": "2025-02-21 13:33:27.864251",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Template",
