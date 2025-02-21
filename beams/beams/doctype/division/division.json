@@ -10,7 +10,8 @@
   "department_abbreviation",
   "column_break_ncbr",
   "division",
-  "cost_center"
+  "cost_center",
+  "region"
  ],
  "fields": [
   {
@@ -44,11 +45,17 @@
   {
    "fieldname": "column_break_ncbr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Region"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-16 17:00:44.038687",
+ "modified": "2025-02-21 08:43:54.337394",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Division",
