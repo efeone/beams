@@ -38,6 +38,10 @@ def get_context(context):
 	'''
 	if has_filter:
 		query += conditions
+
+	# Sort by latest created job first
+	query += " ORDER BY creation DESC"
+
 	jobs = frappe.db.sql(query, as_dict=True)
 	for job in jobs:
 		job['no_of_applications'] = get_job_applicant_count(job.get('name'))
