@@ -15,7 +15,7 @@ frappe.ui.form.on('Budget Template', {
     },
     company: function (frm) {
         if (frm.doc.company) {
-            frm.clear_table("budget_template_item");
+            // frm.clear_table("budget_template_item");
             frm.refresh_field("budget_template_item");
         }
     }
