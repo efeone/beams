@@ -32,6 +32,7 @@
                 {%- if job.employment_type -%}
                 <p><i class="fas fa-briefcase"></i> Employment type: {{ job.employment_type }} </p>
                 {%- endif -%}
+                <p><i class="fas fa-users"></i> Openings: {{ job.no_of_positions }} </p>
                 {%- if job.posted_on -%}
                 <p><i class="far fa-calendar-alt"></i> Published date: {{ frappe.utils.getdate(job.posted_on) }} </p>
                 {%- endif -%}
