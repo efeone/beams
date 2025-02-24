@@ -10,6 +10,11 @@ frappe.query_reports["Damage History Report for Assets"] = {
 						options: "Asset"
 				},
 				{
+						fieldname: "item_code",
+						label: __("Item Code"),
+						fieldtype: "Data",
+				},			
+				{
 						fieldname: "location",
 						label: __("Location"),
 						fieldtype: "Data",
