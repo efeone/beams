@@ -29,20 +29,21 @@ frappe.ui.form.on('Job Applicant', {
         }
     },
     validate: function (frm) {
-      const resume_attachment = frm.doc.resume_attachment;
-      if (resume_attachment) {
-          const file_extension = resume_attachment.split('.').pop().toLowerCase();
-          if (file_extension !== 'pdf') {
-              frappe.msgprint({
-                  title: __('Validation for Resume '),
-                  message: __('Only PDF files are allowed for Resume Attachment.'),
-                  indicator: 'red'
-              });
-              frappe.validated = false;
-          }
-      }
-  }
+        const resume_attachment = frm.doc.resume_attachment;
+        if (resume_attachment) {
+            const allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
+            const file_extension = resume_attachment.split('.').pop().toLowerCase();
 
+            if (!allowed_extensions.includes(file_extension)) {
+                frappe.msgprint({
+                    title: __('Validation for Resume'),
+                    message: __('Only PDF, DOC, DOCX, XLS, and XLSX files are allowed'),
+                    indicator: 'red'
+                });
+                frappe.validated = false;
+            }
+        }
+    }
 });
 
 function handle_custom_buttons(frm) {
