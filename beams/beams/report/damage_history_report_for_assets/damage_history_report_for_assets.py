@@ -11,24 +11,28 @@ def execute(filters=None):
 def get_columns():
     return [
         {"label": "Asset", "fieldname": "asset", "fieldtype": "Link", "options": "Asset", "width": 200},
+        {"label": "Item Code", "fieldname": "item_code", "fieldtype": "Data", "width": 150},
+        {"label": "Total Asset Cost", "fieldname": "total_asset_cost", "fieldtype": "Currency", "width": 150},
         {"label": "Location", "fieldname": "location", "fieldtype": "Data", "width": 200},
         {"label": "Audit ID", "fieldname": "audit_id", "fieldtype": "Link", "options": "Asset Auditing", "width": 150},
         {"label": "Has Damage", "fieldname": "has_damage", "fieldtype": "Data", "width": 100},
         {"label": "Remarks", "fieldname": "remarks", "fieldtype": "Data", "width": 300},
         {"label": "Employee", "fieldname": "employee", "fieldtype": "Link", "options": "Employee", "width": 200},
         {"label": "Posting Date", "fieldname": "posting_date", "fieldtype": "Date", "width": 200},
-        {"label": "Asset Repair ID", "fieldname": "repair_id", "fieldtype": "Link", "options": "Asset Repair", "width": 150},  # New column
+        {"label": "Asset Repair ID", "fieldname": "repair_id", "fieldtype": "Link", "options": "Asset Repair", "width": 150},
         {"label": "Description", "fieldname": "description", "fieldtype": "Data", "width": 250},
         {"label": "Repair Cost", "fieldname": "repair_cost", "fieldtype": "Currency", "width": 150},
         {"label": "Failure Date", "fieldname": "failure_date", "fieldtype": "Date", "width": 150},
         {"label": "Repair Status", "fieldname": "repair_status", "fieldtype": "Select", "width": 150}
     ]
-	
+
 def get_data(filters):
     data = []
     asset_filters = {}
     if filters.get("asset"):
         asset_filters["name"] = filters["asset"]
+    if filters.get("item_code"):
+        asset_filters["item_code"] = filters["item_code"]
     if filters.get("location"):
         asset_filters["location"] = filters["location"]
     asset_auditing_filters = {}
@@ -41,7 +45,7 @@ def get_data(filters):
         repair_filters["repair_status"] = filters["repair_status"]
     if filters.get("repair_id"):
         repair_filters["name"] = filters["repair_id"]
-    assets = frappe.get_all("Asset", fields=["name as asset", "location"], filters=asset_filters if asset_filters else None)
+    assets = frappe.get_all("Asset", fields=["name as asset", "item_code", "total_asset_cost", "location"], filters=asset_filters if asset_filters else None)
     for asset in assets:
         audits = frappe.get_all(
             "Asset Auditing",
@@ -61,6 +65,8 @@ def get_data(filters):
             for repair in repairs:
                 row = {
                     "asset": asset["asset"],
+                    "item_code": asset["item_code"],
+                    "total_asset_cost": asset["total_asset_cost"],
                     "location": asset["location"],
                     "audit_id": audit["audit_id"],
                     "has_damage": "Yes" if audit["has_damage"] else "No" if audit["has_damage"] is not None else None,
@@ -75,7 +81,7 @@ def get_data(filters):
                 }
                 if (filters.get("repair_id") and not row["repair_id"]) or \
                    (filters.get("repair_status") and not row["repair_status"]) or \
-				   (filters.get("employee") and not row["employee"]) or \
+                   (filters.get("employee") and not row["employee"]) or \
                    (filters.get("audit_id") and not row["audit_id"]):
                     continue
                 data.append(row)
