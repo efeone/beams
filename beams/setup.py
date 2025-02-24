@@ -2385,6 +2385,12 @@ def get_job_opening_custom_fields():
                 "insert_after": "location"
             },
             {
+                "fieldname": "no_of_positions",
+                "fieldtype": "Int",
+                "label": "No of.Positions",
+                "insert_after": "employment_type"
+            },
+            {
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
