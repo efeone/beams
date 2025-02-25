@@ -105,4 +105,3 @@ def asset_notifications():
             subject=email_template_doc.subject,
             message=message
         )
-        frappe.db.set_value("Asset", asset.name, "modified", today)
