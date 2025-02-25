@@ -4,16 +4,15 @@
 import frappe
 import json
 from frappe.model.document import Document
-import os
-import io
-from pyqrcode import create
-
 
 class OutwardPass(Document):
        pass
 
 @frappe.whitelist()
 def bundle_asset_fetch(names):
+    """
+    Fetches assets and processed bundles recursively from given asset bundle names
+    """
     names = json.loads(names)
     assets = set()
     processed_bundles = set()
