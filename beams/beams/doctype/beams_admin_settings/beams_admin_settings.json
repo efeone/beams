@@ -8,7 +8,11 @@
   "default_award_expense_account",
   "asset_auditing_notification",
   "notify_after",
-  "asset_auditing_notification_template"
+  "asset_auditing_notification_template",
+  "asset_audit_notification",
+  "start_notification_from",
+  "notifcation_frequency",
+  "notification_template"
  ],
  "fields": [
   {
@@ -40,12 +44,39 @@
    "fieldname": "asset_auditing_notification",
    "fieldtype": "Check",
    "label": "Asset Auditing Notification"
+  },
+  {
+   "default": "0",
+   "fieldname": "asset_audit_notification",
+   "fieldtype": "Check",
+   "label": "Periodic Notification for Asset Auditing "
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "notifcation_frequency",
+   "fieldtype": "Select",
+   "label": "Notifcation Frequency",
+   "options": "\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly"
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "notification_template",
+   "fieldtype": "Link",
+   "label": "Notification Template",
+   "options": "Email Template"
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "start_notification_from",
+   "fieldtype": "Select",
+   "label": "Start Notification From",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-19 12:19:45.614542",
+ "modified": "2025-02-25 11:49:30.547256",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",

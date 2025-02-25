@@ -345,9 +345,9 @@ scheduler_events = {
 # "weekly": [
 # "beams.tasks.weekly"
 # ],
-# "monthly": [
-# "beams.tasks.monthly"
-# ],
+    "monthly": [
+        "beams.beams.custom_scripts.asset.asset.asset_notifications"
+    ],
   }
 
 # Testing
