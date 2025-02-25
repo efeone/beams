@@ -1278,6 +1278,37 @@ def get_item_custom_fields():
                "options": "Item",
                "read_only":1,
                "insert_after": "item_group"
+           },
+           {
+               "fieldname": "item_audit_notification",
+               "fieldtype": "Check",
+               "label": "Periodic Notification for Asset Auditing ",
+               "depends_on": "eval:doc.is_fixed_asset == 1",
+               "insert_after": "asset_category"
+           },
+           {
+               "fieldname": "item_notification_frequency",
+               "fieldtype": "Select",
+               "label": "Notification Frequency",
+               "options":"\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_audit_notification"
+           }   ,
+           {
+               "fieldname": "item_notification_template",
+               "fieldtype": "Link",
+               "label": "Notification Template",
+               "options":"Email Template",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_notification_frequency"
+           },
+           {
+               "fieldname": "start_notification_from",
+               "fieldtype": "Select",
+               "label": "Start Notification From",
+               "options":"\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_audit_notification"
            }
         ]
     }
