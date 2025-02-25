@@ -1477,7 +1477,7 @@ def get_employee_custom_fields():
                 "fieldtype": "Data",
                 "label": "No.of Children",
                 "insert_after":"marital_status"
-            }
+            },
         ],
 
         "Employee External Work History":[
@@ -3158,7 +3158,7 @@ def get_property_setters():
             "doc_type": "Attendance Request",
             "field_name": "reason",
             "property": "options",
-            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForget to Checkin\nForget to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
+            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
         },
         {
             "doctype_or_field": "DocField",
@@ -3437,7 +3437,7 @@ def get_property_setters():
             "field_name": "department",
             "property": "reqd",
             "value": 1
-        },
+        }
     ]
 
 def get_material_request_custom_fields():
