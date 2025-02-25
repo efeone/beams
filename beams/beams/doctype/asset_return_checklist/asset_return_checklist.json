@@ -1,0 +1,41 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-25 16:29:23.291716",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "checklist_item",
+  "checked"
+ ],
+ "fields": [
+  {
+   "fieldname": "checklist_item",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Checklist Item",
+   "options": "Asset Return Check",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "checked",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Checked"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-02-25 16:30:53.043647",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Return Checklist",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

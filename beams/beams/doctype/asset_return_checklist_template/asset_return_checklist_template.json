@@ -1,0 +1,79 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-02-25 16:44:46.464624",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ytj3",
+  "asset_return_checklist_template",
+  "asset_category",
+  "checklist",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ytj3",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Return Checklist Template",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "asset_return_checklist_template",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Asset Return Checklist Template ",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "asset_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Category",
+   "options": "Asset Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "checklist",
+   "fieldtype": "Table",
+   "label": "Checklist",
+   "options": "Asset Return Check",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-25 16:53:55.041102",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Return Checklist Template",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
