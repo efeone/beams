@@ -20,10 +20,22 @@ class AssetTransferRequest(Document):
                 frappe.throw(_("Posting Date cannot be set after today's date."))
 
     def on_update_after_submit(self):
-        '''Ensure that Asset Movement and Stock Entries are created when the workflow state is 'Transferred'.'''
+        '''Ensure that Asset Movement and Stock Entries are created when the workflow state is 'Transferred'.
+           Mark or unmark 'In Transit' checkbox based on workflow state.'''
+
         if self.workflow_state == 'Transferred':
             self.create_asset_movement()
             self.create_stock_entries()
+
+        if self.asset_type == 'Single Asset' and self.asset:
+            asset = frappe.get_doc('Asset', self.asset)
+            asset.in_transit = 1 if self.workflow_state == 'Approved' else 0
+            asset.save()
+        elif self.asset_type == 'Bundle':
+            for asset in self.assets:
+                asset_doc = frappe.get_doc('Asset', asset.asset)
+                asset_doc.in_transit = 1 if self.workflow_state == 'Approved' else 0
+                asset_doc.save()
 
     def create_asset_movement(self):
         """Create Asset Movement when the workflow state is 'Transferred'."""
