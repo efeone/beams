@@ -5,8 +5,6 @@ frappe.ui.form.on("Outward Pass", {
 bundles: function (frm) {
     if (frm.doc.bundles.length > 0) {
         let bundle_names = frm.doc.bundles.map((bundle) => bundle.asset_bundle);
-        console.log("Fetching Assets for Bundles:", bundle_names);
-
         frappe.call({
             method: "beams.beams.doctype.outward_pass.outward_pass.bundle_asset_fetch",
             args: {
@@ -29,7 +27,6 @@ bundles: function (frm) {
     }
 },
 });
-
 function mergeArrays(arr1, arr2, key) {
 const merged = [...arr1, ...arr2];
 const unique = merged.filter((obj, index, self) =>
