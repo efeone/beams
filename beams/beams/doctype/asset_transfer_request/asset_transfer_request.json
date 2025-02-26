@@ -6,13 +6,17 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "posting_date",
-  "posting_time",
+  "employee",
+  "location",
   "asset_type",
   "bundle",
-  "assets",
   "asset",
+  "assets",
   "bundles",
+  "column_break_ivnd",
+  "posting_date",
+  "posting_time",
+  "section_break_sesi",
   "items",
   "asset_return_checklist_template",
   "asset_return_checklist",
@@ -44,7 +48,8 @@
    "fieldname": "assets",
    "fieldtype": "Table MultiSelect",
    "label": "Assets",
-   "options": "Assets"
+   "options": "Assets",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.asset_type == \"Bundle\"",
@@ -55,14 +60,17 @@
    "read_only": 1
   },
   {
+   "allow_on_submit": 1,
+   "depends_on": "eval:doc.workflow_state == \"Transferred\"",
    "fieldname": "asset_return_checklist_template",
    "fieldtype": "Link",
    "label": "Asset Return Checklist template",
-   "options": "Asset Return Checklist Template",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.workflow_state == \"Transferred\"",
+   "options": "Asset Return Checklist Template"
   },
   {
    "allow_on_submit": 1,
+   "depends_on": "eval:doc.asset_return_checklist_template",
    "fieldname": "asset_return_checklist",
    "fieldtype": "Table",
    "label": "Asset Return Checklist",
@@ -83,8 +91,8 @@
    "fieldname": "bundle",
    "fieldtype": "Link",
    "label": "Bundle",
-   "options": "Asset Bundle",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "options": "Asset Bundle"
   },
   {
    "depends_on": "eval:doc.asset_type == \"Bundle\"",
@@ -100,12 +108,34 @@
    "fieldtype": "Link",
    "label": "Asset",
    "options": "Asset"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ivnd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_sesi",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-24 17:05:29.602881",
+ "modified": "2025-02-26 13:08:05.355551",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",

@@ -12,7 +12,9 @@
   "asset_audit_notification",
   "start_notification_from",
   "notifcation_frequency",
-  "notification_template"
+  "notification_template",
+  "column_break_qndy",
+  "asset_transfer_warehouse"
  ],
  "fields": [
   {
@@ -71,12 +73,22 @@
    "fieldtype": "Select",
    "label": "Start Notification From",
    "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "column_break_qndy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "asset_transfer_warehouse",
+   "fieldtype": "Link",
+   "label": "Asset Transfer Warehouse",
+   "options": "Warehouse"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-25 11:49:30.547256",
+ "modified": "2025-02-25 17:08:17.611088",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
