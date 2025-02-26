@@ -54,3 +54,30 @@ class AssetBundle(Document):
 	                values.append({keys: getattr(row, keys)})
 	        item_data[field] = values
 	    return json.dumps(item_data, indent=4)
+
+
+@frappe.whitelist()
+def bundle_asset_fetch(names):
+    '''
+    Fetch assets from specified Asset Bundles, including recursively retrieving assets from nested bundles.
+    '''
+    names = json.loads(names)
+    assets = set()
+    processed_bundles = set()
+    def get_assets_recursive(bundle_name):
+        if bundle_name in processed_bundles:
+            return
+        processed_bundles.add(bundle_name)
+        if not frappe.db.exists("Asset Bundle", bundle_name):
+            frappe.throw(f"Asset Bundle '{bundle_name}' not found during processing.")
+        asset_bundle = frappe.get_doc("Asset Bundle", bundle_name)
+        assets.update(asset_bundle.assets)
+
+        for sub_bundle in asset_bundle.bundles:
+            get_assets_recursive(sub_bundle.asset_bundle)
+
+    for name in names:
+        if not frappe.db.exists("Asset Bundle", name):
+            frappe.throw(f"Asset Bundle '{name}' not found. Please check the name.")
+        get_assets_recursive(name)
+    return list(assets), list(processed_bundles)

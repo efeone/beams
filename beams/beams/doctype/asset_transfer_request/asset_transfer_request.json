@@ -1,0 +1,131 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ATR-{YY}-{####}",
+ "creation": "2025-02-17 14:44:55.162821",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "posting_date",
+  "posting_time",
+  "asset_type",
+  "bundle",
+  "assets",
+  "asset",
+  "bundles",
+  "items",
+  "asset_return_checklist_template",
+  "asset_return_checklist",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "asset_type",
+   "fieldtype": "Select",
+   "label": "Asset Type",
+   "options": "Single Asset\nBundle",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "assets",
+   "fieldtype": "Table MultiSelect",
+   "label": "Assets",
+   "options": "Assets"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Asset Bundle Stock Item",
+   "read_only": 1
+  },
+  {
+   "fieldname": "asset_return_checklist_template",
+   "fieldtype": "Link",
+   "label": "Asset Return Checklist template",
+   "options": "Asset Return Checklist Template",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "asset_return_checklist",
+   "fieldtype": "Table",
+   "label": "Asset Return Checklist",
+   "options": "Asset Return Checklist"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Transfer Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "bundle",
+   "fieldtype": "Link",
+   "label": "Bundle",
+   "options": "Asset Bundle",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "bundles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Bundles",
+   "options": "Bundles",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Single Asset\"",
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "label": "Asset",
+   "options": "Asset"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-24 17:05:29.602881",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Transfer Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
