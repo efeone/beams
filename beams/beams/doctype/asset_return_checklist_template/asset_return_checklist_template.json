@@ -1,6 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
+ "autoname": "field:asset_return_checklist_template",
  "creation": "2025-02-25 16:44:46.464624",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -53,10 +54,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-25 16:53:55.041102",
+ "modified": "2025-02-26 12:26:10.689803",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Return Checklist Template",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {
