@@ -20,8 +20,6 @@ frappe.ui.form.on("Asset Bundle", {
   bundles: function (frm) {
         if (frm.doc.bundles.length > 0) {
             let bundle_names = frm.doc.bundles.map((bundle) => bundle.asset_bundle);
-            console.log("Fetching Assets for Bundles:", bundle_names);
-
             frappe.call({
                 method: "beams.beams.doctype.asset_bundle.asset_bundle.bundle_asset_fetch",
                 args: {

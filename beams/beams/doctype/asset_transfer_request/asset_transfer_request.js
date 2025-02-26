@@ -2,27 +2,22 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Asset Transfer Request", {
-    posting_date: function(frm) {
-        frm.call("validate_posting_date");
-    },
-    bundle: function(frm) {
-        if (frm.doc.asset_type === "Bundle" && frm.doc.bundle) {
-            fetch_stock_items(frm);
-        } else {
-            frm.clear_table('items');
-            frm.refresh_field('items');
-        }
-
-        if (frm.doc.asset_type === "Bundle" && frm.doc.bundle) {
-            fetch_bundle_assets(frm);
-        } else {
-            frm.set_value('assets', []);
-            frm.refresh_field('assets');
-        }
-    },
+  posting_date: function(frm) {
+      frm.call("validate_posting_date");
+  },
+  bundle: function(frm) {
+      if (frm.doc.asset_type === "Bundle" && frm.doc.bundle) {
+          fetch_stock_items(frm);
+          fetch_bundle_assets(frm);
+      } else {
+          frm.clear_table('items');
+          frm.refresh_field('items');
+          frm.set_value('assets', []);
+          frm.refresh_field('assets');
+      }
+  },
     asset_return_checklist_template: function(frm) {
         if (frm.doc.asset_return_checklist_template) {
-          console.log("Fetching checklist items for template:", frm.doc.asset_return_checklist_template);
             frappe.call({
                 method: "beams.beams.doctype.asset_transfer_request.asset_transfer_request.get_asset_return_checklist_template",
                 args: {

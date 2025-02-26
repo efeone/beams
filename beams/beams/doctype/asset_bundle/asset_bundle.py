@@ -72,7 +72,7 @@ def bundle_asset_fetch(names):
             frappe.throw(f"Asset Bundle '{bundle_name}' not found during processing.")
         asset_bundle = frappe.get_doc("Asset Bundle", bundle_name)
         assets.update(asset_bundle.assets)
-        
+
         for sub_bundle in asset_bundle.bundles:
             get_assets_recursive(sub_bundle.asset_bundle)
 
@@ -80,5 +80,4 @@ def bundle_asset_fetch(names):
         if not frappe.db.exists("Asset Bundle", name):
             frappe.throw(f"Asset Bundle '{name}' not found. Please check the name.")
         get_assets_recursive(name)
-
     return list(assets), list(processed_bundles)
