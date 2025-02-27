@@ -185,7 +185,6 @@ def get_dimension_target_details(filters):
 				`tabBudget Account` ba
 			where
 				b.name = ba.parent
-				and b.docstatus = 1
 				and b.fiscal_year between %s and %s
 				and b.budget_against = %s
 				and b.company = %s
@@ -319,7 +318,6 @@ def get_actual_details(name, filters):
 				`tabBudget` b
 			where
 				b.name = ba.parent
-				and b.docstatus = 1
 				and ba.account=gl.account
 				and b.{budget_against} = gl.{budget_against}
 				and gl.fiscal_year between %s and %s
