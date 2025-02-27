@@ -10,6 +10,40 @@ frappe.ui.form.on("Asset Bundle", {
 				}
 			};
 		};
+        frappe.call({
+            method: "beams.beams.doctype.asset_bundle.asset_bundle.get_selected_assets",
+            callback: function (response) {
+                if (response.message) {
+                    let selected_assets = response.message;
+
+                    frm.fields_dict['assets'].get_query = function () {
+                        return {
+                            filters: [
+                                ['name', 'not in', selected_assets]
+                            ]
+                        };
+                    };
+                }
+            }
+        });
+
+				frappe.call({
+            method: "beams.beams.doctype.asset_bundle.asset_bundle.get_selected_bundles",
+            callback: function (response) {
+                if (response.message) {
+                    let selected_bundles = response.message;
+										console.log('yoyo',selected_bundles)
+
+                    frm.fields_dict['bundles'].get_query = function () {
+                        return {
+                            filters: [
+                                ['name', 'not in', selected_bundles]
+                            ]
+                        };
+                    };
+                }
+            }
+        });
 	},
 	validate: function(frm) {
 		if (!frm.doc.stock_items?.length && !frm.doc.assets?.length && !frm.doc.bundles?.length) {
