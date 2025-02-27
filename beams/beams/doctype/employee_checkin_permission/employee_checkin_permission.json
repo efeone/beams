@@ -14,8 +14,12 @@
   "shift_end_time",
   "column_break_iaku",
   "date",
+  "expected_arrival_time",
+  "expected_leaving_time",
   "reason",
-  "amended_from"
+  "amended_from",
+  "section_break_hlte",
+  "reports_to"
  ],
  "fields": [
   {
@@ -46,11 +50,13 @@
    "options": "Shift Type"
   },
   {
+   "fetch_from": "shift.start_time",
    "fieldname": "shift_start_time",
    "fieldtype": "Time",
    "label": "Shift Start Time "
   },
   {
+   "fetch_from": "shift.end_time",
    "fieldname": "shift_end_time",
    "fieldtype": "Time",
    "label": "Shift End Time "
@@ -80,11 +86,37 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "depends_on": "eval:doc.log_type=='OUT'\n",
+   "fieldname": "expected_leaving_time",
+   "fieldtype": "Time",
+   "label": "Expected Leaving Time",
+   "mandatory_depends_on": "eval:doc.log_type=='OUT'\n",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.log_type=='IN'\n",
+   "fieldname": "expected_arrival_time",
+   "fieldtype": "Time",
+   "label": "Expected Arrival Time",
+   "mandatory_depends_on": "eval:doc.log_type=='IN'\n",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_hlte",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reports_to",
+   "fieldtype": "Link",
+   "label": "Reports To",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-26 10:32:58.526029",
+ "modified": "2025-02-27 15:16:13.200069",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Checkin Permission",
