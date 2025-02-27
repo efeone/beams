@@ -15,7 +15,6 @@ frappe.ui.form.on("Asset Bundle", {
             callback: function (response) {
                 if (response.message) {
                     let selected_assets = response.message;
-
                     frm.fields_dict['assets'].get_query = function () {
                         return {
                             filters: [
@@ -32,8 +31,6 @@ frappe.ui.form.on("Asset Bundle", {
             callback: function (response) {
                 if (response.message) {
                     let selected_bundles = response.message;
-										console.log('yoyo',selected_bundles)
-
                     frm.fields_dict['bundles'].get_query = function () {
                         return {
                             filters: [
