@@ -55,6 +55,7 @@ def after_install():
     create_custom_fields(get_item_group_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hr_settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_category_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -121,6 +122,8 @@ def before_uninstall():
     delete_custom_fields(get_item_group_custom_fields())
     delete_custom_fields(get_hr_settings_custom_fields())
     delete_custom_fields(get_asset_category_custom_fields())
+    delete_custom_fields(get_asset_movement_custom_fields())
+
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -3849,7 +3852,30 @@ def get_hr_settings_custom_fields():
             }
         ]
     }
-
+def get_asset_movement_custom_fields():
+    '''
+        Custom fields that need to be added to the Asset Movement DocType
+    '''
+    return {
+        "Asset Movement": [
+            {
+                "fieldname": "new_custodian",
+                "fieldtype": "Link",
+                "label": "New Custodian",
+                "options": "Employee",
+                "insert_after": "assets",
+                "read_only": 1
+            },
+            {
+                "fieldname": "user_id",
+                "label": "User ID",
+                "fieldtype": "Data",
+                "insert_after": "new_custodian",
+                "options": "Email",
+                "read_only": 1
+            }
+        ]
+    }
 def get_asset_category_custom_fields():
     '''
         Custom fields that need to be added to the Asset Category DocType
