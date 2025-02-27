@@ -310,9 +310,8 @@ doc_events = {
         ]
     },
     "Asset Movement": {
-        "on_submit": [
-            "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity"
-            ]
+        "on_submit": "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
+        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
     },
     "Asset":{
         "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
