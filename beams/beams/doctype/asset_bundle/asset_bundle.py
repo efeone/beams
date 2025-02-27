@@ -81,3 +81,22 @@ def bundle_asset_fetch(names):
             frappe.throw(f"Asset Bundle '{name}' not found. Please check the name.")
         get_assets_recursive(name)
     return list(assets), list(processed_bundles)
+
+@frappe.whitelist()
+def get_selected_assets():
+    selected_assets = []
+    asset_entries = frappe.get_all("Assets", fields=["asset", "parent"], filters={"parenttype": "Asset Bundle"})
+
+    for entry in asset_entries:
+        if entry.asset:
+            selected_assets.append(entry.asset)
+    return list(set(selected_assets))
+
+@frappe.whitelist()
+def get_selected_bundles():
+    selected_bundles = set()
+    bundle_entries = frappe.get_all("Bundles", fields=["asset_bundle"])
+
+    for entry in bundle_entries:
+        selected_bundles.add(entry["asset_bundle"])
+    return list(selected_bundles)
