@@ -26,6 +26,7 @@
  ],
  "fields": [
   {
+   "default": "Today",
    "fieldname": "posting_date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -33,6 +34,7 @@
    "reqd": 1
   },
   {
+   "default": "Now",
    "fieldname": "posting_time",
    "fieldtype": "Time",
    "label": "Posting Time",
@@ -153,7 +155,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-28 11:58:18.633671",
+ "modified": "2025-02-28 13:46:02.695064",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",
