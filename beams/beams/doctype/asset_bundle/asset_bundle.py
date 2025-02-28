@@ -55,6 +55,31 @@ class AssetBundle(Document):
 	        item_data[field] = values
 	    return json.dumps(item_data, indent=4)
 
+	def on_update(self):
+	    """
+	    Prevents updating an Asset Bundle if it is currently in a Returned Asset Transfer Request.
+	    """
+	    non_returned_request_names = frappe.get_all(
+	        "Asset Transfer Request",
+	        filters={"workflow_state":["!=", "Returned"]},
+	        pluck="name"
+	    )
+	    if not non_returned_request_names:
+	        return
+	    non_returned_bundles = frappe.get_all(
+	        "Bundles",
+	        filters={"parent": ["in", non_returned_request_names]},
+	        pluck="asset_bundle"
+	    )
+	    directly_assigned_bundles = frappe.get_all(
+	        "Asset Transfer Request",
+	        filters={"name": ["in", non_returned_request_names]},
+	        pluck="bundle"
+	    )
+	    non_returned_bundles_set = set(non_returned_bundles) | set(directly_assigned_bundles)
+	    if self.name in non_returned_bundles_set:
+	        frappe.throw(f"Cannot update Asset Bundle '{self.name}' as it is in a non Returned Asset Transfer Request")
+
 
 @frappe.whitelist()
 def bundle_asset_fetch(names):
