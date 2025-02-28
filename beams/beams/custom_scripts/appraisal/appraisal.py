@@ -6,6 +6,16 @@ from frappe.utils import get_link_to_form
 import datetime
 from frappe.desk.form.assign_to import add as add_assign
 
+
+def validate_kra_marks(doc, method):
+    fields = ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']
+
+    for field in fields:
+        if doc.get(field):  # Check if the child table has data
+            for row in doc.get(field):
+                if row.marks and float(row.marks) > 5:
+                    frappe.throw(_("Marks cannot be greater than 5."))
+
 @frappe.whitelist()
 def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
     '''
@@ -77,7 +87,10 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
         return "Appraisal Template does not exist."
 
     template_doc = frappe.get_doc("Appraisal Template", appraisal_template)
-    if employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback):
+    feedback_doc = None
+
+    feedback_exists = employee_feedback and frappe.db.exists("Employee Performance Feedback", employee_feedback)
+    if feedback_exists:
         feedback_doc = frappe.get_doc("Employee Performance Feedback", employee_feedback)
 
     key_results = []
@@ -113,11 +126,9 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
     total_criteria = len([result for result in key_results if result.get('marks')])
     final_average_score = total_marks / total_criteria if total_criteria > 0 else 0
 
-
     if feedback_doc and feedback_doc.appraisal:
-        appraisal_doc = frappe.get_doc("Appraisal", feedback_doc.appraisal)
-        appraisal_doc.final_average_score = final_average_score
-        appraisal_doc.save()
+        frappe.db.set_value("Appraisal", feedback_doc.appraisal, "final_average_score", final_average_score)
+
     # Generate the HTML table
     table_html = """
         <table class="table table-bordered" style="width:100%;">
@@ -262,6 +273,15 @@ def map_appraisal_to_event(source_name):
         # Log the error and raise it
         frappe.log_error(message=str(e), title="Error in mapping Appraisal to Event")
         raise frappe.exceptions.ValidationError(f"Error: {str(e)}")
+
+@frappe.whitelist()
+def check_existing_event(appraisal_reference):
+    """
+    Check if an Event exists for the given Appraisal.
+
+    """
+    event = frappe.db.get_value("Event", {"appraisal_reference": appraisal_reference}, "name")
+    return event if event else None
 
 @frappe.whitelist()
 def assign_tasks_sequentially(doc=None, method=None):

@@ -26,28 +26,37 @@
         <div class="row">
             <div class="col-md-6">
                 <p><i class="fas fa-briefcase"></i> Job ID: <span style="color: red;">{{ job.name }}</span></p>
-                <p><i class="fas fa-map-marker-alt"></i> Location: {{ job.preffered_location or 'Not Specified' }} </p>
-                <p><i class="fas fa-briefcase"></i> Employment type: {{ job.employment_type or 'Not Specified' }} </p>
+                {%- if job.preffered_location -%}
+                <p><i class="fas fa-map-marker-alt"></i> Location: {{ job.preffered_location }} </p>
+                {%- endif -%}
+                {%- if job.employment_type -%}
+                <p><i class="fas fa-briefcase"></i> Employment type: {{ job.employment_type }} </p>
+                {%- endif -%}
+                <p><i class="fas fa-users"></i> Openings: {{ job.no_of_positions }} </p>
                 {%- if job.posted_on -%}
-                <p><i class="far fa-calendar-alt"></i> Published date: {{ job.get_formatted("posted_on") }} </p>
+                <p><i class="far fa-calendar-alt"></i> Published date: {{ frappe.utils.getdate(job.posted_on) }} </p>
                 {%- endif -%}
                 {%- if job.closes_on -%}
                 <p><i class="fas fa-calendar-day"></i> Last date to apply: {{ job.get_formatted("closes_on")}} </p>
                 {%- endif -%}
             </div>
             <div class="col-md-6">
+            {%- if educational_qualifications -%}
                 <p>
                     <i class="fas fa-graduation-cap"></i>
-                    Preffered Qualifications: {{ educational_qualifications or 'Not Specified' }}
+                    Preffered Qualifications: {{ educational_qualifications }}
+            {%- endif -%}
                 </p>
+                {%- if job.min_experience is not none -%}
                 <p><i class="fas fa-user-tie"></i>
-                    Minimum Experience Required:
-                    {% if job.min_experience %}
-                    {{ job.min_experience }} Years
-                    {% else %}
-                    Not Specified
-                    {% endif %}
+                  Minimum Experience Required:
+                  {%- if job.min_experience == 0 -%}
+                  0 Years
+                  {%- else -%}
+                  {{ "%.2f"|format(job.min_experience|float) }} Years
+                  {%- endif -%}
                 </p>
+                {%- endif -%}
                 {%- if job.publish_salary_range and salary_range -%}
                 <p><i class="fas fa-coins"></i> Salary: {{ salary_range }} </p>
                 {%- endif -%}

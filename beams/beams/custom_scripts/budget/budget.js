@@ -17,20 +17,15 @@ frappe.ui.form.on('Budget', {
         set_filters(frm);
         if (frm.doc.division) {
             // Fetch cost center based on selected division
-            frappe.db.get_value('Division', frm.doc.division, 'cost_center').then(r => {
+            frappe.db.get_value('Division', frm.doc.division, ['region','cost_center']).then(r => {
                 frm.set_value('cost_center', r.message.cost_center);
+                frm.set_value('region', r.message.region);
             });
 
             // Fetch and set budget_template if only one exists for the selected division
-            frappe.db.count('Budget Template', { division: frm.doc.division }).then(count => {
-                if (count === 1) {
-                    frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
-                        if (r.message) {
-                            frm.set_value('budget_template', r.message.name);
-                        }
-                    });
-                } else {
-                    frm.set_value('budget_template', null);
+            frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
+                if (r.message) {
+                    frm.set_value('budget_template', r.message.name);
                 }
             });
         } else {
@@ -77,7 +72,8 @@ function set_filters(frm) {
     frm.set_query('budget_template', function () {
         return {
             filters: {
-                division: frm.doc.division
+                division: frm.doc.division,
+                company: frm.doc.company
             }
         };
     });
@@ -103,6 +99,9 @@ frappe.ui.form.on('Budget Account', {
         let row = locals[cdt][cdn];
         if (row.equal_monthly_distribution && row.budget_amount) {
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
+        }
+        else {
+          clear_monthly_values(frm,cdt,cdn);
         }
     },
     january: function (frm, cdt, cdn) {
@@ -188,3 +187,22 @@ function distribute_budget_equally(frm, cdt, cdn, budget_amount) {
 
     frm.refresh_field('budget_account');
 }
+
+function clear_monthly_values(frm, cdt, cdn) {
+    let fields = [
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december'
+    ];
+
+    fields.forEach(field => frappe.model.set_value(cdt, cdn, field, 0));
+
+    frm.refresh_field('budget_account');
+}
+
+frappe.ui.form.on("Rejection Feedback", {
+    rejection_feedback_add: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        row.user = frappe.session.user_fullname;
+        frm.refresh_field("rejection_feedback");
+    }
+});

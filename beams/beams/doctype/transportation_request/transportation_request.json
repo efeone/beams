@@ -8,6 +8,7 @@
  "field_order": [
   "project",
   "bureau",
+  "location",
   "from",
   "to",
   "column_break_wsxs",
@@ -119,12 +120,20 @@
    "fieldtype": "Int",
    "label": "No of Hired Vehicles",
    "read_only": 1
+  },
+  {
+   "fetch_from": "project.location",
+   "fetch_if_empty": 1,
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-03 16:26:21.258105",
+ "modified": "2025-02-12 17:13:10.350245",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",
@@ -144,6 +153,7 @@
    "write": 1
   }
  ],
+ "search_fields": "project",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

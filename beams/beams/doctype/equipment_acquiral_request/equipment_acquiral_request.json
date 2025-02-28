@@ -8,8 +8,9 @@
  "field_order": [
   "section_break_byuw",
   "project",
+  "equipment_request",
   "bureau",
-  "amended_from",
+  "location",
   "column_break_bbrx",
   "posting_date",
   "required_from",
@@ -17,7 +18,8 @@
   "section_break_ozsg",
   "required_items",
   "section_break_tmmn",
-  "reason_for_rejection"
+  "reason_for_rejection",
+  "amended_from"
  ],
  "fields": [
   {
@@ -88,12 +90,27 @@
    "fieldtype": "Small Text",
    "label": "Reason for Rejection",
    "read_only_depends_on": "eval: doc.workflow_state != \"Pending Approval\";"
+  },
+  {
+   "fetch_from": "project.location",
+   "fetch_if_empty": 1,
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+ },
+ {
+   "fieldname": "equipment_request",
+   "fieldtype": "Link",
+   "label": "Equipment Request",
+   "options": "Equipment Request",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-05 13:43:31.160610",
+ "modified": "2025-02-07 13:40:34.712327",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Acquiral Request",

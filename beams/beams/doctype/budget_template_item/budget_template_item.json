@@ -24,7 +24,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Account",
-   "options": "Account"
+   "options": "Account",
+   "read_only": 1
   },
   {
    "fieldname": "cost_category",
@@ -44,7 +45,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-28 09:36:11.679656",
+ "modified": "2025-02-13 11:59:51.014980",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template Item",

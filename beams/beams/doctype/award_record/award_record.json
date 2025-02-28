@@ -26,7 +26,7 @@
    "reqd": 1
   },
   {
-   "fetch_from": "employee.first_name",
+   "fetch_from": "employee.employee_name",
    "fieldname": "full_name",
    "fieldtype": "Data",
    "label": "Employee Name",
@@ -79,7 +79,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-31 10:56:57.949795",
+ "modified": "2025-02-06 10:32:05.411464",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Award Record",

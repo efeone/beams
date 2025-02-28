@@ -6,23 +6,20 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "asset",
   "employee_in_charge",
+  "assets",
+  "column_break_cgmc",
   "posting_date_and_time",
+  "bundles",
+  "section_break_ekgu",
+  "stock_items",
   "amended_from"
  ],
  "fields": [
   {
-   "fieldname": "asset",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Asset",
-   "options": "Asset",
-   "reqd": 1
-  },
-  {
    "fieldname": "employee_in_charge",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee in Charge",
    "options": "Employee",
    "reqd": 1,
@@ -32,6 +29,7 @@
    "default": "Now",
    "fieldname": "posting_date_and_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Posting Date and Time",
    "reqd": 1
   },
@@ -44,11 +42,38 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "assets",
+   "fieldtype": "Table MultiSelect",
+   "label": "Assets",
+   "options": "Assets",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_cgmc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "bundles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Bundles",
+   "options": "Bundles"
+  },
+  {
+   "fieldname": "section_break_ekgu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "stock_items",
+   "fieldtype": "Table",
+   "label": "Stock Items",
+   "options": "Asset Bundle Stock Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-27 10:19:21.596714",
+ "modified": "2025-02-25 11:34:33.159474",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Pass",

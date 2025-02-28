@@ -57,7 +57,8 @@ doctype_js = {
     "Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
     "Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
     "Appraisal":"beams/custom_scripts/appraisal/appraisal.js",
-    "Project":"beams/custom_scripts/project/project.js"
+    "Project":"beams/custom_scripts/project/project.js",
+    "Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -191,7 +192,8 @@ doc_events = {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
         "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation",
         "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-        "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
+        "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center",
+        "on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
     },
     "Material Request":{
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
@@ -252,8 +254,9 @@ doc_events = {
         "validate": "beams.beams.custom_scripts.leave_application.leave_application.validate"
     },
     "Employee" : {
-        "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert_employee",
-        "validate": "beams.beams.custom_scripts.employee.employee.set_employee_relieving_date"
+        "autoname": "beams.beams.custom_scripts.employee.employee.autoname",
+        "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert",
+        "validate": "beams.beams.custom_scripts.employee.employee.validate"
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
@@ -278,7 +281,8 @@ doc_events = {
         "on_update_after_submit":"beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
         "validate": [
             "beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
-            "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks"
+            "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
+            "beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks",
         ]
     },
     "Event" :{
@@ -304,7 +308,14 @@ doc_events = {
         "before_insert": [
             "beams.beams.custom_scripts.item.item.before_insert"
         ]
-    }
+    },
+    "Asset Movement": {
+        "on_submit": "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
+        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
+    },
+    "Asset":{
+        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
+    },
 }
 
 # Scheduled Tasks
@@ -318,7 +329,8 @@ scheduler_events = {
         "beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation",
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
-        "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders"
+        "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
+        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder"
     ],
 # "all": [
 # "beams.tasks.all"
@@ -332,9 +344,9 @@ scheduler_events = {
 # "weekly": [
 # "beams.tasks.weekly"
 # ],
-# "monthly": [
-# "beams.tasks.monthly"
-# ],
+    "monthly": [
+        "beams.beams.custom_scripts.asset.asset.asset_notifications"
+    ],
   }
 
 # Testing

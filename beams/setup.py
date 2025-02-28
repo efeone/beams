@@ -47,12 +47,15 @@ def after_install():
     create_custom_fields(get_appraisal_custom_fields(),ignore_validate=True)
     create_custom_fields(get_appraisal_kra_custom_fields(),ignore_validate=True)
     create_custom_fields(get_event_custom_fields(),ignore_validate=True)
-    create_custom_fields(get_Project_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_project_custom_fields(),ignore_validate=True)
     create_custom_fields(get_Payroll_Settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_custom_fields(),ignore_validate=True)
     create_custom_fields(get_vehicle_custom_fields(),ignore_validate=True)
     create_custom_fields(get_interview_custom_fields(),ignore_validate=True)
     create_custom_fields(get_item_group_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_hr_settings_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_asset_category_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -111,12 +114,16 @@ def before_uninstall():
     delete_custom_fields(get_appraisal_custom_fields())
     delete_custom_fields(get_appraisal_kra_custom_fields())
     delete_custom_fields(get_event_custom_fields())
-    delete_custom_fields(get_Project_custom_fields())
+    delete_custom_fields(get_project_custom_fields())
     delete_custom_fields(get_Payroll_Settings_custom_fields())
     delete_custom_fields(get_asset_custom_fields())
     delete_custom_fields(get_vehicle_custom_fields())
     delete_custom_fields(get_interview_custom_fields())
     delete_custom_fields(get_item_group_custom_fields())
+    delete_custom_fields(get_hr_settings_custom_fields())
+    delete_custom_fields(get_asset_category_custom_fields())
+    delete_custom_fields(get_asset_movement_custom_fields())
+
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -208,7 +215,7 @@ def get_Payroll_Settings_custom_fields():
         ]
     }
 
-def get_Project_custom_fields():
+def get_project_custom_fields():
     '''
     Custom fields that need to be added to the Project Doctype
     '''
@@ -312,14 +319,23 @@ def get_Project_custom_fields():
                 "fieldtype": "Small Text",
                 "label": "Description",
                 "fetch_from":"program_request.description",
-                "insert_after": "requirements"
+                "insert_after": "bureau"
             },
             {
                 "fieldname": "requirements",
-                "fieldtype": "Small Text",
+                "fieldtype": "Text Editor",
                 "label": "Requirements",
                 "fetch_from":"program_request.requirements",
-                "insert_after": "bureau"
+                "insert_after": "description"
+            },
+            {
+                "fieldname": "location",
+                "fieldtype": "Link",
+                "label": "Location",
+                "options":"Location",
+                "fetch_from":"program_request.location",
+                "insert_after": "department",
+                "fetch_on_save_if_empty":1
             }
 
         ]
@@ -580,6 +596,40 @@ def get_asset_custom_fields():
                 "options":"Bureau",
                 "label": "Bureau",
                 "insert_after": "location"
+            },
+            {
+                "fieldname": "in_transit",
+                "fieldtype": "Check",
+                "label": "In Transit",
+                "insert_after": "is_composite_asset",
+                "allow_on_submit": 1,
+                "read_only":1
+
+            },
+            {
+                "fieldname": "warranty_details_section",
+                "fieldtype": "Section Break",
+                "label": "Warranty Details Section",
+                "insert_after": "comprehensive_insurance",
+                "collapsible": 1
+            },
+            {
+                "fieldname": "warranty_reference_no",
+                "fieldtype": "Data",
+                "label": "Warranty Reference No",
+                "insert_after": "warranty_details_section"
+            },
+            {
+                "fieldname": "warranty_till",
+                "fieldtype": "Date",
+                "label": "Warranty Till",
+                "insert_after": "warranty_reference_no"
+            },
+            {
+                "fieldname": "qr_code",
+                "fieldtype": "Attach Image",
+                "label": "QR code",
+                "insert_after": "department"
             }
         ]
     }
@@ -679,6 +729,14 @@ def get_budget_custom_fields():
                 "label": "Budget Template",
                 "options":"Budget Template",
                 "insert_after": "monthly_distribution"
+            },
+            {
+                "fieldname": "rejection_feedback",
+                "fieldtype": "Table",
+                "label": "Rejection Feedback",
+                "options":"Rejection Feedback",
+                "insert_after": "december",
+                "depends_on": "eval: doc.workflow_state.includes('Rejected')"
             }
         ],
         "Budget Account": [
@@ -1223,6 +1281,37 @@ def get_item_custom_fields():
                "options": "Item",
                "read_only":1,
                "insert_after": "item_group"
+           },
+           {
+               "fieldname": "item_audit_notification",
+               "fieldtype": "Check",
+               "label": "Periodic Notification for Asset Auditing ",
+               "depends_on": "eval:doc.is_fixed_asset == 1",
+               "insert_after": "asset_category"
+           },
+           {
+               "fieldname": "item_notification_frequency",
+               "fieldtype": "Select",
+               "label": "Notification Frequency",
+               "options":"\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_audit_notification"
+           }   ,
+           {
+               "fieldname": "item_notification_template",
+               "fieldtype": "Link",
+               "label": "Notification Template",
+               "options":"Email Template",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_notification_frequency"
+           },
+           {
+               "fieldname": "start_notification_from",
+               "fieldtype": "Select",
+               "label": "Start Notification From",
+               "options":"\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+               "depends_on": "eval:doc.item_audit_notification == 1",
+               "insert_after": "item_audit_notification"
            }
         ]
     }
@@ -1422,7 +1511,7 @@ def get_employee_custom_fields():
                 "fieldtype": "Data",
                 "label": "No.of Children",
                 "insert_after":"marital_status"
-            }
+            },
         ],
 
         "Employee External Work History":[
@@ -2330,6 +2419,12 @@ def get_job_opening_custom_fields():
                 "insert_after": "location"
             },
             {
+                "fieldname": "no_of_positions",
+                "fieldtype": "Int",
+                "label": "No of.Positions",
+                "insert_after": "employment_type"
+            },
+            {
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
@@ -2740,13 +2835,6 @@ def get_appraisal_custom_fields():
                 "read_only": 1
 			},
             {
-                "fieldname": "event_reference",
-                "fieldtype": "Link",
-                "label": "Event Reference",
-                "insert_after": "appraisal_cycle",
-                "options": "Event"
-            },
-            {
                 "fieldname": "employee_self_kra_rating",
                 "fieldtype": "Table",
                 "label": "Employee Rating",
@@ -3104,7 +3192,7 @@ def get_property_setters():
             "doc_type": "Attendance Request",
             "field_name": "reason",
             "property": "options",
-            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForget to Checkin\nForget to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
+            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
         },
         {
             "doctype_or_field": "DocField",
@@ -3297,6 +3385,93 @@ def get_property_setters():
             "property_type": "",
             "value": 1
         },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "HR Settings",
+            "field_name": "emp_created_by",
+            "property": "depends_on",
+            "property_type": "Code",
+            "value": "eval: doc.employee_naming_by_department === 0 "
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget Account",
+            "field_name": "account",
+            "property": "read_only",
+            "property_type": "Link",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "no_of_positions",
+            "property": "reqd",
+            "property_type": "Check",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "reqd",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "default",
+            "value": 0.0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "mandatory_depends_on",
+            "value": "eval: frappe.user_roles.includes('HR Manager')"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "expected_compensation",
+            "property": "depends_on",
+            "value": "eval: frappe.user_roles.includes('HR Manager')"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "employee_left",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "requested_by",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "swap_with_employee",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "employee",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "reqd",
+            "value": 1
+        }
     ]
 
 def get_material_request_custom_fields():
@@ -3565,7 +3740,7 @@ def get_beams_roles():
     '''
         Method to get BEAMS specific roles
     '''
-    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User']
+    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head']
 
 def get_custom_translations():
     '''
@@ -3660,5 +3835,59 @@ def get_vehicle_custom_fields():
             "options": "Vehicle Documents",
             "insert_after": "vehicle_section_break"
         }
+        ]
+    }
+
+def get_hr_settings_custom_fields():
+    '''
+        Custom fields that need to be added to the HR Settings DocType
+    '''
+    return {
+        "HR Settings": [
+            {
+                "fieldname": "employee_naming_by_department",
+                "fieldtype": "Check",
+                "label": "Employee Naming By Department",
+                "insert_after": "employee_settings"
+            }
+        ]
+    }
+def get_asset_movement_custom_fields():
+    '''
+        Custom fields that need to be added to the Asset Movement DocType
+    '''
+    return {
+        "Asset Movement": [
+            {
+                "fieldname": "new_custodian",
+                "fieldtype": "Link",
+                "label": "New Custodian",
+                "options": "Employee",
+                "insert_after": "assets",
+                "read_only": 1
+            },
+            {
+                "fieldname": "user_id",
+                "label": "User ID",
+                "fieldtype": "Data",
+                "insert_after": "new_custodian",
+                "options": "Email",
+                "read_only": 1
+            }
+        ]
+    }
+def get_asset_category_custom_fields():
+    '''
+        Custom fields that need to be added to the Asset Category DocType
+    '''
+    return {
+        "Asset Category": [
+            {
+                "fieldname": "parent_asset_category",
+                "fieldtype": "Link",
+                "label": "Parent Asset Category",
+                "options": "Asset Category",
+                "insert_after": "asset_category_name"
+            }
         ]
     }

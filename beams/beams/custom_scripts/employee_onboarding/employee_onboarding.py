@@ -49,3 +49,21 @@ def get_employee_details(employee_id):
             'holiday_list': employee.holiday_list,
             'employee_grade': employee.grade
         }
+
+@frappe.whitelist()
+def get_job_applicants_with_employee_and_onboarding():
+    job_applicants_with_employees = frappe.get_all(
+        "Employee",
+        filters={"job_applicant": ["!=", ""]},
+        pluck="job_applicant"
+    )
+
+    job_applicants_with_onboarding = frappe.get_all(
+        "Employee Onboarding",
+        filters={"docstatus": ["!=", 2]},
+        pluck="job_applicant"
+    )
+
+    excluded_applicants = list(set(job_applicants_with_employees + job_applicants_with_onboarding))
+
+    return excluded_applicants if excluded_applicants else []

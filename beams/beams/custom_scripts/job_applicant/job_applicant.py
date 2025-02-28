@@ -38,11 +38,9 @@ def validate_job_applicant_details(doc):
 		if frappe.db.exists('Job Opening', doc.job_title):
 			job_opening_doc = frappe.get_doc('Job Opening', doc.job_title)
 
-			#Validating Minimum Experience
+			# Fetching Minimum Experience
 			expected_experience = float(job_opening_doc.min_experience) if job_opening_doc.min_experience else 0
 			experience = float(doc.min_experience) if doc.min_experience else 0
-			if job_opening_doc and expected_experience and (experience < expected_experience):
-				frappe.throw(_('Applicant does not meet the required experience: <b>{0} years</b>').format(str(expected_experience)))
 
 @frappe.whitelist()
 def get_existing_local_enquiry_report(doc_name):
@@ -178,15 +176,16 @@ def fetch_department(doc, method):
             doc.department = department
         else:
             frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
+
 def validate_resume_attachment(doc, method):
     if doc.resume_attachment:
         file_doc = frappe.get_doc("File", {"file_url": doc.resume_attachment})
         file_name = file_doc.file_name
-        file_extension = os.path.splitext(file_name)[1].lower()
+        file_extension = os.path.splitext(file_name)[1][1:].lower()
 
-        if file_extension != '.pdf':
-            frappe.msgprint(
-                msg=_('Only PDF files are allowed for Resume Attachment'),
-                title=_('Validation for Resume'),
-                indicator="red"
+        allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx']
+        if file_extension not in allowed_extensions:
+            frappe.throw(
+                _("Only PDF, DOC, DOCX, XLS, and XLSX files are allowed"),
+                title=_("Validation for Resume")
             )

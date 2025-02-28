@@ -59,9 +59,13 @@
                 <div class="card-body">
                     <div class="card-title-location">
                         <p class="card-title">{{ job.job_title }}</p>
-                        <p class="location" style="color: #437562">Location: {{ job.location or 'Not Specified' }}</p>
+                        {% if job.location %}
+                        <p class="location" style="color: #437562">Location: {{ job.location }}</p>
+                        {% endif %}
                     </div>
+                    {% if job.employment_type %}
                     <p class="card-text"><i class="fas fa-briefcase"></i> Employment Type: {{ job.employment_type }}</p>
+                    {% endif %}
                     {% if job.publish_salary_range and job.salary_range %}
                     <p class="card-text"><i class="fas fa-coins"></i> {{ job.salary_range }}</p>
                     {% endif %}

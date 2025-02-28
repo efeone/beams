@@ -63,7 +63,8 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
                     "name": "equipment_request",
                     "expected_start_date": "required_from",
                     "expected_end_date": "required_to",
-                    "bureau": "bureau"
+                    "bureau": "bureau",
+                    "location": "location"
                 }
             }
         },
@@ -71,10 +72,37 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
     )
 
     for item in equipment_request.required_equipments:
-        acquired_qty = item.quantity - item.issued_quantity
+        acquired_qty = item.required_quantity - item.issued_quantity
         target_item = target_doc.append("required_items", {
             "item": item.required_item,
             "quantity": acquired_qty
         })
 
     return target_doc
+
+
+@frappe.whitelist()
+def map_asset_movement(source_name, target_doc=None):
+    to_employee = frappe.flags.get("args", {}).get("to_employee", '')
+    asset = frappe.flags.get("args", {}).get("asset", '')
+    ref_type = frappe.flags.get("args", {}).get("ref_type", '')
+    ref_name = frappe.flags.get("args", {}).get("ref_name", '')
+    print(ref_type, ref_name)
+    asset_movement = get_mapped_doc("Equipment Request", source_name, {
+        "Equipment Request": {
+            "doctype": "Asset Movement",
+            "field_map": {
+
+            }
+        }
+    }, target_doc)
+    asset_movement.purpose = 'Issue'
+    asset_movement.append('assets', {
+            'asset': asset,
+            'to_employee': to_employee
+        })
+    asset_movement.reference_doctype = ref_type
+    asset_movement.reference_name = ref_name
+    asset_movement.flags.ignore_mandatory = True
+    asset_movement.save(ignore_permissions=True)
+    return asset_movement

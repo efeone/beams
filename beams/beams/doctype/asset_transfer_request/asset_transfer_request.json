@@ -1,0 +1,161 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ATR-{YY}-{####}",
+ "creation": "2025-02-17 14:44:55.162821",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee",
+  "location",
+  "asset_type",
+  "bundle",
+  "asset",
+  "assets",
+  "bundles",
+  "column_break_ivnd",
+  "posting_date",
+  "posting_time",
+  "section_break_sesi",
+  "items",
+  "asset_return_checklist_template",
+  "asset_return_checklist",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "posting_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Posting Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "posting_time",
+   "fieldtype": "Time",
+   "label": "Posting Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "asset_type",
+   "fieldtype": "Select",
+   "label": "Asset Type",
+   "options": "Single Asset\nBundle",
+   "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "assets",
+   "fieldtype": "Table MultiSelect",
+   "label": "Assets",
+   "options": "Assets",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "items",
+   "fieldtype": "Table",
+   "label": "Items",
+   "options": "Asset Bundle Stock Item",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval:doc.workflow_state == \"Transferred\"",
+   "fieldname": "asset_return_checklist_template",
+   "fieldtype": "Link",
+   "label": "Asset Return Checklist template",
+   "mandatory_depends_on": "eval:doc.workflow_state == \"Transferred\"",
+   "options": "Asset Return Checklist Template"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval:doc.asset_return_checklist_template",
+   "fieldname": "asset_return_checklist",
+   "fieldtype": "Table",
+   "label": "Asset Return Checklist",
+   "options": "Asset Return Checklist"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Transfer Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "bundle",
+   "fieldtype": "Link",
+   "label": "Bundle",
+   "mandatory_depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "options": "Asset Bundle"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "bundles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Bundles",
+   "options": "Bundles",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Single Asset\"",
+   "fieldname": "asset",
+   "fieldtype": "Link",
+   "label": "Asset",
+   "options": "Asset"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "label": "Employee",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_ivnd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_sesi",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-02-26 13:08:05.355551",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Transfer Request",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

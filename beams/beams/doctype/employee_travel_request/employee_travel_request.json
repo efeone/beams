@@ -33,6 +33,8 @@
   "mark_attendance",
   "attendance_request",
   "reference_documents",
+  "section_break_fdom",
+  "dynamic_link",
   "reason_for_rejection"
  ],
  "fields": [
@@ -215,12 +217,24 @@
    "label": "Attendance Request",
    "options": "Attendance Request",
    "read_only": 1
+  },
+  {
+   "fieldname": "dynamic_link",
+   "fieldtype": "Table",
+   "label": "Dynamic Link",
+   "options": "Dynamic Link"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "section_break_fdom",
+   "fieldtype": "Section Break",
+   "label": "Links"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-04 10:00:59.408535",
+ "modified": "2025-02-12 17:16:14.451010",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
@@ -241,6 +255,7 @@
    "write": 1
   }
  ],
+ "search_fields": "requested_by",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

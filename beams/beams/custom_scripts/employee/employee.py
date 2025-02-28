@@ -1,5 +1,7 @@
 import frappe
 from frappe import _
+from frappe.model.naming import make_autoname
+from frappe.model.naming import set_name_by_naming_series
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import getdate, nowdate, add_days
 
@@ -37,11 +39,11 @@ def get_employee_name_for_user(user_id):
     return employee_name
 
 @frappe.whitelist()
-def after_insert_employee(doc, method):
+def after_insert(doc, method):
     """
-    Triggered after an Employee record is created.
-    Fetches the default leave policy and leave period from Beams HR Settings,
-    validates the configurations, and creates & submits a Leave Policy Assignment.
+        Triggered after an Employee record is created.
+        Fetches the default leave policy and leave period from Beams HR Settings,
+        validates the configurations, and creates & submits a Leave Policy Assignment.
     """
     # Fetch default leave policy and leave period from Beams HR Settings
     leave_policy = frappe.db.get_single_value('Beams HR Settings', 'default_leave_policy')
@@ -81,12 +83,13 @@ def after_insert_employee(doc, method):
     leave_policy_assignment.submit()
 
 
-def set_employee_relieving_date(doc, method):
+def validate(doc, method):
     """
-    Automatically set the relieving_date based on resignation_letter_date and notice_number_of_days.
+        Automatically set the relieving_date based on resignation_letter_date and notice_number_of_days.
     """
     if doc.resignation_letter_date and doc.notice_number_of_days:
         doc.relieving_date = add_days(getdate(doc.resignation_letter_date), doc.notice_number_of_days)
+
 @frappe.whitelist()
 def get_notice_period(employment_type, job_applicant=None, current_notice_period=None):
     '''
@@ -123,3 +126,43 @@ def get_notice_period(employment_type, job_applicant=None, current_notice_period
             {'name': employment_type}, 'notice_period')
 
     return notice_period
+
+def autoname(doc, method):
+    '''
+        Method to set Employee ID
+    '''
+    employee_naming_by_department = frappe.db.get_single_value('HR Settings', 'employee_naming_by_department')
+    if not employee_naming_by_department:
+        naming_method = frappe.db.get_single_value('HR Settings', 'emp_created_by')
+        if not naming_method:
+            frappe.throw(_('Please setup Employee Naming System in Human Resource > HR Settings'))
+        else:
+            if naming_method == 'Naming Series':
+                set_name_by_naming_series(doc)
+            elif naming_method == 'Employee Number':
+                doc.name = doc.employee_number
+            elif naming_method == 'Full Name':
+                doc.set_employee_name()
+                doc.name = doc.employee_name
+    else:
+        if not doc.department:
+            frappe.throw(_('Department is required to create Employee'))
+        department_abbr = frappe.db.get_value('Department', doc.department, 'abbreviation')
+        if not department_abbr:
+            frappe.throw(_('Abbreviation is missing for Department : {0} is required to create Employee'.format(doc.department)))
+        doc.name = get_next_employee_id(department_abbr)
+    doc.employee = doc.name
+
+def get_next_employee_id(department_abbr):
+    '''
+        Method to get next Employee ID
+    '''
+    series_prefix = "MB/{0}/".format(department_abbr)
+    next_employee_id = '{0}1'.format(series_prefix)
+    employees = frappe.db.get_all('Employee', { 'name': ['like', '%{0}%'.format(series_prefix)] }, order_by='name desc', pluck='name')
+    if employees:
+        employee_id = employees[0]
+        employee_id = employee_id.replace(series_prefix, "")
+        employee_count = int(employee_id)
+        next_employee_id = '{0}{1}'.format(series_prefix, str(employee_count+1))
+    return next_employee_id

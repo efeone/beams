@@ -13,9 +13,7 @@
   "project",
   "fiscal_year",
   "column_break_wemo",
-  "department",
-  "division",
-  "region",
+  "revenue_template",
   "naming_series",
   "section_break",
   "revenue_accounts",
@@ -70,24 +68,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "label": "Region",
-   "options": "Region"
-  },
-  {
-   "fieldname": "department",
-   "fieldtype": "Link",
-   "label": "Department",
-   "options": "Department"
-  },
-  {
-   "fieldname": "division",
-   "fieldtype": "Link",
-   "label": "Division",
-   "options": "Division"
-  },
-  {
    "fieldname": "column_break_wemo",
    "fieldtype": "Column Break"
   },
@@ -121,12 +101,18 @@
    "print_hide": 1,
    "read_only": 1,
    "set_only_once": 1
+  },
+  {
+   "fieldname": "revenue_template",
+   "fieldtype": "Link",
+   "label": "Revenue Template",
+   "options": "Revenue Template"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-01 11:54:09.710461",
+ "modified": "2025-02-21 10:03:45.988108",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue",

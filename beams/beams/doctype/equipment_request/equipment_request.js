@@ -4,21 +4,14 @@
 frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         set_item_query(frm)
-
-        if (frm.doc.docstatus == 1 && frm.doc.workflow_state == 'Approved') {
-            frm.add_custom_button(__('Asset Movement'), function () {
-                let asset_movement = frappe.model.get_new_doc("Asset Movement");
-                asset_movement.posting_date = frm.doc.posting_date;
-                frappe.set_route("form", "Asset Movement", asset_movement.name);
-            }, __("Create"));
+        if (frm.doc.workflow_state === "Approved"){
+          frm.add_custom_button(__('Equipment Acquiral Request'), function () {
+              frappe.model.open_mapped_doc({
+                  method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
+                  frm: frm,
+              });
+          }, __("Create"));
         }
-
-        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
-                frm: frm,
-            });
-        }, __("Create"));
     },
 
     bureau: function (frm) {
@@ -32,29 +25,84 @@ frappe.ui.form.on('Equipment Request', {
     },
     posting_date:function (frm){
       frm.call("validate_posting_date");
+    },
+    location: function(frm) {
+      frm.clear_table("required_equipments");
     }
 });
 
 frappe.ui.form.on('Required Items Detail', {
+    form_render: function(frm, cdt, cdn) {
+        if (frm.doc.workflow_state != "Approved") {
+            $(".btn.btn-xs.btn-default").hide();
+        }
+    },
     required_item: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-
+        if (!frm.doc.location) {
+            frappe.msgprint(__('Please select a location first.'));
+            return;
+        }
         frappe.call({
             method: "beams.beams.custom_scripts.project.project.get_available_quantities",
             args: {
                 items: [row.required_item],
-                bureau: frm.doc.bureau
+                location: frm.doc.location
             },
             callback: function(r) {
                 if (r.message) {
                     const available_qty = r.message[row.required_item] || 0;
-                    row.available_item_quantity = available_qty;
+                    row.available_quantity = available_qty;
                     frm.refresh_field('required_equipments');
                 }
             }
         });
     },
-});
+
+    asset_movement: function (frm, cdt, cdn) {
+       let row = locals[cdt][cdn];
+       frappe.db.get_value('Item', row.required_item, 'item_code', function(r) {
+           if (r && r.item_code) {
+               // Open the prompt dialog with employee and asset fields
+               frappe.prompt([
+                   {
+                       label: 'Employee',
+                       fieldname: 'employee',
+                       fieldtype: 'Link',
+                       options: 'Employee',
+                       reqd: 1
+                   },
+                   {
+                       label: 'Asset',
+                       fieldname: 'asset',
+                       fieldtype: 'Link',
+                       options: 'Asset',
+                       reqd: 1,
+                       get_query: function () {
+                           return {
+                               filters: { item_code: r.item_code }  // Filter assets by item_code
+                           };
+                       }
+                   }
+               ],
+               function (values) {
+                      frappe.model.open_mapped_doc({
+                          method: "beams.beams.doctype.equipment_request.equipment_request.map_asset_movement",
+                          frm: frm,
+                          args: {
+                              to_employee: values.employee,
+                              asset: values.asset,
+                              ref_type: row["doctype"],
+                              ref_name: row["name"]
+                          }
+                      });
+                  }, __('Asset Movement'), __('Create'));
+              } else {
+                  frappe.msgprint(__('Invalid required item selected.'));
+              }
+          });
+      }
+  });
 
 function validate_dates(frm) {
     if (frm.doc.required_from && frm.doc.required_to) {
@@ -71,7 +119,7 @@ function set_item_query(frm) {
           args: {
               doctype: 'Asset',
               filters: {
-                  bureau: frm.doc.bureau
+                  location: frm.doc.location
               },
               fields: ['item_code'],
               limit_page_length: 0

@@ -59,7 +59,7 @@ def create_new_log_on_update(doc, method):
             "start_date": start_date,
             "end_date": end_date,
         })
-        log_doc.insert()
+        log_doc.insert(ignore_permissions=True)
 
 
 def create_new_compensatory_leave_log(doc, method):
@@ -114,7 +114,7 @@ def create_new_compensatory_leave_log(doc, method):
         "start_date": start_date,
         "end_date": end_date,
     })
-    log_doc.insert()
+    log_doc.insert(ignore_permissions=True)
 
 
 
@@ -128,15 +128,15 @@ def validate(doc, method):
     is allowed for the employee's gender. If the leave type is not listed in the mapping,
     no validation is performed.
     """
-    
+
     employee_gender = frappe.db.get_value('Employee', doc.employee, 'gender')
-    
+
     if not employee_gender:
         frappe.throw("Gender not found for Employee {employee}. Please ensure gender is set in the Employee record.".format(employee=doc.employee ))
 
     is_leave_type_mapped = frappe.db.exists('Gender Leave Type Mapping', {'leave_type': doc.leave_type})
 
-    
+
     if is_leave_type_mapped:
         is_valid_mapping = frappe.db.exists(
             'Gender Leave Type Mapping',
@@ -146,7 +146,7 @@ def validate(doc, method):
             }
         )
 
-        
+
         if not is_valid_mapping:
             frappe.throw(
             "The Selected Leave Type '{leave_type}' is not permitted for Employee {employee} "
@@ -156,6 +156,3 @@ def validate(doc, method):
             gender=employee_gender
                 )
             )
-
-           
-

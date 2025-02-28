@@ -2,6 +2,7 @@ import frappe
 from frappe.utils import fmt_money
 
 def get_context(context):
+	context.no_cache = 1
 	# Get designation, location, and job_type from the request form data
 	designation, location, employment_type = frappe.form_dict.get('designation'), frappe.form_dict.get('location'), frappe.form_dict.get('employment_type')
 
@@ -37,6 +38,10 @@ def get_context(context):
 	'''
 	if has_filter:
 		query += conditions
+
+	# Sort by latest created job first
+	query += " ORDER BY creation DESC"
+
 	jobs = frappe.db.sql(query, as_dict=True)
 	for job in jobs:
 		job['no_of_applications'] = get_job_applicant_count(job.get('name'))

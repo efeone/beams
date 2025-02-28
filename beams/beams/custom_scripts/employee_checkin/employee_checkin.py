@@ -47,6 +47,7 @@ def handle_employee_checkin_out(doc, method):
         if allocation.to_date < end_date:
             allocation.to_date = end_date
         allocation.new_leaves_allocated += 1
+        allocation.flags.ignore_permissions = True
         allocation.save()
     else:
         # Create new Leave Allocation
@@ -58,5 +59,5 @@ def handle_employee_checkin_out(doc, method):
             "to_date": end_date,
             "new_leaves_allocated": 1,
         })
-        leave_allocation_doc.insert()
+        leave_allocation_doc.insert(ignore_permissions=True)
         leave_allocation_doc.submit()

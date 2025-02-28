@@ -12,8 +12,31 @@ frappe.ui.form.on('Training Event', {
                 show_training_request_dialog(frm);
             }, "Get Employees");
         }
+    },
+
+    training_program: function(frm) {
+        if (frm.doc.training_program) {
+            frappe.call({
+                method: "frappe.client.get",
+                args: {
+                    doctype: "Training Program",
+                    name: frm.doc.training_program
+                },
+                callback: function(r) {
+                    if (r.message) {
+                        let program = r.message;
+                        frm.set_value("trainer_name", program.trainer_name);
+                        frm.set_value("trainer_email", program.trainer_email);
+                        frm.set_value("contact_number", program.contact_number);
+                        frm.set_value("supplier", program.supplier);
+                    }
+                }
+            });
+        }
     }
 });
+
+
 
 // Function to show the training request dialog
 function show_training_request_dialog(frm) {

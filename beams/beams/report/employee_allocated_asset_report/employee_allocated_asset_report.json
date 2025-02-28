@@ -1,0 +1,42 @@
+{
+ "add_total_row": 0,
+ "columns": [],
+ "creation": "2025-02-24 15:48:26.127549",
+ "disabled": 0,
+ "docstatus": 0,
+ "doctype": "Report",
+ "filters": [],
+ "idx": 0,
+ "is_standard": "Yes",
+ "letterhead": null,
+ "modified": "2025-02-24 16:06:00.637750",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Allocated Asset Report",
+ "owner": "Administrator",
+ "prepared_report": 0,
+ "ref_doctype": "Employee",
+ "report_name": "Employee Allocated Asset Report",
+ "report_type": "Script Report",
+ "roles": [
+  {
+   "role": "HR Manager"
+  },
+  {
+   "role": "HR User"
+  },
+  {
+   "role": "Employee"
+  },
+  {
+   "role": "Employee Self Service"
+  },
+  {
+   "role": "CEO"
+  },
+  {
+   "role": "HOD"
+  }
+ ],
+ "timeout": 0
+}

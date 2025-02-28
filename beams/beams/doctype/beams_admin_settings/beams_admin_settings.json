@@ -5,7 +5,16 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "default_award_expense_account"
+  "default_award_expense_account",
+  "asset_auditing_notification",
+  "notify_after",
+  "asset_auditing_notification_template",
+  "asset_audit_notification",
+  "start_notification_from",
+  "notifcation_frequency",
+  "notification_template",
+  "column_break_qndy",
+  "asset_transfer_warehouse"
  ],
  "fields": [
   {
@@ -15,12 +24,71 @@
    "label": " Default Award Expense Account",
    "options": "Account",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.asset_auditing_notification",
+   "description": "In Days",
+   "fieldname": "notify_after",
+   "fieldtype": "Int",
+   "label": "Notify After",
+   "mandatory_depends_on": "eval:doc.asset_auditing_notification"
+  },
+  {
+   "depends_on": "eval:doc.asset_auditing_notification",
+   "fieldname": "asset_auditing_notification_template",
+   "fieldtype": "Link",
+   "label": "Asset Auditing Notification Template",
+   "mandatory_depends_on": "eval:doc.asset_auditing_notification",
+   "options": "Email Template"
+  },
+  {
+   "default": "0",
+   "fieldname": "asset_auditing_notification",
+   "fieldtype": "Check",
+   "label": "Asset Auditing Notification"
+  },
+  {
+   "default": "0",
+   "fieldname": "asset_audit_notification",
+   "fieldtype": "Check",
+   "label": "Periodic Notification for Asset Auditing "
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "notifcation_frequency",
+   "fieldtype": "Select",
+   "label": "Notifcation Frequency",
+   "options": "\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly"
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "notification_template",
+   "fieldtype": "Link",
+   "label": "Notification Template",
+   "options": "Email Template"
+  },
+  {
+   "depends_on": "eval:doc.asset_audit_notification",
+   "fieldname": "start_notification_from",
+   "fieldtype": "Select",
+   "label": "Start Notification From",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "column_break_qndy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "asset_transfer_warehouse",
+   "fieldtype": "Link",
+   "label": "Asset Transfer Warehouse",
+   "options": "Warehouse"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-23 16:30:33.927575",
+ "modified": "2025-02-25 17:08:17.611088",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",

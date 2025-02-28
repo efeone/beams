@@ -12,16 +12,33 @@ frappe.ui.form.on('Budget Template', {
             frm.clear_table('budget_template_item');
             frm.refresh_field('budget_template_item');
         }
+    },
+    company: function (frm) {
+        if (frm.doc.company) {
+            // frm.clear_table("budget_template_item");
+            frm.refresh_field("budget_template_item");
+        }
     }
 });
 
 frappe.ui.form.on('Budget Template Item', {
     cost_sub_head: function (frm, cdt, cdn) {
         var row = locals[cdt][cdn];
-        if (row.cost_sub_head) {
-            frappe.db.get_value('Cost Subhead', row.cost_sub_head, 'account').then(r => {
-                frappe.model.set_value(cdt, cdn, 'account', r.message.account);
-            })
+
+        if (row.cost_sub_head && frm.doc.company) {
+            frappe.db.get_doc('Cost Subhead', row.cost_sub_head).then(doc => {
+                if (doc.accounts && doc.accounts.length > 0) {
+                    let account_found = doc.accounts.find(acc => acc.company === frm.doc.company);
+                    if (account_found) {
+                        frappe.model.set_value(cdt, cdn, 'account', account_found.default_account);
+                    } else {
+                        frappe.model.set_value(cdt, cdn, 'account', '');
+                        frappe.msgprint(__('No default account found for the selected Cost Subhead and Company.'));
+                    }
+                } else {
+                    frappe.model.set_value(cdt, cdn, 'account', '');
+                }
+            });
         }
     }
 });

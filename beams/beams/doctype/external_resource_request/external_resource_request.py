@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 from frappe.utils import today,getdate
 from frappe import _
+from frappe.utils import today
 
 class ExternalResourceRequest(Document):
 
@@ -32,8 +33,11 @@ class ExternalResourceRequest(Document):
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
-            if self.posting_date > today():
+            posting_date = getdate(self.posting_date)
+            today_date = getdate(today())
+            if posting_date > today_date:
                 frappe.throw(_("Posting Date cannot be set after today's date."))
+
 
     @frappe.whitelist()
     def updated_required_resources(self):

@@ -4,14 +4,6 @@
 frappe.ui.form.on('Employee Travel Request', {
     refresh: function (frm) {
         if (!frm.is_new()) {
-            // Add "Purchase Invoice" button
-            frm.add_custom_button(__('Purchase Invoice'), function () {
-                let invoice = frappe.model.get_new_doc("Purchase Invoice");
-                invoice.posting_date = frm.doc.posting_date;
-                frappe.set_route("form", "Purchase Invoice", invoice.name);
-            }, __("Create"));
-
-            // Add "Journal Entry" button
             frm.add_custom_button(__('Journal Entry'), function () {
                 let journal_entry = frappe.model.get_new_doc("Journal Entry");
                 journal_entry.voucher_type = "Journal Entry";
@@ -24,7 +16,6 @@ frappe.ui.form.on('Employee Travel Request', {
 
     requested_by: function (frm) {
 
-        // Fetch the Batta Policy for the selected employee
         frappe.call({
             method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
             args: { requested_by: frm.doc.requested_by },
@@ -33,7 +24,6 @@ frappe.ui.form.on('Employee Travel Request', {
                     let batta_policy = response.message;
                     frm.set_value('batta_policy', batta_policy.name);
 
-                    // If accommodation is required, fetch and apply the room criteria filter
                     if (frm.doc.accommodation_required) {
                         set_room_criteria_filter(frm)
                     }
@@ -52,6 +42,9 @@ frappe.ui.form.on('Employee Travel Request', {
     },
     posting_date:function (frm){
       frm.call("validate_posting_date");
+    },
+    end_date:function (frm){
+      frm.call("validate_dates");
     }
 });
 

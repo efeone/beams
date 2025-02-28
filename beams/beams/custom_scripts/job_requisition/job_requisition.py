@@ -23,7 +23,7 @@ def create_job_opening_from_job_requisition(doc, method):
                     "qualification": qualification.qualification
                 })
             job_opening.min_experience = doc.min_experience
-            job_opening.job_requisition = doc.name
+            job_opening.job_requisition_id_ = doc.name
             job_opening.no_of_positions = doc.no_of_positions
             job_opening.no_of_days_off = doc.no_of_days_off
             job_opening.preffered_location = doc.location

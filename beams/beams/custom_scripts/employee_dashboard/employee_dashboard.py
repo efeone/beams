@@ -3,8 +3,12 @@ from frappe import _
 def get_data(data=None):
     """
     Method to add transaction data to the provided data dictionary.
-    
+
     """
+
+    data["non_standard_fieldnames"] = {
+        "Asset": "custodian"
+    }
 
     # Adding transactions to the data dictionary
     data["transactions"] = [
@@ -17,7 +21,9 @@ def get_data(data=None):
         {'label': _('Benefit'), 'items': ['Employee Benefit Application', 'Employee Benefit Claim']},
         {'label': _('Payroll'), 'items': ['Salary Structure Assignment', 'Salary Slip', 'Additional Salary', 'Timesheet', 'Employee Incentive', 'Retention Bonus', 'Bank Account']},
         {'label': _('Training'), 'items': ['Training Request', 'Training Event', 'Training Result', 'Training Feedback', 'Employee Skill Map']},
-        {'label': _('Evaluation'), 'items': ['Appraisal']}
+        {'label': _('Evaluation'), 'items': ['Appraisal']},
+        {'label': _('Assets'), 'items': ['Asset']}
+
     ]
 
     # Return the updated data

@@ -3,6 +3,7 @@ from frappe import _
 from beams.www.job_portal.index import get_job_applicant_count, get_salary_range
 
 def get_context(context):
+	context.no_cache = 1
 	job_opening = frappe.form_dict.job_opening or ''
 	if not frappe.db.exists('Job Opening', job_opening):
 		frappe.log_error(str(job_opening), 'Job Opening {0} not found')

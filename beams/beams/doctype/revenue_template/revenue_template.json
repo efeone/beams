@@ -1,0 +1,66 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:template_title",
+ "creation": "2025-02-17 14:10:03.498118",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "template_title",
+  "company",
+  "section_break_ybn1",
+  "revenue_template_item"
+ ],
+ "fields": [
+  {
+   "fieldname": "template_title",
+   "fieldtype": "Data",
+   "label": "Template Title",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_ybn1",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "revenue_template_item",
+   "fieldtype": "Table",
+   "label": "Revenue Template Item",
+   "options": "Revenue Template Item"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-02-21 13:33:27.864251",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Revenue Template",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
