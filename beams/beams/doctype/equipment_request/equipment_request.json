@@ -16,8 +16,9 @@
   "required_to",
   "section_break_mztz",
   "required_equipments",
-  "amended_from",
-  "reason_for_rejection"
+  "priority",
+  "reason_for_rejection",
+  "amended_from"
  ],
  "fields": [
   {
@@ -97,12 +98,18 @@
    "fieldtype": "Link",
    "label": "Location",
    "options": "Location"
+  },
+  {
+   "fieldname": "priority",
+   "fieldtype": "Select",
+   "label": "Priority",
+   "options": "Low\nMedium\nHigh"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 10:59:45.982870",
+ "modified": "2025-02-28 15:28:50.378737",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",
