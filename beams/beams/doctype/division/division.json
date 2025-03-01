@@ -8,6 +8,7 @@
  "field_order": [
   "department",
   "department_abbreviation",
+  "company",
   "column_break_ncbr",
   "division",
   "cost_center",
@@ -51,11 +52,18 @@
    "fieldtype": "Link",
    "label": "Region",
    "options": "Region"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-21 08:43:54.337394",
+ "modified": "2025-03-01 10:52:01.363087",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Division",
