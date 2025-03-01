@@ -21,7 +21,28 @@ class AssetTransferRequest(Document):
 
     def on_update_after_submit(self):
         '''Ensure that Asset Movement and Stock Entries are created when the workflow state is 'Transferred'.
-           Mark or unmark 'In Transit' checkbox based on workflow state.'''
+           Mark or unmark 'In Transit' checkbox based on workflow state.
+
+           Handles updates after submission by adding  assets,items,asset to the asset return checklist when the workflow state is 'Transferred'
+        '''
+
+        if self.workflow_state == "Transferred" and self.asset_return_checklist_template:
+            existing_checklist_items = {row.checklist_item for row in self.get("asset_return_checklist")}
+            assets_to_add = set()
+
+            if self.asset_type == "Bundle":
+                assets_to_add.update(row.asset for row in self.get("assets") if row.asset)
+            elif self.asset_type == "Single Asset" and self.asset:
+                assets_to_add.add(self.asset)
+
+            assets_to_add.update(row.item for row in self.get("items") if row.item)
+            new_assets = assets_to_add - existing_checklist_items
+
+            if new_assets:
+                for asset in new_assets:
+                    self.append("asset_return_checklist", {"checklist_item": asset})
+
+                self.save(ignore_permissions=True)
 
         if self.workflow_state == 'Transferred':
             # Check if asset movement already exists
