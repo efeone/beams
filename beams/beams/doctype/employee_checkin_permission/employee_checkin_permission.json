@@ -108,6 +108,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "fetch_from": "employee.reports_to",
    "fieldname": "reports_to",
    "fieldtype": "Link",
    "label": "Reports To",
@@ -116,7 +117,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-27 15:16:13.200069",
+ "modified": "2025-03-01 12:27:22.637469",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Checkin Permission",
