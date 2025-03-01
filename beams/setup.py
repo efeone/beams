@@ -1678,7 +1678,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Check",
                 "label": "Driving License Needed for this Position",
                 "depends_on": "eval:doc.travel_required == 1",
-                "insert_after": "is_work_shift_needed",
+                "insert_after": "min_experience",
                 "permlevel": 1
             },
             {
@@ -1761,6 +1761,15 @@ def get_job_requisition_custom_fields():
                 "options": "Employee",
                 "insert_after": "request_for",
                 "depends_on": "eval:doc.request_for == 'Employee Replacement'"
+            },
+            {
+                "fieldname": "relieving_date",
+                "fieldtype": "Date",
+                "label": "Relieving Date",
+                "insert_after": "employee_left",
+                "fetch_from":"employee_left.relieving_date",
+                "depends_on":"eval:doc.request_for == 'Employee Replacement'",
+                "read_only": 1
             },
             {
                 "fieldname": "interview",
@@ -2494,7 +2503,7 @@ def get_job_opening_custom_fields():
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Minimum Experience Required",
-                "insert_after": "qualification_details_column_break"
+                "insert_after": "is_work_shift_needed"
             },
             {
                 "fieldname": "proficiency_break",
