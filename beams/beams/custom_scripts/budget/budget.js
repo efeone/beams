@@ -115,11 +115,19 @@ frappe.ui.form.on('Budget Account', {
     },
     equal_monthly_distribution: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
-        if (row.equal_monthly_distribution && row.budget_amount) {
+
+        if (!row.equal_monthly_distribution) {
+            frappe.confirm(
+                "Are you sure you want to uncheck Equal Monthly Distribution?",
+                function() {
+                    clear_monthly_values(frm, cdt, cdn);
+                },
+                function() {
+                    frappe.model.set_value(cdt, cdn, "equal_monthly_distribution", 1);
+                }
+            );
+        } else if (row.budget_amount) { 
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
-        }
-        else {
-          clear_monthly_values(frm,cdt,cdn);
         }
     },
     january: function (frm, cdt, cdn) {
