@@ -47,7 +47,15 @@ function set_filters(frm) {
     frm.set_query('division', function () {
         return {
             filters: {
-                department: frm.doc.department
+                department: frm.doc.department,
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('department', function () {
+        return {
+            filters: {
+                company: frm.doc.company
             }
         };
     });
