@@ -14,7 +14,6 @@ frappe.ui.form.on('Budget', {
         }
     },
     company: function (frm) {
-        set_filters(frm);
         frm.set_value('department', null);
     },
     division: function (frm) {
