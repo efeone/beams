@@ -728,7 +728,7 @@ def get_budget_custom_fields():
                 "fieldtype": "Link",
                 "label": "Budget Template",
                 "options":"Budget Template",
-                "insert_after": "monthly_distribution"
+                "insert_after": "fiscal_year"
             },
             {
                 "fieldname": "rejection_feedback",
@@ -737,7 +737,20 @@ def get_budget_custom_fields():
                 "options":"Rejection Feedback",
                 "insert_after": "december",
                 "depends_on": "eval: doc.workflow_state.includes('Rejected')"
-            }
+            },
+            {
+                "fieldname": "total_amount",
+                "fieldtype": "Currency",
+                "label": "Total Amount",
+                "read_only": 1,
+                "insert_after": "region"
+            },
+            {
+                "fieldname": "column_break_cost",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "project"
+            },
         ],
         "Budget Account": [
             {

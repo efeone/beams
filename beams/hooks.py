@@ -316,6 +316,9 @@ doc_events = {
     "Asset":{
         "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
     },
+    "Budget":{
+        "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount"
+    },
 }
 
 # Scheduled Tasks

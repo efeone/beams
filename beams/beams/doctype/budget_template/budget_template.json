@@ -6,10 +6,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "template_title",
   "department",
-  "column_break",
   "division",
+  "column_break",
   "company",
   "section_break",
   "budget_template_item"
@@ -21,12 +20,6 @@
    "label": "Department",
    "options": "Department",
    "reqd": 1
-  },
-  {
-   "fieldname": "template_title",
-   "fieldtype": "Data",
-   "label": "Template Title",
-   "unique": 1
   },
   {
    "depends_on": "eval:doc.company",
@@ -62,7 +55,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-13 10:50:51.981266",
+ "modified": "2025-03-01 10:54:06.952356",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",
@@ -84,6 +77,5 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": [],
- "title_field": "template_title"
+ "states": []
 }
