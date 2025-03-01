@@ -6,10 +6,16 @@
  "engine": "InnoDB",
  "field_order": [
   "default_local_enquiry_duration",
-  "enable_absence_reminders",
   "absence_reminder_duration",
   "column_break_lmqd",
   "permanent_employment_type",
+  "absence_reminder_template",
+  "column_break_dskf",
+  "enable_absence_reminders",
+  "section_break_mafr",
+  "leave_application_template",
+  "column_break_zilk",
+  "leave_application_reminder_duration",
   "notification_settings_tab",
   "notification_to_admin_department_to_create_id_card_section",
   "notification_to_admin",
@@ -17,7 +23,6 @@
   "column_break_gvvx",
   "notification_to_it",
   "it_hod",
-  "column_break_qbue",
   "tab_3_tab",
   "maternity_leave_type",
   "column_break_pjdi",
@@ -34,9 +39,8 @@
   "send_shift_creation_reminder",
   "shift_creation_reminder_template",
   "appraisal_settings_tab",
-  "appraisal_creation_period",
   "enable_appraisal_reminder",
-  "column_break_rcin",
+  "appraisal_creation_period",
   "appraisal_reminder_template"
  ],
  "fields": [
@@ -81,10 +85,6 @@
   },
   {
    "fieldname": "column_break_gvvx",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_qbue",
    "fieldtype": "Column Break"
   },
   {
@@ -182,10 +182,6 @@
    "label": " Appraisal Creation Period"
   },
   {
-   "fieldname": "column_break_rcin",
-   "fieldtype": "Column Break"
-  },
-  {
    "depends_on": "eval:doc.enable_appraisal_reminder;",
    "fieldname": "appraisal_reminder_template",
    "fieldtype": "Link",
@@ -199,6 +195,7 @@
    "label": "Enable Appraisal Reminder"
   },
   {
+   "description": "Default Employment Type ",
    "fieldname": "permanent_employment_type",
    "fieldtype": "Link",
    "label": "Permanent Employment Type",
@@ -210,7 +207,7 @@
   },
   {
    "depends_on": "eval:doc.enable_absence_reminders == 1",
-   "description": "Days after absence without leave to notify the Reporting Manager",
+   "description": "Notify Reporting Manager after days of Absence without a Leave Application.",
    "fieldname": "absence_reminder_duration",
    "fieldtype": "Int",
    "label": "Absence Reminder Duration"
@@ -220,12 +217,45 @@
    "fieldname": "enable_absence_reminders",
    "fieldtype": "Check",
    "label": "Absence Reminders"
+  },
+  {
+   "depends_on": "eval:doc.enable_absence_reminders == 1",
+   "description": "Default Template for Absence Notification to the Reporting Manager",
+   "fieldname": "absence_reminder_template",
+   "fieldtype": "Link",
+   "label": "Absence Reminder Template",
+   "options": "Email Template"
+  },
+  {
+   "description": "Notify  Employee after days of Absence without a Leave Application.",
+   "fieldname": "leave_application_reminder_duration",
+   "fieldtype": "Int",
+   "label": "Leave Application Reminder Duration"
+  },
+  {
+   "description": " Default Template for Absence Notification to the Employee",
+   "fieldname": "leave_application_template",
+   "fieldtype": "Link",
+   "label": "Leave Application Template",
+   "options": "Email Template"
+  },
+  {
+   "fieldname": "section_break_mafr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_zilk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dskf",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-01-09 11:24:00.923221",
+ "modified": "2025-03-01 16:40:21.223017",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
