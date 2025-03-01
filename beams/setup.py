@@ -1643,6 +1643,13 @@ def get_job_requisition_custom_fields():
     '''
     return {
         "Job Requisition": [
+
+            {
+                "fieldname": "suggestions_details_section",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "skill_proficiency"
+            },
             {
                 "fieldname": "work_details",
                 "fieldtype": "Section Break",
@@ -1654,7 +1661,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Link",
                 "options": "Employment Type",
                 "label": "Employment Type",
-                "insert_after": "work_details",
+                "insert_after": "department",
                 "permlevel": 1
             },
 
@@ -1662,8 +1669,8 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
-                "description": " number of days off within a 30-day period",
-                "insert_after": "employment_type",
+                "description": " Number Of Days Off Within a 30-day Period",
+                "insert_after": "work_details",
                 "permlevel": 1
             },
             {
@@ -1792,10 +1799,10 @@ def get_job_requisition_custom_fields():
 
              {
                 "fieldname": "location",
-                "label": "Location",
+                "label": "Preferred Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "no_of_days_off",
+                "insert_after": "employment_type",
                 "permlevel": 1
             },
             {
@@ -1812,13 +1819,13 @@ def get_job_requisition_custom_fields():
                 "options": "Designation",
                 "insert_after": "request_for",
                 "permlevel": 2,
-                "depends_on": "eval:doc.request_for == 'Existing Vacancy'"
+                "depends_on": "eval:doc.request_for == 'New Vacancy'"
             },
             {
                 "fieldname": "suggestions",
                 "fieldtype": "Small Text",
-                "label": "Suggestions",
-                "insert_after": "description",
+                "label": "Suggestions/Feedback",
+                "insert_after": "suggestions_details_section",
                 "permlevel": 3
             },
         ]
@@ -3484,9 +3491,29 @@ def get_property_setters():
             "field_name": "department",
             "property": "reqd",
             "value": 1
-        }
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "section_break_7",
+            "property": "collapsible",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "depends_on",
+            "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "property": "field_order",
+            "value": "[\"naming_series\", \"designation\", \"department\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\",\"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"description\", \"connections_tab\"]"
+        },
     ]
-
 def get_material_request_custom_fields():
     '''
     Custom fields that need to be added to the Material Request Doctype
