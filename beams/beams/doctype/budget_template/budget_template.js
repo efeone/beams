@@ -7,6 +7,7 @@ frappe.ui.form.on('Budget Template', {
     },
     department: function (frm) {
         set_filters(frm);
+        frm.set_value('division', null);
         if (!frm.doc.department) {
             frm.set_value('division',)
             frm.clear_table('budget_template_item');
