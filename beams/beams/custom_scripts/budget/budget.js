@@ -13,6 +13,10 @@ frappe.ui.form.on('Budget', {
             frm.set_value('division', null);
         }
     },
+    company: function (frm) {
+        set_filters(frm);
+        frm.set_value('department', null);
+    },
     division: function (frm) {
         set_filters(frm);
         if (frm.doc.division) {
