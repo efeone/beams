@@ -745,12 +745,6 @@ def get_budget_custom_fields():
                 "read_only": 1,
                 "insert_after": "region"
             },
-            {
-                "fieldname": "column_break_cost",
-                "fieldtype": "Column Break",
-                "label": "",
-                "insert_after": "project"
-            },
         ],
         "Budget Account": [
             {
