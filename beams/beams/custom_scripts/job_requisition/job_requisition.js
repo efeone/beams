@@ -5,8 +5,14 @@ frappe.ui.form.on('Job Requisition', {
             frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name').then(r => {
                 if (r && r.message) {
                     frm.set_value('requested_by', r.message.name);
+
                 }
             });
+        }
+
+        if (frm.doc.request_for === 'Employee Replacement') {
+            frm.set_value('no_of_positions', 1);
+            frm.set_df_property('no_of_positions','read_only',1);
         }
     },
 

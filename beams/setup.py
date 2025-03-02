@@ -1660,17 +1660,17 @@ def get_job_requisition_custom_fields():
                 "insert_after": "no_of_days_off"
             },
             {
-                "fieldname": "travel_required",
+                "fieldname": "is_work_shift_needed",
                 "fieldtype": "Check",
-                "label": "Travel required for the position",
+                "label": "Is Shift Work Needed",
                 "insert_after": "work_details_column_break",
                 "permlevel": 1
             },
             {
-                "fieldname": "is_work_shift_needed",
+                "fieldname": "travel_required",
                 "fieldtype": "Check",
-                "label": "Is Shift Work Needed",
-                "insert_after": "travel_required",
+                "label": "Travel required for the position",
+                "insert_after": "is_work_shift_needed",
                 "permlevel": 1
             },
             {
@@ -1678,7 +1678,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Check",
                 "label": "Driving License Needed for this Position",
                 "depends_on": "eval:doc.travel_required == 1",
-                "insert_after": "is_work_shift_needed",
+                "insert_after": "travel_required",
                 "permlevel": 1
             },
             {
@@ -1687,6 +1687,7 @@ def get_job_requisition_custom_fields():
                 "label": "License Type",
                 "options": "License Type",
                 "depends_on": "eval:doc.driving_license_needed == 1",
+                "mandatory_depends_on":"eval:doc.driving_license_needed == 1",
                 "insert_after": "driving_license_needed",
                 "permlevel": 1
             },
@@ -2422,7 +2423,7 @@ def get_job_opening_custom_fields():
                 "fieldname": "no_of_positions",
                 "fieldtype": "Int",
                 "label": "No of.Positions",
-                "insert_after": "employment_type"
+                "insert_after": "employment_type",
             },
             {
                 "fieldname": "no_of_days_off",
@@ -3469,7 +3470,7 @@ def get_property_setters():
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "department",
-            "property": "reqd",
+            "property": "hidden",
             "value": 1
         }
     ]
