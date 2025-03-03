@@ -1670,7 +1670,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "work_details_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "no_of_days_off"
+                "insert_after": "min_experience"
             },
             {
                 "fieldname": "travel_required",
@@ -1718,30 +1718,24 @@ def get_job_requisition_custom_fields():
                 "permlevel": 1
             },
             {
-                "fieldname": "education_column_break",
-                "fieldtype": "Column Break",
-                "label": "",
-                "insert_after": "min_education_qual"
-            },
-            {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
                 "label": "Minimum Experience Required",
-                "insert_after": "education_column_break",
+                "insert_after": "no_of_days_off",
                 "permlevel": 1
             },
             {
                 "fieldname": "reset_column",
                 "fieldtype": "Section Break",
                 "label": "",
-                "insert_after": "min_experience"
+                "insert_after": "license_type"
             },
             {
                 "fieldname": "language_proficiency",
                 "fieldtype": "Table",
                 "options": "Language Proficiency",
                 "label": "Language Proficiency",
-                "insert_after": "min_experience",
+                "insert_after": "reset_column",
                 "permlevel": 1
             },
             {
