@@ -124,6 +124,19 @@ frappe.ui.form.on("Asset Transfer Request", {
                 }
             });
         }
+    },
+    async onload(frm) {
+        let assets_in_transfer = await get_assets_in_transfer();
+        console.log("Filtered Assets:", assets_in_transfer);
+
+        frm.set_query("asset", function() {
+            return {
+                filters: [
+                    ["Asset", "status", "!=", "Transferred"],
+                    ["Asset", "name", "not in", assets_in_transfer]
+                ]
+            };
+        });
     }
 });
 
@@ -195,4 +208,26 @@ function start_qr_scanner(frm, fieldname) {
         }
     });
     scanner.show();
+}
+/**
+ * Fetches a list of assets currently in transfer.
+ * @returns {Promise<Array>} - Returns an array of asset names.
+ */
+async function get_assets_in_transfer() {
+    try {
+        let response = await frappe.db.get_list("Asset Transfer Request", {
+            filters: {
+                workflow_state: ["not in", ["Draft", "Rejected","Pending Approval","Approved","Transferred and Received"]]
+            },
+            fields: ["asset"],
+            limit_page_length: 1000
+        });
+
+        let assets = [...new Set(response.map(entry => entry.asset))];
+        console.log("Assets in transfer:", assets);
+        return assets;
+    } catch (error) {
+        console.error("Error fetching assets in transfer:", error);
+        return [];
+    }
 }
