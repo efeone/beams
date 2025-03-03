@@ -1662,7 +1662,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
-                "description": " Number Of Days Off Within a 30-day Period",
+                "description": " Number Of Days Off within a 30-day Period",
                 "insert_after": "work_details",
                 "permlevel": 1
             },
