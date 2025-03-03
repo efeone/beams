@@ -176,16 +176,3 @@ def fetch_department(doc, method):
             doc.department = department
         else:
             frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
-
-def validate_resume_attachment(doc, method):
-    if doc.resume_attachment:
-        file_doc = frappe.get_doc("File", {"file_url": doc.resume_attachment})
-        file_name = file_doc.file_name
-        file_extension = os.path.splitext(file_name)[1][1:].lower()
-
-        allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx']
-        if file_extension not in allowed_extensions:
-            frappe.throw(
-                _("Only PDF, DOC, DOCX, XLS, and XLSX files are allowed"),
-                title=_("Validation for Resume")
-            )
