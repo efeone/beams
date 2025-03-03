@@ -125,7 +125,6 @@ def before_uninstall():
     delete_custom_fields(get_asset_movement_custom_fields())
 
 
-
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -340,6 +339,7 @@ def get_project_custom_fields():
 
         ]
     }
+
 
 def get_employment_type_custom_fields():
     '''
@@ -1662,7 +1662,7 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
-                "description": " Number Of Days Off Within a 30-day Period",
+                "description": "Number Of Days Off within a 30-day Period",
                 "insert_after": "work_details",
                 "permlevel": 1
             },
@@ -1824,6 +1824,20 @@ def get_job_requisition_custom_fields():
                 "insert_after": "description",
                 "permlevel": 3
             },
+            {
+                "fieldname": "publish_on_job_section",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "requested_by_designation"
+            },
+            {
+                "fieldname": "publish_on_job_opening",
+                "fieldtype": "Check",
+                "default": "1",
+                "label": "Publish on Job Opening",
+                "insert_after": "publish_on_job_section",
+                "permlevel":4
+            }
         ]
     }
 
@@ -1849,7 +1863,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "willing_to_work_on_location",
                 "fieldtype": "Check",
-                "label": "Willing to work on the selected location?",
+                "label": "Willing to Work in the Selected Location?",
                 "insert_after": "country"
             },
             {
@@ -2131,7 +2145,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "reference_taken",
                 "fieldtype": "Select",
-                "label": "Can a reference taken now?",
+                "label": "Can I take Reference Now?",
                 "options": "\nYes\nNo",
                 "insert_after": "current_designation"
             },
@@ -2189,7 +2203,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "agency_details",
                 "fieldtype": "Small Text",
-                "label": "Agency Details(if temporary or contractual)",
+                "label": "Agency Details  (if Temporary or Contractual)",
                 "insert_after": "reason_for_leaving"
             },
             {
@@ -3504,7 +3518,7 @@ def get_property_setters():
             "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
         },
         {
-            "doctype_or_field": "DocField",
+            "doctype_or_field": "DocType",
             "doc_type": "Job Requisition",
             "property": "field_order",
             "value": "[\"naming_series\", \"request_for\", \"employee_left\", \"relieving_date\", \"suggested_designation\", \"designation\", \"department\", \"employment_type\", \"location\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\", \"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"interview\", \"interview_rounds\", \"work_details\", \"no_of_days_off\", \"work_details_column_break\", \"travel_required\", \"is_work_shift_needed\", \"driving_license_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"suggestions\", \"connections_tab\"]"
