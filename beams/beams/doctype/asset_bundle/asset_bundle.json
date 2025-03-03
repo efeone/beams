@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "assets",
+  "scan_qr_code",
   "column_break_idhv",
   "bundles",
   "section_break_xxjo",
@@ -44,11 +45,17 @@
    "fieldname": "qr_code",
    "fieldtype": "Attach Image",
    "label": "QR Code"
+  },
+  {
+   "fieldname": "scan_qr_code",
+   "fieldtype": "Data",
+   "label": "Scan QR Code",
+   "options": "Barcode"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-17 12:12:48.487591",
+ "modified": "2025-02-24 11:55:10.128488",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Bundle",
