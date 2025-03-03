@@ -217,8 +217,10 @@ doc_events = {
         "on_update": [
             "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
             "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"
-        ]
+        ],
+        "validate": "beams.beams.custom_scripts.job_requisition.job_requisition.validate_expected_by"
     },
+    
     "Journal Entry": {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
     },
@@ -334,6 +336,7 @@ scheduler_events = {
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
         "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
         "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder"
+
     ],
 # "all": [
 # "beams.tasks.all"
