@@ -12,7 +12,8 @@
   "bundles",
   "section_break_xxjo",
   "stock_items",
-  "qr_code"
+  "qr_code",
+  "bundle_qr_code"
  ],
  "fields": [
   {
@@ -51,11 +52,16 @@
    "fieldtype": "Data",
    "label": "Scan QR Code",
    "options": "Barcode"
+  },
+  {
+   "fieldname": "bundle_qr_code",
+   "fieldtype": "Attach",
+   "label": "Bundle QR Code"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-24 11:55:10.128488",
+ "modified": "2025-03-03 13:32:59.331766",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Bundle",
