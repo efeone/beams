@@ -28,7 +28,12 @@
                 <div class="row">
                     <div class="column">
                         <label for="applicant-name">Applicant Name</label>
-                        <input type="text" id="applicant_name" name="applicant_name" required>
+                        <input 
+                            type="text" 
+                            id="applicant_name" 
+                            name="applicant_name" 
+                            required
+                            onkeydown="return /[a-z ]/i.test(event.key)">
                     </div>
                     <div class="column">
                         <label for="phone-number">Mobile Number</label>
@@ -125,7 +130,7 @@
                         <label for="resume_attachment" class="placeholder">
                             Click to upload Resume
                         </label>
-                        <input type="file" id="resume_attachment" name="file">
+                        <input type="file" id="resume_attachment" name="resume_attachment" required>
                     </div>
                 </div>
                 <div class="row" style="text-align: center;">

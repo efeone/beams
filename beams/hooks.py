@@ -230,7 +230,6 @@ doc_events = {
             "beams.beams.custom_scripts.job_applicant.job_applicant.validate_unique_application",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_designation",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_department",
-            "beams.beams.custom_scripts.job_applicant.job_applicant.validate_resume_attachment"
             ],
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
     },
@@ -336,6 +335,9 @@ scheduler_events = {
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
         "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
         "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder"
+        "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
+        # "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_remainder"
+
     ],
 # "all": [
 # "beams.tasks.all"
