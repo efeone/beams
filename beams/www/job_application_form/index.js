@@ -4,8 +4,8 @@ $(document).ready(function () {
 
     // Click to open file dialog
     placeholder.addEventListener('click', (e) => {
-        e.preventDefault(); // Prevent any default behavior
-        fileInput.click();  // Trigger the file input click
+        e.preventDefault(); 
+        fileInput.click();  
     });
 
     // Handle file selection
@@ -29,7 +29,6 @@ $(document).ready(function () {
                 filesProcessed++;
                 if (filesProcessed === totalFiles) {
                     window.file_reading = false;
-                    console.log("All files processed");
                 }
             });
         });
