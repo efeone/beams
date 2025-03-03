@@ -2,6 +2,95 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on("Asset Transfer Request", {
+  refresh: function (frm) {
+      // Initialize QR Scanner only once
+      if (!frm._qr_scanner_initialized) {
+          frm._qr_scanner_initialized = true;
+
+          // QR Scanner for Single Asset
+          frm.fields_dict.scan_qr_code.$wrapper.on("click", function () {
+              if (!frm.doc.asset_type) {
+                  frappe.msgprint(__("Please select an Asset Type before scanning."));
+                  return;
+              }
+              if (frm.doc.asset_type === "Single Asset") {
+                  start_qr_scanner(frm, "scan_qr_code");
+              }
+          });
+
+          // QR Scanner for Bundle
+          frm.fields_dict.scan_bundle.$wrapper.on("click", function () {
+              if (!frm.doc.asset_type) {
+                  frappe.msgprint(__("Please select an Asset Type before scanning."));
+                  return;
+              }
+              if (frm.doc.asset_type === "Bundle") {
+                  start_qr_scanner(frm, "scan_bundle");
+              }
+          });
+      }
+  },
+
+  scan_qr_code: function (frm) {
+      if (!frm.doc.scan_qr_code || frm.doc.asset_type !== "Single Asset") return;
+
+      let scanned_value = frm.doc.scan_qr_code.trim();
+
+      // Check if Asset is already set
+      if (frm.doc.asset) {
+         frappe.msgprint(__("An asset is already selected: {0}. Please clear it before scanning again.", [frm.doc.asset]));
+          return;
+      }
+
+      frappe.call({
+          method: "frappe.client.get_value",
+          args: {
+              doctype: "Asset",
+              filters: { name: scanned_value },
+              fieldname: ["name", "asset_name"]
+          },
+          callback: function (r) {
+              if (r.message) {
+                  frm.set_value("asset", r.message.name); // Set scanned asset
+              } else {
+                  frappe.msgprint(__('No asset found with this QR code!'));
+                  frappe.validated = false;
+              }
+              frm.set_value("scan_qr_code", ""); // Clear scan field
+          }
+      });
+  },
+
+  scan_bundle: function (frm) {
+      if (!frm.doc.scan_bundle || frm.doc.asset_type !== "Bundle") return;
+
+      let scanned_value = frm.doc.scan_bundle.trim();
+
+      // Check if Bundle is already set
+      if (frm.doc.bundle) {
+          frappe.msgprint(__("A bundle is already selected: {0}. Please clear it before scanning again.", [frm.doc.bundle]));
+          return;
+      }
+
+      frappe.call({
+          method: "frappe.client.get_value",
+          args: {
+              doctype: "Asset Bundle",
+              filters: { name: scanned_value },
+              fieldname: ["name"]
+          },
+          callback: function (r) {
+              if (r.message) {
+                  frm.set_value("bundle", r.message.name); // Set scanned bundle
+              } else {
+                  frappe.msgprint(__('No bundle found with this QR code!'));
+                  frappe.validated = false;
+              }
+              frm.set_value("scan_bundle", ""); // Clear scan field
+          }
+      });
+  },
+
   posting_date: function(frm) {
       frm.call("validate_posting_date");
   },
@@ -85,4 +174,25 @@ function fetch_bundle_assets(frm) {
           frm.refresh_field('bundles');
       }
   });
+}
+
+
+// Function to Start QR Scanner
+function start_qr_scanner(frm, fieldname) {
+    let scanner = new frappe.ui.Scanner({
+        multiple: false,
+        on_success: function (result) {
+            let scanned_value = result.text.trim();
+            if (!scanned_value) {
+                frappe.msgprint(__("Invalid QR Code scanned. Please try again."));
+                return;
+            }
+            frm.set_value(fieldname, scanned_value);
+            frm.trigger(fieldname); // Trigger corresponding processing
+        },
+        on_error: function (error) {
+            frappe.msgprint(__('Failed to scan QR Code. Try again!'));
+        }
+    });
+    scanner.show();
 }

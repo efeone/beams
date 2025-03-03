@@ -16,6 +16,36 @@ class AssetBundle(Document):
 
 	def after_insert(self):
 		self.generate_asset_bundle_qr()
+		self.generate_asset_bundle_qr_file()
+
+
+	def generate_asset_bundle_qr_file(self):
+		bundle_qr_code = self.get("bundle_qr_code")
+		if bundle_qr_code and frappe.db.exists({"doctype": "File", "file_url": bundle_qr_code}):
+			return
+
+		doc_url = self.get_si_file()
+		qr_image = io.BytesIO()
+		url = create(doc_url, error="L")
+		url.png(qr_image, scale=4, quiet_zone=1)
+		name = frappe.generate_hash(self.name, 5)
+		filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+		_file = frappe.get_doc(
+			{
+				"doctype": "File",
+				"file_name": filename,
+				"is_private": 0,
+				"content": qr_image.getvalue(),
+				"attached_to_doctype": self.get("doctype"),
+				"attached_to_name": self.get("name"),
+				"attached_to_field": "bundle_qr_code",
+			}
+		)
+		_file.save()
+		self.db_set("bundle_qr_code", _file.file_url)
+
+	def get_si_file(self):
+		return self.name
 
 	def generate_asset_bundle_qr(self):
 		qr_code = self.get("qr_code")

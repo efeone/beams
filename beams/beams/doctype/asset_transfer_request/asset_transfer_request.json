@@ -14,6 +14,8 @@
   "assets",
   "bundles",
   "received_by",
+  "scan_qr_code",
+  "scan_bundle",
   "column_break_ivnd",
   "posting_date",
   "posting_time",
@@ -150,12 +152,26 @@
    "label": " Received By",
    "mandatory_depends_on": "eval:doc.workflow_state == \"Transferred\"",
    "options": "Employee"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Single Asset\"",
+   "fieldname": "scan_qr_code",
+   "fieldtype": "Data",
+   "label": "Scan Asset",
+   "options": "Barcode"
+  },
+  {
+   "depends_on": "eval:doc.asset_type == \"Bundle\"",
+   "fieldname": "scan_bundle",
+   "fieldtype": "Data",
+   "label": "Scan Bundle",
+   "options": "Barcode"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-28 13:46:02.695064",
+ "modified": "2025-03-03 13:58:26.799954",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",

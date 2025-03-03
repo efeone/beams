@@ -316,7 +316,9 @@ doc_events = {
         "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
     },
     "Asset":{
-        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
+        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr",
+        "on_submit":"beams.beams.custom_scripts.asset.asset.generate_asset_details_qr"
+
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount"

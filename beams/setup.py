@@ -630,6 +630,12 @@ def get_asset_custom_fields():
                 "fieldtype": "Attach Image",
                 "label": "QR code",
                 "insert_after": "department"
+            },
+            {
+                "fieldname": "asset_details",
+                "fieldtype": "Attach Image",
+                "label": "Asset Details",
+                "insert_after": "qr_code"
             }
         ]
     }
