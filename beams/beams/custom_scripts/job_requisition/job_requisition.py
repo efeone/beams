@@ -28,7 +28,7 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.no_of_positions = doc.no_of_positions
             job_opening.no_of_days_off = doc.no_of_days_off
             job_opening.preffered_location = doc.location
-            job_opening.publish = 1
+            job_opening.publish = doc.publish_on_job_opening
             #Setting Skill Proficiency
             for skill in doc.skill_proficiency:
                 job_opening.append('skill_proficiency', {
@@ -99,7 +99,7 @@ def get_template_content(template_name, doc):
 @frappe.whitelist()
 def validate_expected_by(doc, method=None):
     '''Ensure that 'Expected By' date is today or in the future.'''
-    
+
     if doc.expected_by:
         if isinstance(doc.expected_by, str):
             expected_date = datetime.strptime(doc.expected_by, "%Y-%m-%d").date()
@@ -107,8 +107,8 @@ def validate_expected_by(doc, method=None):
             expected_date = doc.expected_by
         else:
             raise ValueError("Invalid type for expected_by. Expected a string or date object.")
-        
+
         today = datetime.today().date()
-        
-        if expected_date < today: 
+
+        if expected_date < today:
             frappe.throw("Expected By date must be a future date.")
