@@ -192,12 +192,12 @@ doc_events = {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
         "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation",
         "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-        "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center",
+        # "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center",
         "on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
     },
     "Material Request":{
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-        "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
+        # "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
@@ -210,8 +210,8 @@ doc_events = {
         "on_submit":"beams.beams.custom_scripts.contract.contract.on_submit"
     },
     "Batta Claim": {
-        "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
-        "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
+        "onchange": ["beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
+                    "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"]
     },
     "Job Requisition": {
         "on_update": [
@@ -235,7 +235,10 @@ doc_events = {
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
     },
     "Interview": {
-        "on_submit": "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
+        "on_submit": [
+                        "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
+                        "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
+                    ],
         "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
         "on_update": "beams.beams.custom_scripts.interview.interview.update_applicant_interview_round"
     },
@@ -262,9 +265,6 @@ doc_events = {
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
-    },
-    "Interview": {
-        "on_submit": "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
     },
     "Employee Separation": {
         "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
