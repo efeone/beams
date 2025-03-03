@@ -79,12 +79,4 @@ frappe.ui.form.on('Job Requisition', {
             }
         }
     }
-    
-
 });
-    
-   
-
-    
-    
-    

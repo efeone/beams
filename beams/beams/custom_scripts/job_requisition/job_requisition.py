@@ -4,7 +4,6 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.utils import now_datetime, get_url_to_form
 from datetime import datetime,date
 
-
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
     '''
@@ -96,7 +95,6 @@ def get_template_content(template_name, doc):
         if description:
             rendered_description = frappe.render_template(description, doc)
     return rendered_description
-
 
 @frappe.whitelist()
 def validate_expected_by(doc, method=None):
