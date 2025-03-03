@@ -9,7 +9,6 @@
   "section_break_9os0",
   "cost_subhead",
   "cost_head",
-  "account",
   "accounts"
  ],
  "fields": [
@@ -24,13 +23,6 @@
    "label": "Cost Subhead",
    "reqd": 1,
    "unique": 1
-  },
-  {
-   "fieldname": "account",
-   "fieldtype": "Link",
-   "label": "Account",
-   "options": "Account",
-   "reqd": 1
   },
   {
    "fieldname": "cost_head",
@@ -49,7 +41,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-13 13:26:53.244996",
+ "modified": "2025-03-03 09:24:01.050075",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Cost Subhead",

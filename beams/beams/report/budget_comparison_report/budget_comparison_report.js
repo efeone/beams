@@ -16,6 +16,29 @@ frappe.query_reports["Budget Comparison Report"] = {
 
 		return value;
 	},
+	after_datatable_render: function (datatable) {
+		let data = frappe.query_report.data;
+		if (!data || !data.length) return;
+
+		let columns = frappe.query_report.columns;
+		let total_row = {};
+
+		// Check if total row already exists
+		let first_column = columns[0]?.fieldname;
+		let total_row_exists = data.some(row => row[first_column] === __("Total"));
+		if (total_row_exists) return;
+
+		columns.forEach((col) => {
+		    if (col.fieldtype === "Currency" || col.fieldtype === "Float") {
+		        total_row[col.fieldname] = data.reduce((sum, row) => sum + (row[col.fieldname] || 0), 0);
+		    } else {
+		        total_row[col.fieldname] = col.fieldname === first_column ? __("Total") : "";
+		    }
+		});
+
+		data.push(total_row);
+		datatable.refresh(data);
+	}
 };
 function get_filters() {
 	function get_dimensions() {
