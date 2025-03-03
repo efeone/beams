@@ -2145,7 +2145,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "reference_taken",
                 "fieldtype": "Select",
-                "label": "Can i take Reference Now?",
+                "label": "Can I take Reference Now?",
                 "options": "\nYes\nNo",
                 "insert_after": "current_designation"
             },
@@ -2203,7 +2203,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "agency_details",
                 "fieldtype": "Small Text",
-                "label": "Agency Details  (if temporary or contractual)",
+                "label": "Agency Details  (if Temporary or Contractual)",
                 "insert_after": "reason_for_leaving"
             },
             {
