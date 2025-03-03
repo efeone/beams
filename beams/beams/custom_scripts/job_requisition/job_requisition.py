@@ -16,8 +16,9 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.designation = doc.designation
             job_opening.status = 'Open'
             job_opening.posted_on = now_datetime()
-            job_opening.department = doc.department
+            job_opening.department = frappe.get_value("Employee", doc.requested_by, "department")
             job_opening.employment_type = doc.employment_type
+            job_opening.job_requisition = doc.name
             # Setting Minimum Educational Qualification
             for qualification in doc.min_education_qual:
                 job_opening.append('min_education_qual', {
