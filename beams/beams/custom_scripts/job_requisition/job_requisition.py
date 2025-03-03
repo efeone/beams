@@ -2,6 +2,7 @@ import json
 import frappe
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import now_datetime, get_url_to_form
+from datetime import datetime,date
 
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
@@ -94,3 +95,20 @@ def get_template_content(template_name, doc):
         if description:
             rendered_description = frappe.render_template(description, doc)
     return rendered_description
+
+@frappe.whitelist()
+def validate_expected_by(doc, method=None):
+    '''Ensure that 'Expected By' date is today or in the future.'''
+    
+    if doc.expected_by:
+        if isinstance(doc.expected_by, str):
+            expected_date = datetime.strptime(doc.expected_by, "%Y-%m-%d").date()
+        elif isinstance(doc.expected_by, date):
+            expected_date = doc.expected_by
+        else:
+            raise ValueError("Invalid type for expected_by. Expected a string or date object.")
+        
+        today = datetime.today().date()
+        
+        if expected_date < today: 
+            frappe.throw("Expected By date must be a future date.")

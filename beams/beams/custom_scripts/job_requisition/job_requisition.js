@@ -66,5 +66,17 @@ frappe.ui.form.on('Job Requisition', {
                 }
             };
         });
+    },
+
+    expected_by: function(frm) {
+        if (frm.doc.expected_by) {
+            let expected_date = frappe.datetime.str_to_obj(frm.doc.expected_by);
+            let today = frappe.datetime.str_to_obj(frappe.datetime.get_today());
+
+            if (expected_date < today) {
+                frappe.msgprint(__('Expected By date must be a future date.'));
+                frm.set_value("expected_by", "");  
+            }
+        }
     }
 });
