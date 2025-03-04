@@ -99,8 +99,9 @@ frappe.ui.form.on("Asset Bundle", {
     },
 
   bundles: function (frm) {
+		let bundle_names = frm.doc.bundles.map((bundle) => bundle.asset_bundle);
+    let previousBundles = frm.doc.__previous_bundles || [];
         if (frm.doc.bundles.length > 0) {
-            let bundle_names = frm.doc.bundles.map((bundle) => bundle.asset_bundle);
             frappe.call({
                 method: "beams.beams.doctype.asset_bundle.asset_bundle.bundle_asset_fetch",
                 args: {
@@ -121,8 +122,28 @@ frappe.ui.form.on("Asset Bundle", {
                 },
             });
         }
-    },
-});
+
+        let removedBundles = previousBundles.filter(b => !bundle_names.includes(b));
+        if (removedBundles.length > 0) {
+          frappe.call({
+             method: "beams.beams.doctype.asset_bundle.asset_bundle.bundle_asset_fetch",
+             args: {
+               names: removedBundles,
+             },
+             callback: function (r) {
+               if (r.message) {
+                 let removed_assets = r.message[0];
+                 let updated_assets = frm.doc.assets.filter(asset =>
+                   !removed_assets.some(removed => removed.asset === asset.asset)
+                 );
+                 frm.set_value("assets", updated_assets);
+               }
+             },
+           });
+         }
+         frm.doc.__previous_bundles = bundle_names;
+       },
+     });
 
 function mergeArrays(arr1, arr2, key) {
   const merged = [...arr1, ...arr2];
