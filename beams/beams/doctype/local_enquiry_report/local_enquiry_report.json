@@ -161,7 +161,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-08 09:28:51.283318",
+ "modified": "2025-03-04 11:44:27.596407",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Report",
@@ -183,5 +183,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "job_applicant_name"
 }
