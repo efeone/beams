@@ -10,7 +10,8 @@
   "interview_reference",
   "interview_status",
   "create_interview",
-  "interview_completed"
+  "interview_completed",
+  "applicant_rating"
  ],
  "fields": [
   {
@@ -55,12 +56,18 @@
    "in_list_view": 1,
    "label": "Interview Completed",
    "read_only": 1
+  },
+  {
+   "fieldname": "applicant_rating",
+   "fieldtype": "Rating",
+   "in_list_view": 1,
+   "label": "Applicant Rating"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-04 14:24:47.903886",
+ "modified": "2025-03-04 12:38:34.878603",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Applicant Interview Round",
