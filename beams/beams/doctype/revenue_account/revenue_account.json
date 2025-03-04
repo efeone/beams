@@ -11,7 +11,22 @@
   "revenue_category",
   "column_break_quzd",
   "revenue_region",
-  "revenue_amount"
+  "revenue_amount",
+  "monthly_amount_distribution_section",
+  "january",
+  "february",
+  "march",
+  "april",
+  "column_break_bmby",
+  "may",
+  "june",
+  "july",
+  "august",
+  "column_break_eqoc",
+  "september",
+  "october",
+  "november",
+  "december"
  ],
  "fields": [
   {
@@ -44,6 +59,7 @@
    "options": "Region"
   },
   {
+   "default": "0",
    "fieldname": "revenue_amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -54,12 +70,86 @@
   {
    "fieldname": "column_break_quzd",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "monthly_amount_distribution_section",
+   "fieldtype": "Section Break",
+   "label": "Monthly Amount Distribution"
+  },
+  {
+   "fieldname": "january",
+   "fieldtype": "Currency",
+   "label": "January",
+   "precision": "0"
+  },
+  {
+   "fieldname": "february",
+   "fieldtype": "Currency",
+   "label": "February"
+  },
+  {
+   "fieldname": "march",
+   "fieldtype": "Currency",
+   "label": "March"
+  },
+  {
+   "fieldname": "april",
+   "fieldtype": "Currency",
+   "label": "April"
+  },
+  {
+   "fieldname": "column_break_bmby",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "may",
+   "fieldtype": "Currency",
+   "label": "May"
+  },
+  {
+   "fieldname": "june",
+   "fieldtype": "Currency",
+   "label": "June"
+  },
+  {
+   "fieldname": "july",
+   "fieldtype": "Currency",
+   "label": "July"
+  },
+  {
+   "fieldname": "august",
+   "fieldtype": "Currency",
+   "label": "August"
+  },
+  {
+   "fieldname": "column_break_eqoc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "september",
+   "fieldtype": "Currency",
+   "label": "September"
+  },
+  {
+   "fieldname": "october",
+   "fieldtype": "Currency",
+   "label": "October"
+  },
+  {
+   "fieldname": "november",
+   "fieldtype": "Currency",
+   "label": "November"
+  },
+  {
+   "fieldname": "december",
+   "fieldtype": "Currency",
+   "label": "December"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-02-21 12:05:39.150338",
+ "modified": "2025-03-01 13:13:11.023656",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Account",

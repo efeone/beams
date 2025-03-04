@@ -7,6 +7,7 @@ frappe.ui.form.on('Budget Template', {
     },
     department: function (frm) {
         set_filters(frm);
+        frm.set_value('division', null);
         if (!frm.doc.department) {
             frm.set_value('division',)
             frm.clear_table('budget_template_item');
@@ -14,6 +15,8 @@ frappe.ui.form.on('Budget Template', {
         }
     },
     company: function (frm) {
+        frm.set_value('department', null);
+        frm.set_value('division', null);
         if (frm.doc.company) {
             // frm.clear_table("budget_template_item");
             frm.refresh_field("budget_template_item");
@@ -47,7 +50,15 @@ function set_filters(frm) {
     frm.set_query('division', function () {
         return {
             filters: {
-                department: frm.doc.department
+                department: frm.doc.department,
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('department', function () {
+        return {
+            filters: {
+                company: frm.doc.company
             }
         };
     });

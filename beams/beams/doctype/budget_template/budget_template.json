@@ -6,10 +6,10 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "department",
-  "division",
-  "column_break",
   "company",
+  "department",
+  "column_break",
+  "division",
   "section_break",
   "budget_template_item"
  ],
@@ -55,7 +55,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-01 10:54:06.952356",
+ "modified": "2025-03-01 15:41:29.156620",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",

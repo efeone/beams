@@ -11,10 +11,11 @@
   "company",
   "cost_center",
   "project",
-  "fiscal_year",
   "column_break_wemo",
+  "fiscal_year",
   "revenue_template",
   "naming_series",
+  "total_amount",
   "section_break",
   "revenue_accounts",
   "amended_from"
@@ -107,12 +108,19 @@
    "fieldtype": "Link",
    "label": "Revenue Template",
    "options": "Revenue Template"
+  },
+  {
+   "fieldname": "total_amount",
+   "fieldtype": "Currency",
+   "label": "Total Amount",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-21 10:03:45.988108",
+ "modified": "2025-03-01 13:50:09.734831",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue",
