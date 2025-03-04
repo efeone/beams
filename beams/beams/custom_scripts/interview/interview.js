@@ -64,7 +64,13 @@ frappe.ui.form.on('Interview', {
             // Convert time strings into Date objects for proper comparison
             let from_time = new Date(`1970-01-01T${frm.doc.from_time}`);
             let to_time = new Date(`1970-01-01T${frm.doc.to_time}`);
-    
+
+            let today = frappe.datetime.get_today();
+
+            if (frm.doc.scheduled_on && frm.doc.scheduled_on < today) {
+                frappe.throw(__("Interview date cannot be in the past."));
+            }
+            
             if (to_time <= from_time) {
                 frappe.throw(__("End Time (To Time) must be greater than Start Time (From Time)."));
             }
