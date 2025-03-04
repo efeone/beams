@@ -5,17 +5,15 @@ frappe.ui.form.on('Job Requisition', {
             frappe.db.get_value('Employee', { 'user_id': frappe.session.user }, 'name').then(r => {
                 if (r && r.message) {
                     frm.set_value('requested_by', r.message.name);
-
                 }
             });
         }
 
         if (frm.doc.request_for === 'Employee Replacement') {
             frm.set_value('no_of_positions', 1);
-            frm.set_df_property('no_of_positions','read_only',1);
+            frm.set_df_property('no_of_positions', 'read_only', 1);
         }
     },
-
     refresh: function (frm) {
         // To clear all custom buttons from the form
         frm.clear_custom_buttons();
@@ -33,7 +31,6 @@ frappe.ui.form.on('Job Requisition', {
             frm.set_df_property('description', 'reqd', 1);
         }
     },
-
     request_for: function (frm) {
         if (frm.doc.request_for) {
             frm.set_value('employee_left', '');
@@ -44,7 +41,6 @@ frappe.ui.form.on('Job Requisition', {
             }
         }
     },
-
     job_description_template: function (frm) {
         // To fetch the Template Content from master
         if (frm.doc.job_description_template) {
@@ -62,27 +58,23 @@ frappe.ui.form.on('Job Requisition', {
             });
         }
     },
-
-    setup: function (frm) {
-        // Set Designation filter for Job Description Template
-        frm.set_query('job_description_template', function () {
-            return {
-                filters: {
-                    'designation': frm.doc.designation
-                }
-            };
-        });
-    },
-
-    expected_by: function(frm) {
+    expected_by: function (frm) {
         if (frm.doc.expected_by) {
-            let expected_date = frappe.datetime.str_to_obj(frm.doc.expected_by);
-            let today = frappe.datetime.str_to_obj(frappe.datetime.get_today());
-
-            if (expected_date < today) {
-                frappe.msgprint(__('Expected By date must be a future date.'));
-                frm.set_value("expected_by", "");  
+            let today = frappe.datetime.get_today();
+            if (frm.doc.expected_by < today) {
+                frm.set_value('expected_by', '');
+                frappe.throw(__('Expected By date must be a future date.'));
             }
         }
     }
 });
+
+function set_filters(frm) {
+    frm.set_query('job_description_template', function () {
+        return {
+            filters: {
+                'designation': frm.doc.designation
+            }
+        };
+    });
+}
