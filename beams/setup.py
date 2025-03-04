@@ -3642,6 +3642,13 @@ def get_property_setters():
             "property": "label",
             "value": "Personal Mobile Number"
         }
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Applicant",
+            "property": "show_title_field_in_link",
+            "property_type" : "Check",
+            "value": 1
+        }
     ]
 def get_material_request_custom_fields():
     '''
