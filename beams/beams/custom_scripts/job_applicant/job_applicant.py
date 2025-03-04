@@ -5,7 +5,12 @@ from frappe.utils import get_url, now_datetime
 from frappe.utils import nowdate
 from frappe.utils import get_url_to_form
 from frappe.utils.password import encrypt
+from frappe.model.naming import make_autoname
 import os
+
+@frappe.whitelist()
+def autoname(doc, method):
+    doc.name = make_autoname("JOB-APP-" + ".YYYY.-.####")
 
 def get_permission_query_conditions(user):
 	if not user:

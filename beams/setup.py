@@ -1637,8 +1637,16 @@ def get_interview_custom_fields():
                 "fieldtype": "Link",
                 "options": "Department",
                 "label": "Department",
-                "insert_after": "job_applicant",
+                "insert_after": "applicant_name",
                 "fetch_from": "job_applicant.department"
+            },
+            {
+                "fieldname": "applicant_name",
+                "fieldtype": "Data",
+                "label": "Applicant Name",
+                "insert_after": "job_applicant",
+                "fetch_from": "job_applicant.applicant_name",
+                "read_only": 1
             }
         ]
     }
