@@ -37,8 +37,13 @@ def execute(filters=None):
 
 def get_final_data(dimension, dimension_items, filters, period_month_ranges, data, DCC_allocation):
 	for account, monthwise_data in dimension_items.items():
-		row = [dimension, account]
+		cost_head = monthwise_data.get("cost_head", "")
+		cost_subhead = monthwise_data.get("cost_subhead", "")
+		cost_category = monthwise_data.get("cost_category", "")  # Added cost_category
+
+		row = [dimension, account, cost_head, cost_subhead, cost_category]  # Added cost_category to row
 		totals = [0, 0, 0]
+
 		for year in get_fiscal_years(filters):
 			last_total = 0
 			for relevant_months in period_month_ranges:
@@ -62,6 +67,7 @@ def get_final_data(dimension, dimension_items, filters, period_month_ranges, dat
 
 				period_data[2] = period_data[0] - period_data[1]
 				row += period_data
+
 		totals[2] = totals[0] - totals[1]
 		if filters["period"] != "Yearly":
 			row += totals
@@ -86,6 +92,24 @@ def get_columns(filters):
 			"options": "Account",
 			"width": 150,
 		},
+		{
+			"label": _("Cost Head"),
+			"fieldname": "cost_head",
+			"fieldtype": "Data",
+			"width": 150,
+		},
+		{
+			"label": _("Cost Subhead"),
+			"fieldname": "cost_subhead",
+			"fieldtype": "Data",
+			"width": 150,
+		},
+		{
+			"label": _("Cost Category"),
+			"fieldname": "cost_category",
+			"fieldtype": "Data",
+			"width": 150,
+		}
 	]
 
 	group_months = False if filters["period"] == "Monthly" else True
@@ -171,6 +195,12 @@ def get_dimension_target_details(filters):
 		cond += f""" and b.{budget_against} in (%s)""" % ", ".join(
 			["%s"] * len(filters.get("budget_against_filter"))
 		)
+	if filters.get("cost_head"):
+		cond += "and ba.cost_head = '{0}'".format(filters.get("cost_head"))
+	if filters.get("cost_subhead"):
+		cond += "and ba.cost_subhead = '{0}'".format(filters.get("cost_subhead"))
+	if filters.get("cost_category"):
+		cond += "and ba.cost_category = '{0}'".format(filters.get("cost_category"))
 
 	return frappe.db.sql(
 		f"""
@@ -179,6 +209,9 @@ def get_dimension_target_details(filters):
 				b.monthly_distribution,
 				ba.account,
 				ba.budget_amount,
+				ba.cost_head,
+				ba.cost_subhead,
+				ba.cost_category,  -- Added cost_category field
 				b.fiscal_year
 			from
 				`tabBudget` b,
@@ -253,30 +286,31 @@ def get_dimension_account_month_map(filters):
 	cam_map = {}
 
 	month_map = {
-    "January": "january",
-    "February": "february",
-    "March": "march",
-    "April": "april",
-    "May": "may",
-    "June": "june",
-    "July": "july",
-    "August": "august",
-    "September": "september",
-    "October": "october",
-    "November": "november",
-    "December": "december"}
-
+		"January": "january", "February": "february", "March": "march",
+		"April": "april", "May": "may", "June": "june", "July": "july",
+		"August": "august", "September": "september", "October": "october",
+		"November": "november", "December": "december"
+	}
 
 	for ccd in dimension_target_details:
 		actual_details = get_actual_details(ccd.budget_against, filters)
 
+		# Ensure cost_head, cost_subhead, and cost_category are stored at the account level
+		cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.account, {
+			"cost_head": ccd.cost_head,
+			"cost_subhead": ccd.cost_subhead,
+			"cost_category": ccd.cost_category  # Added cost_category
+		}).setdefault(ccd.fiscal_year, {})
+
 		for month_id in range(1, 13):
-			month = (datetime.date(2013, month_id, 1).strftime("%B"))
-			cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.account, {}).setdefault(
-				ccd.fiscal_year, {}
-			).setdefault(month, frappe._dict({"target": 0.0, "actual": 0.0}))
+			month = datetime.date(2013, month_id, 1).strftime("%B")
+
+			cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year].setdefault(
+				month, frappe._dict({"target": 0.0, "actual": 0.0})
+			)
 
 			tav_dict = cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year][month]
+
 			month_percentage = (
 				tdd.get(ccd.monthly_distribution, {}).get(month, 0)
 				if ccd.monthly_distribution
@@ -391,13 +425,14 @@ def get_chart_data(filters, columns, data):
 
 	budget_values, actual_values = [0] * no_of_columns, [0] * no_of_columns
 	for d in data:
-		values = d[2:]
+		values = d[5:]  # Start from index 5 (after cost_category)
 		index = 0
 
 		for i in range(no_of_columns):
 			budget_values[i] += values[index]
 			actual_values[i] += values[index + 1]
-			index += 3
+			index += 3  # Skip to the next (budget, actual, variance) set
+
 
 	return {
 		"data": {
