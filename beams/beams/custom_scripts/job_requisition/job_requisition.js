@@ -26,10 +26,24 @@ frappe.ui.form.on('Job Requisition', {
             }
         }
 
-        if (frm.doc.workflow_state === 'Pending CEO Final Approval') {
-            frm.set_df_property('designation', 'reqd', 1);
-            frm.set_df_property('description', 'reqd', 1);
-        }
+                console.log("Refresh triggered. Workflow State: ", frm.doc.workflow_state);
+                
+                if (frm.doc.workflow_state === 'Pending CEO Final Approval') {
+                    frm.set_df_property('designation', 'reqd', 1);
+                    frm.set_df_property('description', 'reqd', 1);
+                    frm.refresh_field('description');
+                    console.log("Description field set to required.");
+                } else {
+                    frm.set_df_property('description', 'reqd', 0);
+                    frm.refresh_field('description');
+                    console.log("Description field is not required.");
+                }
+        
+
+        // if (frm.doc.workflow_state === 'Pending CEO Final Approval') {
+        //     frm.set_df_property('designation', 'reqd', 1);
+        //     frm.set_df_property('description', 'reqd', 1);
+        // }
     },
     request_for: function (frm) {
         if (frm.doc.request_for) {

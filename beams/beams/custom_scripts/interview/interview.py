@@ -3,6 +3,16 @@ import frappe
 from frappe import _
 from six import string_types
 from frappe.utils import get_link_to_form
+from frappe.model.document import Document
+from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError, get_recipients
+
+class InterviewOverride(Document):
+      def on_submit(self):
+            if self.status not in ["Cleared", "Rejected"]:
+                  frappe.throw(
+                        _("Only Interviews with Cleared or Rejected status can be submitted."),
+                        title=_("Not Allowed"),
+                	)
 
 @frappe.whitelist()
 def get_interview_skill_and_question_set(interview_round, interviewer=False, interview_name=False):
