@@ -12,6 +12,7 @@ class VehicleIncidentRecord(Document):
         if self.posting_date:
             if self.posting_date > today():
                 frappe.throw(_("Posting Date cannot be set after today's date."))
+
     @frappe.whitelist()
     def validate_offense_date_and_time(self):
         if self.offense_date_and_time:
