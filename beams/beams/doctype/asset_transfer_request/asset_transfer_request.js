@@ -124,6 +124,13 @@ frappe.ui.form.on("Asset Transfer Request", {
                 }
             });
         }
+    },
+    refresh(frm) {
+        frappe.db.get_list("Asset Transfer Request", {
+            fields: ["asset"], filters: { workflow_state: "Transferred" }
+        }).then(res => frm.set_query("asset", () => ({
+            filters: [["Asset", "status", "!=", "Transferred"], ["Asset", "name", "not in", res.map(a => a.asset)]]
+        }))).catch(err => console.error("Error:", err));
     }
 });
 
