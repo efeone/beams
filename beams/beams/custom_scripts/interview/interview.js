@@ -60,10 +60,16 @@ frappe.ui.form.on('Interview', {
         }
     },
     validate: function(frm) {
-        if (frm.doc.from_time && frm.doc.to_time) {
+        if (frm.doc.from_time && frm.doc.to_time && frm.doc.scheduled_on) {
+
+            let scheduled_on = frm.doc.scheduled_on;
+
             // Convert time strings into Date objects for proper comparison
-            let from_time = new Date(`1970-01-01T${frm.doc.from_time}`);
-            let to_time = new Date(`1970-01-01T${frm.doc.to_time}`);
+            let from_time = new Date(`${scheduled_on}T${frm.doc.from_time}`);
+            let to_time = new Date(`${scheduled_on}T${frm.doc.to_time}`);
+
+            console.log(from_time, to_time);
+            
 
             let today = frappe.datetime.get_today();
 
