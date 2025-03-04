@@ -129,6 +129,24 @@ function get_filters() {
 			fieldtype: "Check",
 			default: 0,
 		},
+		{
+			fieldname: "cost_head",
+			label: __("Cost Head"),
+			fieldtype: "Link",
+			options: "Cost Head"
+		},
+		{
+			fieldname: "cost_subhead",
+			label: __("Cost Subhead"),
+			fieldtype: "Link",
+			options: "Cost Subhead"
+		},
+		{
+			fieldname: "cost_category",
+			label: __("Cost Category"),
+			fieldtype: "Link",
+			options: "Cost Category"
+		}
 	];
 
 	return filters;
