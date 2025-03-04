@@ -1367,6 +1367,14 @@ def get_employee_custom_fields():
                 "insert_after": "attendance_device_id"
             },
             {
+                "fieldname": "leave_policy_name",
+                "fieldtype": "Data",
+                "label": "Title",
+                "fetch_from": "leave_policy.title",
+                "insert_after": "leave_policy",
+                "read_only": 1
+            },
+            {
                 "fieldname": "name_of_father",
                 "fieldtype": "Data",
                 "label": "Father's Name",
@@ -1535,6 +1543,44 @@ def get_employee_custom_fields():
                 "label": "No.of Children",
                 "insert_after":"marital_status"
             },
+            {
+                "fieldname": "company_number",
+                "fieldtype": "Int",
+                "label": "Company Mobile Number",
+                "insert_after":"cell_number"
+            },
+            {
+                "fieldname": "landmark",
+                "fieldtype": "Data",
+                "label": "Landmark",
+                "insert_after":"current_address"
+            },
+            {
+                "fieldname": "landmark_per",
+                "fieldtype": "Data",
+                "label": "Landmark",
+                "insert_after":"permanent_address"
+            },
+            {
+                "fieldname": "emergency_contact_name",
+                "fieldtype": "Data",
+                "label": "Emergency Contact Name",
+                "insert_after":"person_to_be_contacted"
+            },
+            {
+                "fieldname": "emergency_phone",
+                "fieldtype": "Data",
+                "label": "Emergency Phone",
+                "insert_after":"emergency_phone_number"
+            },
+            {
+                "fieldname": "relation_emergency",
+                "fieldtype": "Data",
+                "label": "Relation",
+                "insert_after":"relation"
+            }
+
+
         ],
 
         "Employee External Work History":[
@@ -3553,7 +3599,7 @@ def get_property_setters():
             "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
         },
         {
-            "doctype_or_field": "DocField",
+            "doctype_or_field": "DocType",
             "doc_type": "Job Requisition",
             "property": "field_order",
             "value": "[\"naming_series\", \"request_for\", \"employee_left\", \"relieving_date\", \"suggested_designation\", \"designation\", \"department\", \"employment_type\", \"location\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\", \"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"interview\", \"interview_rounds\", \"work_details\", \"no_of_days_off\", \"work_details_column_break\", \"is_work_shift_needed\", \"travel_required\",  \"driving_license_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"suggestions\", \"connections_tab\"]"
@@ -3567,10 +3613,34 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Employee",
+            "field_name": "permanent_accommodation_type",
+            "property": "hidden",
+            "property_type": "Select",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Attendance Request",
             "field_name": "reports_to",
             "property": "ignore_user_permissions",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+
+            "doc_type": "Employee",
+            "field_name": "current_accommodation_type",
+            "property": "hidden",
+            "property_type": "Select",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee",
+            "field_name": "cell_number",
+            "property": "label",
+            "value": "Personal Mobile Number"
         }
     ]
 def get_material_request_custom_fields():
