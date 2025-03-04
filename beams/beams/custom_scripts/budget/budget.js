@@ -98,15 +98,25 @@ function set_filters(frm) {
 }
 
 frappe.ui.form.on('Budget Account', {
-    cost_subhead: function (frm, cdt, cdn) {
-        var row = locals[cdt][cdn];
-        if (row.cost_subhead) {
-            // Fetch the related account from the selected cost_subhead
-            frappe.db.get_value('Cost Subhead', row.cost_sub_head, 'account').then(r => {
-                frappe.model.set_value(cdt, cdn, 'account', r.message.account);
-            })
-        }
-    },
+  cost_subhead: function (frm, cdt, cdn) {
+      var row = locals[cdt][cdn];
+
+      if (row.cost_subhead && frm.doc.company) {
+          frappe.db.get_doc('Cost Subhead', row.cost_subhead).then(doc => {
+              if (doc.accounts && doc.accounts.length > 0) {
+                  let account_found = doc.accounts.find(acc => acc.company === frm.doc.company);
+                  if (account_found) {
+                      frappe.model.set_value(cdt, cdn, 'account', account_found.default_account);
+                  } else {
+                      frappe.model.set_value(cdt, cdn, 'account', '');
+                      frappe.msgprint(__('No default account found for the selected Cost Subhead and Company.'));
+                  }
+              } else {
+                  frappe.model.set_value(cdt, cdn, 'account', '');
+              }
+          });
+      }
+  },
     budget_amount: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         if (row.equal_monthly_distribution && row.budget_amount) {
@@ -126,7 +136,7 @@ frappe.ui.form.on('Budget Account', {
                     frappe.model.set_value(cdt, cdn, "equal_monthly_distribution", 1);
                 }
             );
-        } else if (row.budget_amount) { 
+        } else if (row.budget_amount) {
             distribute_budget_equally(frm, cdt, cdn, row.budget_amount);
         }
     },
