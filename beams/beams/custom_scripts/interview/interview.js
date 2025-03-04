@@ -59,6 +59,27 @@ frappe.ui.form.on('Interview', {
             }, 'View');
         }
     },
+    validate: function(frm) {
+        if (frm.doc.from_time && frm.doc.to_time && frm.doc.scheduled_on) {
+
+            let scheduled_on = frm.doc.scheduled_on;
+
+            // Convert time strings into Date objects for proper comparison
+            let from_time = new Date(`${scheduled_on}T${frm.doc.from_time}`);
+            let to_time = new Date(`${scheduled_on}T${frm.doc.to_time}`);
+            
+            let today = frappe.datetime.get_today();
+
+            if (frm.doc.scheduled_on && frm.doc.scheduled_on < today) {
+                frappe.throw(__("Interview date cannot be in the past."));
+            }
+            
+            if (to_time <= from_time) {
+                frappe.throw(__("End Time (To Time) must be greater than Start Time (From Time)."));
+            }
+        }
+    },
+    
 
     show_custom_feedback_dialog: function (frm, data, question_data, feedback_exists) {
         let fields = frm.events.get_fields_for_custom_feedback();

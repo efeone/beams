@@ -230,7 +230,6 @@ doc_events = {
             "beams.beams.custom_scripts.job_applicant.job_applicant.validate_unique_application",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_designation",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_department",
-            "beams.beams.custom_scripts.job_applicant.job_applicant.validate_resume_attachment"
             ],
         "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds",
         "autoname":"beams.beams.custom_scripts.job_applicant.job_applicant.autoname"
