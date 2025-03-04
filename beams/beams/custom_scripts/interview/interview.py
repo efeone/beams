@@ -190,3 +190,24 @@ def get_permission_query_conditions(user):
         return conditions
 
     return None
+
+
+def update_applicant_interview_rounds(doc, method):
+    """
+    Update the Job Applicant's applicant_interview_rounds table when a new Interview is created.
+    """
+    if not doc.job_applicant:
+        return
+
+    job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
+    existing_rounds = {row.interview_round for row in job_applicant.applicant_interview_rounds}
+
+    if doc.interview_round in existing_rounds:
+        return
+
+    job_applicant.append("applicant_interview_rounds", {
+        "interview_round": doc.interview_round,
+        "interview_status": doc.status
+    })
+
+    job_applicant.save(ignore_permissions=True)

@@ -220,7 +220,7 @@ doc_events = {
         ],
         "validate": "beams.beams.custom_scripts.job_requisition.job_requisition.validate_expected_by"
     },
-    
+
     "Journal Entry": {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
     },
@@ -239,7 +239,10 @@ doc_events = {
                         "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
                         "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
                     ],
-        "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
+        "after_insert": [
+            "beams.beams.custom_scripts.interview.interview.on_interview_creation",
+            "beams.beams.custom_scripts.interview.interview.update_applicant_interview_rounds"
+        ],
         "on_update": "beams.beams.custom_scripts.interview.interview.update_applicant_interview_round"
     },
     "Interview Feedback": {
