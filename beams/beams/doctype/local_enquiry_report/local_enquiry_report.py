@@ -9,6 +9,7 @@ from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.desk.form.assign_to import remove as remove_assign
 
+
 class LocalEnquiryReport(Document):
     def validate(self):
         self.validate_informations_provided()
@@ -214,3 +215,102 @@ def enquiry_officer_query(doctype, txt, searchfield, start, page_len, filters):
         as_list=True
     )
     return officers
+
+@frappe.whitelist()
+def send_report_reminders():
+    '''
+    Send in-app notifications for reports that are incomplete 
+    and nearing or past their expected completion date.
+    '''
+    today_date = getdate(today())
+ 
+
+    # Fetch reports that are incomplete and have an expected completion date of today or earlier
+    reports = frappe.get_all(
+        "Local Enquiry Report",  
+        filters={
+            "expected_completion_date": ["<=", today_date],
+            "status": ["not in", ["Completed"]],  
+        },
+        fields=["name", "enquiry_officer", "expected_completion_date"]
+    )
+
+    for report in reports:
+   
+        # Fetch Enquiry Officer's User
+        user = get_enquiry_officer_user(report.enquiry_officer)
+
+        if not user:
+            continue  
+
+        # Get last reminder date from Notification Log
+        last_reminder_date = get_last_reminder_date(report.name, user)
+
+        # Ensure reminders are only sent every two days
+        if last_reminder_date and add_days(last_reminder_date, 2) > today_date:
+            continue
+
+        # Send Notification
+        send_frappe_notification(report, user)
+
+def get_enquiry_officer_user(enquiry_officer):
+    '''
+    Get the User linked to the Enquiry Officer (Employee) and check if they have the required role.
+    '''
+
+    if not enquiry_officer:
+        return None
+    
+    user = frappe.get_value("Employee", enquiry_officer, "user_id")
+
+    if not user:
+        return None
+    
+    required_role = "Enquiry Officer"
+    user_roles = frappe.get_roles(user)
+
+    if required_role in user_roles:
+        return user
+
+    return None
+
+def get_last_reminder_date(report_name, user):
+    '''
+    Fetch the last reminder date from the Notification Log for the given LER report.
+    '''
+
+    last_reminder = frappe.get_all(
+        "Notification Log",
+        filters={
+            "subject": f"Reminder: Local Enquiry Report {report_name} is pending",
+            "for_user": user
+        },
+        fields=["creation"],
+        order_by="creation DESC",
+        limit=1
+    )
+
+    if last_reminder:
+        last_date = getdate(last_reminder[0].creation)
+        return last_date
+
+    return None
+
+def send_frappe_notification(report, user):
+    '''
+    Create a Frappe system notification for the Enquiry Officer.
+    '''
+    notification_message = f"Reminder: Report {report.name} is pending. Complete it before {report.expected_completion_date}."
+
+    notification = frappe.get_doc({
+        "doctype": "Notification Log",
+        "subject": f"Reminder: Local Enquiry Report {report.name} is pending",
+        "email_content": notification_message,
+        "for_user": user,
+        "document_type": "Local Enquiry Report",  
+        "document_name": report.name              
+    })
+
+    notification.insert(ignore_permissions=True)
+    frappe.db.commit()
+

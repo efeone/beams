@@ -11,12 +11,24 @@
   "job_applicant_name",
   "designation",
   "department",
-  "enquiry_officer",
+  "referred_by",
+  "referred_by_name",
   "column_break_xtgz",
   "status",
+  "enquiry_officer",
   "expected_completion_date",
   "enquiry_start_date",
   "enquiry_completion_date",
+  "section_break_ad",
+  "address__details_column",
+  "applicant_designation",
+  "current_address",
+  "column_break_ymcv",
+  "phone_number",
+  "workplace_address",
+  "column_break_uqzs",
+  "land_mark",
+  "permanent_address",
   "enquiry_details",
   "enquiry_report",
   "remarks",
@@ -51,6 +63,7 @@
    "fetch_from": "job_applicant.applicant_name",
    "fieldname": "job_applicant_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Job Applicant Name",
    "read_only": 1
   },
@@ -156,6 +169,68 @@
    "depends_on": "eval: !in_list([\"Draft\", \"Assigned to Admin\"], doc.workflow_state)",
    "fieldname": "enquiry_details",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "address__details_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "phone_number",
+   "fieldtype": "Phone",
+   "label": "Phone Number"
+  },
+  {
+   "fieldname": "column_break_ymcv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "land_mark",
+   "fieldtype": "Data",
+   "label": "Land Mark"
+  },
+  {
+   "fieldname": "permanent_address",
+   "fieldtype": "Small Text",
+   "label": "Permanent Address"
+  },
+  {
+   "fieldname": "workplace_address",
+   "fieldtype": "Small Text",
+   "label": "WorkPlace Address"
+  },
+  {
+   "fieldname": "column_break_uqzs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ad",
+   "fieldtype": "Section Break",
+   "label": "Address Details"
+  },
+  {
+   "fieldname": "applicant_designation",
+   "fieldtype": "Link",
+   "label": "Applicant Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "current_address",
+   "fieldtype": "Small Text",
+   "label": "Current Address"
+  },
+  {
+   "fieldname": "referred_by",
+   "fieldtype": "Link",
+   "label": "Referred By",
+   "options": "Job Applicant",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "job_applicant.source_name",
+   "fieldname": "referred_by_name",
+   "fieldtype": "Data",
+   "label": "Referred By Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
