@@ -564,6 +564,13 @@ def get_department_custom_fields():
                 "fieldtype": "Float",
                 "label": "Threshold Amount",
                 "insert_after": "parent_department"
+            },
+            {
+                "fieldname": "finance_group",
+                "fieldtype": "Link",
+                "label": "Finance Group",
+                "options":"Finance Group",
+                "insert_after": "company"
             }
         ]
     }
@@ -706,7 +713,7 @@ def get_budget_custom_fields():
                 "label": "Department",
                 "options":"Department",
                 "reqd": 1,
-                "insert_after": "company"
+                "insert_after": "finance_group"
             },
             {
                 "fieldname": "division",
@@ -744,6 +751,14 @@ def get_budget_custom_fields():
                 "label": "Total Amount",
                 "read_only": 1,
                 "insert_after": "region"
+            },
+            {
+                "fieldname": "finance_group",
+                "fieldtype": "Link",
+                "label": "Finance Group",
+                "options":"Finance Group",
+                "reqd": 1,
+                "insert_after": "company"
             },
         ],
         "Budget Account": [
