@@ -570,7 +570,8 @@ def get_department_custom_fields():
                 "fieldtype": "Link",
                 "label": "Finance Group",
                 "options":"Finance Group",
-                "insert_after": "company"
+                "insert_after": "company",
+                "allow_on_submit": 1
             }
         ]
     }
