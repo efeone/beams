@@ -570,8 +570,7 @@ def get_department_custom_fields():
                 "fieldtype": "Link",
                 "label": "Finance Group",
                 "options":"Finance Group",
-                "insert_after": "company",
-                "allow_on_submit": 1
+                "insert_after": "company"
             }
         ]
     }
@@ -714,7 +713,15 @@ def get_budget_custom_fields():
                 "label": "Department",
                 "options":"Department",
                 "reqd": 1,
-                "insert_after": "finance_group"
+                "insert_after": "company"
+            },
+            {
+                "fieldname": "finance_group",
+                "fieldtype": "Link",
+                "label": "Finance Group",
+                "options":"Finance Group",
+                "insert_after": "department",
+                "fetch_from": "department.finance_group"
             },
             {
                 "fieldname": "division",
@@ -752,15 +759,7 @@ def get_budget_custom_fields():
                 "label": "Total Amount",
                 "read_only": 1,
                 "insert_after": "region"
-            },
-            {
-                "fieldname": "finance_group",
-                "fieldtype": "Link",
-                "label": "Finance Group",
-                "options":"Finance Group",
-                "reqd": 1,
-                "insert_after": "company"
-            },
+            }
         ],
         "Budget Account": [
             {
