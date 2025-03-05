@@ -24,9 +24,21 @@ frappe.ui.form.on('Employee', {
 	            });
 	    }
 	},
-
+  reports_to: function(frm) {
+      if (frm.doc.reports_to) {
+          frm.set_value('expense_approver', frm.doc.reports_to);
+          frm.set_value('shift_request_approver', frm.doc.reports_to);
+          frm.set_value('leave_approver', frm.doc.reports_to);
+      }
+  } else {
+          // Clear approver fields if 'reports_to' is empty
+          frm.set_value('expense_approver', '');
+          frm.set_value('shift_request_approver', '');
+          frm.set_value('leave_approver', '');
+      }
+  },
   refresh: function(frm) {
-    if (!frm.is_new() && frappe.user.has_role('HOD')) { // Adds the custom button 'Training Request' in the 'Create' section
+    if (!frm.is_new() && frappe.user.has_role('HR Manager')) { // Adds the custom button 'Training Request' in the 'Create' section
       frm.add_custom_button('Training Request', function() {
         // Call the server-side function to fetch the employee ID for the current user
         frappe.call({
