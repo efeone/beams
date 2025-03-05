@@ -30,7 +30,7 @@ frappe.ui.form.on('Employee', {
           frm.set_value('shift_request_approver', frm.doc.reports_to);
           frm.set_value('leave_approver', frm.doc.reports_to);
       }
-  } else {
+   else {
           // Clear approver fields if 'reports_to' is empty
           frm.set_value('expense_approver', '');
           frm.set_value('shift_request_approver', '');
