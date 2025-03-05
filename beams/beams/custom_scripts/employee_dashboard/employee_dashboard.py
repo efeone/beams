@@ -6,9 +6,7 @@ def get_data(data=None):
 
     """
 
-    data["non_standard_fieldnames"] = {
-        "Asset": "custodian"
-    }
+    data["non_standard_fieldnames"].update({"Asset":"custodian"})
 
     # Adding transactions to the data dictionary
     data["transactions"] = [
