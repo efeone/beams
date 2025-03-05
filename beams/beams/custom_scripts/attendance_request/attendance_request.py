@@ -2,6 +2,7 @@ import frappe
 from frappe import _
 from frappe.utils import format_date, get_link_to_form
 from hrms.hr.doctype.attendance_request.attendance_request import AttendanceRequest
+from frappe.utils import today
 
 
 class AttendanceRequestOverride(AttendanceRequest):
@@ -138,8 +139,12 @@ def get_checkin_time(employee, checkout_record):
 	return checkin_time
 
 
-
-
-
-
-
+@frappe.whitelist()
+def validate_to_date(doc, method):
+    """
+    Validates that the 'to_date' field in the Attendance Regularisation doctype
+    is not set to a future date.
+    """
+    if doc.to_date:
+        if doc.to_date > today():
+            frappe.throw(_("To Date cannot be a Future date"))
