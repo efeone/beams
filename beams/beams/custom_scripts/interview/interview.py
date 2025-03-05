@@ -3,10 +3,9 @@ import frappe
 from frappe import _
 from six import string_types
 from frappe.utils import get_link_to_form
-from frappe.model.document import Document
-from hrms.hr.doctype.interview.interview import DuplicateInterviewRoundError, get_recipients
+from hrms.hr.doctype.interview.interview import Interview
 
-class InterviewOverride(Document):
+class InterviewOverride(Interview):
       def on_submit(self):
             if self.status not in ["Cleared", "Rejected"]:
                   frappe.throw(

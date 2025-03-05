@@ -3786,7 +3786,7 @@ def get_skill_assessment_custom_fields():
             {
                 "fieldname": "score",
                 "fieldtype": "Float",
-                "label": "Score(Out of 10)",
+                "label": "Score (Out of 10)",
                 "reqd": 1,
                 "insert_after":"skill",
                 "in_list_view": 1
