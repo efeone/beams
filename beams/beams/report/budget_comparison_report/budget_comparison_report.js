@@ -40,6 +40,7 @@ frappe.query_reports["Budget Comparison Report"] = {
 		datatable.refresh(data);
 	}
 };
+
 function get_filters() {
 	function get_dimensions() {
 		let result = [];
@@ -123,12 +124,12 @@ function get_filters() {
 				return frappe.db.get_link_options(budget_against, txt);
 			},
 		},
-		{
-			fieldname: "show_cumulative",
-			label: __("Show Cumulative Amount"),
-			fieldtype: "Check",
-			default: 0,
-		},
+        {
+            fieldname: "finance_group",
+            label: __("Finance Group"),
+            fieldtype: "Link",
+            options: "Finance Group"
+        },
 		{
 			fieldname: "cost_head",
 			label: __("Cost Head"),

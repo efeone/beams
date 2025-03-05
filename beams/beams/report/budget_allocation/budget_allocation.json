@@ -9,7 +9,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2024-11-08 14:37:02.790290",
+ "modified": "2025-03-05 11:23:33.868170",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Allocation",
@@ -22,5 +22,6 @@
   {
    "role": "Accounts Manager"
   }
- ]
+ ],
+ "timeout": 0
 }
