@@ -153,7 +153,17 @@ def get_shift_assignment_custom_fields():
                 "label": "Roster Type",
                 "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
+            },
+            {
+                "fieldname": "user_id",
+                "label": "User ID",
+                "fieldtype": "Data",
+                "insert_after": "end_date",
+                "options": "Email",
+                "hidden": 1
+
             }
+
         ]
     }
 
