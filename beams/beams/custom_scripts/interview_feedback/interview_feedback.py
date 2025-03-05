@@ -75,7 +75,7 @@ def update_applicant_interview_round_from_feedback(doc, method):
         return
 
     # Get the latest rating from Interview Feedback
-    latest_rating = frappe.db.get_value("Interview Feedback", doc.name, "average_rating")
+    latest_rating = frappe.db.get_value("Interview", doc.interview, "average_rating")
     if latest_rating is None:
         frappe.msgprint("No Average Rating found.")
         return
