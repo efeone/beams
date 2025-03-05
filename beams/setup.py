@@ -1641,7 +1641,17 @@ def get_interview_custom_fields():
                 "insert_after": "job_applicant",
                 "fetch_from": "job_applicant.applicant_name",
                 "read_only": 1
+            
+            },
+            {
+                "fieldname": "applicant_email",
+                "fieldtype": "Data",
+                "label": "Applicant Email ID",
+                "insert_after": "job_applicant",
+                "fetch_from": "job_applicant.email_id",
+                "hidden": 1
             }
+
         ]
     }
 
@@ -3513,6 +3523,13 @@ def get_property_setters():
         {
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "reqd",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
             "field_name": "section_break_7",
             "property": "collapsible",
             "property_type": "Check",
@@ -3526,10 +3543,17 @@ def get_property_setters():
             "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
         },
         {
-            "doctype_or_field": "DocType",
+            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "property": "field_order",
             "value": "[\"naming_series\", \"request_for\", \"employee_left\", \"relieving_date\", \"suggested_designation\", \"designation\", \"department\", \"employment_type\", \"location\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\", \"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"interview\", \"interview_rounds\", \"work_details\", \"no_of_days_off\", \"work_details_column_break\", \"is_work_shift_needed\", \"travel_required\",  \"driving_license_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"suggestions\", \"connections_tab\"]"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Applicant",
+            "property": "show_title_field_in_link",
+            "property_type" : "Check",
+            "value": 1
         }
     ]
 def get_material_request_custom_fields():
@@ -3756,7 +3780,7 @@ def get_skill_assessment_custom_fields():
             {
                 "fieldname": "score",
                 "fieldtype": "Float",
-                "label": "Score",
+                "label": "Score (Out of 10)",
                 "reqd": 1,
                 "insert_after":"skill",
                 "in_list_view": 1
@@ -3773,6 +3797,7 @@ def get_skill_assessment_custom_fields():
                 "label": "Weight",
                 "insert_after":"remarks"
             }
+
         ]
     }
 

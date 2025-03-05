@@ -173,7 +173,7 @@ frappe.ui.form.on('Interview', {
             { fieldtype: 'Data', fieldname: 'answer', label: __('Answer') },
             { fieldtype: 'Float', fieldname: 'weight', label: __('Weight') },
             { fieldtype: 'Data', fieldname: 'applicant_answer', label: __('Applicant Answer'), in_list_view: 1, reqd: 1 },
-            { fieldtype: 'Float', fieldname: 'score', label: __('Score'), in_list_view: 1, reqd: 1 },
+            { fieldtype: 'Float', fieldname: 'score', label: __('Score (Out of 10)'), in_list_view: 1, reqd: 1 },
             { fieldtype: 'Data', fieldname: 'parent', hidden: 1, label: __('Parent') },
             { fieldtype: 'Data', fieldname: 'name', hidden: 1, label: __('Name') }
         ];
@@ -182,7 +182,7 @@ frappe.ui.form.on('Interview', {
     get_fields_for_custom_feedback: function () {
         return [
             { fieldtype: 'Link', fieldname: 'skill', label: __('Skill'), options: 'Skill', in_list_view: 1, reqd: 1 },
-            { fieldtype: 'Float', fieldname: 'score', label: __('Score'), in_list_view: 1, reqd: 1 },
+            { fieldtype: 'Float', fieldname: 'score', label: __('Score (Out of 10)'), in_list_view: 1, reqd: 1 },
             { fieldtype: 'Small Text', fieldname: 'remarks', label: __('Remarks') }
         ];
     }

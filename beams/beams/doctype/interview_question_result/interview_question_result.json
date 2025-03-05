@@ -9,8 +9,8 @@
   "question",
   "answer",
   "applicant_answer",
-  "weight",
-  "score"
+  "score",
+  "weight"
  ],
  "fields": [
   {
@@ -21,11 +21,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "weight",
-   "fieldtype": "Float",
-   "label": "Weight"
-  },
-  {
    "fieldname": "answer",
    "fieldtype": "Small Text",
    "label": "Answer"
@@ -33,18 +28,23 @@
   {
    "fieldname": "score",
    "fieldtype": "Float",
-   "label": "Score"
+   "label": "Score (Out of 10)"
   },
   {
    "fieldname": "applicant_answer",
    "fieldtype": "Small Text",
    "label": "Applicant Answer"
+  },
+  {
+   "fieldname": "weight",
+   "fieldtype": "Float",
+   "label": "Weight"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-19 18:18:32.235947",
+ "modified": "2025-03-05 10:50:59.442015",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Interview Question Result",
