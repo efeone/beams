@@ -1641,7 +1641,7 @@ def get_interview_custom_fields():
                 "insert_after": "job_applicant",
                 "fetch_from": "job_applicant.applicant_name",
                 "read_only": 1
-            
+
             },
             {
                 "fieldname": "applicant_email",
@@ -3553,6 +3553,13 @@ def get_property_setters():
             "doc_type": "Job Applicant",
             "property": "show_title_field_in_link",
             "property_type" : "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Attendance Request",
+            "field_name": "reports_to",
+            "property": "ignore_user_permissions",
             "value": 1
         }
     ]
