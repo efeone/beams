@@ -73,13 +73,11 @@ frappe.ui.form.on('Interview', {
             if (frm.doc.scheduled_on && frm.doc.scheduled_on < today) {
                 frappe.throw(__("Interview date cannot be in the past."));
             }
-
             if (to_time <= from_time) {
                 frappe.throw(__("End Time (To Time) must be greater than Start Time (From Time)."));
             }
         }
     },
-
 
     show_custom_feedback_dialog: function (frm, data, question_data, feedback_exists) {
         let fields = frm.events.get_fields_for_custom_feedback();
@@ -182,8 +180,6 @@ frappe.ui.form.on('Interview', {
             }
         });
     },
-
-
 
     get_fields_for_questions: function () {
         return [
