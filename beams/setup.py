@@ -1539,7 +1539,7 @@ def get_employee_custom_fields():
             },
             {
                 "fieldname": "no_of_children",
-                "fieldtype": "Data",
+                "fieldtype": "Int",
                 "label": "No.of Children",
                 "insert_after":"marital_status"
             },
@@ -1579,7 +1579,6 @@ def get_employee_custom_fields():
                 "label": "Relation",
                 "insert_after":"relation"
             }
-
 
         ],
 

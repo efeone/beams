@@ -33,7 +33,7 @@ class JobProposal(Document):
     def on_update(self):
         self.create_todo_on_pending_approval()
 
-    def before_save(self):
+    def validate(self):
         self.validate_proposed_ctc()
 
     def create_offer_from_job_proposal(self):
