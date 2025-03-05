@@ -3628,7 +3628,6 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
-
             "doc_type": "Employee",
             "field_name": "current_accommodation_type",
             "property": "hidden",
@@ -3641,7 +3640,7 @@ def get_property_setters():
             "field_name": "cell_number",
             "property": "label",
             "value": "Personal Mobile Number"
-        }
+        },
         {
             "doctype_or_field": "DocType",
             "doc_type": "Job Applicant",
