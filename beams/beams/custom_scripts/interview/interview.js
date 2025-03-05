@@ -67,19 +67,17 @@ frappe.ui.form.on('Interview', {
             // Convert time strings into Date objects for proper comparison
             let from_time = new Date(`${scheduled_on}T${frm.doc.from_time}`);
             let to_time = new Date(`${scheduled_on}T${frm.doc.to_time}`);
-            
+
             let today = frappe.datetime.get_today();
 
             if (frm.doc.scheduled_on && frm.doc.scheduled_on < today) {
                 frappe.throw(__("Interview date cannot be in the past."));
             }
-            
             if (to_time <= from_time) {
                 frappe.throw(__("End Time (To Time) must be greater than Start Time (From Time)."));
             }
         }
     },
-    
 
     show_custom_feedback_dialog: function (frm, data, question_data, feedback_exists) {
         let fields = frm.events.get_fields_for_custom_feedback();
@@ -164,6 +162,22 @@ frappe.ui.form.on('Interview', {
                 }
                 skill_grid.refresh();
             });
+
+            if (d.fields_dict.questions) {
+                let question_grid = d.fields_dict.questions.grid;
+                question_grid.wrapper.on('change', 'input[data-fieldname="score"]', function () {
+                    let row = question_grid.get_selected();
+                    if (!row) return;
+
+                    let value = parseFloat($(this).val()) || 0;
+                    if (value > 10) {
+                        frappe.msgprint(__('Score cannot be greater than 10'));
+                    } else if (value < 0) {
+                        frappe.msgprint(__('Score cannot be less than 0'));
+                    }
+                    question_grid.refresh();
+                });
+            }
         });
     },
 

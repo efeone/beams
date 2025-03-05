@@ -19,6 +19,14 @@ def validate(doc, method):
             rating = float(row.score) / 10
         row.rating = rating
 
+    for row in doc.interview_question_result:
+        rating = 0
+        if row.score:
+            if row.score > 10 or row.score < 0:
+                frappe.throw(_("Score for question {0} must be a number between 0 and 10.").format(frappe.bold(row.question)))
+            rating = float(row.score) / 10
+        row.rating = rating
+
 def on_interview_feedback_creation(doc):
     '''
         Update the Job Applicant's status to 'Interview Ongoing'
