@@ -7,11 +7,14 @@ frappe.ui.form.on('Shift Swap Request', {
         frm.fields_dict['swap_with_employee'].get_query = function(doc, cdt, cdn) {
             return {
                 filters: {
-                    'department': doc.department // Filter employees based on the department field
+                    'department': doc.department,// Filter employees based on the department field
+                    'name': ['!=', doc.employee] // Prevent selecting the same employee
+
                 }
             };
         };
     },
+  
     onload: function (frm) {
       // Only fetch employee if the field is not set
       if (!frm.doc.employee) {
