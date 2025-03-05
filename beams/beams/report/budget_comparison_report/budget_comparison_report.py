@@ -62,8 +62,8 @@ def get_final_data(dimension, dimension_items, filters, period_month_ranges, dat
 					period_data[0] = period_data[0] * (DCC_allocation / 100)
 					period_data[1] = period_data[1] * (DCC_allocation / 100)
 
-				if filters.get("show_cumulative"):
-					last_total = period_data[0] - period_data[1]
+				# if filters.get("show_cumulative"):
+				# 	last_total = period_data[0] - period_data[1]
 
 				period_data[2] = period_data[0] - period_data[1]
 				row += period_data
@@ -201,6 +201,8 @@ def get_dimension_target_details(filters):
 		cond += "and ba.cost_subhead = '{0}'".format(filters.get("cost_subhead"))
 	if filters.get("cost_category"):
 		cond += "and ba.cost_category = '{0}'".format(filters.get("cost_category"))
+	if filters.get("finance_group"):
+		cond += "and b.finance_group = '{0}'".format(filters.get("finance_group"))
 
 	return frappe.db.sql(
 		f"""

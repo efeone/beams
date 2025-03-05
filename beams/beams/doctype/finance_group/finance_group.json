@@ -12,13 +12,15 @@
   {
    "fieldname": "finance_group",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Finance Group",
+   "reqd": 1,
    "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-05 10:57:25.327813",
+ "modified": "2025-03-05 11:37:31.454741",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Finance Group",
