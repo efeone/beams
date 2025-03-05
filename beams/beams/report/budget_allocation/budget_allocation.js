@@ -140,7 +140,14 @@ function get_filters() {
             fieldname: "cost_subhead",
             label: __("Cost Subhead"),
             fieldtype: "Link",
-            options: "Cost Subhead"
+            options: "Cost Subhead",
+            get_query: function () {
+                return {
+                    filters: {
+                        'cost_head': frappe.query_report.get_filter_value('cost_head')
+                    }
+                }
+            }
         },
         {
             fieldname: "cost_category",
