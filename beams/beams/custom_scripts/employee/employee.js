@@ -26,24 +26,17 @@ frappe.ui.form.on('Employee', {
 	},
   reports_to: function(frm) {
       if (frm.doc.reports_to) {
-          // Fetch the Employee record linked in 'reports_to'
-          frappe.db.get_value('Employee', frm.doc.reports_to, 'name')
-              .then(r => {
-                  if (r.message && r.message.name) {
-                      let approver = r.message.name;
-                      frm.set_value('expense_approver', approver);
-                      frm.set_value('shift_request_approver', approver);
-                      frm.set_value('leave_approver', approver);
-                  }
-              });
-      } else {
+          frm.set_value('expense_approver', frm.doc.reports_to);
+          frm.set_value('shift_request_approver', frm.doc.reports_to);
+          frm.set_value('leave_approver', frm.doc.reports_to);
+      }
+  } else {
           // Clear approver fields if 'reports_to' is empty
           frm.set_value('expense_approver', '');
           frm.set_value('shift_request_approver', '');
           frm.set_value('leave_approver', '');
       }
   },
-
   refresh: function(frm) {
     if (!frm.is_new() && frappe.user.has_role('HR Manager')) { // Adds the custom button 'Training Request' in the 'Create' section
       frm.add_custom_button('Training Request', function() {
