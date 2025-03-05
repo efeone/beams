@@ -6,12 +6,35 @@ from frappe.utils import get_link_to_form
 from hrms.hr.doctype.interview.interview import Interview
 
 class InterviewOverride(Interview):
-      def on_submit(self):
-            if self.status not in ["Cleared", "Rejected"]:
-                  frappe.throw(
-                        _("Only Interviews with Cleared or Rejected status can be submitted."),
-                        title=_("Not Allowed"),
-                	)
+    def on_submit(self):
+        if self.status not in ["Cleared", "Rejected"]:
+              frappe.throw(_("Only Interviews with Cleared or Rejected status can be submitted."),
+                           title=_("Not Allowed"),
+                           )
+
+        # Fetch all interviewers from the Interview Details child table
+        interviewers = [d.interviewer for d in self.interview_details if d.interviewer]
+
+        # Fetch all submitted feedback records for this interview
+        submitted_feedback = frappe.get_all(
+            "Interview Feedback",
+            filters={"interview": self.name, "docstatus": 1},
+            fields=["interviewer"],
+        )
+
+        # Extract interviewers who have submitted feedback
+        submitted_interviewers = {feedback["interviewer"] for feedback in submitted_feedback}
+
+        # Identify interviewers who haven't submitted feedback
+        missing_feedback = [i for i in interviewers if i not in submitted_interviewers]
+
+        if missing_feedback:
+            frappe.throw(
+                _("Interview cannot be submitted. The following interviewers have not submitted feedback: {0}")
+                .format(", ".join(missing_feedback)),
+                title=_("Pending Feedback"),
+            )
+
 
 @frappe.whitelist()
 def get_interview_skill_and_question_set(interview_round, interviewer=False, interview_name=False):
