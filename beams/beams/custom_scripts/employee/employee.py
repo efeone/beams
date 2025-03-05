@@ -3,7 +3,8 @@ from frappe import _
 from frappe.model.naming import make_autoname
 from frappe.model.naming import set_name_by_naming_series
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import getdate, nowdate, add_days
+from frappe.utils import getdate, nowdate, add_days,today
+
 
 @frappe.whitelist()
 def create_event(employee_id=None, hod_user=None, target_doc=None):
@@ -166,3 +167,14 @@ def get_next_employee_id(department_abbr):
         employee_count = int(employee_id)
         next_employee_id = '{0}{1}'.format(series_prefix, str(employee_count+1))
     return next_employee_id
+
+
+def validate_offer_dates(doc, method):
+    """Validate Employee fields before saving/submitting."""
+
+    today_date = getdate(today())
+
+    # Ensure Final Confirmation Date is after Scheduled Confirmation Date
+    if doc.scheduled_confirmation_date and doc.final_confirmation_date:
+        if getdate(doc.final_confirmation_date) <= getdate(doc.scheduled_confirmation_date):
+            frappe.throw(_("Confirmation Date must be after Offer Date."))
