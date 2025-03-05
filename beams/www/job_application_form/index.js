@@ -4,7 +4,7 @@ $(document).ready(function () {
 
     // Click to open file dialog
     placeholder.addEventListener('click', (e) => {
-        e.preventDefault(); 
+        e.preventDefault();
         fileInput.click();  // Trigger the file input click
     });
 
@@ -74,7 +74,6 @@ $(document).ready(function () {
         // Collect skills data
         const skills = get_skills_data();
 
-        // Send data to backend
         frappe.call({
             method: "beams.www.job_application_form.index.create_job_applicant",
             args: {
@@ -85,8 +84,8 @@ $(document).ready(function () {
                 "min_education_qual": min_education_qual,
                 "job_title": job_title,
                 "location": location,
-                "resume_attachment": resume_attachment,
-                "skill_proficiency": skills
+                "resume_attachment": JSON.stringify(resume_attachment), // Convert to JSON string
+                "skill_proficiency": JSON.stringify(skills) // Ensure skill_proficiency is also a JSON string
             },
             callback: function (r) {
                 alert("Your Application has been submitted!");
@@ -96,6 +95,7 @@ $(document).ready(function () {
                 alert('Something went wrong, Please try again');
             }
         });
+
     });
 });
 
