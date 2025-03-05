@@ -33,6 +33,7 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "label": "Posting Date",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -129,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-06 10:54:36.961648",
+ "modified": "2025-03-05 16:29:17.794563",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Shift Swap Request",
