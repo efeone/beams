@@ -174,14 +174,6 @@ def validate_offer_dates(doc, method):
 
     today_date = getdate(today())
 
-    # Ensure Offer Date is in the future
-    if doc.scheduled_confirmation_date and getdate(doc.scheduled_confirmation_date) < today_date:
-        frappe.throw(_("Offer Date must be a future date."))
-
-    # Ensure  Confirmation Date is in the future
-    if doc.final_confirmation_date and getdate(doc.final_confirmation_date) < today_date:
-        frappe.throw(_("Confirmation Date must be a future date."))
-
     # Ensure Final Confirmation Date is after Scheduled Confirmation Date
     if doc.scheduled_confirmation_date and doc.final_confirmation_date:
         if getdate(doc.final_confirmation_date) <= getdate(doc.scheduled_confirmation_date):
