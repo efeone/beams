@@ -1545,8 +1545,9 @@ def get_employee_custom_fields():
             },
             {
                 "fieldname": "company_number",
-                "fieldtype": "Phone",
+                "fieldtype": "Data",
                 "label": "Company Mobile Number",
+                "options":"Phone",
                 "insert_after":"cell_number"
             },
             {
