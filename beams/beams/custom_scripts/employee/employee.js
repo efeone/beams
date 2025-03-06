@@ -26,9 +26,15 @@ frappe.ui.form.on('Employee', {
 	},
   reports_to: function(frm) {
       if (frm.doc.reports_to) {
-          frm.set_value('expense_approver', frm.doc.reports_to);
-          frm.set_value('shift_request_approver', frm.doc.reports_to);
-          frm.set_value('leave_approver', frm.doc.reports_to);
+					frappe.db.get_value('Employee', frm.doc.reports_to, 'user_id')
+					.then(r => {
+							if (r.message.user_id) {
+									reports_to_user = r.message.user_id
+									frm.set_value('expense_approver', reports_to_user);
+									frm.set_value('shift_request_approver', reports_to_user);
+									frm.set_value('leave_approver', reports_to_user);
+							}
+					})
       }
    else {
           // Clear approver fields if 'reports_to' is empty
