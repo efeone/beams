@@ -36,19 +36,19 @@ frappe.ui.form.on('Employee Onboarding', {
             }
         });
 
-        // Fetch excluded job applicants and set filter for job_applicant field
         frappe.call({
-            method: "beams.beams.custom_scripts.employee_onboarding.employee_onboarding.get_job_applicants_with_employee_and_onboarding",
+            method: "beams.beams.custom_scripts.employee_onboarding.employee_onboarding.get_excluded_job_applicants",
             callback: function (r) {
                 if (r.message) {
                     let excluded_applicants = r.message;
-                    frm.fields_dict["job_applicant"].get_query = function () {
+
+                    frm.set_query("job_applicant", function () {
                         return {
                             filters: {
                                 name: ["not in", excluded_applicants]
                             }
                         };
-                    };
+                    });
                 }
             }
         });
