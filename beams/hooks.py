@@ -272,7 +272,8 @@ doc_events = {
         ],
     },
     "Job Offer" : {
-        "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
+        "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
+        "validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
     },
     "Employee Separation": {
         "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
