@@ -84,4 +84,4 @@ def validate_ctc(doc,method):
         Validate that the  CTC value is not negative.
         """
         if doc.ctc < 0:
-            frappe.throw(" CTC cannot be a Negative Value")
+            frappe.throw("CTC cannot be a Negative Value")
