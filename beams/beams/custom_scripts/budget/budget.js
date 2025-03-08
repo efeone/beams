@@ -84,8 +84,7 @@ function set_filters(frm) {
     frm.set_query('department', function () {
         return {
             filters: {
-                company: frm.doc.company,
-                finance_group: frm.doc.finance_group
+                company: frm.doc.company
             }
         };
     });

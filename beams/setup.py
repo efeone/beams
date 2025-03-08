@@ -721,6 +721,7 @@ def get_budget_custom_fields():
                 "label": "Finance Group",
                 "options":"Finance Group",
                 "insert_after": "department",
+                "read_only":1,
                 "fetch_from": "department.finance_group"
             },
             {
