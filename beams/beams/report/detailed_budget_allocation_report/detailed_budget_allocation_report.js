@@ -8,6 +8,20 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             label: "Fiscal Year",
             fieldtype: "Link",
             options: "Fiscal Year",
+            reqd: 1
+        },
+        {
+            fieldname: "period",
+            label: __("Period"),
+            fieldtype: "Select",
+            options: [
+                { value: "Monthly", label: __("Monthly") },
+                { value: "Quarterly", label: __("Quarterly") },
+                { value: "Half-Yearly", label: __("Half-Yearly") },
+                { value: "Yearly", label: __("Yearly") },
+            ],
+            default: "Yearly",
+            reqd: 1,
         },
         {
             fieldname: "company",
@@ -36,6 +50,12 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             }
         },
         {
+            fieldname: "cost_category",
+            label: "Cost Category",
+            fieldtype: "Link",
+            options: "Cost Category",
+        },
+        {
             fieldname: "cost_head",
             label: "Cost Head",
             fieldtype: "Link",
@@ -57,9 +77,9 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
     ],
     tree: true,
     treeView: true,
-    name_field: "name",
+    name_field: "id",
     parent_field: "parent",
-    initial_depth: 2,
+    initial_depth: 1,
     formatter: function (value, row, column, data, default_formatter) {
         value = default_formatter(value, row, column, data);
         if (data && data.indent < 4) {

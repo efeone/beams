@@ -10,6 +10,16 @@ def execute(filters=None):
     if not data:
         return columns, []
 
+    total_budget = sum(row.get('total_budget', 0) for row in data if row['indent'] == 0)
+
+    data.append({
+        'name': 'Total',
+        'parent': '',
+        'cost_category': '',
+        'account': '',
+        'total_budget': total_budget
+    })
+
     return columns, data
 
 def get_columns(filters):
@@ -35,14 +45,12 @@ def get_columns(filters):
     fiscal_year = filters.get('fiscal_year')
     period = filters.get('period')
     group_months = False if period == 'Monthly' else True
-    currency_fields = []
     for from_date, to_date in get_period_date_ranges(period, fiscal_year):
         if period == 'Yearly':
             label = _('Budget')
             columns.append(
                 {'label': label, 'fieldtype': 'Currency', 'fieldname': 'total_budget', 'width': 200}
             )
-            currency_fields.append('total_budget')
         else:
             for label in [
                 _('Budget') + ' (%s)',
@@ -56,16 +64,13 @@ def get_columns(filters):
                 else:
                     label = label % formatdate(from_date, format_string='MMM')
 
-                currency_fields.append(frappe.scrub(label))
                 columns.append(
                     {'label': label, 'fieldtype': 'Currency', 'fieldname': frappe.scrub(label), 'width': 200}
                 )
     if period != 'Yearly':
-        currency_fields.append('total_budget')
         columns.append(
             {'label': _('Total Budget'), 'fieldtype': 'Currency', 'fieldname': 'total_budget', 'width': 200}
         )
-    filters["currency_fields"] = currency_fields
     return columns
 
 def get_data(filters):
@@ -77,9 +82,8 @@ def get_data(filters):
     #Get Months list as per fiscal year
     period_month_ranges = get_period_month_ranges('Monthly', fiscal_year)
     months_order = [month[0].lower() for month in period_month_ranges]
-
+    
     # Dictionary to store budget amounts for each parent
-    currency_fields = filters.get("currency_fields", ["total_budget"])
     budget_map = {}
 
     if filters.get('company'):
@@ -90,7 +94,7 @@ def get_data(filters):
     for company in companies:
         abbr = frappe.db.get_value('Company', company, 'abbr')
         data.append({'id': abbr, 'parent': '', 'indent': 0, 'name': company, 'total_budget': 0})
-        budget_map[abbr] = {field: 0 for field in currency_fields}# Initialize parent total
+        budget_map[abbr] = 0  # Initialize parent total
 
         if filters.get('finance_group'):
             finance_groups = [filters.get('finance_group')]
@@ -100,7 +104,7 @@ def get_data(filters):
         for fg in finance_groups:
             fg_id = f'{fg}-{abbr}'
             data.append({'id': fg_id, 'parent': abbr, 'indent': 1, 'name': fg, 'total_budget': 0})
-            budget_map[fg_id] = {field: 0 for field in currency_fields}
+            budget_map[fg_id] = 0
 
             if filters.get('department'):
                 departments = [filters.get('department')]
@@ -109,7 +113,7 @@ def get_data(filters):
 
             for dept in departments:
                 data.append({'id': dept, 'parent': fg_id, 'indent': 2, 'name': dept, 'total_budget': 0})
-                budget_map[dept] = {field: 0 for field in currency_fields}
+                budget_map[dept] = 0
 
                 if filters.get('cost_head'):
                     cost_heads = [filters.get('cost_head')]
@@ -119,7 +123,7 @@ def get_data(filters):
                 for ch in cost_heads:
                     ch_id = f'{dept}-{ch}'
                     data.append({'id': ch_id, 'parent': dept, 'indent': 3, 'name': ch, 'total_budget': 0})
-                    budget_map[ch_id] = {field: 0 for field in currency_fields}
+                    budget_map[ch_id] = 0
 
                     if filters.get('cost_subhead'):
                         cost_subheads = [filters.get('cost_subhead')]
@@ -146,24 +150,20 @@ def get_data(filters):
                         data.append(csh_row)
 
                         # Accumulate child budget into its parent
-                        for field in currency_fields:
-                            budget_map[ch_id][field] += csh_row.get(field, 0)
+                        budget_map[ch_id] += total_budget
 
                     # Propagate cost head budget to department
-                    for field in currency_fields:
-                        budget_map[dept][field] += budget_map[ch_id][field]
+                    budget_map[dept] += budget_map[ch_id]
 
                 # Propagate department budget to finance group
-                for field in currency_fields:
-                    budget_map[fg_id][field] += budget_map[dept][field]
+                budget_map[fg_id] += budget_map[dept]
 
             # Propagate finance group budget to company
-            for field in currency_fields:
-                budget_map[abbr][field] += budget_map[fg_id][field]
+            budget_map[abbr] += budget_map[fg_id]
 
     # Update budget amounts in the data list
     for row in data:
-        row.update(budget_map.get(row['id'], {}))
+        row['total_budget'] = budget_map.get(row['id'], row.get('total_budget', 0))
 
     return data
 
