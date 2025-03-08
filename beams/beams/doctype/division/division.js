@@ -14,7 +14,11 @@ frappe.ui.form.on('Division', {
                 };
             });
         });
-    }
+        set_department_filter(frm);
+    },
+    company: function(frm) {
+        set_department_filter(frm);
+      }
 });
 
 function get_used_cost_centers(callback) {
@@ -36,4 +40,16 @@ function get_used_cost_centers(callback) {
             console.error('Error fetching used cost centers:', error);
         }
     });
+}
+
+function set_department_filter(frm) {
+    if (frm.doc.company) {
+        frm.set_query('department', function() {
+            return {
+                filters: {
+                    'company': frm.doc.company
+                }
+            };
+        });
+    }
 }
