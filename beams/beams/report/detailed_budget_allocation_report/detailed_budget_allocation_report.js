@@ -41,19 +41,35 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             fieldtype: "Link",
             options: "Department",
             get_query: function () {
+                let dept_filters = {}
+                if (frappe.query_report.get_filter_value('finance_group')) {
+                    dept_filters['finance_group'] = frappe.query_report.get_filter_value('finance_group');
+                }
+                if (frappe.query_report.get_filter_value('company')) {
+                    dept_filters['company'] = frappe.query_report.get_filter_value('company');
+                }
                 return {
-                    filters: {
-                        'finance_group': frappe.query_report.get_filter_value('finance_group'),
-                        'company': frappe.query_report.get_filter_value('company')
-                    }
+                    filters: dept_filters
                 }
             }
         },
         {
-            fieldname: "cost_category",
-            label: "Cost Category",
+            fieldname: "division",
+            label: "Division",
             fieldtype: "Link",
-            options: "Cost Category",
+            options: "Division",
+            get_query: function () {
+                let div_filters = {}
+                if (frappe.query_report.get_filter_value('department')) {
+                    div_filters['department'] = frappe.query_report.get_filter_value('department');
+                }
+                if (frappe.query_report.get_filter_value('company')) {
+                    div_filters['company'] = frappe.query_report.get_filter_value('company');
+                }
+                return {
+                    filters: div_filters
+                }
+            }
         },
         {
             fieldname: "cost_head",
@@ -67,12 +83,20 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             fieldtype: "Link",
             options: "Cost Subhead",
             get_query: function () {
+                let csh_filters = {}
+                if (frappe.query_report.get_filter_value('cost_head')) {
+                    csh_filters['cost_head'] = frappe.query_report.get_filter_value('cost_head');
+                }
                 return {
-                    filters: {
-                        'cost_head': frappe.query_report.get_filter_value('cost_head')
-                    }
+                    filters: csh_filters
                 }
             }
+        },
+        {
+            fieldname: "cost_category",
+            label: "Cost Category",
+            fieldtype: "Link",
+            options: "Cost Category",
         }
     ],
     tree: true,
