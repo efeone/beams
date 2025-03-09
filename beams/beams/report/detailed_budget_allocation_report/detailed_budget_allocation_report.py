@@ -73,6 +73,7 @@ def get_data(filters):
     period = filters.get('period', 'Yearly')
     fiscal_year = filters.get('fiscal_year')
     cost_category = filters.get('cost_category', '')
+    division = filters.get('division', '')
 
     #Get Months list as per fiscal year
     period_month_ranges = get_period_month_ranges('Monthly', fiscal_year)
@@ -102,57 +103,65 @@ def get_data(filters):
             data.append({'id': fg_id, 'parent': abbr, 'indent': 1, 'name': fg, 'total_budget': 0})
             budget_map[fg_id] = {field: 0 for field in currency_fields}
 
+            dept_filters = {'finance_group': fg, 'company': company}
             if filters.get('department'):
-                departments = [filters.get('department')]
-            else:
-                departments = frappe.get_all('Department', filters={'finance_group': fg, 'company': company}, pluck='name')
+                dept_filters['name'] = filters.get('department')
+            departments = frappe.get_all('Department', filters=dept_filters, pluck='name')
 
             for dept in departments:
                 data.append({'id': dept, 'parent': fg_id, 'indent': 2, 'name': dept, 'total_budget': 0})
                 budget_map[dept] = {field: 0 for field in currency_fields}
 
-                if filters.get('cost_head'):
-                    cost_heads = [filters.get('cost_head')]
-                else:
-                    cost_heads = get_cost_heads(dept, fiscal_year, cost_category)
+                division_filter = {'department': dept}
+                if division:
+                    division_filter['name'] = division
+                divisions = frappe.get_all('Division', filters=division_filter, pluck='name')
 
-                for ch in cost_heads:
-                    ch_id = f'{dept}-{ch}'
-                    data.append({'id': ch_id, 'parent': dept, 'indent': 3, 'name': ch, 'total_budget': 0})
-                    budget_map[ch_id] = {field: 0 for field in currency_fields}
+                for div in divisions:
+                    data.append({'id': div, 'parent': dept, 'indent': 3, 'name': div, 'total_budget': 0})
+                    budget_map[div] = {field: 0 for field in currency_fields}
 
-                    if filters.get('cost_subhead'):
-                        cost_subheads = [filters.get('cost_subhead')]
-                    else:
-                        cost_subheads = get_cost_subheads(ch, fiscal_year, cost_category)
+                    cost_head = filters.get('cost_head', '')
+                    cost_heads = get_cost_heads(div, fiscal_year, cost_category=cost_category, cost_head=cost_head)
 
-                    for csh in cost_subheads:
-                        csh_id = f'{dept}-{ch}-{csh}'
-                        cost_details = get_cost_subhead_details(dept, ch, csh, fiscal_year)
-                        total_budget = cost_details.get('total_budget', 0)
-                        row_id = cost_details.get('name', )
-                        csh_row = {
-                            'id': csh_id,
-                            'parent': ch_id,
-                            'indent': 4,
-                            'name': csh,
-                            'cost_category': cost_details.get('cost_category', ''),
-                            'account': cost_details.get('account', ''),
-                            'total_budget': total_budget
-                        }
-                        if period != 'Yearly':
-                            budget_column_data = get_budget_column_data(period, months_order, row_id)
-                            csh_row.update(budget_column_data)
-                        data.append(csh_row)
+                    for ch in cost_heads:
+                        ch_id = f'{div}-{ch}'
+                        data.append({'id': ch_id, 'parent': div, 'indent': 4, 'name': ch, 'total_budget': 0})
+                        budget_map[ch_id] = {field: 0 for field in currency_fields}
 
-                        # Accumulate child budget into its parent
+                        cost_subhead = filters.get('cost_subhead')
+                        cost_subheads = get_cost_subheads(div, ch, fiscal_year, cost_category=cost_category, cost_subhead=cost_subhead)
+
+                        for csh in cost_subheads:
+                            csh_id = f'{div}-{ch}-{csh}'
+                            cost_details = get_cost_subhead_details(div, ch, csh, fiscal_year)
+                            total_budget = cost_details.get('total_budget', 0)
+                            row_id = cost_details.get('name', )
+                            csh_row = {
+                                'id': csh_id,
+                                'parent': ch_id,
+                                'indent': 5,
+                                'name': csh,
+                                'cost_category': cost_details.get('cost_category', ''),
+                                'account': cost_details.get('account', ''),
+                                'total_budget': total_budget
+                            }
+                            if period != 'Yearly':
+                                budget_column_data = get_budget_column_data(period, months_order, row_id)
+                                csh_row.update(budget_column_data)
+                            data.append(csh_row)
+
+                            # Accumulate child budget into its parent
+                            for field in currency_fields:
+                                budget_map[ch_id][field] += csh_row.get(field, 0)
+
+                        # Propagate cost head budget to department
                         for field in currency_fields:
-                            budget_map[ch_id][field] += csh_row.get(field, 0)
+                            budget_map[div][field] += budget_map[ch_id][field]
 
-                    # Propagate cost head budget to department
+                    # Propagate division budget to departments
                     for field in currency_fields:
-                        budget_map[dept][field] += budget_map[ch_id][field]
-
+                        budget_map[dept][field] += budget_map[div][field]
                 # Propagate department budget to finance group
                 for field in currency_fields:
                     budget_map[fg_id][field] += budget_map[dept][field]
@@ -167,7 +176,7 @@ def get_data(filters):
 
     return data
 
-def get_cost_heads(department, fiscal_year, cost_category=None):
+def get_cost_heads(division, fiscal_year, cost_category=None, cost_head=None):
     '''
         Method to get Cost Heads based on Fiscal Year and Department
     '''
@@ -179,20 +188,23 @@ def get_cost_heads(department, fiscal_year, cost_category=None):
         JOIN
             `tabBudget` b ON ba.parent = b.name
         WHERE
-            b.department = %(department)s AND
+            b.division = %(division)s AND
             b.fiscal_year = %(fiscal_year)s
     '''
     query_filters = {
-        'department': department,
+        'division': division,
         'fiscal_year': fiscal_year
     }
     if cost_category:
         query += ' AND ba.cost_category = %(cost_category)s'
         query_filters['cost_category'] = cost_category
+    if cost_head:
+        query += ' AND ba.cost_head = %(cost_head)s'
+        query_filters['cost_head'] = cost_head
     cost_heads = frappe.db.sql(query, query_filters, as_dict=True)
     return [row.cost_head for row in cost_heads]
 
-def get_cost_subheads(cost_head, fiscal_year, cost_category=None):
+def get_cost_subheads(division, cost_head, fiscal_year, cost_category=None, cost_subhead=None):
     '''
         Method to get Cost Subeads based on Fiscal Year and Department
     '''
@@ -205,19 +217,24 @@ def get_cost_subheads(cost_head, fiscal_year, cost_category=None):
             `tabBudget` b ON ba.parent = b.name
         WHERE
             ba.cost_head = %(cost_head)s AND
-            b.fiscal_year = %(fiscal_year)s
+            b.fiscal_year = %(fiscal_year)s AND
+            b.division = %(division)s
     '''
     query_filters = {
         'cost_head':cost_head,
         'fiscal_year':fiscal_year,
+        'division':division
     }
     if cost_category:
         query += ' AND ba.cost_category = %(cost_category)s'
         query_filters['cost_category'] = cost_category
+    if cost_subhead:
+        query += ' AND ba.cost_subhead = %(cost_subhead)s'
+        query_filters['cost_subhead'] = cost_subhead
     cost_subheads = frappe.db.sql(query, query_filters, as_dict=True)
     return [row.cost_subhead for row in cost_subheads]
 
-def get_cost_subhead_details(department, cost_head, cost_subhead, fiscal_year):
+def get_cost_subhead_details(division, cost_head, cost_subhead, fiscal_year):
     subhead_details = {
         'cost_category': '',
         'account': '',
@@ -234,13 +251,13 @@ def get_cost_subhead_details(department, cost_head, cost_subhead, fiscal_year):
         JOIN
             `tabBudget` b ON ba.parent = b.name
         WHERE
-            b.department = %(department)s AND
+            b.division = %(division)s AND
             b.fiscal_year = %(fiscal_year)s AND
             ba.cost_head = %(cost_head)s AND
             ba.cost_subhead = %(cost_subhead)s
     '''
     query_params = {
-        'department':department,
+        'division':division,
         'fiscal_year':fiscal_year,
         'cost_head':cost_head,
         'cost_subhead':cost_subhead
