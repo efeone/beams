@@ -3564,6 +3564,34 @@ def get_property_setters():
         {
             "doctype_or_field": "DocField",
             "doc_type": "Shift Assignment",
+            "field_name": "start_date",
+            "property": "read_only_depends_on",
+            "value": "eval:doc.docstatus == 1"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "end_date",
+            "property": "read_only_depends_on",
+            "value": "eval:doc.docstatus == 1"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "start_date",
+            "property": "allow_on_submit",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "end_date",
+            "property": "allow_on_submit",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
             "field_name": "employee",
             "property": "ignore_user_permissions",
             "value": 1

@@ -4,6 +4,7 @@
 import frappe
 from frappe.utils import today, getdate
 from frappe.model.document import Document
+from frappe.utils import add_days
 from frappe.desk.form.assign_to import add as add_assign
 
 class ShiftSwapRequest(Document):
@@ -65,12 +66,14 @@ class ShiftSwapRequest(Document):
         if self.workflow_state == "Approved":
             self.swap_shifts()
 
+
     def swap_shifts(self):
-        '''
-        Swaps shifts between two employees by:
-        1. Adjusting existing shifts to remove the swapped period.
-        2. Creating new shift assignments for the swapped period.
-        '''
+        """
+        Swaps shifts between two employees while modifying existing shifts to adjust the swap period.
+        Ensures shifts are properly split into new assignments without overlapping.
+        Shift Type & Roster Type are also swapped.
+        """
+
         employee_shift = frappe.get_all(
             "Shift Assignment",
             filters={
@@ -93,72 +96,99 @@ class ShiftSwapRequest(Document):
             fields=["name", "shift_type", "roster_type", "start_date", "end_date"]
         )
 
-        def adjust_existing_shifts(shift_list, employee):
-            '''
-            Adjusts shift assignments by:
-            - Splitting the original shift into two if necessary.
-            - Removing only the swapped portion.
-            '''
+        def adjust_existing_shifts(shift_list, employee, swap_employee):
+            """
+            Adjusts the existing shift assignments based on the swap period.
+            Ensures the existing shift is modified and new shift assignments are created accordingly.
+            Shift Type & Roster Type are swapped during reassignment.
+            """
+
             for shift in shift_list:
                 shift_doc = frappe.get_doc("Shift Assignment", shift["name"])
 
-                # Cancel the shift only if the entire period is covered
-                shift_doc.cancel()
+                if shift_doc.employee == employee:
+                    # Get the shift type & roster type for the swap employee
+                    swap_shift_data = frappe.get_value(
+                        "Shift Assignment",
+                        {
+                            "employee": swap_employee,
+                            "start_date": shift["start_date"],
+                            "end_date": shift["end_date"]
+                        },
+                        ["shift_type", "roster_type"],
+                    ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
 
-                # Create new shifts for the unaffected periods
-                if shift["start_date"] < self.shift_start_date:
-                    new_shift = frappe.new_doc("Shift Assignment")
-                    new_shift.update({
-                        "employee": employee,
-                        "shift_type": shift["shift_type"],
-                        "roster_type": shift["roster_type"],
-                        "start_date": shift["start_date"],
-                        "end_date": frappe.utils.add_days(self.shift_start_date, -1),
-                        "status": "Active"
-                    })
-                    new_shift.insert(ignore_permissions=True)
-                    new_shift.submit()
+                    swap_shift_type, swap_roster_type = swap_shift_data
 
-                if shift["end_date"] > self.shift_end_date:
-                    new_shift = frappe.new_doc("Shift Assignment")
-                    new_shift.update({
-                        "employee": employee,
-                        "shift_type": shift["shift_type"],
-                        "roster_type": shift["roster_type"],
-                        "start_date": frappe.utils.add_days(self.shift_end_date, 1),
-                        "end_date": shift["end_date"],
-                        "status": "Active"
-                    })
-                    new_shift.insert(ignore_permissions=True)
-                    new_shift.submit()
+                    if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
+                        shift_doc.end_date = add_days(self.shift_start_date, -1)
+                        shift_doc.save()
 
-        # Adjust original shifts for both employees
-        adjust_existing_shifts(employee_shift, self.employee)
-        adjust_existing_shifts(swap_with_shift, self.swap_with_employee)
+                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+                        create_shift(employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"])
 
-        # Create new swapped shift assignments
-        if employee_shift:
+                    elif shift["start_date"] == self.shift_start_date and shift["end_date"] > self.shift_end_date:
+                        shift_doc.start_date = add_days(self.shift_end_date, 1)
+                        shift_doc.save()
+
+                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+
+                    elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
+                        shift_doc.end_date = add_days(self.shift_start_date, -1)
+                        shift_doc.save()
+
+                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+
+                elif shift_doc.employee == swap_employee:
+                    # Get the shift type & roster type for the swap employee
+                    swap_shift_data = frappe.get_value(
+                        "Shift Assignment",
+                        {
+                            "employee": employee,
+                            "start_date": shift["start_date"],
+                            "end_date": shift["end_date"]
+                        },
+                        ["shift_type", "roster_type"],
+                    ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
+
+                    swap_shift_type, swap_roster_type = swap_shift_data
+
+                    if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
+                        shift_doc.end_date = add_days(self.shift_start_date, -1)
+                        shift_doc.save()
+
+                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+                        create_shift(swap_employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"])
+
+                    elif shift["start_date"] == self.shift_start_date and shift["end_date"] > self.shift_end_date:
+                        shift_doc.start_date = add_days(self.shift_end_date, 1)
+                        shift_doc.save()
+
+                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+
+                    elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
+                        shift_doc.end_date = add_days(self.shift_start_date, -1)
+                        shift_doc.save()
+
+                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+
+        def create_shift(employee, shift_type, roster_type, start_date, end_date):
+            """
+            Creates a new shift assignment for the given period.
+            Ensures Shift Type & Roster Type are swapped accordingly.
+            """
             new_shift = frappe.new_doc("Shift Assignment")
             new_shift.update({
-                "employee": self.swap_with_employee,
-                "shift_type": employee_shift[0]["shift_type"],
-                "roster_type": employee_shift[0]["roster_type"],
-                "start_date": self.shift_start_date,
-                "end_date": self.shift_end_date,
+                "employee": employee,
+                "shift_type": shift_type,
+                "roster_type": roster_type,
+                "start_date": start_date,
+                "end_date": end_date,
                 "status": "Active"
             })
             new_shift.insert(ignore_permissions=True)
             new_shift.submit()
 
-        if swap_with_shift:
-            new_shift = frappe.new_doc("Shift Assignment")
-            new_shift.update({
-                "employee": self.employee,
-                "shift_type": swap_with_shift[0]["shift_type"],
-                "roster_type": swap_with_shift[0]["roster_type"],
-                "start_date": self.shift_start_date,
-                "end_date": self.shift_end_date,
-                "status": "Active"
-            })
-            new_shift.insert(ignore_permissions=True)
-            new_shift.submit()
+        # Adjust shifts for both employees
+        adjust_existing_shifts(employee_shift, self.employee, self.swap_with_employee)
+        adjust_existing_shifts(swap_with_shift, self.swap_with_employee, self.employee)
