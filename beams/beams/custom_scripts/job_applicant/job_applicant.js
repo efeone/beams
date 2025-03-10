@@ -249,7 +249,7 @@ frappe.ui.form.on('Job Applicant', {
         const magic_link_statuses  = [
             'Interview Completed', 'Local Enquiry Approved', 'Selected',
             'Job Proposal Created', 'Job Proposal Accepted',
-            'Interview Scheduled', 'Interview Ongoing', 'Pending Document Upload'
+            'Interview Scheduled', 'Interview Ongoing'
         ];
 
         if (magic_link_statuses.includes(frm.doc.status)) {
