@@ -3494,6 +3494,94 @@ def get_property_setters():
             "field_name": "department",
             "property": "reqd",
             "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Sales Order",
+            "field_name": "set_warehouse",
+            "property": "hidden",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Sales Order",
+            "field_name": "scan_barcode",
+            "property": "hidden",
+            "property_type": "Data",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "quotation_to",
+            "property": "default",
+            "property_type": "Link",
+            "value":"Customer"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "quotation_to",
+            "property": "read_only",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "order_type",
+            "property": "default",
+            "property_type": "Link",
+            "value":"Sales"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "order_type",
+            "property": "read_only",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "shopping_cart_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "item_weight_details",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "available_quantity_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "gst_details_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "item_code",
+            "property": "label",
+            "property_type": "Link",
+            "value":"Service Item"
         }
     ]
 

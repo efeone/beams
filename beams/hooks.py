@@ -58,7 +58,9 @@ doctype_js = {
     "Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
     "Appraisal":"beams/custom_scripts/appraisal/appraisal.js",
     "Project":"beams/custom_scripts/project/project.js",
-    "Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js"
+    "Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js",
+    "Opportunity":"beams/custom_scripts/opportunity/opportunity.js",
+    "Lead":"beams/custom_scripts/lead/lead.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -178,7 +180,10 @@ doc_events = {
     },
     "Customer": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer",
-        "validate": "beams.beams.custom_scripts.customer.customer.mark_as_edited_if_approved"
+        "validate": [
+            "beams.beams.custom_scripts.customer.customer.mark_as_edited_if_approved",
+            "beams.beams.custom_scripts.customer.customer.duplicate_customer"
+            ]
     },
     "Training Event": {
          "on_update": "beams.beams.custom_scripts.training_event.training_event.on_update",
