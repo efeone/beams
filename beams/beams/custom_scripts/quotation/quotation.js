@@ -1,4 +1,15 @@
 frappe.ui.form.on('Quotation', {
+    party_name: function(frm) {
+        if (frm.doc.quotation_to == "Customer" and frm.doc.party_name) {
+            frappe.db.get_value("Customer", frm.doc.party_name, "region", (r) => {
+                if (r && r.region) {
+                    frm.set_value("region", r.region);
+                }
+            });
+        } else {
+            frm.set_value("region", "");
+        }
+    },
     onload: function(frm) {
        if (!frm.doc.executive) {
            // Only fetch if field is empty

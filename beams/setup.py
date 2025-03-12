@@ -3582,7 +3582,16 @@ def get_property_setters():
             "property": "label",
             "property_type": "Link",
             "value":"Service Item"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "coupon_code",
+            "property": "hidden",
+            "property_type": "Link",
+            "value":1
         }
+
     ]
 
 def get_material_request_custom_fields():
