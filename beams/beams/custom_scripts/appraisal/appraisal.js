@@ -22,7 +22,7 @@ frappe.ui.form.on('Appraisal', {
 
             // Fetch the logged-in user's linked Employee record
             frappe.db.get_value('Employee', { 'user_id': user }, 'name').then(r => {
-                let employee = r.message?.name;
+                let employee = r.message.name;
 
                 // Add "New Feedback" button only if the logged-in user is NOT the appraised employee
                 if (frm.doc.employee !== employee) {
