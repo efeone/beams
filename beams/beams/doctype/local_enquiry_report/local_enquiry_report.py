@@ -122,15 +122,21 @@ def set_status_to_overdue():
 
     # Fetch Local Enquiry Reports with expected completion date on or before today and status not set to 'Overdue'
     enquiries = frappe.get_all('Local Enquiry Report', filters={
-        'expected_completion_date': ['<=', today_date],
         'status': ['!=', 'Overdue']
-    }, fields=['name', 'expected_completion_date'])
+    }, fields=['name', 'expected_completion_date','enquiry_completion_date'])
+    
 
     if enquiries:
         for enquiry in enquiries:
-            # Check Enquiry Completion date is set or Expected completion date is over
-            if not enquiry.enquiry_completion_date and today_date > getdate(enquiry.expected_completion_date):
+            expected_date = getdate(enquiry.expected_completion_date)if enquiry.expected_completion_date else None
+            completion_date = getdate(enquiry.enquiry_completion_date) if enquiry.enquiry_completion_date else None
+            if not expected_date:
+                continue
+            if completion_date and completion_date > expected_date:
                 frappe.db.set_value('Local Enquiry Report', enquiry.name, 'status', 'Overdue')
+
+
+
 
 
 @frappe.whitelist()
