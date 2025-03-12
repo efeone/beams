@@ -1064,8 +1064,7 @@ def get_quotation_custom_fields():
                 "fieldtype": "Link",
                 "label": "Region",
                 "insert_after": "customer_name",
-                "options": "Region",
-                "fetch_from": "party_name.region"
+                "options": "Region"
             },
             {
                 "fieldname": "albatross_details_section",
