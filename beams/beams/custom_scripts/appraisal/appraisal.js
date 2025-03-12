@@ -17,9 +17,19 @@ frappe.ui.form.on('Appraisal', {
         frm.set_df_property('final_score', 'hidden', 1);
 
         if (!frm.is_new()) {
-            // Add custom button to trigger the feedback dialog
-            frm.add_custom_button(__('New Feedback'), function () {
-                frm.events.show_feedback_dialog(frm);
+            // Get the logged-in user
+            let user = frappe.session.user;
+
+            // Fetch the logged-in user's linked Employee record
+            frappe.db.get_value('Employee', { 'user_id': user }, 'name').then(r => {
+                let employee = r.message?.name;
+
+                // Add "New Feedback" button only if the logged-in user is NOT the appraised employee
+                if (frm.doc.employee !== employee) {
+                    frm.add_custom_button(__('New Feedback'), function () {
+                        frm.events.show_feedback_dialog(frm);
+                    });
+                }
             });
         }
 
