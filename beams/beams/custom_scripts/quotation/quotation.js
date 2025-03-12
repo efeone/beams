@@ -1,4 +1,20 @@
 frappe.ui.form.on('Quotation', {
+    onload: function(frm) {
+       if (!frm.doc.executive) {
+           // Only fetch if field is empty
+           let user_roles = frappe.user_roles;
+           // Get roles of the logged-in user
+           if (user_roles.includes("Employee")) {
+                frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name")
+                    .then(r => {
+                        if (r && r.message && r.message.name) {
+                          frm.set_value("executive", r.message.name);
+                      }
+                });
+           }
+       }
+    },
+
     refresh: function(frm) {
         if (frm.doc.docstatus == 1) {
             // Check if the is_barter checkbox is checked and show the Purchase Invoice button
