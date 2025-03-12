@@ -95,6 +95,7 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
 
     key_results = []
     total_marks = 0
+    total_criteria_count = 0
 
     for row in template_doc.rating_criteria:
         marks = ""
@@ -124,10 +125,11 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
             total_marks += float(company_marks)
 
     total_criteria = len([result for result in key_results if result.get('marks')])
-    final_average_score = total_marks / total_criteria if total_criteria > 0 else 0
+    total_criteria_count = len(key_results)
+    final_average_score = round(total_marks / total_criteria if total_criteria > 0 else 0, 3)
 
-    if feedback_doc and feedback_doc.appraisal:
-        frappe.db.set_value("Appraisal", feedback_doc.appraisal, "final_average_score", final_average_score)
+    # if feedback_doc and feedback_doc.appraisal:
+    #     frappe.db.set_value("Appraisal", feedback_doc.appraisal, "final_average_score", final_average_score)
 
     # Generate the HTML table
     table_html = """
@@ -159,14 +161,14 @@ def get_appraisal_summary(appraisal_template, employee_feedback=None):
             <td><b><center>{total_marks:.2f}</center></b></td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: right;"><b>Final Average Score</b><br><br>(on 5 : total of scores for KRAs 1 to 10 divided by 10)</td>
+            <td colspan="2" style="text-align: right;"><b>Final Average Score</b><br><br>(on 5 : total of scores for KRAs 1 to {total_criteria_count} divided by {total_criteria_count})</td>
             <td><b><center>{final_average_score:.2f}</center></b></td>
         </tr>
     """
 
     table_html += "</tbody></table>"
 
-    return table_html
+    return table_html, final_average_score
 
 @frappe.whitelist()
 def get_feedback_for_appraisal(appraisal_name):
@@ -445,9 +447,11 @@ def get_category_based_on_marks(final_average_score):
         'appraisal_threshold': ['<=', final_average_score]
     }
 
-    categories = frappe.db.get_all('Appraisal Category', filters=filters, order_by='appraisal_threshold desc', fields=['name'])
+    # Fetch the categories based on threshold
+    categories = frappe.db.get_all('Appraisal Category', filters=filters, order_by='appraisal_threshold desc', fields=['name', 'appraisal_threshold'])
 
     if categories:
+        # Return the name of the first matching category
         category = categories[0].get('name')
 
     return category
@@ -457,6 +461,7 @@ def set_category_based_on_marks(doc, method):
     '''
     Set the category_based_on_marks field in the Appraisal DocType based on the final_average_score.
     '''
+    # Get the category based on final_average_score
     category = get_category_based_on_marks(doc.final_average_score)
 
     # Update the Appraisal document
