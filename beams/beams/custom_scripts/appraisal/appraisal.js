@@ -44,7 +44,11 @@ frappe.ui.form.on('Appraisal', {
                                 },
                                 callback: function (r) {
                                     if (r.message) {
-                                        $(frm.fields_dict['appraisal_summary'].wrapper).html(r.message);
+                                        $(frm.fields_dict['appraisal_summary'].wrapper).html(r.message[0]);
+                                        if (frm.doc.final_average_score != r.message[1]) {
+                                          frm.set_value("final_average_score", r.message[1])
+                                          frm.refresh_field("final_average_score")
+                                        }
                                     }
                                 }
                             });
