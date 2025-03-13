@@ -111,23 +111,23 @@ def send_asset_reservation_notifications():
         FROM `tabAsset Reservation Log`
         WHERE DATE(reservation_from) = %s
     """, (notify_date,), as_dict=True)
+
     if not reservations or not settings.role_receiving_asset_reservation_notification:
         return
+    recipients = get_users_with_role(settings.role_receiving_asset_reservation_notification)
+    recipients = [
+        user for user in recipients
+        if frappe.db.get_value("User", user, "enabled")  
+    ]
 
-    recipients = get_role_users(settings.role_receiving_asset_reservation_notification)
     if not recipients or not settings.notification_template_for_asset_reservation:
         return
+
     email_template = frappe.get_doc("Email Template", settings.notification_template_for_asset_reservation)
+
     for reservation in reservations:
         send_notification(reservation["name"], recipients, email_template)
 
-def get_role_users(role):
-    """Fetch emails of users assigned to a role"""
-    return [
-        frappe.db.get_value("User", user["parent"], "email")
-        for user in frappe.get_all("Has Role", filters={"role": role, "parenttype": "User"}, fields=["parent"])
-        if frappe.db.get_value("User", user["parent"], "email")
-    ]
 
 def send_notification(reservation_name, recipients, email_template):
     """Send notification email"""
