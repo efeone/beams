@@ -15,6 +15,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee"
@@ -43,7 +44,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-10 10:51:38.137515",
+ "modified": "2025-03-13 10:03:34.261116",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Category Details",
