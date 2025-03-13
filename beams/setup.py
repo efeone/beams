@@ -2885,8 +2885,7 @@ def get_employee_feedback_rating_custom_fields():
                 "fieldname": "marks",
                 "fieldtype": " Float",
                 "label": "Marks out of 5",
-                "in_list_view":1,
-                "insert_after": "rating"
+                "insert_after": "per_weightage"
             }
         ]
     }
@@ -3669,6 +3668,20 @@ def get_property_setters():
             "field_name": "cell_number",
             "property": "label",
             "value": "Personal Mobile Number"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Employee Feedback Rating",
+            "property": "field_order",
+            "value": "[\"criteria\", \"per_weightage\", \"marks\", \"rating\"]"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "rating",
+            "property": "in_list_view",
+            "property_type": "Check",
+            "value": 0
         },
         {
             "doctype_or_field": "DocType",
