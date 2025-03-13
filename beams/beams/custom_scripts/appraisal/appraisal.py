@@ -292,7 +292,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
         method (str): The method context in which the function is called (e.g., "on_update").
     """
     try:
-        print("Starting task assignment")
         if not doc:
             frappe.throw("Missing document data.")
 
@@ -306,7 +305,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
             frappe.throw("Invalid Appraisal document.")
 
         appraisal_template_name = appraisal_doc.appraisal_template
-        print(f"Appraisal Template: {appraisal_template_name}")
 
         if not appraisal_template_name:
             return
@@ -314,7 +312,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
         # Fetch Appraisal Template and assessment officers
         appraisal_template_doc = frappe.get_doc("Appraisal Template", appraisal_template_name)
         assessment_officers = appraisal_template_doc.get("assessment_officers")
-        print(f"Assessment Officers Found: {assessment_officers}")
 
         if not assessment_officers:
             frappe.log_error("No assessment officers defined in the appraisal template.")
@@ -322,15 +319,12 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
 
         # Find the next officer to assign a task to
         assigned_officers = {row.designation for row in appraisal_doc.category_details}
-        print(f"Completed Tasks: {assigned_officers}")
 
         for officer in assessment_officers:
             designation = officer.designation
-            print(f"Checking officer with designation: {designation}")
 
             # Skip if task is already completed for this designation
             if designation in assigned_officers:
-                print(f"Task already completed for designation: {designation}")
                 continue
 
             # Fetch employees for the designation
@@ -339,7 +333,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
                 filters={"designation": designation, "status": "Active"},
                 fields=["name", "user_id", "employee_name"]
             )
-            print(f"Employees found for designation {designation}: {employees}")
 
             if not employees:
                 continue
@@ -347,7 +340,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
             # Assign task to the first available employee with a user ID
             for employee in employees:
                 if employee.get("user_id"):
-                    print(f"Assigning task to employee: {employee.user_id}")
                     try:
                         add_assign({
                             "assign_to": [employee.user_id],
@@ -355,7 +347,6 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
                             "name": appraisal_doc.name,
                             "description": f"Please add Category for {employee_id}.",
                         })
-                        print("Task assigned successfully")
 
                         # Send Notification
                         frappe.sendmail(
@@ -368,12 +359,10 @@ def assign_tasks_sequentially(doc=None, employee_id=None):
                     except Exception as e:
                         frappe.log_error(f"Failed to assign task to {employee.user_id}: {str(e)}", "Task Assignment")
 
-        print("No tasks were assigned")
         return 0    
 
     except Exception as e:
         frappe.log_error(f"Error in task assignment: {str(e)}", "Task Assignment")
-        print(f"Error encountered: {str(e)}")
         frappe.throw(str(e))
 
 
