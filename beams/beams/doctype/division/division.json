@@ -10,9 +10,7 @@
   "department_abbreviation",
   "company",
   "column_break_ncbr",
-  "division",
-  "cost_center",
-  "region"
+  "division"
  ],
  "fields": [
   {
@@ -37,21 +35,8 @@
    "reqd": 1
   },
   {
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "label": "Cost Center",
-   "options": "Cost Center",
-   "reqd": 1
-  },
-  {
    "fieldname": "column_break_ncbr",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "region",
-   "fieldtype": "Link",
-   "label": "Region",
-   "options": "Region"
   },
   {
    "fieldname": "company",
@@ -63,7 +48,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-01 10:52:01.363087",
+ "modified": "2025-03-13 11:53:58.870718",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Division",
