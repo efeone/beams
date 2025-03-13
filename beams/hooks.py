@@ -290,7 +290,6 @@ doc_events = {
         "validate":"beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.validate"
     },
     "Appraisal":{
-        "on_update_after_submit":"beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
         "validate": [
             "beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
             "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
