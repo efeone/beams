@@ -1,10 +1,9 @@
 # Copyright (c) 2024, efeone and contributors
 # For license information, please see license.txt
 import frappe
-from frappe.utils import nowdate, add_days
+from frappe.utils import today, add_days, getdate
 from frappe.model.document import Document
 from frappe.utils.user import get_users_with_role
-
 
 class BEAMSAdminSettings(Document):
     pass
@@ -98,3 +97,39 @@ def send_inapp_notification(recipients, subject, message):
             frappe.publish_realtime(event="msgprint",
                 message=message,
                 user=user)
+
+def send_asset_reservation_notifications():
+    """Send notifications for upcoming Asset Reservations"""
+
+    settings = frappe.get_single("BEAMS Admin Settings")
+    if not settings.notification_for_asset_reservation:
+        return
+
+    notify_date = getdate(add_days(today(), (settings.notification_for_asset_reservation_before or 0)))
+    reservations = frappe.db.sql("""
+        SELECT name, reservation_from
+        FROM `tabAsset Reservation Log`
+        WHERE DATE(reservation_from) = %s
+    """, (notify_date,), as_dict=True)
+    if not reservations or not settings.role_receiving_asset_reservation_notification:
+        return
+
+    recipients = get_role_users(settings.role_receiving_asset_reservation_notification)
+    if not recipients or not settings.notification_template_for_asset_reservation:
+        return
+    email_template = frappe.get_doc("Email Template", settings.notification_template_for_asset_reservation)
+    for reservation in reservations:
+        send_notification(reservation["name"], recipients, email_template)
+
+def get_role_users(role):
+    """Fetch emails of users assigned to a role"""
+    return [
+        frappe.db.get_value("User", user["parent"], "email")
+        for user in frappe.get_all("Has Role", filters={"role": role, "parenttype": "User"}, fields=["parent"])
+        if frappe.db.get_value("User", user["parent"], "email")
+    ]
+
+def send_notification(reservation_name, recipients, email_template):
+    """Send notification email"""
+    message = frappe.render_template(email_template.response, {"reservation": {"name": reservation_name}})
+    frappe.sendmail(recipients=recipients, subject=email_template.subject, message=message)
