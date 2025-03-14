@@ -38,19 +38,21 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
         {
             fieldname: "department",
             label: "Department",
-            fieldtype: "Link",
+            fieldtype: "MultiSelectList",
             options: "Department",
-            get_query: function () {
-                let dept_filters = {}
+            get_data: function (txt) {
+                let dept_mult_filters = {}
                 if (frappe.query_report.get_filter_value('finance_group')) {
-                    dept_filters['finance_group'] = frappe.query_report.get_filter_value('finance_group');
+                    dept_mult_filters['finance_group'] = frappe.query_report.get_filter_value('finance_group');
                 }
                 if (frappe.query_report.get_filter_value('company')) {
-                    dept_filters['company'] = frappe.query_report.get_filter_value('company');
+                    dept_mult_filters['company'] = frappe.query_report.get_filter_value('company');
                 }
-                return {
-                    filters: dept_filters
-                }
+				return frappe.db.get_link_options("Department", txt, dept_mult_filters);
+			},
+            on_change: function() {
+                frappe.query_report.set_filter_value("division", [])
+                frappe.query_report.refresh();
             }
         },
         {
@@ -95,8 +97,8 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
         {
             fieldname: "cost_category",
             label: "Cost Category",
-            fieldtype: "Link",
-            options: "Cost Category",
+            fieldtype: "Select",
+            options: "\nHR Overheads\nOperational Exp",
         }
     ],
     tree: true,
