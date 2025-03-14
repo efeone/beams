@@ -1,5 +1,6 @@
 {
  "add_total_row": 1,
+ "add_translate_data": 0,
  "columns": [],
  "creation": "2025-03-05 20:54:32.054081",
  "disabled": 0,
@@ -9,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-03-08 20:09:22.046366",
+ "modified": "2025-03-14 11:55:20.522999",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Detailed Budget Allocation Report",

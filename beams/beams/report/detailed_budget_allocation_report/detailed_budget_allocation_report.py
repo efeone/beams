@@ -103,10 +103,11 @@ def get_data(filters):
             data.append({'id': fg_id, 'parent': abbr, 'indent': 1, 'name': fg, 'total_budget': 0})
             budget_map[fg_id] = {field: 0 for field in currency_fields}
 
-            dept_filters = {'finance_group': fg, 'company': company}
+            departments = []
             if filters.get('department'):
-                dept_filters['name'] = filters.get('department')
-            departments = frappe.get_all('Department', filters=dept_filters, pluck='name')
+                departments = frappe.parse_json(filters.get('department'))
+            else:
+                departments = frappe.db.get_all('Department', {'finance_group':['in', finance_groups], 'company':['in', companies]}, pluck='name')
 
             for dept in departments:
                 data.append({'id': dept, 'parent': fg_id, 'indent': 2, 'name': dept, 'total_budget': 0})
