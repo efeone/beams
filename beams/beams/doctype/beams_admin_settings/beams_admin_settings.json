@@ -14,7 +14,11 @@
   "notifcation_frequency",
   "notification_template",
   "column_break_qndy",
-  "asset_transfer_warehouse"
+  "asset_transfer_warehouse",
+  "notification_for_asset_reservation",
+  "role_receiving_asset_reservation_notification",
+  "notification_template_for_asset_reservation",
+  "notification_for_asset_reservation_before"
  ],
  "fields": [
   {
@@ -83,12 +87,41 @@
    "fieldtype": "Link",
    "label": "Asset Transfer Warehouse",
    "options": "Warehouse"
+  },
+  {
+   "default": "0",
+   "fieldname": "notification_for_asset_reservation",
+   "fieldtype": "Check",
+   "label": "Notification for Asset Reservation"
+  },
+  {
+   "depends_on": "eval:doc.notification_for_asset_reservation == 1;",
+   "fieldname": "role_receiving_asset_reservation_notification",
+   "fieldtype": "Link",
+   "label": "Role Receiving Asset Reservation Notification",
+   "mandatory_depends_on": "eval:doc.notification_for_asset_reservation == 1;",
+   "options": "Role"
+  },
+  {
+   "depends_on": "eval:doc.notification_for_asset_reservation == 1;",
+   "fieldname": "notification_template_for_asset_reservation",
+   "fieldtype": "Link",
+   "label": "Notification Template for Asset Reservation",
+   "mandatory_depends_on": "eval:doc.notification_for_asset_reservation == 1;",
+   "options": "Email Template"
+  },
+  {
+   "depends_on": "eval:doc.notification_for_asset_reservation == 1;",
+   "fieldname": "notification_for_asset_reservation_before",
+   "fieldtype": "Int",
+   "label": "Notification for Asset Reservation Before",
+   "mandatory_depends_on": "eval:doc.notification_for_asset_reservation == 1;"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-02-25 17:08:17.611088",
+ "modified": "2025-03-05 11:04:59.008809",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
