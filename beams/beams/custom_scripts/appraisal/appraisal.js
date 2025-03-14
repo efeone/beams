@@ -1,5 +1,6 @@
 frappe.ui.form.on('Appraisal', {
     refresh: function (frm) {
+        frm.trigger('update_self_kra_rating_list_view');
         frm.remove_custom_button(__('View Goals'));
         set_table_properties(frm, 'employee_self_kra_rating');
         set_table_properties(frm, 'dept_self_kra_rating');
@@ -443,56 +444,70 @@ frappe.ui.form.on('Appraisal', {
 
         dialog.show();
     },
-
-    //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
-    appraisal_template: function (frm) {
-        if (frm.doc.appraisal_template) {
-            frappe.call({
-                method: "beams.beams.custom_scripts.appraisal.appraisal.get_appraisal_template_criteria",
-                args: {
-                    appraisal_template_name: frm.doc.appraisal_template
-                },
-                callback: function (response) {
-                    if (response.message.success) {
-                        const { employee_criteria, department_criteria, company_criteria } = response.message;
-                        // Clear existing rows in all child tables
-                        frm.clear_table("employee_self_kra_rating");
-                        frm.clear_table("dept_self_kra_rating");
-                        frm.clear_table("company_self_kra_rating");
-                        // Populate Employee criteria
-                        employee_criteria.forEach(item => {
-                            const new_row = frm.add_child("employee_self_kra_rating");
-                            new_row.criteria = item.criteria;
-                            new_row.per_weightage = item.per_weightage;
-                        });
-                        // Populate Department criteria
-                        department_criteria.forEach(item => {
-                            const new_row = frm.add_child("dept_self_kra_rating");
-                            new_row.criteria = item.criteria;
-                            new_row.per_weightage = item.per_weightage;
-                        }); ``
-                        // Populate Company criteria
-                        company_criteria.forEach(item => {
-                            const new_row = frm.add_child("company_self_kra_rating");
-                            new_row.criteria = item.criteria;
-                            new_row.per_weightage = item.per_weightage;
-                        });
-                        frm.refresh_field("employee_self_kra_rating");
-                        frm.refresh_field("dept_self_kra_rating");
-                        frm.refresh_field("company_self_kra_rating");
-                    }
-                }
-            });
-        } else {
-            // Clear all child tables if no template is selected
-            frm.clear_table("employee_self_kra_rating");
-            frm.clear_table("dept_self_kra_rating");
-            frm.clear_table("company_self_kra_rating");
-            frm.refresh_field("employee_self_kra_rating");
-            frm.refresh_field("dept_self_kra_rating");
-            frm.refresh_field("company_self_kra_rating");
-        }
-    }
+  //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
+  appraisal_template: function (frm) {
+      if (frm.doc.appraisal_template) {
+          frappe.call({
+              method: "beams.beams.custom_scripts.appraisal.appraisal.get_appraisal_template_criteria",
+              args: {
+                  appraisal_template_name: frm.doc.appraisal_template
+              },
+              callback: function (response) {
+                  if (response.message.success) {
+                      const { employee_criteria, department_criteria, company_criteria } = response.message;
+                      // Clear existing rows in all child tables
+                      frm.clear_table("employee_self_kra_rating");
+                      frm.clear_table("dept_self_kra_rating");
+                      frm.clear_table("company_self_kra_rating");
+                      // Populate Employee criteria
+                      employee_criteria.forEach(item => {
+                          const new_row = frm.add_child("employee_self_kra_rating");
+                          new_row.criteria = item.criteria;
+                          new_row.per_weightage = item.per_weightage;
+                      });
+                      // Populate Department criteria
+                      department_criteria.forEach(item => {
+                          const new_row = frm.add_child("dept_self_kra_rating");
+                          new_row.criteria = item.criteria;
+                          new_row.per_weightage = item.per_weightage;
+                        });``
+                      // Populate Company criteria
+                      company_criteria.forEach(item => {
+                          const new_row = frm.add_child("company_self_kra_rating");
+                          new_row.criteria = item.criteria;
+                          new_row.per_weightage = item.per_weightage;
+                      });
+                      frm.refresh_field("employee_self_kra_rating");
+                      frm.refresh_field("dept_self_kra_rating");
+                      frm.refresh_field("company_self_kra_rating");
+                  }
+              }
+          });
+      } else {
+          // Clear all child tables if no template is selected
+          frm.clear_table("employee_self_kra_rating");
+          frm.clear_table("dept_self_kra_rating");
+          frm.clear_table("company_self_kra_rating");
+          frm.refresh_field("employee_self_kra_rating");
+          frm.refresh_field("dept_self_kra_rating");
+          frm.refresh_field("company_self_kra_rating");
+      }
+  },
+  update_self_kra_rating_list_view: function (frm) {
+        /**
+        * Dynamically updates the "rating" and "marks" fields to be visible in the list view
+        * for multiple child tables in the Appraisal doctype.
+        */
+         let child_tables = ["employee_self_kra_rating", "dept_self_kra_rating", "company_self_kra_rating"];
+         child_tables.forEach(child_table => {
+             if (frm.fields_dict[child_table]) {
+                 frm.fields_dict[child_table].grid.update_docfield_property("rating", "in_list_view", 1);
+                 frm.fields_dict[child_table].grid.update_docfield_property("marks", "in_list_view", 1);
+                 frm.fields_dict[child_table].grid.reset_grid();
+                 frm.refresh_field(child_table);
+             }
+         });
+  }
 });
 
 function set_table_properties(frm, table_name) {
