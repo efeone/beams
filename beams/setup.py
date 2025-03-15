@@ -760,6 +760,20 @@ def get_budget_custom_fields():
                 "label": "Total Amount",
                 "read_only": 1,
                 "insert_after": "region"
+            },
+            {
+                "fieldname": "budget_accounts_custom",
+                "fieldtype": "Table",
+                "label": "Budget Accounts",
+                "options": "Budget Account",
+                "insert_after": "accounts"
+            },
+            {
+                "fieldname": "budget_accounts_hr",
+                "fieldtype": "Table",
+                "label": "Budget Accounts",
+                "options": "Budget Account",
+                "insert_after": "budget_accounts_custom"
             }
         ],
         "Budget Account": [
@@ -3590,6 +3604,27 @@ def get_property_setters():
             "property": "hidden",
             "property_type": "Link",
             "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "hidden",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "read_only",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "reqd",
+            "value":0
         }
 
     ]

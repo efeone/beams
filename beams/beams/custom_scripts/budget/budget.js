@@ -20,7 +20,9 @@ frappe.ui.form.on('Budget', {
     if (!frm.doc.budget_template) {
         frm.set_value('cost_center', null);
         frm.set_value('region', null);
+        frm.clear_table('budget_accounts_custom');
         frm.clear_table('accounts');
+        frm.refresh_field('budget_accounts_custom');
         frm.refresh_field('accounts');
         return;
     }
@@ -34,7 +36,9 @@ frappe.ui.form.on('Budget', {
     frappe.confirm(
         __('Are you sure you want to change the Budget Template? This will reset existing budget data.'),
         function () {
+            frm.clear_table('budget_accounts_custom');
             frm.clear_table('accounts');
+            frm.refresh_field('accounts');
 
             frappe.call({
                 method: 'frappe.client.get',
@@ -50,12 +54,18 @@ frappe.ui.form.on('Budget', {
 
                         let budget_template_items = budget_template.budget_template_item || [];
                         budget_template_items.forEach(function (item) {
-                            let row = frm.add_child('accounts');
-                            row.cost_head = item.cost_head;
-                            row.cost_subhead = item.cost_sub_head;
-                            row.account = item.account;
-                            row.cost_category = item.cost_category;
+                          let row1 = frm.add_child('budget_accounts_custom');
+                              row1.cost_head = item.cost_head;
+                              row1.cost_subhead = item.cost_sub_head;
+                              row1.account = item.account;
+                              row1.cost_category = item.cost_category;
+                          let row2 = frm.add_child('accounts');
+                              row2.cost_head = item.cost_head;
+                              row2.cost_subhead = item.cost_sub_head;
+                              row2.account = item.account;
+                              row2.cost_category = item.cost_category;
                         });
+                        frm.refresh_field('budget_accounts_custom');
                         frm.refresh_field('accounts');
                     }
                 }
