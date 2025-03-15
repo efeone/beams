@@ -1,5 +1,6 @@
 frappe.ui.form.on('Budget', {
     refresh: function (frm) {
+        console.log("HELLO WORLD");
         set_filters(frm);
         if (!frm.is_new()) {
             frm.add_custom_button('Open Budget Tool', () => {
@@ -30,7 +31,7 @@ frappe.ui.form.on('Budget', {
         }
     },
     budget_template: function (frm) {
-        frm.clear_table('accounts');
+        frm.clear_table('budget_accounts_custom');
 
         if (frm.doc.budget_template) {
             frappe.call({
@@ -47,20 +48,29 @@ frappe.ui.form.on('Budget', {
 
                         let budget_template_items = budget_template.budget_template_item || [];
                         budget_template_items.forEach(function (item) {
-                            let row = frm.add_child('accounts');
+                            let row = frm.add_child('budget_accounts_custom');
                             row.cost_head = item.cost_head;
                             row.cost_subhead = item.cost_sub_head;
                             row.account = item.account;
                             row.cost_category = item.cost_category;
+
+                            console.log("adding to the og")
+
+                            let row2 = frm.add_child('accounts');
+                            row2.cost_head = item.cost_head;
+                            row2.cost_subhead = item.cost_sub_head;
+                            row2.account = item.account;
+                            row2.cost_category = item.cost_category;
                         });
-                        frm.refresh_field('accounts');
+                        frm.refresh_field('budget_accounts_custom');
+                        frm.refresh_field('accounts')
                     }
                 }
             });
         } else {
             frm.set_value('cost_center', null);
             frm.set_value('region', null);
-            frm.refresh_field('accounts');
+            frm.refresh_field('budget_accounts_custom');
         }
     }
 });
@@ -105,8 +115,8 @@ frappe.ui.form.on('Budget Account', {
 
       if (row.cost_subhead && frm.doc.company) {
           frappe.db.get_doc('Cost Subhead', row.cost_subhead).then(doc => {
-              if (doc.accounts && doc.accounts.length > 0) {
-                  let account_found = doc.accounts.find(acc => acc.company === frm.doc.company);
+              if (doc.budget_accounts_custom && doc.budget_accounts_custom.length > 0) {
+                  let account_found = doc.budget_accounts_custom.find(acc => acc.company === frm.doc.company);
                   if (account_found) {
                       frappe.model.set_value(cdt, cdn, 'account', account_found.default_account);
                   } else {
@@ -118,7 +128,7 @@ frappe.ui.form.on('Budget Account', {
               }
           });
       }
-  },
+    },
     budget_amount: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
         if (row.equal_monthly_distribution && row.budget_amount) {
@@ -177,6 +187,9 @@ frappe.ui.form.on('Budget Account', {
     },
     december: function (frm, cdt, cdn) {
         calculate_budget_amount(frm, cdt, cdn);
+    },
+    budget_accounts_custom_add: function(frm, cdt, cdn) {
+        console.log("new row", locals[cdt][cdn]);
     }
 });
 
