@@ -774,7 +774,17 @@ def get_budget_custom_fields():
                 "label": "Budget Accounts",
                 "options": "Budget Account",
                 "insert_after": "budget_accounts_custom"
-            }
+            },
+            {
+                "fieldname": "default_currency",
+                "fieldtype": "Link",
+                "label": "Default Currency",
+                "options": "Currency",
+                "read_only": 1,
+                "hidden":1,
+                "insert_after": "budget_accounts_hr",
+                "default": "INR"
+            },
         ],
         "Budget Account": [
             {
@@ -823,7 +833,7 @@ def get_budget_custom_fields():
                 "fieldname": "section_break_ab",
                 "fieldtype": "Section Break",
                 "label": "Monthly Amount Distribution",
-                "insert_after": "budget_amount_inr"
+                "insert_after": "budget_amount"
             },
             {
                 "fieldname": "january",
@@ -910,11 +920,127 @@ def get_budget_custom_fields():
                 "insert_after": "november"
             },
             {
+                "fieldname": "section_break_inr",
+                "fieldtype": "Section Break",
+                "label": "Monthly Amount Distribution (INR)",
+                "insert_after": "december",
+                "collapsible": 1,
+                "read_only": 1
+            },
+            {
+                "fieldname": "january_inr",
+                "fieldtype": "Currency",
+                "label": "January (INR)",
+                "insert_after": "section_break_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "february_inr",
+                "fieldtype": "Currency",
+                "label": "February (INR)",
+                "insert_after": "january_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "march_inr",
+                "fieldtype": "Currency",
+                "label": "March (INR)",
+                "insert_after": "february_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "april_inr",
+                "fieldtype": "Currency",
+                "label": "April (INR)",
+                "insert_after": "march_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "column_break_zz1",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "april_inr"
+            },
+            {
+                "fieldname": "may_inr",
+                "fieldtype": "Currency",
+                "label": "May (INR)",
+                "insert_after": "column_break_zz1",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "june_inr",
+                "fieldtype": "Currency",
+                "label": "June (INR)",
+                "insert_after": "may_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "july_inr",
+                "fieldtype": "Currency",
+                "label": "July (INR)",
+                "insert_after": "june_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "august_inr",
+                "fieldtype": "Currency",
+                "label": "August (INR)",
+                "insert_after": "july_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "column_break_zz2",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "july_inr"
+            },
+            {
+                "fieldname": "september_inr",
+                "fieldtype": "Currency",
+                "label": "September (INR)",
+                "insert_after": "column_break_zz2",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "october_inr",
+                "fieldtype": "Currency",
+                "label": "October (INR)",
+                "insert_after": "september_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "november_inr",
+                "fieldtype": "Currency",
+                "label": "November (INR)",
+                "insert_after": "october_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "december_inr",
+                "fieldtype": "Currency",
+                "label": "December (INR)",
+                "insert_after": "november_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
                 "fieldname": "budget_amount_inr",
                 "fieldtype": "Currency",
                 "label": "Budget Amount (INR)",
                 "insert_after": "budget_amount",
-                "options": "INR",
+                "options": "default_currency",
                 "read_only": 1
             },
         ]

@@ -27,19 +27,29 @@ def populate_og_accounts(doc, method=None):
 
 
 def convert_currency(doc, method):
-    """method converts the budget amount of non-INR companies' budgets"""
+    """Convert budget amounts for non-INR companies"""
     company_currency = frappe.db.get_value("Company", doc.company, "default_currency")
     if company_currency == "INR":
         return
+
     exchange_rate = frappe.db.get_value("Company", doc.company, "exchange_rate_to_inr")
     if not exchange_rate:
         frappe.throw(
-            "Please set Exchange Rate from <b>{0}</b> to <b>INR</b> for <b>{1}</b>".format(
-                company_currency, doc.company
-            ),
+            f"Please set Exchange Rate from <b>{company_currency}</b> to <b>INR</b> for <b>{doc.company}</b>",
             title="Message",
         )
-    for row in doc.accounts:
+
+    months = [
+        "january", "february", "march", "april", "may", "june",
+        "july", "august", "september", "october", "november", "december"
+    ]
+
+    def apply_conversion(row):
+        """Apply exchange rate conversion to a budget row"""
         row.budget_amount_inr = row.budget_amount * exchange_rate
-    for custom_row in doc.budget_accounts_custom:
-        custom_row.budget_amount_inr = custom_row.budget_amount * exchange_rate
+        for month in months:
+            setattr(row, f"{month}_inr", getattr(row, month, 0) * exchange_rate)
+
+    for row in (*doc.accounts, *doc.budget_accounts_custom):
+        apply_conversion(row)
+

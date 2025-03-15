@@ -76,7 +76,7 @@ def get_data(filters):
 
     #Get Months list as per fiscal year
     period_month_ranges = get_period_month_ranges('Monthly', fiscal_year)
-    months_order = [month[0].lower() for month in period_month_ranges]
+    months_order = [f"{month[0].lower()}_inr" for month in period_month_ranges]
 
     # Dictionary to store budget amounts for each parent
     currency_fields = filters.get("currency_fields", ["total_budget"])
@@ -253,7 +253,7 @@ def get_cost_subhead_details(division, cost_head, cost_subhead, fiscal_year):
             ba.name,
             ba.cost_category,
             ba.account,
-            ba.budget_amount as total_budget
+            ba.budget_amount_inr as total_budget
         FROM
             `tabBudget Account` ba
         JOIN
