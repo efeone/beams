@@ -323,8 +323,7 @@ doc_events = {
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount",
-        "before_save":"beams.beams.custom_scripts.budget.budget.populate_og_accounts",
-        # "validate":"beams.beams.custom_scripts.budget.budget.sync_budget_accounts"
+        "before_save":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
     },
 }
 
