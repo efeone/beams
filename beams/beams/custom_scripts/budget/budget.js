@@ -16,23 +16,26 @@ frappe.ui.form.on('Budget', {
     company: function (frm) {
         frm.set_value('department', null);
     },
-    division: function (frm) {
-        set_filters(frm);
-        if (frm.doc.division) {
-            // Fetch and set budget_template if only one exists for the selected division
-            frappe.db.get_value('Budget Template', { division: frm.doc.division }, 'name').then(r => {
-                if (r.message) {
-                    frm.set_value('budget_template', r.message.name);
-                }
-            });
-        } else {
-            frm.set_value('budget_template', null);
-        }
-    },
     budget_template: function (frm) {
+    if (!frm.doc.budget_template) {
+        frm.set_value('cost_center', null);
+        frm.set_value('region', null);
         frm.clear_table('accounts');
+        frm.refresh_field('accounts');
+        return;
+    }
 
-        if (frm.doc.budget_template) {
+    if (frm.doc.budget_template === frm._previous_budget_template) {
+        return;
+    }
+
+    let previous_template = frm.doc.__last_value || frm._previous_budget_template;
+
+    frappe.confirm(
+        __('Are you sure you want to change the Budget Template? This will reset existing budget data.'),
+        function () {
+            frm.clear_table('accounts');
+
             frappe.call({
                 method: 'frappe.client.get',
                 args: {
@@ -57,14 +60,15 @@ frappe.ui.form.on('Budget', {
                     }
                 }
             });
-        } else {
-            frm.set_value('cost_center', null);
-            frm.set_value('region', null);
-            frm.refresh_field('accounts');
-        }
-    }
-});
 
+            frm._previous_budget_template = frm.doc.budget_template;
+        },
+        function () {
+            frm.set_value('budget_template', previous_template);
+        }
+    );
+}
+});
 // Function to apply filters in the cost subhead field in Budget Account
 function set_filters(frm) {
     frm.set_query('division', function () {

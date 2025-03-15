@@ -39,8 +39,7 @@
    "in_list_view": 1,
    "label": "Division",
    "options": "Division",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "column_break",
@@ -93,7 +92,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-13 11:59:04.124887",
+ "modified": "2025-03-13 16:04:02.546476",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",
