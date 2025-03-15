@@ -823,7 +823,7 @@ def get_budget_custom_fields():
                 "fieldname": "section_break_ab",
                 "fieldtype": "Section Break",
                 "label": "Monthly Amount Distribution",
-                "insert_after": "budget_amount"
+                "insert_after": "budget_amount_inr"
             },
             {
                 "fieldname": "january",
@@ -908,7 +908,15 @@ def get_budget_custom_fields():
                 "fieldtype": "Currency",
                 "label": "December",
                 "insert_after": "november"
-            }
+            },
+            {
+                "fieldname": "budget_amount_inr",
+                "fieldtype": "Currency",
+                "label": "Budget Amount (INR)",
+                "insert_after": "budget_amount",
+                "options": "INR",
+                "read_only": 1
+            },
         ]
     }
 
@@ -2588,6 +2596,13 @@ def get_company_custom_fields():
                 "fieldtype": "Text Editor",
                 "label": "Company Policy",
                 "insert_after": "company_policy_tab"
+            },
+            {
+                "fieldname": "exchange_rate_to_inr",
+                "fieldtype": "Float",
+                "label": "Exchange Rate to INR",
+                "insert_after": "exchange_gain_loss_account",
+                "description": "1 Unit of Company Currency = [?] INR"
             }
         ]
     }
