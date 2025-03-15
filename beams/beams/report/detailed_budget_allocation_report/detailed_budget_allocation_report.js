@@ -24,16 +24,24 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             reqd: 1,
         },
         {
+            fieldname: "month",
+            label: __("Month"),
+            fieldtype: "Select",
+            options: "\nJan\nFeb\nMar\nApr\nMay\nJun\nJul\nAug\nSep\nOct\nNov\nDec",
+            depends_on: "eval: doc.period == 'Monthly'",
+        },
+        {
             fieldname: "company",
             label: "Company",
             fieldtype: "Link",
             options: "Company",
+            default: frappe.defaults.get_user_default("Company")
         },
         {
-            fieldname: "finance_group",
-            label: "Finance Group",
-            fieldtype: "Link",
-            options: "Finance Group",
+            fieldname: "region",
+            label: "Region",
+            fieldtype: "Select",
+            options: "\nNational\nGCC"
         },
         {
             fieldname: "department",
@@ -42,15 +50,12 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             options: "Department",
             get_data: function (txt) {
                 let dept_mult_filters = {}
-                if (frappe.query_report.get_filter_value('finance_group')) {
-                    dept_mult_filters['finance_group'] = frappe.query_report.get_filter_value('finance_group');
-                }
                 if (frappe.query_report.get_filter_value('company')) {
                     dept_mult_filters['company'] = frappe.query_report.get_filter_value('company');
                 }
-				return frappe.db.get_link_options("Department", txt, dept_mult_filters);
-			},
-            on_change: function() {
+                return frappe.db.get_link_options("Department", txt, dept_mult_filters);
+            },
+            on_change: function () {
                 frappe.query_report.set_filter_value("division", [])
                 frappe.query_report.refresh();
             }
@@ -62,8 +67,8 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             options: "Division",
             get_query: function () {
                 let div_filters = {}
-                if (frappe.query_report.get_filter_value('department')) {
-                    div_filters['department'] = frappe.query_report.get_filter_value('department');
+                if (frappe.query_report.get_filter_value('department').length) {
+                    div_filters['department'] = ['in', frappe.query_report.get_filter_value('department')]
                 }
                 if (frappe.query_report.get_filter_value('company')) {
                     div_filters['company'] = frappe.query_report.get_filter_value('company');
@@ -99,13 +104,20 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             label: "Cost Category",
             fieldtype: "Select",
             options: "\nHR Overheads\nOperational Exp",
+        },
+        {
+            fieldname: "sort_by",
+            label: "Sort By",
+            fieldtype: "Select",
+            options: "ASC\nDESC",
+            default: "DESC"
         }
     ],
     tree: true,
     treeView: true,
     name_field: "id",
     parent_field: "parent",
-    initial_depth: 1,
+    initial_depth: 4,
     formatter: function (value, row, column, data, default_formatter) {
         value = default_formatter(value, row, column, data);
         if (data && data.indent < 4) {
