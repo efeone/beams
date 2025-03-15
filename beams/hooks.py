@@ -322,7 +322,7 @@ doc_events = {
         "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
     },
     "Budget":{
-        "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount",
+        "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
         "before_save":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
     },
 }
