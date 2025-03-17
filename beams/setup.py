@@ -771,7 +771,7 @@ def get_budget_custom_fields():
             {
                 "fieldname": "budget_accounts_hr",
                 "fieldtype": "Table",
-                "label": "Budget Accounts",
+                "label": "Budget Accounts(HR Overheads)",
                 "options": "Budget Account",
                 "insert_after": "budget_accounts_custom"
             },
