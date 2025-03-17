@@ -58,6 +58,7 @@ def after_install():
     create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
 
 
+
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -125,6 +126,7 @@ def before_uninstall():
     delete_custom_fields(get_asset_movement_custom_fields())
 
 
+
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -166,6 +168,7 @@ def get_shift_assignment_custom_fields():
 
         ]
     }
+
 
 def get_Payroll_Settings_custom_fields():
     '''
@@ -309,7 +312,6 @@ def get_project_custom_fields():
                 "fieldname": "approved_budget",
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
-                "options":"approved_budget",
                 "insert_after":"budget_expense_types",
                 "read_only": 1
 
@@ -318,7 +320,6 @@ def get_project_custom_fields():
                 "fieldname": "estimated_budget",
                 "fieldtype": "Currency",
                 "label": "Estimated Budget",
-                "options":"Estimated Budget",
                 "fetch_from": "program_request.estimated_budget",
                 "insert_after":"approved_budget",
                 "read_only": 1
