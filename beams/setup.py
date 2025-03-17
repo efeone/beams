@@ -309,7 +309,6 @@ def get_project_custom_fields():
                 "fieldname": "approved_budget",
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
-                "options":"approved_budget",
                 "insert_after":"budget_expense_types",
                 "read_only": 1
 
@@ -318,7 +317,6 @@ def get_project_custom_fields():
                 "fieldname": "estimated_budget",
                 "fieldtype": "Currency",
                 "label": "Estimated Budget",
-                "options":"Estimated Budget",
                 "fetch_from": "program_request.estimated_budget",
                 "insert_after":"approved_budget",
                 "read_only": 1
