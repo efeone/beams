@@ -350,7 +350,8 @@ scheduler_events = {
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
         "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
-        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder"
+        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder",
+        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications"
     ],
 # "all": [
 # "beams.tasks.all"
