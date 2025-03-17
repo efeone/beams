@@ -58,7 +58,6 @@ def after_install():
     create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
 
 
-
     #Creating BEAMS specific Property Setters
     create_property_setters(get_property_setters())
 
@@ -126,7 +125,6 @@ def before_uninstall():
     delete_custom_fields(get_asset_movement_custom_fields())
 
 
-
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -168,7 +166,6 @@ def get_shift_assignment_custom_fields():
 
         ]
     }
-
 
 def get_Payroll_Settings_custom_fields():
     '''
