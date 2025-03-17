@@ -115,7 +115,8 @@
    "fieldtype": "Table MultiSelect",
    "label": "Required Employees",
    "mandatory_depends_on": "eval: doc.workflow_state == \"Pending Approval\"",
-   "options": "Employees"
+   "options": "Employees",
+   "read_only_depends_on": "eval:doc.workflow_state == \"Approved\""
   },
   {
    "fetch_from": "project.location",
@@ -129,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-14 12:02:09.724554",
+ "modified": "2025-03-17 10:19:31.385542",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
