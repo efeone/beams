@@ -65,7 +65,7 @@ class EmployeeTravelRequest(Document):
 
         # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
         if self.workflow_state == "Approved" and self.reason_for_rejection:
-            frappe.throw("You cannot approve this request if 'Reason for Rejection' is filled.")
+            frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
     @frappe.whitelist()
     def validate_posting_date(self):
