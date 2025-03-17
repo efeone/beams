@@ -17,6 +17,11 @@ class TechnicalRequest(Document):
         if self.workflow_state == "Rejected" and not self.reason_for_rejection:
             frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
+    def on_update_after_submit(self):
+        # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
+        if self.workflow_state == "Approved" and self.reason_for_rejection:
+            frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
+
     def validate(self):
         self.validate_required_from_and_required_to()
 
@@ -37,7 +42,7 @@ class TechnicalRequest(Document):
                 msg=_("Required From cannot be after Required To."),
                 title=_("Message")
             )
-            
+
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
