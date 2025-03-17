@@ -15,6 +15,7 @@ class EquipmentAcquiralRequest(Document):
         self.validate_posting_date()
 
     def on_update_after_submit(self):
+        # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
         if self.workflow_state == "Approved" and self.reason_for_rejection:
             frappe.throw("You cannot approve this request if 'Reason for Rejection' is filled.")
 
