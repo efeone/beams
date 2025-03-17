@@ -14,6 +14,10 @@ class EquipmentAcquiralRequest(Document):
     def before_save(self):
         self.validate_posting_date()
 
+    def on_update_after_submit(self):
+        if self.workflow_state == "Approved" and self.reason_for_rejection:
+            frappe.throw("You cannot approve this request if 'Reason for Rejection' is filled.")
+
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
         """

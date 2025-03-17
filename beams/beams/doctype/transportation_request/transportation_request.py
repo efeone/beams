@@ -18,6 +18,10 @@ class TransportationRequest(Document):
     def before_update_after_submit(self):
         self.update_no_of_own_vehicles()
 
+    def on_update_after_submit(self):
+        if self.workflow_state == "Approved" and self.reason_for_rejection:
+            frappe.throw("You cannot approve this request if 'Reason for Rejection' is filled.")
+
     def update_no_of_own_vehicles(self):
         '''
         Calculate the total number of rows in the "Vehicles" child table

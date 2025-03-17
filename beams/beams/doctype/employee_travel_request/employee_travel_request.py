@@ -44,6 +44,9 @@ class EmployeeTravelRequest(Document):
             self.total_days = date_diff(self.end_date, self.start_date)
 
     def on_update_after_submit(self):
+        if self.workflow_state == "Approved" and self.reason_for_rejection:
+            frappe.throw("You cannot approve this request if 'Reason for Rejection' is filled.")
+
         """
         Create an Attendance Regularization record in 'Draft' when mark_attendance is checked.
         """
