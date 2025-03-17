@@ -352,8 +352,6 @@ scheduler_events = {
         "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
         "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder",
         "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications"
-
-
     ],
 # "all": [
 # "beams.tasks.all"
