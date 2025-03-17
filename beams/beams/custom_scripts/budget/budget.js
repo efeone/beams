@@ -6,6 +6,16 @@ frappe.ui.form.on('Budget', {
                 frappe.set_route('Form', 'Budget Tool', 'Budget Tool');
             });
         }
+        if (frappe.user_roles.includes("HOD")) {
+            frm.toggle_display("budget_accounts_custom", true);
+        } else {
+            frm.toggle_display("budget_accounts_custom", false);
+        }
+        if (frappe.user_roles.includes("HR Manager")) {
+            frm.toggle_display("budget_accounts_hr", true);
+        } else {
+            frm.toggle_display("budget_accounts_hr", false);
+        }
     },
     department: function (frm) {
         set_filters(frm);
