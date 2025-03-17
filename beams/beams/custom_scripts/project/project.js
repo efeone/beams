@@ -237,6 +237,26 @@ frappe.ui.form.on('Project', {
                       });
                         }
                     });
+                    // **Auto-fill table with items from Required Items**
+                    let equipments_data = frm.doc.required_items.map(item => ({
+                      item: item.required_item, // Ensure this matches the Required Items table
+                      available_quantity: item.available_quantity || 0,
+                      required_quantity: item.required_quantity || 1
+                    }));
+
+                    // **Populate Table in the Dialog**
+                    dialog.fields_dict.equipments.df.data = equipments_data;
+                    dialog.fields_dict.equipments.grid.refresh();
+
+                    // **Filter the Item Field to Remove Already Selected Items**
+                    dialog.fields_dict.equipments.grid.get_field('item').get_query = function () {
+                      let selected_items = dialog.fields_dict.equipments.df.data.map(row => row.item);
+                      return {
+                        filters: {
+                          name: ['in', frm.doc.required_items.map(item => item.required_item).filter(item => !selected_items.includes(item))]
+                        }
+                      };
+                    };
                     dialog.show();
                 }, __("Create"));
 

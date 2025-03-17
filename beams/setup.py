@@ -345,6 +345,20 @@ def get_project_custom_fields():
                 "fetch_from":"program_request.location",
                 "insert_after": "department",
                 "fetch_on_save_if_empty":1
+            },
+            {
+                "fieldname": "required_items_details",
+                "fieldtype": "Section Break",
+                "label": "Required Items Details",
+                "collapsible": 1,
+                "insert_after": "estimated_budget"
+            },
+            {
+                "fieldname": "required_items",
+                "fieldtype": "Table",
+                "label": "Required Items",
+                "options": "Required Items Detail",
+                "insert_after": "required_items_details"
             }
 
         ]
