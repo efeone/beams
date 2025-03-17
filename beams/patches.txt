@@ -6,3 +6,4 @@ beams.patches.delete_custom_fields  #26-11-2024-1
 # Patches added in this section will be executed after doctypes are migrated
 beams.patches.set_account_in_cost_subhead  #14-02-20250
 beams.patches.set_company_in_budget_template  #20-02-2025
+beams.patches.update_budget_for_inr  #17-03-2025
