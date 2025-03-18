@@ -81,11 +81,14 @@ function validate_employee_selection(frm) {
 }
 
 function set_employee_query(frm) {
-    frm.fields_dict['required_employees'].get_query = function() {
+    let current_user = frappe.session.user;
+
+    frm.fields_dict['required_employees'].grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+        let child = locals[cdt][cdn];
         return {
             filters: {
-                department: frm.doc.department,
-                designation: frm.doc.designation
+                department: child.department,
+                designation: child.designation
             }
         };
     };

@@ -25,6 +25,16 @@ class TechnicalRequest(Document):
     def validate(self):
         self.validate_required_from_and_required_to()
 
+    def on_update_after_submit(self):
+        old_doc = self.get_doc_before_save()
+        for row in self.required_employees:
+            for old_row in old_doc.required_employees:
+                if (row.employee != old_row.employee) and (row.idx == old_row.idx):
+                    hod = frappe.db.get_value("Department", row.department, "head_of_department")
+                    hod_user = frappe.db.get_value("Employee", hod, "user_id")
+                    if hod_user != frappe.session.user:
+                        frappe.throw(f"You do not have permission to select/change the employee at row #{row.idx}")
+
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
         """
