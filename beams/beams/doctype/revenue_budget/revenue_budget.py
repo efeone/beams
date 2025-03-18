@@ -4,9 +4,7 @@
 import frappe
 from frappe.model.document import Document
 
-class Revenue(Document):
-    def before_naming(self):
-        self.naming_series = f"{{{frappe.scrub(self.revenue_against)}}}./.{self.fiscal_year}/.###"
+class RevenueBudget(Document):
 
     def before_save(self):
         self.calculate_total_amount()
