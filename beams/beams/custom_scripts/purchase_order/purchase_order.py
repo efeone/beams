@@ -114,7 +114,7 @@ def fetch_department_from_cost_center(doc, method):
 @frappe.whitelist()
 def update_equipment_quantities(doc, method):
     """
-    Update the 'acquired_quantity' field in the 'Required Acquiral Items' child table
+    Update the 'acquired_quantity' field in the 'Required Acquiral Items' child table and project
     of the linked Equipment Acquiral Request when the Purchase Order is submitted.
     """
     old_doc = doc.get_doc_before_save()
@@ -141,3 +141,13 @@ def update_equipment_quantities(doc, method):
                                 if e_item.required_item == ea_item:
                                     e_item.acquired_quantity = (e_item.acquired_quantity + item.qty)
                             er_doc.save()
+
+                            project = frappe.db.get_value("Equipment Request", equipment_request, "project")
+                            if project:
+                                project_doc = frappe.get_doc("Project", project)
+
+                                for p_item in project_doc.required_items:
+                                    if p_item.required_item == ea_item:
+                                        p_item.acquired_quantity += item.qty
+
+                                project_doc.save()
