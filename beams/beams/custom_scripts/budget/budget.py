@@ -48,7 +48,7 @@ def convert_currency(doc, method):
         """Apply exchange rate conversion to a budget row"""
         row.budget_amount_inr = row.budget_amount * exchange_rate
         for month in months:
-            setattr(row, f"{month}_inr", getattr(row, month, 0) * exchange_rate)
+            setattr(row, f"{month}_inr", (getattr(row, month, 0) or 0) * exchange_rate)
 
     for row in (*doc.accounts, *doc.budget_accounts_custom):
         apply_conversion(row)
