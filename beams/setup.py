@@ -759,7 +759,8 @@ def get_budget_custom_fields():
                 "fieldtype": "Currency",
                 "label": "Total Amount",
                 "read_only": 1,
-                "insert_after": "region"
+                "insert_after": "region",
+                "options": "company_currency"
             },
             {
                 "fieldname": "budget_accounts_custom",
@@ -784,6 +785,16 @@ def get_budget_custom_fields():
                 "hidden":1,
                 "insert_after": "budget_accounts_hr",
                 "default": "INR"
+            },
+            {
+                "fieldname": "company_currency",
+                "fieldtype": "Link",
+                "label": "Company Currency",
+                "options": "Currency",
+                "read_only": 1,
+                "hidden":1,
+                "insert_after": "default_currency",
+                "fetch_from": "company.default_currency"
             },
         ],
         "Budget Account": [
