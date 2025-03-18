@@ -34,9 +34,9 @@ class TechnicalRequest(Document):
                     hod_user = frappe.db.get_value("Employee", hod, "user_id")
                     if hod_user != frappe.session.user:
                         frappe.throw(f"You do not have permission to select/change the employee at row #{row.idx}")
-            if old_doc.workflow_state == "Pending Approval" and self.workflow_state == "Approved":
+            if old_doc.workflow_state == "Pending Approval" and self.workflow_state in ["Approved" , "Rejected"] :
                 if not row.employee:
-                    frappe.throw("Cannot Approve Technical Request without Assigning Employees")
+                    frappe.throw("Cannot Approve/Reject Technical Request without Assigning Employees")
 
     @frappe.whitelist()
     def validate_required_from_and_required_to(self):
