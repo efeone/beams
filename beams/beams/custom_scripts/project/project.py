@@ -101,7 +101,7 @@ def create_transportation_request(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_technical_support_request(project_id, requirements):
-    ''' Create Technical Request document '''
+    ''' Create a single Technical Request document and duplicate rows based on no_of_employees '''
 
     # Parse the JSON input
     requirements = json.loads(requirements)
@@ -113,14 +113,24 @@ def create_technical_support_request(project_id, requirements):
     # Fetch Project details
     project = frappe.get_doc('Project', project_id)
 
-    # Iterate over the requirements and create Technical Requests
+    # Create a single Technical Request document
+    doc = frappe.get_doc({
+        'doctype': 'Technical Request',
+        'project': project_id,
+        'posting_date': nowdate(),
+        'bureau': project.bureau,
+        'location': project.location,
+        'required_from':project.expected_start_date,
+        'required_to':project.expected_end_date,
+        'required_employees': []  # Initialize child table
+    })
+
+    # Iterate over the requirements and add them to the child table
     for req in requirements:
         department = frappe.db.get_value("Department", req['department'], "name")
         designation = frappe.db.get_value("Designation", req['designation'], "name")
-        bureau =frappe.db.get_value("Project", project_id, "bureau")
-        location=frappe.db.get_value("Project", project_id, "location")
         remarks = req.get('remarks', "")
-        no_of_employees = req.get('no_of_employees')
+        no_of_employees = req.get('no_of_employees',1)  # Get the number of employees
         required_from = req.get('required_from')
         required_to = req.get('required_to')
 
@@ -128,24 +138,22 @@ def create_technical_support_request(project_id, requirements):
         if not department or not designation:
             frappe.throw(_("Both Department and Designation are required."))
 
-        # Create the Technical Request document
-        doc = frappe.get_doc({
-            'doctype': 'Technical Request',
-            'project': project_id,
-            'department': department,
-            'designation': designation,
-            'remarks': remarks,
-            'posting_date': nowdate(),
-            'bureau':bureau,
-            'location':location,
-            'no_of_employees': no_of_employees,
-            'required_from': required_from,
-            'required_to': required_to
-        })
-        doc.insert(ignore_permissions=True)
-        frappe.msgprint(_("Technical Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
+        # Duplicate rows based on `no_of_employees`
+        for _ in range(no_of_employees):
+            doc.append("required_employees", {
+                "department": department,
+                "designation": designation,
+                "required_from": required_from,
+                "required_to": required_to,
+                "remarks": remarks
+            })
+
+    # Insert the single Technical Request
+    doc.insert(ignore_permissions=True)
+    frappe.msgprint('Technical Request created successfully')
 
     return
+
 
 @frappe.whitelist()
 def update_program_request_status_on_project_completion(doc, method):
