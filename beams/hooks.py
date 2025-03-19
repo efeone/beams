@@ -60,7 +60,9 @@ doctype_js = {
     "Project":"beams/custom_scripts/project/project.js",
     "Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js",
     "Training Feedback":"beams/custom_scripts/training_feedback/training_feedback.js",
-    "Appraisal Template":"beams/custom_scripts/appraisal_template/appraisal_template.js"
+    "Appraisal Template":"beams/custom_scripts/appraisal_template/appraisal_template.js",
+    "Opportunity":"beams/custom_scripts/opportunity/opportunity.js",
+    "Lead":"beams/custom_scripts/lead/lead.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -181,7 +183,10 @@ doc_events = {
     },
     "Customer": {
         "after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_customer",
-        "validate": "beams.beams.custom_scripts.customer.customer.mark_as_edited_if_approved"
+        "validate": [
+            "beams.beams.custom_scripts.customer.customer.mark_as_edited_if_approved",
+            "beams.beams.custom_scripts.customer.customer.duplicate_customer"
+            ]
     },
     "Training Event": {
          "on_update": "beams.beams.custom_scripts.training_event.training_event.on_update",
@@ -331,11 +336,13 @@ doc_events = {
 
     },
     "Budget":{
-        "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount"
-     },
+        "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
+        "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
+    },
     "Attendance Request":{
         "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
     }
+        
 }
 
 # Scheduled Tasks

@@ -586,6 +586,13 @@ def get_department_custom_fields():
                 "fieldtype": "Float",
                 "label": "Threshold Amount",
                 "insert_after": "parent_department"
+            },
+            {
+                "fieldname": "finance_group",
+                "fieldtype": "Link",
+                "label": "Finance Group",
+                "options":"Finance Group",
+                "insert_after": "company"
             }
         ]
     }
@@ -737,6 +744,15 @@ def get_budget_custom_fields():
                 "insert_after": "company"
             },
             {
+                "fieldname": "finance_group",
+                "fieldtype": "Link",
+                "label": "Finance Group",
+                "options":"Finance Group",
+                "insert_after": "department",
+                "read_only":1,
+                "fetch_from": "department.finance_group"
+            },
+            {
                 "fieldname": "division",
                 "fieldtype": "Link",
                 "label": "Division",
@@ -771,7 +787,42 @@ def get_budget_custom_fields():
                 "fieldtype": "Currency",
                 "label": "Total Amount",
                 "read_only": 1,
-                "insert_after": "region"
+                "insert_after": "region",
+                "options": "company_currency"
+            },
+            {
+                "fieldname": "budget_accounts_custom",
+                "fieldtype": "Table",
+                "label": "Budget Accounts",
+                "options": "Budget Account",
+                "insert_after": "accounts"
+            },
+            {
+                "fieldname": "budget_accounts_hr",
+                "fieldtype": "Table",
+                "label": "Budget Accounts(HR Overheads)",
+                "options": "Budget Account",
+                "insert_after": "budget_accounts_custom"
+            },
+            {
+                "fieldname": "default_currency",
+                "fieldtype": "Link",
+                "label": "Default Currency",
+                "options": "Currency",
+                "read_only": 1,
+                "hidden":1,
+                "insert_after": "budget_accounts_hr",
+                "default": "INR"
+            },
+            {
+                "fieldname": "company_currency",
+                "fieldtype": "Link",
+                "label": "Company Currency",
+                "options": "Currency",
+                "read_only": 1,
+                "hidden":1,
+                "insert_after": "default_currency",
+                "fetch_from": "company.default_currency"
             },
         ],
         "Budget Account": [
@@ -906,7 +957,131 @@ def get_budget_custom_fields():
                 "fieldtype": "Currency",
                 "label": "December",
                 "insert_after": "november"
-            }
+            },
+            {
+                "fieldname": "section_break_inr",
+                "fieldtype": "Section Break",
+                "label": "Monthly Amount Distribution (INR)",
+                "insert_after": "december",
+                "collapsible": 1,
+                "read_only": 1
+            },
+            {
+                "fieldname": "january_inr",
+                "fieldtype": "Currency",
+                "label": "January (INR)",
+                "insert_after": "section_break_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "february_inr",
+                "fieldtype": "Currency",
+                "label": "February (INR)",
+                "insert_after": "january_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "march_inr",
+                "fieldtype": "Currency",
+                "label": "March (INR)",
+                "insert_after": "february_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "april_inr",
+                "fieldtype": "Currency",
+                "label": "April (INR)",
+                "insert_after": "march_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "column_break_zz1",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "april_inr"
+            },
+            {
+                "fieldname": "may_inr",
+                "fieldtype": "Currency",
+                "label": "May (INR)",
+                "insert_after": "column_break_zz1",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "june_inr",
+                "fieldtype": "Currency",
+                "label": "June (INR)",
+                "insert_after": "may_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "july_inr",
+                "fieldtype": "Currency",
+                "label": "July (INR)",
+                "insert_after": "june_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "august_inr",
+                "fieldtype": "Currency",
+                "label": "August (INR)",
+                "insert_after": "july_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "column_break_zz2",
+                "fieldtype": "Column Break",
+                "label": " ",
+                "insert_after": "july_inr"
+            },
+            {
+                "fieldname": "september_inr",
+                "fieldtype": "Currency",
+                "label": "September (INR)",
+                "insert_after": "column_break_zz2",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "october_inr",
+                "fieldtype": "Currency",
+                "label": "October (INR)",
+                "insert_after": "september_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "november_inr",
+                "fieldtype": "Currency",
+                "label": "November (INR)",
+                "insert_after": "october_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "december_inr",
+                "fieldtype": "Currency",
+                "label": "December (INR)",
+                "insert_after": "november_inr",
+                "read_only": 1,
+                "options": "default_currency"
+            },
+            {
+                "fieldname": "budget_amount_inr",
+                "fieldtype": "Currency",
+                "label": "Budget Amount (INR)",
+                "insert_after": "budget_amount",
+                "options": "default_currency",
+                "read_only": 1
+            },
         ]
     }
 
@@ -2667,6 +2842,13 @@ def get_company_custom_fields():
                 "fieldtype": "Text Editor",
                 "label": "Company Policy",
                 "insert_after": "company_policy_tab"
+            },
+            {
+                "fieldname": "exchange_rate_to_inr",
+                "fieldtype": "Float",
+                "label": "Exchange Rate to INR",
+                "insert_after": "exchange_gain_loss_account",
+                "description": "1 Unit of Company Currency = [?] INR"
             }
         ]
     }
@@ -3707,10 +3889,125 @@ def get_property_setters():
             "doc_type": "Job Requisition",
             "property": "field_order",
             "value": '["basic_details_tab", "basic_information", "employee", "naming_series", "salutation", "first_name", "middle_name", "last_name", "bureau", "stringer_type", "employee_name", "column_break_9", "gender", "date_of_birth", "name_of_father", "name_of_spouse", "column_break1", "date_of_joining", "date_of_appointment", "image", "status", "training_status", "erpnext_user", "user_id", "create_user", "create_user_permission", "company_details_section", "company", "department", "employee_number", "column_break_25", "designation", "reports_to", "column_break_18", "branch", "grade", "employment_details", "job_applicant", "scheduled_confirmation_date", "column_break_32", "final_confirmation_date", "contract_end_date", "col_break_22", "notice_number_of_days", "date_of_retirement", "contact_details", "cell_number", "company_number", "column_break_40", "personal_email", "company_email", "column_break4", "prefered_contact_email", "prefered_email", "unsubscribed", "address_section", "pincode", "current_address", "landmark", "current_accommodation_type", "column_break_46", "permanent_address", "landmark_per", "permanent_accommodation_type", "emergency_contact_details", "person_to_be_contacted", "emergency_contact_name", "column_break_55", "emergency_phone_number", "emergency_phone", "column_break_19", "relation", "relation_emergency", "attendance_and_leave_details", "attendance_device_id", "leave_policy", "leave_policy_name", "column_break_44", "holiday_list", "default_shift", "approvers_section", "expense_approver", "leave_approver", "column_break_45", "shift_request_approver", "leave_approver_name", "expense_approver_name", "salary_information", "ctc", "salary_currency", "salary_mode", "salary_cb", "payroll_cost_center", "pan_number", "provident_fund_account", "bank_details_section", "bank_name", "column_break_heye", "bank_ac_no", "bank_cb", "ifsc_code", "micr_code", "iban", "nominee_details_section", "nominee_details", "personal_details", "marital_status", "aadhar_id", "no_of_children", "family_background", "column_break6", "blood_group", "health_details", "health_insurance_section", "health_insurance_provider", "health_insurance_no", "passport_details_section", "passport_number", "valid_upto", "column_break_73", "date_of_issue", "place_of_issue", "additional_information_section", "physical_disabilities", "disabilities", "marital_indebtness", "court_proceedings", "court_proceedings_details", "column_break_travel", "are_you_willing_to_travel", "in_india", "abroad", "state_restrictions_problems", "places_to_travel", "are_you_related_to_employee", "related_employee_name", "profile_tab", "bio", "educational_qualification", "education", "previous_work_experience", "external_work_history", "history_in_company", "internal_work_history", "documents_tab", "employee_documents", "exit", "resignation_letter_date", "relieving_date", "exit_interview_details", "held_on", "new_workplace", "column_break_99", "leave_encashed", "encashment_date", "feedback_section", "reason_for_leaving", "column_break_104", "feedback", "lft", "rgt", "old_parent", "connections_tab"]'
-
+        },
+        {
+            "doc_type": "Sales Order",
+            "field_name": "set_warehouse",
+            "property": "hidden",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Sales Order",
+            "field_name": "scan_barcode",
+            "property": "hidden",
+            "property_type": "Data",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "quotation_to",
+            "property": "default",
+            "property_type": "Link",
+            "value":"Customer"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "quotation_to",
+            "property": "read_only",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "order_type",
+            "property": "default",
+            "property_type": "Link",
+            "value":"Sales"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "order_type",
+            "property": "read_only",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "shopping_cart_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "item_weight_details",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "available_quantity_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "gst_details_section",
+            "property": "hidden",
+            "property_type": "Section Break",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation Item",
+            "field_name": "item_code",
+            "property": "label",
+            "property_type": "Link",
+            "value":"Service Item"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Quotation",
+            "field_name": "coupon_code",
+            "property": "hidden",
+            "property_type": "Link",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "hidden",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "read_only",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Budget",
+            "field_name": "accounts",
+            "property": "reqd",
+            "value":0
         }
-
     ]
+
 def get_material_request_custom_fields():
     '''
     Custom fields that need to be added to the Material Request Doctype
