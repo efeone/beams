@@ -36,6 +36,8 @@
    "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Bureau",
    "options": "Bureau"
   },
@@ -109,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-28 15:28:50.378737",
+ "modified": "2025-03-19 12:09:30.504937",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",

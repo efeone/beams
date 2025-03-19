@@ -34,6 +34,7 @@
    "fieldname": "bureau",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Bureau ",
    "options": "Bureau"
   },
@@ -110,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-18 13:52:51.852369",
+ "modified": "2025-03-19 12:16:08.476821",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
