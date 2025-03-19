@@ -2,16 +2,21 @@
 // For license information, please see license.txt
 frappe.ui.form.on("Revenue Budget", {
     onload: function (frm) {
-      frm.fields_dict.revenue_accounts.grid.get_field("account").get_query = function(doc, cdt, cdn) {
-          let row = locals[cdt][cdn];
-          return {
-              filters: {
-                  company: frm.doc.company
-              }
-          };
-      };
+      set_filters(frm);
+    },
+    company: function (frm) {
+        set_filters(frm);
     }
 });
+function set_filters(frm) {
+    frm.set_query("account", "revenue_accounts", function (doc, cdt, cdn) {
+        return {
+            filters: {
+                company: frm.doc.company
+            }
+        };
+    });
+  }
 
 frappe.ui.form.on('Revenue Account', {
     january: function (frm, cdt, cdn) {
