@@ -7,5 +7,11 @@ frappe.ui.form.on('Program Request', {
     },
     end_date: function (frm) {
         frm.call("validate_start_date_and_end_dates");
+    },
+    generates_revenue: function(frm) {
+        frm.call("check_expected_revenue");
+    },
+    expected_revenue: function(frm) {
+        frm.call("check_expected_revenue");
     }
 });

@@ -145,13 +145,14 @@
   {
    "fieldname": "expected_revenue",
    "fieldtype": "Float",
-   "label": "Expected Revenue"
+   "label": "Expected Revenue",
+   "mandatory_depends_on": "eval:doc.generates_revenue == 1\n"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 09:55:16.690563",
+ "modified": "2025-03-19 12:18:37.206677",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",

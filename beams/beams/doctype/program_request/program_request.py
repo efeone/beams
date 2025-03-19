@@ -9,6 +9,7 @@ from frappe.utils import getdate
 class ProgramRequest(Document):
     def validate(self):
         self.validate_start_date_and_end_dates()
+        self.check_expected_revenue()
 
     @frappe.whitelist()
     def validate_start_date_and_end_dates(self):
@@ -27,6 +28,12 @@ class ProgramRequest(Document):
                 msg=_("Start Date cannot be after End Date."),
                 title=_("Validation Error")
             )
+    @frappe.whitelist()
+    def check_expected_revenue(self):
+        '''Function to check if Expected Revenue is > 0 when Generates Revenue is checked'''
+        if self.generates_revenue and self.expected_revenue <= 0:
+            frappe.throw(_("Expected Revenue must be greater than 0."))
+
     def on_update_after_submit(self):
         self.create_project_from_program_request()
 
