@@ -39,6 +39,8 @@
   {
    "fieldname": "project",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Project",
    "options": "Project"
   },
@@ -46,6 +48,8 @@
    "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Bureau",
    "options": "Bureau"
   },
@@ -98,8 +102,8 @@
    "fieldtype": "Link",
    "label": "Location",
    "options": "Location"
- },
- {
+  },
+  {
    "fieldname": "equipment_request",
    "fieldtype": "Link",
    "label": "Equipment Request",
@@ -110,7 +114,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-07 13:40:34.712327",
+ "modified": "2025-03-19 12:11:50.645046",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Acquiral Request",

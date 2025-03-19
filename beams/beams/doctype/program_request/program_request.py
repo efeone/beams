@@ -5,6 +5,8 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_link_to_form
 from frappe.utils import getdate
+from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils.user import get_users_with_role
 
 class ProgramRequest(Document):
     def validate(self):
@@ -37,9 +39,11 @@ class ProgramRequest(Document):
     def on_update_after_submit(self):
         self.create_project_from_program_request()
 
+
     def create_project_from_program_request(self):
         """
-        Create a Project from the Program Request if the workflow state is 'Approved'.
+        Create a Project from the Program Request if the workflow state is 'Approved',
+        and assign it to all users with the "Operations Head" role.
         """
 
         # Check if the Program Request already has a linked Project
@@ -58,13 +62,16 @@ class ProgramRequest(Document):
             return
 
         # Check if a Project already exists for this Program Request
-        if frappe.db.exists("Project", {"program": program_request_id}):
+        if frappe.db.exists("Project", {"program_request": program_request_id}):
             frappe.msgprint(_("A Project already exists for this Program Request."))
             return
 
         if frappe.db.exists("Project", {'project_name': program_request.program_name}):
             frappe.msgprint(_("A Project already exists for this Program."))
             return
+
+        # Get all users with the "Operations Head" role
+        operation_heads = get_users_with_role("Operations Head")
 
         # Attempt to create a new Project
         try:
@@ -80,7 +87,20 @@ class ProgramRequest(Document):
             self.db_set('project', project.name)
             frappe.msgprint(_("Project <b>{0}</b> has been created successfully.").format(project.project_name),indicator="green",alert=1,)
 
+            # Assign ToDo to all Operation Heads
+            for user in operation_heads:
+                self.assign_todo_to_user(user, "Project", project.name, f"New Project Created: {self.program_name}")
+
             return project.name
 
         except Exception as e:
             frappe.msgprint(_("Error creating project: {0}").format(str(e)))
+
+    def assign_todo_to_user(self, user, doctype_name, doc_name, action_description):
+        """Assign a ToDo to a specific user"""
+        add_assign({
+            "assign_to": [user],  # Assign to individual user
+            "doctype": doctype_name,
+            "name": doc_name,
+            "description": f"New {doctype_name} Created: {doc_name}.<br>{action_description}"
+        })
