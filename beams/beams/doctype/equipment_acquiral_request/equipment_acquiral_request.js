@@ -46,10 +46,12 @@ frappe.ui.form.on("Equipment Acquiral Request", {
                                         in_list_view: 1
                                     }
                                 ],
-                                data: frm.doc.required_items.map(item => ({
-                                    item_code: item.item,
-                                    qty: item.quantity
-                                }))
+								data: frm.doc.required_items
+									.filter(item => item.quantity != item.acquired_qty)
+									.map(item => ({
+										item_code: item.item,
+										qty: item.quantity - item.acquired_qty
+									}))
                             }
                         ],
                         size: 'large',
