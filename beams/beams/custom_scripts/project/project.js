@@ -1,5 +1,6 @@
 frappe.ui.form.on('Project', {
     refresh(frm) {
+      hide_asset_movement_field(frm);
       //function adds a button to the 'Project' form to create an Adhoc Budget.
         frm.add_custom_button(__('Adhoc Budget'), function () {
             frappe.model.open_mapped_doc({
@@ -292,6 +293,19 @@ frappe.ui.form.on('Project', {
         };
       }
     });
+
+    function hide_asset_movement_field(frm) {
+        /**
+         * Dynamically hides the "asset_movement" field in the "Required Items"
+         * child table within the relevant doctype.
+         */
+        ["required_items"].forEach(table_name => {
+            if (frm.fields_dict[table_name]) {
+                frm.fields_dict[table_name].grid.update_docfield_property("asset_movement", "hidden", 1);
+                frm.fields_dict[table_name].grid.refresh();
+            }
+        });
+    }
 
     // Apply filter dynamically when Designation field changes in child table
   frappe.ui.form.on('Allocated Resource Detail', {
