@@ -8,10 +8,10 @@ frappe.ui.form.on('Program Request', {
     end_date: function (frm) {
         frm.call("validate_start_date_and_end_dates");
     },
-    validate: function(frm) {
-       if (frm.doc.generates_revenue && frm.doc.expected_revenue <= 0) {
-           frappe.msgprint(__('Expected Revenue must be greater than 0.'));
-           frappe.validated = false;  // Prevents form submission
-       }
-   }
+    generates_revenue: function(frm) {
+        frm.call("check_expected_revenue");
+    },
+    expected_revenue: function(frm) {
+        frm.call("check_expected_revenue");
+    }
 });
