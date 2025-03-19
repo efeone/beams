@@ -1,15 +1,20 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{department} - {division}",
+ "autoname": "field:template_name",
  "creation": "2025-01-23 15:24:52.064169",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "template_name",
   "company",
   "department",
+  "budget_head",
+  "budget_head_user",
   "column_break",
   "division",
+  "cost_center",
+  "region",
   "section_break",
   "budget_template_item"
  ],
@@ -34,8 +39,7 @@
    "in_list_view": 1,
    "label": "Division",
    "options": "Division",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "fieldname": "column_break",
@@ -51,15 +55,48 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "budget_head",
+   "fieldtype": "Link",
+   "label": "Budget Head",
+   "options": "Employee"
+  },
+  {
+   "fetch_from": "budget_head.user_id",
+   "fieldname": "budget_head_user",
+   "fieldtype": "Link",
+   "label": "Budget Head User",
+   "options": "User"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center",
+   "reqd": 1
+  },
+  {
+   "fieldname": "region",
+   "fieldtype": "Link",
+   "label": "Region",
+   "options": "Region"
+  },
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "label": "Template Name",
+   "reqd": 1,
+   "unique": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-01 15:41:29.156620",
+ "modified": "2025-03-13 16:04:02.546476",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template",
- "naming_rule": "Expression",
+ "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
   {

@@ -2,6 +2,10 @@ frappe.ui.form.on('Sales Order', {
   refresh: function(frm) {
     setTimeout(() => {
         frm.remove_custom_button('Delivery Note', 'Create');
+        frm.remove_custom_button('Pick List', 'Create');
+        frm.remove_custom_button('Work Order', 'Create');
+        frm.remove_custom_button('Material Request', 'Create');
+        frm.remove_custom_button('Request for Raw Materials', 'Create');
     }, 500);
     set_actual_customer_query(frm);
     frm.dashboard.clear_headline();

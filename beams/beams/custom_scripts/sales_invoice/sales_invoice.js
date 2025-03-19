@@ -2,6 +2,8 @@ frappe.ui.form.on('Sales Invoice', {
   refresh: function(frm) {
     setTimeout(() => {
         frm.remove_custom_button('Delivery', 'Create');
+        frm.remove_custom_button('Timesheet', 'Get Items From');
+        frm.remove_custom_button('Delivery Note', 'Get Items From');
     }, 500);
     set_actual_customer_query(frm);
 
