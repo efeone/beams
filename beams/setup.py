@@ -345,9 +345,9 @@ def get_project_custom_fields():
                 "fetch_on_save_if_empty":1
             },
             {
-                "fieldname": "required_items_details",
+                "fieldname": "requirements_details",
                 "fieldtype": "Section Break",
-                "label": "Required Items Details",
+                "label": "Requirements Details",
                 "collapsible": 1,
                 "insert_after": "estimated_budget"
             },
@@ -356,7 +356,14 @@ def get_project_custom_fields():
                 "fieldtype": "Table",
                 "label": "Required Items",
                 "options": "Required Items Detail",
-                "insert_after": "required_items_details"
+                "insert_after": "requirements_details"
+            },
+            {
+                "fieldname": "required_manpower_details",
+                "fieldtype": "Table",
+                "label": "Required Manpower Details",
+                "options": "Required Manpower Details",
+                "insert_after": "required_items"
             }
 
         ]
