@@ -3899,6 +3899,7 @@ def get_property_setters():
         },
         {
             "doc_type": "Sales Order",
+            "doctype_or_field": "DocField",
             "field_name": "set_warehouse",
             "property": "hidden",
             "property_type": "Link",
