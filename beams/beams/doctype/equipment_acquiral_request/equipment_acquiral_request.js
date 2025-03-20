@@ -66,7 +66,7 @@ frappe.ui.form.on("Equipment Acquiral Request", {
 
                                 if (!po.supplier || !po.schedule_date) {
                                     frappe.msgprint({
-                                        title: __('Error'),
+                                        title: __('Message'),
                                         indicator: 'red',
                                         message: __('Supplier and Required by Date are mandatory')
                                     });
