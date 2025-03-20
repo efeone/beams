@@ -17,33 +17,37 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Vehicle",
-   "options": "Vehicle"
+   "options": "Vehicle",
+   "read_only": 1
   },
   {
    "fieldname": "hired_vehicle",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Hired Vehicle"
+   "label": "Hired Vehicle",
+   "read_only": 1
   },
   {
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": " Reference DocType ",
-   "options": "DocType"
+   "options": "DocType",
+   "read_only": 1
   },
   {
    "fieldname": "reference_name",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Reference Name ",
-   "options": "reference_doctype"
+   "options": "reference_doctype",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 17:42:53.024823",
+ "modified": "2025-03-20 11:54:52.642376",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Vehicle Details",
