@@ -324,6 +324,13 @@ doc_events = {
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount"
     },
+    "Attendance Request":{
+        "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
+    },
+    "Voucher Entry Type":{
+        "validate":"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
+    }
+        
 }
 
 # Scheduled Tasks
