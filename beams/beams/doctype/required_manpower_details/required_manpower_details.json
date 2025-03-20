@@ -19,6 +19,7 @@
    "fieldname": "department",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
+   "in_list_view": 1,
    "label": "Department",
    "options": "Department"
   },
@@ -26,29 +27,34 @@
    "fieldname": "designation",
    "fieldtype": "Link",
    "ignore_user_permissions": 1,
+   "in_list_view": 1,
    "label": "Designation",
    "options": "Designation"
   },
   {
    "fieldname": "required_from",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Required From"
   },
   {
    "fieldname": "required_to",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Required To"
   },
   {
    "default": "0",
    "fieldname": "allocated",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Allocated"
   },
   {
    "default": "0",
    "fieldname": "hired",
    "fieldtype": "Check",
+   "in_list_view": 1,
    "label": "Hired"
   },
   {
@@ -59,7 +65,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 11:39:42.226881",
+ "modified": "2025-03-19 14:33:36.895152",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Manpower Details",

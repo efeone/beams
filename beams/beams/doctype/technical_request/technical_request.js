@@ -18,17 +18,17 @@ frappe.ui.form.on('Technical Request', {
         if (!frm.is_new() && frm.doc.workflow_state === "Approved") {
             frm.add_custom_button("External Resource Request", function() {
                 frappe.call({
-                    method: "beams.beams.doctype.technical_request.technical_request.map_external_resource_request",
+                    method: "beams.beams.doctype.technical_request.technical_request.create_external_resource_request",
                     args: {
-                        "technical_request": frm.doc.name
-                    },
-                    callback: function(response) {
-                        if (response.message) {
-                            frappe.set_route("Form", "External Resource Request", response.message);
-                        }
-                    },
-                });
-            }, "Create");
+                          technical_request: frm.doc.name
+                      },
+                      callback: function(response) {
+                          if (response.message) {
+                              frappe.set_route("Form", "External Resource Request", response.message);
+                          }
+                      }
+                  });
+              }, __("Create"));
         }
       },
     posting_date:function (frm){

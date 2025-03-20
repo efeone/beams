@@ -82,6 +82,7 @@ def map_equipment_request(source_name, target_doc=None):
         target_doc
     )
 
+
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
     '''
@@ -100,60 +101,42 @@ def create_transportation_request(source_name, target_doc=None):
     return transportation_request
 
 @frappe.whitelist()
-def create_technical_support_request(project_id, requirements):
-    ''' Create a single Technical Request document and duplicate rows based on no_of_employees '''
+def create_technical_request(project_id):
+    '''Create a Technical Request document and map required manpower details from Project.'''
 
-    # Parse the JSON input
-    requirements = json.loads(requirements)
-
-    # Validate the Project ID
     if not frappe.db.exists('Project', project_id):
         frappe.throw(_("Invalid Project ID: {0}").format(project_id))
 
-    # Fetch Project details
     project = frappe.get_doc('Project', project_id)
 
-    # Create a single Technical Request document
     doc = frappe.get_doc({
         'doctype': 'Technical Request',
         'project': project_id,
         'posting_date': nowdate(),
         'bureau': project.bureau,
         'location': project.location,
-        'required_from':project.expected_start_date,
-        'required_to':project.expected_end_date,
-        'required_employees': []  # Initialize child table
+        'required_from': project.expected_start_date,
+        'required_to': project.expected_end_date,
+        'required_employees': []
     })
 
-    # Iterate over the requirements and add them to the child table
-    for req in requirements:
-        department = frappe.db.get_value("Department", req['department'], "name")
-        designation = frappe.db.get_value("Designation", req['designation'], "name")
-        remarks = req.get('remarks', "")
-        no_of_employees = req.get('no_of_employees',1)  # Get the number of employees
-        required_from = req.get('required_from')
-        required_to = req.get('required_to')
+    # Fetch manpower details from Project's child table (`required_manpower_details`)
+    for man in project.get("required_manpower_details", []):
+        department = frappe.db.get_value("Department", man.department, "name")
+        designation = frappe.db.get_value("Designation", man.designation, "name")
 
-        # Validate mandatory fields
         if not department or not designation:
             frappe.throw(_("Both Department and Designation are required."))
 
-        # Duplicate rows based on `no_of_employees`
-        for _ in range(no_of_employees):
-            doc.append("required_employees", {
-                "department": department,
-                "designation": designation,
-                "required_from": required_from,
-                "required_to": required_to,
-                "remarks": remarks
-            })
+        doc.append("required_employees", {
+            "department": department,
+            "designation": designation,
+            "required_from": man.required_from,
+            "required_to": man.required_to,
+        })
 
-    # Insert the single Technical Request
     doc.insert(ignore_permissions=True)
-    frappe.msgprint('Technical Request created successfully')
-
-    return
-
+    return doc.name
 
 @frappe.whitelist()
 def update_program_request_status_on_project_completion(doc, method):
