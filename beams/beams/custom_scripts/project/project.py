@@ -84,10 +84,6 @@ def map_equipment_request(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
-    '''
-    Maps fields from the Project doctype to the Transportation Request doctype,
-    including the Required Vehicle Details child table.
-    '''
     transportation_request = get_mapped_doc("Project", source_name, {
         "Project": {
             "doctype": "Transportation Request",
@@ -112,13 +108,23 @@ def create_transportation_request(source_name, target_doc=None):
         }
     }, target_doc)
 
-    # Ignore mandatory field validation
-    transportation_request.flags.ignore_mandatory = True
+    details = frappe.get_all(
+        "Required Vehicle Details",
+        filters={"parent": source_name, "parenttype": "Project"},
+        fields=["from", "to"],
+        order_by="idx asc",
+        limit=1
+    )
+
+    if details:
+        setattr(transportation_request, "from", details[0].get("from"))
+        setattr(transportation_request, "to", details[0].get("to"))
+
+    if not transportation_request.get("from") or not transportation_request.get("to"):
+        frappe.throw("Error: 'From' or 'To' location is missing!")
+
     transportation_request.save()
-
     return transportation_request
-
-
 
 @frappe.whitelist()
 def create_technical_support_request(project_id, requirements):
