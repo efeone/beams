@@ -275,18 +275,24 @@ function calculate_batta_totals(frm) {
     });
 }
 
+frappe.ui.form.on('Batta Claim', {
+    origin: update_child_table,
+    destination: update_child_table
+});
+
+function update_child_table(frm) {
+    if (!frm.doc.work_detail) return;
+
+    frm.doc.work_detail.forEach(row => {
+        frappe.model.set_value(row.doctype, row.name, 'origin', frm.doc.origin || '');
+        frappe.model.set_value(row.doctype, row.name, 'destination', frm.doc.destination || '');
+    });
+}
 
 frappe.ui.form.on('Work Detail', {
-    distance_travelled_km: function(frm, cdt, cdn) {
-        calculate_total_distance_travelled(frm);
-    },
-
     work_detail_add: function(frm, cdt, cdn) {
-        const { origin, destination } = frm.doc;
-
-           // Set initial values for the new row
-        frappe.model.set_value(cdt, cdn, 'origin', origin);
-        frappe.model.set_value(cdt, cdn, 'destination', destination);
+        frappe.model.set_value(cdt, cdn, 'origin', frm.doc.origin || '');
+        frappe.model.set_value(cdt, cdn, 'destination', frm.doc.destination || '');
     }
 });
 
