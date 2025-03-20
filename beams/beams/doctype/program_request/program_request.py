@@ -12,9 +12,10 @@ class ProgramRequest(Document):
     def validate(self):
         self.validate_start_date_and_end_dates()
         self.check_expected_revenue()
-        if frappe.db.exists("Program Request", {"program_name": self.program_name}):
-             frappe.throw("A Program with this name already exists. Please choose a different name.")
-
+        existing_project = frappe.db.exists("Project", {"project_name": self.program_name})
+        if existing_project:
+            frappe.throw(f"A Project already exists for this Program: {self.program_name}")
+                 
     @frappe.whitelist()
     def validate_start_date_and_end_dates(self):
         """
@@ -66,16 +67,6 @@ class ProgramRequest(Document):
         if not (doc_before_save.workflow_state == "Pending Approval" and program_request.workflow_state == 'Approved'):
             return
 
-        # Check if a Project already exists for this Program Request
-        if frappe.db.exists("Project", {"program_request": program_request_id}):
-            frappe.msgprint(_("A Project already exists for this Program Request."))
-            return
-
-        if frappe.db.exists("Project", {'project_name': program_request.program_name}):
-            frappe.msgprint(_("A Project already exists for this Program."))
-            return
-
-        # Get all users with the "Operations Head" role
         operation_heads = get_users_with_role("Operations Head")
 
         # Attempt to create a new Project
