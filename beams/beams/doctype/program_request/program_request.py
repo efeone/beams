@@ -12,6 +12,8 @@ class ProgramRequest(Document):
     def validate(self):
         self.validate_start_date_and_end_dates()
         self.check_expected_revenue()
+        if frappe.db.exists("Program Request", {"program_name": self.program_name}):
+             frappe.throw("A Program with this name already exists. Please choose a different name.")
 
     @frappe.whitelist()
     def validate_start_date_and_end_dates(self):
@@ -98,7 +100,6 @@ class ProgramRequest(Document):
 
         except Exception as e:
             frappe.msgprint(_("Error creating project: {0}").format(str(e)))
-
     def assign_todo_to_user(self, user, doctype_name, doc_name, action_description):
         """Assign a ToDo to a specific user"""
         add_assign({
@@ -107,3 +108,8 @@ class ProgramRequest(Document):
             "name": doc_name,
             "description": f"New {doctype_name} Created: {doc_name}.<br>{action_description}"
         })
+@frappe.whitelist()
+def check_program_name_exists(program_name):
+    """Check if a Program Request with the given name already exists"""
+    exists = frappe.db.exists("Program Request", {"program_name": program_name})
+    return bool(exists)
