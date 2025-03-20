@@ -47,6 +47,7 @@
    "default": "0",
    "fieldname": "allocated",
    "fieldtype": "Check",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Allocated"
   },
@@ -54,6 +55,7 @@
    "default": "0",
    "fieldname": "hired",
    "fieldtype": "Check",
+   "hidden": 1,
    "in_list_view": 1,
    "label": "Hired"
   },
@@ -65,7 +67,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 14:33:36.895152",
+ "modified": "2025-03-20 14:41:57.006949",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Manpower Details",
