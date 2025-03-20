@@ -54,6 +54,14 @@ frappe.ui.form.on('Revenue Account', {
     },
     december: function (frm, cdt, cdn) {
         calculate_revenue_amount(frm, cdt, cdn);
+    },
+    revenue_centre: function(frm, cdt, cdn) {
+        let row = frappe.get_doc(cdt, cdn);
+        let revenue_centres = frm.doc.revenue_accounts.map(r => r.revenue_centre);
+        if (revenue_centres.filter(rc => rc === row.revenue_centre).length > 1) {
+            frappe.msgprint(__('Revenue Centre {0} is already selected. Please choose a different one.', [row.revenue_centre]));
+            frappe.model.set_value(cdt, cdn, 'revenue_centre', '');
+        }
     }
 });
 
