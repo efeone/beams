@@ -17,6 +17,7 @@
   "noof_travallers",
   "section_break_yjlc",
   "requirements",
+  "required_vehicle",
   "vehicles",
   "no_of_own_vehicles",
   "no_of_hired_vehicles",
@@ -73,7 +74,7 @@
   },
   {
    "fieldname": "requirements",
-   "fieldtype": "Small Text",
+   "fieldtype": "Text Editor",
    "label": "Requirements"
   },
   {
@@ -130,12 +131,18 @@
    "fieldtype": "Link",
    "label": "Location",
    "options": "Location"
+  },
+  {
+   "fieldname": "required_vehicle",
+   "fieldtype": "Table",
+   "label": " Required Vehicle",
+   "options": "Required Vehicle Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-04 11:50:41.274550",
+ "modified": "2025-03-19 14:32:24.792056",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",

@@ -85,19 +85,46 @@ def map_equipment_request(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
-    '''
-    Maps fields from the Project doctype to the Transportation Request doctype'.
-    '''
     transportation_request = get_mapped_doc("Project", source_name, {
         "Project": {
-                "doctype": "Transportation Request",
-                "field_map": {
-                    "name": "project",
-                    "bureau": "bureau",
-                    "location": "location"
-                }
+            "doctype": "Transportation Request",
+            "field_map": {
+                "name": "project",
+                "bureau": "bureau",
+                "location": "location",
+                "expected_start_date": "required_on"
+            },
+            "field_no_map": ["required_vehicle_details"]
+        },
+        "Required Vehicle Details": {
+            "doctype": "Required Vehicle Details",
+            "add_if_empty": True,
+            "field_map": {
+                "no_of_travellers": "no_of_travellers",
+                "from": "from",
+                "to": "to",
+                "allocated": "allocated",
+                "hired": "hired"
             }
+        }
     }, target_doc)
+
+    details = frappe.get_all(
+        "Required Vehicle Details",
+        filters={"parent": source_name, "parenttype": "Project"},
+        fields=["from", "to"],
+        order_by="idx asc",
+        limit=1
+    )
+
+    if details:
+        setattr(transportation_request, "from", details[0].get("from"))
+        setattr(transportation_request, "to", details[0].get("to"))
+
+    if not transportation_request.get("from") or not transportation_request.get("to"):
+        frappe.throw("Error: 'From' or 'To' location is missing!")
+
+    transportation_request.save()
     return transportation_request
 
 @frappe.whitelist()

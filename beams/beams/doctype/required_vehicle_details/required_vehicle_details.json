@@ -1,0 +1,72 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "RVD-.#####",
+ "creation": "2025-03-19 13:40:23.447449",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "no_of_travellers",
+  "from",
+  "to",
+  "allocated",
+  "hired",
+  "required_vehicle_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "no_of_travellers",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No. of Travellers"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From",
+   "options": "Location"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To",
+   "options": "Location"
+  },
+  {
+   "fieldname": "required_vehicle_details",
+   "fieldtype": "Text Editor",
+   "in_list_view": 1,
+   "label": "Required Vehicle Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "allocated",
+   "fieldtype": "Check",
+   "in_standard_filter": 1,
+   "label": "Allocated"
+  },
+  {
+   "default": "0",
+   "fieldname": "hired",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Hired"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-19 14:15:50.836054",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Required Vehicle Details",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

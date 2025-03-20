@@ -364,7 +364,23 @@ def get_project_custom_fields():
                 "label": "Required Manpower Details",
                 "options": "Required Manpower Details",
                 "insert_after": "required_items"
+            },
+            {
+                "fieldname": "required_vehicle_details",
+                "fieldtype": "Table",
+                "label": "Required Vehicle Details",
+                "options": "Required Vehicle Details",
+                "insert_after": "required_manpower_details"
+            },
+            {
+                "fieldname": "allocated_vehicle_details",
+                "fieldtype": "Table",
+                "label": "Allocated Vehicle Details",
+                "options": "Allocated Vehicle Details",
+                "insert_after": "allocated_resources_details"
             }
+
+
 
         ]
     }
