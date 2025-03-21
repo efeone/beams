@@ -232,7 +232,7 @@
    "label": "Is Overnight Stay"
   },
   {
-   "depends_on": "eval: doc.batta_type == 'Internal'",
+   "depends_on": "eval: (doc.batta_type == 'Internal' && doc.is_overnight_stay ==1);",
    "fieldname": "room_criteria",
    "fieldtype": "Table MultiSelect",
    "label": "Room Criteria",
@@ -290,7 +290,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-19 19:53:17.013025",
+ "modified": "2025-03-21 11:38:27.414706",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

@@ -326,6 +326,9 @@ doc_events = {
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
         "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
     },
+    "Voucher Entry Type": {
+        "validate" :"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
+    }
 }
 
 # Scheduled Tasks
