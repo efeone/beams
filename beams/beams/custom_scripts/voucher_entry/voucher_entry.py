@@ -11,11 +11,10 @@ def create_petty_cash_request(voucher_entry_name, bureau, mode_of_payment, accou
     petty_cash = frappe.get_doc({
         "doctype": "Petty Cash Request",
         "bureau": bureau,
-        "mode_of_payment": mode_of_payment,
+        "petty_cash_account": mode_of_payment,
         "account": account,
         "requested_amount": requested_amount,
         "reference_voucher": voucher_entry_name,
-        "requested_person": frappe.session.user,
         "employee": employee
     })
 
