@@ -339,11 +339,14 @@ doc_events = {
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
         "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
+     },
+    "Training Program": {
+        "validate": "beams.beams.custom_scripts.training_program.training_program.validate_training_program"
     },
     "Attendance Request":{
         "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
     }
-        
+
 }
 
 # Scheduled Tasks
