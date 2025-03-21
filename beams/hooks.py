@@ -337,7 +337,7 @@ doc_events = {
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
-        "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
+        "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts",
         "validate":"beams.beams.custom_scripts.budget.budget.update_total_amount"
      },
     "Training Program": {
