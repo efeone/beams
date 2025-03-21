@@ -45,6 +45,13 @@ frappe.ui.form.on('Employee Travel Request', {
     },
     end_date:function (frm){
       frm.call("validate_dates");
+       calculateTotalDays(frm);
+    },
+    validate:function(frm){
+      frm.call("validate_expected_time");
+    },
+    start_date:function(frm){
+      calculateTotalDays(frm);
     }
 });
 
@@ -86,4 +93,15 @@ function set_mode_of_travel_filter(frm) {
           })
       },
   });
+}
+
+function calculateTotalDays(frm) {
+    if (frm.doc.start_date && frm.doc.end_date) {
+        let start = new Date(frm.doc.start_date);
+        let end = new Date(frm.doc.end_date);
+        let diff = frappe.datetime.get_day_diff(end, start);
+        frm.set_value('total_days', diff > 0 ? diff : 1);
+    } else {
+        frm.set_value('total_days', null);
+    }
 }
