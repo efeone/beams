@@ -225,13 +225,13 @@
   },
   {
    "default": "0",
-   "depends_on": "eval: (doc.batta_type == \"Internal\" && doc.is_travelling_outside_kerala == 1);\n",
+   "depends_on": "eval:doc.batta_type == 'Internal'",
    "fieldname": "is_overnight_stay",
    "fieldtype": "Check",
    "label": "Is Overnight Stay"
   },
   {
-   "depends_on": "eval: doc.batta_type == 'Internal'",
+   "depends_on": "eval: (doc.batta_type == \"Internal\" && doc.is_overnight_stay == 1);\n",
    "fieldname": "room_criteria",
    "fieldtype": "Table MultiSelect",
    "label": "Room Criteria",
@@ -284,7 +284,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-20 12:11:27.034914",
+ "modified": "2025-03-21 09:16:27.808452",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
