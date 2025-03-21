@@ -62,7 +62,8 @@ doctype_js = {
     "Training Feedback":"beams/custom_scripts/training_feedback/training_feedback.js",
     "Appraisal Template":"beams/custom_scripts/appraisal_template/appraisal_template.js",
     "Opportunity":"beams/custom_scripts/opportunity/opportunity.js",
-    "Lead":"beams/custom_scripts/lead/lead.js"
+    "Lead":"beams/custom_scripts/lead/lead.js",
+    "Payment Entry":"beams/custom_scripts/payment_entry/payment_entry.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",

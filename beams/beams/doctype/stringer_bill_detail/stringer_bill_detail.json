@@ -8,8 +8,11 @@
  "field_order": [
   "date",
   "on_air_date_and_time",
+  "title",
   "subject",
-  "title"
+  "stringer_type",
+  "stringer_amount",
+  "attach"
  ],
  "fields": [
   {
@@ -26,7 +29,7 @@
   },
   {
    "fieldname": "subject",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Subject"
   },
@@ -35,12 +38,31 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Title"
+  },
+  {
+   "fieldname": "stringer_type",
+   "fieldtype": "Link",
+   "label": "Stringer Type",
+   "options": "Stringer Type"
+  },
+  {
+   "fetch_from": "stringer_type.amount",
+   "fieldname": "stringer_amount",
+   "fieldtype": "Currency",
+   "label": "Stringer Amount",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-10-17 09:37:30.537112",
+ "modified": "2025-03-19 19:38:26.150834",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill Detail",

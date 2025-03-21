@@ -1,19 +1,18 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "naming_series:",
+ "autoname": "format:{revenue_group}-{revenue_region}/{fiscal_year}/{###}",
  "creation": "2025-01-29 09:40:07.549966",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_epzm",
-  "revenue_against",
   "company",
-  "cost_center",
-  "project",
+  "revenue_group",
+  "revenue_category",
   "column_break_wemo",
   "fiscal_year",
-  "revenue_template",
+  "revenue_region",
   "naming_series",
   "total_amount",
   "section_break",
@@ -26,43 +25,18 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "revenue_against",
-   "fieldtype": "Select",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Revenue Against",
-   "options": "Cost Center\nProject",
-   "reqd": 1
-  },
-  {
    "fieldname": "company",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Company",
    "options": "Company",
    "reqd": 1
   },
   {
-   "depends_on": "eval:doc.revenue_against == 'Cost Center'",
-   "fieldname": "cost_center",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Cost Center",
-   "mandatory_depends_on": "eval:doc.revenue_against == 'Cost Center'",
-   "options": "Cost Center"
-  },
-  {
-   "depends_on": "eval:doc.revenue_against == 'Project'",
-   "fieldname": "project",
-   "fieldtype": "Link",
-   "in_standard_filter": 1,
-   "label": "Project",
-   "mandatory_depends_on": "eval:doc.revenue_against == 'Project'",
-   "options": "Project"
-  },
-  {
    "fieldname": "fiscal_year",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Fiscal Year",
    "options": "Fiscal Year",
@@ -84,16 +58,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Revenue",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "fieldname": "naming_series",
    "fieldtype": "Data",
    "hidden": 1,
@@ -104,27 +68,53 @@
    "set_only_once": 1
   },
   {
-   "fieldname": "revenue_template",
-   "fieldtype": "Link",
-   "label": "Revenue Template",
-   "options": "Revenue Template"
-  },
-  {
    "fieldname": "total_amount",
    "fieldtype": "Currency",
    "label": "Total Amount",
    "precision": "2",
    "read_only": 1
+  },
+  {
+   "fieldname": "revenue_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Revenue Group",
+   "options": "Revenue Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "revenue_category",
+   "fieldtype": "Link",
+   "label": "Revenue Category",
+   "options": "Revenue Category",
+   "reqd": 1
+  },
+  {
+   "fieldname": "revenue_region",
+   "fieldtype": "Select",
+   "label": "Revenue Region",
+   "options": "National\nGCC",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Revenue Budget",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-01 13:50:09.734831",
+ "modified": "2025-03-18 12:09:29.003630",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Revenue",
- "naming_rule": "By \"Naming Series\" field",
+ "name": "Revenue Budget",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {

@@ -1457,6 +1457,14 @@ def get_supplier_custom_fields():
                 "depends_on": "eval:doc.is_stringer == 1",
                 "insert_after": "is_stringer"
 
+            },
+            {
+                "fieldname": "area",
+                "fieldtype": "Data",
+                "label": "Area",
+                "depends_on": "eval:doc.is_stringer == 1",
+                "insert_after": "bureau"
+
             }
         ]
     }
@@ -4029,6 +4037,14 @@ def get_property_setters():
             "field_name": "accounts",
             "property": "reqd",
             "value":0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Payment Entry",
+            "field_name": "party_type",
+            "property": "default",
+            "property_type": "Link",
+            "value":"Employee"
         }
     ]
 

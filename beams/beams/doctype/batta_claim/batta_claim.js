@@ -223,6 +223,7 @@ function calculate_hours_and_totals(frm, cdt, cdn) {
                         row.number_of_days = Math.ceil(row.total_hours / 24);
                         row.daily_batta = row.number_of_days * frm.doc.batta;
                     } else if (frm.doc.batta_based_on === 'Hours') {
+                        row.number_of_days = Math.ceil(row.total_hours / 24);
                         row.daily_batta = (row.total_hours - row.ot_hours) * frm.doc.batta;
                     }
 

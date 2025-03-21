@@ -11,36 +11,24 @@ frappe.ui.form.on('Stringer Bill', {
             };
         });
     },
-});
-frappe.ui.form.on('Stringer Bill Date', {
-    date: function(frm, cdt, cdn) {
-        let child = locals[cdt][cdn];
-        // Get the list of dates from the child table
-        let dates = frm.doc.date.map(row => row.date);
-        // Check for duplicate dates
-        if (dates.filter(d => d === child.date).length > 1) {
-            frappe.msgprint({
-                title: __('Message'),
-                message: __('{0} Date should be Unique', [child.date]),
-                indicator: 'red'
-            });
-            frappe.model.set_value(cdt, cdn, 'date', '');
-            return;
-        }
-        // Calculate the number of unique dates and update the no_of_days field
-        update_no_of_days(frm);
-    },
-    date_remove: function(frm) {
-        // Recalculate no_of_days when a row is removed
-        update_no_of_days(frm);
+    refresh: function (frm) {
+        calculate_total(frm);
     }
 });
 
-/*
-* Helper function to update the no_of_days field
-*/
-function update_no_of_days(frm) {
-    let dates = frm.doc.date.map(row => row.date);
-    let unique_dates = [...new Set(dates)];
-    frm.set_value('no_of_days', unique_dates.length);
+frappe.ui.form.on('Stringer Bill Detail', {
+    stringer_amount: function (frm) {
+        calculate_total(frm);
+    },
+    stringer_bill_detail_remove: function (frm) {
+        calculate_total(frm);
+    }
+});
+
+function calculate_total(frm) {
+    let total = 0;
+    (frm.doc.stringer_bill_detail || []).forEach(row => {
+        total += row.stringer_amount || 0;  // Summing up child table amounts
+    });
+    frm.set_value('stringer_amount', total);
 }
