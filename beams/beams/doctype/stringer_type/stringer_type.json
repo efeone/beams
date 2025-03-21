@@ -8,7 +8,8 @@
  "field_order": [
   "section_break_bdam",
   "stringer_type",
-  "amended_from"
+  "amended_from",
+  "amount"
  ],
  "fields": [
   {
@@ -18,7 +19,9 @@
   {
    "fieldname": "stringer_type",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Stringer Type",
+   "reqd": 1,
    "unique": 1
   },
   {
@@ -30,11 +33,18 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "amount",
+   "fieldtype": "Currency",
+   "label": "Amount",
+   "precision": "2",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-09-12 14:28:56.010143",
+ "modified": "2025-03-19 10:17:28.646565",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Type",
