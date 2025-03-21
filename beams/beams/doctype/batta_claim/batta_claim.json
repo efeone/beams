@@ -24,6 +24,7 @@
   "is_travelling_outside_kerala",
   "is_overnight_stay",
   "room_criteria",
+  "attach",
   "section_break_bkxb",
   "room_rent_batta",
   "batta_based_on",
@@ -270,6 +271,11 @@
    "fieldtype": "Currency",
    "label": "Food Allowance",
    "precision": "2"
+  },
+  {
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "label": "Attach"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -284,7 +290,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2024-10-10 11:01:24.580594",
+ "modified": "2025-03-19 19:53:17.013025",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
