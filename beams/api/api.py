@@ -421,3 +421,33 @@ def get_quotation_from_ro_id(albatross_ro_id):
 	if frappe.db.exists('Quotation', { 'albatross_ro_id':albatross_ro_id }):
 		quotation = frappe.db.get_value('Quotation', { 'albatross_ro_id':albatross_ro_id })
 	return quotation
+
+@frappe.whitelist()
+def get_employees(employee_id=None, department=None):
+    '''
+    Fetch all employees from the same department.
+
+    Args:
+        employee_id: Fetch employees belonging to the same department as this employee.
+        department: Fetch employees from a specific department.
+    '''
+    try:
+        employees = []
+        fields = ['employee', 'employee_name', 'department']
+        filters = {}
+        if employee_id:
+            emp_department = frappe.get_value('Employee', employee_id, 'department')
+            if not emp_department:
+                return response(f'Employee {employee_id} not found', {}, False, 404)
+            filters['department'] = emp_department
+        elif department:
+            filters['department'] = department
+        employees = frappe.db.get_list('Employee', fields=fields, filters=filters)
+        if employees:
+            return response('Employees retrieved successfully', employees, True, 200)
+        else:
+            return response('No employees found', employees, False, 200)
+    except Exception as exception:
+        frappe.log_error(frappe.get_traceback())
+        clean_exception_message = strip_html_tags(str(exception))
+        return response(clean_exception_message, {}, False, 401)
