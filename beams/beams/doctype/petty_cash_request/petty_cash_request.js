@@ -8,18 +8,42 @@ frappe.ui.form.on("Petty Cash Request", {
                 open_payment_entry(frm);
             }, __("Create"));
         }
+        frm.set_query('petty_cash_account', function() {
+            return {
+                filters: {
+                    type: 'Cash'
+                }
+            };
+        });
+    },
+    petty_cash_account: function(frm) {
+        var petty_cash_account = frm.doc.petty_cash_account;
+        if (!petty_cash_account) {
+            frm.set_value('account', '');
+            return;
+        }
+        frappe.call({
+            method: 'frappe.client.get',
+            args: {
+                'doctype': 'Mode of Payment',
+                'filters': {'name': petty_cash_account},
+                'fieldname': ['accounts']
+            },
+            callback: function(response) {
+                if (response && response.message && response.message.accounts && response.message.accounts.length > 0) {
+                    var defaultAccount = response.message.accounts[0].default_account;
+                    frm.set_value('account', defaultAccount);
+                }
+            }
+        });
     }
 });
 
 function open_payment_entry(frm) {
     frappe.new_doc("Payment Entry", {
-        payment_type: "Pay",
-        party_type: "Employee",
-        party: frm.doc.employee,
+        payment_type: "Internal Transfer",
         paid_amount: frm.doc.requested_amount,
-        reference_no: frm.doc.name,
         reference_date: frappe.datetime.nowdate(),
-        mode_of_payment: frm.doc.mode_of_payment,
-        paid_from: frm.doc.account
+        paid_to: frm.doc.account
     });
 }
