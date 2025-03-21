@@ -3793,7 +3793,16 @@ def get_property_setters():
             "property": "default",
             "property_type": "Link",
             "value":"Employee"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Voucher Entry",
+            "field_name": "bureau",
+            "property": "in_standard_filter",
+            "property_type": "Check",
+            "value":1
         }
+
 
     ]
 
