@@ -7,15 +7,16 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
-  "on_air_date_and_time",
+  "stringer_type",
   "title",
   "subject",
-  "stringer_type",
   "stringer_amount",
-  "attach"
+  "attach",
+  "on_air_date_and_time"
  ],
  "fields": [
   {
+   "columns": 1,
    "fieldname": "date",
    "fieldtype": "Date",
    "in_list_view": 1,
@@ -24,45 +25,52 @@
   {
    "fieldname": "on_air_date_and_time",
    "fieldtype": "Datetime",
-   "in_list_view": 1,
    "label": "On Air Date and Time"
   },
   {
+   "columns": 2,
    "fieldname": "subject",
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Subject"
   },
   {
+   "columns": 1,
    "fieldname": "title",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Title"
   },
   {
+   "columns": 1,
    "fieldname": "stringer_type",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Stringer Type",
    "options": "Stringer Type"
   },
   {
+   "columns": 2,
    "fetch_from": "stringer_type.amount",
    "fieldname": "stringer_amount",
    "fieldtype": "Currency",
+   "in_list_view": 1,
    "label": "Stringer Amount",
    "precision": "2",
    "read_only": 1
   },
   {
+   "columns": 1,
    "fieldname": "attach",
    "fieldtype": "Attach",
+   "in_list_view": 1,
    "label": "Attach"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 19:38:26.150834",
+ "modified": "2025-03-21 17:21:53.395651",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill Detail",
