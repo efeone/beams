@@ -126,7 +126,7 @@ class BattaClaim(Document):
 
 # Batta Policy
 @frappe.whitelist()
-def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_overnight_stay, total_distance_travelled_km, total_hours):
+def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_overnight_stay,is_avail_room_rent, total_distance_travelled_km, total_hours):
     # Ensure distance and total_hours are floats or 0
     total_distance_travelled_km = float(total_distance_travelled_km or 0)
     total_hours = float(total_hours or 0)
@@ -151,6 +151,7 @@ def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_over
     # Convert inputs to booleans
     is_travelling_outside_kerala = bool(int(is_travelling_outside_kerala or 0))
     is_overnight_stay = bool(int(is_overnight_stay or 0))
+    is_avail_room_rent = bool(int(is_avail_room_rent or 0))
 
     # Initialize daily batta and room rent variables
     daily_batta_without_overnight_stay = 0
@@ -173,13 +174,14 @@ def calculate_batta_allowance(designation, is_travelling_outside_kerala, is_over
         total_batta += daily_batta_without_overnight_stay
 
     if is_overnight_stay:
-        # Handle room rent addition
-        if is_actual_room_rent == 0:  # Add room rent only if checkbox is unchecked (value is 0)
-            if is_travelling_outside_kerala:
-                room_rent = safe_add(policy.get('outside_kerala_'))
-            else:
-                room_rent = safe_add(policy.get('inside_kerala_'))
-            room_rent_batta += room_rent  # Add room rent value to room_rent_batta
+        if is_avail_room_rent:
+            # Handle room rent addition
+            if is_actual_room_rent == 0:  # Add room rent only if checkbox is unchecked (value is 0)
+                if is_travelling_outside_kerala:
+                    room_rent = safe_add(policy.get('outside_kerala_'))
+                else:
+                    room_rent = safe_add(policy.get('inside_kerala_'))
+                room_rent_batta += room_rent  # Add room rent value to room_rent_batta
 
         # Handle daily batta with overnight stay addition
         if is_actual_daily_batta_with_overnight_stay == 0:  # Add daily batta only if checkbox is unchecked (value is 0)
