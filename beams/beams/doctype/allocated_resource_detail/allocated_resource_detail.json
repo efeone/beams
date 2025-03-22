@@ -8,6 +8,8 @@
  "field_order": [
   "department",
   "designation",
+  "assigned_from",
+  "assigned_to",
   "employee",
   "hired_personnel",
   "hired_personnel_contact_info"
@@ -18,39 +20,58 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "read_only": 1
   },
   {
    "fieldname": "employee",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Employee",
-   "options": "Employee"
+   "options": "Employee",
+   "read_only": 1
   },
   {
    "fieldname": "department",
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "read_only": 1
   },
   {
    "fieldname": "hired_personnel",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Hired Personnel"
+   "label": "Hired Personnel",
+   "read_only": 1
   },
   {
    "fieldname": "hired_personnel_contact_info",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Hired Personnel Contact Info"
+   "label": "Hired Personnel Contact Info",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_from",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Assigned From",
+   "read_only": 1
+  },
+  {
+   "fieldname": "assigned_to",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Assigned To",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 14:32:56.747852",
+ "modified": "2025-03-21 09:12:39.666225",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Resource Detail",
