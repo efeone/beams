@@ -47,7 +47,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Stringer Type",
-   "options": "Stringer Type"
+   "options": "Stringer Type",
+   "reqd": 1
   },
   {
    "columns": 2,
@@ -70,7 +71,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-21 17:21:53.395651",
+ "modified": "2025-03-22 09:41:25.247352",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill Detail",
