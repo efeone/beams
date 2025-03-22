@@ -174,12 +174,17 @@ function set_batta_based_on_options(frm) {
 
 /* Function to handle designation field based on batta_type */
 function handle_designation_based_on_batta_type(frm) {
+  if (!frm.doc.employee) {
+        frm.set_value('designation', '');
+        return;
+    }
     if (frm.doc.batta_type === 'Internal' && frm.doc.employee) {
         // Fetch and set designation when batta_type is Internal
         designation = frappe.db.get_value('Employee', frm.doc.employee, 'designation', function (r) {
             if (r && r.designation) {
                 frm.set_value('designation', r.designation);
             } else {
+                frm.set_value('designation', '');
                 frappe.msgprint(__('Designation not found for the selected employee.'));
             }
         });

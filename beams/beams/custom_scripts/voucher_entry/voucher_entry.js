@@ -9,14 +9,20 @@ frappe.ui.form.on('Voucher Entry', {
                 }
             });
         }
-    }
-});
-
-frappe.ui.form.on("Voucher Entry", {
+    },
     refresh: function (frm) {
         if (!frm.is_new()) {
             frm.add_custom_button(__('Petty Cash Request'), function () {
                 show_petty_cash_dialog(frm);
+            });
+        }
+    },
+    after_save: function(frm) {
+        if (frm.doc.balance < frm.doc.total_amount) {
+            frappe.msgprint({
+                title: __('Warning'),
+                indicator: 'orange',
+                message: __('Balance cannot be less than Total Amount.')
             });
         }
     }

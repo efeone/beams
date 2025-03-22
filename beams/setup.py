@@ -1859,6 +1859,13 @@ def get_voucher_entry_custom_fields():
                 "options": "Bureau",
                 "label": "Bureau",
                 "insert_after": "balance"
+            },
+            {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "options": "Department",
+                "label": "Department",
+                "insert_after": "company"
             }
         ]
     }
@@ -4052,6 +4059,13 @@ def get_property_setters():
             "field_name": "bureau",
             "property": "in_standard_filter",
             "property_type": "Check",
+            "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Voucher Entry",
+            "field_name": "total_amount",
+            "property": "read_only",
             "value":1
         }
     ]

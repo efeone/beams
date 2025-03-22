@@ -125,6 +125,7 @@
   {
    "fieldname": "account",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Account",
    "options": "Account",
    "reqd": 1
@@ -133,7 +134,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-18 11:44:42.181253",
+ "modified": "2025-03-22 13:55:55.760498",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Account",
