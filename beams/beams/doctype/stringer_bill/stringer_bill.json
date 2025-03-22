@@ -102,7 +102,8 @@
    "fieldname": "stringer_amount",
    "fieldtype": "Currency",
    "label": "Stringer Amount",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fetch_from": "supplier.area",
@@ -119,7 +120,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2025-03-19 11:09:02.793895",
+ "modified": "2025-03-21 17:11:38.404059",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",

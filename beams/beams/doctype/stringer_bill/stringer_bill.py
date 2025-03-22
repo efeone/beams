@@ -19,10 +19,6 @@ class StringerBill(Document):
         # Fetch the item code from the Stringer Type
         item_code = frappe.db.get_single_value('Beams Accounts Settings', 'stringer_service_item')
 
-        if not item_code:
-            frappe.throw(f"No item found for Stringer Type: {self.stringer_type}")
-            return
-
 
 
         # Create a new Purchase Invoice
@@ -39,12 +35,12 @@ class StringerBill(Document):
         purchase_invoice.append('items', {
             'item_code': item_code,
             'qty': 1,
-            'rate': self.daily_wage
+            'rate': self.stringer_amount
         })
 
         # Insert and submit the document
         purchase_invoice.insert()
-        purchase_invoice.submit()
+        purchase_invoice.save()
 
         # Confirm success
         frappe.msgprint(f"Purchase Invoice {purchase_invoice.name} created successfully with Stringer Bill reference {self.name}.", alert=True, indicator="green")
