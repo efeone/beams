@@ -21,11 +21,59 @@ class AssetTransferRequest(Document):
 
     def on_update_after_submit(self):
         '''Ensure that Asset Movement and Stock Entries are created when the workflow state is 'Transferred'.
-           Mark or unmark 'In Transit' checkbox based on workflow state.'''
+           Mark or unmark 'In Transit' checkbox based on workflow state.
+
+           Handles updates after submission by adding  assets,items,asset to the asset return checklist when the workflow state is 'Transferred'
+        '''
+
+        if self.workflow_state == "Transferred" and self.asset_return_checklist_template:
+            existing_checklist_items = {row.checklist_item for row in self.get("asset_return_checklist")}
+            assets_to_add = set()
+
+            if self.asset_type == "Bundle":
+                assets_to_add.update(row.asset for row in self.get("assets") if row.asset)
+            elif self.asset_type == "Single Asset" and self.asset:
+                assets_to_add.add(self.asset)
+
+            assets_to_add.update(row.item for row in self.get("items") if row.item)
+            new_assets = assets_to_add - existing_checklist_items
+
+            if new_assets:
+                for asset in new_assets:
+                    self.append("asset_return_checklist", {"checklist_item": asset})
+
+                self.save(ignore_permissions=True)
 
         if self.workflow_state == 'Transferred':
-            self.create_asset_movement()
-            self.create_stock_entries()
+            # Check if asset movement already exists
+            existing_asset_movement = frappe.db.exists("Asset Movement", {
+                "reference_name": self.name,
+                "reference_doctype": "Asset Transfer Request"
+            })
+
+            # Check if stock entry already exists
+            existing_stock_entry = frappe.db.exists("Stock Entry", {
+                "name": self.stock_entry
+            })
+
+            # Only create if they don't exist
+            if not existing_asset_movement:
+                self.create_asset_movement()
+
+            # Only create stock entry if it does not exist
+            if not existing_stock_entry and not self.stock_entry:
+                self.create_stock_entries()
+
+            # Handle 'in_transit' flag for assets
+            if self.asset_type == 'Single Asset' and self.asset:
+                asset = frappe.get_doc('Asset', self.asset)
+                asset.in_transit = 1 if self.workflow_state == 'Approved' else 0
+                asset.save()
+            elif self.asset_type == 'Bundle':
+                for asset in self.assets:
+                    asset_doc = frappe.get_doc('Asset', asset.asset)
+                    asset_doc.in_transit = 1 if self.workflow_state == 'Approved' else 0
+                    asset_doc.save()
 
         if self.asset_type == 'Single Asset' and self.asset:
             asset = frappe.get_doc('Asset', self.asset)
@@ -36,9 +84,20 @@ class AssetTransferRequest(Document):
                 asset_doc = frappe.get_doc('Asset', asset.asset)
                 asset_doc.in_transit = 1 if self.workflow_state == 'Approved' else 0
                 asset_doc.save()
+        self.validate_recieved_by()
+
+    def validate_recieved_by(self):
+        '''
+            Method triggered after the document is updated.
+            It checks if the workflow state has changed from "Transferred" to "Transferred and Received".
+        '''
+        old_doc = self.get_doc_before_save()
+        if old_doc and old_doc.workflow_state == "Transferred" and self.workflow_state == "Transferred and Received":
+            if not self.received_by:
+                frappe.throw(_("The Received By field must be filled."))
 
     def create_asset_movement(self):
-        """Create Asset Movement when the workflow state is 'Transferred'."""
+        '''Create Asset Movement when the workflow state is 'Transferred'.'''
         asset_movement = frappe.new_doc('Asset Movement')
         asset_movement.purpose = 'Transfer'
         asset_movement.posting_time = self.posting_time
@@ -79,21 +138,22 @@ class AssetTransferRequest(Document):
         )
 
     def create_stock_entries(self):
-        """Create Stock Entry when the workflow state is 'Transferred'."""
+        '''Create Stock Entry when the workflow state is 'Transferred'.'''
         if not self.asset_type == "Bundle":
             return
 
         if not self.items:
             return
 
-        source_warehouse = 'Stores - E'
-        if not frappe.db.exists('Warehouse', source_warehouse):
-            frappe.throw(_("Could not find Source Warehouse: {0}".format(source_warehouse)))
+        warehouse = frappe.db.get_value("Beams Admin Settings", None, "asset_transfer_warehouse")
+
+        if not warehouse:
+            frappe.throw(_("Could not find asset_transfer_warehouse in Beams Admin Settings."))
 
         stock_entry = frappe.new_doc('Stock Entry')
         stock_entry.stock_entry_type = 'Material Issue'
         stock_entry.purpose = 'Material Issue'
-        stock_entry.from_warehouse = source_warehouse
+        stock_entry.from_warehouse = warehouse
         stock_entry.posting_time = self.posting_time
         stock_entry.set("set_posting_time", 1)
         stock_entry.posting_date = self.posting_date
@@ -104,7 +164,7 @@ class AssetTransferRequest(Document):
                 stock_entry.append('items', {
                     "item_code": item.item,
                     "qty": item.qty,
-                    "s_warehouse": source_warehouse,
+                    "s_warehouse": warehouse,
                 })
 
         if not stock_entry.items:
@@ -112,6 +172,8 @@ class AssetTransferRequest(Document):
 
         stock_entry.insert()
         stock_entry.submit()
+
+        self.db_set("stock_entry", stock_entry.name)
 
         frappe.msgprint(
             _('Stock Entry Created: <a href="{0}">{1}</a>').format(get_url_to_form(stock_entry.doctype, stock_entry.name),stock_entry.name),

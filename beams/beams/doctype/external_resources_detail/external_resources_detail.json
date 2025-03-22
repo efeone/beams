@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "department",
   "designation",
   "required_from",
   "required_to",
@@ -45,12 +46,19 @@
    "fieldtype": "Phone",
    "in_list_view": 1,
    "label": "Contact Number "
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-18 12:01:57.703122",
+ "modified": "2025-03-19 16:02:33.883488",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Resources Detail",

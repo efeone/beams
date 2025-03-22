@@ -33,9 +33,9 @@
   "mark_attendance",
   "attendance_request",
   "reference_documents",
+  "reason_for_rejection",
   "section_break_fdom",
-  "dynamic_link",
-  "reason_for_rejection"
+  "dynamic_link"
  ],
  "fields": [
   {
@@ -234,7 +234,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-12 17:16:14.451010",
+ "modified": "2025-03-13 16:21:47.792111",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

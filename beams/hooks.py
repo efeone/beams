@@ -59,6 +59,8 @@ doctype_js = {
     "Appraisal":"beams/custom_scripts/appraisal/appraisal.js",
     "Project":"beams/custom_scripts/project/project.js",
     "Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js",
+    "Training Feedback":"beams/custom_scripts/training_feedback/training_feedback.js",
+    "Appraisal Template":"beams/custom_scripts/appraisal_template/appraisal_template.js",
     "Opportunity":"beams/custom_scripts/opportunity/opportunity.js",
     "Lead":"beams/custom_scripts/lead/lead.js",
     "Payment Entry":"beams/custom_scripts/payment_entry/payment_entry.js"
@@ -155,7 +157,8 @@ permission_query_conditions = {
 
 override_doctype_class = {
     "Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
-    "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride"
+    "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
+    "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride"
 }
 
 # Document Events
@@ -198,12 +201,12 @@ doc_events = {
         "on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
         "after_insert": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_purchase_order_creation",
         "before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-        "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center",
+        # "validate": "beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center",
         "on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
     },
     "Material Request":{
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-        "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
+        # "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Sales Order": {
         "autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
@@ -216,15 +219,17 @@ doc_events = {
         "on_submit":"beams.beams.custom_scripts.contract.contract.on_submit"
     },
     "Batta Claim": {
-        "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
-        "onchange": "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"
+        "onchange": ["beams.beams.doctype.batta_claim.batta_claim.calculate_batta_allowance",
+                    "beams.beams.doctype.batta_claim.batta_claim.calculate_batta"]
     },
     "Job Requisition": {
         "on_update": [
             "beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
             "beams.beams.custom_scripts.job_requisition.job_requisition.on_update"
-        ]
+        ],
+        "validate": "beams.beams.custom_scripts.job_requisition.job_requisition.validate_expected_by"
     },
+
     "Journal Entry": {
         "on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
     },
@@ -234,18 +239,25 @@ doc_events = {
             "beams.beams.custom_scripts.job_applicant.job_applicant.validate_unique_application",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_designation",
             "beams.beams.custom_scripts.job_applicant.job_applicant.fetch_department",
-            "beams.beams.custom_scripts.job_applicant.job_applicant.validate_resume_attachment"
             ],
-        "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds"
+        "after_insert":"beams.beams.custom_scripts.job_applicant.job_applicant.set_interview_rounds",
+        "autoname":"beams.beams.custom_scripts.job_applicant.job_applicant.autoname"
     },
     "Interview": {
-        "on_submit": "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
-        "after_insert": "beams.beams.custom_scripts.interview.interview.on_interview_creation",
+        "on_submit": [
+                        "beams.beams.custom_scripts.interview.interview.mark_interview_completed",
+                        "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
+                    ],
+        "after_insert": [
+            "beams.beams.custom_scripts.interview.interview.on_interview_creation",
+            "beams.beams.custom_scripts.interview.interview.update_applicant_interview_rounds"
+        ],
         "on_update": "beams.beams.custom_scripts.interview.interview.update_applicant_interview_round"
     },
     "Interview Feedback": {
         "after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.after_insert",
-        "validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate"
+        "validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate",
+        "on_submit": "beams.beams.custom_scripts.interview_feedback.interview_feedback.update_applicant_interview_round_from_feedback"
     },
     "Employee Checkin":{
         "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
@@ -262,13 +274,14 @@ doc_events = {
     "Employee" : {
         "autoname": "beams.beams.custom_scripts.employee.employee.autoname",
         "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert",
-        "validate": "beams.beams.custom_scripts.employee.employee.validate"
+        "validate":  [
+            "beams.beams.custom_scripts.employee.employee.validate",
+            "beams.beams.custom_scripts.employee.employee.validate_offer_dates"
+        ],
     },
     "Job Offer" : {
-        "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee"
-    },
-    "Interview": {
-        "on_submit": "beams.beams.custom_scripts.interview.interview.update_job_applicant_status"
+        "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
+        "validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
     },
     "Employee Separation": {
         "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
@@ -284,7 +297,6 @@ doc_events = {
         "validate":"beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.validate"
     },
     "Appraisal":{
-        "on_update_after_submit":"beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
         "validate": [
             "beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
             "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
@@ -320,14 +332,22 @@ doc_events = {
         "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
     },
     "Asset":{
-        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr"
+        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr",
+        "on_submit":"beams.beams.custom_scripts.asset.asset.generate_asset_details_qr"
+
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
         "before_validate":"beams.beams.custom_scripts.budget.budget.populate_og_accounts"
+     },
+    "Training Program": {
+        "validate": "beams.beams.custom_scripts.training_program.training_program.validate_training_program"
     },
     "Voucher Entry Type": {
         "validate" :"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
+    },
+    "Attendance Request":{
+        "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
     }
 }
 
@@ -343,7 +363,8 @@ scheduler_events = {
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
         "beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
         "beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
-        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder"
+        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder",
+        "beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications"
     ],
 # "all": [
 # "beams.tasks.all"

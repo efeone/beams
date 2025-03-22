@@ -125,7 +125,6 @@ def before_uninstall():
     delete_custom_fields(get_asset_movement_custom_fields())
 
 
-
 def delete_custom_fields(custom_fields: dict):
     '''
     Method to Delete custom fields
@@ -154,7 +153,17 @@ def get_shift_assignment_custom_fields():
                 "label": "Roster Type",
                 "options":"\nRegular\nDouble Shift",
                 "insert_after": "shift_type"
+            },
+            {
+                "fieldname": "user_id",
+                "label": "User ID",
+                "fieldtype": "Data",
+                "insert_after": "end_date",
+                "options": "Email",
+                "hidden": 1
+
             }
+
         ]
     }
 
@@ -300,7 +309,6 @@ def get_project_custom_fields():
                 "fieldname": "approved_budget",
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
-                "options":"approved_budget",
                 "insert_after":"budget_expense_types",
                 "read_only": 1
 
@@ -309,7 +317,6 @@ def get_project_custom_fields():
                 "fieldname": "estimated_budget",
                 "fieldtype": "Currency",
                 "label": "Estimated Budget",
-                "options":"Estimated Budget",
                 "fetch_from": "program_request.estimated_budget",
                 "insert_after":"approved_budget",
                 "read_only": 1
@@ -336,10 +343,48 @@ def get_project_custom_fields():
                 "fetch_from":"program_request.location",
                 "insert_after": "department",
                 "fetch_on_save_if_empty":1
+            },
+            {
+                "fieldname": "requirements_details",
+                "fieldtype": "Section Break",
+                "label": "Requirements Details",
+                "collapsible": 1,
+                "insert_after": "estimated_budget"
+            },
+            {
+                "fieldname": "required_items",
+                "fieldtype": "Table",
+                "label": "Required Items",
+                "options": "Required Items Detail",
+                "insert_after": "requirements_details"
+            },
+            {
+                "fieldname": "required_manpower_details",
+                "fieldtype": "Table",
+                "label": "Required Manpower Details",
+                "options": "Required Manpower Details",
+                "insert_after": "required_items"
+            },
+            {
+                "fieldname": "required_vehicle_details",
+                "fieldtype": "Table",
+                "label": "Required Vehicle Details",
+                "options": "Required Vehicle Details",
+                "insert_after": "required_manpower_details"
+            },
+            {
+                "fieldname": "allocated_vehicle_details",
+                "fieldtype": "Table",
+                "label": "Allocated Vehicle Details",
+                "options": "Allocated Vehicle Details",
+                "insert_after": "allocated_resources_details"
             }
+
+
 
         ]
     }
+
 
 def get_employment_type_custom_fields():
     '''
@@ -637,6 +682,12 @@ def get_asset_custom_fields():
                 "fieldtype": "Attach Image",
                 "label": "QR code",
                 "insert_after": "department"
+            },
+            {
+                "fieldname": "asset_details",
+                "fieldtype": "Attach Image",
+                "label": "Asset Details",
+                "insert_after": "qr_code"
             }
         ]
     }
@@ -1534,6 +1585,14 @@ def get_employee_custom_fields():
                 "insert_after": "attendance_device_id"
             },
             {
+                "fieldname": "leave_policy_name",
+                "fieldtype": "Data",
+                "label": "Title",
+                "fetch_from": "leave_policy.title",
+                "insert_after": "leave_policy",
+                "read_only": 1
+            },
+            {
                 "fieldname": "name_of_father",
                 "fieldtype": "Data",
                 "label": "Father's Name",
@@ -1698,10 +1757,48 @@ def get_employee_custom_fields():
             },
             {
                 "fieldname": "no_of_children",
-                "fieldtype": "Data",
+                "fieldtype": "Int",
                 "label": "No.of Children",
                 "insert_after":"marital_status"
             },
+            {
+                "fieldname": "company_number",
+                "fieldtype": "Data",
+                "label": "Company Mobile Number",
+                "options":"Phone",
+                "insert_after":"cell_number"
+            },
+            {
+                "fieldname": "landmark",
+                "fieldtype": "Data",
+                "label": "Landmark",
+                "insert_after":"current_address"
+            },
+            {
+                "fieldname": "landmark_per",
+                "fieldtype": "Data",
+                "label": "Landmark",
+                "insert_after":"permanent_address"
+            },
+            {
+                "fieldname": "emergency_contact_name",
+                "fieldtype": "Data",
+                "label": "Emergency Contact Name",
+                "insert_after":"person_to_be_contacted"
+            },
+            {
+                "fieldname": "emergency_phone",
+                "fieldtype": "Data",
+                "label": "Emergency Phone",
+                "insert_after":"emergency_phone_number"
+            },
+            {
+                "fieldname": "relation_emergency",
+                "fieldtype": "Data",
+                "label": "Relation",
+                "insert_after":"relation"
+            }
+
         ],
 
         "Employee External Work History":[
@@ -1808,9 +1905,27 @@ def get_interview_custom_fields():
                 "fieldtype": "Link",
                 "options": "Department",
                 "label": "Department",
-                "insert_after": "job_applicant",
+                "insert_after": "applicant_name",
                 "fetch_from": "job_applicant.department"
+            },
+            {
+                "fieldname": "applicant_name",
+                "fieldtype": "Data",
+                "label": "Applicant Name",
+                "insert_after": "job_applicant",
+                "fetch_from": "job_applicant.applicant_name",
+                "read_only": 1
+
+            },
+            {
+                "fieldname": "applicant_email",
+                "fieldtype": "Data",
+                "label": "Applicant Email ID",
+                "insert_after": "job_applicant",
+                "fetch_from": "job_applicant.email_id",
+                "hidden": 1
             }
+
         ]
     }
 
@@ -1831,7 +1946,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Link",
                 "options": "Employment Type",
                 "label": "Employment Type",
-                "insert_after": "work_details",
+                "insert_after": "department",
                 "permlevel": 1
             },
 
@@ -1839,28 +1954,28 @@ def get_job_requisition_custom_fields():
                 "fieldname": "no_of_days_off",
                 "fieldtype": "Int",
                 "label": "Number of Days Off",
-                "description": " number of days off within a 30-day period",
-                "insert_after": "employment_type",
+                "description": "Number Of Days Off within a 30-day Period",
+                "insert_after": "work_details",
                 "permlevel": 1
             },
             {
                 "fieldname": "work_details_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "no_of_days_off"
-            },
-            {
-                "fieldname": "travel_required",
-                "fieldtype": "Check",
-                "label": "Travel required for the position",
-                "insert_after": "work_details_column_break",
-                "permlevel": 1
+                "insert_after": "min_experience"
             },
             {
                 "fieldname": "is_work_shift_needed",
                 "fieldtype": "Check",
                 "label": "Is Shift Work Needed",
-                "insert_after": "travel_required",
+                "insert_after": "work_details_column_break",
+                "permlevel": 1
+            },
+            {
+                "fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Travel required for the position",
+                "insert_after": "is_work_shift_needed",
                 "permlevel": 1
             },
             {
@@ -1868,7 +1983,7 @@ def get_job_requisition_custom_fields():
                 "fieldtype": "Check",
                 "label": "Driving License Needed for this Position",
                 "depends_on": "eval:doc.travel_required == 1",
-                "insert_after": "is_work_shift_needed",
+                "insert_after": "travel_required",
                 "permlevel": 1
             },
             {
@@ -1877,6 +1992,7 @@ def get_job_requisition_custom_fields():
                 "label": "License Type",
                 "options": "License Type",
                 "depends_on": "eval:doc.driving_license_needed == 1",
+                "mandatory_depends_on":"eval:doc.driving_license_needed == 1",
                 "insert_after": "driving_license_needed",
                 "permlevel": 1
             },
@@ -1895,30 +2011,24 @@ def get_job_requisition_custom_fields():
                 "permlevel": 1
             },
             {
-                "fieldname": "education_column_break",
-                "fieldtype": "Column Break",
-                "label": "",
-                "insert_after": "min_education_qual"
-            },
-            {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
-                "label": "Minimum Experience Required",
-                "insert_after": "education_column_break",
+                "label": "Minimum Experience Required (Years)",
+                "insert_after": "no_of_days_off",
                 "permlevel": 1
             },
             {
                 "fieldname": "reset_column",
                 "fieldtype": "Section Break",
                 "label": "",
-                "insert_after": "min_experience"
+                "insert_after": "license_type"
             },
             {
                 "fieldname": "language_proficiency",
                 "fieldtype": "Table",
                 "options": "Language Proficiency",
                 "label": "Language Proficiency",
-                "insert_after": "min_experience",
+                "insert_after": "reset_column",
                 "permlevel": 1
             },
             {
@@ -1953,6 +2063,15 @@ def get_job_requisition_custom_fields():
                 "depends_on": "eval:doc.request_for == 'Employee Replacement'"
             },
             {
+                "fieldname": "relieving_date",
+                "fieldtype": "Date",
+                "label": "Relieving Date",
+                "insert_after": "employee_left",
+                "fetch_from":"employee_left.relieving_date",
+                "depends_on":"eval:doc.request_for == 'Employee Replacement'",
+                "read_only": 1
+            },
+            {
                 "fieldname": "interview",
                 "fieldtype": "Section Break",
                 "label": "Interview Details",
@@ -1969,10 +2088,10 @@ def get_job_requisition_custom_fields():
 
              {
                 "fieldname": "location",
-                "label": "Location",
+                "label": "Preferred Location",
                 "fieldtype": "Link",
                 "options": "Location",
-                "insert_after": "no_of_days_off",
+                "insert_after": "employment_type",
                 "permlevel": 1
             },
             {
@@ -1989,15 +2108,29 @@ def get_job_requisition_custom_fields():
                 "options": "Designation",
                 "insert_after": "request_for",
                 "permlevel": 2,
-                "depends_on": "eval:doc.request_for == 'Existing Vacancy'"
+                "depends_on": "eval:doc.request_for == 'New Vacancy'"
             },
             {
                 "fieldname": "suggestions",
                 "fieldtype": "Small Text",
-                "label": "Suggestions",
+                "label": "Suggestions/Feedback",
                 "insert_after": "description",
                 "permlevel": 3
             },
+            {
+                "fieldname": "publish_on_job_section",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "requested_by_designation"
+            },
+            {
+                "fieldname": "publish_on_job_opening",
+                "fieldtype": "Check",
+                "default": "1",
+                "label": "Publish on Job Opening",
+                "insert_after": "publish_on_job_section",
+                "permlevel":4
+            }
         ]
     }
 
@@ -2023,7 +2156,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "willing_to_work_on_location",
                 "fieldtype": "Check",
-                "label": "Willing to work on the selected location?",
+                "label": "Willing to Work in the Selected Location?",
                 "insert_after": "country"
             },
             {
@@ -2162,9 +2295,8 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
-                "label": "Work Experience(in years)",
+                "label": "Work Experience (Years)",
                 "insert_after": "details_column_break",
-                "permlevel": 1
             },
             {
                 "fieldname": "details_column_break",
@@ -2305,7 +2437,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "reference_taken",
                 "fieldtype": "Select",
-                "label": "Can a reference taken now?",
+                "label": "Can I take Reference Now?",
                 "options": "\nYes\nNo",
                 "insert_after": "current_designation"
             },
@@ -2363,7 +2495,7 @@ def get_job_applicant_custom_fields():
             {
                 "fieldname": "agency_details",
                 "fieldtype": "Small Text",
-                "label": "Agency Details(if temporary or contractual)",
+                "label": "Agency Details  (if Temporary or Contractual)",
                 "insert_after": "reason_for_leaving"
             },
             {
@@ -2612,7 +2744,7 @@ def get_job_opening_custom_fields():
                 "fieldname": "no_of_positions",
                 "fieldtype": "Int",
                 "label": "No of.Positions",
-                "insert_after": "employment_type"
+                "insert_after": "employment_type",
             },
             {
                 "fieldname": "no_of_days_off",
@@ -2683,8 +2815,8 @@ def get_job_opening_custom_fields():
             {
                 "fieldname": "min_experience",
                 "fieldtype": "Float",
-                "label": "Minimum Experience Required",
-                "insert_after": "qualification_details_column_break"
+                "label": "Minimum Experience Required (Years)",
+                "insert_after": "is_work_shift_needed"
             },
             {
                 "fieldname": "proficiency_break",
@@ -2978,8 +3110,7 @@ def get_employee_feedback_rating_custom_fields():
                 "fieldname": "marks",
                 "fieldtype": " Float",
                 "label": "Marks out of 5",
-                "in_list_view":1,
-                "insert_after": "rating"
+                "insert_after": "per_weightage"
             }
         ]
     }
@@ -3017,7 +3148,7 @@ def get_appraisal_custom_fields():
         	{
 				"fieldname": "category_based_on_marks",
 				"fieldtype": "Link",
-                "options": "Category",
+                "options": "Appraisal Category",
 				"label": "Category based on marks",
 				"insert_after": "category_html",
                 "read_only": 1
@@ -3098,7 +3229,8 @@ def get_appraisal_custom_fields():
                 "fieldname": "final_average_score",
                 "fieldtype": "Float",
                 "label": "Final Average Score",
-                "insert_after": "employee_image"
+                "insert_after": "employee_image",
+                "precision": 3
             }
         ]
     }
@@ -3658,6 +3790,34 @@ def get_property_setters():
         {
             "doctype_or_field": "DocField",
             "doc_type": "Shift Assignment",
+            "field_name": "start_date",
+            "property": "read_only_depends_on",
+            "value": "eval:doc.docstatus == 1"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "end_date",
+            "property": "read_only_depends_on",
+            "value": "eval:doc.docstatus == 1"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "start_date",
+            "property": "allow_on_submit",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
+            "field_name": "end_date",
+            "property": "allow_on_submit",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Shift Assignment",
             "field_name": "employee",
             "property": "ignore_user_permissions",
             "value": 1
@@ -3666,12 +3826,104 @@ def get_property_setters():
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "department",
-            "property": "reqd",
+            "property": "hidden",
             "value": 1
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "department",
+            "property": "reqd",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "section_break_7",
+            "property": "collapsible",
+            "property_type": "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Job Requisition",
+            "field_name": "designation",
+            "property": "depends_on",
+            "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Requisition",
+            "property": "field_order",
+            "value": "[\"naming_series\", \"request_for\", \"employee_left\", \"relieving_date\", \"suggested_designation\", \"designation\", \"department\", \"employment_type\", \"location\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\", \"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"interview\", \"interview_rounds\", \"work_details\", \"no_of_days_off\", \"work_details_column_break\", \"is_work_shift_needed\", \"travel_required\",  \"driving_license_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"suggestions\", \"connections_tab\"]"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Applicant",
+            "property": "show_title_field_in_link",
+            "property_type" : "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee",
+            "field_name": "permanent_accommodation_type",
+            "property": "hidden",
+            "property_type": "Select",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Attendance Request",
+            "field_name": "reports_to",
+            "property": "ignore_user_permissions",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee",
+            "field_name": "current_accommodation_type",
+            "property": "hidden",
+            "property_type": "Select",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee",
+            "field_name": "cell_number",
+            "property": "label",
+            "value": "Personal Mobile Number"
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Employee Feedback Rating",
+            "property": "field_order",
+            "value": "[\"criteria\", \"per_weightage\", \"marks\", \"rating\"]"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Employee Feedback Rating",
+            "field_name": "rating",
+            "property": "in_list_view",
+            "property_type": "Check",
+            "value": 0
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Applicant",
+            "property": "show_title_field_in_link",
+            "property_type" : "Check",
+            "value": 1
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Requisition",
+            "property": "field_order",
+            "value": '["basic_details_tab", "basic_information", "employee", "naming_series", "salutation", "first_name", "middle_name", "last_name", "bureau", "stringer_type", "employee_name", "column_break_9", "gender", "date_of_birth", "name_of_father", "name_of_spouse", "column_break1", "date_of_joining", "date_of_appointment", "image", "status", "training_status", "erpnext_user", "user_id", "create_user", "create_user_permission", "company_details_section", "company", "department", "employee_number", "column_break_25", "designation", "reports_to", "column_break_18", "branch", "grade", "employment_details", "job_applicant", "scheduled_confirmation_date", "column_break_32", "final_confirmation_date", "contract_end_date", "col_break_22", "notice_number_of_days", "date_of_retirement", "contact_details", "cell_number", "company_number", "column_break_40", "personal_email", "company_email", "column_break4", "prefered_contact_email", "prefered_email", "unsubscribed", "address_section", "pincode", "current_address", "landmark", "current_accommodation_type", "column_break_46", "permanent_address", "landmark_per", "permanent_accommodation_type", "emergency_contact_details", "person_to_be_contacted", "emergency_contact_name", "column_break_55", "emergency_phone_number", "emergency_phone", "column_break_19", "relation", "relation_emergency", "attendance_and_leave_details", "attendance_device_id", "leave_policy", "leave_policy_name", "column_break_44", "holiday_list", "default_shift", "approvers_section", "expense_approver", "leave_approver", "column_break_45", "shift_request_approver", "leave_approver_name", "expense_approver_name", "salary_information", "ctc", "salary_currency", "salary_mode", "salary_cb", "payroll_cost_center", "pan_number", "provident_fund_account", "bank_details_section", "bank_name", "column_break_heye", "bank_ac_no", "bank_cb", "ifsc_code", "micr_code", "iban", "nominee_details_section", "nominee_details", "personal_details", "marital_status", "aadhar_id", "no_of_children", "family_background", "column_break6", "blood_group", "health_details", "health_insurance_section", "health_insurance_provider", "health_insurance_no", "passport_details_section", "passport_number", "valid_upto", "column_break_73", "date_of_issue", "place_of_issue", "additional_information_section", "physical_disabilities", "disabilities", "marital_indebtness", "court_proceedings", "court_proceedings_details", "column_break_travel", "are_you_willing_to_travel", "in_india", "abroad", "state_restrictions_problems", "places_to_travel", "are_you_related_to_employee", "related_employee_name", "profile_tab", "bio", "educational_qualification", "education", "previous_work_experience", "external_work_history", "history_in_company", "internal_work_history", "documents_tab", "employee_documents", "exit", "resignation_letter_date", "relieving_date", "exit_interview_details", "held_on", "new_workplace", "column_break_99", "leave_encashed", "encashment_date", "feedback_section", "reason_for_leaving", "column_break_104", "feedback", "lft", "rgt", "old_parent", "connections_tab"]'
+        },
+        {
             "doc_type": "Sales Order",
+            "doctype_or_field": "DocField",
             "field_name": "set_warehouse",
             "property": "hidden",
             "property_type": "Link",
@@ -3802,8 +4054,6 @@ def get_property_setters():
             "property_type": "Check",
             "value":1
         }
-
-
     ]
 
 def get_material_request_custom_fields():
@@ -4030,7 +4280,7 @@ def get_skill_assessment_custom_fields():
             {
                 "fieldname": "score",
                 "fieldtype": "Float",
-                "label": "Score",
+                "label": "Score (Out of 10)",
                 "reqd": 1,
                 "insert_after":"skill",
                 "in_list_view": 1
@@ -4047,6 +4297,7 @@ def get_skill_assessment_custom_fields():
                 "label": "Weight",
                 "insert_after":"remarks"
             }
+
         ]
     }
 
@@ -4072,7 +4323,7 @@ def get_beams_roles():
     '''
         Method to get BEAMS specific roles
     '''
-    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head']
+    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver']
 
 def get_custom_translations():
     '''

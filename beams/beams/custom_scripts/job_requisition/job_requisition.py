@@ -2,6 +2,7 @@ import json
 import frappe
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import now_datetime, get_url_to_form
+from datetime import datetime,date
 
 @frappe.whitelist()
 def create_job_opening_from_job_requisition(doc, method):
@@ -15,8 +16,9 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.designation = doc.designation
             job_opening.status = 'Open'
             job_opening.posted_on = now_datetime()
-            job_opening.department = doc.department
+            job_opening.department = frappe.get_value("Employee", doc.requested_by, "department")
             job_opening.employment_type = doc.employment_type
+            job_opening.job_requisition = doc.name
             # Setting Minimum Educational Qualification
             for qualification in doc.min_education_qual:
                 job_opening.append('min_education_qual', {
@@ -27,7 +29,7 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.no_of_positions = doc.no_of_positions
             job_opening.no_of_days_off = doc.no_of_days_off
             job_opening.preffered_location = doc.location
-            job_opening.publish = 1
+            job_opening.publish = doc.publish_on_job_opening
             #Setting Skill Proficiency
             for skill in doc.skill_proficiency:
                 job_opening.append('skill_proficiency', {
@@ -94,3 +96,20 @@ def get_template_content(template_name, doc):
         if description:
             rendered_description = frappe.render_template(description, doc)
     return rendered_description
+
+@frappe.whitelist()
+def validate_expected_by(doc, method=None):
+    '''Ensure that 'Expected By' date is today or in the future.'''
+
+    if doc.expected_by:
+        if isinstance(doc.expected_by, str):
+            expected_date = datetime.strptime(doc.expected_by, "%Y-%m-%d").date()
+        elif isinstance(doc.expected_by, date):
+            expected_date = doc.expected_by
+        else:
+            raise ValueError("Invalid type for expected_by. Expected a string or date object.")
+
+        today = datetime.today().date()
+
+        if expected_date < today:
+            frappe.throw("Expected By date must be a future date.")

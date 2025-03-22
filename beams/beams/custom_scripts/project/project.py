@@ -82,70 +82,88 @@ def map_equipment_request(source_name, target_doc=None):
         target_doc
     )
 
+
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
-    '''
-    Maps fields from the Project doctype to the Transportation Request doctype'.
-    '''
     transportation_request = get_mapped_doc("Project", source_name, {
         "Project": {
-                "doctype": "Transportation Request",
-                "field_map": {
-                    "name": "project",
-                    "bureau": "bureau",
-                    "location": "location"
-                }
+            "doctype": "Transportation Request",
+            "field_map": {
+                "name": "project",
+                "bureau": "bureau",
+                "location": "location",
+                "expected_start_date": "required_on"
+            },
+            "field_no_map": ["required_vehicle_details"]
+        },
+        "Required Vehicle Details": {
+            "doctype": "Required Vehicle Details",
+            "add_if_empty": True,
+            "field_map": {
+                "no_of_travellers": "no_of_travellers",
+                "from": "from",
+                "to": "to",
+                "allocated": "allocated",
+                "hired": "hired"
             }
+        }
     }, target_doc)
+
+    details = frappe.get_all(
+        "Required Vehicle Details",
+        filters={"parent": source_name, "parenttype": "Project"},
+        fields=["from", "to"],
+        order_by="idx asc",
+        limit=1
+    )
+
+    if details:
+        setattr(transportation_request, "from", details[0].get("from"))
+        setattr(transportation_request, "to", details[0].get("to"))
+
+    if not transportation_request.get("from") or not transportation_request.get("to"):
+        frappe.throw("Error: 'From' or 'To' location is missing!")
+
+    transportation_request.save()
     return transportation_request
 
 @frappe.whitelist()
-def create_technical_support_request(project_id, requirements):
-    ''' Create Technical Request document '''
+def create_technical_request(project_id):
+    '''Create a Technical Request document and map required manpower details from Project.'''
 
-    # Parse the JSON input
-    requirements = json.loads(requirements)
-
-    # Validate the Project ID
     if not frappe.db.exists('Project', project_id):
         frappe.throw(_("Invalid Project ID: {0}").format(project_id))
 
-    # Fetch Project details
     project = frappe.get_doc('Project', project_id)
 
-    # Iterate over the requirements and create Technical Requests
-    for req in requirements:
-        department = frappe.db.get_value("Department", req['department'], "name")
-        designation = frappe.db.get_value("Designation", req['designation'], "name")
-        bureau =frappe.db.get_value("Project", project_id, "bureau")
-        location=frappe.db.get_value("Project", project_id, "location")
-        remarks = req.get('remarks', "")
-        no_of_employees = req.get('no_of_employees')
-        required_from = req.get('required_from')
-        required_to = req.get('required_to')
+    doc = frappe.get_doc({
+        'doctype': 'Technical Request',
+        'project': project_id,
+        'posting_date': nowdate(),
+        'bureau': project.bureau,
+        'location': project.location,
+        'required_from': project.expected_start_date,
+        'required_to': project.expected_end_date,
+        'required_employees': []
+    })
 
-        # Validate mandatory fields
+    # Fetch manpower details from Project's child table (`required_manpower_details`)
+    for man in project.get("required_manpower_details", []):
+        department = frappe.db.get_value("Department", man.department, "name")
+        designation = frappe.db.get_value("Designation", man.designation, "name")
+
         if not department or not designation:
             frappe.throw(_("Both Department and Designation are required."))
 
-        # Create the Technical Request document
-        doc = frappe.get_doc({
-            'doctype': 'Technical Request',
-            'project': project_id,
-            'department': department,
-            'designation': designation,
-            'remarks': remarks,
-            'posting_date': nowdate(),
-            'bureau':bureau,
-            'location':location,
-            'no_of_employees': no_of_employees,
-            'required_from': required_from,
-            'required_to': required_to
+        doc.append("required_employees", {
+            "department": department,
+            "designation": designation,
+            "required_from": man.required_from,
+            "required_to": man.required_to,
         })
-        doc.insert(ignore_permissions=True)
-        frappe.msgprint(_("Technical Request created successfully for project: {0}.").format(project.project_name), indicator="green", alert=1)
 
-    return
+    doc.insert(ignore_permissions=True)
+    return doc.name
 
 @frappe.whitelist()
 def update_program_request_status_on_project_completion(doc, method):

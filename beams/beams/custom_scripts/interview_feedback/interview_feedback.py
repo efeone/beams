@@ -19,6 +19,14 @@ def validate(doc, method):
             rating = float(row.score) / 10
         row.rating = rating
 
+    for row in doc.interview_question_result:
+        rating = 0
+        if row.score:
+            if row.score > 10 or row.score < 0:
+                frappe.throw(_("Score for question {0} must be a number between 0 and 10.").format(frappe.bold(row.question)))
+            rating = float(row.score) / 10
+        row.rating = rating
+
 def on_interview_feedback_creation(doc):
     '''
         Update the Job Applicant's status to 'Interview Ongoing'
@@ -51,3 +59,36 @@ def get_interview_details(interview_round):
         "questions": questions,
         "skill_assessment": skill_assessment
     }
+
+def update_applicant_interview_round_from_feedback(doc, method):
+    """
+    Updates the interview round rating in the child table of Job Applicant
+    and recalculates the overall applicant rating.
+    """
+
+    if not doc.job_applicant or not doc.interview_round:
+        frappe.msgprint("Missing Job Applicant or Interview Round.")
+        return
+
+    if not frappe.db.exists("Job Applicant", doc.job_applicant):
+        frappe.msgprint(f"Job Applicant {doc.job_applicant} does not exist.")
+        return
+
+    # Get the latest rating from Interview Feedback
+    latest_rating = frappe.db.get_value("Interview", doc.interview, "average_rating")
+    if latest_rating is None:
+        frappe.msgprint("No Average Rating found.")
+        return
+
+    job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
+
+    for round in job_applicant.applicant_interview_rounds:
+        if round.interview_round.strip() == doc.interview_round.strip():
+            round.applicant_rating = float(latest_rating)
+            break
+
+    # Calculate the new overall rating
+    ratings = [r.applicant_rating for r in job_applicant.applicant_interview_rounds if r.applicant_rating]
+    job_applicant.applicant_rating = sum(ratings) / len(ratings) if ratings else 0
+
+    job_applicant.save(ignore_permissions=True)

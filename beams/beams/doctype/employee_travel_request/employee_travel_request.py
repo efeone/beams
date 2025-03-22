@@ -3,10 +3,11 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import date_diff, today,getdate
+from frappe.utils import date_diff,today,getdate
 import json
 from frappe.utils import get_url_to_form
 from frappe.utils import today
+from datetime import datetime
 from frappe import _
 
 
@@ -20,6 +21,8 @@ class EmployeeTravelRequest(Document):
     def validate(self):
         self.validate_dates()
         self.calculate_total_days()
+        self.validate_expected_time()
+        self.total_days_calculate()
 
     def before_save(self):
         self.validate_posting_date()
@@ -63,12 +66,29 @@ class EmployeeTravelRequest(Document):
                     alert=True, indicator="green"
                 )
 
+        # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
+        if self.workflow_state == "Approved" and self.reason_for_rejection:
+            frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
             if self.posting_date > today():
                 frappe.throw(_("Posting Date cannot be set after today's date."))
+
+    @frappe.whitelist()
+    def validate_expected_time(self):
+        """Ensure Expected Check-out Time is not earlier than Expected Check-in Time."""
+        if self.expected_check_in_time and self.expected_check_out_time:
+            if self.expected_check_out_time < self.expected_check_in_time:
+                frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
+
+    def total_days_calculate(self):
+        """Calculate the total number of travel days, ensuring at least one day."""
+        if self.start_date and self.end_date:
+            start_date = datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S").date()
+            end_date = datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S").date()
+            self.total_days = 1 if start_date == end_date else (end_date - start_date).days + 1
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):

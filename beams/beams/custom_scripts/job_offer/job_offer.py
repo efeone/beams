@@ -8,7 +8,7 @@ def make_employee(source_name, target_doc=None):
         email, name = frappe.db.get_value(
             "Job Applicant", source.job_applicant, ["email_id", "applicant_name"]
         ) or (None, None)
-        
+
         if email:
             target.personal_email = email
         if name:
@@ -28,7 +28,7 @@ def make_employee(source_name, target_doc=None):
     else:
         target_doc = {}
 
-    
+
     try:
         doc = get_mapped_doc(
             "Job Offer",
@@ -46,14 +46,14 @@ def make_employee(source_name, target_doc=None):
             set_missing_values,
         )
 
-        
+
         job_offer = frappe.get_doc("Job Offer", source_name)
-        
+
         # Only proceed if Job Applicant exists
         if job_offer.job_applicant:
             applicant_data = frappe.get_doc("Job Applicant", job_offer.job_applicant)
-            
-            
+
+
             mapping = {
                 "gender": applicant_data.get("gender"),
                 "date_of_birth": applicant_data.get("date_of_birth"),
@@ -76,3 +76,13 @@ def make_employee(source_name, target_doc=None):
     except Exception as e:
         frappe.log_error(message=f"Error in make_employee: {str(e)}")
         frappe.throw(f"An error occurred while creating employee: {str(e)}")
+
+
+@frappe.whitelist()
+def validate_ctc(doc,method):
+        """
+        Validate that the  CTC value is not negative.
+        """
+        if doc.ctc:
+            if doc.ctc < 0:
+                frappe.throw("CTC cannot be a Negative Value")

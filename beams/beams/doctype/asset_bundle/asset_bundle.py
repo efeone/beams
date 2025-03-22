@@ -16,6 +16,36 @@ class AssetBundle(Document):
 
 	def after_insert(self):
 		self.generate_asset_bundle_qr()
+		self.generate_asset_bundle_qr_file()
+
+
+	def generate_asset_bundle_qr_file(self):
+		bundle_qr_code = self.get("bundle_qr_code")
+		if bundle_qr_code and frappe.db.exists({"doctype": "File", "file_url": bundle_qr_code}):
+			return
+
+		doc_url = self.get_si_file()
+		qr_image = io.BytesIO()
+		url = create(doc_url, error="L")
+		url.png(qr_image, scale=4, quiet_zone=1)
+		name = frappe.generate_hash(self.name, 5)
+		filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+		_file = frappe.get_doc(
+			{
+				"doctype": "File",
+				"file_name": filename,
+				"is_private": 0,
+				"content": qr_image.getvalue(),
+				"attached_to_doctype": self.get("doctype"),
+				"attached_to_name": self.get("name"),
+				"attached_to_field": "bundle_qr_code",
+			}
+		)
+		_file.save()
+		self.db_set("bundle_qr_code", _file.file_url)
+
+	def get_si_file(self):
+		return self.name
 
 	def generate_asset_bundle_qr(self):
 		qr_code = self.get("qr_code")
@@ -54,6 +84,31 @@ class AssetBundle(Document):
 	                values.append({keys: getattr(row, keys)})
 	        item_data[field] = values
 	    return json.dumps(item_data, indent=4)
+
+	def on_update(self):
+	    """
+	    Prevents updating an Asset Bundle if it is currently in a Returned Asset Transfer Request.
+	    """
+	    non_returned_request_names = frappe.get_all(
+	        "Asset Transfer Request",
+	        filters={"workflow_state":["!=", "Returned"]},
+	        pluck="name"
+	    )
+	    if not non_returned_request_names:
+	        return
+	    non_returned_bundles = frappe.get_all(
+	        "Bundles",
+	        filters={"parent": ["in", non_returned_request_names]},
+	        pluck="asset_bundle"
+	    )
+	    directly_assigned_bundles = frappe.get_all(
+	        "Asset Transfer Request",
+	        filters={"name": ["in", non_returned_request_names]},
+	        pluck="bundle"
+	    )
+	    non_returned_bundles_set = set(non_returned_bundles) | set(directly_assigned_bundles)
+	    if self.name in non_returned_bundles_set:
+	        frappe.throw(f"Cannot update Asset Bundle '{self.name}' as it is in a non Returned Asset Transfer Request")
 
 
 @frappe.whitelist()

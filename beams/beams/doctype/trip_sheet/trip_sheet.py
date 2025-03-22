@@ -8,8 +8,20 @@ from frappe import _
 
 class TripSheet(Document):
     def validate(self):
+        # Ensure the final_odometer_reading is not None and is an integer
+        if self.final_odometer_reading is None:
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
+
+        if not isinstance(self.final_odometer_reading, int):
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
+            
+        if not self.travel_requests and not self.transportation_requests:
+            frappe.throw("Please provide at least one of Travel Requests or Transportation Requests.")
+
         self.validate_start_datetime_and_end_datetime()
         self.calculate_and_validate_fuel_data()
+
+
     def before_save(self):
         self.validate_posting_date()
 

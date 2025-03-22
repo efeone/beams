@@ -36,6 +36,36 @@ def generate_asset_qr(doc,method = None):
     doc.db_set("qr_code", _file.file_url)
 
 def get_si_json(doc):
+    """Return a simple unique asset identifier instead of JSON"""
+    return doc.name  # Store just the asset name (e.g., "Asset-0001") in the QR
+
+
+@frappe.whitelist()
+def generate_asset_details_qr(doc,method = None):
+    asset_details = doc.get("asset_details")
+    if asset_details and frappe.db.exists({"doctype": "File", "file_url": asset_details}):
+        return
+    doc_url = get_si_json_data(doc)
+    qr_image = io.BytesIO()
+    url = create(doc_url, error="L")
+    url.png(qr_image, scale=4, quiet_zone=1)
+    name = frappe.generate_hash(doc.name, 5)
+    filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+    _file = frappe.get_doc(
+        {
+            "doctype": "File",
+            "file_name": filename,
+            "is_private": 0,
+            "content": qr_image.getvalue(),
+            "attached_to_doctype": doc.get("doctype"),
+            "attached_to_name": doc.get("name"),
+            "attached_to_field": "asset_details",
+        }
+    )
+    _file.save()
+    doc.db_set("asset_details", _file.file_url)
+
+def get_si_json_data(doc):
     essential_fields = [
         "item_code",
         "asset_name",

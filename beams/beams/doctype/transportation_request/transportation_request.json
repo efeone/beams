@@ -17,6 +17,7 @@
   "noof_travallers",
   "section_break_yjlc",
   "requirements",
+  "required_vehicle",
   "vehicles",
   "no_of_own_vehicles",
   "no_of_hired_vehicles",
@@ -66,14 +67,16 @@
    "reqd": 1
   },
   {
+   "default": "1",
    "fieldname": "noof_travallers",
    "fieldtype": "Int",
    "label": "No.of Travallers"
   },
   {
    "fieldname": "requirements",
-   "fieldtype": "Small Text",
-   "label": "Requirements"
+   "fieldtype": "Text Editor",
+   "label": "Requirements",
+   "reqd": 1
   },
   {
    "allow_on_submit": 1,
@@ -109,10 +112,11 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "eval: doc.workflow_state == \"Pending Approval\" || doc.workflow_state == \"Rejected\";\n",
+   "depends_on": "eval: doc.workflow_state == \"Pending Approval\" || doc.workflow_state == \"Rejected\";",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
    "label": "Reason for Rejection",
+   "read_only": 1,
    "read_only_depends_on": "eval: doc.workflow_state != \"Pending Approval\";"
   },
   {
@@ -128,12 +132,18 @@
    "fieldtype": "Link",
    "label": "Location",
    "options": "Location"
+  },
+  {
+   "fieldname": "required_vehicle",
+   "fieldtype": "Table",
+   "label": " Required Vehicle",
+   "options": "Required Vehicle Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-12 17:13:10.350245",
+ "modified": "2025-03-21 15:06:46.314975",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",

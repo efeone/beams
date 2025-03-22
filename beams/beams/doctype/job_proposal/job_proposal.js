@@ -10,5 +10,8 @@ frappe.ui.form.on('Job Proposal', {
                 }
             };
         });
+    },
+    proposed_ctc:function (frm){
+        frm.call("validate_proposed_ctc");
     }
 });

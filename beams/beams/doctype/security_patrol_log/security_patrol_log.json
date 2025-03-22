@@ -8,6 +8,7 @@
  "field_order": [
   "section_break_ielw",
   "employee",
+  "full_name",
   "patrol_log",
   "remarks",
   "amended_from"
@@ -45,12 +46,19 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "fetch_from": "employee.employee_name",
+   "fieldname": "full_name",
+   "fieldtype": "Data",
+   "label": "Full Name",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-27 09:11:22.160164",
+ "modified": "2025-02-28 12:21:30.350671",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Security Patrol Log",

@@ -112,24 +112,35 @@ function handle_custom_buttons(frm) {
                 }
             });
 
-            if (!frm.doc.is_form_submitted) {
-                // Button for Sending Magic Link
-                frm.add_custom_button(__('Send Magic Link'), function () {
-                    frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
-                        frappe.call({
-                            method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link',
-                            args: {
-                                applicant_id: frm.doc.name
-                            },
-                            callback: function (r) {
-                                if (r.message) {
-                                    frm.reload_doc();
-                                }
-                            }
-                        });
-                    });
-                });
-            }
+            frm.add_custom_button(__('Send Magic Link'), function () {
+          // Confirm the action with the user
+          frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
+              // Call the backend method to generate and send the magic link
+              frappe.call({
+                  method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link', // Ensure the correct method path
+                  args: {
+                      applicant_id: frm.doc.name // Send the applicant's ID to the backend
+                  },
+                  callback: function (r) {
+                      console.log(r);
+                      if (r.message) {
+                          // Assuming r.message contains the magic link URL
+                          // Optionally, copy the magic link to the clipboard
+                          navigator.clipboard.writeText(r.message)
+                              .then(function () {
+                                  frappe.show_alert(__('Magic Link copied to clipboard!'));
+                              })
+                              .catch(function (err) {
+                                  frappe.show_alert(__('Failed to copy Magic Link to clipboard'));
+                              });
+
+                          // Optionally, you can reload the document if needed
+                          frm.reload_doc();
+                      }
+                  }
+              });
+          });
+      });
 
             if (frm.doc.status === 'Accepted') {
                 frm.add_custom_button(__('Training Completed'), function () {
@@ -188,6 +199,10 @@ frappe.ui.form.on('Applicant Interview Round', {
             frappe.set_route('Form', 'Interview', row.interview_reference);
         }
         else {
+            if (frm.doc.status !== "Document Uploaded") {
+                frappe.msgprint(__('Please upload the required documents before creating or viewing an interview.'));
+                return;
+            }
             frappe.model.with_doctype('Interview', function () {
                 let new_interview = frappe.model.get_new_doc('Interview');
                 new_interview.job_applicant = frm.doc.name;
@@ -234,7 +249,7 @@ frappe.ui.form.on('Job Applicant', {
         const magic_link_statuses  = [
             'Interview Completed', 'Local Enquiry Approved', 'Selected',
             'Job Proposal Created', 'Job Proposal Accepted',
-            'Interview Scheduled', 'Interview Ongoing', 'Pending Document Upload'
+            'Interview Scheduled', 'Interview Ongoing'
         ];
 
         if (magic_link_statuses.includes(frm.doc.status)) {

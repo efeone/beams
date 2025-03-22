@@ -3,6 +3,38 @@ import frappe
 from frappe import _
 from six import string_types
 from frappe.utils import get_link_to_form
+from hrms.hr.doctype.interview.interview import Interview
+
+class InterviewOverride(Interview):
+    def on_submit(self):
+        if self.status not in ["Cleared", "Rejected"]:
+              frappe.throw(_("Only Interviews with Cleared or Rejected status can be submitted."),
+                           title=_("Not Allowed"),
+                           )
+
+        # Fetch all interviewers from the Interview Details child table
+        interviewers = [d.interviewer for d in self.interview_details if d.interviewer]
+
+        # Fetch all submitted feedback records for this interview
+        submitted_feedback = frappe.get_all(
+            "Interview Feedback",
+            filters={"interview": self.name, "docstatus": 1},
+            fields=["interviewer"],
+        )
+
+        # Extract interviewers who have submitted feedback
+        submitted_interviewers = {feedback["interviewer"] for feedback in submitted_feedback}
+
+        # Identify interviewers who haven't submitted feedback
+        missing_feedback = [i for i in interviewers if i not in submitted_interviewers]
+
+        if missing_feedback:
+            frappe.throw(
+                _("Interview cannot be submitted. The following interviewers have not submitted feedback: {0}")
+                .format(", ".join(missing_feedback)),
+                title=_("Pending Feedback"),
+            )
+
 
 @frappe.whitelist()
 def get_interview_skill_and_question_set(interview_round, interviewer=False, interview_name=False):
@@ -190,3 +222,24 @@ def get_permission_query_conditions(user):
         return conditions
 
     return None
+
+
+def update_applicant_interview_rounds(doc, method):
+    """
+    Update the Job Applicant's applicant_interview_rounds table when a new Interview is created.
+    """
+    if not doc.job_applicant:
+        return
+
+    job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
+    existing_rounds = {row.interview_round for row in job_applicant.applicant_interview_rounds}
+
+    if doc.interview_round in existing_rounds:
+        return
+
+    job_applicant.append("applicant_interview_rounds", {
+        "interview_round": doc.interview_round,
+        "interview_status": doc.status
+    })
+
+    job_applicant.save(ignore_permissions=True)

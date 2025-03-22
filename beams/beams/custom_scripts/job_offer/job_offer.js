@@ -22,6 +22,14 @@ frappe.ui.form.on("Job Offer", {
             });
         }
     },
+    validate: function(frm) {
+        if (frm.doc.ctc){
+            if (frm.doc.ctc < 0) {
+                frappe.msgprint(__('CTC cannot be a Negative  Value'));
+                frappe.validated = false
+            }
+    }
+}
 });
 
 function make_employee(frm) {

@@ -51,19 +51,22 @@ def get_employee_details(employee_id):
         }
 
 @frappe.whitelist()
-def get_job_applicants_with_employee_and_onboarding():
-    job_applicants_with_employees = frappe.get_all(
+def get_excluded_job_applicants():
+    # Get job applicants linked to active employees
+    job_applicants_with_active_employees = frappe.get_all(
         "Employee",
-        filters={"job_applicant": ["!=", ""]},
+        filters={"status": "Active", "job_applicant": ["!=", ""]},
         pluck="job_applicant"
     )
 
+    # Get job applicants linked to Employee Onboarding (excluding canceled)
     job_applicants_with_onboarding = frappe.get_all(
         "Employee Onboarding",
         filters={"docstatus": ["!=", 2]},
         pluck="job_applicant"
     )
 
-    excluded_applicants = list(set(job_applicants_with_employees + job_applicants_with_onboarding))
+    # Get applicants who satisfy **both** conditions
+    excluded_applicants = list(set(job_applicants_with_active_employees) & set(job_applicants_with_onboarding))
 
     return excluded_applicants if excluded_applicants else []
