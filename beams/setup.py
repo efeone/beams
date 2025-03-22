@@ -3801,6 +3801,13 @@ def get_property_setters():
             "property": "in_standard_filter",
             "property_type": "Check",
             "value":1
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Voucher Entry",
+            "field_name": "total_amount",
+            "property": "read_only",
+            "value":1
         }
 
 
