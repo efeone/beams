@@ -43,6 +43,7 @@
    "options": "Company"
   },
   {
+   "fetch_from": "supplier.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
@@ -102,13 +103,15 @@
    "fieldname": "stringer_amount",
    "fieldtype": "Currency",
    "label": "Stringer Amount",
-   "precision": "2"
+   "precision": "2",
+   "read_only": 1
   },
   {
    "fetch_from": "supplier.area",
    "fieldname": "area",
    "fieldtype": "Data",
-   "label": "Area"
+   "label": "Area",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -119,7 +122,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2025-03-19 11:09:02.793895",
+ "modified": "2025-03-22 09:35:39.704283",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",

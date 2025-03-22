@@ -34,6 +34,9 @@ frappe.ui.form.on('Batta Claim', {
     is_overnight_stay: function(frm) {
         frm.trigger('calculate_batta');
     },
+    is_avail_room_rent: function(frm) {
+        frm.trigger('calculate_batta');
+    },
     total_distance_travelled_km: function(frm) {
         frm.trigger('calculate_batta');
     },
@@ -123,6 +126,7 @@ frappe.ui.form.on('Batta Claim', {
                 args: {
                     designation: frm.doc.designation,
                     is_travelling_outside_kerala: frm.doc.is_travelling_outside_kerala,
+                    is_avail_room_rent: frm.doc.is_avail_room_rent,
                     is_overnight_stay: frm.doc.is_overnight_stay,
                     total_distance_travelled_km: frm.doc.total_distance_travelled_km,
                     total_hours: total_hours,

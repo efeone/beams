@@ -343,10 +343,12 @@ doc_events = {
     "Training Program": {
         "validate": "beams.beams.custom_scripts.training_program.training_program.validate_training_program"
     },
+    "Voucher Entry Type": {
+        "validate" :"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
+    },
     "Attendance Request":{
         "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
     }
-
 }
 
 # Scheduled Tasks
