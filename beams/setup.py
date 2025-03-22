@@ -571,6 +571,19 @@ def get_department_custom_fields():
                 "label": "Finance Group",
                 "options":"Finance Group",
                 "insert_after": "company"
+            },
+            {
+                "fieldname": "depart_cost_section",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "leave_block_list"
+            },
+            {
+                "fieldname": "department_cost_center",
+                "fieldtype": "Table",
+                "label": "Cost Center",
+                "options":"Department Cost Center",
+                "insert_after": "depart_cost_section"
             }
         ]
     }
@@ -1383,7 +1396,7 @@ def get_purchase_invoice_custom_fields():
                 "options": "Bureau",
                 "insert_after": "supplier"
             }
-        ]
+        ],
     }
 
 def get_supplier_custom_fields():
@@ -1513,7 +1526,7 @@ def get_employee_custom_fields():
     return {
         "Employee": [
             {
-                "fieldname": "Bureau",
+                "fieldname": "bureau",
                 "fieldtype": "Link",
                 "options": "Bureau",
                 "label": "Bureau",

@@ -158,6 +158,10 @@ override_doctype_class = {
     "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride"
 }
 
+standard_queries = {
+    "Cost Center": "beams.beams.overrides.queries.get_cost_center_list"
+}
+
 # Document Events
 # ---------------
 # Hook on document methods and events
