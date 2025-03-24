@@ -57,7 +57,7 @@
   {
    "fieldname": "room_rent_overnightbills_section",
    "fieldtype": "Section Break",
-   "label": "Room Rent for OverNight Stay"
+   "label": "Room Rent for Overnight Stay"
   },
   {
    "depends_on": "eval:doc.is_actual__ == \"0\"",
@@ -91,7 +91,7 @@
   {
    "fieldname": "daily_batta_with_overnight_stay_section",
    "fieldtype": "Section Break",
-   "label": " Daily Batta With OverNight Stay"
+   "label": " Daily Batta With Overnight Stay"
   },
   {
    "fieldname": "column_break_xaxj",
@@ -110,10 +110,10 @@
    "label": "Inside Kerala"
   },
   {
-   "description": "Travel 50 kms with minimum 8 hours.\n",
+   "description": "Travel 100 kms with minimum 8 hours.\n",
    "fieldname": "daily_batta_without_over_night_stay_section",
    "fieldtype": "Section Break",
-   "label": "Daily Batta Without OverNight Stay"
+   "label": "Daily Batta Without Overnight Stay"
   },
   {
    "fieldname": "column_break_ixxb",
@@ -126,7 +126,7 @@
    "label": "Inside Kerala"
   },
   {
-   "description": "Travel 25 kms with minimum 6 hours ",
+   "description": "Travel 50 kms with minimum 6 hours",
    "fieldname": "food_allowance_section",
    "fieldtype": "Section Break",
    "label": "Food Allowance "
@@ -188,7 +188,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-10-04 15:14:47.080979",
+ "modified": "2025-03-22 13:42:15.306374",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Policy",

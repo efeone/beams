@@ -15,10 +15,20 @@
   "from_date_and_time",
   "to_date_and_time",
   "on_air_date",
+  "section_break_ikdi",
+  "breakfast",
+  "column_break_vnsw",
+  "lunch",
+  "column_break_atwg",
+  "dinner",
+  "column_break_gaok",
+  "total_food_allowance",
   "section_break_wigg",
   "daily_batta",
   "column_break_uihk",
   "ot_batta",
+  "column_break_cjsx",
+  "total_batta",
   "section_break_elqj",
   "purpose",
   "total_hours",
@@ -53,10 +63,11 @@
    "read_only": 1
   },
   {
+   "description": "Daily Batta Without Food Allowance",
    "fieldname": "daily_batta",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": " Daily Batta",
+   "label": "  Batta",
    "read_only": 1
   },
   {
@@ -129,12 +140,64 @@
   {
    "fieldname": "column_break_uihk",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_ikdi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "breakfast",
+   "fieldtype": "Currency",
+   "label": "BreakFast",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_vnsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_atwg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_gaok",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_food_allowance",
+   "fieldtype": "Currency",
+   "label": "Total Food Allowance",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_cjsx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-09-25 11:27:06.396834",
+ "modified": "2025-03-22 12:48:25.552974",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Work Detail",
