@@ -32,9 +32,8 @@
   "column_break_gbiv",
   "daily_batta_with_overnight_stay",
   "daily_batta_without_overnight_stay",
-  "batta",
   "column_break_jwtq",
-  "food_allowance",
+  "batta",
   "ot_batta",
   "section_break_osak",
   "work_detail",
@@ -116,6 +115,7 @@
   {
    "fieldname": "batta_based_on",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Batta Based On",
    "options": "Daily\nHours"
   },
@@ -139,7 +139,7 @@
   {
    "fieldname": "total_daily_batta",
    "fieldtype": "Currency",
-   "label": "Total Daily Batta",
+   "label": "Total Batta",
    "read_only": 1
   },
   {
@@ -267,13 +267,6 @@
    "precision": "2"
   },
   {
-   "depends_on": "eval:doc.batta_type == \"Internal\"",
-   "fieldname": "food_allowance",
-   "fieldtype": "Currency",
-   "label": "Food Allowance",
-   "precision": "2"
-  },
-  {
    "fieldname": "attach",
    "fieldtype": "Attach",
    "label": "Attach"
@@ -298,7 +291,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-21 15:21:24.428732",
+ "modified": "2025-03-22 12:26:10.349038",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
