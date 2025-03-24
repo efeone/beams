@@ -161,6 +161,10 @@ override_doctype_class = {
     "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride"
 }
 
+standard_queries = {
+    "Cost Center": "beams.beams.overrides.queries.get_cost_center_list"
+}
+
 # Document Events
 # ---------------
 # Hook on document methods and events
