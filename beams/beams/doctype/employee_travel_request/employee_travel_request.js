@@ -77,23 +77,32 @@ function set_room_criteria_filter(frm) {
 }
 
 function set_mode_of_travel_filter(frm) {
+  // Check if the session user is Administrator
+  if (frappe.session.user === "Administrator") {
+    frm.set_query("mode_of_travel", function() {
+      return {}; // No filter applied
+    });
+    return;
+  }
+
   frappe.call({
-      method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_mode_of_travel",
-      args: {
-        batta_policy_name: frm.doc.batta_policy
-      },
-      callback: function (filter_response) {
-          let mode_of_travel = filter_response.message || [];
-          frm.set_query("mode_of_travel", function() {
-            return {
-              filters: {
-                name: ["in", mode_of_travel]
-              }
-            }
-          })
-      },
+    method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_mode_of_travel",
+    args: {
+      batta_policy_name: frm.doc.batta_policy
+    },
+    callback: function (filter_response) {
+      let mode_of_travel = filter_response.message || [];
+      frm.set_query("mode_of_travel", function() {
+        return {
+          filters: {
+            name: ["in", mode_of_travel]
+          }
+        };
+      });
+    },
   });
 }
+
 
 function calculateTotalDays(frm) {
     if (frm.doc.start_date && frm.doc.end_date) {
