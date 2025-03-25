@@ -1872,7 +1872,14 @@ def get_voucher_entry_custom_fields():
                 "options": "Bureau",
                 "label": "Bureau",
                 "insert_after": "balance"
-            }
+            },
+            {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "options": "Department",
+                "label": "Department",
+                "insert_after": "company"
+            },
         ]
     }
 
