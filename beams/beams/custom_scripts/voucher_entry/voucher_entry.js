@@ -55,10 +55,23 @@ function show_petty_cash_dialog(frm) {
                 label: __("Requested Amount"),
                 fieldtype: "Currency",
                 reqd: 1
-            }
+            },
+            {
+                fieldname: "reason",
+                label: __("Reason"),
+                fieldtype: "Small Text",
+                reqd: 1
+            },
         ],
         primary_action_label: __("Submit"),
         primary_action(values) {
+            if (values.requested_amount <= 0) {
+                frappe.throw({
+                    title: __("Invalid Amount"),
+                    message: __("Requested Amount should be greater than 0. Please enter a valid amount."),
+                    indicator: "red"
+                });
+            }
             submit_petty_cash_request(frm, values, d);
         }
     });
@@ -74,7 +87,8 @@ function submit_petty_cash_request(frm, values, dialog) {
             bureau: values.bureau,
             mode_of_payment: values.mode_of_payment,
             account: values.account,
-            requested_amount: values.requested_amount
+            requested_amount: values.requested_amount,
+            reason: values.reason
         },
         callback: function (response) {
             if (response.message.status === "success") {
