@@ -37,6 +37,8 @@
   {
    "fieldname": "supplier",
    "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Supplier",
    "options": "Supplier"
   },
@@ -123,11 +125,13 @@
   {
    "fieldname": "ending_date_and_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Ending Date and Time "
   },
   {
    "fieldname": "starting_date_and_time",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Starting Date and Time "
   },
   {
@@ -152,7 +156,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-25 10:52:18.820262",
+ "modified": "2025-03-25 12:23:17.388355",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
