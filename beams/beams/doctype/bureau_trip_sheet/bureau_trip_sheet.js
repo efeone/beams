@@ -1,19 +1,11 @@
+// Copyright (c) 2024, efeone and contributors
+// For license information, please see license.txt
+
 frappe.ui.form.on("Bureau Trip Sheet", {
     refresh: function (frm) {
         filter_supplier_field(frm);
-    },
-
-    is_overnight_stay: function (frm) {
-        update_daily_batta(frm);
-    },
-
-    is_travelling_outside_kerala: function (frm) {
-        update_daily_batta(frm);
-    },
-
-    driver: function (frm) {
-        update_daily_batta(frm);
     }
+
 });
 
 // Function to filter the supplier field
