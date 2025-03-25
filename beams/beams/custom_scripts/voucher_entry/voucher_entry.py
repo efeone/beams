@@ -20,7 +20,6 @@ def create_petty_cash_request(voucher_entry_name, bureau, mode_of_payment, accou
     })
 
     petty_cash.insert(ignore_permissions=True)
-    petty_cash.submit()
     frappe.db.commit()
 
     return {"status": "success", "message": "Petty Cash Request Created Successfully!", "docname": petty_cash.name}
