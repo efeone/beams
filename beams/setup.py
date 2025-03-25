@@ -1478,6 +1478,14 @@ def get_supplier_custom_fields():
                 "depends_on": "eval:doc.is_stringer == 1",
                 "insert_after": "bureau"
 
+            },
+            {
+                "fieldname": "ot_batta",
+                "fieldtype": "Currency",
+                "label": "OT Batta",
+                "depends_on": "eval:doc.is_transporter == 1",
+                "insert_after": "is_transporter"
+
             }
         ]
     }
