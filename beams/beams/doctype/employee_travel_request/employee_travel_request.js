@@ -43,16 +43,16 @@ frappe.ui.form.on('Employee Travel Request', {
     posting_date:function (frm){
       frm.call("validate_posting_date");
     },
-    end_date:function (frm){
-      frm.call("validate_dates");
-       calculateTotalDays(frm);
-    },
     validate:function(frm){
       frm.call("validate_expected_time");
     },
     start_date:function(frm){
       calculateTotalDays(frm);
+    },
+    end_date:function (frm){
+      frm.call("total_days_calculate");
     }
+
 });
 
 function set_room_criteria_filter(frm) {

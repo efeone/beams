@@ -20,9 +20,9 @@ class EmployeeTravelRequest(Document):
 
     def validate(self):
         self.validate_dates()
-        self.calculate_total_days()
         self.validate_expected_time()
         self.total_days_calculate()
+
 
     def before_save(self):
         self.validate_posting_date()
@@ -42,9 +42,7 @@ class EmployeeTravelRequest(Document):
                 if self.start_date < today():
                     frappe.throw("Start Date cannot be in the past.")
 
-    def calculate_total_days(self):
-        if self.start_date and self.end_date:
-            self.total_days = date_diff(self.end_date, self.start_date)
+
 
     def on_update_after_submit(self):
         """
@@ -83,6 +81,7 @@ class EmployeeTravelRequest(Document):
             if self.expected_check_out_time < self.expected_check_in_time:
                 frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
 
+    @frappe.whitelist()
     def total_days_calculate(self):
         """Calculate the total number of travel days, ensuring at least one day."""
         if self.start_date and self.end_date:
