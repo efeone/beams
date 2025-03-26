@@ -21,13 +21,23 @@
   "batta",
   "section_break_tjbr",
   "work_details",
+  "section_break_xxsb",
+  "total_distance_travelled_km",
+  "column_break_fgob",
+  "total_hours",
   "trip_details_section",
   "departure_location",
   "destination_location",
   "column_break_cdph",
   "ending_date_and_time",
   "starting_date_and_time",
-  "amended_from"
+  "amended_from",
+  "section_break_dwds",
+  "total_daily_batta",
+  "column_break_zjgd",
+  "total_ot_batta",
+  "column_break_jevl",
+  "total_driver_batta"
  ],
  "fields": [
   {
@@ -40,7 +50,8 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "reqd": 1
   },
   {
    "fieldname": "company",
@@ -62,9 +73,11 @@
    "fetch_from": "supplier.ot_batta",
    "fieldname": "ot_batta",
    "fieldtype": "Currency",
-   "label": "OT Batta"
+   "label": "OT Batta",
+   "read_only": 1
   },
   {
+   "depends_on": "eval:doc.is_overnight_stay ==0",
    "fieldname": "daily_batta_without_overnight_stay",
    "fieldtype": "Currency",
    "label": "Daily Batta Without Overnight Stay"
@@ -82,6 +95,7 @@
    "label": "  Is Travelling Outside Kerala"
   },
   {
+   "depends_on": "eval:doc.is_overnight_stay ==1",
    "fieldname": "daily_batta_with_overnight_stay",
    "fieldtype": "Currency",
    "label": "Daily Batta With Overnight Stay"
@@ -89,7 +103,8 @@
   {
    "fieldname": "batta",
    "fieldtype": "Currency",
-   "label": "Batta"
+   "label": "Batta",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_hzfr",
@@ -151,12 +166,62 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "section_break_xxsb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_distance_travelled_km",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled(KM)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fgob",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dwds",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_daily_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zjgd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total Ot Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jevl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_driver_batta",
+   "fieldtype": "Currency",
+   "label": "Total Driver Batta",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-25 12:23:17.388355",
+ "modified": "2025-03-25 23:33:01.033127",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
