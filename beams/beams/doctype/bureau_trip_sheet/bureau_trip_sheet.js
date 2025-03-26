@@ -108,7 +108,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
     }
 
 });
-
+/* set filter is transporter in Supplier. */
 function filter_supplier_field(frm) {
     frm.set_query("supplier", function () {
         return {
@@ -119,6 +119,7 @@ function filter_supplier_field(frm) {
     });
 }
 
+/* Calculate total hours, number of days, and overtime hours */
 function calculate_hours_and_days(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
@@ -138,6 +139,8 @@ function calculate_hours_and_days(frm, cdt, cdn) {
                 frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
                 frappe.model.set_value(cdt, cdn, 'number_of_days', number_of_days);
 
+                frm.refresh_field("work_details");
+
                 setTimeout(() => {
                     calculate_daily_batta(frm, cdt, cdn);
                     calculate_ot_batta(frm, cdt, cdn);
@@ -146,6 +149,7 @@ function calculate_hours_and_days(frm, cdt, cdn) {
     }
 }
 
+/* Calculate daily batta based on number of days and batta rate */
 function calculate_daily_batta(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
@@ -157,6 +161,7 @@ function calculate_daily_batta(frm, cdt, cdn) {
     frm.refresh_field('work_details');
 }
 
+/* Calculate overtime batta based on OT hours and OT batta rate */
 function calculate_ot_batta(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
 
@@ -167,6 +172,7 @@ function calculate_ot_batta(frm, cdt, cdn) {
     frm.refresh_field('work_details');
 }
 
+/* Update daily batta for all work details rows */
 function update_all_daily_batta(frm) {
     if (frm.doc.work_details) {
         frm.doc.work_details.forEach(row => {
@@ -178,6 +184,8 @@ function update_all_daily_batta(frm) {
     }
 }
 
+
+/* Update OT batta for all work details rows */
 function update_all_ot_batta(frm) {
     if (frm.doc.work_details) {
         frm.doc.work_details.forEach(row => {
@@ -189,6 +197,7 @@ function update_all_ot_batta(frm) {
     }
 }
 
+/* Calculate total batta by summing daily batta values */
 function calculate_batta(frm) {
     let total_batta = (frm.doc.daily_batta_with_overnight_stay || 0) +
                       (frm.doc.daily_batta_without_overnight_stay || 0);
@@ -196,6 +205,7 @@ function calculate_batta(frm) {
     frappe.model.set_value(frm.doctype, frm.docname, 'batta', total_batta);
 }
 
+/* Calculate total food allowance and total batta for a row */
 function calculate_total_food_allowance(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
     row.total_food_allowance = (row.breakfast || 0) + (row.lunch || 0) + (row.dinner || 0);
@@ -208,41 +218,51 @@ function calculate_total_food_allowance(frm, cdt, cdn) {
     frm.set_value("total_daily_batta", total_batta_sum);
 }
 
+/* Calculate total distance travelled across all work details rows */
 function calculate_total_distance_travelled(frm) {
-    let totalDistance = 0;
+    let total_distance = 0;
     frm.doc.work_details.forEach(row => {
-        totalDistance += row.distance_travelled_km || 0;
+        total_distance += row.distance_travelled_km || 0;
     });
-    frm.set_value('total_distance_travelled_km', totalDistance);
+    frm.set_value('total_distance_travelled_km', total_distance);
+    frm.refresh_field("total_distance_travelled_km");
 }
 
+/* Calculate total hours from all work details rows */
 function calculate_hours(frm) {
-    let totalHours = 0;
+    let total_hours = 0;
     frm.doc.work_details.forEach(row => {
-        totalHours += row.total_hours || 0;
+        total_hours += row.total_hours || 0;
     });
     frm.set_value('total_hours', totalHours);
+    frm.refresh_field("total_hours");
 }
 
+/* Calculate total daily batta for all work details rows */
 function calculate_total_daily_batta(frm) {
-    let totalBatta = 0;
+    let total_batta = 0;
     frm.doc.work_details.forEach(row => {
-        totalBatta += row.total_batta || 0;
+        total_batta += row.total_batta || 0;
     });
-    frm.set_value('total_daily_batta', totalBatta);
+    frm.set_value('total_daily_batta', total_batta);
+    frm.refresh_field("total_daily_batta");
 }
 
+/* Calculate total OT batta for all work details rows */
 function calculate_total_ot_batta(frm) {
-    let totalOtBatta = 0;
+    let total_ot_batta = 0;
     frm.doc.work_details.forEach(row => {
-        totalOtBatta += row.ot_batta || 0;
+        total_ot_batta += row.ot_batta || 0;
     });
-    frm.set_value('total_ot_batta', totalOtBatta);
+    frm.set_value('total_ot_batta', total_ot_batta);
+    frm.refresh_field("total_ot_batta");
 }
 
+/* Calculate total driver batta as the sum of total daily batta and total OT batta */
 function calculate_total_driver_batta(frm) {
     let total_daily_batta = frm.doc.total_daily_batta || 0;
     let total_ot_batta = frm.doc.total_ot_batta || 0;
 
     frm.set_value('total_driver_batta', total_daily_batta + total_ot_batta);
+    frm.refresh_field("total_driver_batta");
 }
