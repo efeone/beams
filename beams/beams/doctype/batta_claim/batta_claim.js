@@ -193,10 +193,22 @@ frappe.ui.form.on('Work Detail', {
         set_batta_for_food_allowance(frm, cdt, cdn);
     },
     to_date_and_time: function(frm, cdt, cdn) {
+      let row = locals[cdt][cdn];
+
+      if (row.from_date_and_time && row.to_date_and_time) {
+          let from_date = new Date(row.from_date_and_time);
+          let to_date = new Date(row.to_date_and_time);
+
+          if (to_date <= from_date) {
+              frappe.msgprint(__('To Date & Time must be greater than From Date & Time'));
+              frappe.model.set_value(cdt, cdn, 'to_date_and_time', null);
+              return;
+        }
         calculate_hours(frm, cdt, cdn);
         calculate_daily_batta(frm, cdt, cdn);
         set_batta_for_food_allowance(frm, cdt, cdn);
     }
+  }
 });
 
 function calculate_total_distance_travelled(frm) {
