@@ -15,6 +15,7 @@
   "designation",
   "company",
   "bureau",
+  "is_delhi_bureau",
   "purpose",
   "column_break_lgjy",
   "cost_centre",
@@ -37,13 +38,12 @@
   "ot_batta",
   "section_break_osak",
   "work_detail",
+  "section_break_ozsf",
   "total_distance_travelled_km",
+  "column_break_fxzl",
+  "total_hours",
   "section_break_nsff",
-  "total_daily_batta",
-  "column_break_vksq",
-  "total_ot_batta",
-  "column_break_ofhv",
-  "total_driver_batta"
+  "total_daily_batta"
  ],
  "fields": [
   {
@@ -88,7 +88,8 @@
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.batta_type == \"External\"\n",
@@ -143,27 +144,6 @@
    "read_only": 1
   },
   {
-   "depends_on": "eval:doc.batta_type == \"External\"",
-   "fieldname": "total_ot_batta",
-   "fieldtype": "Currency",
-   "label": "Total OT Batta",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_driver_batta",
-   "fieldtype": "Currency",
-   "label": "Total Driver Batta",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_vksq",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_ofhv",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "work_detail",
    "fieldtype": "Table",
    "label": "Work Detail",
@@ -204,12 +184,6 @@
    "fieldname": "purpose",
    "fieldtype": "Small Text",
    "label": "Purpose"
-  },
-  {
-   "fieldname": "total_distance_travelled_km",
-   "fieldtype": "Float",
-   "label": "Total Distance Travelled (KM)",
-   "read_only": 1
   },
   {
    "depends_on": "eval: doc.batta_type == 'Internal'",
@@ -277,6 +251,32 @@
    "fieldname": "is_avail_room_rent",
    "fieldtype": "Check",
    "label": "Is Avail Room Rent"
+  },
+  {
+   "fieldname": "section_break_ozsf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fxzl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_distance_travelled_km",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled(KM)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_delhi_bureau",
+   "fieldtype": "Check",
+   "label": "Is Delhi Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -291,7 +291,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-22 12:26:10.349038",
+ "modified": "2025-03-25 11:00:55.832977",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
