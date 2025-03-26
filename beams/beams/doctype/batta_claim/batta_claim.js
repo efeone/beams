@@ -62,9 +62,11 @@ frappe.ui.form.on('Batta Claim', {
         calculate_allowance(frm);
     },
     is_travelling_outside_kerala: function(frm) {
+        update_all_daily_batta(frm);
         calculate_allowance(frm);
     },
     is_overnight_stay: function(frm) {
+        update_all_daily_batta(frm);
         calculate_allowance(frm);
         frm.doc.work_detail.forEach(row => {
           set_batta_for_food_allowance(frm, row["doctype"], row["name"]);
@@ -72,6 +74,7 @@ frappe.ui.form.on('Batta Claim', {
         })
     },
     is_avail_room_rent: function(frm) {
+        update_all_daily_batta(frm);
         calculate_allowance(frm);
     },
     is_delhi_bureau: function(frm) {
@@ -80,6 +83,7 @@ frappe.ui.form.on('Batta Claim', {
         set_batta_for_food_allowance(frm, row["doctype"], row["name"]);
       })
     },
+    //fetching policy values and setting fields read-only accordingly
     refresh: function(frm) {
         frappe.call({
             method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
@@ -211,6 +215,9 @@ frappe.ui.form.on('Work Detail', {
   }
 });
 
+/*
+  Calculates the total distance traveled based on all work detail entries.
+*/
 function calculate_total_distance_travelled(frm) {
     let totalDistance = 0;
     frm.doc.work_detail.forEach(row => {
@@ -219,6 +226,9 @@ function calculate_total_distance_travelled(frm) {
     frm.set_value('total_distance_travelled_km', totalDistance);
 }
 
+/*
+  Calculates the total hours worked based on all work detail entries.
+*/
 function calculate_total_hours(frm) {
     let totalHours = 0;
     frm.doc.work_detail.forEach(row => {
@@ -227,18 +237,20 @@ function calculate_total_hours(frm) {
     frm.set_value('total_hours', totalHours);
 }
 
+/*
+  Calculates hours worked for a specific row based on the from and to date/time fields.
+*/
 function calculate_hours(frm, cdt, cdn) {
     let row = frappe.get_doc(cdt, cdn);
     if (row.from_date_and_time && row.to_date_and_time) {
         let total_hours = (new Date(row.to_date_and_time) - new Date(row.from_date_and_time)) / (1000 * 60 * 60);
-
-        frappe.db.get_single_value('Beams Accounts Settings', 'default_working_hours')
-            .then(default_hours => {
                 frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
-            });
     }
 }
 
+/*
+  Calculates the daily batta based on the total hours worked and the batta type.
+*/
 function calculate_daily_batta(frm, cdt, cdn) {
     let row = frappe.get_doc(cdt, cdn);
 
@@ -255,6 +267,9 @@ function calculate_daily_batta(frm, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, 'daily_batta', daily_batta);
 }
 
+/*
+  Updates daily batta for all child rows in the work detail table.
+*/
 function update_all_daily_batta(frm) {
     if (frm.doc.work_detail) {
         frm.doc.work_detail.forEach(row => {
@@ -263,6 +278,9 @@ function update_all_daily_batta(frm) {
     }
 }
 
+/*
+  Calculates the total daily batta across all work detail entries.
+*/
 function calculate_total_daily_batta(frm) {
     let totalDailyBatta = 0;
     frm.doc.work_detail.forEach(row => {
@@ -287,6 +305,7 @@ function handle_designation_based_on_batta_type(frm) {
     }
 }
 
+/* Sets the batta-based options based on the selected batta type.*/
 function set_batta_based_on_options(frm) {
     if (frm.doc.batta_type === 'External') {
         frm.set_df_property('batta_based_on', 'options', 'Hours');
@@ -297,6 +316,7 @@ function set_batta_based_on_options(frm) {
     }
 }
 
+/* Calculates total batta based on room rent, daily batta with and without overnight stay.*/
 function calculate_batta(frm) {
     let total_batta = (frm.doc.room_rent_batta || 0)
                     + (frm.doc.daily_batta_without_overnight_stay || 0)
@@ -332,6 +352,7 @@ function calculate_allowance(frm) {
     });
 }
 
+/* Determines eligibility for food allowance and updates fields accordingly.*/
 function set_batta_for_food_allowance(frm, cdt, cdn) {
     let child = locals[cdt][cdn];
     let designation = frm.doc.designation;
@@ -383,6 +404,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
     }
 }
 
+/* Calculation of Total Food Allowance. */
 function calculate_total_food_allowance(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
     row.total_food_allowance = (row.breakfast || 0) + (row.lunch || 0) + (row.dinner || 0);
@@ -390,6 +412,7 @@ function calculate_total_food_allowance(frm, cdt, cdn) {
     frm.refresh_field("work_detail");
 }
 
+/* Calculation of total batta based on daily batta and food allowance. */
 function calculate_total_batta(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
     frappe.model.set_value(cdt, cdn, "total_batta", (row.daily_batta || 0) + (row.total_food_allowance || 0));
