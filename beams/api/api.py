@@ -1,6 +1,7 @@
 import frappe
 from frappe import _
 from frappe.utils import getdate
+from hrms.api.roster import get_shifts
 
 @frappe.whitelist(allow_guest=True)
 def response(message, data, success, status_code):
@@ -451,3 +452,22 @@ def get_employees(employee_id=None, department=None):
         frappe.log_error(frappe.get_traceback())
         clean_exception_message = strip_html_tags(str(exception))
         return response(clean_exception_message, {}, False, 401)
+
+@frappe.whitelist()
+def get_employee_shift(employee: str, date: str):
+    '''
+	    Fetch the shift details of an employee for a specific date.
+
+	    :param employee: Employee ID (e.g., "EMP-0001")
+	    :param date: Date in YYYY-MM-DD format
+	    :return: Shift details if found, else an empty dictionary
+    '''
+
+    # Define filters
+    employee_filters = {"name": employee}
+    shift_filters = {}
+
+    shifts = get_shifts(date, date, employee_filters, shift_filters)
+
+    # Return the shift details if found
+    return shifts.get(employee, [])
