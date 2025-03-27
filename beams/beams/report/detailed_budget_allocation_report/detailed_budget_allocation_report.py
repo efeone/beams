@@ -63,6 +63,18 @@ def get_columns(filters):
         columns.append(
             {'label': _('Total Budget'), 'fieldtype': 'Currency', 'fieldname': 'total_budget', 'width': 200}
         )
+
+    if not filters.get("budget_amount_only"):
+        fields = [
+            {'label': _('Finance Group'), 'fieldtype': 'Link', 'fieldname': 'finance_group', 'options': 'Finance Group', 'width': 200},
+            {'label': _('Department'), 'fieldtype': 'Link', 'fieldname': 'department', 'options': 'Department', 'width': 200},
+            {'label': _('Division'), 'fieldtype': 'Link', 'fieldname': 'division', 'options': 'Division', 'width': 200},
+            {'label': _('Cost Head'), 'fieldtype': 'Link', 'fieldname': 'cost_head', 'options': 'Cost Head', 'width': 200},
+            {'label': _('Cost Subhead'), 'fieldtype': 'Link', 'fieldname': 'cost_subhead', 'options': 'Cost Subhead', 'width': 200}
+        ]
+        # Insert all fields at index 1 in one step
+        columns[1:1] = fields
+
     filters["currency_fields"] = currency_fields
     return columns
 
@@ -151,6 +163,16 @@ def get_data(filters):
                                 'account': cost_details.get('account', ''),
                                 'total_budget': total_budget
                             }
+
+                            if not filters.get("budget_amount_only"):
+                                csh_row.update({
+                                    'finance_group': fg,
+                                    'department': dept,
+                                    'division': div,
+                                    'cost_head': ch,
+                                    'cost_subhead': csh,
+                                })
+
                             if period != 'Yearly':
                                 budget_column_data = get_budget_column_data(period, months_order, row_id)
                                 csh_row.update(budget_column_data)
@@ -158,17 +180,33 @@ def get_data(filters):
 
                             # Accumulate child budget into its parent
                             for field in currency_fields:
+                                budget_map[ch_id].update({
+                                    'finance_group': fg,
+                                    'department': dept,
+                                    'division': div,
+                                    'cost_head': ch,
+                                })
                                 budget_map[ch_id][field] += csh_row.get(field, 0)
 
                         # Propagate cost head budget to department
                         for field in currency_fields:
+                            budget_map[div].update({
+                                'finance_group': fg,
+                                'department': dept,
+                                'division': div,
+                            })
                             budget_map[div][field] += budget_map[ch_id][field]
 
                     # Propagate division budget to departments
                     for field in currency_fields:
+                        budget_map[dept].update({
+                            'finance_group': fg,
+                            'department': dept,
+                        })
                         budget_map[dept][field] += budget_map[div][field]
                 # Propagate department budget to finance group
                 for field in currency_fields:
+                    budget_map[fg_id]['finance_group'] = fg
                     budget_map[fg_id][field] += budget_map[dept][field]
 
             # Propagate finance group budget to company
