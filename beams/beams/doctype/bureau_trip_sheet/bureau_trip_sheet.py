@@ -44,7 +44,7 @@ class BureauTripSheet(Document):
         if self.work_details:
             for row in self.work_details:
                 if row.total_hours:
-                    total_hours += row.total_hours
+                    total_hours += float(row.total_hours) 
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_hours = total_hours
