@@ -130,7 +130,7 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
     '''
     # Convert inputs to proper types
     total_distance_travelled_km = float(total_distance_travelled_km or 0)
-    total_hours = float(total_hours or 0)
+    total_hours = total_hours or 0
 
     # Fetch the Batta Policy for the given designation
     batta_policy = frappe.get_all('Batta Policy', filters={'designation': designation}, fields=['*'])

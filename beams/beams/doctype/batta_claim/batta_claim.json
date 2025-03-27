@@ -64,7 +64,7 @@
    "fieldname": "batta_type",
    "fieldtype": "Select",
    "label": "Batta Type",
-   "options": "External\nInternal"
+   "options": "Internal\nExternal"
   },
   {
    "depends_on": "eval:doc.batta_type == \"Internal\"\n",
@@ -291,7 +291,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-25 11:00:55.832977",
+ "modified": "2025-03-27 13:44:09.312155",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
