@@ -442,7 +442,7 @@ def get_employees(employee_id=None, department=None):
             filters['department'] = emp_department
         elif department:
             filters['department'] = department
-        employees = frappe.db.get_list('Employee', fields=fields, filters=filters)
+        employees = frappe.get_all('Employee', fields=fields, filters=filters)
         if employees:
             return response('Employees retrieved successfully', employees, True, 200)
         else:
