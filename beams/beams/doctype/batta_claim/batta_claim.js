@@ -119,7 +119,10 @@ frappe.ui.form.on('Batta Claim', {
 frappe.ui.form.on('Work Detail', {
     distance_travelled_km: function(frm, cdt, cdn) {
         calculate_total_distance_travelled(frm);
-        set_batta_for_food_allowance(frm, cdt, cdn)
+        setTimeout(() => {
+            set_batta_for_food_allowance(frm, cdt, cdn);
+            calculate_batta(frm, cdt, cdn);
+        }, 30);
     },
     daily_batta: function(frm, cdt, cdn) {
         calculate_total_batta(frm, cdt, cdn);
@@ -177,11 +180,17 @@ frappe.ui.form.on('Work Detail', {
         calculate_total_distance_travelled(frm);
         calculate_total_daily_batta(frm);
         calculate_total_hours(frm);
+        setTimeout(() => {
+            calculate_batta(frm, cdt, cdn);
+        }, 30);
     },
     work_detail_remove: function(frm, cdt, cdn) {
         calculate_total_distance_travelled(frm);
         calculate_total_daily_batta(frm);
         calculate_total_hours(frm);
+        setTimeout(() => {
+            calculate_batta(frm, cdt, cdn);
+        }, 30);
     },
     total_hours: function(frm, cdt, cdn) {
         calculate_daily_batta(frm, cdt, cdn);
@@ -194,7 +203,10 @@ frappe.ui.form.on('Work Detail', {
     from_date_and_time: function(frm, cdt, cdn) {
         calculate_hours(frm, cdt, cdn);
         calculate_daily_batta(frm, cdt, cdn);
-        set_batta_for_food_allowance(frm, cdt, cdn);
+        setTimeout(() => {
+            set_batta_for_food_allowance(frm, cdt, cdn);
+            calculate_batta(frm, cdt, cdn);
+        }, 30);
     },
     to_date_and_time: function(frm, cdt, cdn) {
       let row = locals[cdt][cdn];
@@ -210,7 +222,10 @@ frappe.ui.form.on('Work Detail', {
         }
         calculate_hours(frm, cdt, cdn);
         calculate_daily_batta(frm, cdt, cdn);
-        set_batta_for_food_allowance(frm, cdt, cdn);
+        setTimeout(() => {
+            set_batta_for_food_allowance(frm, cdt, cdn);
+            calculate_batta(frm, cdt, cdn);
+        }, 30);
     }
   }
 });
