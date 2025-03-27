@@ -234,7 +234,7 @@ function calculate_hours(frm) {
     frm.doc.work_details.forEach(row => {
         total_hours += row.total_hours || 0;
     });
-    frm.set_value('total_hours', totalHours);
+    frm.set_value('total_hours', total_hours);
     frm.refresh_field("total_hours");
 }
 
