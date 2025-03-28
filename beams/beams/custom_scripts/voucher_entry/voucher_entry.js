@@ -54,7 +54,9 @@ function show_petty_cash_dialog(frm) {
                 fieldname: "requested_amount",
                 label: __("Requested Amount"),
                 fieldtype: "Currency",
-                reqd: 1
+                reqd: 1,
+                read_only: 1,
+                default: frm.doc.total_amount - frm.doc.balance
             },
             {
                 fieldname: "reason",
