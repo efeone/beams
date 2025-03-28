@@ -3,6 +3,7 @@
 
 import frappe
 import json
+import re
 from frappe.utils import getdate, get_datetime, date_diff
 from frappe.model.document import Document
 
@@ -129,8 +130,16 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
         Calculation Of Total Batta Allowance based on Batta Policy
     '''
     # Convert inputs to proper types
-    total_distance_travelled_km = float(total_distance_travelled_km or 0)
-    total_hours = total_hours or 0
+    def sanitize_number(value):
+        """Extract a valid float from a string by keeping only the first valid decimal number."""
+        if isinstance(value, str):
+            match = re.search(r'\d+(\.\d+)?', value)
+            return float(match.group()) if match else 0.0
+        return float(value or 0.0)
+
+    # Convert inputs safely
+    total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
+    total_hours = sanitize_number(total_hours)
 
     # Fetch the Batta Policy for the given designation
     batta_policy = frappe.get_all('Batta Policy', filters={'designation': designation}, fields=['*'])
