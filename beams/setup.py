@@ -4323,7 +4323,7 @@ def get_beams_roles():
     '''
         Method to get BEAMS specific roles
     '''
-    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver']
+    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator']
 
 def get_custom_translations():
     '''
