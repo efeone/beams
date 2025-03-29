@@ -46,7 +46,7 @@
    "fieldname": "asset_type",
    "fieldtype": "Select",
    "label": "Asset Type",
-   "options": "Single Asset\nBundle",
+   "options": "\nSingle Asset\nBundle",
    "reqd": 1
   },
   {
@@ -171,7 +171,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-03 13:58:26.799954",
+ "modified": "2025-03-17 15:10:36.965694",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",

@@ -56,6 +56,7 @@ def after_install():
     create_custom_fields(get_hr_settings_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_category_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_employee_onboarding_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -123,6 +124,7 @@ def before_uninstall():
     delete_custom_fields(get_hr_settings_custom_fields())
     delete_custom_fields(get_asset_category_custom_fields())
     delete_custom_fields(get_asset_movement_custom_fields())
+    delete_custom_fields(get_employee_onboarding_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -164,6 +166,46 @@ def get_shift_assignment_custom_fields():
 
             }
 
+        ]
+    }
+
+def get_employee_onboarding_custom_fields():
+    '''
+    Custom fields that need to be added to the Employment Onboarding DocType
+    '''
+    return {
+        "Employee Onboarding": [
+            {
+                "fieldname": "section_break_onboard",
+                "fieldtype": "Section Break",
+                "label": " ",
+                "insert_after": "activities"
+            },
+            {
+                "fieldname": "assigned_assets",
+                "fieldtype": "Table MultiSelect",
+                "label": "Assigned Assets",
+                "options": "Assets",
+                "insert_after": "section_break_onboard"
+            },
+            {
+                "fieldname": "column_break_onboarding",
+                "fieldtype": "Column Break",
+                "insert_after": "assigned_assets"
+            },
+            {
+                "fieldname": "assigned_bundles",
+                "fieldtype": "Table MultiSelect",
+                "label": "Assigned bundles",
+                "options": "Bundles",
+                "insert_after": "column_break_onboarding"
+            },
+            {
+                "fieldname": "onboarding_asset_section_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "assigned_bundles"
+            }
         ]
     }
 
