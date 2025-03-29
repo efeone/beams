@@ -4,6 +4,8 @@
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.utils import get_datetime, getdate
+
 
 class BureauTripSheet(Document):
     def validate(self):
@@ -44,7 +46,7 @@ class BureauTripSheet(Document):
         if self.work_details:
             for row in self.work_details:
                 if row.total_hours:
-                    total_hours += float(row.total_hours) 
+                    total_hours += float(row.total_hours)
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_hours = total_hours
@@ -76,3 +78,133 @@ class BureauTripSheet(Document):
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_ot_batta = total_ot_batta
+
+@frappe.whitelist()
+def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):
+    '''
+        Method to get Batta for Food
+    '''
+    values = { 'break_fast':0, 'lunch':0, 'dinner':0 }
+    batta_policy = frappe.db.exists('Batta Policy', { 'designation':designation })
+    from_date_time = get_datetime(from_date_time)
+    to_date_time = get_datetime(to_date_time)
+    required_hours = 6
+    if batta_policy and float(total_hrs)>required_hours:
+        break_fast, lunch, dinner = frappe.db.get_value('Batta Policy', batta_policy, ['break_fast', 'lunch', 'dinner'])
+        same_date = False
+        if getdate(from_date_time) == getdate(to_date_time):
+            same_date = True
+        #Breakfast check
+        if same_date:
+            date_threshold = getdate(from_date_time)
+            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
+            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
+            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
+                values['break_fast'] = break_fast
+            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
+            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
+            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
+                values['lunch'] = lunch
+            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
+            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
+            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
+                values['dinner'] = dinner
+        else:
+            #Breakfast check
+            date_threshold = getdate(from_date_time) #Check with Start Date
+            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
+            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
+            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
+                values['break_fast'] = break_fast
+            date_threshold = getdate(to_date_time) #Check with End Date
+            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
+            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
+            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
+                values['break_fast'] = values.get('break_fast', 0) + break_fast
+            #Lunch Check
+            date_threshold = getdate(from_date_time) #Check with Start Date
+            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
+            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
+            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
+                values['lunch'] = lunch
+            date_threshold = getdate(to_date_time) #Check with End Date
+            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
+            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
+            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
+                values['lunch'] = values.get('lunch', 0) + lunch
+            #Dinner Check
+            date_threshold = getdate(from_date_time) #Check with Start Date
+            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
+            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
+            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
+                values['dinner'] = dinner
+            date_threshold = getdate(to_date_time) #Check with End Date
+            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
+            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
+            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
+                values['dinner'] = values.get('dinner', 0) + dinner
+    return values
+
+@frappe.whitelist()
+def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, total_distance_travelled_km=0, total_hours=0):
+    '''
+        Calculation Of Total Batta Allowance based on Batta Policy
+    '''
+    #Convert inputs to proper types
+    def sanitize_number(value):
+        try:
+            return float(value)
+        except:
+            return 0
+    total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
+    total_hours = sanitize_number(total_hours)
+
+    # Fetch the Batta Policy for the given designation
+    batta_policy = frappe.get_all('Batta Policy', filters={'designation': 'Driver'}, fields=['*'])
+    if not batta_policy:
+        frappe.throw(f"No Batta Policy found for the designation: {designation}")
+        return {"batta": 0}
+
+    policy = batta_policy[0]
+
+    # Get policy checkbox values
+    is_actual_daily_batta = policy.get('is_actual_') or 0  # Daily Batta with Overnight Stay Checkbox
+    is_actual_daily_batta_without_overnight = policy.get('is_actual__') or 0  # Daily Batta Without Overnight Stay Checkbox
+
+    # Convert inputs to boolean
+    is_travelling_outside_kerala = bool(int(is_travelling_outside_kerala or 0))
+    is_overnight_stay = bool(int(is_overnight_stay or 0))
+
+    # Initialize batta values
+    daily_batta_with_overnight_stay = 0
+    daily_batta_without_overnight_stay = 0
+
+    # Calculate Daily Batta with Overnight Stay
+    if not is_actual_daily_batta:  # Check if policy is not actual
+        if is_overnight_stay:
+            if is_travelling_outside_kerala:
+                daily_batta_with_overnight_stay = float(policy.get('outside_kerala__', 0))
+            else:
+                daily_batta_with_overnight_stay = float(policy.get('inside_kerala__', 0))
+
+    # Calculate Daily Batta without Overnight Stay
+    if not is_actual_daily_batta_without_overnight:  # Check if policy is not actual
+        if not is_overnight_stay:  # Ensure overnight stay is NOT checked
+            if total_distance_travelled_km > 100 and total_hours >= 8: # Additional condition
+                if is_travelling_outside_kerala:
+                    daily_batta_without_overnight_stay = float(policy.get('outside_kerala', 0))
+                else:
+                    daily_batta_without_overnight_stay = float(policy.get('inside_kerala', 0))
+
+    return {
+        "daily_batta_with_overnight_stay": daily_batta_with_overnight_stay,
+        "daily_batta_without_overnight_stay": daily_batta_without_overnight_stay
+    }
+
+@frappe.whitelist()
+def get_batta_policy_values():
+    '''
+        Fetch and return the batta policy values from the 'Batta Policy' doctype
+    '''
+    result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
+    return result
