@@ -24,6 +24,7 @@ class TechnicalRequest(Document):
             frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
         if self.workflow_state == "Approved" and self.project:
             self.update_project_allocated_resources()
+            update_allocated_field(self)
 
     def validate(self):
         self.validate_required_from_and_required_to()
@@ -101,5 +102,27 @@ def create_external_resource_request(technical_request):
                 "required_to": emp.required_to
             })
 
-    external_req.insert(ignore_permissions=True)  
+    external_req.insert(ignore_permissions=True)
     return external_req.name
+
+@frappe.whitelist()
+def update_allocated_field(doc):
+    if doc.workflow_state == "Approved" and doc.project:
+        project = frappe.get_doc("Project", doc.project)
+
+        # Ensure required tables exist in both doctypes
+        if not hasattr(doc, "required_employees") or not hasattr(project, "required_manpower_details"):
+            frappe.throw("Required tables are missing in the Technical Request or Project doctype.")
+
+        for emp in doc.required_employees:
+            if emp.employee:
+                for mp in project.required_manpower_details:
+                    if (
+                        emp.designation == mp.designation
+                        and emp.required_from == mp.required_from
+                        and emp.required_to == mp.required_to
+                    ):
+                        mp.allocated = 1
+
+        project.save(ignore_permissions=True)
+        frappe.msgprint(f"Allocated manpower updated for Project {doc.project}")
