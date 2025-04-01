@@ -84,66 +84,39 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
     '''
         Method to get Batta for Food
     '''
-    values = { 'break_fast':0, 'lunch':0, 'dinner':0 }
-    batta_policy = frappe.db.exists('Batta Policy', { 'designation':designation })
+    values = {'break_fast': 0, 'lunch': 0, 'dinner': 0}
+    batta_policy = frappe.db.exists('Batta Policy', {'designation': designation})
     from_date_time = get_datetime(from_date_time)
     to_date_time = get_datetime(to_date_time)
     required_hours = 6
-    if batta_policy and float(total_hrs)>required_hours:
+
+    if batta_policy and float(total_hrs) > required_hours:
         break_fast, lunch, dinner = frappe.db.get_value('Batta Policy', batta_policy, ['break_fast', 'lunch', 'dinner'])
-        same_date = False
-        if getdate(from_date_time) == getdate(to_date_time):
-            same_date = True
-        #Breakfast check
-        if same_date:
-            date_threshold = getdate(from_date_time)
-            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
-            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
-            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
-                values['break_fast'] = break_fast
-            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
-            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
-            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
-                values['lunch'] = lunch
-            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
-            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
-            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
-                values['dinner'] = dinner
-        else:
-            #Breakfast check
-            date_threshold = getdate(from_date_time) #Check with Start Date
-            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
-            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
-            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
-                values['break_fast'] = break_fast
-            date_threshold = getdate(to_date_time) #Check with End Date
-            break_fast_start_time = get_datetime('{0} {1}'.format(date_threshold, '04:00'))
-            break_fast_end_time = get_datetime('{0} {1}'.format(date_threshold, '09:00'))
-            if (from_date_time <= break_fast_start_time <= to_date_time) or (from_date_time <= break_fast_end_time <= to_date_time):
-                values['break_fast'] = values.get('break_fast', 0) + break_fast
-            #Lunch Check
-            date_threshold = getdate(from_date_time) #Check with Start Date
-            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
-            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
-            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
-                values['lunch'] = lunch
-            date_threshold = getdate(to_date_time) #Check with End Date
-            lunch_start_time = get_datetime('{0} {1}'.format(date_threshold, '12:30'))
-            lunch_end_time = get_datetime('{0} {1}'.format(date_threshold, '14:00'))
-            if (from_date_time <= lunch_start_time <= to_date_time) or (from_date_time <= lunch_end_time <= to_date_time):
-                values['lunch'] = values.get('lunch', 0) + lunch
-            #Dinner Check
-            date_threshold = getdate(from_date_time) #Check with Start Date
-            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
-            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
-            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
-                values['dinner'] = dinner
-            date_threshold = getdate(to_date_time) #Check with End Date
-            dinner_start_time = get_datetime('{0} {1}'.format(date_threshold, '18:00'))
-            dinner_end_time = get_datetime('{0} {1}'.format(date_threshold, '21:00'))
-            if (from_date_time <= dinner_start_time <= to_date_time) or (from_date_time <= dinner_end_time <= to_date_time):
-                values['dinner'] = values.get('dinner', 0) + dinner
+        same_date = getdate(from_date_time) == getdate(to_date_time)
+
+        meal_times = {
+            'break_fast': ('04:00', '09:00', break_fast),
+            'lunch': ('12:30', '14:00', lunch),
+            'dinner': ('18:00', '21:00', dinner)
+        }
+
+        for meal, (start_time, end_time, allowance) in meal_times.items():
+            if same_date:
+                date_threshold = getdate(from_date_time)
+                if check_meal_time(from_date_time, to_date_time, date_threshold, start_time, end_time):
+                    values[meal] = allowance
+            else:
+                # Check for both start and end dates
+                for date_threshold in [getdate(from_date_time), getdate(to_date_time)]:
+                    if check_meal_time(from_date_time, to_date_time, date_threshold, start_time, end_time):
+                        values[meal] += allowance
+
     return values
+
+def check_meal_time(from_date_time, to_date_time, date_threshold, start_time, end_time):
+    start_datetime = get_datetime('{} {}'.format(date_threshold, start_time))
+    end_datetime = get_datetime('{} {}'.format(date_threshold, end_time))
+    return (from_date_time <= start_datetime <= to_date_time) or (from_date_time <= end_datetime <= to_date_time)
 
 @frappe.whitelist()
 def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, total_distance_travelled_km=0, total_hours=0):

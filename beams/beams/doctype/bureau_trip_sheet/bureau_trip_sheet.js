@@ -295,7 +295,7 @@ function calculate_total_food_allowance(frm, cdt, cdn) {
 
     frm.refresh_field("work_details");
 
-      let total_batta_sum = frm.doc.work_details.reduce((sum, r) => sum + (r.total_batta || 0), 0);
+    let total_batta_sum = frm.doc.work_details.reduce((sum, r) => sum + (r.total_batta || 0), 0);
     frm.set_value("total_daily_batta", total_batta_sum);
 }
 
