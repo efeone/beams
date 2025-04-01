@@ -18,6 +18,7 @@ class ExternalResourceRequest(Document):
 
     def on_submit(self):
         self.update_external_resources_project_allocated_resources()
+        update_hired_field(self)
 
     def update_external_resources_project_allocated_resources(self):
         """Update the allocated_resources_details table in Project when a External Resource Request is Submitted."""
@@ -72,3 +73,25 @@ class ExternalResourceRequest(Document):
         for req in self.required_resources:
             req.required_from = self.required_from
             req.required_to = self.required_to
+
+@frappe.whitelist()
+def update_hired_field(doc, method=None):
+    if doc.project:
+        project = frappe.get_doc("Project", doc.project)
+
+        # Ensure required tables exist
+        if not hasattr(doc, "required_resources") or not hasattr(project, "required_manpower_details"):
+            frappe.throw("Required tables are missing in the External Resource Request or Project doctype.")
+
+        for resource in doc.required_resources:
+            for manpower in project.required_manpower_details:
+                if (
+                    resource.designation == manpower.designation
+                    and get_datetime(resource.required_from) == get_datetime(manpower.required_from)
+                    and get_datetime(resource.required_to) == get_datetime(manpower.required_to)
+                ):
+                    manpower.hired = 1
+                    break
+
+        project.save(ignore_permissions=True)
+        frappe.msgprint(f"Hired manpower updated for Project {doc.project}")
