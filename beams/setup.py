@@ -299,10 +299,10 @@ def get_project_custom_fields():
                 "insert_after": "program_request"
             },
             {
-                "fieldname": "allocated_resources_details",
+                "fieldname": "allocated_manpower_details",
                 "fieldtype": "Table",
-                "label": "Allocated Resource Detail",
-                "options":"Allocated Resource Detail",
+                "label": "Allocated Manpower Detail",
+                "options":"Allocated Manpower Detail",
                 "insert_after":"allocated_resources_details_section"
             },
             {
@@ -377,7 +377,7 @@ def get_project_custom_fields():
                 "fieldtype": "Table",
                 "label": "Allocated Vehicle Details",
                 "options": "Allocated Vehicle Details",
-                "insert_after": "allocated_resources_details"
+                "insert_after": "allocated_manpower_details"
             }
 
 
