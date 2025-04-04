@@ -5,7 +5,11 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "vehicle"
+  "vehicle",
+  "from_location",
+  "to_location",
+  "no_of_travellers",
+  "details"
  ],
  "fields": [
   {
@@ -14,12 +18,38 @@
    "in_list_view": 1,
    "label": "Vehicle",
    "options": "Vehicle"
+  },
+  {
+   "fieldname": "no_of_travellers",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "No of Travellers"
+  },
+  {
+   "fieldname": "details",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Details"
+  },
+  {
+   "fieldname": "from_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From",
+   "options": "Location"
+  },
+  {
+   "fieldname": "to_location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To",
+   "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-20 10:41:01.944058",
+ "modified": "2025-04-03 12:56:45.306136",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Detail",

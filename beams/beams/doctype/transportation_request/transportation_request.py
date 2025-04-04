@@ -38,6 +38,11 @@ class TransportationRequest(Document):
                     "hired_vehicle": vehicle.get("hired_vehicle", ""),
                     "reference_doctype": "Transportation Request",
                     "reference_name": self.name,
+                    "from":vehicle.from_location,
+                    "to":vehicle.to_location,
+                    "no_of_travellers":vehicle.no_of_travellers,
+                    "allocated":1
+
                 })
             project_doc.save(ignore_permissions=True)
 
