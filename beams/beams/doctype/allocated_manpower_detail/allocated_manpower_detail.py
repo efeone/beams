@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class AllocatedResourceDetail(Document):
+class AllocatedManpowerDetail(Document):
 	pass

@@ -30,7 +30,7 @@ class TechnicalRequest(Document):
         self.validate_required_from_and_required_to()
 
     def update_project_allocated_resources(self):
-        """Update the allocated_resources_details table in Project when a Technical Request is Approved."""
+        """Update the allocated_manpower_details table in Project when a Technical Request is Approved."""
         if not frappe.db.exists('Project', self.project):
             frappe.throw(_("Invalid Project ID: {0}").format(self.project))
 
@@ -50,7 +50,7 @@ class TechnicalRequest(Document):
         ]
 
         if allocated_resources:
-            project.extend("allocated_resources_details", allocated_resources)
+            project.extend("allocated_manpower_details", allocated_resources)
             project.save(ignore_permissions=True)
 
     @frappe.whitelist()
@@ -111,16 +111,16 @@ def update_allocated_field(doc):
         project = frappe.get_doc("Project", doc.project)
 
         # Ensure required tables exist in both doctypes
-        if not hasattr(doc, "required_employees") or not hasattr(project, "required_manpower_details"):
+        if not hasattr(doc, "required_employees") or not hasattr(project, "allocated_manpower_details"):
             frappe.throw("Required tables are missing in the Technical Request or Project doctype.")
 
         for emp in doc.required_employees:
             if emp.employee:
-                for mp in project.required_manpower_details:
+                for mp in project.allocated_manpower_details:
                     if (
                         emp.designation == mp.designation
-                        and emp.required_from == mp.required_from
-                        and emp.required_to == mp.required_to
+                        and emp.required_from == mp.assigned_from
+                        and emp.required_to == mp.assigned_to
                     ):
                         mp.allocated = 1
 
