@@ -7,7 +7,11 @@
  "engine": "InnoDB",
  "field_order": [
   "vehicle",
-  "hired_vehicle",
+  "from",
+  "to",
+  "no_of_travellers",
+  "allocated",
+  "hired",
   "reference_doctype",
   "reference_name"
  ],
@@ -21,16 +25,8 @@
    "read_only": 1
   },
   {
-   "fieldname": "hired_vehicle",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Hired Vehicle",
-   "read_only": 1
-  },
-  {
    "fieldname": "reference_doctype",
    "fieldtype": "Link",
-   "in_list_view": 1,
    "label": " Reference DocType ",
    "options": "DocType",
    "read_only": 1
@@ -38,16 +34,47 @@
   {
    "fieldname": "reference_name",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Reference Name ",
    "options": "reference_doctype",
    "read_only": 1
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "To"
+  },
+  {
+   "fieldname": "no_of_travellers",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "No of Travellers"
+  },
+  {
+   "default": "0",
+   "fieldname": "allocated",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Allocated"
+  },
+  {
+   "default": "0",
+   "fieldname": "hired",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Hired"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-20 11:54:52.642376",
+ "modified": "2025-04-03 11:05:55.515966",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Vehicle Details",
