@@ -6,6 +6,12 @@ frappe.ui.form.on('Technical Request', {
         set_employee_field_read_only(frm);
         set_employee_query(frm);
 
+        const readOnlyFields = ['project','bureau', 'location','posting_date', 'required_from', 'required_to'];
+        const should_be_read_only = !frm.is_new() && frm.doc.workflow_state === 'Draft';
+        readOnlyFields.forEach(field => {
+            frm.set_df_property(field, 'read_only', should_be_read_only);
+        });
+
         if (!frm.is_new() && frm.doc.workflow_state === "Approved") {
             frm.add_custom_button("External Resource Request", function() {
                 frappe.call({
@@ -22,7 +28,6 @@ frappe.ui.form.on('Technical Request', {
               }, __("Create"));
         }
       },
-
       workflow_state: function(frm) {
         set_employee_field_read_only(frm);
     },
