@@ -6,9 +6,9 @@ frappe.ui.form.on('Technical Request', {
         set_employee_field_read_only(frm);
         set_employee_query(frm);
 
-        const readOnlyFields = ['project','bureau', 'location','posting_date', 'required_from', 'required_to'];
+        const read_only_fields = ['project','bureau', 'location','posting_date', 'required_from', 'required_to'];
         const should_be_read_only = !frm.is_new() && frm.doc.workflow_state === 'Draft';
-        readOnlyFields.forEach(field => {
+        read_only_fields.forEach(field => {
             frm.set_df_property(field, 'read_only', should_be_read_only);
         });
 
