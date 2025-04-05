@@ -206,7 +206,14 @@ frappe.ui.form.on('Project', {
                 }
             };
         };
-      }
+      },
+    required_from : function(frm) {
+       frm.doc.required_manpower_details.forEach(row => {
+           if (row.required_from < row.required_to) {
+               frappe.throw(__('Required To must be greater than Required From date in row {0}', [row.idx]));
+           }
+       });
+   }
     });
 
     function hide_asset_movement_field(frm) {
@@ -240,3 +247,15 @@ frappe.ui.form.on('Project', {
           frm.refresh_field("allocated_manpower_details");
       }
   });
+  frappe.ui.form.on('Required Manpower Details', {
+      required_to: function(frm, cdt, cdn) {
+          validate_dates(cdt, cdn);
+      }
+  });
+
+  function validate_dates(cdt, cdn) {
+      let row = locals[cdt][cdn];
+      if (row.required_from && row.required_to && row.required_from > row.required_to) {
+          frappe.msgprint(`Row ${row.idx || ''}: "Required From" must be before "Required To"`);
+      }
+  }
