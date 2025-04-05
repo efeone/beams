@@ -145,22 +145,27 @@ def create_technical_request(project_id):
         'required_from': project.expected_start_date,
         'required_to': project.expected_end_date,
         'required_employees': []
+
     })
 
     # Fetch manpower details from Project's child table (`required_manpower_details`)
     for man in project.get("required_manpower_details", []):
         department = frappe.db.get_value("Department", man.department, "name")
         designation = frappe.db.get_value("Designation", man.designation, "name")
+        no_of_employees = man.get('no_of_employees',1)
+        required_from = man.get('required_from')
+        required_to = man.get('required_to')
 
         if not department or not designation:
             frappe.throw(_("Both Department and Designation are required."))
 
-        doc.append("required_employees", {
-            "department": department,
-            "designation": designation,
-            "required_from": man.required_from,
-            "required_to": man.required_to,
-        })
+        for _ in range(no_of_employees):
+            doc.append("required_employees", {
+                "department": department,
+                "designation": designation,
+                "required_from": man.required_from,
+                "required_to": man.required_to,
+            })
 
     doc.insert(ignore_permissions=True)
     return doc.name
@@ -192,11 +197,11 @@ def validate_employee_assignment(doc, method):
     """
     Validate that an employee is not assigned to multiple projects during the same time period.
     """
-    for row in doc.allocated_resources_details:
+    for row in doc.allocated_manpower_details:
         if not row.employee:
             continue
         overlapping_projects = frappe.get_all(
-            "Allocated Resource Detail",
+            "Allocated Manpower Detail",
             filters={
                 "employee": row.employee,
                 "parent": ["!=", doc.name],

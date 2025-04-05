@@ -12,7 +12,9 @@
   "assigned_to",
   "employee",
   "hired_personnel",
-  "hired_personnel_contact_info"
+  "hired_personnel_contact_info",
+  "allocated",
+  "hired"
  ],
  "fields": [
   {
@@ -66,15 +68,31 @@
    "in_list_view": 1,
    "label": "Assigned To",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "allocated",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Allocated",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "hired",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Hired",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-21 09:12:39.666225",
+ "modified": "2025-04-03 10:19:02.966839",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Allocated Resource Detail",
+ "name": "Allocated Manpower Detail",
  "owner": "Administrator",
  "permissions": [],
  "sort_field": "modified",

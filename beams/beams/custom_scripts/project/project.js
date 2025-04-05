@@ -14,7 +14,7 @@ frappe.ui.form.on('Project', {
          frappe.call({
              method: "beams.beams.custom_scripts.project.project.create_technical_request",
              args: {
-                 project_id: frm.doc.name  
+                 project_id: frm.doc.name
              },
              callback: function (r) {
                  if (r.message) {
@@ -198,7 +198,7 @@ frappe.ui.form.on('Project', {
             });
         }, __("Create"));
         // Ensure filtering is applied when form loads
-        frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+        frm.fields_dict.allocated_manpower_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
             let row = locals[cdt][cdn];
             return {
                 filters: {
@@ -223,12 +223,12 @@ frappe.ui.form.on('Project', {
     }
 
     // Apply filter dynamically when Designation field changes in child table
-  frappe.ui.form.on('Allocated Resource Detail', {
+  frappe.ui.form.on('Allocated Manpower Detail', {
       designation: function(frm, cdt, cdn) {
           let row = locals[cdt][cdn];
           frappe.model.set_value(cdt, cdn, 'employee', '');
           if (row.designation) {
-              frm.fields_dict.allocated_resources_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+              frm.fields_dict.allocated_manpower_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
                   let child_row = locals[cdt][cdn];
                   return {
                       filters: {
@@ -237,6 +237,6 @@ frappe.ui.form.on('Project', {
                   };
               };
           }
-          frm.refresh_field("allocated_resources_details");
+          frm.refresh_field("allocated_manpower_details");
       }
   });

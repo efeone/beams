@@ -21,7 +21,7 @@ class ExternalResourceRequest(Document):
         update_hired_field(self)
 
     def update_external_resources_project_allocated_resources(self):
-        """Update the allocated_resources_details table in Project when a External Resource Request is Submitted."""
+        """Update the allocated_manpower_details table in Project when a External Resource Request is Submitted."""
         if not frappe.db.exists('Project', self.project):
             frappe.throw(_("Invalid Project ID: {0}").format(self.project))
 
@@ -40,7 +40,7 @@ class ExternalResourceRequest(Document):
         ]
 
         if allocated_resources:
-            project.extend("allocated_resources_details", allocated_resources)
+            project.extend("allocated_manpower_details", allocated_resources)
             project.save(ignore_permissions=True)
 
 
@@ -80,18 +80,17 @@ def update_hired_field(doc, method=None):
         project = frappe.get_doc("Project", doc.project)
 
         # Ensure required tables exist
-        if not hasattr(doc, "required_resources") or not hasattr(project, "required_manpower_details"):
+        if not hasattr(doc, "required_resources") or not hasattr(project, "allocated_manpower_details"):
             frappe.throw("Required tables are missing in the External Resource Request or Project doctype.")
 
         for resource in doc.required_resources:
-            for manpower in project.required_manpower_details:
+            for manpower in project.allocated_manpower_details:
                 if (
                     resource.designation == manpower.designation
-                    and get_datetime(resource.required_from) == get_datetime(manpower.required_from)
-                    and get_datetime(resource.required_to) == get_datetime(manpower.required_to)
+                    and get_datetime(resource.required_from) == get_datetime(manpower.assigned_from)
+                    and get_datetime(resource.required_to) == get_datetime(manpower.assigned_to)
                 ):
                     manpower.hired = 1
-                    break
 
         project.save(ignore_permissions=True)
         frappe.msgprint(f"Hired manpower updated for Project {doc.project}")
