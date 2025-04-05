@@ -11,9 +11,8 @@ def validate_project(doc, method):
             if row.required_from > row.required_to:
                 frappe.throw(f"Row {row.idx}: 'Required From' date must be before 'Required To' date.")
 
-
 def validate_project_dates(doc, method):
-    """Validate Required From and Required To against Expected Start Date and Expected End Date"""
+    """Validate 'Required From' and 'Required To' dates in the Required Manpower Details child table against the project's Expected Start Date and Expected End Date."""
     if not doc.expected_start_date or not doc.expected_end_date:
         return
     for row in doc.required_manpower_details:
