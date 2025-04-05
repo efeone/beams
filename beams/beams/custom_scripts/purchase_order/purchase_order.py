@@ -146,7 +146,7 @@ def update_equipment_quantities(doc, method):
                             if project:
                                 project_doc = frappe.get_doc("Project", project)
 
-                                for p_item in project_doc.required_items:
+                                for p_item in project_doc.allocated_item_details:
                                     if p_item.required_item == ea_item:
                                         p_item.acquired_quantity += item.qty
 

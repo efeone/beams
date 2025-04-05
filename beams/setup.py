@@ -306,6 +306,22 @@ def get_project_custom_fields():
                 "insert_after":"allocated_resources_details_section"
             },
             {
+                "fieldname": "allocated_item_details",
+                "fieldtype": "Table",
+                "label": "Allocated Item Details",
+                "options":"Required Items Detail",
+                "Allow on Submit" : 1,
+                "insert_after":"allocated_resources_details_section"
+
+            },
+            {
+                "fieldname": "allocated_item_details",
+                "fieldtype": "Table",
+                "label": "Allocated Item Details",
+                "options":"Required Items Detail",
+                "insert_after":"allocated_resources_details_section"
+            },
+            {
                 "fieldname": "approved_budget",
                 "fieldtype": "Currency",
                 "label": "Approved Budget",
@@ -355,7 +371,7 @@ def get_project_custom_fields():
                 "fieldname": "required_items",
                 "fieldtype": "Table",
                 "label": "Required Items",
-                "options": "Required Items Detail",
+                "options": "Required Items Table",
                 "insert_after": "requirements_details"
             },
             {
