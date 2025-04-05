@@ -42,11 +42,8 @@ class TransportationRequest(Document):
                     "to":vehicle.to_location,
                     "no_of_travellers":vehicle.no_of_travellers,
                     "allocated":1
-
                 })
             project_doc.save(ignore_permissions=True)
-
-
 
     def update_no_of_own_vehicles(self):
         '''
