@@ -3548,6 +3548,20 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
+            "doc_type": "Project",
+            "field_name": "expected_start_date",
+            "property": "fieldtype",
+            "value":"Datetime"
+        },
+        {
+            "doctype_or_field": "DocField",
+            "doc_type": "Project",
+            "field_name": "expected_end_date",
+            "property": "fieldtype",
+            "value":"Datetime"
+        },
+        {
+            "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "designation",
             "property": "fetch_from",
