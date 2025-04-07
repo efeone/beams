@@ -8,6 +8,13 @@ from frappe import _
 
 class VehicleHireRequest(Document):
     def on_submit(self):
+        if self.transportation_request:
+            frappe.db.set_value(
+            "Transportation Request",
+            self.transportation_request,
+            "vehicle_hire_request",
+            self.name
+            )
         self.update_hired_vehicles_on_submit()
 
     def on_cancel(self):
