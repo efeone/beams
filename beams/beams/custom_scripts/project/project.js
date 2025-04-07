@@ -38,7 +38,7 @@ frappe.ui.form.on('Project', {
             fields: [
               {
                 label: 'Required From',
-                fieldtype: 'Date',
+                fieldtype: 'Datetime',
                 fieldname: 'required_from',
                 in_list_view: 1,
                 default: frm.doc.expected_start_date || frappe.datetime.now_datetime(),
@@ -46,7 +46,7 @@ frappe.ui.form.on('Project', {
               },
               {
                 label: 'Required To',
-                fieldtype: 'Date',
+                fieldtype: 'Datetime',
                 fieldname: 'required_to',
                 default: frm.doc.expected_end_date || frappe.datetime.now_datetime(),
                 in_list_view: 1,
