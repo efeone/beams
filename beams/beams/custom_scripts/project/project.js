@@ -1,6 +1,13 @@
 frappe.ui.form.on('Project', {
     refresh(frm) {
-      hide_asset_movement_field(frm);
+
+        // Hide Asset Movement in Allocated Item Details
+        if (frm.fields_dict["allocated_item_details"] && frm.fields_dict["allocated_item_details"].grid) {
+            let grid = frm.fields_dict["allocated_item_details"].grid;
+            grid.toggle_display("asset_movement", false);
+            frm.refresh_field("allocated_item_details");
+        }
+
       //function adds a button to the 'Project' form to create an Adhoc Budget.
         frm.add_custom_button(__('Adhoc Budget'), function () {
             frappe.model.open_mapped_doc({
@@ -31,15 +38,17 @@ frappe.ui.form.on('Project', {
             fields: [
               {
                 label: 'Required From',
-                fieldtype: 'Datetime',
+                fieldtype: 'Date',
                 fieldname: 'required_from',
                 in_list_view: 1,
+                default: frm.doc.expected_start_date || frappe.datetime.now_datetime(),
                 reqd: 1
               },
               {
                 label: 'Required To',
-                fieldtype: 'Datetime',
+                fieldtype: 'Date',
                 fieldname: 'required_to',
+                default: frm.doc.expected_end_date || frappe.datetime.now_datetime(),
                 in_list_view: 1,
                 reqd: 1
               },
@@ -106,19 +115,6 @@ frappe.ui.form.on('Project', {
                         primary_action_label: 'Submit',
                         primary_action(values) {
                             const equipment_data = values?.equipments || [];
-
-                            // Validate required dates
-                            const required_from = values.required_from;
-                            const required_to = values.required_to;
-                            if(!required_from || !required_to) {
-                              frappe.msgprint(__('Both "Required From" and "Required To" are mandatory.'));
-                                return;
-                            }
-                            if(required_from >= required_to) {
-                              frappe.msgprint(__('"Required From" date should be earlier than "Required To" date.'));
-                                return;
-                            }
-
                             if(!equipment_data.length) {
                               frappe.msgprint(__('Please add at least one equipment row.'));
                                 return;
@@ -216,18 +212,6 @@ frappe.ui.form.on('Project', {
    }
     });
 
-    function hide_asset_movement_field(frm) {
-        /**
-         * Dynamically hides the "asset_movement" field in the "Required Items"
-         * child table within the relevant doctype.
-         */
-        ["required_items"].forEach(table_name => {
-            if (frm.fields_dict[table_name]) {
-                frm.fields_dict[table_name].grid.update_docfield_property("asset_movement", "hidden", 1);
-                frm.fields_dict[table_name].grid.refresh();
-            }
-        });
-    }
 
     // Apply filter dynamically when Designation field changes in child table
   frappe.ui.form.on('Allocated Manpower Detail', {
