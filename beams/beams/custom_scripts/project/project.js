@@ -8,23 +8,6 @@ frappe.ui.form.on('Project', {
             frm.refresh_field("allocated_item_details");
         }
 
-        // Add "Adhoc Budget" button
-        frm.add_custom_button(__('Adhoc Budget'), function () {
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.custom_scripts.project.project.create_adhoc_budget",
-                frm: frm,
-            });
-        }, __("Create"));
-
-
-        // Add "Adhoc Budget" button
-        frm.add_custom_button(__('Adhoc Budget'), function () {
-            frappe.model.open_mapped_doc({
-                method: "beams.beams.custom_scripts.project.project.create_adhoc_budget",
-                frm: frm,
-            });
-        }, __("Create"));
-
       //function adds a button to the 'Project' form to create an Adhoc Budget.
         frm.add_custom_button(__('Adhoc Budget'), function () {
             frappe.model.open_mapped_doc({
