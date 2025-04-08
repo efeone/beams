@@ -87,6 +87,7 @@ def update_hired_field(doc, method=None):
             for manpower in project.allocated_manpower_details:
                 if (
                     resource.designation == manpower.designation
+                    and resource.hired_personnel == manpower.hired_personnel
                     and get_datetime(resource.required_from) == get_datetime(manpower.assigned_from)
                     and get_datetime(resource.required_to) == get_datetime(manpower.assigned_to)
                 ):
