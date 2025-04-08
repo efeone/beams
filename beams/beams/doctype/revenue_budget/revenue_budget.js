@@ -12,6 +12,7 @@ frappe.ui.form.on("Revenue Budget", {
        set_filters(frm);
        fetch_template(frm);
     },
+    /* Fetch Revenue Template Items in to Revenue Accounts when a Revenue Template is Selected */
     revenue_template: function(frm) {
         if (frm.doc.revenue_template) {
             frappe.call({
@@ -128,7 +129,7 @@ function calculate_revenue_amount(frm, cdt, cdn) {
     frappe.model.set_value(cdt, cdn, 'revenue_amount', total);
     frm.refresh_field('revenue_account');
 }
-
+/* Fetch Revenue Template in Revenue Budget based on Revenue category and Selected company */
 function fetch_template(frm) {
     if (frm.doc.revenue_category && frm.doc.company) {
         frappe.call({

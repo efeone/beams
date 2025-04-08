@@ -44,6 +44,7 @@ class RevenueBudget(Document):
 
 @frappe.whitelist()
 def get_revenue_template(revenue_category, company):
+    """Get Revenue Template based on Revenue category and selected Company"""
     template = frappe.db.get_value(
         "Revenue Template",
         {"revenue_category": revenue_category, "company": company},
