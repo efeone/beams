@@ -130,7 +130,7 @@
                     <div class="column">
                         <label for="current_mobile_no">Mobile Number</label>
                         <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number or '' }}" {% if doc.phone_number %} readonly {% endif %}>
-                    </div> 
+                    </div>
                     <div class="column">
                     </div>
                 </div>
@@ -146,6 +146,7 @@
                                     <th>Date Attended To</th>
                                     <th>Result(%)</th>
                                     <th>Attachment</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -157,6 +158,7 @@
                                     <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
                                     <td><input type="Float" name="results_1" class="result" style="background-color: #fff;"></td>
                                     <td><input type="file" id="qualification_file" class="home-textinput" style="background-color: #fff;"/></td>
+                                    <td><button type="button" onclick="removeRow(this)">Delete</button></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -177,6 +179,7 @@
                                 <th> Type of Cerfificate</th>
                                 <th>Subject Major</th>
                                 <th>Attachment</th>
+                                <th></th>
                             </tr>
                             <tr>
                   </tr>
@@ -191,6 +194,7 @@
                                 <td><input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;"></td>
                                 <td><input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;"></td>
                                 <td><input type="file" id="certification_file" class="home-textinput" style="background-color: #fff;"/></td>
+                                <td><button type="button" onclick="removeRow(this)">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -238,7 +242,7 @@
                         <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" >
                     </div>
                      <div class="column">
-                    </div> 
+                    </div>
                 </div>
                 <div class="row">
                     <div class="column">
@@ -311,6 +315,7 @@
                                 <th>Period of Employment</th>
                                 <th>Reason for Leaving</th>
                                 <th>Attachment</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -323,6 +328,7 @@
                                 <td><input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;"></td>
                                 <td><input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;"></td>
                                 <td><input type="file" id="prev_emp_file" class="home-textinput" style="background-color: #fff;"/></td>
+                                <td><button type="button" onclick="removeRow(this)">Delete</button></td>
                             </tr>
                         </tbody>
                     </table>
@@ -403,6 +409,7 @@
                       <th>Speak</th>
                       <th>Read</th>
                       <th>Write</th>
+                      <th></th>
                   </tr>
                       </thead>
                       <tbody>
@@ -443,6 +450,7 @@
                                       <input type="radio" id="write-1" name="write" value="0.2"><label for="write-1">&#9733;</label>
                                   </div>
                               </td>
+                              <td><button type="button" onclick="removeRow(this)">Delete</button></td>
                           </tr>
                       </tbody>
                   </table>
@@ -496,7 +504,7 @@
             <div class="row">
                 <label>
                     <input type="checkbox" id="professional_org_checkbox">
-                    Are you a member of any Professional Organization? 
+                    Are you a member of any Professional Organization?
                 </label>
                 <div id="professional_org_section" style="display: none;">
                     <textarea id="professional_org" name="professional_org" rows="4" cols="90"></textarea>
@@ -505,7 +513,7 @@
             <div class="row">
                 <label>
                     <input type="checkbox" id="political_org_checkbox">
-                    Are you a member of any Political Organization? 
+                    Are you a member of any Political Organization?
                 </label>
                 <div id="political_org_section" style="display: none;">
                     <textarea id="political_org" name="political_org" rows="4" cols="90"></textarea>
@@ -514,7 +522,7 @@
             <div class="row">
                 <label>
                     <input type="checkbox" id="specialised_training_checkbox">
-                    Have you attended any specialized training program? 
+                    Have you attended any specialized training program?
                 </label>
                 <div id="specialised_training_section" style="display: none;">
                     <textarea id="specialised_training" name="specialised_training" rows="4" cols="90"></textarea>
@@ -554,10 +562,10 @@
         document.getElementById("confirm").addEventListener("change", function () {
                 const submitBtn = document.getElementById("submitBtn");
                 if (this.checked) {
-                    submitBtn.style.backgroundColor = "black"; 
+                    submitBtn.style.backgroundColor = "black";
                     submitBtn.style.color = "white";
                 } else {
-                    submitBtn.style.backgroundColor = "gray"; 
+                    submitBtn.style.backgroundColor = "gray";
                 }
             });
         // Redirect on submit button click
@@ -639,9 +647,9 @@
 
         // Initialize toggles for all sections
         toggleSection('related_to_employee_checkbox', 'relationship_details_section', [
-            'related_employee', 
-            'related_employee_org', 
-            'related_employee_pos', 
+            'related_employee',
+            'related_employee_org',
+            'related_employee_pos',
             'related_employee_rel'
         ]);
         toggleSection('professional_org_checkbox', 'professional_org_section', ['professional_org']);
@@ -691,6 +699,7 @@
             var cell5 = row.insertCell(4);
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
+            var cell8 = row.insertCell(7);
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
@@ -700,7 +709,19 @@
             cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
             cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result"  style="background-color: #fff;">';
             cell7.innerHTML = '<input type="file" name=qualification_file[] class="file"  style="background-color: #fff;">';
+            cell8.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
         }
+        function removeRow(button) {
+            const row = button.closest("tr");
+            const tbody = row.parentNode;
+            tbody.removeChild(row);
+
+            // Re-number rows
+            Array.from(tbody.rows).forEach((r, i) => {
+                r.cells[0].textContent = i + 1;
+            });
+        }
+
 
          // Function to add a new row in the Professional Qualifications table
         function addRow_prof(tableId) {
@@ -717,6 +738,7 @@
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
             var cell8 = row.insertCell(7);
+            var cell9 = row.insertCell(8);
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
@@ -727,6 +749,7 @@
             cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;">';
             cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;">';
             cell8.innerHTML = '<input type="file" name=certification_file[] class="file" style="background-color: #fff;">';
+            cell9.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
 
         }
 
@@ -745,6 +768,7 @@
             var cell6 = row.insertCell(5);
             var cell7 = row.insertCell(6);
             var cell8 = row.insertCell(7);
+            var cell9 = row.insertCell(8);
 
             // Add content to cells
             cell1.innerHTML = rowCount + 1;
@@ -755,6 +779,7 @@
             cell6.innerHTML = '<input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;">';
             cell7.innerHTML = '<input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;">';
             cell8.innerHTML = '<input type="file" name="prev_emp_file" class="experience_file" style="background-color: #fff;">';
+            cell9.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
 
         }
 
@@ -770,6 +795,7 @@
               var cell3 = row.insertCell(2);
               var cell4 = row.insertCell(3);
               var cell5 = row.insertCell(4);
+              var cell6 = row.insertCell(5);
 
               // Add content to cells
               cell1.innerHTML = rowCount + 1;
@@ -777,6 +803,7 @@
               cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
               cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
               cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
+              cell6.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
           }
 
           function validateDigits(input) {
