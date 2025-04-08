@@ -31,155 +31,143 @@ frappe.ui.form.on('Project', {
          });
      }, __("Create"));
 
-        // Add "Equipment Request" button under the "Create" group
+
         frm.add_custom_button(__('Equipment Request'), function () {
-          const dialog = new frappe.ui.Dialog({
-            title: 'Equipments',
-            fields: [
-              {
-                label: 'Required From',
-                fieldtype: 'Datetime',
-                fieldname: 'required_from',
-                in_list_view: 1,
-                default: frm.doc.expected_start_date || frappe.datetime.now_datetime(),
-                reqd: 1
-              },
-              {
-                label: 'Required To',
-                fieldtype: 'Datetime',
-                fieldname: 'required_to',
-                default: frm.doc.expected_end_date || frappe.datetime.now_datetime(),
-                in_list_view: 1,
-                reqd: 1
-              },
-              {
-                fieldtype: 'Table',
-                label: 'Equipments',
-                fieldname: 'equipments',
-                reqd: 1,
-                fields: [
-                  {
-                    label: 'Item',
-                    fieldtype: 'Link',
-                    fieldname: 'item',
-                    options: 'Item',
-                    in_list_view: 1,
-                    reqd: 1,
-                    onchange: function() {
-                      let data = [];
-                      let promises = [];
-                      dialog.fields_dict.equipments.df.data.forEach((item, i) => {
-                      let promise = frappe.call({
-                        method: "beams.beams.custom_scripts.project.project.get_available_quantities",
-                        args: {
-                          items: [item.item],
-                          location: frm.doc.location
-                          },
-                          callback: function(r) {
-                          if (r.message)
-                          {
-                            const available_qty = r.message[item.item] || 0;
-                            item["available_quantity"] = available_qty;
-                            data.push(item);
-                          }
+            const dialog = new frappe.ui.Dialog({
+              title: 'Equipments',
+              fields: [
+                {
+                  label: 'Required From',
+                  fieldtype: 'Datetime',
+                  fieldname: 'required_from',
+                  default: frm.doc.expected_start_date || frappe.datetime.now_datetime(),
+                  reqd: 1
+                },
+                {
+                  label: 'Required To',
+                  fieldtype: 'Datetime',
+                  fieldname: 'required_to',
+                  default: frm.doc.expected_end_date || frappe.datetime.now_datetime(),
+                  reqd: 1
+                },
+                {
+                  fieldtype: 'Table',
+                  label: 'Equipments',
+                  fieldname: 'equipments',
+                  reqd: 1,
+                  fields: [
+                    {
+                      label: 'Item',
+                      fieldtype: 'Link',
+                      fieldname: 'item',
+                      options: 'Item',
+                      in_list_view: 1,
+                      reqd: 1,
+                      onchange: function (frm, cdt, cdn) {
+                        let row = frappe.get_doc(cdt, cdn);
+                        if (row.item) {
+                          frappe.call({
+                            method: "beams.beams.custom_scripts.project.project.get_available_quantities",
+                            args: {
+                              items: JSON.stringify([row.item])
+                            },
+                            callback: function (r) {
+                              if (r.message) {
+                                row.available_quantity = r.message[row.item];
+                                dialog.fields_dict.equipments.grid.refresh();
+                              }
+                            }
+                          });
+                        }
+                      }
+                    },
+                    {
+                      label: 'Available Quantity',
+                      fieldtype: 'Int',
+                      fieldname: 'available_quantity',
+                      in_list_view: 1,
+                      read_only: 1,
+                      default: 0
+                    },
+                    {
+                      label: 'Required Quantity',
+                      fieldtype: 'Int',
+                      fieldname: 'required_quantity',
+                      in_list_view: 1,
+                      reqd: 1
+                    }
+                  ]
+                }
+              ],
+              size: 'large',
+              primary_action_label: 'Submit',
+              primary_action(values) {
+                const equipment_data = values?.equipments || [];
+          
+                if (!values.required_from || !values.required_to) {
+                  frappe.msgprint(__('Both "Required From" and "Required To" are mandatory.'));
+                  return;
+                }
+          
+                if (values.required_from >= values.required_to) {
+                  frappe.msgprint(__('"Required From" date should be earlier than "Required To" date.'));
+                  return;
+                }
+          
+                if (!equipment_data.length) {
+                  frappe.msgprint(__('Please add at least one equipment row.'));
+                  return;
+                }
+          
+                const request_data = equipment_data.map(row => ({
+                  item: row.item,
+                  required_quantity: row.required_quantity,
+                  available_quantity: row.available_quantity,
+                  required_from: values.required_from,
+                  required_to: values.required_to
+                }));
+          
+                frappe.call({
+                  method: 'beams.beams.custom_scripts.project.project.create_equipment_request',
+                  args: {
+                    source_name: frm.doc.name,
+                    equipment_data: JSON.stringify(request_data),
+                    required_from: values.required_from,
+                    required_to: values.required_to
                   }
-                        });
-                                                promises.push(promise);
-                                            });
-
-                                            Promise.all(promises).then(() => {
-                                                dialog.fields_dict.equipments.df.data = data;
-                                                dialog.fields_dict.equipments.grid.refresh();
-                                            });
-                                        }
-                                    },
-                                    {
-                                        label: 'Available Quantity',
-                                        fieldtype: 'Int',
-                                        fieldname: 'available_quantity',
-                                        in_list_view: 1,
-                                        read_only: 1,
-                                        default: 0
-                                    },
-                                    {
-                                        label: 'Required Quantity',
-                                        fieldtype: 'Int',
-                                        fieldname: 'required_quantity',
-                                        in_list_view: 1,
-                                        reqd: 1
-                                    }
-                                ]
-                            }
-                        ],
-                        size: 'large',
-                        primary_action_label: 'Submit',
-                        primary_action(values) {
-                            const equipment_data = values?.equipments || [];
-                            if(!equipment_data.length) {
-                              frappe.msgprint(__('Please add at least one equipment row.'));
-                                return;
-                            }
-                            const request_data = [];
-
-                            // Loop through equipment data to process requests
-                            for(const row of equipment_data) {
-                                const available_qty = row.available_quantity || 0;
-
-                                request_data.push({
-                                    item: row.item,
-                                    required_quantity: row.required_quantity,
-                                    available_quantity: row.available_quantity,
-                                    required_from: row.required_from,
-                                    required_to: row.required_to
-                                });
-                            }
-
-                            // Create the equipment request
-                      frappe.call({
-                        method: 'beams.beams.custom_scripts.project.project.create_equipment_request',
-                        args: {
-                          source_name: frm.doc.name,
-                          equipment_data: JSON.stringify(request_data),
-                          required_from: values.required_from,
-                          required_to: values.required_to
-                        }
-                      }).then(() => {
-                        dialog.hide();
-                        frm.reload_doc();
-                      });
-                        }
-                    });
-                    // **Auto-fill table with items from Required Items**
-                    let equipments_data = frm.doc.required_items.map(item => ({
-                      item: item.required_item, // Ensure this matches the Required Items table
-                      available_quantity: item.available_quantity || 0,
-                      required_quantity: item.required_quantity || 1
-                    }));
-
-                    // **Populate Table in the Dialog**
-                    dialog.fields_dict.equipments.df.data = equipments_data;
-                    dialog.fields_dict.equipments.grid.refresh();
-
-                    // **Filter the Item Field to Remove Already Selected Items**
-                    dialog.fields_dict.equipments.grid.get_field('item').get_query = function () {
-                      let selected_items = dialog.fields_dict.equipments.df.data.map(row => row.item);
-                      return {
-                        filters: {
-                          name: ['in', frm.doc.required_items.map(item => item.required_item).filter(item => !selected_items.includes(item))]
-                        }
-                      };
-                    };
-                    dialog.show();
-                }, __("Create"));
-
-        // Add a button to create an Equipment Acquiral Request
-        frm.add_custom_button(__('Equipment Acquiral Request'), function () {
-          frappe.model.open_mapped_doc({
-            method: "beams.beams.custom_scripts.project.project.map_equipment_acquiral_request",
-            frm: frm,
-          });
-        }, __("Create"));
-
+                }).then(() => {
+                  dialog.hide();
+                  frm.reload_doc();
+                });
+              }
+            });
+          
+            // Pre-populate from required_items if present
+            let required_items = frm.doc.required_items || [];
+            if (required_items.length) {
+              let item_codes = required_items.map(d => d.required_item);
+              frappe.call({
+                method: "beams.beams.custom_scripts.project.project.get_available_quantities",
+                args: {
+                  items: JSON.stringify(item_codes)
+                },
+                callback: function (r) {
+                  let qty_map = r.message || {};
+                  let rows = required_items.map(d => ({
+                    item: d.required_item,
+                    available_quantity: qty_map[d.required_item] || 0,
+                    required_quantity: d.required_quantity || 1
+                  }));
+          
+                  dialog.fields_dict.equipments.df.data = rows;
+                  dialog.fields_dict.equipments.grid.refresh();
+                }
+              });
+            }
+          
+            dialog.show();
+          }, __("Create"));
+          
         frm.add_custom_button("External Resource Request", function() {
             frappe.new_doc("External Resource Request", {
                 project: frm.doc.name,
@@ -203,6 +191,7 @@ frappe.ui.form.on('Project', {
             };
         };
       },
+      
     required_from : function(frm) {
        frm.doc.required_manpower_details.forEach(row => {
            if (row.required_from < row.required_to) {
@@ -243,3 +232,23 @@ frappe.ui.form.on('Project', {
           frappe.msgprint(`Row ${row.idx || ''}: "Required From" must be before "Required To"`);
       }
   }
+
+
+frappe.ui.form.on('Required Items Detail', {
+  required_item: function(frm, cdt, cdn) {
+    let row = frappe.get_doc(cdt, cdn);
+    if (row.required_item) {
+      frappe.call({
+        method: "beams.beams.custom_scripts.project.project.get_available_quantities",
+        args: {
+          items: JSON.stringify([row.required_item])
+        },
+        callback: function (r) {
+          if (r.message) {
+            frappe.model.set_value(cdt, cdn, 'available_quantity', r.message[row.required_item] || 0);
+          }
+        }
+      });
+    }
+  }
+});
