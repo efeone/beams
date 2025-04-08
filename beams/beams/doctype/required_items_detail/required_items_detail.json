@@ -21,6 +21,7 @@
    "in_list_view": 1,
    "label": "Required Item",
    "options": "Item",
+   "read_only_depends_on": "eval:doc.parenttype === \"Project\"",
    "reqd": 1
   },
   {
@@ -44,6 +45,7 @@
    "in_list_view": 1,
    "label": "Required Quantity",
    "non_negative": 1,
+   "read_only_depends_on": "eval:doc.parenttype === \"Project\"",
    "reqd": 1
   },
   {
@@ -64,7 +66,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-17 12:48:04.260155",
+ "modified": "2025-04-07 16:15:29.316451",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
