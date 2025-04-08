@@ -1,9 +1,11 @@
-import frappe
-from frappe.model.mapper import get_mapped_doc
 import json
-from frappe import _
-from frappe.utils import nowdate
+
+import frappe
 from erpnext.accounts.utils import get_fiscal_year
+from frappe import _
+from frappe.model.mapper import get_mapped_doc
+from frappe.utils import nowdate
+
 
 def validate_project(doc, method):
     for row in doc.get("required_manpower_details"):
@@ -243,73 +245,70 @@ def validate_employee_assignment(doc, method):
             frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another project ({', '.join(overlapping_projects)}) within the same time period.")
 
 @frappe.whitelist()
-def get_assets_by_location(location):
-    '''Fetch unique item codes of Assets linked to the given Location.'''
-    if not location:
-        frappe.throw(_("Location is required."))
-
-    assets = frappe.get_all(
-        "Asset",
-        filters={"location": location},
-        pluck="item_code",
-        distinct=True
-    )
-
-    return assets or []
-
-@frappe.whitelist()
-def get_available_quantities(items, location):
-    '''
-    Get available quantities for specified items at a given location.
-    Returns a dictionary with item codes as keys and their available quantities as values.
-    '''
-    if isinstance(items, str):
-        items = json.loads(items)
-
-    if not location:
-        frappe.throw(_("Location is required."))
-
-    available_quantities = {item: 0 for item in items}
-
-    # Fetch count of assets matching the given items and location
-    for item in items:
-        total_quantity = frappe.db.count(
-            "Asset",
-            filters={
-                "item_code": item,
-                "location": location
-            }
-        ) or 0
-        available_quantities[item] = total_quantity
-
-    return available_quantities
-
-@frappe.whitelist()
 def create_equipment_request(source_name, equipment_data, required_from, required_to):
-    '''Creates an Equipment Request for a project with multiple items.'''
-    request_data = json.loads(equipment_data)
+    """Creates an Equipment Request for a project with multiple items."""
+    
+    try:
+        request_data = json.loads(equipment_data)
+    except Exception as e:
+        frappe.throw(_("Invalid equipment data format. Error: {}").format(str(e)))
 
     if not frappe.db.exists('Project', source_name):
         frappe.throw(_("Invalid Project ID: {0}").format(source_name))
 
-    print("Request Data:", request_data)
+    if not request_data:
+        frappe.throw(_("No equipment data found to create request."))
 
-    request_doc = frappe.get_doc({
-        'doctype': "Equipment Request",
-        'project': source_name,
-        'required_from': required_from,
-        'required_to': required_to,
-        'required_equipments': [
-            {
-                'required_item': data['item'],
-                'required_quantity': data['required_quantity'],
-                'available_quantity': data['available_quantity']
-            }
-            for data in request_data
-        ]
-    })
+    # Create the Equipment Request doc
+    request_doc = frappe.new_doc("Equipment Request")
+    request_doc.project = source_name
+    request_doc.required_from = required_from
+    request_doc.required_to = required_to
 
+    for item in request_data:
+        request_doc.append('required_equipments', {
+            'required_item': item.get('item'),
+            'required_quantity': item.get('required_quantity'),
+            'available_quantity': item.get('available_quantity', 0)
+        })
+
+    # Save and commit the doc
     request_doc.insert(ignore_permissions=True)
-    project_name = frappe.db.get_value('Project', source_name, 'project_name')
-    frappe.msgprint(_("Equipment Request created successfully for project: {}.").format(project_name),indicator="green",alert=1)
-    return True
+
+    # Show success message with document link
+    frappe.msgprint(
+        msg=_("Equipment Request <a href='/app/equipment-request/{0}'>{0}</a> created successfully for project.".format(request_doc.name)),
+        title=_("Success"),
+        indicator='green',
+        alert=True
+    )
+
+    return request_doc.name
+
+
+@frappe.whitelist()
+def get_available_quantities(items):
+    '''Get available quantities for specified items based on location from Beams Admin Settings.'''
+    frappe.logger().info(f"🔍 get_available_quantities called with items: {items}")
+
+    if isinstance(items, str):
+        try:
+            items = json.loads(items)
+        except Exception as e:
+            frappe.throw(f"Invalid JSON for items: {str(e)}")
+
+    if not isinstance(items, list):
+        frappe.throw("Items should be a list.")
+
+    location = frappe.db.get_single_value("Beams Admin Settings", "asset_location")
+    if not location:
+        frappe.throw("Asset location not configured in Beams Admin Settings.")
+
+
+    result = {}
+    for item in items:
+        if item:
+            qty = frappe.db.count("Asset", {"item_code": item, "location": location}) or 0
+            result[item] = qty
+
+    return result
