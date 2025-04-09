@@ -10,6 +10,7 @@
   "employee",
   "employee_name",
   "department",
+  "shift",
   "column_break_ayiq",
   "posting_date",
   "shift_start_date",
@@ -17,6 +18,7 @@
   "section_break_byjn",
   "swap_with_employee",
   "swap_with_employee_name",
+  "swapped_employee_shift",
   "column_break_ycao",
   "hod_employee",
   "hod_user",
@@ -125,12 +127,28 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fetch_from": "employee.default_shift",
+   "fieldname": "shift",
+   "fieldtype": "Link",
+   "label": "Shift ",
+   "options": "Shift Type",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "swap_with_employee.default_shift",
+   "fieldname": "swapped_employee_shift",
+   "fieldtype": "Link",
+   "label": "Shift",
+   "options": "Shift Type",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-05 16:29:17.794563",
+ "modified": "2025-04-08 13:09:12.711151",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Shift Swap Request",
