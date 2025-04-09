@@ -300,7 +300,7 @@ def get_available_quantities(items, source_name=None):
         location = frappe.db.get_value("Project", source_name, "asset_location")
 
     if not location:
-        location = frappe.db.get_single_value("Beams Admin Settings", "asset_location")
+        location = frappe.db.get_single_value("Beams Admin Settings", "default_asset_location")
 
     if not location:
         frappe.throw("Asset location not configured in Project or Beams Admin Settings.")
