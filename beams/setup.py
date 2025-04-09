@@ -303,16 +303,7 @@ def get_project_custom_fields():
                 "fieldtype": "Table",
                 "label": "Allocated Manpower Detail",
                 "options":"Allocated Manpower Detail",
-                "insert_after":"allocated_resources_details_section"
-            },
-            {
-                "fieldname": "allocated_item_details",
-                "fieldtype": "Table",
-                "label": "Allocated Item Details",
-                "options":"Required Items Detail",
-                "Allow on Submit" : 1,
-                "insert_after":"allocated_resources_details_section"
-
+                "insert_after":"allocated_item_details"
             },
             {
                 "fieldname": "allocated_item_details",
@@ -394,6 +385,13 @@ def get_project_custom_fields():
                 "label": "Allocated Vehicle Details",
                 "options": "Allocated Vehicle Details",
                 "insert_after": "allocated_manpower_details"
+            },
+            {
+                "fieldname": "asset_location",
+                "fieldtype": "Link",
+                "label": "Asset Location",
+                "options":"Location",
+                "insert_after": "estimated_budget"
             }
 
 
