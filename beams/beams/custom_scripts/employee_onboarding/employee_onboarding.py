@@ -1,5 +1,7 @@
 import frappe
 from frappe.model.mapper import get_mapped_doc
+from frappe.utils import  get_url_to_form
+from frappe.model.document import Document
 
 @frappe.whitelist()
 # Create a Company Policy Acceptance Log  Document by mapping fields from employee onboarding
@@ -70,3 +72,68 @@ def get_excluded_job_applicants():
     excluded_applicants = list(set(job_applicants_with_active_employees) & set(job_applicants_with_onboarding))
 
     return excluded_applicants if excluded_applicants else []
+
+
+@frappe.whitelist()
+def after_submit(doc_name):
+    """
+    Triggers Asset Transfer Requests only once after submission if the 'employee' field has a value.
+    Prevents duplicate requests by checking existing records.
+    """
+    doc = frappe.get_doc("Employee Onboarding", doc_name)
+    if not doc.employee:
+        return
+    existing_request = frappe.db.exists("Asset Transfer Request", {"employee": doc.employee})
+    if not existing_request:
+        create_asset_transfer_requests(doc)
+
+@frappe.whitelist()
+def create_asset_transfer_requests(doc, *args, **kwargs):
+    doc = frappe.parse_json(doc) if isinstance(doc, str) else doc
+    source_doc = frappe.get_doc("Employee Onboarding", doc.name)
+    if not source_doc.employee:
+        return
+    employee = source_doc.employee
+    employee_doc = frappe.get_doc("Employee", employee)
+    bureau = employee_doc.bureau
+    if not bureau:
+        frappe.throw("The 'Bureau' field is required in the Employee", title="Missing Bureau")
+    bureau_doc = frappe.get_doc("Bureau", bureau)
+    location = bureau_doc.location
+    if not location:
+        frappe.throw("The 'Location' field is required in the Bureau", title="Missing Location")
+    assigned_assets = [row.get("asset") for row in source_doc.get("assigned_assets", []) if row.get("asset")]
+    assigned_bundles = [row.get("asset_bundle") for row in source_doc.get("assigned_bundles", []) if row.get("asset_bundle")]
+    if not assigned_assets and not assigned_bundles:
+        return
+    asset_transfer_requests = []
+    for asset_name in assigned_assets:
+        asset_name = asset_name.strip()
+        if asset_name:
+            asset_transfer_request = frappe.get_doc({
+                "doctype": "Asset Transfer Request",
+                "asset_type": "Single Asset",
+                "asset": asset_name,
+                "employee": employee,
+                "location": location
+            })
+            asset_transfer_request.insert()
+            asset_transfer_requests.append(asset_transfer_request)
+    for bundle_name in assigned_bundles:
+        bundle_name = bundle_name.strip()
+        if bundle_name:
+            asset_transfer_request = frappe.get_doc({
+                "doctype": "Asset Transfer Request",
+                "asset_type": "Bundle",
+                "bundle": bundle_name,
+                "employee": employee,
+                "location": location
+            })
+            asset_transfer_request.insert()
+            asset_transfer_requests.append(asset_transfer_request)
+    if asset_transfer_requests:
+        links = "<br>".join(
+            f'<a href="{frappe.utils.get_url_to_form(req.doctype, req.name)}">{req.name}</a>'
+            for req in asset_transfer_requests
+        )
+        frappe.msgprint(f'Asset Transfer Requests Created:<br>{links}', alert=True, indicator='green')

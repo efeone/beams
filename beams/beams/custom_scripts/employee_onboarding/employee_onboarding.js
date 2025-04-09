@@ -1,5 +1,13 @@
 frappe.ui.form.on('Employee Onboarding', {
     refresh: function(frm) {
+        if (frm.doc.docstatus === 1 && frm.doc.employee) {
+            frappe.call({
+                method: "beams.beams.custom_scripts.employee_onboarding.employee_onboarding.after_submit",
+                args: { "doc_name": frm.doc.name },
+                callback: function(response) {
+                }
+            });
+        }
         // Check if CPAL already exists for the employee
         frappe.call({
             method: "frappe.client.get_list",
