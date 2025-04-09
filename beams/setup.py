@@ -1578,7 +1578,7 @@ def get_employee_custom_fields():
     return {
         "Employee": [
             {
-                "fieldname": "Bureau",
+                "fieldname": "bureau",
                 "fieldtype": "Link",
                 "options": "Bureau",
                 "label": "Bureau",
