@@ -2710,6 +2710,40 @@ def get_job_applicant_custom_fields():
                 "read_only":1,
                 "insert_after": "specialised_training"
             },
+            {
+                "fieldname": "payslip_month_1",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 1",
+                "insert_after": "section_break_001"
+            },
+            {
+                "fieldname": "break_oo1",
+                "fieldtype": "Column Break",
+                "insert_after": "payslip_month_1"
+            },
+            {
+                "fieldname": "payslip_month_2",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 2",
+                "insert_after": "break_oo1"
+            },
+            {
+                "fieldname": "section_break_001",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "prev_emp_his"
+            },
+            {
+                "fieldname": "break_oo2",
+                "fieldtype": "Column Break",
+                "insert_after": "payslip_month_2"
+            },
+            {
+                "fieldname": "payslip_month_3",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 3",
+                "insert_after": "break_oo2"
+            }
         ]
     }
 

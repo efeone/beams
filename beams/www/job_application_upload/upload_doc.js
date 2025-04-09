@@ -45,9 +45,9 @@ $(document).ready(function () {
             "first_salary_drawn", "last_salary_drawn", "agency_details", "current_salary", "expected_salary",
             "telephone_number", "other_achievments", "position", "interviewed_location", "interviewed_date",
             "interviewed_outcome", "related_employee", "related_employee_org", "related_employee_pos",
-            "related_employee_rel", "professional_org", "political_org", "specialised_training", 
-            "reference_taken", "was_this_position", "state_restriction", "achievements_checkbox", 
-            "interviewed_before_checkbox", "related_to_employee_checkbox", "professional_org_checkbox", 
+            "related_employee_rel", "professional_org", "political_org", "specialised_training",
+            "reference_taken", "was_this_position", "state_restriction", "achievements_checkbox",
+            "interviewed_before_checkbox", "related_to_employee_checkbox", "professional_org_checkbox",
             "political_org_checkbox", "specialised_training_checkbox"
         ];
 
@@ -55,9 +55,9 @@ $(document).ready(function () {
         const data = fields.reduce((obj, field) => {
             obj[field] = safeValue($(`#${field}`).val());
             return obj;
-        }, { 
+        }, {
             docname: applicant_id ,
-            date_of_birth: date_of_birth, 
+            date_of_birth: date_of_birth,
             interviewed_date: interviewed_date
         });
 
@@ -124,6 +124,17 @@ $(document).ready(function () {
             };
             if (row.language) {
                 data.language_proficiency.push(row);
+            }
+        });
+
+        // Handle Payslip Files
+        const payslipFields = ["payslip_month_1", "payslip_month_2", "payslip_month_3"];
+        payslipFields.forEach(field => {
+            const fileInput = $(`#${field}`)[0];
+            if (fileInput && fileInput.files.length) {
+                data[field] = fileInput.filedata;
+            } else {
+                data[field] = null;
             }
         });
 
