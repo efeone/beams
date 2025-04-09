@@ -14,7 +14,7 @@
   "notifcation_frequency",
   "notification_template",
   "column_break_qndy",
-  "asset_location",
+  "default_asset_location",
   "asset_transfer_warehouse",
   "notification_for_asset_reservation",
   "role_receiving_asset_reservation_notification",
@@ -119,16 +119,16 @@
    "mandatory_depends_on": "eval:doc.notification_for_asset_reservation == 1;"
   },
   {
-   "fieldname": "asset_location",
+   "fieldname": "default_asset_location",
    "fieldtype": "Link",
-   "label": "Asset Location",
+   "label": "Default Asset Location ",
    "options": "Location"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-07 11:01:57.255143",
+ "modified": "2025-04-09 12:57:13.541525",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
