@@ -385,6 +385,13 @@ def get_project_custom_fields():
                 "label": "Allocated Vehicle Details",
                 "options": "Allocated Vehicle Details",
                 "insert_after": "allocated_manpower_details"
+            },
+            {
+                "fieldname": "asset_location",
+                "fieldtype": "Link",
+                "label": "Asset Location",
+                "options":"Location",
+                "insert_after": "estimated_budget"
             }
 
 
