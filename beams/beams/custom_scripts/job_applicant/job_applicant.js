@@ -27,22 +27,6 @@ frappe.ui.form.on('Job Applicant', {
             // Clear location if checkbox is unchecked
             frm.set_value('location', '');
         }
-    },
-    validate: function (frm) {
-        const resume_attachment = frm.doc.resume_attachment;
-        if (resume_attachment) {
-            const allowed_extensions = ['pdf', 'doc', 'docx', 'xls', 'xlsx'];
-            const file_extension = resume_attachment.split('.').pop().toLowerCase();
-
-            if (!allowed_extensions.includes(file_extension)) {
-                frappe.msgprint({
-                    title: __('Validation for Resume'),
-                    message: __('Only PDF, DOC, DOCX, XLS, and XLSX files are allowed'),
-                    indicator: 'red'
-                });
-                frappe.validated = false;
-            }
-        }
     }
 });
 
