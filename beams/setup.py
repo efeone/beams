@@ -2205,7 +2205,6 @@ def get_job_applicant_custom_fields():
                 "label": "Mobile Number",
                 "insert_after": "current_address"
             },
-
             {
                "fieldname": "current_column_break",
                 "fieldtype": "Column Break",
@@ -2213,28 +2212,10 @@ def get_job_applicant_custom_fields():
                 "insert_after": "current_mobile_no"
             },
             {
-               "fieldname": "current_period_from",
-                "fieldtype": "Int",
-                "label": "Period of From stay",
-                "insert_after": "current_column_break"
-            },
-            {
-               "fieldname": "current_period_to",
-                "fieldtype": "Int",
-                "label": "Period of To stay",
-                "insert_after": "current_period_from"
-            },
-            {
-               "fieldname": "current_residence_no",
-                "fieldtype": "Int",
-                "label": "Residence Number",
-                "insert_after": "current_period_to"
-            },
-            {
                 "fieldname": "permanent_address_session_break",
                 "fieldtype": "Section Break",
                 "label": "Permanent Address",
-                "insert_after": "current_residence_no"
+                "insert_after": "current_column_break"
             },
             {
                "fieldname": "permanent_address",
@@ -2243,41 +2224,16 @@ def get_job_applicant_custom_fields():
                 "insert_after": "permanent_address_session_break"
             },
             {
-               "fieldname": "permanent_residence_no",
-                "fieldtype": "Int",
-                "label": "Residence Number",
-                "insert_after": "permanent_address"
-            },
-            {
                "fieldname": "permanent_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "permanent_residence_no"
-            },
-            {
-               "fieldname": "permanent_period_from",
-                "fieldtype": "Int",
-                "label": "Period of From stay",
-                "insert_after": "permanent_column_break"
-            },
-            {
-               "fieldname": "permanent_period_to",
-                "fieldtype": "Int",
-                "label": "Period of To stay",
-                "insert_after": "permanent_period_from"
-            },
-            {
-               "fieldname": "permananet_email_id",
-                "fieldtype": "Data",
-                "options": "Email",
-                "label": "Email ID",
-                "insert_after": "permanent_period_to"
+                "insert_after": "permanent_address"
             },
             {
                 "fieldname": "email_address_session_break",
                 "fieldtype": "Section Break",
                 "label": "",
-                "insert_after": "permananet_email_id"
+                "insert_after": "permanent_column_break"
             },
             {
                "fieldname": "email_id_1",
@@ -2392,23 +2348,10 @@ def get_job_applicant_custom_fields():
                 "insert_after": "current_employer"
             },
             {
-                "fieldname": "employee_code",
-                "fieldtype": "Data",
-                "label": "Employee Code",
-                "insert_after": "name_of_employer"
-            },
-            {
-                "fieldname": "telephone_no",
-                "fieldtype": "Data",
-                "options": "Phone",
-                "label": "Telephone No",
-                "insert_after": "employee_code"
-            },
-            {
                 "fieldname": "employment_period_from",
                 "fieldtype": "Int",
                 "label": "Employment Period From",
-                "insert_after": "telephone_no"
+                "insert_after": "name_of_employer"
             },
             {
                 "fieldname": "employment_period_to",
@@ -2417,36 +2360,16 @@ def get_job_applicant_custom_fields():
                 "insert_after": "employment_period_from"
             },
             {
-                "fieldname": "address_of_employer",
-                "fieldtype": "Small Text",
-                "label": "Address of Employer",
-                "insert_after": "employment_period_to"
-            },
-
-            {
                 "fieldname": "current_employer_1_column_break",
                 "fieldtype": "Column Break",
                 "label": "",
-                "insert_after": "address_of_employer"
-            },
-
-            {
-                "fieldname": "first_salary_drawn",
-                "fieldtype": "Currency",
-                "label": "First Salary Drawn",
-                "insert_after": "current_employer_1_column_break"
-            },
-            {
-                "fieldname": "last_salary_drawn",
-                "fieldtype": "Currency",
-                "label": "Last Salary Drawn",
-                "insert_after": "first_salary_drawn"
+                "insert_after": "employment_period_to"
             },
             {
                 "fieldname": "current_designation",
                 "fieldtype": "Data",
                 "label": "Designation",
-                "insert_after": "last_salary_drawn"
+                "insert_after": "current_employer_1_column_break"
             },
             {
                 "fieldname": "reference_taken",
@@ -2466,7 +2389,7 @@ def get_job_applicant_custom_fields():
                 "fieldname": "duties_and_reponsibilities",
                 "fieldtype": "Small Text",
                 "label": "Duties and Responsibilities",
-                "insert_after": "was_this_position"
+                "insert_after": "column_break_agency"
             },
             {
                 "fieldname": "current_employer_column_break",
@@ -2504,19 +2427,36 @@ def get_job_applicant_custom_fields():
                 "fieldname": "reason_for_leaving",
                 "fieldtype": "Small Text",
                 "label": "Reason For Leaving",
-                "insert_after": "manager_email"
+                "insert_after": "duties_and_reponsibilities"
             },
             {
                 "fieldname": "agency_details",
                 "fieldtype": "Small Text",
                 "label": "Agency Details  (if Temporary or Contractual)",
-                "insert_after": "reason_for_leaving"
+                "insert_after": "address_of_employer"
+            },
+            {
+                "fieldname": "column_break_agency",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "agency_details"
+            },
+            {
+                "fieldname": "previous_emp",
+                "fieldtype": "Section Break",
+                "insert_after": "manager_email"
+            },
+            {
+                "fieldname": "address_of_employer",
+                "fieldtype": "Small Text",
+                "label": "Address of Employer",
+                "insert_after": "previous_emp"
             },
             {
                 "fieldname": "previous_emplyoment",
                 "fieldtype": "Section Break",
                 "label": "Previous Employment History",
-                "insert_after": "agency_details"
+                "insert_after": "previous_emp"
             },
             {
                 "fieldname": "prev_emp_his",
