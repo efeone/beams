@@ -24,10 +24,10 @@ jobs:
         port: 22
         script: |
           sudo -u frappe -H bash -c "
-            cd /home/frappe/dev-bench/apps/beams # we move into our app's folder
+            cd /home/frappe/frappe-bench/apps/beams # we move into our app's folder
             git pull upstream develop # we pull any changes from git
             cd /home/frappe          
-            cd /home/frappe/dev-bench
+            cd /home/frappe/frappe-bench
             # bench setup requirements
             bench migrate # sync database
           "
