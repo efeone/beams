@@ -239,23 +239,28 @@ frappe.ui.form.on('Project', {
       }
   }
 
+ 
   frappe.ui.form.on('Required Items Table', {
     required_item: function(frm, cdt, cdn) {
-      
-      let row = locals[cdt][cdn]
+      let row = locals[cdt][cdn];
       if (row.required_item) {
-        
         frappe.call({
           method: "beams.beams.custom_scripts.project.project.get_available_quantities",
           args: {
-            items: JSON.stringify([row.required_item])
+            items: JSON.stringify([row.required_item]),
+            source_name: frm.doc.name  
           },
-          callback: function (r) {
+          callback: function(r) {
             if (r.message) {
-              frappe.model.set_value(cdt, cdn, 'available_quantity', r.message[row.required_item] || 0);
+              if (r.message._error) {
+                frappe.model.set_value(cdt, cdn, 'available_quantity', 0);
+              } else {
+                frappe.model.set_value(cdt, cdn, 'available_quantity', r.message[row.required_item] || 0);
+              }
             }
           }
         });
       }
     }
   });
+  
