@@ -13,28 +13,6 @@ def validate_project(doc, method):
             if row.required_from > row.required_to:
                 frappe.throw(f"Row {row.idx}: 'Required From' date must be before 'Required To' date.")
 
-def validate_project_dates(doc, method):
-    """Validate 'Required From' and 'Required To' dates in the Required Manpower Details child table against the project's Expected Start Date and Expected End Date."""
-    if not doc.expected_start_date or not doc.expected_end_date:
-        return
-    for row in doc.required_manpower_details:
-        if row.required_from and row.required_from < doc.expected_start_date:
-            frappe.throw(_("Row {0}: Required From ({1}) cannot be before Expected Start Date ({2})").format(
-                row.idx, row.required_from, doc.expected_start_date
-            ))
-        if row.required_to and row.required_to < doc.expected_start_date:
-            frappe.throw(_("Row {0}: Required To ({1}) cannot be before Expected Start Date ({2})").format(
-                row.idx, row.required_to, doc.expected_start_date
-            ))
-        if row.required_from and row.required_from > doc.expected_end_date:
-            frappe.throw(_("Row {0}: Required From ({1}) cannot be after Expected End Date ({2})").format(
-                row.idx, row.required_from, doc.expected_end_date
-            ))
-        if row.required_to and row.required_to > doc.expected_end_date:
-            frappe.throw(_("Row {0}: Required To ({1}) cannot be after Expected End Date ({2})").format(
-                row.idx, row.required_to, doc.expected_end_date
-            ))
-
 @frappe.whitelist()
 def create_adhoc_budget(source_name, target_doc=None):
     '''
@@ -247,7 +225,7 @@ def validate_employee_assignment(doc, method):
 @frappe.whitelist()
 def create_equipment_request(source_name, equipment_data, required_from, required_to):
     """Creates an Equipment Request for a project with multiple items."""
-    
+
     try:
         request_data = json.loads(equipment_data)
     except Exception as e:
