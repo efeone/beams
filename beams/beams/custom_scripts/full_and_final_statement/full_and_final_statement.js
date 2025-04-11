@@ -1,12 +1,12 @@
 frappe.ui.form.on('Full and Final Statement', {
     employee: function(frm) {
         if (frm.doc.employee) {
-            fetchAssetBundles(frm);
+            fetch_asset_bundles(frm);
         }
     }
 });
 
-function fetchAssetBundles(frm) {
+function fetch_asset_bundles(frm) {
     frappe.call({
         method: 'beams.beams.custom_scripts.full_and_final_statement.full_and_final_statement.fetch_asset_bundles_for_employee',
         args: {
