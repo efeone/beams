@@ -7,6 +7,7 @@ from frappe.utils import today,getdate,now_datetime
 from frappe.model.mapper import get_mapped_doc
 from frappe import _
 from datetime import datetime
+import json
 
 class EquipmentRequest(Document):
     def on_update_after_submit(self):
@@ -114,29 +115,46 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
 
     return target_doc
 
-
 @frappe.whitelist()
-def map_asset_movement(source_name, target_doc=None):
-    to_employee = frappe.flags.get("args", {}).get("to_employee", '')
-    asset = frappe.flags.get("args", {}).get("asset", '')
-    ref_type = frappe.flags.get("args", {}).get("ref_type", '')
-    ref_name = frappe.flags.get("args", {}).get("ref_name", '')
-    print(ref_type, ref_name)
-    asset_movement = get_mapped_doc("Equipment Request", source_name, {
+def map_asset_movement(source_name, assigned_to=None, items=None, target_doc=None):
+    """
+    Maps an Equipment Request to an Asset Movement with selected assets and assigns them to an employee.
+    Only available assets with status 'Submitted' are considered for the movement.
+    """
+    if isinstance(items, str):
+        items = json.loads(items)
+
+    def postprocess(source, target):
+        employee_id = frappe.db.get_value("Employee", {"user_id": assigned_to})
+        if not employee_id:
+            frappe.throw(f"No Employee linked to User '{assigned_to}'")
+        target.to_employee = employee_id
+        if items:
+            for row in items:
+                item_code = row.get("item")
+                count = row.get("count")
+
+                assets = frappe.get_all("Asset",
+                    filters={
+                        "item_code": item_code,
+                        "docstatus": 1,
+                        "status": "Submitted"
+                    },
+                    fields=["name", "location"],
+                    limit=count
+                )
+
+                for asset in assets:
+                    target.append("assets", {
+                        "asset": asset.name,
+                        "source_location": asset.location,
+                        "to_employee": employee_id,
+                        "target_location": None
+                    })
+
+
+    return get_mapped_doc("Equipment Request", source_name, {
         "Equipment Request": {
             "doctype": "Asset Movement",
-            "field_map": {
-
-            }
         }
-    }, target_doc)
-    asset_movement.purpose = 'Issue'
-    asset_movement.append('assets', {
-            'asset': asset,
-            'to_employee': to_employee
-        })
-    asset_movement.reference_doctype = ref_type
-    asset_movement.reference_name = ref_name
-    asset_movement.flags.ignore_mandatory = True
-    asset_movement.save(ignore_permissions=True)
-    return asset_movement
+    }, target_doc, postprocess)
