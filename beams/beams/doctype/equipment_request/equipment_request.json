@@ -10,6 +10,7 @@
   "project",
   "bureau",
   "location",
+  "requested_by",
   "column_break_dsby",
   "posting_date",
   "required_from",
@@ -108,12 +109,19 @@
    "fieldtype": "Select",
    "label": "Priority",
    "options": "Low\nMedium\nHigh"
+  },
+  {
+   "default": "__user",
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-07 14:56:40.418558",
+ "modified": "2025-04-10 23:12:54.804433",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",
