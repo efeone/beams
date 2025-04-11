@@ -9,11 +9,7 @@ def fetch_asset_bundles_for_employee(employee):
         fields=["name", "bundle", "posting_date", "creation"],
         order_by="posting_date desc, creation desc"
     )
-
-    if not atrs:
-        frappe.msgprint(_("No Asset Transfer Requests found for this employee."))
-        return []
-
+    
     bundles = {}
     for atr in atrs:
         if atr.bundle:
