@@ -1,0 +1,59 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:FFB-{YY}-{####}",
+ "creation": "2025-02-28 15:24:43.911564",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "asset_transfer_request",
+  "asset_bundle",
+  "date",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "asset_transfer_request",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Transfer Request",
+   "options": "Asset Transfer Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "asset_bundle",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Asset Bundle",
+   "options": "Asset Bundle",
+   "read_only": 1
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Date",
+   "read_only": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Description"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-11 11:27:06.749335",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Full and Final Bundle",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
