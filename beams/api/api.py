@@ -1,7 +1,10 @@
 import frappe
+import json
+import re
 from frappe import _
-from frappe.utils import getdate
+from frappe.utils import getdate, now_datetime, time_diff
 from hrms.api.roster import get_shifts
+
 
 @frappe.whitelist(allow_guest=True)
 def response(message, data, success, status_code):
@@ -471,3 +474,237 @@ def get_employee_shift(employee: str, date: str):
 
     # Return the shift details if found
     return shifts.get(employee, [])
+
+@frappe.whitelist()
+def get_doc(doctype, docname, with_history=False, method=None):
+    '''
+        API to get the data of a document along with attached files
+        args:
+            doctype : doctype of the document
+            docname : name of the document
+            with_history : returns document history when true
+            method : returns the data object instead of response when true
+    '''
+    try:
+        doc = frappe.get_doc(doctype, docname)
+        values = {'doctype':doctype, 'docname':docname}
+        attached_files = frappe.db.sql('''
+                                SELECT
+                                    file_name,
+                                    file_url
+                                FROM
+                                    tabFile
+                                WHERE
+                                    attached_to_doctype = %(doctype)s AND
+                                    attached_to_name = %(docname)s
+                                ''', values=values, as_dict=1)
+        comments = get_comments(doctype, docname)
+        data = doc.__dict__
+        data['meta'] = []
+        if data.get('meta'):
+            data.pop('meta')
+        if data.get('flags'):
+            data.pop('flags')
+        if data.get('_table_fieldnames'):
+            data.pop('_table_fieldnames')
+        data['_comments'] = comments
+        data['attachments'] = attached_files
+        if with_history:
+            data['history'] = get_doc_history(doctype, docname)
+        if not method:
+            data = [data]
+            return response('Successfully got data of {doctype} {docname}'.format(doctype = doctype, docname = docname), data, True, 200)
+        else:
+            return data
+    except Exception as exception:
+        frappe.log_error(frappe.get_traceback())
+        return response(exception, {}, False, 400)
+
+def get_comments(doctype, docname):
+    '''method gets comments of a document, removes html elements from it and then returns it
+       args:
+            doctype : doctype of the document
+            docname : name of the document'''
+    values = {'doctype':doctype, 'docname':docname}
+    comments = frappe.db.sql('''
+                        SELECT
+                            owner,
+                            comment_type,
+                            content
+                        FROM
+                            tabComment
+                        WHERE
+                            reference_doctype = %(doctype)s
+                        AND
+                            reference_name = %(docname)s
+                        ORDER BY
+                            modified desc
+                        ''', values=values, as_dict=1)
+    for comment in comments:
+        comment.content = convert_message(comment.content)
+    return comments
+
+def convert_message(message):
+    '''
+        method removes html elements from string
+        args:
+            message: string to be converted
+    '''
+    CLEANR = re.compile('<.*?>')
+    cleanmessage = re.sub(CLEANR, "",message)
+    return cleanmessage
+
+def get_doc_history(doctype, docname):
+    '''
+        method to get the histroy of a document
+        args:
+            doctype : doctype of the document
+            docname : name of the document
+    '''
+    history = []
+    values = {'doctype':doctype, 'docname':docname}
+    view_log = frappe.db.sql('''
+        SELECT
+            viewed_by as user,
+            creation as time
+        FROM
+            `tabView Log`
+        WHERE
+            reference_doctype = %(doctype)s
+        AND
+            reference_name = %(docname)s
+        ORDER BY
+            creation asc
+    ''', values = values, as_dict=1)
+    for log in view_log:
+        user = set_current_user_as_you_str(log.user)
+        log['log'] = '{0} viewed this {1}'.format(user, get_time_diff_in_words(log.time))
+    history += view_log
+    versions = frappe.db.sql('''
+        SELECT
+            owner as user,
+            creation as time,
+            data
+        FROM
+            tabVersion
+        WHERE
+            ref_doctype = %(doctype)s
+        AND
+            docname = %(docname)s
+    ''', values = values, as_dict=1)
+    for version in versions:
+        user = set_current_user_as_you_str(version.user)
+        data = json.loads(version.data)
+        time_modifier = get_time_diff_in_words(version['time'])
+        if data['added']:
+            version['log'] = '{0} added rows for {1} - {2}'.format(user, generate_changes_message(data['added'], 'added'), time_modifier)
+        elif data['changed']:
+            version['log'] = '{0} changed values for {1} - {2}'.format(user, generate_changes_message(data['changed'], 'changed'), time_modifier)
+        elif data['removed']:
+            version['log'] = '{0} removed rows for {1} - {2}'.format(user, generate_changes_message(data['removed'], 'removed'), time_modifier)
+        elif data['row_changed']:
+            version['log'] = '{0} changed values for {1} - {2}'.format(user, generate_changes_message(data['row_changed'], 'row_changed', doctype), time_modifier)
+        version.pop('data')
+    history += versions
+
+    history.sort(key=return_keys_of_doct_history_list)
+
+    doc = frappe.get_doc(doctype, docname)
+    creation_dict = {
+        'user': doc.owner,
+        'time': doc.creation,
+        'log': '{0} created this {1}'.format(set_current_user_as_you_str(doc.owner), get_time_diff_in_words(doc.creation))
+    }
+    modifi_dict = {
+        'user': doc.modified_by,
+        'time': doc.modified,
+        'log': '{0} edited this {1}'.format(set_current_user_as_you_str(doc.modified_by), get_time_diff_in_words(doc.modified))
+    }
+    history = [creation_dict, modifi_dict] + history
+
+    return history
+
+def return_keys_of_doct_history_list(log_dict):
+    '''key generator for history lsit sort'''
+    return log_dict['time']
+
+def get_time_diff_in_words(time):
+    '''
+        method used to get the time difference between current time and given time in words
+        args:
+            time : datetime object of time to be calculated
+    '''
+    now = now_datetime()
+    diff = time_diff(now, time)
+    days = int(diff.days)
+    if not days:
+        hours = int(diff.seconds/3600)
+        if not hours:
+            minutes = int(diff.seconds/60)
+            if not minutes:
+                return 'just now'
+            elif minutes == 1:
+                return '1 minute ago'
+            return '{0} minutes ago'.format(minutes)
+        if hours == 1:
+            return '1 hour ago'
+        return '{0} hours ago'.format(hours)
+    elif days < 7:
+        if days == 1:
+            return '1 day ago'
+        return '{0} days ago'.format(days)
+    if time.month == now.month:
+        weeks = int(days/7)
+        if weeks > 1:
+            return '{0} weeks ago'.format(weeks)
+        return '1 week ago'
+    years = now.year - time.year
+    if not years:
+        months = diff_month(now, time)
+        if months == 1:
+            return '1 month ago'
+        return '{0} months ago'.format(months)
+    if years == 1:
+        return '1 year ago'
+    return '{0} years ago'.format(years)
+
+def diff_month(d1, d2):
+    '''
+        method to get the month difference between two dates
+        args:
+            d1, d2: datetime objects of dates
+    '''
+    return (d1.year - d2.year) * 12 + d1.month - d2.month
+
+def set_current_user_as_you_str(user):
+    '''
+        method used to return self addressal if the user in question is the current user
+        args:
+            user : email of the user
+    '''
+    if frappe.session.user == user:
+        return 'You'
+    return user
+
+def generate_changes_message(changes, type, doctype = None):
+    '''
+        method used to generate the messages for document history
+        args:
+            changes : a list object contatining the version data
+            type : type of change happened
+    '''
+    changes_list = []
+    for change in changes:
+        if type == 'changed':
+            changes_list.append('{0} from {1} to {2}'.format(change[0], change[1], change[2]))
+        elif type in ['added', 'removed']:
+            label = frappe.get_meta(change[1]['parenttype']).get_field(change[1]['parentfield']).label
+            changes_list.append(label)
+        elif type == 'row_changed':
+            field_meta = frappe.get_meta(doctype).get_field(change[0])
+            label = field_meta.label
+            for value_change in change[3]:
+                child_label = frappe.get_meta(field_meta.options).get_field(value_change[0]).label
+                changes_list.append('{0} from {1} to {2} in row #{3}'.format(child_label, value_change[1], value_change[2], change[1]))
+    changes_str = ', '.join(changes_list)
+    return changes_str
