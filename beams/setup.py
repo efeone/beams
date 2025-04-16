@@ -1493,7 +1493,6 @@ def get_supplier_custom_fields():
                 "label": "Area",
                 "depends_on": "eval:doc.is_stringer == 1",
                 "insert_after": "bureau"
-
             },
             {
                 "fieldname": "ot_batta",
@@ -1501,7 +1500,13 @@ def get_supplier_custom_fields():
                 "label": "OT Batta",
                 "depends_on": "eval:doc.is_transporter == 1",
                 "insert_after": "is_transporter"
-
+            },
+            {
+                "fieldname": "designation",
+                "fieldtype": "Link",
+                "label": "Designation",
+                "options": "Designation",
+                "insert_after": "country"
             }
         ]
     }

@@ -48,7 +48,7 @@ frappe.ui.form.on("External Resource Request", {
                                 get_query: function () {
                                     return {
                                         filters: {
-                                            hireable: 1 
+                                            hireable: 1
                                         }
                                     };
                                 }
@@ -70,12 +70,12 @@ frappe.ui.form.on("External Resource Request", {
                         primary_action_label: __('Create Purchase Order'),
                         primary_action: function () {
                             let values = dialog.get_values();
-    
+
                             if (!values.supplier || !values.schedule_date || !values.service_item || !values.qty || !values.rate) {
                                 frappe.msgprint(__('All fields are required!'));
                                 return;
                             }
-    
+
                             frappe.call({
                                 method: "frappe.client.insert",
                                 args: {
@@ -101,17 +101,17 @@ frappe.ui.form.on("External Resource Request", {
                                     }
                                 }
                             });
-    
+
                             dialog.hide();
                         }
                     });
-    
+
                     dialog.show();
                 }, __("Create"));
             }
         }
     });
-    
+
 
     frappe.ui.form.on("External Resources Detail", {
         required_resources_add: function (frm, cdt, cdn) {
@@ -121,5 +121,54 @@ frappe.ui.form.on("External Resource Request", {
                   frm.refresh_field("required_resources");
               }
           })
+        },
+
+        designation: function (frm, cdt, cdn) {
+          let row = locals[cdt][cdn];
+          if (row.designation) {
+            frm.fields_dict.required_resources.grid.update_docfield_property(
+                "hired_personnel",
+                "get_query",
+                function () {
+                    return {
+                        filters: {
+                            designation: row.designation
+                        }
+                    };
+                }
+            );
+            // Optionally clear hired_personnel when designation changes
+            frappe.model.set_value(cdt, cdn, "hired_personnel", null);
+          } else {
+            frm.fields_dict.required_resources.grid.update_docfield_property(
+                "hired_personnel",
+                "get_query",
+                null
+            );
         }
+      },
+      designation: function (frm, cdt, cdn) {
+        let row = locals[cdt][cdn];
+        if (row.designation) {
+          frm.fields_dict.required_resources.grid.update_docfield_property(
+              "hired_personnel",
+              "get_query",
+              function () {
+                  return {
+                      filters: {
+                          designation: row.designation
+                      }
+                  };
+              }
+          );
+          // Optionally clear hired_personnel when designation changes
+          frappe.model.set_value(cdt, cdn, "hired_personnel", null);
+        } else {
+          frm.fields_dict.required_resources.grid.update_docfield_property(
+              "hired_personnel",
+              "get_query",
+              null
+          );
+        }
+      }
     });
