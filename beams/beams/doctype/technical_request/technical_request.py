@@ -122,7 +122,7 @@ def update_allocated_field(doc):
                         and emp.required_from == mp.assigned_from
                         and emp.required_to == mp.assigned_to
                     ):
-                        mp.allocated = 1
+                        mp.status = 'Allocated'
 
         project.save(ignore_permissions=True)
         frappe.msgprint(f"Allocated manpower updated for Project {doc.project}")
