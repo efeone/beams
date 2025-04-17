@@ -91,7 +91,7 @@ def update_hired_field(doc, method=None):
                     and get_datetime(resource.required_from) == get_datetime(manpower.assigned_from)
                     and get_datetime(resource.required_to) == get_datetime(manpower.assigned_to)
                 ):
-                    manpower.hired = 1
+                    manpower.status = 'Hired'
 
         project.save(ignore_permissions=True)
         frappe.msgprint(f"Hired manpower updated for Project {doc.project}")
