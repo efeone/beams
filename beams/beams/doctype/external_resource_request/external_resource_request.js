@@ -137,7 +137,7 @@ frappe.ui.form.on("External Resource Request", {
                     };
                 }
             );
-            // Optionally clear hired_personnel when designation changes
+          
             frappe.model.set_value(cdt, cdn, "hired_personnel", null);
           } else {
             frm.fields_dict.required_resources.grid.update_docfield_property(
