@@ -1,0 +1,90 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:MPTL-{YYYY}-{#####}",
+ "creation": "2025-04-17 11:58:21.691455",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_3v7e",
+  "project",
+  "location",
+  "column_break_tn7k",
+  "expected_start_date",
+  "expected_end_date",
+  "section_break_n4e0",
+  "allocated_manpower_detail"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_3v7e",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fetch_from": "project.location",
+   "fetch_if_empty": 1,
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fetch_from": "project.expected_start_date",
+   "fieldname": "expected_start_date",
+   "fieldtype": "Datetime",
+   "label": "Expected Start Date"
+  },
+  {
+   "fetch_from": "project.expected_end_date",
+   "fieldname": "expected_end_date",
+   "fieldtype": "Datetime",
+   "label": "Expected End Date"
+  },
+  {
+   "fieldname": "column_break_tn7k",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "allocated_manpower_detail",
+   "fieldtype": "Table",
+   "label": "Allocated Manpower Details",
+   "options": "Allocated Manpower Detail"
+  },
+  {
+   "fieldname": "section_break_n4e0",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-17 12:24:52.981296",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Manpower Transaction Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
