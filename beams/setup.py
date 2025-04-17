@@ -1481,6 +1481,14 @@ def get_supplier_custom_fields():
                 "depends_on": "eval:doc.is_stringer == 1",
                 "insert_after": "bureau"
 
+            },
+            {
+                "fieldname": "designation",
+                "fieldtype": "Link",
+                "label": "Designation",
+                "options": "Designation",
+                "insert_after": "country"
+
             }
         ]
     }

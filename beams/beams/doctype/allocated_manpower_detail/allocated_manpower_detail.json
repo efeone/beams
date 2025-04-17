@@ -12,9 +12,12 @@
   "assigned_to",
   "employee",
   "hired_personnel",
+  "returned_date",
   "hired_personnel_contact_info",
   "allocated",
-  "hired"
+  "hired",
+  "returned",
+  "returned_reason"
  ],
  "fields": [
   {
@@ -84,12 +87,30 @@
    "in_list_view": 1,
    "label": "Hired",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "returned",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Returned"
+  },
+  {
+   "fieldname": "returned_date",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Returned Date"
+  },
+  {
+   "fieldname": "returned_reason",
+   "fieldtype": "Small Text",
+   "label": "Returned Reason"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-03 10:19:02.966839",
+ "modified": "2025-04-17 12:27:42.630541",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Manpower Detail",

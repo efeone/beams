@@ -36,9 +36,10 @@
   {
    "allow_on_submit": 1,
    "fieldname": "hired_personnel",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Hired Personnel "
+   "label": "Hired Personnel ",
+   "options": "Supplier"
   },
   {
    "allow_on_submit": 1,
@@ -58,7 +59,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 16:02:33.883488",
+ "modified": "2025-04-16 16:33:35.122701",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Resources Detail",
