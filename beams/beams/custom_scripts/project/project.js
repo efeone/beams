@@ -8,6 +8,15 @@ frappe.ui.form.on('Project', {
             frm.refresh_field("allocated_item_details");
         }
 
+        // Hide Returned Date , Returned & Returned Reason in Allocated Manpower Details
+        if (frm.fields_dict["allocated_manpower_details"] && frm.fields_dict["allocated_manpower_details"].grid) {
+            let grid = frm.fields_dict["allocated_manpower_details"].grid;
+            grid.toggle_display("returned_date", false);
+            grid.toggle_display("returned", false);
+            grid.toggle_display("returned_reason", false);
+            frm.refresh_field("allocated_manpower_details");
+        }
+
       //function adds a button to the 'Project' form to create an Adhoc Budget.
         frm.add_custom_button(__('Adhoc Budget'), function () {
             frappe.model.open_mapped_doc({
@@ -70,7 +79,7 @@ frappe.ui.form.on('Project', {
                           method: "beams.beams.custom_scripts.project.project.get_available_quantities",
                           args: {
                             items: JSON.stringify([row.item]),
-                            source_name: frm.doc.name  
+                            source_name: frm.doc.name
                           },
                           callback: function (r) {
                             if (r.message) {
@@ -169,8 +178,8 @@ frappe.ui.form.on('Project', {
 
           dialog.show();
         }, __("Create"));
-        
-          
+
+
         frm.add_custom_button("External Resource Request", function() {
             frappe.new_doc("External Resource Request", {
                 project: frm.doc.name,
@@ -196,7 +205,7 @@ frappe.ui.form.on('Project', {
             };
         };
       },
-      
+
     required_from : function(frm) {
        frm.doc.required_manpower_details.forEach(row => {
            if (row.required_from < row.required_to) {
@@ -239,7 +248,7 @@ frappe.ui.form.on('Project', {
       }
   }
 
- 
+
   frappe.ui.form.on('Required Items Table', {
     required_item: function(frm, cdt, cdn) {
       let row = locals[cdt][cdn];
@@ -248,7 +257,7 @@ frappe.ui.form.on('Project', {
           method: "beams.beams.custom_scripts.project.project.get_available_quantities",
           args: {
             items: JSON.stringify([row.required_item]),
-            source_name: frm.doc.name  
+            source_name: frm.doc.name
           },
           callback: function(r) {
             if (r.message) {
@@ -263,4 +272,3 @@ frappe.ui.form.on('Project', {
       }
     }
   });
-  
