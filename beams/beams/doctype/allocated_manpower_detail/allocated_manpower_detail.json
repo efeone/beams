@@ -14,10 +14,9 @@
   "hired_personnel",
   "returned_date",
   "hired_personnel_contact_info",
-  "allocated",
-  "hired",
   "returned",
-  "returned_reason"
+  "returned_reason",
+  "status"
  ],
  "fields": [
   {
@@ -74,22 +73,6 @@
   },
   {
    "default": "0",
-   "fieldname": "allocated",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Allocated",
-   "read_only": 1
-  },
-  {
-   "default": "0",
-   "fieldname": "hired",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Hired",
-   "read_only": 1
-  },
-  {
-   "default": "0",
    "fieldname": "returned",
    "fieldtype": "Check",
    "in_list_view": 1,
@@ -105,12 +88,18 @@
    "fieldname": "returned_reason",
    "fieldtype": "Small Text",
    "label": "Returned Reason"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nAllocated\nHired"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-17 12:27:42.630541",
+ "modified": "2025-04-17 15:46:15.951754",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Manpower Detail",
