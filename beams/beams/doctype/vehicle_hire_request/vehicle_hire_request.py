@@ -69,7 +69,7 @@ class VehicleHireRequest(Document):
                     "from":vehicle.get("from"),
                     "to":vehicle.to,
                     "no_of_travellers":vehicle.no_of_travellers,
-                    "hired":1
+                    "status":"Hired"
                 })
                 project_details.save(ignore_permissions=True)
 

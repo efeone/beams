@@ -11,12 +11,12 @@
   "assigned_from",
   "assigned_to",
   "employee",
+  "status",
   "hired_personnel",
-  "returned_date",
   "hired_personnel_contact_info",
+  "returned_date",
   "returned",
-  "returned_reason",
-  "status"
+  "returned_reason"
  ],
  "fields": [
   {
@@ -92,6 +92,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "\nAllocated\nHired"
   }
@@ -99,7 +100,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-17 15:46:15.951754",
+ "modified": "2025-04-19 11:27:44.153819",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Allocated Manpower Detail",
