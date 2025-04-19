@@ -1,0 +1,81 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-19 11:29:43.949067",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "vehicle",
+  "vehicle_type",
+  "from",
+  "to",
+  "no_of_travellers",
+  "status",
+  "return_date",
+  "return_reason"
+ ],
+ "fields": [
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle"
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle Type"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "From"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "To"
+  },
+  {
+   "fieldname": "no_of_travellers",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "No of Travellers"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Allocated\nHired"
+  },
+  {
+   "fieldname": "return_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "Return Date"
+  },
+  {
+   "fieldname": "return_reason",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Return Reason"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-19 11:45:47.726388",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Log Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
