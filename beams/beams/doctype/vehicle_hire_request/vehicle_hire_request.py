@@ -16,6 +16,7 @@ class VehicleHireRequest(Document):
             self.name
             )
         self.update_hired_vehicles_on_submit()
+        self.update_vehicle_details_on_project()
 
     def on_cancel(self):
         self.update_hired_vehicles_on_cancel()
@@ -30,7 +31,7 @@ class VehicleHireRequest(Document):
         '''
         if self.required_vehicles:
             # Calculate the total number of vehicles
-            total_vehicles = sum(row.no_of_vehicles or 0 for row in self.required_vehicles)
+            total_vehicles = len(self.required_vehicles)
 
             # Update the Transportation Request
             if self.transportation_request:
@@ -52,6 +53,25 @@ class VehicleHireRequest(Document):
                 "no_of_hired_vehicles",
                 0
             )
+
+    def update_vehicle_details_on_project(self):
+
+        if self.required_vehicles:
+
+            project_details = frappe.get_doc("Project", self.project)
+
+            for vehicle in self.required_vehicles:
+                project_details.append("allocated_vehicle_details", {
+                    "vehicle": vehicle.vehicle_number,
+                    "hired_vehicle": vehicle.get("hired_vehicle", ""),
+                    "reference_doctype": "Vehicle Hire Request",
+                    "reference_name": self.name,
+                    "from":vehicle.get("from"),
+                    "to":vehicle.to,
+                    "no_of_travellers":vehicle.no_of_travellers,
+                    "status":"Hired"
+                })
+                project_details.save(ignore_permissions=True)
 
     @frappe.whitelist()
     def validate_posting_date(self):

@@ -41,7 +41,7 @@ class TransportationRequest(Document):
                     "from":vehicle.from_location,
                     "to":vehicle.to_location,
                     "no_of_travellers":vehicle.no_of_travellers,
-                    "allocated":1
+                    "status":"Allocated"
                 })
             project_doc.save(ignore_permissions=True)
 
