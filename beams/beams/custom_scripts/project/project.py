@@ -1,5 +1,4 @@
 import json
-
 import frappe
 from erpnext.accounts.utils import get_fiscal_year
 from frappe import _
@@ -144,6 +143,7 @@ def create_technical_request(project_id):
 
     project = frappe.get_doc('Project', project_id)
 
+
     doc = frappe.get_doc({
         'doctype': 'Technical Request',
         'project': project_id,
@@ -153,30 +153,69 @@ def create_technical_request(project_id):
         'required_from': project.expected_start_date,
         'required_to': project.expected_end_date,
         'required_employees': []
-
     })
 
-    # Fetch manpower details from Project's child table (`required_manpower_details`)
-    for man in project.get("required_manpower_details", []):
-        department = frappe.db.get_value("Department", man.department, "name")
-        designation = frappe.db.get_value("Designation", man.designation, "name")
-        no_of_employees = man.get('no_of_employees',1)
-        required_from = man.get('required_from')
-        required_to = man.get('required_to')
+    any_valid_row = False
 
-        if not department or not designation:
-            frappe.throw(_("Both Department and Designation are required."))
+    for req_row in project.required_manpower_details:
+        if not req_row.department or not req_row.designation or not req_row.no_of_employees:
+            continue
 
-        for _ in range(no_of_employees):
+        department = req_row.department
+        designation = req_row.designation
+        required_no_of_employees = req_row.no_of_employees
+        required_from = req_row.required_from
+        required_to = req_row.required_to
+
+        assigned_employees = frappe.get_all(
+            "Allocated Manpower Detail",
+            filters={
+                "parent": project.name,
+                "department": department,
+                "designation": designation,
+                "assigned_from": ["<=", required_to],
+                "assigned_to": [">=", required_from]
+            },
+            fields=["employee"]
+        )
+
+        unique_assigned_employees = set(row.employee for row in assigned_employees)
+        assigned_count = len(unique_assigned_employees)
+
+        if assigned_count > required_no_of_employees:
+            frappe.throw(_(
+                "Cannot create a Technical Request. The number of employees assigned to the department '{0}' and designation '{1}' exceeds the required number ({2}) during the period {3} to {4}. "
+                "Currently assigned: {5} employees in project {6}."
+            ).format(
+                department, designation, required_no_of_employees, required_from, required_to, assigned_count, project.name
+            ))
+
+        elif assigned_count == required_no_of_employees:
+            frappe.msgprint(_(
+                "Note: The number of employees assigned to department '{0}' and designation '{1}' has already reached the required number ({2}) for the period {3} to {4}."
+            ).format(
+                department, designation, required_no_of_employees, required_from, required_to
+            ))
+            continue
+
+        remaining_needed = required_no_of_employees - assigned_count
+        any_valid_row = True
+
+        for i in range(remaining_needed):
             doc.append("required_employees", {
                 "department": department,
                 "designation": designation,
-                "required_from": man.required_from,
-                "required_to": man.required_to,
+                "required_from": required_from,
+                "required_to": required_to,
             })
+
+    if not any_valid_row:
+        frappe.throw(_("No new manpower requirements available for assignment. All requirements are already fulfilled."))
 
     doc.insert(ignore_permissions=True)
     return doc.name
+
+
 
 @frappe.whitelist()
 def update_program_request_status_on_project_completion(doc, method):
@@ -221,6 +260,31 @@ def validate_employee_assignment(doc, method):
         if overlapping_projects:
             employee_name = frappe.get_value("Employee", row.employee, "employee_name")
             frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another project ({', '.join(overlapping_projects)}) within the same time period.")
+
+@frappe.whitelist()
+def validate_employee_assignment_in_same_project(doc, method):
+    '''
+    Validate that an employee is not assigned to multiple roles/tasks within the same project during the same time period.
+    '''
+    employee_assignments = {}
+
+    for row in doc.allocated_manpower_details:
+        if not row.employee:
+            continue
+
+        if row.employee not in employee_assignments:
+            employee_assignments[row.employee] = []
+
+        for existing_row in employee_assignments[row.employee]:
+            if (
+                (existing_row.assigned_from <= row.assigned_to) and
+                (existing_row.assigned_to >= row.assigned_from)
+            ):
+                employee_name = frappe.get_value("Employee", row.employee, "employee_name")
+                frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another task or role within the same project ({doc.name}) during the same time period.")
+
+        employee_assignments[row.employee].append(row)
+
 
 @frappe.whitelist()
 def create_equipment_request(source_name, equipment_data, required_from, required_to):
@@ -293,7 +357,7 @@ def get_available_quantities(items, source_name=None):
             quantity = frappe.db.count("Asset", {
                 "item_code": item,
                 "location": location,
-                "docstatus": 1 
+                "docstatus": 1
             })
             result[item] = quantity or 0
 
