@@ -324,7 +324,8 @@ doc_events = {
             "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion",
             "beams.beams.custom_scripts.project.project.validate_project"
         ],
-         "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment"    
+         "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment",
+         "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project"
     },
     "Item": {
         "before_insert": [
