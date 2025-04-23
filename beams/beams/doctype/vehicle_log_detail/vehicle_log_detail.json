@@ -13,6 +13,7 @@
   "to",
   "no_of_travellers",
   "status",
+  "returned",
   "return_date",
   "return_reason"
  ],
@@ -65,12 +66,20 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Return Reason"
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "returned",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "returned"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-19 11:51:05.520000",
+ "modified": "2025-04-23 16:29:53.868218",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Log Detail",
