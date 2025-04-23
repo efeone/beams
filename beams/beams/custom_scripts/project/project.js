@@ -321,3 +321,46 @@ frappe.ui.form.on('Project', {
       }
     }
   });
+
+  frappe.ui.form.on('Allocated Vehicle Details', {
+      return: function(frm, cdt, cdn) {
+          let row = locals[cdt][cdn];
+          frappe.prompt([
+              {
+                  label: 'Return Date',
+                  fieldname: 'return_date',
+                  fieldtype: 'Datetime',
+                  reqd: 1
+              },
+              {
+                  label: 'Return Reason',
+                  fieldname: 'return_reason',
+                  fieldtype: 'Small Text',
+                  reqd: 1
+              }
+          ],
+          function(values) {
+              row.return_date = values.return_date;
+              row.return_reason = values.return_reason;
+              row.returned = 1;
+              frm.refresh_field('allocated_vehicle_details');
+              frappe.call({
+                  method: "beams.beams.custom_scripts.project.project.update_vehicle_return_details_in_log",
+                  args: {
+                      project: frm.doc.name,
+                      vehicle: row.vehicle,
+                      return_date: values.return_date,
+                      return_reason: values.return_reason
+                  },
+                  callback: function(r) {
+                      if (!r.exc) {
+                          frappe.msgprint("Vehicle Transaction Log updated.");
+                          frm.save();
+                      }
+                  }
+              });
+          },
+          'Return Vehicle',
+          'Submit');
+      }
+  });

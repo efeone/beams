@@ -476,3 +476,113 @@ def on_update_project(doc, method):
     if updated:
         log_doc.save(ignore_permissions=True)
         frappe.msgprint(f"Unreturned manpower records marked as returned due to project {doc.status.lower()}.")
+
+def sync_vehicle_logs(doc, method):
+    """
+    Sync vehicle transaction logs from Project's allocated_vehicle_details to
+    Vehicle Transaction Log's vehicle_log_details, while preserving return data.
+    """
+
+    source_child_table = "allocated_vehicle_details"
+    target_child_table = "vehicle_log_details"
+
+    log_name = frappe.db.get_value("Vehicle Transaction Log", {"project": doc.name})
+
+    if log_name:
+        transaction_log = frappe.get_doc("Vehicle Transaction Log", log_name)
+    else:
+        transaction_log = frappe.new_doc("Vehicle Transaction Log")
+        transaction_log.project = doc.name
+        transaction_log.project_name = doc.project_name
+
+    if not transaction_log.meta.get_field(target_child_table):
+        frappe.throw(f"Child table field '{target_child_table}' not found in Vehicle Transaction Log")
+
+    existing_logs = {
+        row.vehicle: row
+        for row in transaction_log.get(target_child_table)
+    }
+
+    updated_rows = []
+
+    for row in doc.get(source_child_table) or []:
+        vehicle = row.vehicle
+        existing = existing_logs.get(vehicle)
+
+        from_location = frappe.db.get_value("Location", row.get("from"), "location_name") or row.get("from")
+        to_location = frappe.db.get_value("Location", row.get("to"), "location_name") or row.get("to")
+
+        log_data = {
+            "vehicle": vehicle,
+            "from": from_location,
+            "to": to_location,
+            "no_of_travellers": row.no_of_travellers,
+            "status": row.status,
+        }
+
+        if existing:
+            log_data["return_date"] = existing.return_date
+            log_data["return_reason"] = existing.return_reason
+
+        updated_rows.append(log_data)
+
+    transaction_log.set(target_child_table, [])
+    for data in updated_rows:
+        transaction_log.append(target_child_table, data)
+
+    transaction_log.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def update_vehicle_return_details_in_log(project, vehicle, return_date, return_reason):
+    """
+    Updates the return details of a vehicle in the 'Vehicle Transaction Log' for the given project.
+    """
+    log_name = frappe.db.get_value("Vehicle Transaction Log", {"project": project})
+    if not log_name:
+        frappe.throw(_("No Vehicle Transaction Log found for this project."))
+
+    log_doc = frappe.get_doc("Vehicle Transaction Log", log_name)
+    updated = False
+
+    for row in log_doc.vehicle_log_details:
+        if row.vehicle == vehicle and not row.returned:
+            row.returned = True
+            row.return_date = return_date
+            row.return_reason = return_reason
+            updated = True
+    if updated:
+        log_doc.save(ignore_permissions=True)
+    else:
+        frappe.throw(_("No matching vehicle record found in the transaction log."))
+
+def auto_return_vehicles_on_project_completion(doc, method):
+    """
+    Automatically marks vehicles as returned in the 'Vehicle Transaction Log'
+    when the associated project is marked as 'Completed' or 'Cancelled'.
+    """
+    if doc.status not in ("Completed", "Cancelled"):
+        return
+
+    log_name = frappe.db.get_value("Vehicle Transaction Log", {"project": doc.name})
+    if not log_name:
+        return
+
+    log_doc = frappe.get_doc("Vehicle Transaction Log", log_name)
+    updated = False
+
+    for row in log_doc.vehicle_log_details:
+        if not row.returned and not row.return_date and not row.return_reason:
+            row.returned = True
+            row.return_date = frappe.utils.nowdate()
+            row.return_reason = "Project Completed" if doc.status == "Completed" else "Project Cancelled"
+            updated = True
+
+        elif row.return_reason and row.return_date:
+            row.returned = True
+            updated = True
+
+        else:
+            print(f" - Skipped (already returned or reason provided)")
+
+    if updated:
+        log_doc.save(ignore_permissions=True)
