@@ -324,7 +324,9 @@ doc_events = {
             "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion",
             "beams.beams.custom_scripts.project.project.validate_project",
             "beams.beams.custom_scripts.project.project.sync_manpower_logs",
-            "beams.beams.custom_scripts.project.project.on_update_project"
+            "beams.beams.custom_scripts.project.project.on_update_project",
+            "beams.beams.custom_scripts.project.project.sync_vehicle_logs",
+            "beams.beams.custom_scripts.project.project.auto_return_vehicles_on_project_completion"
         ],
          "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment",
          "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project"
