@@ -30,20 +30,47 @@ class TransportationRequest(Document):
 
             if not self.vehicles:
                 return
-            project_doc.set("allocated_vehicle_details", [])
 
-            for vehicle in self.vehicles:
-                project_doc.append("allocated_vehicle_details", {
+            existing_vehicles = project_doc.get("allocated_vehicle_details", [])
+            vehicles_to_update = {vehicle.vehicle: vehicle for vehicle in self.vehicles}
+
+            updated_vehicle_details = []
+            for existing_vehicle in existing_vehicles:
+                if existing_vehicle.reference_name != self.name:
+                    updated_vehicle_details.append(existing_vehicle)
+
+                elif existing_vehicle.vehicle in vehicles_to_update:
+                    vehicle = vehicles_to_update[existing_vehicle.vehicle]
+                    updated_vehicle_details.append({
+                        "vehicle": vehicle.vehicle,
+                        "hired_vehicle": vehicle.get("hired_vehicle", ""),
+                        "reference_doctype": "Transportation Request",
+                        "reference_name": self.name,
+                        "from": vehicle.from_location,
+                        "to": vehicle.to_location,
+                        "no_of_travellers": vehicle.no_of_travellers,
+                        "status": "Allocated"
+                    })
+                    del vehicles_to_update[existing_vehicle.vehicle]
+
+            for vehicle in vehicles_to_update.values():
+                updated_vehicle_details.append({
                     "vehicle": vehicle.vehicle,
                     "hired_vehicle": vehicle.get("hired_vehicle", ""),
                     "reference_doctype": "Transportation Request",
                     "reference_name": self.name,
-                    "from":vehicle.from_location,
-                    "to":vehicle.to_location,
-                    "no_of_travellers":vehicle.no_of_travellers,
-                    "status":"Allocated"
+                    "from": vehicle.from_location,
+                    "to": vehicle.to_location,
+                    "no_of_travellers": vehicle.no_of_travellers,
+                    "status": "Allocated"
                 })
-            project_doc.save(ignore_permissions=True)
+
+            project_doc.set("allocated_vehicle_details", updated_vehicle_details)
+
+            try:
+                project_doc.save(ignore_permissions=True)
+            except Exception as e:
+                frappe.throw(f"Failed to update Project: {str(e)}")
 
     def update_no_of_own_vehicles(self):
         '''
