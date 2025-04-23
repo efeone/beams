@@ -4,6 +4,7 @@ from erpnext.accounts.utils import get_fiscal_year
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import nowdate
+from frappe.utils import now
 
 
 def validate_project(doc, method):
@@ -253,7 +254,9 @@ def validate_employee_assignment(doc, method):
                 "employee": row.employee,
                 "parent": ["!=", doc.name],
                 "assigned_from": ["<=", row.assigned_to],
-                "assigned_to": [">=", row.assigned_from]
+                "assigned_to": [">=", row.assigned_from],
+                "parenttype": "Technical Request",
+                "parentfield": "allocated_manpower_details",
             },
             pluck="parent"
         )
@@ -362,3 +365,114 @@ def get_available_quantities(items, source_name=None):
             result[item] = quantity or 0
 
     return result
+
+def sync_manpower_logs(doc, method):
+    """
+    Sync manpower logs from Project without removing return-related data.
+    """
+    source_child_table = "allocated_manpower_details"
+    target_child_table = "allocated_manpower_detail"
+
+    log_name = frappe.db.get_value("Manpower Transaction Log", {"project": doc.name})
+
+    if log_name:
+        transaction_log = frappe.get_doc("Manpower Transaction Log", log_name)
+    else:
+        transaction_log = frappe.new_doc("Manpower Transaction Log")
+        transaction_log.project = doc.name
+        transaction_log.project_name = doc.project_name
+
+    if not transaction_log.meta.get_field(target_child_table):
+        frappe.throw(f"Child table field '{target_child_table}' not found in Manpower Transaction Log")
+
+    existing_logs = {
+        (row.employee, row.hired_personnel, str(row.assigned_from), str(row.assigned_to)): row
+        for row in transaction_log.get(target_child_table)
+    }
+
+    updated_rows = []
+
+    for row in doc.get(source_child_table) or []:
+        key = (row.employee, row.hired_personnel, str(row.assigned_from), str(row.assigned_to))
+        existing = existing_logs.get(key)
+
+        if existing:
+            updated_rows.append({
+                "department": row.department,
+                "designation": row.designation,
+                "assigned_from": row.assigned_from,
+                "assigned_to": row.assigned_to,
+                "employee": row.employee,
+                "hired_personnel": row.hired_personnel,
+                "hired_personnel_contact_info": row.hired_personnel_contact_info,
+                "status": row.status,
+                "returned": existing.returned,
+                "returned_date": existing.returned_date,
+                "returned_reason": existing.returned_reason
+            })
+        else:
+            updated_rows.append({
+                "department": row.department,
+                "designation": row.designation,
+                "assigned_from": row.assigned_from,
+                "assigned_to": row.assigned_to,
+                "employee": row.employee,
+                "hired_personnel": row.hired_personnel,
+                "hired_personnel_contact_info": row.hired_personnel_contact_info,
+                "status": row.status
+            })
+
+    transaction_log.set(target_child_table, [])
+    for data in updated_rows:
+        transaction_log.append(target_child_table, data)
+    transaction_log.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def update_return_details_in_log(project, assigned_from, returned_date, returned_reason, employee=None, hired_personnel=None):
+    log_name = frappe.db.get_value("Manpower Transaction Log", {"project": project})
+    if not log_name:
+        frappe.throw(_("No Manpower Transaction Log found for this project."))
+
+    log_doc = frappe.get_doc("Manpower Transaction Log", log_name)
+    updated = False
+
+    for row in log_doc.allocated_manpower_detail:
+        match_employee = employee and row.employee == employee
+        match_hired = hired_personnel and row.hired_personnel == hired_personnel
+        match_assigned = str(row.assigned_from) == str(assigned_from)
+
+        if match_assigned and (match_employee or match_hired):
+            row.returned = 1
+            row.returned_date = returned_date
+            row.returned_reason = returned_reason
+            updated = True
+            break
+
+    if updated:
+        log_doc.save(ignore_permissions=True)
+    else:
+        frappe.throw(_("No matching manpower record found in the transaction log."))
+
+
+def on_update_project(doc, method):
+    if doc.status not in ["Completed", "Cancelled"]:
+        return
+
+    log_name = frappe.db.get_value("Manpower Transaction Log", {"project": doc.name})
+    if not log_name:
+        return
+
+    log_doc = frappe.get_doc("Manpower Transaction Log", log_name)
+
+    updated = False
+    for row in log_doc.allocated_manpower_detail:
+        if not row.returned:
+            row.returned = 1
+            row.returned_date = now()
+            row.returned_reason = "Project Completed" if doc.status == "Completed" else "Project Cancelled"
+            updated = True
+
+    if updated:
+        log_doc.save(ignore_permissions=True)
+        frappe.msgprint(f"Unreturned manpower records marked as returned due to project {doc.status.lower()}.")

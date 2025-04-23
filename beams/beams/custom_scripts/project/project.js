@@ -232,6 +232,55 @@ frappe.ui.form.on('Project', {
               };
           }
           frm.refresh_field("allocated_manpower_details");
+      },
+
+      return: function(frm, cdt, cdn) {
+          let child = locals[cdt][cdn];
+
+          frappe.prompt([
+              {
+                  label: 'Returned Date',
+                  fieldname: 'returned_date',
+                  fieldtype: 'Datetime',
+                  reqd: 1
+              },
+              {
+                  label: 'Returned Reason',
+                  fieldname: 'returned_reason',
+                  fieldtype: 'Small Text',
+                  reqd: 1
+              }
+          ],
+          function(values) {
+              frappe.model.set_value(cdt, cdn, 'returned_date', values.returned_date);
+              frappe.model.set_value(cdt, cdn, 'returned_reason', values.returned_reason);
+              frappe.model.set_value(cdt, cdn, 'returned', 1);
+
+              let args = {
+                  project: frm.doc.name,
+                  assigned_from: child.assigned_from,
+                  returned_date: values.returned_date,
+                  returned_reason: values.returned_reason
+              };
+
+              if (child.employee) {
+                  args.employee = child.employee;
+              } else if (child.hired_personnel) {
+                  args.hired_personnel = child.hired_personnel;
+              }
+
+              frappe.call({
+                  method: "beams.beams.custom_scripts.project.project.update_return_details_in_log",
+                  args: args,
+                  callback: function(r) {
+                      if (!r.exc) {
+                          frappe.msgprint("Manpower Transaction Log updated.");
+                      }
+                  }
+              });
+          },
+          'Return Manpower',
+          'Submit');
       }
   });
 
