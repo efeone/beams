@@ -109,6 +109,17 @@ frappe.ui.form.on("External Resource Request", {
                     dialog.show();
                 }, __("Create"));
             }
+            frm.fields_dict.required_resources.grid.get_field("hired_personnel").get_query = function(doc, cdt, cdn) {
+                let row = locals[cdt][cdn];
+                if (row.designation) {
+                    return {
+                        filters: {
+                            designation: row.designation
+                        }
+                    };
+                }
+                return {};
+            };
         }
     });
 
@@ -121,30 +132,5 @@ frappe.ui.form.on("External Resource Request", {
                   frm.refresh_field("required_resources");
               }
           })
-        },
-
-        designation: function (frm, cdt, cdn) {
-          let row = locals[cdt][cdn];
-          if (row.designation) {
-            frm.fields_dict.required_resources.grid.update_docfield_property(
-                "hired_personnel",
-                "get_query",
-                function () {
-                    return {
-                        filters: {
-                            designation: row.designation
-                        }
-                    };
-                }
-            );
-          
-            frappe.model.set_value(cdt, cdn, "hired_personnel", null);
-          } else {
-            frm.fields_dict.required_resources.grid.update_docfield_property(
-                "hired_personnel",
-                "get_query",
-                null
-            );
         }
-      }
     });
