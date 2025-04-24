@@ -1,0 +1,127 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{NPL}-{DD}-{MM}-{YY}",
+ "creation": "2025-04-24 11:41:38.919930",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_cml8",
+  "security_personnel",
+  "start_time",
+  "end_time",
+  "column_break_wqhy",
+  "patrol_date",
+  "status",
+  "amended_from",
+  "section_break_npfx",
+  "checkpoints",
+  "section_break_wumv",
+  "total_checkpoints",
+  "column_break_jbqr",
+  "checked_count"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_cml8",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Night Patrol Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "checkpoints",
+   "fieldtype": "Table",
+   "label": "Checkpoints",
+   "options": "Checkpoint"
+  },
+  {
+   "fieldname": "start_time",
+   "fieldtype": "Datetime",
+   "label": "Start Time"
+  },
+  {
+   "fieldname": "end_time",
+   "fieldtype": "Datetime",
+   "label": "End Time"
+  },
+  {
+   "fieldname": "patrol_date",
+   "fieldtype": "Date",
+   "label": "Patrol Date"
+  },
+  {
+   "fieldname": "security_personnel",
+   "fieldtype": "Link",
+   "label": "Security Personnel",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nScheduled\nIn Progress\nCompleted"
+  },
+  {
+   "fieldname": "column_break_wqhy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_npfx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_wumv",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_checkpoints",
+   "fieldtype": "Int",
+   "label": "Total Checkpoints"
+  },
+  {
+   "fieldname": "checked_count",
+   "fieldtype": "Int",
+   "label": "Checked Count"
+  },
+  {
+   "fieldname": "column_break_jbqr",
+   "fieldtype": "Column Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-24 12:22:01.007486",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Night Patrol Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
