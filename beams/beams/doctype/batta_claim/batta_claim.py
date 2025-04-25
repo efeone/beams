@@ -63,13 +63,13 @@ class BattaClaim(Document):
             'account': batta_payable_account,
             'party_type': 'Employee',
             'party': self.employee,
-            'debit_in_account_currency': self.total_driver_batta,
+            'debit_in_account_currency': self.total_daily_batta,
             'credit_in_account_currency': 0,
         })
         journal_entry.append('accounts', {
             'account': batta_expense_account,
             'debit_in_account_currency': 0,
-            'credit_in_account_currency': self.total_driver_batta,
+            'credit_in_account_currency': self.total_daily_batta,
         })
         journal_entry.insert()
         journal_entry.submit()
