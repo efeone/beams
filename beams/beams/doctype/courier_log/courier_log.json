@@ -1,0 +1,102 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:CL-{YY}-{####}",
+ "creation": "2025-04-24 11:06:10.851229",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_fuje",
+  "courier_type",
+  "tracking_number",
+  "sender",
+  "recipient",
+  "column_break_qyhg",
+  "courier_service",
+  "date",
+  "status",
+  "section_break_cwuh",
+  "description"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_fuje",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "courier_type",
+   "fieldtype": "Select",
+   "label": "Courier Type",
+   "options": "\nIncoming\nOutgoing"
+  },
+  {
+   "fieldname": "tracking_number",
+   "fieldtype": "Data",
+   "label": "Tracking Number"
+  },
+  {
+   "fieldname": "sender",
+   "fieldtype": "Data",
+   "label": "Sender"
+  },
+  {
+   "fieldname": "recipient",
+   "fieldtype": "Data",
+   "label": "Recipient"
+  },
+  {
+   "fieldname": "courier_service",
+   "fieldtype": "Data",
+   "label": "Courier Service"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Datetime",
+   "label": "Date"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nReceived\nDispatched\nDelivered"
+  },
+  {
+   "fieldname": "column_break_qyhg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cwuh",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-24 11:22:54.412911",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Courier Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
