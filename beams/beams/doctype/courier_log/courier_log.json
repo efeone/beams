@@ -7,7 +7,6 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_fuje",
-  "courier_type",
   "tracking_number",
   "sender",
   "recipient",
@@ -22,12 +21,6 @@
   {
    "fieldname": "section_break_fuje",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "courier_type",
-   "fieldtype": "Select",
-   "label": "Courier Type",
-   "options": "\nIncoming\nOutgoing"
   },
   {
    "fieldname": "tracking_number",
@@ -76,7 +69,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-24 11:22:54.412911",
+ "modified": "2025-04-25 15:33:47.974499",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",
