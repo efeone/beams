@@ -174,7 +174,7 @@ def create_transportation_request(source_name, target_doc=None):
 @frappe.whitelist()
 def validate_vehicle_assignment_in_same_project(doc, method):
     '''
-    Validate that a vehicle is not assigned to multiple times in same project during the same time period.
+    Validate that a vehicle is not assigned to multiple times in the same project during the same time period.
     '''
     vehicle_assignments = {}
 
@@ -200,10 +200,10 @@ def validate_vehicle_assignment_in_same_project(doc, method):
                     (existing_from <= to_date) and
                     (existing_to >= from_date)
                 ):
-                    vehicle_name = frappe.get_value("Vehicle", row.vehicle, "name")
-                    frappe.throw(f"Vehicle {vehicle_name} ({row.vehicle}) is already assigned for this same project ({doc.name}) during the same time period.")
+                    frappe.throw(f"Vehicle {row.vehicle} is already assigned for this same project ({doc.name}) during the same time period.")
 
         vehicle_assignments[row.vehicle].append(row)
+
 
 @frappe.whitelist()
 def create_technical_request(project_id):
