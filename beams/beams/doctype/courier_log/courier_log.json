@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_fuje",
+  "inward_register",
   "tracking_number",
   "sender",
   "recipient",
@@ -65,11 +66,19 @@
   {
    "fieldname": "section_break_cwuh",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "inward_register",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Inward Register",
+   "options": "Inward Register",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-25 15:33:47.974499",
+ "modified": "2025-04-28 13:31:55.101144",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",
