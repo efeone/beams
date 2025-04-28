@@ -8,6 +8,7 @@ from frappe import _
 
 class VehicleHireRequest(Document):
     def on_submit(self):
+        self.generate_external_vehicle_details_from_hire_request()
         if self.transportation_request:
             frappe.db.set_value(
             "Transportation Request",
@@ -72,6 +73,29 @@ class VehicleHireRequest(Document):
                     "status":"Hired"
                 })
                 project_details.save(ignore_permissions=True)
+
+    def generate_external_vehicle_details_from_hire_request(self):
+        """
+        Generate External Vehicle Details records from the Vehicle Hire Request child table
+        """
+        project = frappe.get_doc("Project", self.project)
+
+        for vehicle in self.required_vehicles:
+            external_vehicle_detail = frappe.new_doc("External Vehicle Details")
+
+            external_vehicle_detail.project = self.project
+            external_vehicle_detail.transportation_request = self.transportation_request
+            external_vehicle_detail.required_on = self.required_on
+            external_vehicle_detail.required_to = self.required_on
+            external_vehicle_detail.vehicle_no = vehicle.vehicle_number
+            external_vehicle_detail.returned = "No"
+            external_vehicle_detail.purpose = f"Vehicle Hire Request Against {self.project}"
+            external_vehicle_detail.vehicle_type = vehicle.vehicle_type
+            external_vehicle_detail.set("from", vehicle.get("from"))
+            external_vehicle_detail.to = vehicle.to
+            external_vehicle_detail.vehicle_number = vehicle.vehicle_number
+
+            external_vehicle_detail.save()
 
     @frappe.whitelist()
     def validate_posting_date(self):

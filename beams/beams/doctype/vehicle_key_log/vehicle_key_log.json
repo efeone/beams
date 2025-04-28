@@ -1,0 +1,115 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VKL-{YY}-{#####}",
+ "creation": "2025-04-25 15:41:47.252203",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_d0ps",
+  "is_external_vehicle",
+  "vehicle",
+  "external_vehicle",
+  "key_identifier",
+  "key_holder",
+  "column_break_bb13",
+  "assigned_date",
+  "returned_date",
+  "status",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_d0ps",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Vehicle Key Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "key_identifier",
+   "fieldtype": "Data",
+   "label": "Key identifier"
+  },
+  {
+   "fieldname": "assigned_date",
+   "fieldtype": "Datetime",
+   "label": "Assigned Date"
+  },
+  {
+   "fieldname": "returned_date",
+   "fieldtype": "Datetime",
+   "label": "Returned Date"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "In Custody\nReturned"
+  },
+  {
+   "fieldname": "column_break_bb13",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "key_holder",
+   "fieldtype": "Link",
+   "label": "Key Holder",
+   "options": "Employee"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_external_vehicle",
+   "fieldtype": "Check",
+   "label": "Is External Vehicle"
+  },
+  {
+   "depends_on": "eval:doc.is_external_vehicle",
+   "fieldname": "external_vehicle",
+   "fieldtype": "Link",
+   "label": "External Vehicle ",
+   "options": "External Vehicle Details"
+  },
+  {
+   "depends_on": "eval:doc.is_external_vehicle == 0",
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-25 16:19:27.389037",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Key Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
