@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "field:vehicle_no",
+ "autoname": "format:{vehicle_no}-{project}-{#}",
  "creation": "2025-04-25 12:38:31.843470",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -108,11 +108,11 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-25 15:32:32.932603",
+ "modified": "2025-04-28 13:17:49.111299",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "External Vehicle Details",
- "naming_rule": "By fieldname",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
