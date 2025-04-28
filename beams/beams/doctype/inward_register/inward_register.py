@@ -13,7 +13,6 @@ class InwardRegister(Document):
 	def before_save(self):
 		self.validate_posting_date()
 
-
 	def on_submit(self, method=None):
 	    """
 	    Creates a ToDo task for the driver when the 'vehicle_key' checkbox is checked.
@@ -34,6 +33,14 @@ class InwardRegister(Document):
 	                    "name": self.name,
 	                    "description": description
 	                })
+
+	    if self.visitor_type == 'Courier':
+	        courier_log = frappe.new_doc('Courier Log')
+	        courier_log.courier_service = self.courier_service
+	        courier_log.recipient = self.received_by
+	        courier_log.description = self.purpose_of_visit
+	        courier_log.insert()
+
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
