@@ -36,7 +36,7 @@
   {
    "fieldname": "key_identifier",
    "fieldtype": "Data",
-   "label": "Key identifier"
+   "label": "Key Identifier"
   },
   {
    "fieldname": "assigned_date",
@@ -88,7 +88,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-25 16:19:27.389037",
+ "modified": "2025-04-28 13:28:00.872257",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Key Log",
