@@ -51,12 +51,12 @@
   {
    "fieldname": "in_time",
    "fieldtype": "Datetime",
-   "label": "In_Time "
+   "label": "In Time "
   },
   {
    "fieldname": "out_time",
    "fieldtype": "Datetime",
-   "label": "Out_Time "
+   "label": "Out Time "
   },
   {
    "fieldname": "visitor_type",
@@ -88,7 +88,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-23 15:35:31.089387",
+ "modified": "2025-04-24 12:32:09.117912",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Visitor Log",
