@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{DD}-{MM}-{####}",
+ "autoname": "format:{VR}-{DD}-{MM}-{####}",
  "creation": "2025-04-25 14:59:32.825122",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -92,7 +92,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-25 16:13:02.934375",
+ "modified": "2025-04-28 13:25:57.194656",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Visit Request",
