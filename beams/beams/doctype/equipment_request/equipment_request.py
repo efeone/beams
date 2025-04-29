@@ -116,10 +116,10 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
     return target_doc
 
 @frappe.whitelist()
-def map_asset_movement(source_name, assigned_to=None, items=None, target_doc=None):
+def map_asset_movement(source_name, assigned_to=None, items=None, purpose="Issue", target_doc=None):
     """
     Maps an Equipment Request to an Asset Movement with selected assets and assigns them to an employee.
-    Only available assets with status 'Submitted' are considered for the movement.
+    Also fills reference_doctype and reference_name.
     """
     if isinstance(items, str):
         items = json.loads(items)
@@ -128,13 +128,20 @@ def map_asset_movement(source_name, assigned_to=None, items=None, target_doc=Non
         employee_id = frappe.db.get_value("Employee", {"user_id": assigned_to})
         if not employee_id:
             frappe.throw(f"No Employee linked to User '{assigned_to}'")
+
         target.to_employee = employee_id
+        target.reference_doctype = "Equipment Request"
+        target.reference_name = source.name
+        target.purpose = purpose or "Issue"
+
         if items:
             for row in items:
                 item_code = row.get("item")
                 count = row.get("count")
+                reference_name = row.get("name")
 
-                assets = frappe.get_all("Asset",
+                assets = frappe.get_all(
+                    "Asset",
                     filters={
                         "item_code": item_code,
                         "docstatus": 1,
@@ -149,12 +156,18 @@ def map_asset_movement(source_name, assigned_to=None, items=None, target_doc=Non
                         "asset": asset.name,
                         "source_location": asset.location,
                         "to_employee": employee_id,
-                        "target_location": None
+                        "target_location": None,
+                        "reference_name": reference_name
                     })
 
-
-    return get_mapped_doc("Equipment Request", source_name, {
-        "Equipment Request": {
-            "doctype": "Asset Movement",
-        }
-    }, target_doc, postprocess)
+    return get_mapped_doc(
+        "Equipment Request",
+        source_name,
+        {
+            "Equipment Request": {
+                "doctype": "Asset Movement"
+            }
+        },
+        target_doc,
+        postprocess
+    )
