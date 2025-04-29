@@ -3,56 +3,59 @@ from frappe.utils import flt
 
 def update_issued_quantity(doc, method):
     """
-    Update or insert Issued Quantity in Project's Allocated Item Details table
-    based on Equipment Request, using reference from Asset Movement.
+    Updates Issued Quantity in 'Required Items Detail' of an Equipment Request,
+    and updates or inserts corresponding rows in Project's Allocated Item Details,
+    based on the Asset Movement.
     """
+    if not doc.assets:
+        frappe.throw("No assets found in this Asset Movement.")
 
-    if not frappe.db.exists("Required Items Detail", doc.reference_name):
-        return
+    reference_name = doc.reference_name
+    if not reference_name:
+        frappe.throw("Reference name missing in Asset Movement.")
 
-    movement_qty = flt(getattr(doc, "quantity", 1))
-    existing_issued = flt(frappe.db.get_value("Required Items Detail", doc.reference_name, "issued_quantity")) or 0
-    frappe.db.set_value("Required Items Detail", doc.reference_name, "issued_quantity", existing_issued + movement_qty)
+    required_items = frappe.get_all(
+        "Required Items Detail",
+        filters={"parent": reference_name},
+        fields=["name", "required_item", "issued_quantity", "required_quantity"]
+    )
 
-    equipment_request = frappe.db.get_value("Required Items Detail", doc.reference_name, "parent")
-    if not equipment_request:
-        return
+    if not required_items:
+        frappe.throw(f"No Required Items found for Equipment Request {reference_name}.")
 
-    project_name = frappe.db.get_value("Equipment Request", equipment_request, "project")
+    asset_count = {}
+    for asset in doc.assets:
+        if not asset.asset_name:
+            frappe.throw(f"Asset Name not set for Asset {asset.asset}.")
+        asset_count[asset.asset_name] = asset_count.get(asset.asset_name, 0) + 1
+
+    for req in required_items:
+        item = req.required_item
+        if item in asset_count:
+            new_issued_qty = (req.issued_quantity or 0) + asset_count[item]
+            frappe.db.set_value("Required Items Detail", req.name, "issued_quantity", new_issued_qty)
+
+    project_name = frappe.db.get_value("Equipment Request", reference_name, "project")
     if not project_name:
-        return
+        frappe.throw(f"Project not linked in Equipment Request {reference_name}.")
 
-    required_item_value = frappe.db.get_value("Required Items Detail", doc.reference_name, "required_item")
-    if not required_item_value:
-        return
+    project_doc = frappe.get_doc("Project", project_name)
 
-    eq_doc = frappe.get_doc("Equipment Request", equipment_request)
-    required_quantity = 0
-    for item in eq_doc.required_equipments:
-        if item.required_item == required_item_value:
-            required_quantity = flt(item.required_quantity or 0)
-            break
+    for req in required_items:
+        item = req.required_item
+        if item in asset_count:
+            for row in project_doc.allocated_item_details:
+                if row.required_item == item:
+                    row.issued_quantity = (row.issued_quantity or 0) + asset_count[item]
+                    break
+            else:
+                project_doc.append("allocated_item_details", {
+                    "required_item": item,
+                    "required_quantity": req.required_quantity,
+                    "issued_quantity": asset_count[item],
+                })
 
-    # Update the Project's allocated_item_details table
-    if frappe.db.exists("Project", project_name):
-        project_doc = frappe.get_doc("Project", project_name)
-        found = False
-
-        for row in project_doc.allocated_item_details:
-            if row.required_item == required_item_value:
-                row.issued_quantity = flt(row.issued_quantity or 0) + movement_qty
-                found = True
-                break
-
-        if not found:
-            project_doc.append("allocated_item_details", {
-                "required_item": required_item_value,
-                "required_quantity": required_quantity,
-                "issued_quantity": movement_qty,
-            })
-
-        project_doc.save(ignore_permissions=True)
-
+    project_doc.save(ignore_permissions=True)
 
 def before_save(doc, method):
     if doc.assets:

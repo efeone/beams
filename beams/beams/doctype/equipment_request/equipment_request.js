@@ -4,49 +4,71 @@
 frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
         if (frm.doc.workflow_state === "Approved") {
-            frm.add_custom_button(__('Equipment Acquiral Request'), function () {
+            frm.add_custom_button(__("Equipment Acquiral Request"), function () {
                 frappe.model.open_mapped_doc({
                     method: "beams.beams.doctype.equipment_request.equipment_request.map_equipment_acquiral_request",
                     frm: frm,
                 });
             }, __("Create"));
-
-            frm.add_custom_button(__('Asset Movement'), function () {
+            frm.add_custom_button(__("Asset Movement"), function () {
                 const default_items = (frm.doc.required_equipments || []).map(row => ({
+                    name: row.name,
                     item: row.required_item,
-                    count: row.required_quantity
+                    count: null,
+                    available_qty: row.available_quantity,
+                    required_qty: row.required_quantity
                 }));
 
                 const fields = [
                     {
-                        label: 'Assigned To',
-                        fieldname: 'assigned_to',
-                        fieldtype: 'Link',
-                        options: 'User',
+                        label: "Assigned To",
+                        fieldname: "assigned_to",
+                        fieldtype: "Link",
+                        options: "User",
                         reqd: 1,
-                        default: frm.doc.requested_by || frappe.session.user 
+                        default: frm.doc.requested_by || frappe.session.user
                     },
                     {
-                        fieldname: 'asset_movement_details',
-                        label: 'Asset Movement Details',
-                        fieldtype: 'Table',
+                        label: "Purpose",
+                        fieldname: "purpose",
+                        fieldtype: "Select",
+                        options: ["Issue", "Transfer", "Receipt", "Return"],
+                        default: "Issue",
+                        reqd: 1
+                    },
+                    {
+                        fieldname: "asset_movement_details",
+                        label: "Asset Movement Details",
+                        fieldtype: "Table",
                         cannot_add_rows: false,
                         reqd: 1,
                         fields: [
                             {
-                                label: 'Item',
-                                fieldname: 'item',
-                                fieldtype: 'Link',
-                                options: 'Item',
+                                label: "Item",
+                                fieldname: "item",
+                                fieldtype: "Link",
+                                options: "Item",
                                 in_list_view: 1,
                                 reqd: 1
                             },
                             {
-                                label: 'Count',
-                                fieldname: 'count',
-                                fieldtype: 'Int',
+                                label: "Count",
+                                fieldname: "count",
+                                fieldtype: "Int",
                                 in_list_view: 1,
                                 reqd: 1
+                            },
+                            {
+                                label: "Available Quantity",
+                                fieldname: "available_qty",
+                                fieldtype: "Int",
+                                in_list_view: 1
+                            },
+                            {
+                                label: "Required Quantity",
+                                fieldname: "required_qty",
+                                fieldtype: "Int",
+                                in_list_view: 1
                             }
                         ],
                         data: default_items
@@ -60,17 +82,16 @@ frappe.ui.form.on('Equipment Request', {
                             source_name: frm.doc.name,
                             assigned_to: values.assigned_to,
                             items: values.asset_movement_details,
-                            purpose: "Transfer"
+                            purpose: values.purpose
                         },
                         callback: function (r) {
                             if (r.message) {
-                                r.message.purpose = "Issue";
                                 frappe.model.sync(r.message);
-                                frappe.set_route('Form', r.message.doctype, r.message.name);
+                                frappe.set_route("Form", r.message.doctype, r.message.name);
                             }
                         }
                     });
-                }, __('Asset Movement'), __('Submit'));
+                }, __("Asset Movement"), __("Submit"));
             }, __("Create"));
         }
     },
