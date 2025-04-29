@@ -329,7 +329,8 @@ doc_events = {
             "beams.beams.custom_scripts.project.project.auto_return_vehicles_on_project_completion"
         ],
          "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment",
-         "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project"
+         "validate": "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project",
+         "validate": "beams.beams.custom_scripts.project.project.validate_vehicle_assignment_in_same_project"
     },
     "Item": {
         "before_insert": [

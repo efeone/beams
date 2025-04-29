@@ -93,47 +93,117 @@ def map_equipment_request(source_name, target_doc=None):
 
 @frappe.whitelist()
 def create_transportation_request(source_name, target_doc=None):
-    transportation_request = get_mapped_doc("Project", source_name, {
-        "Project": {
-            "doctype": "Transportation Request",
-            "field_map": {
-                "name": "project",
-                "bureau": "bureau",
-                "location": "location",
-                "expected_start_date": "required_on"
-            },
-            "field_no_map": ["required_vehicle_details"]
-        },
-        "Required Vehicle Details": {
-            "doctype": "Required Vehicle Details",
-            "add_if_empty": True,
-            "field_map": {
-                "no_of_travellers": "no_of_travellers",
-                "from": "from",
-                "to": "to",
-                "allocated": "allocated",
-                "hired": "hired"
-            }
-        }
-    }, target_doc)
 
-    details = frappe.get_all(
+    '''Create  Transportation Request document and map required vehicle details from Project.'''
+
+    all_rvds = frappe.get_all(
         "Required Vehicle Details",
         filters={"parent": source_name, "parenttype": "Project"},
-        fields=["from", "to"],
-        order_by="idx asc",
-        limit=1
+        fields=["name", "from", "to", "no_of_travellers", "allocated", "hired", "required_vehicle_details"],
+        order_by="idx asc"
     )
 
-    if details:
-        setattr(transportation_request, "from", details[0].get("from"))
-        setattr(transportation_request, "to", details[0].get("to"))
+    allocated_vehicles = frappe.get_all(
+        "Allocated Vehicle Details",
+        filters={"parent": source_name, "parenttype": "Project"},
+        fields=["from", "to", "no_of_travellers", "status"]
+    )
+
+    allocated_route_counts = {}
+    for allocated in allocated_vehicles:
+        if allocated.get("status") in ["Allocated", "Hired"]:
+            route_key = (allocated.get("from"), allocated.get("to"))
+            if route_key in allocated_route_counts:
+                allocated_route_counts[route_key] += 1
+            else:
+                allocated_route_counts[route_key] = 1
+
+    total_route_counts = {}
+    for rvd in all_rvds:
+        route_key = (rvd.get("from"), rvd.get("to"))
+        if route_key in total_route_counts:
+            total_route_counts[route_key] += 1
+        else:
+            total_route_counts[route_key] = 1
+
+    unallocated_rvds = []
+    processed_routes = {}
+
+    for rvd in all_rvds:
+        route_key = (rvd.get("from"), rvd.get("to"))
+        allocated_count = allocated_route_counts.get(route_key, 0)
+
+        processed_count = processed_routes.get(route_key, 0)
+
+        if processed_count < (total_route_counts.get(route_key, 0) - allocated_count):
+            unallocated_rvds.append(rvd)
+            processed_routes[route_key] = processed_count + 1
+
+    if not unallocated_rvds:
+        frappe.throw("All Required Vehicle Details have already been allocated or hired. Cannot create Transportation Request.")
+
+    # Create the Transportation Request document
+    transportation_request = frappe.new_doc("Transportation Request")
+
+    project = frappe.get_doc("Project", source_name)
+
+    transportation_request.project = source_name
+    transportation_request.bureau = project.bureau
+    transportation_request.location = project.location
+    transportation_request.required_on = project.expected_start_date
+    transportation_request.requirements = "Transportation for project " + source_name
+
+    setattr(transportation_request, "from", unallocated_rvds[0].get("from"))
+    setattr(transportation_request, "to", unallocated_rvds[0].get("to"))
 
     if not transportation_request.get("from") or not transportation_request.get("to"):
         frappe.throw("Error: 'From' or 'To' location is missing!")
 
+    for rvd in unallocated_rvds:
+        row = transportation_request.append("required_vehicle", {})
+        row.no_of_travellers = rvd.no_of_travellers
+        setattr(row, "from", rvd.get("from"))
+        setattr(row, "to", rvd.get("to"))
+        row.allocated = rvd.allocated
+        row.hired = rvd.hired
+        row.required_vehicle_details = rvd.required_vehicle_details
+
     transportation_request.save()
     return transportation_request
+
+@frappe.whitelist()
+def validate_vehicle_assignment_in_same_project(doc, method):
+    '''
+    Validate that a vehicle is not assigned to multiple times in the same project during the same time period.
+    '''
+    vehicle_assignments = {}
+
+    for row in doc.allocated_vehicle_details:
+        if not row.vehicle:
+            continue
+
+        from_date = getattr(row, 'from', None)
+        to_date = getattr(row, 'to', None)
+
+        if not from_date or not to_date:
+            continue
+
+        if row.vehicle not in vehicle_assignments:
+            vehicle_assignments[row.vehicle] = []
+
+        for existing_row in vehicle_assignments[row.vehicle]:
+            existing_from = getattr(existing_row, 'from', None)
+            existing_to = getattr(existing_row, 'to', None)
+
+            if existing_from and existing_to:
+                if (
+                    (existing_from <= to_date) and
+                    (existing_to >= from_date)
+                ):
+                    frappe.throw(f"Vehicle {row.vehicle} is already assigned for this same project ({doc.name}) during the same time period.")
+
+        vehicle_assignments[row.vehicle].append(row)
+
 
 @frappe.whitelist()
 def create_technical_request(project_id):
