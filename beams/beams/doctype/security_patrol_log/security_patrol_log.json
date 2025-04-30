@@ -8,7 +8,10 @@
  "field_order": [
   "section_break_ielw",
   "employee",
+  "column_break_r4ox",
   "full_name",
+  "section_break_hfts",
+  "patrol_template",
   "patrol_log",
   "remarks",
   "amended_from"
@@ -53,12 +56,26 @@
    "fieldtype": "Data",
    "label": "Full Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "patrol_template",
+   "fieldtype": "Link",
+   "label": "Patrol Log Template",
+   "options": "Patrol Log Template"
+  },
+  {
+   "fieldname": "column_break_r4ox",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_hfts",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-28 12:21:30.350671",
+ "modified": "2025-04-30 10:06:35.442305",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Security Patrol Log",
