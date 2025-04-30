@@ -1,0 +1,106 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ETL-{YYYY}-{#####}",
+ "creation": "2025-04-30 12:10:51.188931",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_yb2x",
+  "project",
+  "equipment_request",
+  "equipment_acquiral_request",
+  "location",
+  "column_break_1n8u",
+  "expected_start_date",
+  "expected_end_date",
+  "bureau",
+  "section_break_svdu",
+  "item_log_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_yb2x",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "equipment_request",
+   "fieldtype": "Link",
+   "label": "Equipment Request",
+   "options": "Equipment Request"
+  },
+  {
+   "fieldname": "equipment_acquiral_request",
+   "fieldtype": "Link",
+   "label": "Equipment Acquiral Request",
+   "options": "Equipment Acquiral Request"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "column_break_1n8u",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "expected_start_date",
+   "fieldtype": "Datetime",
+   "label": "Expected Start Date"
+  },
+  {
+   "fieldname": "expected_end_date",
+   "fieldtype": "Datetime",
+   "label": "Expected End Date"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "section_break_svdu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_log_details",
+   "fieldtype": "Table",
+   "label": "Item Log Details",
+   "options": "Required Items Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-30 12:30:35.674915",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Equipment Transaction Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
