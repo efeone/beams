@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{template_name}-{#####} ",
+ "creation": "2025-04-28 16:42:03.449869",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_hith",
+  "template_name",
+  "patrol_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_hith",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "template_name",
+   "fieldtype": "Data",
+   "label": "Template Name"
+  },
+  {
+   "fieldname": "patrol_log",
+   "fieldtype": "Table",
+   "label": "Patrol Log",
+   "options": "Patrol Log Detail"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-30 10:33:31.719018",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Patrol Log Template",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
