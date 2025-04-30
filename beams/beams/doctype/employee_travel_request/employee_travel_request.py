@@ -86,9 +86,11 @@ class EmployeeTravelRequest(Document):
     def total_days_calculate(self):
         """Calculate the total number of travel days, ensuring at least one day."""
         if self.start_date and self.end_date:
-            start_date = datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S").date()
-            end_date = datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S").date()
-            self.total_days = 1 if start_date == end_date else (end_date - start_date).days + 1
+            start_date = self.start_date if isinstance(self.start_date, datetime) else datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S")
+            end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
+
+            self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
+
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):
