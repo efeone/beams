@@ -9,9 +9,6 @@ from frappe.utils import get_url_to_form
 from frappe.utils import today
 from datetime import datetime
 from frappe import _
-
-
-
 class EmployeeTravelRequest(Document):
     def on_cancel(self):
         # Validate that "Reason for Rejection" is provided if the status is "Rejected"
@@ -85,17 +82,10 @@ class EmployeeTravelRequest(Document):
     def total_days_calculate(self):
         """Calculate the total number of travel days, ensuring at least one day."""
         if self.start_date and self.end_date:
-            if isinstance(self.start_date, str):
-                start_date = datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S").date()
-            else:
-                start_date = self.start_date.date()
+            start_date = self.start_date if isinstance(self.start_date, datetime) else datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S")
+            end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
 
-            if isinstance(self.end_date, str):
-                end_date = datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S").date()
-            else:
-                end_date = self.end_date.date()
-
-            self.total_days = 1 if start_date == end_date else (end_date - start_date).days + 1
+            self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):
