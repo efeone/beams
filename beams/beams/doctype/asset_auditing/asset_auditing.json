@@ -41,6 +41,7 @@
    "reqd": 1
   },
   {
+   "description": "A minimum of 3 photos must be uploaded",
    "fieldname": "asset_photos",
    "fieldtype": "Table",
    "label": "Asset Photos",
@@ -87,7 +88,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-02-18 16:10:52.558484",
+ "modified": "2025-04-30 14:52:09.761054",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing",
