@@ -183,7 +183,7 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
     # Calculate Daily Batta without Overnight Stay
     if not is_actual_daily_batta_without_overnight:  # Check if policy is not actual
         if not is_overnight_stay:  # Ensure overnight stay is NOT checked
-            if total_distance_travelled_km > 100 and total_hours >= 8: # Additional condition
+            if total_distance_travelled_km >= 100 and total_hours >= 8: # Additional condition
                 if is_travelling_outside_kerala:
                     daily_batta_without_overnight_stay = float(policy.get('outside_kerala', 0))
                 else:

@@ -384,7 +384,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
             is_eligible = true;
         }
     } else {
-        if (child.distance_travelled_km >= 50 && child.distance_travelled_km <= 100 && child.total_hours > 6) {
+        if (child.distance_travelled_km >= 50 && child.distance_travelled_km < 100 && child.total_hours > 6) {
             is_eligible = true;
         }
     }
