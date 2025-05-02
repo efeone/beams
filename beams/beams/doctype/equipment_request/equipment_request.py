@@ -37,12 +37,23 @@ class EquipmentRequest(Document):
                     required_items = []
 
                     for item in self.required_equipments:
-                        required_items.append(item.required_item)
+                        if not frappe.db.exists("Item", item.required_item):
+                            frappe.throw(f"Item '{item.required_item}' does not exist.")
 
-                    asset_reservation_log.item = ", ".join(required_items)
-                    asset_reservation_log.insert(ignore_permissions=True, ignore_mandatory=True)
+                        asset_reservation_log = frappe.new_doc("Asset Reservation Log")
+                        asset_reservation_log.project = self.project
+                        asset_reservation_log.posting_date = self.posting_date
+                        asset_reservation_log.location = self.location
+                        asset_reservation_log.priority = self.priority
+                        asset_reservation_log.reservation_from = self.required_from
+                        asset_reservation_log.reservation_to = self.required_to
+                        asset_reservation_log.equipment_request = self.name
+                        asset_reservation_log.item = item.required_item  # assign only a single item
+                        asset_reservation_log.insert(ignore_permissions=True, ignore_mandatory=True)
+
                     frappe.db.commit()
-                    frappe.msgprint("Asset Reservation Log Created", alert=True, indicator="green")
+                    frappe.msgprint("Asset Reservation Logs Created", alert=True, indicator="green")
+
 
     def on_cancel(self):
         # Validate that "Reason for Rejection" is provided if the status is "Rejected"
@@ -107,11 +118,10 @@ def map_equipment_acquiral_request(source_name, target_doc=None):
     )
 
     for item in equipment_request.required_equipments:
-        required_qty = item.required_quantity - item.issued_quantity
-        if required_qty > 0:
-            target_item = target_doc.append("required_items", {
-                "item": item.required_item,
-                "quantity": required_qty
+        acquired_qty = item.required_quantity - item.issued_quantity
+        target_item = target_doc.append("required_items", {
+            "item": item.required_item,
+            "quantity": acquired_qty
         })
 
     return target_doc
@@ -121,6 +131,7 @@ def map_asset_movement(source_name, assigned_to=None, items=None, purpose="Issue
     """
     Maps an Equipment Request to an Asset Movement with selected assets and assigns them to an employee.
     Also fills reference_doctype and reference_name.
+    Skips items where count is 0 or less.
     """
     if isinstance(items, str):
         items = json.loads(items)
@@ -141,6 +152,9 @@ def map_asset_movement(source_name, assigned_to=None, items=None, purpose="Issue
                 count = row.get("count")
                 reference_name = row.get("name")
 
+                if not item_code or not isinstance(count, (int, float)) or count <= 0:
+                    continue
+
                 assets = frappe.get_all(
                     "Asset",
                     filters={
@@ -149,7 +163,7 @@ def map_asset_movement(source_name, assigned_to=None, items=None, purpose="Issue
                         "status": "Submitted"
                     },
                     fields=["name", "location"],
-                    limit=count
+                    limit=int(count)
                 )
 
                 for asset in assets:

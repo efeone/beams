@@ -21,7 +21,7 @@ def update_issued_quantity(doc, method):
     )
 
     if not required_items:
-        frappe.throw(f"No Required Items found for Equipment Request {reference_name}.")
+        return
 
     asset_count = {}
     for asset in doc.assets:
@@ -37,7 +37,7 @@ def update_issued_quantity(doc, method):
 
     project_name = frappe.db.get_value("Equipment Request", reference_name, "project")
     if not project_name:
-        frappe.throw(f"Project not linked in Equipment Request {reference_name}.")
+        return
 
     project_doc = frappe.get_doc("Project", project_name)
 
