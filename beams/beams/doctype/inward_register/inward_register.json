@@ -13,6 +13,7 @@
   "column_break_weuy",
   "posting_date",
   "posting_time",
+  "visit_date",
   "section_break_zgfs",
   "received_by",
   "purpose_of_visit",
@@ -107,8 +108,14 @@
    "fieldname": "courier_service",
    "fieldtype": "Data",
    "label": "Courier Service"
+  },
+  {
+   "fieldname": "visit_date",
+   "fieldtype": "Date",
+   "label": "Visit Date"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
