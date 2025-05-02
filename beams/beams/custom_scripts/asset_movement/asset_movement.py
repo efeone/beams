@@ -12,7 +12,7 @@ def update_issued_quantity(doc, method):
 
     reference_name = doc.reference_name
     if not reference_name:
-        frappe.throw("Reference name missing in Asset Movement.")
+        return
 
     required_items = frappe.get_all(
         "Required Items Detail",
