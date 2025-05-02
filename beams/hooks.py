@@ -207,6 +207,7 @@ doc_events = {
     },
     "Material Request":{
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+        "after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers"
         # "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Sales Order": {
