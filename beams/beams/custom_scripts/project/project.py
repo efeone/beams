@@ -5,6 +5,7 @@ from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import nowdate
 from frappe.utils import now
+from frappe.utils import cint, now
 
 
 def validate_project(doc, method):
@@ -656,3 +657,101 @@ def auto_return_vehicles_on_project_completion(doc, method):
 
     if updated:
         log_doc.save(ignore_permissions=True)
+
+
+
+def sync_equipment_logs(doc, method):
+    """
+    Sync equipment transaction logs from Project without removing return-related data.
+    """
+    source_child_table = "allocated_item_details"
+    target_child_table = "item_log_details"
+
+    log_name = frappe.db.get_value("Equipment Transaction Log", {"project": doc.name})
+
+    if log_name:
+        transaction_log = frappe.get_doc("Equipment Transaction Log", log_name)
+    else:
+        transaction_log = frappe.new_doc("Equipment Transaction Log")
+        transaction_log.project = doc.name
+        transaction_log.insert(ignore_permissions=True)
+
+    if not transaction_log.meta.get_field(target_child_table):
+        frappe.throw(f"Child table field '{target_child_table}' not found in Equipment Transaction Log")
+
+    existing_logs = {
+        row.required_item: row for row in transaction_log.get(target_child_table)
+    }
+
+    updated_rows = []
+
+    for row in doc.get(source_child_table) or []:
+        existing = existing_logs.get(row.required_item)
+
+        updated_rows.append({
+            "required_item": row.required_item,
+            "available_quantity": row.available_quantity,
+            "required_quantity": row.required_quantity,
+            "issued_quantity": row.issued_quantity,
+            "acquired_quantity": row.acquired_quantity,
+            "returned_count": existing.returned_count if existing else "0",
+            "returned_reason": existing.returned_reason if existing else "",
+            "return_date": existing.return_date if existing else None
+        })
+
+    transaction_log.set(target_child_table, [])
+    for data in updated_rows:
+        transaction_log.append(target_child_table, data)
+
+    transaction_log.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def update_return_details_in_equipment_log(project, required_item, return_date, returned_reason, returned_count):
+    """
+    Update return details in the Equipment Transaction Log for a specific equipment item.
+    """
+    log_name = frappe.db.get_value("Equipment Transaction Log", {"project": project})
+    if not log_name:
+        frappe.throw(_("No Equipment Transaction Log found for this project."))
+
+    log_doc = frappe.get_doc("Equipment Transaction Log", log_name)
+    updated = False
+
+    for row in log_doc.item_log_details:
+        if row.required_item == required_item:
+            row.return_date = return_date
+            row.returned_reason = f"{returned_reason} | Returned On: {return_date} | Returned Count: {returned_count}"
+            row.returned_count = returned_count
+            updated = True
+            break
+
+    if updated:
+        log_doc.save(ignore_permissions=True)
+    else:
+        frappe.throw(_("No matching equipment record found in the transaction log."))
+
+def auto_return_equipment_on_project_completion(doc, method):
+    if doc.status not in ["Completed", "Cancelled"]:
+        return
+
+    log_name = frappe.db.get_value("Equipment Transaction Log", {"project": doc.name})
+    if not log_name:
+        return
+
+    log_doc = frappe.get_doc("Equipment Transaction Log", log_name)
+    updated = False
+
+    for row in log_doc.item_log_details:
+        total_issued = cint(row.issued_quantity) + cint(row.acquired_quantity)
+        pending_return = total_issued - cint(row.returned_count)
+
+        if pending_return > 0:
+            row.return_date = now()
+            row.returned_reason = (row.returned_reason or "") + f"\nProject {doc.status} | Returned Count: {pending_return}"
+            row.returned_count = total_issued
+            updated = True
+
+    if updated:
+        log_doc.save(ignore_permissions=True)
+        frappe.msgprint(f"Unreturned Item records marked as returned due to project {doc.status.lower()}.")

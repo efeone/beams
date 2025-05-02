@@ -6,7 +6,7 @@ frappe.ui.form.on('Project', {
             let grid = frm.fields_dict["allocated_item_details"].grid;
             grid.toggle_display("asset_movement", false);
             grid.toggle_display("return_date", false);
-            grid.toggle_display("returned", false);
+            grid.toggle_display("returned_count", false);
             grid.toggle_display("returned_reason", false);
             frm.refresh_field("allocated_item_details");
         }
@@ -364,6 +364,58 @@ frappe.ui.form.on('Project', {
               });
           },
           'Return Vehicle',
+          'Submit');
+      }
+  });
+
+  frappe.ui.form.on('Required Items Detail', {
+      return: function(frm, cdt, cdn) {
+          let child = locals[cdt][cdn];
+
+          frappe.prompt([
+              {
+                  label: 'Return Date',
+                  fieldname: 'return_date',
+                  fieldtype: 'Datetime',
+                  reqd: 1
+              },
+              {
+                  label: 'Returned Reason',
+                  fieldname: 'returned_reason',
+                  fieldtype: 'Small Text',
+                  reqd: 1
+              },
+              {
+                label: 'Returned Count',
+                fieldname: 'returned_count',
+                fieldtype: 'Int',
+                reqd: 1
+            }
+          ],
+          function(values) {
+              frappe.model.set_value(cdt, cdn, 'return_date', values.return_date);
+              frappe.model.set_value(cdt, cdn, 'returned_reason', values.returned_reason);
+              frappe.model.set_value(cdt, cdn, 'returned_count', values.returned_count);
+
+              let args = {
+                  project: frm.doc.name,
+                  required_item: child.required_item,
+                  return_date: values.return_date,
+                  returned_reason: values.returned_reason,
+                  returned_count: values.returned_count
+              };
+
+              frappe.call({
+                  method: "beams.beams.custom_scripts.project.project.update_return_details_in_equipment_log",
+                  args: args,
+                  callback: function(r) {
+                      if (!r.exc) {
+                          frappe.msgprint("Equipment Transaction Log updated successfully.");
+                      }
+                  }
+              });
+          },
+          'Return Equipment',
           'Submit');
       }
   });
