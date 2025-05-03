@@ -137,14 +137,3 @@ def get_checkin_time(employee, checkout_record):
 			if checkin_time and checkin.shift:
 				return checkin_time
 	return checkin_time
-
-
-@frappe.whitelist()
-def validate_to_date(doc, method):
-    """
-    Validates that the 'to_date' field in the Attendance Regularisation doctype
-    is not set to a future date.
-    """
-    if doc.to_date:
-        if doc.to_date > today():
-            frappe.throw(_("To Date cannot be a Future date"))
