@@ -42,6 +42,7 @@
    "options": "Equipment Acquiral Request"
   },
   {
+   "fetch_from": "project.location",
    "fieldname": "location",
    "fieldtype": "Link",
    "label": "Location",
@@ -52,16 +53,19 @@
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "project.expected_start_date",
    "fieldname": "expected_start_date",
    "fieldtype": "Datetime",
    "label": "Expected Start Date"
   },
   {
+   "fetch_from": "project.expected_end_date",
    "fieldname": "expected_end_date",
    "fieldtype": "Datetime",
    "label": "Expected End Date"
   },
   {
+   "fetch_from": "project.bureau",
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
@@ -80,7 +84,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-30 12:30:35.674915",
+ "modified": "2025-05-02 16:37:17.492795",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Transaction Log",

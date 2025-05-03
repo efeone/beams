@@ -14,7 +14,7 @@
   "acquired_quantity",
   "asset_movement",
   "return_date",
-  "returned",
+  "returned_count",
   "returned_reason",
   "return"
  ],
@@ -67,12 +67,6 @@
    "read_only": 1
   },
   {
-   "default": "0",
-   "fieldname": "returned",
-   "fieldtype": "Check",
-   "label": "Returned"
-  },
-  {
    "fieldname": "returned_reason",
    "fieldtype": "Small Text",
    "label": "Returned Reason"
@@ -86,12 +80,18 @@
    "fieldname": "return_date",
    "fieldtype": "Datetime",
    "label": "Return Date"
+  },
+  {
+   "default": "0",
+   "fieldname": "returned_count",
+   "fieldtype": "Int",
+   "label": "Returned Count"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-30 12:51:19.145364",
+ "modified": "2025-05-02 16:34:43.864230",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Items Detail",
