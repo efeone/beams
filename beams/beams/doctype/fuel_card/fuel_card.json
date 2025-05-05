@@ -7,12 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "provider",
-  "card_no",
-  "column_break_nhyn",
-  "current_holder",
-  "issued_to_current_holder_on",
-  "section_break_xlnl",
-  "recharge_history"
+  "card_no"
  ],
  "fields": [
   {
@@ -28,36 +23,11 @@
    "fieldtype": "Data",
    "label": "Card No.",
    "reqd": 1
-  },
-  {
-   "fieldname": "current_holder",
-   "fieldtype": "Link",
-   "label": "Current Holder",
-   "options": "Employee"
-  },
-  {
-   "fieldname": "issued_to_current_holder_on",
-   "fieldtype": "Date",
-   "label": "Issued to Current Holder On"
-  },
-  {
-   "fieldname": "recharge_history",
-   "fieldtype": "Table",
-   "label": "Recharge History",
-   "options": "Recharge History"
-  },
-  {
-   "fieldname": "column_break_nhyn",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "section_break_xlnl",
-   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-23 14:39:31.388603",
+ "modified": "2025-05-05 09:53:53.847042",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card",
