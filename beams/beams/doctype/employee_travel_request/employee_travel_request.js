@@ -59,32 +59,18 @@ frappe.ui.form.on('Employee Travel Request', {
     posting_date:function (frm){
       frm.call("validate_posting_date");
     },
-    end_date:function (frm){
-      frm.call("validate_dates");
-       calculateTotalDays(frm);
-    },
     validate:function(frm){
       frm.call("validate_expected_time");
     },
-    start_date:function(frm){
-      calculateTotalDays(frm);
-    },
-    is_group: function (frm) {
-        if (!frm.doc.is_group) {
-            frm.set_value('travellers', []);
-            frm.set_value('number_of_travellers', 0);
-        }
-    },
+    start_date: function(frm) {
+      calculate_days(frm);
+  },
+  end_date: function(frm) {
+      calculate_days(frm);
+  }
 
-    travellers: function (frm) {
-        if (frm.doc.is_group && frm.doc.travellers) {
-            frm.set_value('number_of_travellers', frm.doc.travellers.length);
-        } else {
-            frm.set_value('number_of_travellers', 0);
-        }
-    }
-});
-
+  });
+  
 function set_room_criteria_filter(frm) {
   if (frm.doc.batta_policy){
       frappe.call({
@@ -125,13 +111,16 @@ function set_mode_of_travel_filter(frm) {
   });
 }
 
-function calculateTotalDays(frm) {
-    if (frm.doc.start_date && frm.doc.end_date) {
-        let start = new Date(frm.doc.start_date);
-        let end = new Date(frm.doc.end_date);
-        let diff = frappe.datetime.get_day_diff(end, start);
-        frm.set_value('total_days', diff > 0 ? diff : 1);
-    } else {
-        frm.set_value('total_days', null);
-    }
+
+function calculate_days(frm) {
+  if (frm.doc.start_date && frm.doc.end_date) {
+      frm.call('validate_dates').then(() => {
+          return frm.call('total_days_calculate');
+      }).then(() => {
+          frm.refresh_field('total_days');
+      });
+  } else {
+      frm.set_value('total_days', null);
+  }
 }
+
