@@ -10,6 +10,8 @@
   "requested_by",
   "is_group",
   "travellers",
+  "number_of_travellers",
+  "is_vehicle_required",
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
@@ -33,6 +35,7 @@
   "mark_attendance",
   "attendance_request",
   "reference_documents",
+  "travel_vehicle_allocation",
   "reason_for_rejection",
   "section_break_fdom",
   "dynamic_link"
@@ -229,12 +232,31 @@
    "fieldname": "section_break_fdom",
    "fieldtype": "Section Break",
    "label": "Links"
+  },
+  {
+   "fieldname": "number_of_travellers",
+   "fieldtype": "Int",
+   "label": "Number of Travellers",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_vehicle_required",
+   "fieldtype": "Check",
+   "label": "Is Vehicle Required"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "travel_vehicle_allocation",
+   "fieldtype": "Table",
+   "label": "Travel Vehicle Allocation",
+   "options": "Vehicle Allocation"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-13 16:21:47.792111",
+ "modified": "2025-05-05 15:14:01.727506",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
