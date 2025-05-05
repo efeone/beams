@@ -3664,14 +3664,6 @@ def get_property_setters():
         },
         {
             "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "designation",
-            "property": "reqd",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
             "doc_type": "Job Applicant",
             "field_name": "resume_link",
             "property": "hidden",
@@ -3835,16 +3827,18 @@ def get_property_setters():
             "value": 1
         },
         {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "department",
-            "property": "hidden",
-            "value": 1
+           "doctype_or_field": "DocField",
+           "doc_type": "Job Requisition",
+           "field_name": "designation",
+           "property": "reqd",
+           "property_type": "Check",
+           "value": 0
         },
         {
             "doctype_or_field": "DocField",
             "doc_type": "Job Requisition",
             "field_name": "department",
+            "property_type": "Check",
             "property": "reqd",
             "value": 0
         },
@@ -3862,12 +3856,6 @@ def get_property_setters():
             "field_name": "designation",
             "property": "depends_on",
             "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Requisition",
-            "property": "field_order",
-            "value": "[\"naming_series\", \"request_for\", \"employee_left\", \"relieving_date\", \"suggested_designation\", \"designation\", \"department\", \"employment_type\", \"location\", \"column_break_qkna\", \"no_of_positions\", \"expected_compensation\", \"reason_for_requesting\", \"column_break_4\", \"company\", \"status\", \"interview\", \"interview_rounds\", \"work_details\", \"no_of_days_off\", \"work_details_column_break\", \"is_work_shift_needed\", \"travel_required\",  \"driving_license_needed\", \"license_type\", \"education\", \"min_education_qual\", \"education_column_break\", \"min_experience\", \"reset_column\", \"language_proficiency\", \"skill_proficiency\", \"section_break_7\", \"requested_by\", \"requested_by_name\", \"column_break_10\", \"requested_by_dept\", \"requested_by_designation\", \"timelines_tab\", \"posting_date\", \"completed_on\", \"column_break_15\", \"expected_by\", \"time_to_fill\", \"job_description_tab\", \"job_description_template\", \"job_title\", \"description\", \"suggestions\", \"connections_tab\"]"
         },
         {
             "doctype_or_field": "DocType",
@@ -3926,12 +3914,6 @@ def get_property_setters():
             "property": "show_title_field_in_link",
             "property_type" : "Check",
             "value": 1
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Requisition",
-            "property": "field_order",
-            "value": '["basic_details_tab", "basic_information", "employee", "naming_series", "salutation", "first_name", "middle_name", "last_name", "bureau", "stringer_type", "employee_name", "column_break_9", "gender", "date_of_birth", "name_of_father", "name_of_spouse", "column_break1", "date_of_joining", "date_of_appointment", "image", "status", "training_status", "erpnext_user", "user_id", "create_user", "create_user_permission", "company_details_section", "company", "department", "employee_number", "column_break_25", "designation", "reports_to", "column_break_18", "branch", "grade", "employment_details", "job_applicant", "scheduled_confirmation_date", "column_break_32", "final_confirmation_date", "contract_end_date", "col_break_22", "notice_number_of_days", "date_of_retirement", "contact_details", "cell_number", "company_number", "column_break_40", "personal_email", "company_email", "column_break4", "prefered_contact_email", "prefered_email", "unsubscribed", "address_section", "pincode", "current_address", "landmark", "current_accommodation_type", "column_break_46", "permanent_address", "landmark_per", "permanent_accommodation_type", "emergency_contact_details", "person_to_be_contacted", "emergency_contact_name", "column_break_55", "emergency_phone_number", "emergency_phone", "column_break_19", "relation", "relation_emergency", "attendance_and_leave_details", "attendance_device_id", "leave_policy", "leave_policy_name", "column_break_44", "holiday_list", "default_shift", "approvers_section", "expense_approver", "leave_approver", "column_break_45", "shift_request_approver", "leave_approver_name", "expense_approver_name", "salary_information", "ctc", "salary_currency", "salary_mode", "salary_cb", "payroll_cost_center", "pan_number", "provident_fund_account", "bank_details_section", "bank_name", "column_break_heye", "bank_ac_no", "bank_cb", "ifsc_code", "micr_code", "iban", "nominee_details_section", "nominee_details", "personal_details", "marital_status", "aadhar_id", "no_of_children", "family_background", "column_break6", "blood_group", "health_details", "health_insurance_section", "health_insurance_provider", "health_insurance_no", "passport_details_section", "passport_number", "valid_upto", "column_break_73", "date_of_issue", "place_of_issue", "additional_information_section", "physical_disabilities", "disabilities", "marital_indebtness", "court_proceedings", "court_proceedings_details", "column_break_travel", "are_you_willing_to_travel", "in_india", "abroad", "state_restrictions_problems", "places_to_travel", "are_you_related_to_employee", "related_employee_name", "profile_tab", "bio", "educational_qualification", "education", "previous_work_experience", "external_work_history", "history_in_company", "internal_work_history", "documents_tab", "employee_documents", "exit", "resignation_letter_date", "relieving_date", "exit_interview_details", "held_on", "new_workplace", "column_break_99", "leave_encashed", "encashment_date", "feedback_section", "reason_for_leaving", "column_break_104", "feedback", "lft", "rgt", "old_parent", "connections_tab"]'
         },
         {
             "doc_type": "Sales Order",
@@ -4065,6 +4047,12 @@ def get_property_setters():
             "property": "in_standard_filter",
             "property_type": "Check",
             "value":1
+        },
+        {
+            "doctype_or_field": "DocType",
+            "doc_type": "Job Requisition",
+            "property": "field_order",
+            "value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "reason_for_requesting", "column_break_4", "company", "status", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
         }
     ]
 
