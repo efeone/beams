@@ -1,14 +1,13 @@
-# # Copyright (c) 2025, efeone and contributors
-# # For license information, please see license.txt
+# Copyright (c) 2025, efeone and contributors
+# For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
-from frappe.utils import date_diff,today,getdate
-import json
-from frappe.utils import get_url_to_form
-from frappe.utils import today
-from datetime import datetime
 from frappe import _
+from frappe.model.document import Document
+from frappe.utils import get_url_to_form, today
+from datetime import datetime
+
+
 class EmployeeTravelRequest(Document):
     def on_cancel(self):
         # Validate that "Reason for Rejection" is provided if the status is "Rejected"
@@ -38,8 +37,6 @@ class EmployeeTravelRequest(Document):
                 frappe.throw("End Date cannot be earlier than Start Date.")
                 if self.start_date < today():
                     frappe.throw("Start Date cannot be in the past.")
-
-
 
     def on_update_after_submit(self):
         """
@@ -77,7 +74,7 @@ class EmployeeTravelRequest(Document):
         if self.expected_check_in_time and self.expected_check_out_time:
             if self.expected_check_out_time < self.expected_check_in_time:
                 frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
-
+    
     @frappe.whitelist()
     def total_days_calculate(self):
         """Calculate the total number of travel days, ensuring at least one day."""
