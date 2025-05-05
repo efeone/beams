@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{FCL}-{YY}-{#####}",
+ "autoname": "format:{fuel_card}-{YY}-{#####}",
  "creation": "2025-05-05 11:06:37.718538",
  "doctype": "DocType",
  "engine": "InnoDB",
@@ -52,7 +52,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-05 12:05:34.424623",
+ "modified": "2025-05-05 15:02:56.840722",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card Log",

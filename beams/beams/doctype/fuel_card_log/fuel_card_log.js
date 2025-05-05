@@ -1,9 +1,27 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 frappe.ui.form.on("Fuel Card Log", {
+  setup(frm) {
+    frm.set_query("fuel_card", () => {
+      let used = [];
+      frappe.call({
+        method: "frappe.client.get_list",
+        async: false,
+        args: {
+          doctype: "Fuel Card Log",
+          fields: ["fuel_card"],
+          filters: { docstatus: ["!=", 2] }
+        },
+        callback(r) {
+          used = r.message.map(d => d.fuel_card);
+        }
+      });
+      return { filters: [["Fuel Card", "name", "not in", used]] };
+    });
+  },
+
 	refresh(frm) {
 		if (!frm.is_new()) {
-      
 			// Button: Set Current Ownership
 			frm.add_custom_button('Set Current Ownership', () => {
 				frappe.prompt([
@@ -36,8 +54,7 @@ frappe.ui.form.on("Fuel Card Log", {
 					});
 					frm.refresh_field('owered_by');
 					frm.set_value('current_holder', values.new_owner);
-
-					frappe.msgprint('Ownership updated successfully.');
+          frm.save();
 				}, 'Set Current Ownership', 'Save');
 			});
 
@@ -70,7 +87,7 @@ frappe.ui.form.on("Fuel Card Log", {
 						voucher_no: values.voucher_no
 					});
 					frm.refresh_field('recharge_history');
-					frappe.msgprint('Recharge History updated successfully.');
+          frm.save();
 				}, 'Set Recharge History', 'Save');
 			});
 		}
