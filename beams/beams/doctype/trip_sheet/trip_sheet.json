@@ -164,7 +164,7 @@
   {
    "fieldname": "mileage",
    "fieldtype": "Float",
-   "label": "Mileage(Kmpl)",
+   "label": "Mileage(kmpl)",
    "read_only": 1
   },
   {
@@ -189,7 +189,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-05 16:21:55.643770",
+ "modified": "2025-05-05 16:31:07.920511",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
