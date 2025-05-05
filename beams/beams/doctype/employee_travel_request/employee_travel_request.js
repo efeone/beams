@@ -12,6 +12,22 @@ frappe.ui.form.on('Employee Travel Request', {
                 frappe.set_route("form", "Journal Entry", journal_entry.name);
             }, __("Create"));
         }
+
+        if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
+            frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
+        } else {
+            frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
+        }
+    },
+
+    onload: function (frm) {
+        frm.fields_dict.travel_vehicle_allocation.grid.get_field("driver").get_query = function () {
+            return {
+                filters: {
+                    designation: "Driver"
+                }
+            };
+        };
     },
 
     requested_by: function (frm) {
@@ -52,6 +68,20 @@ frappe.ui.form.on('Employee Travel Request', {
     },
     start_date:function(frm){
       calculateTotalDays(frm);
+    },
+    is_group: function (frm) {
+        if (!frm.doc.is_group) {
+            frm.set_value('travellers', []);
+            frm.set_value('number_of_travellers', 0);
+        }
+    },
+
+    travellers: function (frm) {
+        if (frm.doc.is_group && frm.doc.travellers) {
+            frm.set_value('number_of_travellers', frm.doc.travellers.length);
+        } else {
+            frm.set_value('number_of_travellers', 0);
+        }
     }
 });
 
