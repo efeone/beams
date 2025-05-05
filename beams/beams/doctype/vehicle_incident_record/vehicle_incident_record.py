@@ -1,10 +1,12 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 
+
 import frappe
+from frappe import _
 from frappe.model.document import Document
 from frappe.utils import today
-from frappe import _
+
 
 class VehicleIncidentRecord(Document):
     @frappe.whitelist()
@@ -16,5 +18,17 @@ class VehicleIncidentRecord(Document):
     @frappe.whitelist()
     def validate_offense_date_and_time(self):
         if self.offense_date_and_time:
-            if self.offense_date_and_time > today():
-                frappe.throw(_("Offense Date cannot be set after today's date."))
+            current_datetime = frappe.utils.now_datetime()
+            offense_datetime = frappe.utils.get_datetime(self.offense_date_and_time)
+
+            if offense_datetime > current_datetime:
+                frappe.throw(_("Offense Date and Time cannot be in the future."))
+
+            offense_date = offense_datetime.date()
+
+            if self.trip_start_date and self.trip_end_date:
+                start_date = frappe.utils.getdate(self.trip_start_date)
+                end_date = frappe.utils.getdate(self.trip_end_date)
+
+                if not (start_date <= offense_date <= end_date):
+                    frappe.throw(_("Offense Date must be between Start Date and End Date of the trip."))
