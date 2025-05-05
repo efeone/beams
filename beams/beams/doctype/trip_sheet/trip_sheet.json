@@ -21,8 +21,8 @@
   "safety_inspection",
   "remarks",
   "trip_details_section",
-  "departure_location",
-  "destination_location",
+  "trip_details",
+  "section_break_ygej",
   "initial_odometer_reading",
   "final_odometer_reading",
   "distance_traveledkm",
@@ -94,7 +94,7 @@
    "default": "0",
    "fieldname": "clean_vehicle",
    "fieldtype": "Check",
-   "label": "Clean Vehicle"
+   "label": "Is Cleaned"
   },
   {
    "default": "0",
@@ -133,20 +133,6 @@
    "reqd": 1
   },
   {
-   "fieldname": "departure_location",
-   "fieldtype": "Link",
-   "label": "Departure Location ",
-   "options": "Location",
-   "reqd": 1
-  },
-  {
-   "fieldname": "destination_location",
-   "fieldtype": "Link",
-   "label": "Destination Location ",
-   "options": "Location",
-   "reqd": 1
-  },
-  {
    "fetch_from": "vehicle.last_odometer",
    "fetch_if_empty": 1,
    "fieldname": "initial_odometer_reading",
@@ -169,7 +155,7 @@
   {
    "fieldname": "fuel_consumed",
    "fieldtype": "Float",
-   "label": "Fuel Consumed"
+   "label": "Fuel Consumed(Ltr)"
   },
   {
    "fieldname": "column_break_anpp",
@@ -178,7 +164,7 @@
   {
    "fieldname": "mileage",
    "fieldtype": "Float",
-   "label": "Mileage",
+   "label": "Mileage(Km/Ltr)",
    "read_only": 1
   },
   {
@@ -188,12 +174,22 @@
    "in_list_view": 1,
    "label": "Posting Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "trip_details",
+   "fieldtype": "Table",
+   "label": "Trip Details",
+   "options": "Trip Details"
+  },
+  {
+   "fieldname": "section_break_ygej",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-31 13:52:37.720123",
+ "modified": "2025-05-05 14:29:37.226321",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
