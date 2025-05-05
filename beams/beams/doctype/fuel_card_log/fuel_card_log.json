@@ -1,0 +1,78 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{fuel_card}-{YY}-{#####}",
+ "creation": "2025-05-05 11:06:37.718538",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "fuel_card",
+  "column_break_yjyq",
+  "current_holder",
+  "section_break_6qhb",
+  "owered_by",
+  "recharge_history"
+ ],
+ "fields": [
+  {
+   "fieldname": "fuel_card",
+   "fieldtype": "Link",
+   "label": " Fuel Card",
+   "options": "Fuel Card"
+  },
+  {
+   "fieldname": "owered_by",
+   "fieldtype": "Table",
+   "label": "Owered By",
+   "options": "Owered By",
+   "read_only": 1
+  },
+  {
+   "fieldname": "recharge_history",
+   "fieldtype": "Table",
+   "label": "Recharge History",
+   "options": "Recharge History",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_yjyq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "current_holder",
+   "fieldtype": "Link",
+   "label": "Current Holder",
+   "options": "Employee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_6qhb",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-05 15:02:56.840722",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Fuel Card Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
