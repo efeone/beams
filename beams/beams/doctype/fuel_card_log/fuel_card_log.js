@@ -24,7 +24,7 @@ frappe.ui.form.on("Fuel Card Log", {
     if (!frm.is_new()) {
 
       // Button: Set Current Ownership
-      frm.add_custom_button('Set Current Ownership', () => {
+      frm.add_custom_button('Ownership Transaction', () => {
         frappe.prompt([
           {
             label: 'New Owner',
@@ -41,7 +41,7 @@ frappe.ui.form.on("Fuel Card Log", {
             reqd: 1
           }
         ], (values) => {
-          let last_row = frm.doc.owered_by && frm.doc.owered_by.slice(-1)[0];
+          let last_row = frm.doc.ownered_by && frm.doc.ownered_by.slice(-1)[0];
 
           if (last_row && last_row.ownership === values.new_owner) {
             frappe.msgprint(`The last owner is already "${values.new_owner}". No new row added.`);
@@ -49,18 +49,18 @@ frappe.ui.form.on("Fuel Card Log", {
             return;
           }
 
-          let child = frm.add_child('owered_by', {
+          let child = frm.add_child('ownered_by', {
             ownership: values.new_owner,
             date: values.date
           });
-          frm.refresh_field('owered_by');
+          frm.refresh_field('ownered_by');
           frm.set_value('current_holder', values.new_owner);
           frm.save();
-        }, 'Set Current Ownership', 'Save');
-      });
+        }, 'Add', 'Save');
+      }, 'Add');
 
       // Button: Set Recharge History
-      frm.add_custom_button('Set Recharge History', () => {
+      frm.add_custom_button('Recharge', () => {
         frappe.prompt([
           {
             label: 'Recharge Amount',
@@ -89,8 +89,8 @@ frappe.ui.form.on("Fuel Card Log", {
           });
           frm.refresh_field('recharge_history');
           frm.save();
-        }, 'Set Recharge History', 'Save');
-      });
+        }, 'Add', 'Save');
+      }, 'Add');
     }
   }
 });
