@@ -61,38 +61,25 @@ frappe.ui.form.on('Trip Sheet', {
      }
  },
    onload: function(frm) {
-     if (frappe.session.user !== 'Administrator') {
-         frappe.call({
-             method: 'frappe.client.get_list',
-             args: {
-                 doctype: 'Employee',
-                 filters: {
-                     user_id: frappe.session.user
-                 },
-                 fields: ['name']
-             },
-             callback: function(emp_res) {
-                 if (emp_res.message.length > 0) {
-                     const employee_id = emp_res.message[0].name;
+     if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Driver')) {
+         // Get Employee linked to current user
+         frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+             .then(r => {
+                 if (r.message && r.message.name) {
+                     const employee_id = r.message.name;
 
-                     frappe.call({
-                         method: 'frappe.client.get_list',
-                         args: {
-                             doctype: 'Driver',
-                             filters: {
-                                 employee: employee_id
-                             },
-                             fields: ['name']
-                         },
-                         callback: function(driver_res) {
-                             if (driver_res.message.length > 0) {
-                                 frm.set_value('driver', driver_res.message[0].name);
-                             }
+                     // Get Driver linked to the employee
+                     frappe.db.get_list('Driver', {
+                         filters: { employee: employee_id },
+                         fields: ['name'],
+                         limit: 1
+                     }).then(driver_list => {
+                         if (driver_list.length > 0) {
+                             frm.set_value('driver', driver_list[0].name);
                          }
                      });
                  }
-             }
-         });
+             });
      }
         frm.set_query('transportation_requests', function() {
             return {
