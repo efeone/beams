@@ -11,10 +11,11 @@ frappe.ui.form.on('Employee Travel Request', {
                 journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
                 frappe.set_route("form", "Journal Entry", journal_entry.name);
             }, __("Create"));
-
-            frm.add_custom_button(__('Claim Expense'), function () {
+        }
+        if (frm.doc.docstatus === 1 && frm.doc.workflow_state === 'Approved') {
+            frm.add_custom_button(__('Expense Claim'), function () {
                 const dialog = new frappe.ui.Dialog({
-                    title: 'Claim Travel Expenses',
+                    title: 'Travel Claim Expenses',
                     fields: [
                         {
                             fieldtype: 'Table',
@@ -79,8 +80,9 @@ frappe.ui.form.on('Employee Travel Request', {
                 });
                 dialog.show();
             }, __('Create'));
-
         }
+
+
 
         if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
             frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
