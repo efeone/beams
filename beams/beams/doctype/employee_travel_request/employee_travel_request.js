@@ -92,6 +92,7 @@ frappe.ui.form.on('Employee Travel Request', {
     },
 
     onload: function (frm) {
+      apply_travellers_filter(frm);
         frm.fields_dict.travel_vehicle_allocation.grid.get_field("driver").get_query = function () {
             return {
                 filters: {
@@ -102,7 +103,7 @@ frappe.ui.form.on('Employee Travel Request', {
     },
 
     requested_by: function (frm) {
-
+      apply_travellers_filter(frm);
         frappe.call({
             method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
             args: { requested_by: frm.doc.requested_by },
@@ -138,7 +139,21 @@ frappe.ui.form.on('Employee Travel Request', {
   },
   end_date: function(frm) {
       calculate_days(frm);
-  }
+  },
+  is_group: function (frm) {
+    if (!frm.doc.is_group) {
+        frm.set_value('travellers', []);
+        frm.set_value('number_of_travellers', 0);
+    }
+},
+
+travellers: function (frm) {
+    if (frm.doc.is_group && frm.doc.travellers) {
+        frm.set_value('number_of_travellers', frm.doc.travellers.length);
+    } else {
+        frm.set_value('number_of_travellers', 0);
+    }
+}
 
   });
 
@@ -201,4 +216,14 @@ function calculate_days(frm) {
   } else {
       frm.set_value('total_days', null);
   }
+}
+
+function apply_travellers_filter(frm) {
+  frm.set_query('travellers', function () {
+      return {
+          filters: [
+              ['name', '!=', frm.doc.requested_by || '']
+          ]
+      };
+  });
 }
