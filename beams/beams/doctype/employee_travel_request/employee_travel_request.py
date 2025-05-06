@@ -6,6 +6,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form, today
 from datetime import datetime
+import json
 
 
 class EmployeeTravelRequest(Document):
@@ -129,3 +130,61 @@ def filter_mode_of_travel(batta_policy_name):
         return mode_of_travel
     else:
         return []
+
+@frappe.whitelist()
+def create_expense_claim(employee, travel_request, expenses):
+    '''
+    Create an Expense Claim from Travel Request.
+    '''
+
+    if isinstance(expenses, str):
+        expenses = json.loads(expenses)
+
+    if not expenses:
+        frappe.throw(_("Please provide at least one expense item."))
+
+    travel_doc = frappe.get_doc("Employee Travel Request", travel_request)
+
+    expense_claim = frappe.new_doc("Expense Claim")
+    expense_claim.employee = employee
+    expense_claim.approval_status = "Draft"
+    expense_claim.posting_date = today()
+
+    # Get Company and payable account
+    employee_doc = frappe.get_doc("Employee", employee)
+    company = employee_doc.company
+
+    default_payable_account = frappe.get_cached_value('Company', company, 'default_payable_account')
+    if not default_payable_account:
+        default_payable_account = frappe.db.get_value("Account", {
+            "company": company,
+            "account_type": "Payable",
+            "is_group": 0
+        }, "name")
+
+    if not default_payable_account:
+        frappe.throw(_("Please set a Default Payable Account in Company {0}").format(company))
+
+    expense_claim.payable_account = default_payable_account
+
+    for expense in expenses:
+        amount = expense.get("amount")
+        if amount in [None, ""]:
+            frappe.throw(_("Expense Amount is required for all items."))
+
+        expense_entry = {
+            "amount": amount,
+            "expense_date": expense.get("expense_date"),
+            "expense_type": expense.get("expense_type"),
+            "description": expense.get("description")
+        }
+        expense_claim.append("expenses", expense_entry)
+
+    expense_claim.total_claimed_amount = sum((item.amount or 0) for item in expense_claim.expenses)
+    expense_claim.save()
+
+    frappe.msgprint(
+        _('Expense Claim Created: <a href="{0}">{1}</a>').format(get_url_to_form("Expense Claim", expense_claim.name), expense_claim.name),
+        alert=True,indicator='green')
+
+    return expense_claim.name
