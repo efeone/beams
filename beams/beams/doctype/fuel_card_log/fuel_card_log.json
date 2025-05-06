@@ -10,7 +10,7 @@
   "column_break_yjyq",
   "current_holder",
   "section_break_6qhb",
-  "owered_by",
+  "ownered_by",
   "recharge_history"
  ],
  "fields": [
@@ -19,13 +19,6 @@
    "fieldtype": "Link",
    "label": " Fuel Card",
    "options": "Fuel Card"
-  },
-  {
-   "fieldname": "owered_by",
-   "fieldtype": "Table",
-   "label": "Owered By",
-   "options": "Owered By",
-   "read_only": 1
   },
   {
    "fieldname": "recharge_history",
@@ -48,11 +41,18 @@
   {
    "fieldname": "section_break_6qhb",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "ownered_by",
+   "fieldtype": "Table",
+   "label": "Ownership History",
+   "options": "Ownered By",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-05 15:02:56.840722",
+ "modified": "2025-05-06 12:57:16.601870",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card Log",
