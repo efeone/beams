@@ -11,6 +11,75 @@ frappe.ui.form.on('Employee Travel Request', {
                 journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
                 frappe.set_route("form", "Journal Entry", journal_entry.name);
             }, __("Create"));
+
+            frm.add_custom_button(__('Claim Expense'), function () {
+                const dialog = new frappe.ui.Dialog({
+                    title: 'Claim Travel Expenses',
+                    fields: [
+                        {
+                            fieldtype: 'Table',
+                            label: 'Expenses',
+                            fieldname: 'expenses',
+                            reqd: 1,
+                            fields: [
+                                {
+                                    label: 'Expense Date',
+                                    fieldtype: 'Date',
+                                    fieldname: 'expense_date',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Expense Claim Type',
+                                    fieldtype: 'Link',
+                                    options: 'Expense Claim Type',
+                                    fieldname: 'expense_type',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Description',
+                                    fieldtype: 'Small Text',
+                                    fieldname: 'description',
+                                    in_list_view: 1
+                                },
+                                {
+                                    label: 'Amount',
+                                    fieldtype: 'Currency',
+                                    fieldname: 'amount',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                }
+                            ]
+                        }
+                    ],
+                    size: 'large',
+                    primary_action_label: 'Submit',
+                    primary_action(values) {
+                        const expenses = values.expenses || [];
+                        if (!expenses.length) {
+                            frappe.msgprint(__('Please enter at least one expense item.'));
+                            return;
+                        }
+                        frappe.call({
+                            method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_expense_claim',
+                            args: {
+                                employee: frm.doc.requested_by,
+                                travel_request: frm.doc.name,
+                                expenses: expenses
+                            },
+                            callback: function (r) {
+                                if (!r.exc) {
+                                    dialog.hide();
+                                    frappe.set_route('Form', 'Expense Claim', r.message);
+                                }
+                            }
+                        });
+                    }
+                });
+                dialog.show();
+            }, __('Create'));
+
         }
 
         if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
@@ -70,7 +139,7 @@ frappe.ui.form.on('Employee Travel Request', {
   }
 
   });
-  
+
 function set_room_criteria_filter(frm) {
   if (frm.doc.batta_policy){
       frappe.call({
@@ -123,4 +192,3 @@ function calculate_days(frm) {
       frm.set_value('total_days', null);
   }
 }
-
