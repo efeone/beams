@@ -61,6 +61,24 @@ frappe.ui.form.on('Trip Sheet', {
      }
  },
    onload: function(frm) {
+        if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Driver')) {
+            // Get Employee linked to current user
+            frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+                .then(r => {
+                    if (r.message && r.message.name) {
+                        const employee_id = r.message.name;
+                        frappe.db.get_list('Driver', {
+                            filters: { employee: employee_id },
+                            fields: ['name'],
+                            limit: 1
+                        }).then(driver_list => {
+                            if (driver_list.length > 0) {
+                                frm.set_value('driver', driver_list[0].name);
+                            }
+                        });
+                    }
+                });
+        }
         frm.set_query('transportation_requests', function() {
             return {
                 filters: {
@@ -95,5 +113,18 @@ frappe.ui.form.on('Trip Sheet', {
 
             return selected_requests;
         }
+    }
+});
+
+frappe.ui.form.on('Trip Details', {
+    from_time: function (frm, cdt, cdn) {
+        frm.call('calculate_hours').then(() => {
+            frm.refresh_field('trip_details');
+        });
+    },
+    to_time: function (frm, cdt, cdn) {
+        frm.call('calculate_hours').then(() => {
+            frm.refresh_field('trip_details');
+        });
     }
 });

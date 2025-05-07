@@ -14,16 +14,32 @@ class TripSheet(Document):
 
         if not isinstance(self.final_odometer_reading, int):
             frappe.throw("Please enter an integer value for Final Odometer Reading.")
-            
+
         if not self.travel_requests and not self.transportation_requests:
             frappe.throw("Please provide at least one of Travel Requests or Transportation Requests.")
 
         self.validate_start_datetime_and_end_datetime()
         self.calculate_and_validate_fuel_data()
+        self.calculate_hours()
 
 
     def before_save(self):
         self.validate_posting_date()
+
+    @frappe.whitelist()
+    def calculate_hours(self):
+        for trip in self.trip_details:
+            if trip.from_time and trip.to_time:
+                from_time = frappe.utils.get_datetime(trip.from_time)
+                to_time = frappe.utils.get_datetime(trip.to_time)
+
+                if to_time > from_time:
+                    diff = to_time - from_time
+                    trip.hrs = round(diff.total_seconds() / 3600, 2)
+                else:
+                    trip.hrs = 0
+                    frappe.throw(f"To Time must be after From Time for trip from {trip.departure} to {trip.destination}")
+
 
     @frappe.whitelist()
     def validate_start_datetime_and_end_datetime(self):
