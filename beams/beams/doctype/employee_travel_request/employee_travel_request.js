@@ -91,7 +91,11 @@ frappe.ui.form.on('Employee Travel Request', {
 	},
 
 	requested_by: function (frm) {
-		apply_travellers_filter(frm);
+    // Skip applying filter if user has "Admin" role
+    if (!frappe.user.has_role("Admin")) {
+      apply_travellers_filter(frm);
+    }
+
 		frappe.call({
 			method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
 			args: { requested_by: frm.doc.requested_by },
@@ -168,6 +172,13 @@ function set_room_criteria_filter(frm) {
 }
 
 function set_mode_of_travel_filter(frm) {
+  // Skip filter if user has "Admin" role
+  if (frappe.user.has_role("Admin")) {
+    frm.set_query("mode_of_travel", function () {
+      return {};
+    });
+    return;
+  }
 	frappe.call({
 		method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_mode_of_travel",
 		args: {
