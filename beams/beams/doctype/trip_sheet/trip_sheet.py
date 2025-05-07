@@ -154,3 +154,36 @@ def create_vehicle_incident_record(trip_sheet):
     vehicle_incident.insert(ignore_mandatory=True)
 
     return vehicle_incident.name
+
+
+@frappe.whitelist()
+def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):
+    driver = filters.get("driver") if filters else None
+    if not driver:
+        return []
+
+    conditions = []
+    if txt:
+        conditions.append(f"etr.name LIKE %(txt)s")
+
+    query = """
+        SELECT DISTINCT etr.name, etr.requested_by
+        FROM `tabEmployee Travel Request` etr
+        INNER JOIN `tabVehicle Allocation` tva
+            ON tva.parent = etr.name
+        WHERE tva.driver = %(driver)s
+        {conditions}
+        ORDER BY etr.name
+        LIMIT %(start)s, %(page_len)s
+    """.format(conditions=" AND " + " AND ".join(conditions) if conditions else "")
+
+    return frappe.db.sql(
+        query,
+        {
+            "driver": driver,
+            "txt": f"%{txt}%" if txt else None,
+            "start": start,
+            "page_len": page_len,
+        },
+        as_list=True,
+    )

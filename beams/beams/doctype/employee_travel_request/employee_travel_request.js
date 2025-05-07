@@ -90,17 +90,6 @@ frappe.ui.form.on('Employee Travel Request', {
 		}
 	},
 
-	onload: function (frm) {
-		apply_travellers_filter(frm);
-		frm.fields_dict.travel_vehicle_allocation.grid.get_field("driver").get_query = function () {
-			return {
-				filters: {
-					designation: "Driver"
-				}
-			};
-		};
-	},
-
 	requested_by: function (frm) {
 		apply_travellers_filter(frm);
 		frappe.call({
@@ -150,7 +139,7 @@ frappe.ui.form.on('Employee Travel Request', {
 
 	travellers: function (frm) {
 		if (frm.doc.is_group && frm.doc.travellers) {
-			frm.set_value("number_of_travellers", frm.doc.travellers.length);
+			frm.set_value("number_of_travellers", frm.doc.travellers.length+1);
 		} else {
 			frm.set_value("number_of_travellers", 0);
 		}

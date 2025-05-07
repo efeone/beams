@@ -60,6 +60,7 @@ frappe.ui.form.on('Trip Sheet', {
          }, __("Create"));
      }
  },
+
    onload: function(frm) {
         if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Driver')) {
             // Get Employee linked to current user
@@ -113,6 +114,27 @@ frappe.ui.form.on('Trip Sheet', {
 
             return selected_requests;
         }
+    },
+    driver: function(frm) {
+        frm.set_query('travel_requests', function() {
+            return {
+                query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
+                filters: {
+                    driver: frm.doc.driver
+                }
+            };
+        });
+    },
+
+    refresh: function(frm) {
+        frm.set_query('travel_requests', function() {
+            return {
+                query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
+                filters: {
+                    driver: frm.doc.driver
+                }
+            };
+        });
     }
 });
 
