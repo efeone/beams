@@ -2,219 +2,218 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Employee Travel Request', {
-	refresh: function (frm) {
-		if (!frm.is_new()) {
-			frm.add_custom_button(__('Journal Entry'), function () {
-				let journal_entry = frappe.model.get_new_doc("Journal Entry");
-				journal_entry.voucher_type = "Journal Entry";
-				journal_entry.posting_date = frm.doc.posting_date;
-				journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
-				frappe.set_route("form", "Journal Entry", journal_entry.name);
-			}, __("Create"));
-		}
+    refresh: function (frm) {
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Journal Entry'), function () {
+                let journal_entry = frappe.model.get_new_doc("Journal Entry");
+                journal_entry.voucher_type = "Journal Entry";
+                journal_entry.posting_date = frm.doc.posting_date;
+                journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
+                frappe.set_route("form", "Journal Entry", journal_entry.name);
+            }, __("Create"));
+        }
 
-		if (frm.doc.is_unplanned === 1 && frm.doc.docstatus === 1 && ['Approved', 'Approved by HOD'].includes(frm.doc.workflow_state)) {
-			frm.add_custom_button(__('Expense Claim'), function () {
-				const dialog = new frappe.ui.Dialog({
-					title: 'Travel Claim Expenses',
-					fields: [
-						{
-							fieldtype: 'Table',
-							label: 'Expenses',
-							fieldname: 'expenses',
-							reqd: 1,
-							fields: [
-								{
-									label: 'Expense Date',
-									fieldtype: 'Date',
-									fieldname: 'expense_date',
-									in_list_view: 1,
-									reqd: 1
-								},
-								{
-									label: 'Expense Claim Type',
-									fieldtype: 'Link',
-									options: 'Expense Claim Type',
-									fieldname: 'expense_type',
-									in_list_view: 1,
-									reqd: 1
-								},
-								{
-									label: 'Description',
-									fieldtype: 'Small Text',
-									fieldname: 'description',
-									in_list_view: 1
-								},
-								{
-									label: 'Amount',
-									fieldtype: 'Currency',
-									fieldname: 'amount',
-									in_list_view: 1,
-									reqd: 1
-								}
-							]
-						}
-					],
-					size: 'large',
-					primary_action_label: 'Submit',
-					primary_action(values) {
-						const expenses = values.expenses || [];
-						if (!expenses.length) {
-							frappe.msgprint(__('Please enter at least one expense item.'));
-							return;
-						}
-						frappe.call({
-							method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_expense_claim',
-							args: {
-								employee: frm.doc.requested_by,
-								travel_request: frm.doc.name,
-								expenses: expenses
-							},
-							callback: function (r) {
-								if (!r.exc) {
-									dialog.hide();
-									frappe.set_route('Form', 'Expense Claim', r.message);
-								}
-							}
-						});
-					}
-				});
-				dialog.show();
-			}, __('Create'));
-		}
+        if (frm.doc.is_unplanned === 1 && frm.doc.docstatus === 1 && ['Approved', 'Approved by HOD'].includes(frm.doc.workflow_state)) {
+            frm.add_custom_button(__('Expense Claim'), function () {
+                const dialog = new frappe.ui.Dialog({
+                    title: 'Travel Claim Expenses',
+                    fields: [
+                        {
+                            fieldtype: 'Table',
+                            label: 'Expenses',
+                            fieldname: 'expenses',
+                            reqd: 1,
+                            fields: [
+                                {
+                                    label: 'Expense Date',
+                                    fieldtype: 'Date',
+                                    fieldname: 'expense_date',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Expense Claim Type',
+                                    fieldtype: 'Link',
+                                    options: 'Expense Claim Type',
+                                    fieldname: 'expense_type',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Description',
+                                    fieldtype: 'Small Text',
+                                    fieldname: 'description',
+                                    in_list_view: 1
+                                },
+                                {
+                                    label: 'Amount',
+                                    fieldtype: 'Currency',
+                                    fieldname: 'amount',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                }
+                            ]
+                        }
+                    ],
+                    size: 'large',
+                    primary_action_label: 'Submit',
+                    primary_action(values) {
+                        const expenses = values.expenses || [];
+                        if (!expenses.length) {
+                            frappe.msgprint(__('Please enter at least one expense item.'));
+                            return;
+                        }
+                        frappe.call({
+                            method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_expense_claim',
+                            args: {
+                                employee: frm.doc.requested_by,
+                                travel_request: frm.doc.name,
+                                expenses: expenses
+                            },
+                            callback: function (r) {
+                                if (!r.exc) {
+                                    dialog.hide();
+                                    frappe.set_route('Form', 'Expense Claim', r.message);
+                                }
+                            }
+                        });
+                    }
+                });
+                dialog.show();
+            }, __('Create'));
+        }
 
-		if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
-		} else {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
-		}
-	},
+        if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
+            frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
+        } else {
+            frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
+        }
+    },
 
-	requested_by: function (frm) {
-    // Skip applying filter if user has "Admin" role
-    if (!frappe.user.has_role("Admin")) {
-      apply_travellers_filter(frm);
+    requested_by: function (frm) {
+        frappe.call({
+            method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
+            args: { requested_by: frm.doc.requested_by },
+            callback: function (response) {
+                if (response.message) {
+                    let batta_policy = response.message;
+                    frm.set_value("batta_policy", batta_policy.name);
+
+                    if (frm.doc.accommodation_required) {
+                        set_room_criteria_filter(frm);
+                    }
+                } else {
+                    frm.set_value("batta_policy", "");
+                }
+            }
+        });
+        // Skip applying filter if user has "Admin" role
+        if (!frappe.user.has_role("Admin")) {
+            apply_travellers_filter(frm);
+        }
+    },
+
+    accommodation_required: function (frm) {
+        set_room_criteria_filter(frm);
+    },
+
+    batta_policy: function (frm) {
+        set_mode_of_travel_filter(frm);
+    },
+
+    posting_date: function (frm) {
+        frm.call("validate_posting_date");
+    },
+
+    start_date: function (frm) {
+        calculate_days(frm);
+    },
+
+    end_date: function (frm) {
+        calculate_days(frm);
+    },
+
+    is_group: function (frm) {
+        if (!frm.doc.is_group) {
+            frm.set_value("travellers", []);
+            frm.set_value("number_of_travellers", 0);
+        }
+    },
+
+    travellers: function (frm) {
+        if (frm.doc.is_group && frm.doc.travellers) {
+            frm.set_value("number_of_travellers", frm.doc.travellers.length+1);
+        } else {
+            frm.set_value("number_of_travellers", 0);
+        }
     }
-
-		frappe.call({
-			method: "beams.beams.doctype.employee_travel_request.employee_travel_request.get_batta_policy",
-			args: { requested_by: frm.doc.requested_by },
-			callback: function (response) {
-				if (response.message) {
-					let batta_policy = response.message;
-					frm.set_value("batta_policy", batta_policy.name);
-
-					if (frm.doc.accommodation_required) {
-						set_room_criteria_filter(frm);
-					}
-				} else {
-					frm.set_value("batta_policy", "");
-				}
-			}
-		});
-	},
-
-	accommodation_required: function (frm) {
-		set_room_criteria_filter(frm);
-	},
-
-	batta_policy: function (frm) {
-		set_mode_of_travel_filter(frm);
-	},
-
-	posting_date: function (frm) {
-		frm.call("validate_posting_date");
-	},
-
-	start_date: function (frm) {
-		calculate_days(frm);
-	},
-
-	end_date: function (frm) {
-		calculate_days(frm);
-	},
-
-	is_group: function (frm) {
-		if (!frm.doc.is_group) {
-			frm.set_value("travellers", []);
-			frm.set_value("number_of_travellers", 0);
-		}
-	},
-
-	travellers: function (frm) {
-		if (frm.doc.is_group && frm.doc.travellers) {
-			frm.set_value("number_of_travellers", frm.doc.travellers.length+1);
-		} else {
-			frm.set_value("number_of_travellers", 0);
-		}
-	}
 });
 
 function set_room_criteria_filter(frm) {
-	if (frm.doc.batta_policy) {
-		frappe.call({
-			method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_room_criteria",
-			args: {
-				batta_policy_name: frm.doc.batta_policy
-			},
-			callback: function (filter_response) {
-				let room_criteria = filter_response.message || [];
-				frm.set_query("room_criteria", function () {
-					return {
-						filters: {
-							name: ["in", room_criteria]
-						}
-					};
-				});
-			}
-		});
-	}
+    if (frm.doc.batta_policy) {
+        frappe.call({
+            method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_room_criteria",
+            args: {
+                batta_policy_name: frm.doc.batta_policy
+            },
+            callback: function (filter_response) {
+                let room_criteria = filter_response.message || [];
+                frm.set_query("room_criteria", function () {
+                    return {
+                        filters: {
+                            name: ["in", room_criteria]
+                        }
+                    };
+                });
+            }
+        });
+    }
 }
 
 function set_mode_of_travel_filter(frm) {
-  // Skip filter if user has "Admin" role
-  if (frappe.user.has_role("Admin")) {
-    frm.set_query("mode_of_travel", function () {
-      return {};
+    // Skip filter if user has "Admin" role
+    if (frappe.user.has_role("Admin")) {
+        frm.set_query("mode_of_travel", function () {
+            return {};
+        });
+        return;
+    }
+    frappe.call({
+        method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_mode_of_travel",
+        args: {
+            batta_policy_name: frm.doc.batta_policy
+        },
+        callback: function (filter_response) {
+            let mode_of_travel = filter_response.message || [];
+            frm.set_query("mode_of_travel", function () {
+                return {
+                    filters: {
+                        name: ["in", mode_of_travel]
+                    }
+                };
+            });
+        }
     });
-    return;
-  }
-	frappe.call({
-		method: "beams.beams.doctype.employee_travel_request.employee_travel_request.filter_mode_of_travel",
-		args: {
-			batta_policy_name: frm.doc.batta_policy
-		},
-		callback: function (filter_response) {
-			let mode_of_travel = filter_response.message || [];
-			frm.set_query("mode_of_travel", function () {
-				return {
-					filters: {
-						name: ["in", mode_of_travel]
-					}
-				};
-			});
-		}
-	});
 }
 
 function calculate_days(frm) {
-	if (frm.doc.start_date && frm.doc.end_date) {
-		frm.call("validate_dates")
-			.then(() => {
-				return frm.call("total_days_calculate");
-			})
-			.then(() => {
-				frm.refresh_field("total_days");
-			});
-	} else {
-		frm.set_value("total_days", null);
-	}
+    if (frm.doc.start_date && frm.doc.end_date) {
+        frm.call("validate_dates")
+        .then(() => {
+            return frm.call("total_days_calculate");
+        })
+        .then(() => {
+            frm.refresh_field("total_days");
+        });
+    } else {
+        frm.set_value("total_days", null);
+    }
 }
 
 function apply_travellers_filter(frm) {
-	frm.set_query("travellers", function () {
-		return {
-			filters: [["name", "!=", frm.doc.requested_by || ""]]
-		};
-	});
+    frm.set_query("travellers", function () {
+        return {
+            filters: [["name", "!=", frm.doc.requested_by || ""]]
+        };
+    });
 }
