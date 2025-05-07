@@ -8,15 +8,18 @@
  "field_order": [
   "section_break_ue5d",
   "trip_sheet",
-  "offense_type",
   "driver",
   "driver_name",
   "column_break_hwrj",
-  "posting_date",
+  "offense_type",
   "trip_start_date",
   "trip_end_date",
+  "column_break_trzy",
+  "posting_date",
   "offense_date_and_time",
-  "amended_from"
+  "amended_from",
+  "section_break_ezbs",
+  "vehicle_incident_details"
  ],
  "fields": [
   {
@@ -93,13 +96,27 @@
    "fieldname": "trip_end_date",
    "fieldtype": "Datetime",
    "label": "Trip End Date"
+  },
+  {
+   "fieldname": "section_break_ezbs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_incident_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Incident Details",
+   "options": "Vehicle Incident Details"
+  },
+  {
+   "fieldname": "column_break_trzy",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-05 11:01:32.435060",
+ "modified": "2025-05-06 15:36:17.994950",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",
