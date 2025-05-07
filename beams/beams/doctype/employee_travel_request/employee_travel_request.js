@@ -129,28 +129,29 @@ frappe.ui.form.on('Employee Travel Request', {
         calculate_days(frm);
     },
 
-    end_date: function (frm) {
+	end_date: function (frm) {
         calculate_days(frm);
-				update_number_of_travellers_visibility(frm);
-    },
+        update_number_of_travellers_visibility(frm);
+	},
 
-    is_group: function (frm) {
-				update_number_of_travellers_visibility(frm);
+	is_group: function (frm) {
+        update_number_of_travellers_visibility(frm);
         if (!frm.doc.is_group) {
             frm.set_value("travellers", []);
             frm.set_value("number_of_travellers", 1);
         }
-    },
+	},
 
-    travellers: function (frm) {
+	travellers: function (frm) {
         if (frm.doc.is_group && frm.doc.travellers) {
-            frm.set_value("number_of_travellers", frm.doc.travellers.length+1);
+        frm.set_value("number_of_travellers", frm.doc.travellers.length + 1);
         }
-				update_number_of_travellers_visibility(frm); 
-    },
-		is_unplanned: function(frm) {
         update_number_of_travellers_visibility(frm);
-    }
+	},
+
+	is_unplanned: function (frm) {
+        update_number_of_travellers_visibility(frm);
+	}
 });
 
 function update_number_of_travellers_visibility(frm) {
