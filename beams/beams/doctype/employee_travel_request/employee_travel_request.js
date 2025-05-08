@@ -216,12 +216,12 @@ function set_mode_of_travel_filter(frm) {
 function calculate_days(frm) {
     if (frm.doc.start_date && frm.doc.end_date) {
         frm.call("validate_dates")
-            .then(() => {
-                return frm.call("total_days_calculate");
-            })
-            .then(() => {
-                frm.refresh_field("total_days");
-            });
+        .then(() => {
+            return frm.call("total_days_calculate");
+        })
+        .then(() => {
+            frm.refresh_field("total_days");
+        });
     } else {
         frm.set_value("total_days", null);
     }
