@@ -79,6 +79,7 @@
    "depends_on": "eval:doc.is_group;",
    "fieldname": "travellers",
    "fieldtype": "Table MultiSelect",
+   "ignore_user_permissions": 1,
    "label": "Travellers",
    "options": "Traveller"
   },
@@ -256,7 +257,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-05 15:14:01.727506",
+ "modified": "2025-05-08 10:25:58.519959",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
