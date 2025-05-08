@@ -1821,6 +1821,13 @@ def get_employee_custom_fields():
                 "fieldtype": "Data",
                 "label": "Relation",
                 "insert_after":"relation"
+            },
+            {
+                "fieldname": "assessment_officer",
+                "fieldtype": "Link",
+                "options": "Employee",
+                "label": "Assessment Officer",
+                "insert_after": "reports_to"
             }
 
         ],
@@ -3081,19 +3088,6 @@ def get_appraisal_template_custom_fields():
                 "fieldtype": "Data",
                 "label": "Label for Company KRA",
                 "insert_after": "company_rating_criteria"
-            },
-            {
-                "fieldname": "designation_section",
-                "fieldtype": "Section Break",
-                "label": "",
-                "insert_after": "label_for_company_kra"
-            },
-            {
-                "fieldname": "assessment_officers",
-                "fieldtype": "Table",
-                "options": "Assessment Officer",
-                "label": "Assessment Officers",
-                "insert_after": "designation_section"
             }
         ]
     }
