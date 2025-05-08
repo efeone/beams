@@ -155,6 +155,8 @@ frappe.ui.form.on('Employee Travel Request', {
 
 });
 
+// Toggles visibility of 'number_of_travellers' field based on 'is_group' status and 'travellers' table length.
+
 function update_number_of_travellers_visibility(frm) {
     if (frm.doc.is_group && frm.doc.travellers && frm.doc.travellers.length > 0) {
         frm.set_df_property("number_of_travellers", "hidden", 0);
