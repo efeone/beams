@@ -41,15 +41,23 @@ frappe.ui.form.on('Appraisal', {
                     return;
                 }
 
-                frappe.call({
-                    method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
-                    args: { doc: frm.doc.name, employee_id: frm.doc.employee },
-                    callback: function (response) {
-                        if (!response.exc) {
-                            frappe.msgprint(__('Notification sent and tasks assigned.'));
-                        }
+                frappe.confirm(
+                    'Do you want to send the notification and assign tasks now?',
+                    () => {
+                        frappe.call({
+                            method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
+                            args: {
+                                doc: frm.doc.name,
+                                employee_id: frm.doc.employee
+                            },
+                            callback: (response) => {
+                                if (!response.exc) {
+                                    frappe.msgprint('Notification sent and tasks assigned.');
+                                }
+                            }
+                        });
                     }
-                });
+                );
             }).addClass("btn-primary");
         }
 
