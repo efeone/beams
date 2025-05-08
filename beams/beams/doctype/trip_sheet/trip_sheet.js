@@ -59,6 +59,16 @@ frappe.ui.form.on('Trip Sheet', {
              });
          }, __("Create"));
      }
+     
+     frm.set_query('travel_requests', function() {
+        return {
+            query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
+            filters: {
+                driver: frm.doc.driver
+            }
+        };
+    });
+
  },
 
    onload: function(frm) {
@@ -116,17 +126,6 @@ frappe.ui.form.on('Trip Sheet', {
         }
     },
     driver: function(frm) {
-        frm.set_query('travel_requests', function() {
-            return {
-                query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
-                filters: {
-                    driver: frm.doc.driver
-                }
-            };
-        });
-    },
-
-    refresh: function(frm) {
         frm.set_query('travel_requests', function() {
             return {
                 query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
