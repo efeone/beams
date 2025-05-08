@@ -283,58 +283,50 @@ def check_existing_event(appraisal_reference):
     return event if event else None
 
 @frappe.whitelist()
-def assign_tasks_sequentially(doc, employee_id):
+def assign_tasks_sequentially(doc):
     """
     Sends an email notification to the assessment officer to review the appraisal.
     """
     appraisal = frappe.get_doc("Appraisal", doc)
-    employee = frappe.get_doc("Employee", appraisal.employee)
+    assessment_officer_id = frappe.db.get_value("Employee", appraisal.employee, "assessment_officer")
 
-    # Validate assessment officer
-    if not employee.assessment_officer:
-        frappe.throw(f"Assessment Officer not set for employee {employee.name}")
+    if not assessment_officer_id:
+        frappe.throw(f"Assessment Officer not set for employee {appraisal.employee}")
 
-    assessment_officer = frappe.get_doc("Employee", employee.assessment_officer)
-    if not assessment_officer.user_id:
-        frappe.throw(f"No User ID found for assessment officer {assessment_officer.name}")
+    user_id, officer_name = frappe.db.get_value("Employee", assessment_officer_id, ["user_id", "employee_name"])
 
-    officer_user = frappe.get_doc("User", assessment_officer.user_id)
+    if not user_id:
+        frappe.throw(f"No User ID found for assessment officer {assessment_officer_id}")
 
-    # Get Email Template
-    hr_settings = frappe.get_single("Beams HR Settings")
-    if not hr_settings.assessment_reminder_template:
+    # Get email template
+    template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
+    if not template_name:
         frappe.throw("Please set 'Assessment Reminder Template' in Beams HR Settings.")
 
-    template = frappe.get_doc("Email Template", hr_settings.assessment_reminder_template)
+    template = frappe.get_doc("Email Template", template_name)
 
     context = {
         "doc": appraisal,
         "employee_name": appraisal.employee_name,
-        "officer_name": assessment_officer.name,  # No need to use get_fullname
+        "officer_name": officer_name,
     }
-
-    # Render subject and message using template
     subject = frappe.render_template(template.subject or '', context)
     message = frappe.render_template(template.response or template.message or '', context)
-
-    frappe.sendmail(
-        recipients=officer_user.email,
-        subject=subject,
-        message=message
-    )
+    
+    frappe.sendmail(recipients=frappe.db.get_value("User", user_id, "email"), subject=subject, message=message)
 
     frappe.get_doc({
         "doctype": "Notification Log",
         "subject": subject,
-        "for_user": officer_user.name,
+        "for_user": user_id,
         "type": "Alert",
         "document_type": "Appraisal",
-        "document_name": appraisal.name,
+        "document_name": appraisal,
         "from_user": frappe.session.user,
         "email_content": message
     }).insert(ignore_permissions=True)
 
-    frappe.msgprint(f"Notification sent to {officer_user.full_name or officer_user.name} for appraisal review.")
+    frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
     return {"status": "ok"}
 
 @frappe.whitelist()
