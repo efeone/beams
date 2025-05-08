@@ -217,3 +217,46 @@ function apply_travellers_filter(frm) {
         };
     });
 }
+
+frappe.ui.form.on('Vehicle Allocation', {
+  driver: function(frm, cdt, cdn) {
+      set_driver_filters(frm, cdt, cdn);
+  },
+  vehicle: function(frm, cdt, cdn) {
+      set_vehicle_filters(frm, cdt, cdn);
+  },
+  travel_vehicle_allocation_add: function(frm, cdt, cdn) {
+      set_driver_filters(frm, cdt, cdn);
+      set_vehicle_filters(frm, cdt, cdn);
+  }
+});
+
+function set_driver_filters(frm, cdt, cdn) {
+  const current_row = locals[cdt][cdn];
+  const selected_drivers = (frm.doc.travel_vehicle_allocation || [])
+      .filter(row => row.name !== current_row.name && row.driver)
+      .map(row => row.driver);
+
+  frm.fields_dict.travel_vehicle_allocation.grid.get_field("driver").get_query = function(doc, cdt, cdn) {
+      return {
+          filters: [
+              ["name", "not in", selected_drivers]
+          ]
+      };
+  };
+}
+
+function set_vehicle_filters(frm, cdt, cdn) {
+  const current_row = locals[cdt][cdn];
+  const selected_vehicles = (frm.doc.travel_vehicle_allocation || [])
+      .filter(row => row.name !== current_row.name && row.vehicle)
+      .map(row => row.vehicle);
+
+  frm.fields_dict.travel_vehicle_allocation.grid.get_field("vehicle").get_query = function(doc, cdt, cdn) {
+      return {
+          filters: [
+              ["name", "not in", selected_vehicles]
+          ]
+      };
+  };
+}
