@@ -2,29 +2,29 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Trip Sheet', {
-    posting_date:function (frm){
+    posting_date: function (frm) {
         frm.call("validate_posting_date");
-      },
-    starting_date_and_time: function(frm) {
+    },
+    starting_date_and_time: function (frm) {
         frm.call({
             method: "validate_start_datetime_and_end_datetime",
             doc: frm.doc,
         });
     },
-    ending_date_and_time: function(frm) {
+    ending_date_and_time: function (frm) {
         frm.call({
             method: "validate_start_datetime_and_end_datetime",
             doc: frm.doc,
         });
     },
-    vehicle: function(frm) {
+    vehicle: function (frm) {
         if (frm.doc.vehicle) {
             frappe.call({
                 method: 'beams.beams.doctype.trip_sheet.trip_sheet.get_last_odometer',
                 args: {
                     vehicle: frm.doc.vehicle
                 },
-                callback: function(r) {
+                callback: function (r) {
                     if (r.message) {
                         frm.set_value("initial_odometer_reading", r.message);
                     } else {
@@ -36,32 +36,42 @@ frappe.ui.form.on('Trip Sheet', {
             frm.set_value("initial_odometer_reading", null);
         }
     },
-    final_odometer_reading: function(frm) {
+    final_odometer_reading: function (frm) {
         frm.call("calculate_and_validate_fuel_data");
     },
-    fuel_consumed: function(frm) {
+    fuel_consumed: function (frm) {
         frm.call("calculate_and_validate_fuel_data");
     },
 
-    refresh: function(frm) {
-     if (!frm.is_new()) {
-         frm.add_custom_button(__('Vehicle Incident Record'), function() {
-             frappe.call({
-                 method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
-                 args: {
-                     trip_sheet: frm.doc.name
-                 },
-                 callback: function(r) {
-                     if (r.message) {
-                         frappe.set_route("form", "Vehicle Incident Record", r.message);
-                     }
-                 }
-             });
-         }, __("Create"));
-     }
- },
+    refresh: function (frm) {
+        if (!frm.is_new()) {
+            frm.add_custom_button(__('Vehicle Incident Record'), function () {
+                frappe.call({
+                    method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
+                    args: {
+                        trip_sheet: frm.doc.name
+                    },
+                    callback: function (r) {
+                        if (r.message) {
+                            frappe.set_route("form", "Vehicle Incident Record", r.message);
+                        }
+                    }
+                });
+            }, __("Create"));
+        }
 
-   onload: function(frm) {
+        frm.set_query('travel_requests', function () {
+            return {
+                query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
+                filters: {
+                    driver: frm.doc.driver
+                }
+            };
+        });
+
+    },
+
+    onload: function (frm) {
         if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Driver')) {
             // Get Employee linked to current user
             frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
@@ -80,14 +90,14 @@ frappe.ui.form.on('Trip Sheet', {
                     }
                 });
         }
-        frm.set_query('transportation_requests', function() {
+        frm.set_query('transportation_requests', function () {
             return {
                 filters: {
                     name: ['not in', get_selected_requests('Transportation Request Details', 'transportation_request')]
                 }
             };
         });
-        frm.set_query('travel_requests', function() {
+        frm.set_query('travel_requests', function () {
             return {
                 filters: {
                     name: ['not in', get_selected_requests('Employee Travel Request Details', 'employee_travel_request')]
@@ -105,7 +115,7 @@ frappe.ui.form.on('Trip Sheet', {
                     fieldname: fieldname
                 },
                 async: false,
-                callback: function(response) {
+                callback: function (response) {
                     if (response && response.message) {
                         selected_requests = response.message;
                     }
@@ -115,19 +125,8 @@ frappe.ui.form.on('Trip Sheet', {
             return selected_requests;
         }
     },
-    driver: function(frm) {
-        frm.set_query('travel_requests', function() {
-            return {
-                query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
-                filters: {
-                    driver: frm.doc.driver
-                }
-            };
-        });
-    },
-
-    refresh: function(frm) {
-        frm.set_query('travel_requests', function() {
+    driver: function (frm) {
+        frm.set_query('travel_requests', function () {
             return {
                 query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
                 filters: {
