@@ -82,8 +82,7 @@
    "fieldname": "driver_name",
    "fieldtype": "Data",
    "label": "Driver Name",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fetch_from": "trip_sheet.starting_date_and_time",
@@ -112,11 +111,10 @@
    "fieldtype": "Column Break"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-06 15:36:17.994950",
+ "modified": "2025-05-09 13:23:18.991915",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",
