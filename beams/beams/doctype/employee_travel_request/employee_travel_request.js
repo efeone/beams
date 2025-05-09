@@ -81,7 +81,7 @@ frappe.ui.form.on('Employee Travel Request', {
                 });
                 dialog.show();
             }, __('Create'));
-
+        }
 
         if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
             frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
