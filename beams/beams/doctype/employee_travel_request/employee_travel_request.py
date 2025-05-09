@@ -1,12 +1,13 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 
+import json
+from datetime import datetime
+
 import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form, today
-from datetime import datetime
-import json
 
 
 class EmployeeTravelRequest(Document):
@@ -39,28 +40,58 @@ class EmployeeTravelRequest(Document):
                     frappe.throw("Start Date cannot be in the past.")
 
     def on_update_after_submit(self):
-        """
-        Create an Attendance Regularization record in 'Draft' when mark_attendance is checked.
-        """
-        if self.mark_attendance == 1 and self.workflow_state == "Approved":
-                attn_reg = frappe.new_doc("Attendance Request")
-                attn_reg.employee = self.requested_by
-                attn_reg.reason = "On Duty"
-                attn_reg.from_date = self.start_date
-                attn_reg.to_date = self.end_date
-                attn_reg.explanation = "From Travel Request: {}".format(self.name)
-                attn_reg.insert()
-                self.db_set("attendance_request", attn_reg.name)
-                frappe.msgprint(
-                    'Attendance Request Created: <a href="{0}">{1}</a>'.format(
-                        get_url_to_form(attn_reg.doctype, attn_reg.name), attn_reg.name
-                    ),
-                    alert=True, indicator="green"
-                )
+        # Trigger only when state becomes Approved
+        if self.workflow_state != "Approved":
+            return
 
-        # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
-        if self.workflow_state == "Approved" and self.reason_for_rejection:
+        # Validation: Rejection reason must be empty when approved
+        if self.reason_for_rejection:
             frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
+
+        if not self.mark_attendance:
+            return
+
+        employees = []
+
+        # Add main employee
+        if self.requested_by:
+            employees.append(self.requested_by)
+
+        # Add employees from child table
+        for row in self.travellers:
+            if row.employee:
+                employees.append(row.employee)
+
+        # Remove duplicates and empty entries
+        employees = list(set(filter(None, employees)))
+
+        for emp in employees:
+            overlapping = frappe.db.exists(
+                "Attendance Request",
+                {
+                    "employee": emp,
+                    "from_date": ["<=", self.end_date],
+                    "to_date": [">=", self.start_date],
+                    "docstatus": ["!=", 2]
+                }
+            )
+
+            if overlapping:
+                continue
+
+            attendance = frappe.get_doc({
+                "doctype": "Attendance Request",
+                "employee": emp,
+                "from_date": self.start_date,
+                "to_date": self.end_date,
+                "request_type": "On Duty",
+                "company": frappe.db.get_value("Employee", emp, "company"),
+                "description": f"From Travel Request {self.name}",
+                "reason": "On Duty"
+            })
+
+            attendance.insert(ignore_permissions=True)
+            frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
 
     @frappe.whitelist()
     def validate_posting_date(self):
