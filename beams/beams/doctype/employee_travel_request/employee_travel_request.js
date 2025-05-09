@@ -13,7 +13,7 @@ frappe.ui.form.on('Employee Travel Request', {
             }, __("Create"));
         }
 
-        if (frm.doc.is_unplanned === 1 && frm.doc.docstatus === 1 ) {
+        if (frm.doc.is_unplanned === 1 ) {
             frm.add_custom_button(__('Expense Claim'), function () {
                 const dialog = new frappe.ui.Dialog({
                     title: 'Travel Claim Expenses',
