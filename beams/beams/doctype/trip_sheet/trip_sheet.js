@@ -139,11 +139,37 @@ frappe.ui.form.on('Trip Sheet', {
 
 frappe.ui.form.on('Trip Details', {
     from_time: function (frm, cdt, cdn) {
+        let child = locals[cdt][cdn];
+
+        if (child.from_time) {
+            // Validate if from_time is within the range of starting_date_and_time and ending_date_and_time
+            if (child.from_time < frm.doc.starting_date_and_time || child.from_time > frm.doc.ending_date_and_time) {
+                frappe.msgprint(__('From Time must be between Starting Date and Time and Ending Date and Time.'));
+                frappe.model.set_value(cdt, cdn, 'from_time', null); // Reset the invalid value
+                return;
+            }
+        }else{
+            frappe.model.set_value(cdt, cdn, 'hrs', null);
+        }
+
         frm.call('calculate_hours').then(() => {
             frm.refresh_field('trip_details');
         });
     },
     to_time: function (frm, cdt, cdn) {
+        let child = locals[cdt][cdn];
+
+        if (child.to_time) {
+            // Validate if to_time is within the range of starting_date_and_time and ending_date_and_time
+            if (child.to_time < frm.doc.starting_date_and_time || child.to_time > frm.doc.ending_date_and_time) {
+                frappe.msgprint(__('To Time must be between Starting Date and Time and Ending Date and Time.'));
+                frappe.model.set_value(cdt, cdn, 'to_time', null); // Reset the invalid value
+                return;
+            }
+        }else{
+            frappe.model.set_value(cdt, cdn, 'hrs', null);
+        }
+
         frm.call('calculate_hours').then(() => {
             frm.refresh_field('trip_details');
         });
