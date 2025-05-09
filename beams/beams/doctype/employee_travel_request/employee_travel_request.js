@@ -2,6 +2,15 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Employee Travel Request', {
+    onload(frm) {
+        if (!frm.doc.requested_by) {
+            frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+                .then(r => {
+                    if (r.message) frm.set_value('requested_by', r.message.name);
+                });
+        }
+    },
+    
     refresh: function (frm) {
         if (!frm.is_new()) {
             frm.add_custom_button(__('Journal Entry'), function () {
