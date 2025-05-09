@@ -97,7 +97,7 @@
   {
    "fieldname": "travel_type",
    "fieldtype": "Link",
-   "label": "Propose of Travel",
+   "label": "Purpose of Travel",
    "options": "Purpose of Travel",
    "reqd": 1
   },
@@ -256,8 +256,13 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-05-08 10:25:58.519959",
+ "links": [
+  {
+   "link_doctype": "Expense Claim",
+   "link_fieldname": "travel_request"
+  }
+ ],
+ "modified": "2025-05-07 15:11:30.696679",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

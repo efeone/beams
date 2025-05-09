@@ -177,6 +177,7 @@ def create_expense_claim(employee, travel_request, expenses):
     travel_doc = frappe.get_doc("Employee Travel Request", travel_request)
 
     expense_claim = frappe.new_doc("Expense Claim")
+    expense_claim.travel_request = travel_request
     expense_claim.employee = employee
     expense_claim.approval_status = "Draft"
     expense_claim.posting_date = today()

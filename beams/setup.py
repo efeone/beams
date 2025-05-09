@@ -57,6 +57,7 @@ def after_install():
     create_custom_fields(get_asset_category_custom_fields(),ignore_validate=True)
     create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
     create_custom_fields(get_full_and_final_statement_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_expense_claim_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -125,6 +126,7 @@ def before_uninstall():
     delete_custom_fields(get_asset_category_custom_fields())
     delete_custom_fields(get_asset_movement_custom_fields())
     delete_custom_fields(get_full_and_final_statement_custom_fields())
+    delete_custom_fields(get_expense_claim_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -4486,6 +4488,23 @@ def get_full_and_final_statement_custom_fields():
                 "label": "Allocated Bundles",
                 "options": "Full and Final Bundle",
                 "insert_after": "assets_allocated"
+            }
+        ]
+    }
+    
+def get_expense_claim_custom_fields():
+    '''
+        Custom fields that need to be added to the Expense Claim DocType
+    '''
+    return {
+        "Expense Claim": [
+            {
+                "fieldname": "travel_request",
+                "fieldtype": "Link",
+                "label": "Travel Request",
+                "options": "Employee Travel Request",
+                "insert_after": "approval_status",
+                "read_only": 1
             }
         ]
     }

@@ -13,7 +13,7 @@ frappe.ui.form.on('Employee Travel Request', {
             }, __("Create"));
         }
 
-        if (frm.doc.is_unplanned === 1 && frm.doc.docstatus === 1 && ['Approved', 'Approved by HOD'].includes(frm.doc.workflow_state)) {
+        if (frm.doc.is_unplanned === 1 ) {
             frm.add_custom_button(__('Expense Claim'), function () {
                 const dialog = new frappe.ui.Dialog({
                     title: 'Travel Claim Expenses',
@@ -271,7 +271,7 @@ function set_vehicle_filters(frm, cdt, cdn) {
   const selected_vehicles = (frm.doc.travel_vehicle_allocation || [])
       .filter(row => row.name !== current_row.name && row.vehicle)
       .map(row => row.vehicle);
-  
+
   // Set query filter on the vehicle field to exclude selected vehicles
   frm.fields_dict.travel_vehicle_allocation.grid.get_field("vehicle").get_query = function(doc, cdt, cdn) {
       return {
