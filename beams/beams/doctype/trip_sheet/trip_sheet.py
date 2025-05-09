@@ -65,6 +65,8 @@ class TripSheet(Document):
         Validate odometer readings and calculate distance traveled and fuel consumption per km.
         Automatically updates the fields on the same document.
         '''
+        if self.final_odometer_reading is None or self.initial_odometer_reading is None:
+            return
         if self.initial_odometer_reading > self.final_odometer_reading:
             frappe.throw(_("Initial Odometer Reading must be less than  Final Odometer Reading"))
 
