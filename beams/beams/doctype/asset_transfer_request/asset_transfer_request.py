@@ -86,21 +86,23 @@ class AssetTransferRequest(Document):
                 asset_doc.save()
         self.validate_recieved_by()
 
-        if self.workflow_state == 'Returned':
-            existing_return_movement = frappe.db.exists("Asset Movement", {
-                "reference_name": self.name,
-                "reference_doctype": "Asset Transfer Request",
-                "purpose": "Transfer"
-            })
+        old_doc = self.get_doc_before_save()
 
-            all_movements = frappe.get_all("Asset Movement", filters={
-                "reference_doctype": "Asset Transfer Request",
-                "reference_name": self.name,
-                "purpose": "Transfer"
-            })
+        if old_doc:
+            previous_state = old_doc.workflow_state
+            current_state = self.workflow_state
 
-            if len(all_movements) < 2:
-                self.create_asset_movement_on_return()
+            if previous_state != current_state and current_state == "Returned":
+                # Workflow has changed to "Returned"
+                all_movements = frappe.get_all("Asset Movement", filters={
+                    "reference_doctype": "Asset Transfer Request",
+                    "reference_name": self.name,
+                    "purpose": "Transfer"
+                })
+
+                if len(all_movements) < 2:
+                    self.create_asset_movement_on_return()
+
 
 
 
