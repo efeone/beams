@@ -135,6 +135,7 @@ frappe.ui.form.on('Trip Sheet', {
             };
         });
     },
+    // Updates the vehicle safety inspection details based on the selected vehicle template
     vehicle_template(frm) {
         let template = frm.doc.vehicle_template;
 
