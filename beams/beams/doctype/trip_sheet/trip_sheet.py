@@ -48,13 +48,12 @@ class TripSheet(Document):
         for row in self.trip_details:
             if row.get("from_time"):
                 if not (self.starting_date_and_time <= row.from_time <= self.ending_date_and_time):
-                    frappe.throw(_("Row #{0}: From Time must be between Starting and Ending Date and Time.").format(row.idx))
+                    frappe.throw(_("Row #{0}: From Time must be between Starting and Ending Date and Time.").format(row.idx),
+                    title=_("Message"))
             if row.get("to_time"):
                 if not (self.starting_date_and_time <= row.to_time <= self.ending_date_and_time):
-                    frappe.throw(_("Row #{0}: To Time must be between Starting and Ending Date and Time.").format(row.idx))
-
-
-
+                    frappe.throw(_("Row #{0}: To Time must be between Starting and Ending Date and Time.").format(row.idx),
+                    title=_("Message"))
 
     @frappe.whitelist()
     def validate_start_datetime_and_end_datetime(self):
