@@ -20,7 +20,7 @@
   },
   {
    "fieldname": "amount",
-   "fieldtype": "Float",
+   "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Amount"
   },
@@ -32,11 +32,10 @@
    "label": "Is Employee Payable"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-06 15:36:43.770977",
+ "modified": "2025-05-12 09:13:51.843171",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Details",
