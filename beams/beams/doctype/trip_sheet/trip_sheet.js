@@ -134,6 +134,29 @@ frappe.ui.form.on('Trip Sheet', {
                 }
             };
         });
+    },
+    // Updates the vehicle safety inspection details based on the selected vehicle template
+    vehicle_template(frm) {
+        let template = frm.doc.vehicle_template;
+
+        if (!template) {
+            frm.clear_table('vehicle_safety_inspection_details');
+            frm.refresh_field('vehicle_safety_inspection_details');
+            return;
+        }
+
+        frappe.db.get_doc('Vehicle Safety Inspection', template)
+            .then(doc => {
+                frm.clear_table('vehicle_safety_inspection_details');
+                doc.vehicle_safety_inspection.forEach(d => {
+                    frm.add_child('vehicle_safety_inspection_details', {
+                        item: d.item,
+                        status: d.status,
+                        remarks: d.remarks
+                    });
+                });
+                frm.refresh_field('vehicle_safety_inspection_details');
+            });
     }
 });
 
