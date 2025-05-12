@@ -21,6 +21,8 @@
   "pre_trip_checklist_section",
   "clean_vehicle",
   "safety_inspection",
+  "vehicle_template",
+  "vehicle_safety_inspection_details",
   "remarks",
   "trip_details_section",
   "trip_details",
@@ -184,12 +186,26 @@
   {
    "fieldname": "section_break_ygej",
    "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.safety_inspection == 1",
+   "fieldname": "vehicle_template",
+   "fieldtype": "Link",
+   "label": "Vehicle Template",
+   "options": "Vehicle Safety Inspection"
+  },
+  {
+   "depends_on": "eval:doc.safety_inspection == 1",
+   "fieldname": "vehicle_safety_inspection_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Safety Inspection Details",
+   "options": "Vehicle Inspection Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-08 16:35:44.189219",
+ "modified": "2025-05-12 10:55:32.663863",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
@@ -210,6 +226,7 @@
    "write": 1
   }
  ],
+ "search_fields": "driver,vehicle,starting_date_and_time",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

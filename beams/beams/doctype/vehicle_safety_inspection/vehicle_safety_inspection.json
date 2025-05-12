@@ -1,0 +1,57 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:vehicle",
+ "creation": "2025-05-09 16:25:28.621906",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_xxhg",
+  "vehicle",
+  "vehicle_safety_inspection"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_xxhg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "unique": 1
+  },
+  {
+   "fieldname": "vehicle_safety_inspection",
+   "fieldtype": "Table",
+   "label": "Vehicle Safety Inspection",
+   "options": "Vehicle Inspection Details"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-09 16:36:27.962414",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Safety Inspection",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
