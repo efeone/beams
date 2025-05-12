@@ -96,6 +96,9 @@ class ShiftSwapRequest(Document):
             fields=["name", "shift_type", "roster_type", "start_date", "end_date"]
         )
 
+        shifts_to_submit = []
+
+
         def adjust_existing_shifts(shift_list, employee, swap_employee):
             """
             Adjusts the existing shift assignments based on the swap period.
@@ -105,7 +108,6 @@ class ShiftSwapRequest(Document):
 
             for shift in shift_list:
                 shift_doc = frappe.get_doc("Shift Assignment", shift["name"])
-
                 if shift_doc.employee == employee:
                     # Get the shift type & roster type for the swap employee
                     swap_shift_data = frappe.get_value(
@@ -117,28 +119,20 @@ class ShiftSwapRequest(Document):
                         },
                         ["shift_type", "roster_type"],
                     ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
-
                     swap_shift_type, swap_roster_type = swap_shift_data
-
                     if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
-
-                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
-                        create_shift(employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"])
-
+                        shifts_to_submit.append(create_shift(swap_employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
+                        shifts_to_submit.append(create_shift(employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"]))
                     elif shift["start_date"] == self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.start_date = add_days(self.shift_end_date, 1)
                         shift_doc.save()
-
-                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
-
+                        shifts_to_submit.append(create_shift(swap_employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
                     elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
-
-                        create_shift(swap_employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
-
+                        shifts_to_submit.append(create_shift(swap_employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
                 elif shift_doc.employee == swap_employee:
                     # Get the shift type & roster type for the swap employee
                     swap_shift_data = frappe.get_value(
@@ -150,27 +144,23 @@ class ShiftSwapRequest(Document):
                         },
                         ["shift_type", "roster_type"],
                     ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
-
                     swap_shift_type, swap_roster_type = swap_shift_data
-
                     if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
-
-                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
-                        create_shift(swap_employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"])
-
+                        shifts_to_submit.append(create_shift(employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
+                        shifts_to_submit.append(create_shift(swap_employee, shift["shift_type"], shift["roster_type"], add_days(self.shift_end_date, 1), shift["end_date"]))
                     elif shift["start_date"] == self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.start_date = add_days(self.shift_end_date, 1)
                         shift_doc.save()
 
-                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
-
+                        shifts_to_submit.append(create_shift(employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
                     elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
 
-                        create_shift(employee, swap_shift_type, swap_roster_type, self.shift_start_date, self.shift_end_date)
+                        shifts_to_submit.append(create_shift(employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
+
 
         def create_shift(employee, shift_type, roster_type, start_date, end_date):
             """
@@ -186,9 +176,12 @@ class ShiftSwapRequest(Document):
                 "end_date": end_date,
                 "status": "Active"
             })
-            new_shift.insert(ignore_permissions=True)
-            new_shift.submit()
+            return new_shift
 
         # Adjust shifts for both employees
         adjust_existing_shifts(employee_shift, self.employee, self.swap_with_employee)
         adjust_existing_shifts(swap_with_shift, self.swap_with_employee, self.employee)
+
+        for s_shift in shifts_to_submit:
+            s_shift.insert(ignore_permissions=True)
+            s_shift.submit()
