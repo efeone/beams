@@ -21,6 +21,7 @@ class TripSheet(Document):
         self.validate_start_datetime_and_end_datetime()
         self.calculate_and_validate_fuel_data()
         self.calculate_hours()
+        self.validate_trip_times()
 
 
     def before_save(self):
@@ -39,6 +40,20 @@ class TripSheet(Document):
                 else:
                     trip.hrs = 0
                     frappe.throw(f"To Time must be after From Time for trip from {trip.departure} to {trip.destination}")
+            else:
+                trip.hrs = None
+
+    @frappe.whitelist()
+    def validate_trip_times(self):
+        for row in self.trip_details:
+            if row.get("from_time"):
+                if not (self.starting_date_and_time <= row.from_time <= self.ending_date_and_time):
+                    frappe.throw(_("Row #{0}: From Time must be between Starting and Ending Date and Time.").format(row.idx))
+            if row.get("to_time"):
+                if not (self.starting_date_and_time <= row.to_time <= self.ending_date_and_time):
+                    frappe.throw(_("Row #{0}: To Time must be between Starting and Ending Date and Time.").format(row.idx))
+
+
 
 
     @frappe.whitelist()
