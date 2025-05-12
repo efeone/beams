@@ -141,11 +141,13 @@ frappe.ui.form.on('Trip Details', {
     from_time: function (frm, cdt, cdn) {
         frm.call('calculate_hours').then(() => {
             frm.refresh_field('trip_details');
+            return frm.call('validate_trip_times');
         });
     },
     to_time: function (frm, cdt, cdn) {
         frm.call('calculate_hours').then(() => {
             frm.refresh_field('trip_details');
+            return frm.call('validate_trip_times');
         });
     }
 });
