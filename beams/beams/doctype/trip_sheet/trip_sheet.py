@@ -107,21 +107,18 @@ def get_last_odometer(vehicle):
     if not vehicle:
         return 0
 
-    last_trip_exists = frappe.db.exists(
+    final_odometer = frappe.db.get_value(
         "Trip Sheet",
         {"vehicle": vehicle, "docstatus": 1},
+        "final_odometer_reading",
+        order_by="creation desc"
     )
 
-    if last_trip_exists:
-        final_odometer = frappe.db.get_value(
-            "Trip Sheet",
-            {"vehicle": vehicle, "docstatus": 1},
-            "final_odometer_reading",
-            order_by="creation desc",
-        )
+    if final_odometer is not None:
         return final_odometer or 0
-    else:
-        return 0
+    vehicle_odometer = frappe.db.get_value("Vehicle", vehicle, "last_odometer") or 0
+    return vehicle_odometer
+
 
 @frappe.whitelist()
 def get_selected_requests(child_table, fieldname):
