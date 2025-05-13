@@ -111,7 +111,7 @@ def get_last_odometer(vehicle):
         "Trip Sheet",
         {"vehicle": vehicle, "docstatus": 1},
         "final_odometer_reading",
-        order_by="creation desc"
+        order_by="starting_date_and_time desc"
     )
 
     if final_odometer is not None:
