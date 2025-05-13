@@ -4319,7 +4319,7 @@ def get_beams_roles():
     '''
         Method to get BEAMS specific roles
     '''
-    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator']
+    return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security']
 
 def get_custom_translations():
     '''
@@ -4485,7 +4485,7 @@ def get_full_and_final_statement_custom_fields():
             }
         ]
     }
-    
+
 def get_expense_claim_custom_fields():
     '''
         Custom fields that need to be added to the Expense Claim DocType

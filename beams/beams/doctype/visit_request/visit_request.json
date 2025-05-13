@@ -9,13 +9,13 @@
   "section_break_tgtp",
   "visitor_type",
   "visitor_name",
-  "purpose_of_visit",
-  "contact_number",
   "person_to_meet",
+  "contact_number",
+  "purpose_of_visit",
   "amended_from",
   "column_break_gbkg",
   "request_date",
-  "visit_date",
+  "expected_date_and_time",
   "approval_status",
   "approver"
  ],
@@ -42,7 +42,7 @@
   },
   {
    "fieldname": "purpose_of_visit",
-   "fieldtype": "Data",
+   "fieldtype": "Small Text",
    "label": "Purpose of Visit"
   },
   {
@@ -57,14 +57,10 @@
    "options": "Employee"
   },
   {
+   "default": "Today",
    "fieldname": "request_date",
    "fieldtype": "Date",
    "label": "Request Date"
-  },
-  {
-   "fieldname": "visit_date",
-   "fieldtype": "Date",
-   "label": "Visit Date"
   },
   {
    "fieldname": "approval_status",
@@ -86,13 +82,17 @@
    "fieldname": "visitor_name",
    "fieldtype": "Data",
    "label": "Visitor Name"
+  },
+  {
+   "fieldname": "expected_date_and_time",
+   "fieldtype": "Datetime",
+   "label": "expected date and time"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-28 13:25:57.194656",
+ "modified": "2025-05-13 13:43:13.573454",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Visit Request",
