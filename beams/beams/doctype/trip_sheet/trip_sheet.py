@@ -26,6 +26,12 @@ class TripSheet(Document):
 
     def before_save(self):
         self.validate_posting_date()
+        # Set safety_inspection_completed based on fit_for_use are checked
+        if self.vehicle_safety_inspection_details:
+            all_fit_for_use = all(row.fit_for_use == 1 for row in self.vehicle_safety_inspection_details)
+            self.safety_inspection_completed = 1 if all_fit_for_use else 0
+        else:
+            self.safety_inspection_completed = 0
 
     @frappe.whitelist()
     def calculate_hours(self):
