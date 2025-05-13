@@ -25,11 +25,7 @@ frappe.ui.form.on('Trip Sheet', {
                     vehicle: frm.doc.vehicle
                 },
                 callback: function (r) {
-                    if (r.message) {
-                        frm.set_value("initial_odometer_reading", r.message);
-                    } else {
-                        frm.set_value("initial_odometer_reading", 0);
-                    }
+                    frm.set_value("initial_odometer_reading", r.message || 0);
                 }
             });
         } else {
