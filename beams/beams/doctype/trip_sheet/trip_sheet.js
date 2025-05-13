@@ -131,7 +131,32 @@ frappe.ui.form.on('Trip Sheet', {
             };
         });
     },
-    // Updates the vehicle safety inspection details based on the selected vehicle template
+    // Trigger when the vehicle field changes
+    vehicle(frm) {
+        if (frm.doc.vehicle) {
+            frappe.db.get_list('Vehicle Safety Inspection', {
+                filters: {
+                    vehicle: frm.doc.vehicle
+                },
+                fields: ['name'],
+                limit: 1
+            }).then(result => {
+                if (result && result.length > 0) {
+                    frm.set_value('vehicle_template', result[0].name);
+                } else {
+                    frm.set_value('vehicle_template', null);
+                    frm.clear_table('vehicle_safety_inspection_details');
+                    frm.refresh_field('vehicle_safety_inspection_details');
+                }
+            });
+        } else {
+            frm.set_value('vehicle_template', null);
+            frm.clear_table('vehicle_safety_inspection_details');
+            frm.refresh_field('vehicle_safety_inspection_details');
+        }
+    },
+
+    // Updates the vehicle safety inspection details based on the vehicle template
     vehicle_template(frm) {
         let template = frm.doc.vehicle_template;
 
@@ -147,12 +172,19 @@ frappe.ui.form.on('Trip Sheet', {
                 doc.vehicle_safety_inspection.forEach(d => {
                     frm.add_child('vehicle_safety_inspection_details', {
                         item: d.item,
-                        status: d.status,
+                        fit_for_use: d.fit_for_use,
                         remarks: d.remarks
                     });
                 });
                 frm.refresh_field('vehicle_safety_inspection_details');
+                let all_fit_for_use = frm.doc.vehicle_safety_inspection_details.every(row => row.fit_for_use === 1);
+                frm.set_value('safety_inspection_completed', all_fit_for_use ? 1 : 0);
             });
+    },
+    // Trigger when vehicle_safety_inspection_details table is modified
+    vehicle_safety_inspection_details: function(frm) {
+        let all_fit_for_use = frm.doc.vehicle_safety_inspection_details.every(row => row.fit_for_use === 1);
+        frm.set_value('safety_inspection_completed', all_fit_for_use ? 1 : 0);
     }
 });
 

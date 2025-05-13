@@ -20,9 +20,9 @@
   "transportation_requests",
   "pre_trip_checklist_section",
   "clean_vehicle",
-  "safety_inspection",
   "vehicle_template",
   "vehicle_safety_inspection_details",
+  "safety_inspection_completed",
   "remarks",
   "trip_details_section",
   "trip_details",
@@ -97,12 +97,6 @@
    "fieldname": "clean_vehicle",
    "fieldtype": "Check",
    "label": "Is Cleaned"
-  },
-  {
-   "default": "0",
-   "fieldname": "safety_inspection",
-   "fieldtype": "Check",
-   "label": "Safety Inspection"
   },
   {
    "fieldname": "remarks",
@@ -188,24 +182,32 @@
    "fieldtype": "Section Break"
   },
   {
-   "depends_on": "eval:doc.safety_inspection == 1",
+   "depends_on": "eval:doc.vehicle\n",
    "fieldname": "vehicle_template",
    "fieldtype": "Link",
-   "label": "Vehicle Template",
-   "options": "Vehicle Safety Inspection"
+   "label": "Vehicle Safety Template",
+   "options": "Vehicle Safety Inspection",
+   "read_only": 1
   },
   {
-   "depends_on": "eval:doc.safety_inspection == 1",
+   "depends_on": "eval:doc.vehicle",
    "fieldname": "vehicle_safety_inspection_details",
    "fieldtype": "Table",
    "label": "Vehicle Safety Inspection Details",
    "options": "Vehicle Inspection Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "safety_inspection_completed",
+   "fieldtype": "Check",
+   "label": "Safety Inspection Completed",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-12 10:55:32.663863",
+ "modified": "2025-05-13 11:40:29.508434",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
