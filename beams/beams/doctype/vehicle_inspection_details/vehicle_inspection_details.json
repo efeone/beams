@@ -9,8 +9,8 @@
  "field_order": [
   "section_break_bv3z",
   "item",
-  "result",
-  "notes"
+  "fit_for_use",
+  "remarks"
  ],
  "fields": [
   {
@@ -24,23 +24,24 @@
    "label": "Item"
   },
   {
-   "fieldname": "result",
-   "fieldtype": "Select",
+   "default": "0",
+   "fieldname": "fit_for_use",
+   "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Result",
-   "options": "\nFit for Use\nNeeds Repair"
+   "label": "Fit for Use",
+   "options": "\n"
   },
   {
-   "fieldname": "notes",
+   "fieldname": "remarks",
    "fieldtype": "Small Text",
    "in_list_view": 1,
-   "label": "Notes"
+   "label": "Remarks"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-12 15:54:22.213485",
+ "modified": "2025-05-13 10:00:27.550581",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Inspection Details",
