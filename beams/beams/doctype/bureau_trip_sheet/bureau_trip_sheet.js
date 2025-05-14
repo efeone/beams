@@ -7,7 +7,7 @@ frappe.ui.form.on('Trip Details', {
         setTimeout(() => {
             set_batta_for_food_allowance(frm, cdt, cdn);
             calculate_batta(frm, cdt, cdn);
-        }, 30);
+        }, 200);
     },
     to_date_and_time: function (frm, cdt, cdn) {
         let row = locals[cdt][cdn];
@@ -24,7 +24,7 @@ frappe.ui.form.on('Trip Details', {
             setTimeout(() => {
                 set_batta_for_food_allowance(frm, cdt, cdn);
                 calculate_batta(frm, cdt, cdn);
-        }, 30);
+        }, 200);
         }
 
         calculate_hours_and_days(frm, cdt, cdn);
