@@ -22,8 +22,7 @@
    "in_list_view": 1,
    "label": "Employee in Charge",
    "options": "Employee",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "Now",
@@ -73,7 +72,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-02-25 11:34:33.159474",
+ "modified": "2025-05-14 11:05:53.631672",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Pass",
