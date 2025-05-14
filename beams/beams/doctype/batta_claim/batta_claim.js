@@ -206,7 +206,7 @@ frappe.ui.form.on('Work Detail', {
         setTimeout(() => {
             set_batta_for_food_allowance(frm, cdt, cdn);
             calculate_batta(frm, cdt, cdn);
-        }, 30);
+        }, 500);
     },
     to_date_and_time: function(frm, cdt, cdn) {
       let row = locals[cdt][cdn];
@@ -225,7 +225,7 @@ frappe.ui.form.on('Work Detail', {
         setTimeout(() => {
             set_batta_for_food_allowance(frm, cdt, cdn);
             calculate_batta(frm, cdt, cdn);
-        }, 30);
+        }, 500);
     }
   }
 });
