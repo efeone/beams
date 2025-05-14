@@ -2,6 +2,17 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Security Patrol Log', {
+    onload: function (frm) {
+        if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Security')) {
+            // Get the Employee linked to the current user
+            frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+                .then(r => {
+                    if (r.message && r.message.name) {
+                        frm.set_value('employee', r.message.name);
+                    }
+                });
+        }
+    },
     patrol_template: function (frm) {
         if (frm.doc.patrol_template) {
             frappe.call({
@@ -23,5 +34,10 @@ frappe.ui.form.on('Security Patrol Log', {
                 }
             });
         }
+        else{
+            frm.clear_table('patrol_log');
+            frm.refresh_field('patrol_log');
+        }
+
     }
 });

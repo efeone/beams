@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "service_unit",
+  "checked",
   "remarks"
  ],
  "fields": [
@@ -23,12 +24,19 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Remarks"
+  },
+  {
+   "default": "0",
+   "fieldname": "checked",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Checked"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-25 23:38:12.278668",
+ "modified": "2025-05-14 12:22:05.991502",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Patrol Log Detail",
