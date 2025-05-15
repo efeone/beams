@@ -73,7 +73,8 @@
    "fieldname": "received_by",
    "fieldtype": "Link",
    "label": "Received By",
-   "options": "Employee"
+   "options": "Employee",
+   "reqd": 1
   },
   {
    "depends_on": "eval:doc.vehicle_key;",
@@ -115,11 +116,10 @@
    "label": "Visit Date"
   }
  ],
- "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-25 14:30:34.845221",
+ "modified": "2025-05-14 12:08:44.095780",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",
@@ -140,6 +140,7 @@
    "write": 1
   }
  ],
+ "search_fields": "visitor_type,visitor_name,posting_date",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
