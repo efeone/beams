@@ -34,7 +34,7 @@ frappe.ui.form.on('Security Patrol Log', {
                 }
             });
         }
-        else{
+        else {
             frm.clear_table('patrol_log');
             frm.refresh_field('patrol_log');
         }
