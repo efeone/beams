@@ -367,7 +367,6 @@ doc_events = {
     "Expense Claim": {
         "after_insert": "beams.beams.custom_scripts.expense_claim.expense_claim.notify_expense_approver_on_creation"
     }
-
 }
 
 # Scheduled Tasks

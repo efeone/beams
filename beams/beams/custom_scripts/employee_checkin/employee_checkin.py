@@ -1,7 +1,7 @@
 import frappe
 from frappe.utils import add_days, today
 from datetime import datetime
-from frappe.utils import nowdate
+from frappe.utils import nowdate, get_datetime
 
 
 def handle_employee_checkin_out(doc, method):
@@ -65,7 +65,9 @@ def handle_employee_checkin_out(doc, method):
         leave_allocation_doc.submit()
 
 def set_hd_agent_active_status(doc, method=None):
-    "Update HD Agent's active status based on today's latest employee check-in"
+
+    """Update HD Agent's active status based on today's latest employee check-in"""
+
     employee = doc.employee
 
     # Get user linked to the employee
@@ -74,9 +76,8 @@ def set_hd_agent_active_status(doc, method=None):
     if not user:
         return
 
-    # Get today's date range
-    start = nowdate() + " 00:00:00"
-    end = nowdate() + " 23:59:59"
+    start = get_datetime(nowdate() + " 00:00:00")
+    end = get_datetime(nowdate() + " 23:59:59")
 
     # Get the latest check-in today
     latest_checkin = frappe.db.get_all(
