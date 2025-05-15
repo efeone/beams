@@ -4510,7 +4510,7 @@ def get_full_and_final_statement_custom_fields():
             }
         ]
     }
-    
+
 def get_expense_claim_custom_fields():
     '''
         Custom fields that need to be added to the Expense Claim DocType
