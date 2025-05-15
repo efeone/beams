@@ -91,6 +91,8 @@ def create_inward_register(guest_appointment):
     inward_register.visitor_name = appointment.guest_name
     inward_register.received_by = appointment.received_by
     inward_register.purpose_of_visit = appointment.purpose_of_visit
+    inward_register.visit_date = appointment.appointment_date
+    inward_register.visitor_type = "Guest"
     inward_register.insert(ignore_mandatory=True)
 
     return inward_register.name
