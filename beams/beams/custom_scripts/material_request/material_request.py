@@ -19,7 +19,7 @@ def notify_stock_managers(doc=None, method=None):
                 "user_type": "System User"
             },
             fields=["name", "email"]
-        ) if "Stock Manager" in frappe.get_roles(user.name)
+        ) if any(role in frappe.get_roles(user.name) for role in ["Stock Manager", "Admin"])
     ]
 
     if not recipients:
