@@ -392,67 +392,55 @@ frappe.ui.form.on('Appraisal', {
         dialog.show();
     },
 
-    // Function to open the Add Category dialog
-    open_add_category_dialog: function (frm) {
-        const dialog = new frappe.ui.Dialog({
-            title: 'Add Category',
-            fields: [
-                { label: 'Select Category', fieldname: 'select_category', fieldtype: 'Link', options: 'Appraisal Category', only_select: 1, reqd: 1 },
-                { label: 'Remarks', fieldname: 'remarks', fieldtype: 'Text', reqd: 1 },
-            ],
-            primary_action_label: 'Submit',
-            primary_action: function (data) {
-                if (data.select_category && data.remarks) {
-                    let user_id = frappe.session.user;
-                    frappe.call({
-                        method: "frappe.client.get_list",
-                        args: { doctype: "Employee", filters: { user_id: user_id }, fields: ["name", "designation"] },
-                        callback: function (response) {
-                            if (response.message && response.message.length > 0) {
-                                let employee_doc = response.message[0];
-                                frappe.call({
-                                    method: "beams.beams.custom_scripts.appraisal.appraisal.add_to_category_details",
-                                    args: {
-                                        parent_docname: frm.doc.name,
-                                        category: data.select_category,
-                                        remarks: data.remarks,
-                                        employee: employee_doc.name,
-                                        designation: employee_doc.designation,
-                                    },
-                                    callback: function (res) {
-                                        if (res.message) {
-                                            frappe.msgprint(__('Category successfully added to Category Details.'));
-                                            frappe.call({
-                                                method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
-                                                args: { doc: frm.doc.name },
-                                                callback: function (response) {
-                                                    console.log(r.message)
-                                                    if (!response.exc) {
-                                                        frappe.msgprint(__('Notification sent and tasks assigned.'));
-                                                    }
-                                                }
-                                            });
-                                            frm.reload_doc();
-                                            dialog.hide();
-                                        } else {
-                                            frappe.msgprint(__('Failed to add category.'));
-                                        }
-                                    },
-                                });
-                            } else {
-                                frappe.msgprint(__('Employee details not found for the logged-in user.'));
-                            }
-                        },
-                    });
-                } else {
-                    frappe.msgprint(__('Please fill all mandatory fields.'));
-                }
-            },
-        });
+  open_add_category_dialog: function (frm) {
+      const dialog = new frappe.ui.Dialog({
+          title: 'Add Category',
+          fields: [
+              { label: 'Select Category', fieldname: 'select_category', fieldtype: 'Link', options: 'Appraisal Category', only_select: 1, reqd: 1 },
+              { label: 'Remarks', fieldname: 'remarks', fieldtype: 'Text', reqd: 1 },
+          ],
+          primary_action_label: 'Submit',
+          primary_action(data) {
+              if (data.select_category && data.remarks) {
+                  frappe.call({
+                      method: "beams.beams.custom_scripts.appraisal.appraisal.add_to_category_details",
+                      args: {
+                          parent_docname: frm.doc.name,
+                          category: data.select_category,
+                          remarks: data.remarks
+                      },
+                      callback(res) {
+                          if (res.message === "Success") {
+                              frappe.msgprint(__('Category successfully added to Category Details.'));
 
-        dialog.show();
-    },
-  //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
+                              // Notify assessment officer
+                              frappe.call({
+                                  method: "beams.beams.custom_scripts.appraisal.appraisal.send_assessment_reminder",
+                                  args: { doc: frm.doc.name },
+                                  callback(response) {
+                                      if (!response.exc) {
+                                          frappe.msgprint(__('Notification sent to Assessment Officer.'));
+                                      }
+                                  }
+                              });
+
+                              frm.reload_doc();
+                              dialog.hide();
+                          } else {
+                              frappe.msgprint(__('Failed to add category.'));
+                          }
+                      }
+                  });
+              } else {
+                  frappe.msgprint(__('Please fill all mandatory fields.'));
+              }
+          }
+      });
+
+      dialog.show();
+  },
+
+ //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
   appraisal_template: function (frm) {
       if (frm.doc.appraisal_template) {
           frappe.call({
