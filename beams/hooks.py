@@ -262,7 +262,12 @@ doc_events = {
         "on_submit": "beams.beams.custom_scripts.interview_feedback.interview_feedback.update_applicant_interview_round_from_feedback"
     },
     "Employee Checkin":{
-        "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
+        "after_insert": [
+            "beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out",
+            "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
+        ],
+        "on_update" : "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
+
     },
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
@@ -362,6 +367,7 @@ doc_events = {
     "Expense Claim": {
         "after_insert": "beams.beams.custom_scripts.expense_claim.expense_claim.notify_expense_approver_on_creation"
     }
+
 }
 
 # Scheduled Tasks
