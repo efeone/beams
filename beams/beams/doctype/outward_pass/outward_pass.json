@@ -8,9 +8,11 @@
  "field_order": [
   "employee_in_charge",
   "assets",
+  "scan_asset",
   "column_break_cgmc",
   "posting_date_and_time",
   "bundles",
+  "scan_bundle",
   "section_break_ekgu",
   "stock_items",
   "amended_from"
@@ -68,11 +70,23 @@
    "fieldtype": "Table",
    "label": "Stock Items",
    "options": "Asset Bundle Stock Item"
+  },
+  {
+   "fieldname": "scan_asset",
+   "fieldtype": "Data",
+   "label": "Scan Asset",
+   "options": "Barcode"
+  },
+  {
+   "fieldname": "scan_bundle",
+   "fieldtype": "Data",
+   "label": "Scan Bundle",
+   "options": "Barcode"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-14 11:05:53.631672",
+ "modified": "2025-05-14 15:20:31.619027",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Pass",
