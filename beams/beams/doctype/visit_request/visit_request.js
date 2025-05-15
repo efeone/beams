@@ -3,6 +3,9 @@
 
 frappe.ui.form.on('Visit Request', {
     request_date: function (frm) {
-        frm.call("validate_request_date");
-    },
+        frm.call({
+            method: 'validate_request_date',
+            doc: frm.doc
+        });
+    }
 });

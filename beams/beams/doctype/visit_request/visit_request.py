@@ -3,8 +3,8 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe import _  # Needed for translation
-from frappe.utils import today  # Needed to use today()
+from frappe import _
+from frappe.utils import today
 
 class VisitRequest(Document):
 
