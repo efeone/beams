@@ -10,7 +10,7 @@ frappe.ui.form.on('Employee Travel Request', {
                 });
         }
     },
-    
+
     refresh: function (frm) {
         if (!frm.is_new()) {
             frm.add_custom_button(__('Journal Entry'), function () {
@@ -96,6 +96,14 @@ frappe.ui.form.on('Employee Travel Request', {
             frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
         } else {
             frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
+        }
+
+        if (frm.doc.is_unplanned === 1) {
+            frm.set_df_property("ticket_details", "read_only", 0);
+        } else if (frm.doc.workflow_state === "Approved by HOD") {
+            frm.set_df_property("ticket_details", "read_only", 0);
+        } else {
+            frm.set_df_property("ticket_details", "read_only", 1);
         }
     },
 
