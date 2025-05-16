@@ -1,0 +1,62 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-01-18 12:03:23.303907",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "department",
+  "designation",
+  "employee",
+  "hired_personnel",
+  "hired_personnel_contact_info"
+ ],
+ "fields": [
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "employee",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "hired_personnel",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hired Personnel"
+  },
+  {
+   "fieldname": "hired_personnel_contact_info",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hired Personnel Contact Info"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-03-19 14:32:56.747852",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Allocated Resource Detail",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

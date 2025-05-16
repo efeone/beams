@@ -6,6 +6,42 @@ frappe.ui.form.on("Revenue Budget", {
     },
     company: function (frm) {
         set_filters(frm);
+        fetch_template(frm);
+    },
+    revenue_category: function (frm) {
+       set_filters(frm);
+       fetch_template(frm);
+    },
+    /* Fetch Revenue Template Items in to Revenue Accounts when a Revenue Template is Selected */
+    revenue_template: function(frm) {
+        if (frm.doc.revenue_template) {
+            frappe.call({
+                method: 'frappe.client.get',
+                args: {
+                    doctype: 'Revenue Template',
+                    name: frm.doc.revenue_template
+                },
+                callback: function (response) {
+                    if (response.message) {
+                        let revenue_template = response.message;
+
+                        frm.clear_table('revenue_accounts');
+
+                        // Loop through the revenue_template_item child table
+                        let template_items = revenue_template.revenue_template_item || [];
+                        template_items.forEach(function (item) {
+                            let row = frm.add_child('revenue_accounts');
+                            row.revenue_group = item.revenue_group;
+                            row.account = item.account;
+                            row.revenue_region = item.revenue_region;
+                            row.revenue_centre = item.revenue_centre;
+                        });
+
+                        frm.refresh_field('revenue_accounts');
+                    }
+                }
+            });
+        }
     }
 });
 function set_filters(frm) {
@@ -13,6 +49,14 @@ function set_filters(frm) {
         return {
             filters: {
                 company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('revenue_template', function () {
+        return {
+            filters: {
+                company: frm.doc.company,
+                revenue_category: frm.doc.revenue_category
             }
         };
     });
@@ -84,4 +128,23 @@ function calculate_revenue_amount(frm, cdt, cdn) {
 
     frappe.model.set_value(cdt, cdn, 'revenue_amount', total);
     frm.refresh_field('revenue_account');
+}
+/* Fetch Revenue Template in Revenue Budget based on Revenue category and Selected company */
+function fetch_template(frm) {
+    if (frm.doc.revenue_category && frm.doc.company) {
+        frappe.call({
+            method: 'beams.beams.doctype.revenue_budget.revenue_budget.get_revenue_template',
+            args: {
+                revenue_category: frm.doc.revenue_category,
+                company: frm.doc.company
+            },
+            callback: function(r) {
+                if (r.message) {
+                    frm.set_value('revenue_template', r.message);
+                } else {
+                    frm.set_value('revenue_template', '');
+                }
+            }
+        });
+    }
 }

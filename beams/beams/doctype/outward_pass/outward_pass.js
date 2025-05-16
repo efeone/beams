@@ -111,4 +111,3 @@ function mergeArrays(arr1, arr2, key) {
     );
     return unique;
 }
-

@@ -1,0 +1,248 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:BTS-{YY}-{####}",
+ "creation": "2025-03-24 15:17:02.532199",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_qq5d",
+  "supplier",
+  "bureau",
+  "column_break_psaw",
+  "company",
+  "section_break_qavf",
+  "is_overnight_stay",
+  "is_travelling_outside_kerala",
+  "daily_batta_with_overnight_stay",
+  "daily_batta_without_overnight_stay",
+  "column_break_hzfr",
+  "ot_batta",
+  "batta",
+  "section_break_tjbr",
+  "work_details",
+  "section_break_xxsb",
+  "total_distance_travelled_km",
+  "column_break_fgob",
+  "total_hours",
+  "trip_details_section",
+  "departure_location",
+  "destination_location",
+  "column_break_cdph",
+  "starting_date_and_time",
+  "ending_date_and_time",
+  "amended_from",
+  "section_break_dwds",
+  "total_daily_batta",
+  "column_break_zjgd",
+  "total_ot_batta",
+  "column_break_jevl",
+  "total_driver_batta"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_qq5d",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Supplier",
+   "options": "Supplier",
+   "reqd": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "section_break_qavf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "supplier.ot_batta",
+   "fieldname": "ot_batta",
+   "fieldtype": "Currency",
+   "label": "OT Batta",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.is_overnight_stay ==0",
+   "fieldname": "daily_batta_without_overnight_stay",
+   "fieldtype": "Currency",
+   "label": "Daily Batta Without Overnight Stay"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_overnight_stay",
+   "fieldtype": "Check",
+   "label": "Is Overnight Stay"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_travelling_outside_kerala",
+   "fieldtype": "Check",
+   "label": "  Is Travelling Outside Kerala"
+  },
+  {
+   "depends_on": "eval:doc.is_overnight_stay ==1",
+   "fieldname": "daily_batta_with_overnight_stay",
+   "fieldtype": "Currency",
+   "label": "Daily Batta With Overnight Stay"
+  },
+  {
+   "fieldname": "batta",
+   "fieldtype": "Currency",
+   "label": "Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_hzfr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_tjbr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "work_details",
+   "fieldtype": "Table",
+   "label": "Work Details",
+   "options": "Trip Details"
+  },
+  {
+   "fieldname": "trip_details_section",
+   "fieldtype": "Section Break",
+   "label": "Trip Details"
+  },
+  {
+   "fieldname": "departure_location",
+   "fieldtype": "Link",
+   "label": "Departure Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "destination_location",
+   "fieldtype": "Link",
+   "label": "Destination Location",
+   "options": "Location"
+  },
+  {
+   "fieldname": "ending_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Ending Date and Time "
+  },
+  {
+   "fieldname": "starting_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Starting Date and Time "
+  },
+  {
+   "fieldname": "column_break_cdph",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_psaw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bureau Trip Sheet",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "section_break_xxsb",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_distance_travelled_km",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled(KM)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fgob",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_dwds",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "total_daily_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_zjgd",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total Ot Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jevl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_driver_batta",
+   "fieldtype": "Currency",
+   "label": "Total Driver Batta",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-26 12:37:56.781474",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Bureau Trip Sheet",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

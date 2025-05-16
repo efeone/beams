@@ -1,11 +1,10 @@
 import json
+
 import frappe
 from erpnext.accounts.utils import get_fiscal_year
 from frappe import _
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import nowdate
-from frappe.utils import now
-from frappe.utils import cint, now
+from frappe.utils import cint, now, nowdate
 
 
 def validate_project(doc, method):
@@ -214,7 +213,6 @@ def create_technical_request(project_id):
         frappe.throw(_("Invalid Project ID: {0}").format(project_id))
 
     project = frappe.get_doc('Project', project_id)
-
 
     doc = frappe.get_doc({
         'doctype': 'Technical Request',
@@ -653,7 +651,7 @@ def auto_return_vehicles_on_project_completion(doc, method):
             updated = True
 
         else:
-            print(f" - Skipped (already returned or reason provided)")
+            print(" - Skipped (already returned or reason provided)")
 
     if updated:
         log_doc.save(ignore_permissions=True)

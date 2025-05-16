@@ -201,30 +201,24 @@ def get_categories_table():
     return categories_html
 
 @frappe.whitelist()
-def add_to_category_details(parent_docname, category, remarks):
-    """
-    Adds a new row with category details (category, remarks, employee, designation)
-    to the category_details child table of an Appraisal document and saves it.
-    """
+def add_to_category_details(parent_docname, category, remarks, employee, designation):
+    '''
+        Adds a new row with category details (category, remarks, employee, designation) to the category_details child table of an Appraisal document and saves it.
+    '''
     try:
         parent_doc = frappe.get_doc("Appraisal", parent_docname)
-        employee = parent_doc.employee
-        designation = parent_doc.designation
-
-        parent_doc.append("category_details", {
+        child_row = parent_doc.append("category_details", {
             "category": category,
             "remarks": remarks,
             "employee": employee,
             "designation": designation
         })
+        parent_doc.save()
 
-        parent_doc.save(ignore_permissions=True)
         return "Success"
     except Exception as e:
         frappe.log_error(frappe.get_traceback(), "Add to Category Details Error")
         return "Failed"
-
-
 
 @frappe.whitelist()
 def map_appraisal_to_event(source_name):
@@ -288,52 +282,112 @@ def check_existing_event(appraisal_reference):
     event = frappe.db.get_value("Event", {"appraisal_reference": appraisal_reference}, "name")
     return event if event else None
 
+
 @frappe.whitelist()
-def assign_tasks_sequentially(doc):
+def assign_tasks_sequentially(doc=None, employee_id=None):
     """
-    Sends an email notification to the assessment officer to review the appraisal.
+    Assign tasks sequentially to assessment officers listed in the Appraisal Template.
+    Args:
+        doc (str/dict): The Appraisal document instance (JSON or dict format).
+        method (str): The method context in which the function is called (e.g., "on_update").
     """
-    appraisal = frappe.get_doc("Appraisal", doc)
-    assessment_officer_id = frappe.db.get_value("Employee", appraisal.employee, "assessment_officer")
+    try:
+        if not doc:
+            frappe.throw("Missing document data.")
 
-    if not assessment_officer_id:
-        frappe.throw(f"Assessment Officer not set for employee {appraisal.employee}")
+        # If doc is an ID string, fetch the full document
+        if isinstance(doc, str) and not doc.startswith('{'):
+            appraisal_doc = frappe.get_doc("Appraisal", doc)
+        else:
+            appraisal_doc = doc
 
-    user_id, officer_name = frappe.db.get_value("Employee", assessment_officer_id, ["user_id", "employee_name"])
+        if not appraisal_doc:
+            frappe.throw("Invalid Appraisal document.")
 
-    if not user_id:
-        frappe.throw(f"No User ID found for assessment officer {assessment_officer_id}")
+        appraisal_template_name = appraisal_doc.appraisal_template
 
-    # Get email template
-    template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
-    if not template_name:
-        frappe.throw("Please set 'Assessment Reminder Template' in Beams HR Settings.")
+        if not appraisal_template_name:
+            return
 
-    template = frappe.get_doc("Email Template", template_name)
+        # Fetch Appraisal Template and assessment officers
+        appraisal_template_doc = frappe.get_doc("Appraisal Template", appraisal_template_name)
+        assessment_officers = appraisal_template_doc.get("assessment_officers")
 
-    context = {
-        "doc": appraisal,
-        "employee_name": appraisal.employee_name,
-        "officer_name": officer_name,
-    }
-    subject = frappe.render_template(template.subject or '', context)
-    message = frappe.render_template(template.response or template.message or '', context)
+        if not assessment_officers:
+            frappe.log_error("No assessment officers defined in the appraisal template.")
+            return
 
-    frappe.sendmail(recipients=frappe.db.get_value("User", user_id, "email"), subject=subject, message=message)
+        # Find the next officer to assign a task to
+        assigned_officers = {row.designation for row in appraisal_doc.category_details}
 
-    frappe.get_doc({
-        "doctype": "Notification Log",
-        "subject": subject,
-        "for_user": user_id,
-        "type": "Alert",
-        "document_type": "Appraisal",
-        "document_name": appraisal,
-        "from_user": frappe.session.user,
-        "email_content": message
-    }).insert(ignore_permissions=True)
+        for officer in assessment_officers:
+            designation = officer.designation
 
-    frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
-    return {"status": "ok"}
+            # Skip if task is already completed for this designation
+            if designation in assigned_officers:
+                continue
+
+            # Fetch employees for the designation
+            employees = frappe.get_all(
+                "Employee",
+                filters={"designation": designation, "status": "Active"},
+                fields=["name", "user_id", "employee_name"]
+            )
+
+            if not employees:
+                continue
+
+            # Assign task to the first available employee with a user ID
+            for employee in employees:
+                if employee.get("user_id"):
+                    try:
+                        add_assign({
+                            "assign_to": [employee.user_id],
+                            "doctype": appraisal_doc.doctype,
+                            "name": appraisal_doc.name,
+                            "description": f"Please add Category for {employee_id}.",
+                        })
+
+                        # Send Notification
+                        frappe.sendmail(
+                            recipients=[employee.user_id],
+                            subject="New Category Task Assigned",
+                            message=f"A new category task has been assigned to you for designation: {designation}."
+                        )
+
+                        return 
+                    except Exception as e:
+                        frappe.log_error(f"Failed to assign task to {employee.user_id}: {str(e)}", "Task Assignment")
+
+        return 0    
+
+    except Exception as e:
+        frappe.log_error(f"Error in task assignment: {str(e)}", "Task Assignment")
+        frappe.throw(str(e))
+
+
+
+def send_notification(user_id, appraisal_doc):
+    """
+    Sends an email notification to the assigned officer.
+
+    Args:
+        user_id (str): The user ID of the officer.
+        appraisal_doc (frappe.Document): The Appraisal document instance.
+    """
+    try:
+        subject = f"Appraisal Notification: {appraisal_doc.name}"
+        message = f"""
+            Dear Officer,<br><br>
+            You have been assigned to review the appraisal {appraisal_doc.name}. 
+            Please take the necessary action.<br><br>
+            Regards.
+        """
+        frappe.sendmail(recipients=user_id, subject=subject, message=message)
+    
+    except Exception as e:
+        frappe.log_error("Notification Error", f"Failed to send notification to {user_id}: {str(e)}")
+
 
 @frappe.whitelist()
 def get_appraisal_template_criteria(appraisal_template_name):
@@ -432,59 +486,3 @@ def set_category_based_on_marks(doc, method):
     # Update the Appraisal document
     if category:
         doc.category_based_on_marks = category
-
-
-@frappe.whitelist()
-def send_assessment_reminder(doc):
-    """
-    Sends an email notification and Notification Log to the Assessment Officer to review the appraisal.
-    """
-    appraisal = frappe.get_doc("Appraisal", doc)
-    assessment_officer_id = frappe.db.get_value("Employee", appraisal.employee, "assessment_officer")
-
-    if not assessment_officer_id:
-        frappe.throw(f"Assessment Officer not set for employee {appraisal.employee}")
-
-    user_id, officer_name = frappe.db.get_value("Employee", assessment_officer_id, ["user_id", "employee_name"])
-    if not user_id:
-        frappe.throw(f"No User ID found for assessment officer {assessment_officer_id}")
-
-    email_id = frappe.db.get_value("User", user_id, "email")
-    if not email_id:
-        frappe.throw(f"No Email ID found for user {user_id}")
-
-    # Fetch Email Template from settings
-    template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
-    if not template_name:
-        frappe.throw("Please set 'Assessment Reminder Template' in Beams HR Settings.")
-
-    template = frappe.get_doc("Email Template", template_name)
-    context = {
-        "doc": appraisal,
-        "employee_name": appraisal.employee_name,
-        "officer_name": officer_name,
-    }
-    subject = frappe.render_template(template.subject or '', context)
-    message = frappe.render_template(template.response or template.message or '', context)
-
-    # Send Email
-    frappe.sendmail(
-        recipients=email_id,
-        subject=subject,
-        message=message
-    )
-
-    # Notification Log
-    frappe.get_doc({
-        "doctype": "Notification Log",
-        "subject": subject,
-        "for_user": user_id,
-        "type": "Alert",
-        "document_type": "Appraisal",
-        "document_name": appraisal.name,
-        "from_user": frappe.session.user,
-        "email_content": message
-    }).insert(ignore_permissions=True)
-
-    frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
-    return {"status": "ok"}

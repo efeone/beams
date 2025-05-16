@@ -15,6 +15,7 @@
   "designation",
   "company",
   "bureau",
+  "is_delhi_bureau",
   "purpose",
   "column_break_lgjy",
   "cost_centre",
@@ -32,19 +33,17 @@
   "column_break_gbiv",
   "daily_batta_with_overnight_stay",
   "daily_batta_without_overnight_stay",
-  "batta",
   "column_break_jwtq",
-  "food_allowance",
+  "batta",
   "ot_batta",
   "section_break_osak",
   "work_detail",
+  "section_break_ozsf",
   "total_distance_travelled_km",
+  "column_break_fxzl",
+  "total_hours",
   "section_break_nsff",
-  "total_daily_batta",
-  "column_break_vksq",
-  "total_ot_batta",
-  "column_break_ofhv",
-  "total_driver_batta"
+  "total_daily_batta"
  ],
  "fields": [
   {
@@ -65,7 +64,7 @@
    "fieldname": "batta_type",
    "fieldtype": "Select",
    "label": "Batta Type",
-   "options": "External\nInternal"
+   "options": "Internal\nExternal"
   },
   {
    "depends_on": "eval:doc.batta_type == \"Internal\"\n",
@@ -89,7 +88,8 @@
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "read_only": 1
   },
   {
    "depends_on": "eval:doc.batta_type == \"External\"\n",
@@ -116,6 +116,7 @@
   {
    "fieldname": "batta_based_on",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Batta Based On",
    "options": "Daily\nHours"
   },
@@ -139,29 +140,8 @@
   {
    "fieldname": "total_daily_batta",
    "fieldtype": "Currency",
-   "label": "Total Daily Batta",
+   "label": "Total Batta",
    "read_only": 1
-  },
-  {
-   "depends_on": "eval:doc.batta_type == \"External\"",
-   "fieldname": "total_ot_batta",
-   "fieldtype": "Currency",
-   "label": "Total OT Batta",
-   "read_only": 1
-  },
-  {
-   "fieldname": "total_driver_batta",
-   "fieldtype": "Currency",
-   "label": "Total Driver Batta",
-   "read_only": 1
-  },
-  {
-   "fieldname": "column_break_vksq",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "column_break_ofhv",
-   "fieldtype": "Column Break"
   },
   {
    "fieldname": "work_detail",
@@ -204,12 +184,6 @@
    "fieldname": "purpose",
    "fieldtype": "Small Text",
    "label": "Purpose"
-  },
-  {
-   "fieldname": "total_distance_travelled_km",
-   "fieldtype": "Float",
-   "label": "Total Distance Travelled (KM)",
-   "read_only": 1
   },
   {
    "depends_on": "eval: doc.batta_type == 'Internal'",
@@ -267,13 +241,6 @@
    "precision": "2"
   },
   {
-   "depends_on": "eval:doc.batta_type == \"Internal\"",
-   "fieldname": "food_allowance",
-   "fieldtype": "Currency",
-   "label": "Food Allowance",
-   "precision": "2"
-  },
-  {
    "fieldname": "attach",
    "fieldtype": "Attach",
    "label": "Attach"
@@ -284,6 +251,32 @@
    "fieldname": "is_avail_room_rent",
    "fieldtype": "Check",
    "label": "Is Avail Room Rent"
+  },
+  {
+   "fieldname": "section_break_ozsf",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "column_break_fxzl",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_distance_travelled_km",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled(KM)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_delhi_bureau",
+   "fieldtype": "Check",
+   "label": "Is Delhi Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -298,7 +291,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-03-21 15:21:24.428732",
+ "modified": "2025-03-27 13:44:09.312155",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",

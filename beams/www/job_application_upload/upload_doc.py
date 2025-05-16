@@ -70,13 +70,6 @@ def update_register_form(docname, data):
             doc.in_india = bool(data.get("in_india"))
             doc.abroad = bool(data.get("abroad"))
             doc.is_form_submitted = bool(data.get("is_form_submitted"))
-
-            # Upload payslip documents
-            for field in ["payslip_month_1", "payslip_month_2", "payslip_month_3"]:
-                if data.get(field):
-                    filename = update_file(data[field], 'Job Applicant', docname) or ''
-                    setattr(doc, field, filename)
-            
             doc.education_qualification = []
             doc.professional_certification = []
             doc.prev_emp_his = []

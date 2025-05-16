@@ -1,4 +1,6 @@
 [pre_model_sync]
+
+beams.patches.delete_employee_fields  #25-02-2024
 beams.patches.rename_hod_role #30-10-2024
 beams.patches.delete_custom_fields  #26-11-2024-1
 beams.patches.no_of_children_patch  #06-03-2025
