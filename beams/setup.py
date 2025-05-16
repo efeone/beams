@@ -58,6 +58,7 @@ def after_install():
     create_custom_fields(get_asset_movement_custom_fields(),ignore_validate=True)
     create_custom_fields(get_full_and_final_statement_custom_fields(),ignore_validate=True)
     create_custom_fields(get_expense_claim_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_hd_ticket_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -127,6 +128,7 @@ def before_uninstall():
     delete_custom_fields(get_asset_movement_custom_fields())
     delete_custom_fields(get_full_and_final_statement_custom_fields())
     delete_custom_fields(get_expense_claim_custom_fields())
+    delete_custom_fields(get_hd_ticket_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -1910,6 +1912,36 @@ def get_expected_skill_set_custom_fields():
             }
         ]
     }
+
+def get_hd_ticket_custom_fields():
+    '''
+    Custom fields to be added to the HD Ticket Doctype
+    '''
+    return {
+        "HD Ticket": [
+            {
+                "fieldname": "ticket_section_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "ticket_split_from"
+            },
+            {
+                "fieldname": "spare_part_needed",
+                "fieldtype": "Check",
+                "label": "Spare Part Needed",
+                "insert_after": "ticket_section_break"
+            },
+            {
+                "fieldname": "spare_part_item_table",
+                "fieldtype": "Table",
+                "label": "Spare Part Items",
+                "insert_after": "spare_part_needed",
+                "options": "Spare Part Item",
+                "depends_on": "eval:doc.spare_part_needed == 1"
+            }
+        ]
+    }
+
 
 def get_interview_round_custom_fields():
     '''
