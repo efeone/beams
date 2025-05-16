@@ -49,7 +49,7 @@ frappe.ui.form.on('Trip Sheet', {
                     },
                     callback: function (r) {
                         if (r.message) {
-                            frappe.set_route("form", "Vehicle Incident Record", r.message);
+                            frappe.new_doc("Vehicle Incident Record", r.message);
                         }
                     }
                 });
