@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class TicketDetail(Document):
+class AttachmentDetail(Document):
 	pass

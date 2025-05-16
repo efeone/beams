@@ -36,7 +36,7 @@
   "attendance_request",
   "reference_documents",
   "travel_vehicle_allocation",
-  "ticket_details",
+  "attachments",
   "reason_for_rejection",
   "section_break_fdom",
   "dynamic_link"
@@ -256,10 +256,10 @@
   },
   {
    "allow_on_submit": 1,
-   "fieldname": "ticket_details",
+   "fieldname": "attachments",
    "fieldtype": "Table",
-   "label": "Ticket Details",
-   "options": "Ticket Detail"
+   "label": "Attachments",
+   "options": "Attachment Detail"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -270,7 +270,7 @@
    "link_fieldname": "travel_request"
   }
  ],
- "modified": "2025-05-16 12:11:56.814195",
+ "modified": "2025-05-16 15:14:49.480986",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

@@ -7,7 +7,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "ticket_name",
+  "document_name",
   "attach",
   "remarks"
  ],
@@ -26,19 +26,19 @@
    "label": "Remarks"
   },
   {
-   "fieldname": "ticket_name",
+   "fieldname": "document_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Ticket Name"
+   "label": "Document Name"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-16 13:00:29.848967",
+ "modified": "2025-05-16 15:11:46.005876",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Ticket Detail",
+ "name": "Attachment Detail",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [],
