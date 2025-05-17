@@ -39,6 +39,9 @@ class TripSheet(Document):
 
     @frappe.whitelist()
     def calculate_hours(self):
+        '''
+        Calculate hours between from_time and to_time for each trip, validating their order.
+        '''
         for trip in self.trip_details:
             if trip.from_time and trip.to_time:
                 from_time = frappe.utils.get_datetime(trip.from_time)
@@ -55,6 +58,10 @@ class TripSheet(Document):
 
     @frappe.whitelist()
     def validate_trip_times(self):
+        '''
+        Validates that all `from_time` and `to_time` values in the trip_details table fall
+        within the range defined by `starting_date_and_time` and `ending_date_and_time`.
+        '''
         if not self.starting_date_and_time or not self.ending_date_and_time:
             return
 
