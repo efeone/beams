@@ -19,6 +19,9 @@ class VehicleIncidentRecord(Document):
 
     @frappe.whitelist()
     def validate_offense_date_and_time(self):
+        '''
+        Validates that the offense date is not in the future and falls within the trip start and end dates.
+        '''
         if self.offense_date_and_time:
             offense_date = frappe.utils.getdate(self.offense_date_and_time)
             current_date = frappe.utils.getdate()
