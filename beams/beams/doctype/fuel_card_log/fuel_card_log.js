@@ -41,7 +41,6 @@ frappe.ui.form.on("Fuel Card Log", {
             onchange: function() {
               const selectedDate = this.get_value();
               const todayDate = frappe.datetime.get_today();
-
               if (selectedDate > todayDate) {
                 if (!this._showDateError) {
                   this._showDateError = true;
@@ -76,7 +75,7 @@ frappe.ui.form.on("Fuel Card Log", {
           frm.save();
         }, 'Add', 'Save');
       }, 'Add');
-      
+
       // Button: Set Recharge History
       frm.add_custom_button('Recharge', () => {
         frappe.prompt([
