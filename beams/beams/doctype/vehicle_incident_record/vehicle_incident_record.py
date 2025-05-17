@@ -74,10 +74,7 @@ class VehicleIncidentRecord(Document):
                 })
 
                 journal_entry.insert()
-                journal_entry.submit()
-
                 row.journal_entry = journal_entry.name
-
                 frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True, indicator="green")
 
         self.save(ignore_permissions=True)
