@@ -118,14 +118,14 @@
   },
   {
    "fieldname": "starting_date_and_time",
-   "fieldtype": "Datetime",
-   "label": "Starting Date and Time ",
+   "fieldtype": "Date",
+   "label": "Starting Date",
    "reqd": 1
   },
   {
    "fieldname": "ending_date_and_time",
-   "fieldtype": "Datetime",
-   "label": " Ending Date and Time",
+   "fieldtype": "Date",
+   "label": " Ending Date",
    "reqd": 1
   },
   {
@@ -207,7 +207,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-13 11:40:29.508434",
+ "modified": "2025-05-16 11:47:41.240388",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
