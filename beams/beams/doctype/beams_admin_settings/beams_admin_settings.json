@@ -19,7 +19,8 @@
   "notification_for_asset_reservation",
   "role_receiving_asset_reservation_notification",
   "notification_template_for_asset_reservation",
-  "notification_for_asset_reservation_before"
+  "notification_for_asset_reservation_before",
+  "default_employee_payable_account"
  ],
  "fields": [
   {
@@ -123,12 +124,18 @@
    "fieldtype": "Link",
    "label": "Default Asset Location ",
    "options": "Location"
+  },
+  {
+   "fieldname": "default_employee_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Employee Payable Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-04-09 12:57:13.541525",
+ "modified": "2025-05-17 11:08:21.034982",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
