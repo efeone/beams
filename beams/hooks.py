@@ -161,7 +161,8 @@ permission_query_conditions = {
 override_doctype_class = {
     "Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
     "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
-    "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride"
+    "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
+    "HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride"  
 }
 
 # Document Events
