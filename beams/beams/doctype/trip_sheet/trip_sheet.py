@@ -8,13 +8,6 @@ from frappe import _
 
 class TripSheet(Document):
     def validate(self):
-        # Ensure the final_odometer_reading is not None and is an integer
-        if self.final_odometer_reading is None:
-            frappe.throw("Please enter an integer value for Final Odometer Reading.")
-
-        if not isinstance(self.final_odometer_reading, int):
-            frappe.throw("Please enter an integer value for Final Odometer Reading.")
-
         if not self.travel_requests and not self.transportation_requests:
             frappe.throw("Please provide at least one of Travel Requests or Transportation Requests.")
 
@@ -32,6 +25,16 @@ class TripSheet(Document):
             self.safety_inspection_completed = 1 if all_fit_for_use else 0
         else:
             self.safety_inspection_completed = 0
+
+    def on_submit(self):
+        self.validate_final_odometer_reading()
+
+    def validate_final_odometer_reading(self):
+        if self.final_odometer_reading is None:
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
+
+        if not isinstance(self.final_odometer_reading, int):
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
 
     @frappe.whitelist()
     def calculate_hours(self):
