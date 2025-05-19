@@ -53,7 +53,7 @@ class VehicleIncidentRecord(Document):
             frappe.throw(f"Employee not linked to Driver {self.driver}")
 
         for row in self.vehicle_incident_details:
-            if row.is_employee_payable and not row.get("journal_entry"):  
+            if row.is_employee_payable and not row.get("journal_entry"):
                 journal_entry = frappe.new_doc("Journal Entry")
                 journal_entry.voucher_type = "Journal Entry"
                 journal_entry.posting_date = self.posting_date or nowdate()

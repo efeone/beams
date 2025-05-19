@@ -40,6 +40,9 @@ class EmployeeTravelRequest(Document):
                     frappe.throw("Start Date cannot be in the past.")
 
     def on_update_after_submit(self):
+        if self.workflow_state == "Approved":
+            self.create_missing_trip_sheets_for_etr()
+
         # Trigger only when state becomes Approved
         if self.workflow_state != "Approved":
             return
@@ -107,6 +110,56 @@ class EmployeeTravelRequest(Document):
 
             attendance.insert(ignore_permissions=True)
             frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
+
+    def create_missing_trip_sheets_for_etr(doc):
+        '''
+        Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
+        if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
+        '''
+        etr_name = doc.name
+        linked_ts_rows = frappe.get_all(
+            "Employee Travel Request Details",
+            filters={"employee_travel_request": etr_name},
+            fields=["parent"]
+        )
+        ts_names = [row.parent for row in linked_ts_rows]
+
+        existing_ts = frappe.get_all(
+            "Trip Sheet",
+            filters={"name": ["in", ts_names], "docstatus": ["!=", 2]},
+            fields=["name", "vehicle"]
+        )
+
+        existing_vehicles_with_ts = {ts.vehicle for ts in existing_ts}
+
+        allocations = [{
+            "vehicle": row.vehicle,
+            "driver": row.driver
+        } for row in doc.travel_vehicle_allocation]
+
+        if not existing_ts:
+            vehicles_to_create = allocations
+        else:
+            vehicles_to_create = [alloc for alloc in allocations if alloc["vehicle"] not in existing_vehicles_with_ts]
+
+        for alloc in vehicles_to_create:
+            vehicle = alloc["vehicle"]
+            driver = alloc.get("driver")
+
+            ts = frappe.get_doc({
+                "doctype": "Trip Sheet",
+                "vehicle": vehicle,
+                "driver": driver,
+                "posting_date": frappe.utils.today(),
+                "starting_date_and_time": doc.start_date,
+                "ending_date_and_time": doc.end_date,
+                "travel_requests": [{
+                    "employee_travel_request": etr_name
+                }],
+            })
+
+            ts.insert()
+            frappe.msgprint(f"Trip Sheet {ts.name} created for Vehicle {vehicle} with Driver {driver}")
 
     @frappe.whitelist()
     def validate_posting_date(self):
