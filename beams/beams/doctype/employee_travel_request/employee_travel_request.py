@@ -81,6 +81,21 @@ class EmployeeTravelRequest(Document):
         employees = list(set(filter(None, employees)))
 
         for emp in employees:
+            if emp == self.requested_by:
+                attendance = frappe.get_doc({
+                    "doctype": "Attendance Request",
+                    "employee": emp,
+                    "from_date": self.start_date,
+                    "to_date": self.end_date,
+                    "request_type": "On Duty",
+                    "company": frappe.db.get_value("Employee", emp, "company"),
+                    "description": f"From Travel Request {self.name}",
+                    "reason": "On Duty"
+                })
+                attendance.insert(ignore_permissions=True)
+                frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
+                continue
+
             overlapping = frappe.db.exists(
                 "Attendance Request",
                 {
