@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VDL-{YYYY}-{#####}",
+ "creation": "2025-05-17 10:59:25.811855",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_vgbn",
+  "vehicle",
+  "license_plate",
+  "column_break_jiz6",
+  "make",
+  "model",
+  "vehicle_document_details_section",
+  "vehicle_documents"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_vgbn",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "vehicle.license_plate",
+   "fieldname": "license_plate",
+   "fieldtype": "Data",
+   "label": "License Plate"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fetch_from": "vehicle.make",
+   "fieldname": "make",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fetch_from": "vehicle.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fieldname": "column_break_jiz6",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_document_details_section",
+   "fieldtype": "Section Break",
+   "label": "Vehicle Document Details"
+  },
+  {
+   "fieldname": "vehicle_documents",
+   "fieldtype": "Table",
+   "label": "Vehicle Documents",
+   "options": "Vehicle Documents"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-05-19 10:18:17.596085",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Documents Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
