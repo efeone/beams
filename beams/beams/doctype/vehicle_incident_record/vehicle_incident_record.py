@@ -38,43 +38,43 @@ class VehicleIncidentRecord(Document):
                     frappe.throw(_("Offense Date must be between Start Date and End Date of the trip."))
                     
     def create_journal_entry_for_payable_items(self):
-            '''
-            Automatically creates and submits a Journal Entry for each payable vehicle incident
-            where the 'is_employee_payable' field is checked
-            '''
-            settings = frappe.get_single("BEAMS Admin Settings")
-            account = settings.default_employee_payable_account
+        '''
+        Automatically creates and submits a Journal Entry for each payable vehicle incident
+        where the 'is_employee_payable' field is checked
+        '''
+        settings = frappe.get_single("BEAMS Admin Settings")
+        account = settings.default_employee_payable_account
 
-            if not account:
-                frappe.throw("Default Employee Payable Account is not set in BEAMS Admin Settings.")
+        if not account:
+            frappe.throw("Default Employee Payable Account is not set in BEAMS Admin Settings.")
 
-            employee_id = frappe.db.get_value("Driver", self.driver, "employee")
-            if not employee_id:
-                frappe.throw(f"Employee not linked to Driver {self.driver}")
+        employee_id = frappe.db.get_value("Driver", self.driver, "employee")
+        if not employee_id:
+            frappe.throw(f"Employee not linked to Driver {self.driver}")
 
-            for row in self.vehicle_incident_details:
-                if row.is_employee_payable and not row.get("journal_entry"):  
-                    journal_entry = frappe.new_doc("Journal Entry")
-                    journal_entry.voucher_type = "Journal Entry"
-                    journal_entry.posting_date = self.posting_date or nowdate()
-                    journal_entry.company = frappe.defaults.get_user_default("Company")
-                    journal_entry.remark = f"Payable offense recorded in Vehicle Incident Record {self.name}"
+        for row in self.vehicle_incident_details:
+            if row.is_employee_payable and not row.get("journal_entry"):
+                journal_entry = frappe.new_doc("Journal Entry")
+                journal_entry.voucher_type = "Journal Entry"
+                journal_entry.posting_date = self.posting_date or nowdate()
+                journal_entry.company = frappe.defaults.get_user_default("Company")
+                journal_entry.remark = f"Payable offense recorded in Vehicle Incident Record {self.name}"
 
-                    journal_entry.append("accounts", {
-                        "account": account,
-                        "party_type": "Employee",
-                        "party": employee_id,
-                        "debit_in_account_currency": row.amount
-                    })
-                    journal_entry.append("accounts", {
-                        "account": account,
-                        "party_type": "Employee",
-                        "party": employee_id,
-                        "credit_in_account_currency": row.amount
-                    })
+                journal_entry.append("accounts", {
+                    "account": account,
+                    "party_type": "Employee",
+                    "party": employee_id,
+                    "debit_in_account_currency": row.amount
+                })
+                journal_entry.append("accounts", {
+                    "account": account,
+                    "party_type": "Employee",
+                    "party": employee_id,
+                    "credit_in_account_currency": row.amount
+                })
 
-                    journal_entry.insert()
-                    row.journal_entry = journal_entry.name
-                    frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True, indicator="green")
+                journal_entry.insert()
+                row.journal_entry = journal_entry.name
+                frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True, indicator="green")
 
-            self.save(ignore_permissions=True)
+        self.save(ignore_permissions=True)
