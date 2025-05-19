@@ -99,7 +99,7 @@ class TripSheet(Document):
             frappe.throw(
                 msg=_("Starting Date and Time cannot be after Ending Date and Time."),
                 title=_("Validation Error")
-                )    
+                )
 
     @frappe.whitelist()
     def calculate_and_validate_fuel_data(self):
