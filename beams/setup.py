@@ -1,7 +1,8 @@
+import os
+import click
 import frappe
 from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
-
 
 def after_install():
     #Creating BEAMS specific custom fields
