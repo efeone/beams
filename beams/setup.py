@@ -1,8 +1,7 @@
-import os
-import click
 import frappe
 from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
 
 def after_install():
     #Creating BEAMS specific custom fields
@@ -59,6 +58,7 @@ def after_install():
     create_custom_fields(get_full_and_final_statement_custom_fields(),ignore_validate=True)
     create_custom_fields(get_expense_claim_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hd_ticket_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_hd_ticket_type_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -129,6 +129,7 @@ def before_uninstall():
     delete_custom_fields(get_full_and_final_statement_custom_fields())
     delete_custom_fields(get_expense_claim_custom_fields())
     delete_custom_fields(get_hd_ticket_custom_fields())
+    delete_custom_fields(get_hd_ticket_type_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -170,6 +171,22 @@ def get_shift_assignment_custom_fields():
 
             }
 
+        ]
+    }
+    
+def get_hd_ticket_type_custom_fields():
+    '''
+    Custom fields that need to be added to the HD Ticket Type DocType
+    '''
+    return {
+        "HD Ticket Type": [
+            {
+                "fieldname": "team_name",
+                "fieldtype": "Link",
+                "label": "Team Name",
+                "options":"HD Team",
+                "insert_after": "is_system"
+            }
         ]
     }
 
@@ -3296,6 +3313,7 @@ def get_property_setters():
         BEAMS specific property setters that need to be added to the Customer ,Account and Supplier DocTypes
     '''
     return [
+    
         {
             "doctype_or_field": "DocField",
             "doc_type": "Customer",
