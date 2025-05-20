@@ -708,6 +708,38 @@ def get_asset_custom_fields():
                 "fieldtype": "Attach Image",
                 "label": "Asset Details",
                 "insert_after": "qr_code"
+            },
+            {
+                "fieldname": "room",
+                "fieldtype": "Link",
+                "label": "Room",
+                "options":"Service Unit",
+                "allow_on_submit": 1,
+                "insert_after": "journal_entry_for_scrap"
+            },
+            {
+                "fieldname": "shelf",
+                "fieldtype": "Link",
+                "label": "Shelf",
+                "options":"Shelf",
+                "allow_on_submit": 1,
+                "insert_after": "room"
+            },
+            {
+                "fieldname": "row",
+                "fieldtype": "Link",
+                "label": "Row",
+                "options":"Row",
+                "allow_on_submit": 1,
+                "insert_after": "shelf"
+            },
+            {
+                "fieldname": "bin",
+                "fieldtype": "Link",
+                "label": "Bin",
+                "options":"Container",
+                "allow_on_submit": 1,
+                "insert_after": "row"
             }
         ]
     }
@@ -4499,6 +4531,40 @@ def get_asset_movement_custom_fields():
                 "insert_after": "new_custodian",
                 "options": "Email",
                 "read_only": 1
+            }
+        ],
+        "Asset Movement Item": [
+            {
+                "fieldname": "room",
+                "fieldtype": "Link",
+                "label": "Room",
+                "options":"Service Unit",
+                "allow_on_submit": 1,
+                "insert_after": "from_employee"
+            },
+            {
+                "fieldname": "shelf",
+                "fieldtype": "Link",
+                "label": "Shelf",
+                "options":"Shelf",
+                "allow_on_submit": 1,
+                "insert_after": "room"
+            },
+            {
+                "fieldname": "row",
+                "fieldtype": "Link",
+                "label": "Row",
+                "options":"Row",
+                "allow_on_submit": 1,
+                "insert_after": "to_employee"
+            },
+            {
+                "fieldname": "bin",
+                "fieldtype": "Link",
+                "label": "Bin",
+                "options":"Container",
+                "allow_on_submit": 1,
+                "insert_after": "row"
             }
         ]
     }

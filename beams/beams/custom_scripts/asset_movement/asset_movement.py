@@ -66,3 +66,34 @@ def before_save(doc, method):
             new_custodian_doc = frappe.get_doc("Employee", doc.new_custodian)
             if new_custodian_doc.user_id:
                 doc.user_id = new_custodian_doc.user_id
+
+@frappe.whitelist()
+def update_asset_location_from_movement(doc, method=None):
+    '''
+    Updates the location and physical storage details (room, shelf, row, bin)
+    of assets listed in an Asset Movement document.
+    '''
+    if isinstance(doc, str):
+        doc = frappe.get_doc("Asset Movement", doc)
+
+    for item in doc.assets:
+        if not item.asset:
+            continue
+
+        asset = frappe.get_doc("Asset", item.asset)
+        updated = False
+
+        if item.target_location:
+            asset.location = item.target_location
+            updated = True
+        else:
+            frappe.throw(f"Target Location is required for Asset {item.asset}.")
+
+        for field in ["room", "shelf", "row", "bin"]:
+            item_value = getattr(item, field, None)
+            if item_value:
+                setattr(asset, field, item_value)
+                updated = True
+
+        if updated:
+            asset.save(ignore_permissions=True)

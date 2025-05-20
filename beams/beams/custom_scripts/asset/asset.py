@@ -135,3 +135,50 @@ def asset_notifications():
             subject=email_template_doc.subject,
             message=message
         )
+
+@frappe.whitelist()
+def create_asset_location_log(doc, method=None):
+    '''
+    Automatically creates or updates an Asset Location Log entry
+    whenever a change in the asset's physical location occurs
+    '''
+    if not (doc.room or doc.shelf or doc.row or doc.bin):
+        return
+
+    log = frappe.get_all(
+        "Asset Location Log",
+        filters={"asset": doc.name},
+        fields=["name"]
+    )
+
+    new_log_data = {
+        "asset": doc.name,
+        "room": doc.room,
+        "shelf": doc.shelf,
+        "row": doc.row,
+        "bin": doc.bin,
+        "timestamp": frappe.utils.now()
+    }
+
+    if log:
+        log_doc = frappe.get_doc("Asset Location Log", log[0].name)
+
+        if log_doc.asset_location_log:
+            last_entry = log_doc.asset_location_log[-1]
+            if (
+                last_entry.room == doc.room and
+                last_entry.shelf == doc.shelf and
+                last_entry.row == doc.row and
+                last_entry.bin == doc.bin
+            ):
+                return
+
+        log_doc.append("asset_location_log", new_log_data)
+        log_doc.save(ignore_permissions=True)
+
+    else:
+        frappe.get_doc({
+            "doctype": "Asset Location Log",
+            "asset": doc.name,
+            "asset_location_log": [new_log_data]
+        }).insert(ignore_permissions=True)
