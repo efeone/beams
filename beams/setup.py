@@ -4099,6 +4099,13 @@ def get_material_request_custom_fields():
                 "no_copy":1,
                 "depends_on": "eval:doc.budget_exceeded == 1"
 
+            },
+            {
+                "fieldname": "requested_by",
+                "fieldtype": "Link",
+                "label": "Requested By",
+                "insert_after": "material_request_type",
+                "options": "Employee"
             }
         ]
     }
