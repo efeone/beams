@@ -11,7 +11,7 @@ frappe.ui.form.on('Employee Travel Request', {
         }
     },
     refresh: function (frm) {
-        if (!frm.is_new()) {
+        if (!frm.is_new() && frappe.user.has_role("Admin")) {
             frm.add_custom_button(__('Journal Entry'), function () {
                 let journal_entry = frappe.model.get_new_doc("Journal Entry");
                 journal_entry.voucher_type = "Journal Entry";
