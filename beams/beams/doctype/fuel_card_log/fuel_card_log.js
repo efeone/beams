@@ -22,7 +22,6 @@ frappe.ui.form.on("Fuel Card Log", {
 
   refresh(frm) {
     if (!frm.is_new()) {
-      // Button: Set Current Ownership
       frm.add_custom_button('Ownership Transaction', () => {
         frappe.prompt([
           {
@@ -39,19 +38,19 @@ frappe.ui.form.on("Fuel Card Log", {
             default: frappe.datetime.get_today(),
             reqd: 1,
             onchange: function() {
-              const selectedDate = this.get_value();
-              const todayDate = frappe.datetime.get_today();
-              if (selectedDate > todayDate) {
-                if (!this._showDateError) {
-                  this._showDateError = true;
+              const selected_date = this.get_value();
+              const today_date = frappe.datetime.get_today();
+              if (selected_date > today_date) {
+                if (!this._show_date_error) {
+                  this._show_date_error = true;
                   frappe.msgprint({
                     title: 'Invalid Date',
                     indicator: 'red',
                     message: 'Future dates are not allowed. Please select today or a past date.'
                   });
-                  this.set_value(todayDate);
+                  this.set_value(today_date);
                   setTimeout(() => {
-                    this._showDateError = false;
+                    this._show_date_error = false;
                   }, 100);
                 }
               }
