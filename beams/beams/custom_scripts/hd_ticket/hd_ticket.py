@@ -63,27 +63,9 @@ class HDTicketOverride(HDTicket):
 
             return users
 
+                                                                                                                     
         except Exception:
             frappe.log_error(frappe.get_traceback(), "get_active_users_from_team")
             return []
 
-    def get_assigned_agent(self):
-        """Get the first assigned HD Agent from the ToDo or _assign field."""
-        assignees = frappe.parse_json(getattr(self, '_assign', '[]') or '[]')
-        if assignees:
-            user = assignees[0]
-            if frappe.db.exists("HD Agent", {"user": user}):
-                return frappe.get_doc("HD Agent", {"user": user})
-
-        todos = frappe.get_all("ToDo", {
-            "reference_type": self.doctype,
-            "reference_name": self.name,
-            "status": "Open"
-        }, ["owner"], limit=1)
-
-        if todos:
-            user = todos[0].owner
-            if frappe.db.exists("HD Agent", {"user": user}):
-                return frappe.get_doc("HD Agent", {"user": user})
-
-        return None
+  
