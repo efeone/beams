@@ -5,6 +5,7 @@ from frappe.model.document import Document
 from frappe.utils import get_datetime
 from frappe.utils import today
 from frappe import _
+from frappe.utils import getdate
 
 class TripSheet(Document):
     def validate(self):
@@ -38,6 +39,9 @@ class TripSheet(Document):
 
     @frappe.whitelist()
     def calculate_hours(self):
+        '''
+        Calculate hours between from_time and to_time for each trip, validating their order.
+        '''
         for trip in self.trip_details:
             if trip.from_time and trip.to_time:
                 from_time = frappe.utils.get_datetime(trip.from_time)
@@ -54,15 +58,32 @@ class TripSheet(Document):
 
     @frappe.whitelist()
     def validate_trip_times(self):
+        '''
+        Validates that all `from_time` and `to_time` values in the trip_details table fall
+        within the range defined by `starting_date_and_time` and `ending_date_and_time`.
+        '''
+        if not self.starting_date_and_time or not self.ending_date_and_time:
+            return
+
+        starting_date = frappe.utils.getdate(self.starting_date_and_time)
+        ending_date = frappe.utils.getdate(self.ending_date_and_time)
+
         for row in self.trip_details:
             if row.get("from_time"):
-                if not (self.starting_date_and_time <= row.from_time <= self.ending_date_and_time):
-                    frappe.throw(_("Row #{0}: From Time must be between Starting and Ending Date and Time.").format(row.idx),
-                    title=_("Message"))
+                from_date = frappe.utils.getdate(row.from_time)
+                if not (starting_date <= from_date <= ending_date):
+                    frappe.throw(
+                        _("Row #{0}: From Date must be between Starting Date and Ending Date.").format(row.idx),
+                        title=_("Message")
+                    )
             if row.get("to_time"):
-                if not (self.starting_date_and_time <= row.to_time <= self.ending_date_and_time):
-                    frappe.throw(_("Row #{0}: To Time must be between Starting and Ending Date and Time.").format(row.idx),
-                    title=_("Message"))
+                to_date = frappe.utils.getdate(row.to_time)
+                if not (starting_date <= to_date <= ending_date):
+                    frappe.throw(
+                        _("Row #{0}: To Date must be between Starting Date and Ending Date.").format(row.idx),
+                        title=_("Message")
+                    )
+
 
     @frappe.whitelist()
     def validate_start_datetime_and_end_datetime(self):
@@ -73,8 +94,9 @@ class TripSheet(Document):
         if not self.starting_date_and_time or not self.ending_date_and_time:
             return
 
-        starting_date_and_time = get_datetime(self.starting_date_and_time)
-        ending_date_and_time = get_datetime(self.ending_date_and_time)
+        starting_date_and_time = getdate(self.starting_date_and_time)
+        ending_date_and_time = getdate(self.ending_date_and_time)
+
 
         if starting_date_and_time > ending_date_and_time:
             frappe.throw(
@@ -168,15 +190,12 @@ def create_vehicle_incident_record(trip_sheet):
 
     trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
 
-    vehicle_incident = frappe.get_doc({
+    vehicle_incident_data = {
         "doctype": "Vehicle Incident Record",
         "trip_sheet": trip_sheet
-    })
+    }
 
-    vehicle_incident.insert(ignore_mandatory=True)
-
-    return vehicle_incident.name
-
+    return vehicle_incident_data
 
 @frappe.whitelist()
 def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):
