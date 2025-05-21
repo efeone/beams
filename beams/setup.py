@@ -4251,6 +4251,14 @@ def get_journal_entry_custom_fields():
                 "read_only": 1,
                 "options": "Substitute Booking",
                 "insert_after": "batta_claim_reference"
+            },
+            {
+                "fieldname": "employee_travel_request",
+                "fieldtype": "Link",
+                "label": "Employee Travel Request",
+                "options": "Employee Travel Request",
+                "insert_after":"naming_series",
+                "read_only":1
             }
 
         ]

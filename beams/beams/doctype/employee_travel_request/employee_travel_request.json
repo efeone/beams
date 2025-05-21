@@ -245,7 +245,7 @@
    "default": "0",
    "fieldname": "is_vehicle_required",
    "fieldtype": "Check",
-   "label": "Is Vehicle Required"
+   "label": "Vehicle Required"
   },
   {
    "allow_on_submit": 1,
@@ -268,9 +268,17 @@
   {
    "link_doctype": "Expense Claim",
    "link_fieldname": "travel_request"
+  },
+  {
+   "link_doctype": "Journal Entry",
+   "link_fieldname": "employee_travel_request"
+  },
+  {
+   "link_doctype": "Trip Sheet",
+   "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-05-16 15:14:49.480986",
+ "modified": "2025-05-20 17:15:56.197036",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
