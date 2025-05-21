@@ -16,7 +16,9 @@ frappe.ui.form.on('Employee Travel Request', {
                 let journal_entry = frappe.model.get_new_doc("Journal Entry");
                 journal_entry.voucher_type = "Journal Entry";
                 journal_entry.posting_date = frm.doc.posting_date;
+                journal_entry.employee_travel_request = frm.doc.name;
                 journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
+                frappe.model.set_value("Journal Entry", journal_entry.name, "employee_travel_request", frm.doc.name);
                 frappe.set_route("form", "Journal Entry", journal_entry.name);
             }, __("Create"));
         }
