@@ -69,10 +69,11 @@ def before_save(doc, method):
 
 @frappe.whitelist()
 def update_asset_location_from_movement(doc, method=None):
-    '''
-    Updates the location and physical storage details (room, shelf, row, bin)
-    of assets listed in an Asset Movement document.
-    '''
+    """
+        Updates the location and physical storage details (room, shelf, row, bin)
+        of assets listed in an Asset Movement document.
+        If any of these fields are empty in the movement record, they will also be cleared in the Asset.
+    """
     if isinstance(doc, str):
         doc = frappe.get_doc("Asset Movement", doc)
 
@@ -87,13 +88,12 @@ def update_asset_location_from_movement(doc, method=None):
             asset.location = item.target_location
             updated = True
         else:
-            frappe.throw(f"Target Location is required for Asset {item.asset}.")
+            return
 
         for field in ["room", "shelf", "row", "bin"]:
             item_value = getattr(item, field, None)
-            if item_value:
-                setattr(asset, field, item_value)
-                updated = True
+            setattr(asset, field, item_value if item_value is not None else "")
+            updated = True
 
         if updated:
             asset.save(ignore_permissions=True)

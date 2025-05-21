@@ -138,21 +138,16 @@ def asset_notifications():
 
 @frappe.whitelist()
 def create_asset_location_log(doc, method=None):
-    '''
-    Automatically creates or updates an Asset Location Log entry
-    whenever a change in the asset's physical location occurs
-    '''
-    if not (doc.room or doc.shelf or doc.row or doc.bin):
+    """
+        Automatically creates or updates an Asset Location Log entry
+        whenever a change in the asset's physical location occurs
+    """
+    if not (doc.room or doc.shelf or doc.row or doc.bin or doc.location):
         return
-
-    log = frappe.get_all(
-        "Asset Location Log",
-        filters={"asset": doc.name},
-        fields=["name"]
-    )
 
     new_log_data = {
         "asset": doc.name,
+        "location": doc.location,
         "room": doc.room,
         "shelf": doc.shelf,
         "row": doc.row,
@@ -160,23 +155,23 @@ def create_asset_location_log(doc, method=None):
         "timestamp": frappe.utils.now()
     }
 
-    if log:
-        log_doc = frappe.get_doc("Asset Location Log", log[0].name)
-
+    try:
+        log_doc = frappe.get_last_doc("Asset Location Log", filters={"asset": doc.name})
         if log_doc.asset_location_log:
             last_entry = log_doc.asset_location_log[-1]
             if (
-                last_entry.room == doc.room and
-                last_entry.shelf == doc.shelf and
-                last_entry.row == doc.row and
-                last_entry.bin == doc.bin
+                (last_entry.room or "") == (doc.room or "") and
+                (last_entry.shelf or "") == (doc.shelf or "") and
+                (last_entry.row or "") == (doc.row or "") and
+                (last_entry.bin or "") == (doc.bin or "") and
+                (last_entry.location or "") == (doc.location or "")
             ):
                 return
 
         log_doc.append("asset_location_log", new_log_data)
         log_doc.save(ignore_permissions=True)
 
-    else:
+    except frappe.DoesNotExistError:
         frappe.get_doc({
             "doctype": "Asset Location Log",
             "asset": doc.name,
