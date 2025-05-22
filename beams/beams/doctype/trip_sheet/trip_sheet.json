@@ -23,7 +23,6 @@
   "vehicle_template",
   "vehicle_safety_inspection_details",
   "safety_inspection_completed",
-  "remarks",
   "trip_details_section",
   "trip_details",
   "section_break_ygej",
@@ -33,7 +32,9 @@
   "column_break_anpp",
   "fuel_consumed",
   "mileage",
-  "amended_from"
+  "amended_from",
+  "section_break_kwfq",
+  "remarks"
  ],
  "fields": [
   {
@@ -202,12 +203,16 @@
    "fieldtype": "Check",
    "label": "Safety Inspection Completed",
    "read_only": 1
+  },
+  {
+   "fieldname": "section_break_kwfq",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-16 11:47:41.240388",
+ "modified": "2025-05-22 11:06:53.708549",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
