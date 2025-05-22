@@ -10,6 +10,7 @@
   "trip_sheet",
   "driver",
   "driver_name",
+  "vehicle",
   "column_break_hwrj",
   "offense_type",
   "trip_start_date",
@@ -109,12 +110,20 @@
   {
    "fieldname": "column_break_trzy",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "trip_sheet.vehicle",
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-16 12:02:55.496053",
+ "modified": "2025-05-22 11:26:14.062368",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",
