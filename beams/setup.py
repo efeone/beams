@@ -60,6 +60,7 @@ def after_install():
     create_custom_fields(get_expense_claim_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hd_ticket_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hd_ticket_type_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_expense_claim_type_custom_fields(),ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -131,6 +132,7 @@ def before_uninstall():
     delete_custom_fields(get_expense_claim_custom_fields())
     delete_custom_fields(get_hd_ticket_custom_fields())
     delete_custom_fields(get_hd_ticket_type_custom_fields())
+    delete_custom_fields(get_expense_claim_type_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -4631,6 +4633,21 @@ def get_expense_claim_custom_fields():
                 "options": "Employee Travel Request",
                 "insert_after": "approval_status",
                 "read_only": 1
+            }
+        ]
+    }
+
+def get_expense_claim_type_custom_fields():
+    '''
+        Custom fields that need to be added to the Expense Claim Type DocType
+    '''
+    return {
+        "Expense Claim Type": [
+            {
+                "fieldname": "vehicle_against",
+                "fieldtype": "Check",
+                "label": "Vehicle Against",
+                "insert_after": "deferred_expense_account"
             }
         ]
     }
