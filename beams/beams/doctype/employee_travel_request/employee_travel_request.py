@@ -188,10 +188,12 @@ class EmployeeTravelRequest(Document):
 
             ts = frappe.get_doc(ts_data)
             ts.insert()
+            
             frappe.msgprint(
                 f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
                 alert=True
             )
+
 
     @frappe.whitelist()
     def validate_posting_date(self):
@@ -320,3 +322,62 @@ def create_expense_claim(employee, travel_request, expenses):
         alert=True,indicator='green')
 
     return expense_claim.name
+
+
+
+import frappe
+from frappe import _
+
+@frappe.whitelist()
+def get_expense_claim_html(doc):
+    """
+    Render HTML showing Expense Claims and their 'expenses'  for a given Travel Request.
+    
+    Args:
+        doc (str): The name/ID of the Travel Request document.
+    
+    Returns:
+        dict: A dictionary containing the rendered HTML.
+    """
+    if not doc:
+        frappe.throw(_("Travel Request ID is required."))
+
+    expense_claims = frappe.get_all(
+        "Expense Claim",
+        filters={"travel_request": doc},
+        fields=["name", "employee", "total_claimed_amount", "posting_date", "status"]
+    )
+
+    full_claims = []
+    for claim in expense_claims:
+        ec_doc = frappe.get_doc("Expense Claim", claim.name)
+        expenses = sorted(
+            ec_doc.expenses,
+            key=lambda x: x.expense_date,
+            reverse=True
+        )
+        full_claims.append({
+            "name": ec_doc.name,
+            "employee": ec_doc.employee,
+            "posting_date": ec_doc.posting_date,
+            "status": ec_doc.status,
+            "url": frappe.utils.get_url_to_form("Expense Claim", claim.name),
+            "expenses": [
+                {
+                    "expense_date": row.expense_date,
+                    "expense_type": row.expense_type,
+                    "default_account": row.default_account,
+                    "description": row.description,
+                    "amount": row.amount,
+                    "sanctioned_amount": row.sanctioned_amount,
+                }
+                for row in expenses
+            ]
+        })
+
+    html = frappe.render_template(
+        "beams/doctype/employee_travel_request/expense_claim.html",
+        {"expense_claims": full_claims}
+    )
+
+    return {"html": html}

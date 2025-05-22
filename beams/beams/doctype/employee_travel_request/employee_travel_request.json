@@ -37,6 +37,7 @@
   "reference_documents",
   "travel_vehicle_allocation",
   "attachments",
+  "expense_claim_html",
   "reason_for_rejection",
   "section_break_fdom",
   "dynamic_link"
@@ -260,6 +261,10 @@
    "fieldtype": "Table",
    "label": "Attachments",
    "options": "Attachment Detail"
+  },
+  {
+   "fieldname": "expense_claim_html",
+   "fieldtype": "HTML"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -278,7 +283,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-05-20 17:15:56.197036",
+ "modified": "2025-05-20 17:35:18.302367",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
