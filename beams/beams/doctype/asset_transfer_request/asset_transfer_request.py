@@ -199,62 +199,80 @@ class AssetTransferRequest(Document):
             _('Stock Entry Created: <a href="{0}">{1}</a>').format(get_url_to_form(stock_entry.doctype, stock_entry.name),stock_entry.name),
             alert=True, indicator='green')
 
+    def get_valid_previous_movement_row(self, asset_name, current_location):
+        """
+            fetches the most recent asset movement row with full location details
+            (room, shelf, row, bin) before the current location
+        """
+        rows = frappe.get_all(
+            "Asset Movement Item",
+            filters={"asset": asset_name, "docstatus": 1},
+            fields=["asset", "parent", "source_location", "target_location", "room", "shelf", "row", "bin", "modified"],
+            order_by="modified desc"
+        )
+        for row in rows:
+            if row.target_location == current_location:
+                continue
+            if all([row.room, row.shelf, row.row, row.bin]):
+                return row
+        return None
+
     def create_asset_movement_on_return(self):
-        '''Create Asset Movement when the workflow state is 'Returned'.'''
+        """
+            asset movement to return the asset to its previous location
+            when the workflow state is set to "Returned"
+        """
         asset_movement = frappe.new_doc('Asset Movement')
         asset_movement.purpose = 'Transfer'
         asset_movement.posting_time = self.posting_time
         asset_movement.reference_doctype = "Asset Transfer Request"
         asset_movement.reference_name = self.name
-        posting_datetime_str = f"{self.posting_date} {self.posting_time}"
-        asset_movement.transaction_date = datetime.strptime(posting_datetime_str, "%Y-%m-%d %H:%M:%S")
+        asset_movement.transaction_date = datetime.strptime(f"{self.posting_date} {self.posting_time}", "%Y-%m-%d %H:%M:%S")
 
         added_assets = False
 
-        previous_movement = frappe.get_doc("Asset Movement", {
-            "reference_name": self.name,
-            "reference_doctype": "Asset Transfer Request",
-            "purpose": "Transfer"
-        })
-
-        previous_assets = {row.asset: row.source_location for row in previous_movement.assets}
-
-        if self.asset_type == "Single Asset":
-            if self.asset:
-                asset_doc = frappe.get_doc("Asset", self.asset)
-                prev_location = previous_assets.get(self.asset)
-                if prev_location and asset_doc.location != prev_location:
-                    asset_movement.append('assets', {
-                        "asset": self.asset,
-                        "source_location": asset_doc.location,
-                        "target_location": prev_location,
-                    })
-                    added_assets = True
+        if self.asset_type == "Single Asset" and self.asset:
+            asset_doc = frappe.get_doc("Asset", self.asset)
+            prev_row = self.get_valid_previous_movement_row(self.asset, asset_doc.location)
+            if prev_row and asset_doc.location != prev_row.target_location:
+                asset_movement.append('assets', {
+                    "asset": self.asset,
+                    "source_location": asset_doc.location,
+                    "target_location": prev_row.target_location,
+                    "room": prev_row.room,
+                    "shelf": prev_row.shelf,
+                    "row": prev_row.row,
+                    "bin": prev_row.bin
+                })
+                added_assets = True
 
         elif self.asset_type == "Bundle":
             for item in self.assets:
                 if item.asset:
                     asset_doc = frappe.get_doc("Asset", item.asset)
-                    prev_location = previous_assets.get(item.asset)
-                    if prev_location and asset_doc.location != prev_location:
+                    prev_row = self.get_valid_previous_movement_row(item.asset, asset_doc.location)
+                    if prev_row and asset_doc.location != prev_row.target_location:
                         asset_movement.append('assets', {
                             "asset": item.asset,
                             "source_location": asset_doc.location,
-                            "target_location": prev_location,
+                            "target_location": prev_row.target_location,
+                            "room": prev_row.room,
+                            "shelf": prev_row.shelf,
+                            "row": prev_row.row,
+                            "bin": prev_row.bin
                         })
                         added_assets = True
 
-        asset_movement.insert()
-        asset_movement.submit()
-
-        frappe.msgprint(
-            _('Asset Return Movement Created: <a href="{0}">{1}</a>').format(
-                get_url_to_form(asset_movement.doctype, asset_movement.name),
-                asset_movement.name
-            ),
-            alert=True, indicator='green'
-        )
-
+        if added_assets:
+            asset_movement.insert()
+            asset_movement.submit()
+            frappe.msgprint(
+                _('Asset Return Movement Created: <a href="{0}">{1}</a>').format(
+                    get_url_to_form(asset_movement.doctype, asset_movement.name),
+                    asset_movement.name
+                ),
+                alert=True, indicator='green'
+            )
 
 @frappe.whitelist()
 def get_stock_items_from_bundle(bundle):
