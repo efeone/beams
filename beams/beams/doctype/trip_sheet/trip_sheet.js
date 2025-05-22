@@ -17,21 +17,6 @@ frappe.ui.form.on('Trip Sheet', {
             doc: frm.doc,
         });
     },
-    vehicle: function (frm) {
-        if (frm.doc.vehicle) {
-            frappe.call({
-                method: 'beams.beams.doctype.trip_sheet.trip_sheet.get_last_odometer',
-                args: {
-                    vehicle: frm.doc.vehicle
-                },
-                callback: function (r) {
-                    frm.set_value("initial_odometer_reading", r.message || 0);
-                }
-            });
-        } else {
-            frm.set_value("initial_odometer_reading", null);
-        }
-    },
     final_odometer_reading: function (frm) {
         frm.call("calculate_and_validate_fuel_data");
     },
@@ -131,9 +116,18 @@ frappe.ui.form.on('Trip Sheet', {
             };
         });
     },
-    // Trigger when the vehicle field changes
-    vehicle(frm) {
+    vehicle: function(frm) {
         if (frm.doc.vehicle) {
+            frappe.call({
+                method: 'beams.beams.doctype.trip_sheet.trip_sheet.get_last_odometer',
+                args: {
+                    vehicle: frm.doc.vehicle
+                },
+                callback: function(r) {
+                    frm.set_value("initial_odometer_reading", r.message || 0);
+                }
+            });
+
             frappe.db.get_list('Vehicle Safety Inspection', {
                 filters: {
                     vehicle: frm.doc.vehicle
@@ -149,7 +143,9 @@ frappe.ui.form.on('Trip Sheet', {
                     frm.refresh_field('vehicle_safety_inspection_details');
                 }
             });
+
         } else {
+            frm.set_value("initial_odometer_reading", null);
             frm.set_value('vehicle_template', null);
             frm.clear_table('vehicle_safety_inspection_details');
             frm.refresh_field('vehicle_safety_inspection_details');
