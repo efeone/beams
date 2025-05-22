@@ -39,7 +39,10 @@ frappe.ui.form.on('Employee Travel Request', {
                                     fieldtype: 'Date',
                                     fieldname: 'expense_date',
                                     in_list_view: 1,
-                                    reqd: 1
+                                    reqd: 1,
+                                    change: function() {
+                                        validate_expense_date(this, frm);
+                                    }
                                 },
                                 {
                                     label: 'Expense Claim Type',
@@ -73,6 +76,24 @@ frappe.ui.form.on('Employee Travel Request', {
                             frappe.msgprint(__('Please enter at least one expense item.'));
                             return;
                         }
+                        let validation_failed = false;
+
+                        for (let expense of expenses) {
+                            if (!expense.expense_date) {
+                                frappe.msgprint({
+                                    title: __('Missing Expense Date'),
+                                    message: __('Please enter expense date for all expense items.'),
+                                    indicator: 'red'
+                                });
+                                validation_failed = true;
+                                break;
+                            }
+                         }
+
+                         if (validation_failed) {
+                             return;
+                         }
+
                         frappe.call({
                             method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_expense_claim',
                             args: {
@@ -83,7 +104,6 @@ frappe.ui.form.on('Employee Travel Request', {
                             callback: function (r) {
                                 if (!r.exc) {
                                     dialog.hide();
-                                    frappe.set_route('Form', 'Expense Claim', r.message);
                                 }
                             }
                         });
@@ -246,6 +266,28 @@ function apply_travellers_filter(frm) {
             filters: [["name", "!=", frm.doc.requested_by || ""]]
         };
     });
+}
+
+function validate_expense_date(field, frm) {
+    const expense_date = field.value;
+
+    if (!expense_date || !frm.doc.start_date || !frm.doc.end_date) {
+        return;
+    }
+
+    const start_date_only = frm.doc.start_date.split(' ')[0];
+    const end_date_only = frm.doc.end_date.split(' ')[0];
+
+    if (expense_date < start_date_only || expense_date > end_date_only) {
+        frappe.msgprint({
+            title: __('Invalid Expense Date'),
+            message: __('Expense date must be between travel start date {0} and end date {1}.',
+                [frappe.datetime.str_to_user(start_date_only),
+                 frappe.datetime.str_to_user(end_date_only)]),
+            indicator: 'red'
+        });
+        field.set_value('');
+    }
 }
 
 frappe.ui.form.on('Vehicle Allocation', {
