@@ -363,3 +363,4 @@ function set_expense_claim_html(frm) {
         }
     });
 }
+
