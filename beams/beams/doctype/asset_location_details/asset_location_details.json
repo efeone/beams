@@ -1,72 +1,72 @@
 {
-  "actions": [],
-  "allow_rename": 1,
-  "creation": "2025-05-19 15:02:10.916931",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-   "location",
-   "room",
-   "shelf",
-   "row",
-   "bin",
-   "date_time"
-  ],
-  "fields": [
-   {
-    "fieldname": "room",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Room",
-    "options": "Service Unit"
-   },
-   {
-    "fieldname": "shelf",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Shelf",
-    "options": "Shelf"
-   },
-   {
-    "fieldname": "row",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Row",
-    "options": "Row"
-   },
-   {
-    "fieldname": "bin",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Bin",
-    "options": "Container"
-   },
-   {
-    "default": "now",
-    "fieldname": "date_time",
-    "fieldtype": "Datetime",
-    "in_list_view": 1,
-    "label": "Date Time"
-   },
-   {
-    "fieldname": "location",
-    "fieldtype": "Link",
-    "in_list_view": 1,
-    "label": "Location",
-    "options": "Location"
-   }
-  ],
-  "index_web_pages_for_search": 1,
-  "istable": 1,
-  "links": [],
-  "modified": "2025-05-21 21:50:08.883992",
-  "modified_by": "Administrator",
-  "module": "BEAMS",
-  "name": "Asset Location Details",
-  "owner": "Administrator",
-  "permissions": [],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
- }
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-05-19 15:02:10.916931",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "location",
+  "room",
+  "shelf",
+  "row",
+  "bin",
+  "date_time"
+ ],
+ "fields": [
+  {
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Room",
+   "options": "Service Unit"
+  },
+  {
+   "fieldname": "shelf",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Shelf",
+   "options": "Shelf"
+  },
+  {
+   "fieldname": "row",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Row",
+   "options": "Row"
+  },
+  {
+   "fieldname": "bin",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bin",
+   "options": "Container"
+  },
+  {
+   "default": "now",
+   "fieldname": "date_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Date Time"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Location",
+   "options": "Location"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-05-21 21:50:08.883992",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Location Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
