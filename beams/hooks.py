@@ -350,13 +350,16 @@ doc_events = {
         ]
     },
     "Asset Movement": {
-        "on_submit": "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
-        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
+        "on_submit": [
+            "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
+            "beams.beams.custom_scripts.asset_movement.asset_movement.update_asset_location_from_movement"
+            ],
+        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save",
     },
     "Asset":{
         "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr",
-        "on_submit":"beams.beams.custom_scripts.asset.asset.generate_asset_details_qr"
-
+        "on_submit":"beams.beams.custom_scripts.asset.asset.generate_asset_details_qr",
+        "on_update_after_submit":"beams.beams.custom_scripts.asset.asset.create_asset_location_log"
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
