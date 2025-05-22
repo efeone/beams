@@ -324,10 +324,6 @@ def create_expense_claim(employee, travel_request, expenses):
     return expense_claim.name
 
 
-
-import frappe
-from frappe import _
-
 @frappe.whitelist()
 def get_expense_claim_html(doc):
     """

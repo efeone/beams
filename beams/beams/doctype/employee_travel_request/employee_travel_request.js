@@ -362,5 +362,4 @@ function set_expense_claim_html(frm) {
             frappe.msgprint(__('Error: Server request failed.'));
         }
     });
-    
 }
