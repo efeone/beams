@@ -7,7 +7,7 @@ frappe.ui.form.on('BEAMS Admin Settings', {
         frm.set_query('default_employee_payable_account', function() {
             return {
                 filters: {
-                    'account_type': 'Receivable'
+                    'account_type': 'Payable'
                 }
             };
         });
