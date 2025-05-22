@@ -145,8 +145,19 @@ class EmployeeTravelRequest(Document):
         for alloc in vehicles_to_create:
             vehicle = alloc["vehicle"]
             driver = alloc.get("driver")
+            safety_inspection = frappe.get_all(
+                "Vehicle Safety Inspection",
+                filters={"vehicle": vehicle},
+                fields=["name"],
+                limit=1
+            )
+            if not safety_inspection:
+                frappe.msgprint(
+                    f"No Vehicle Safety Inspection found for Vehicle {vehicle}. Please create one to ensure compliance.",
+                    alert=True
+                )
 
-            ts = frappe.get_doc({
+            ts_data = {
                 "doctype": "Trip Sheet",
                 "vehicle": vehicle,
                 "driver": driver,
@@ -156,10 +167,31 @@ class EmployeeTravelRequest(Document):
                 "travel_requests": [{
                     "employee_travel_request": etr_name
                 }],
-            })
+            }
+            if safety_inspection:
+                ts_data["vehicle_template"] = safety_inspection[0].name
+                inspection_doc = frappe.get_doc("Vehicle Safety Inspection", safety_inspection[0].name)
+                ts_data["vehicle_safety_inspection_details"] = []
+                for detail in inspection_doc.vehicle_safety_inspection:
+                    ts_data["vehicle_safety_inspection_details"].append({
+                        "item": detail.item,
+                        "fit_for_use": detail.fit_for_use,
+                        "remarks": detail.remarks
+                    })
+            else:
+                ts_data["vehicle_template"] = None
+                frappe.msgprint(
+                    f"No Vehicle Safety Inspection found for Vehicle {vehicle}. "
+                    f"Fields vehicle_template and vehicle_safety_inspection_details will be empty in Trip Sheet.",
+                    alert=True
+                )
 
+            ts = frappe.get_doc(ts_data)
             ts.insert()
-            frappe.msgprint(f"Trip Sheet {ts.name} created for Vehicle {vehicle} with Driver {driver}")
+            frappe.msgprint(
+                f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
+                alert=True
+            )
 
     @frappe.whitelist()
     def validate_posting_date(self):
