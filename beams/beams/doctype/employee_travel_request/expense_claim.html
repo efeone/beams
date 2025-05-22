@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Claims</title>
+    <style>
+        table, th, td {
+            border: 1px solid #d1d8dd;
+            border-collapse: collapse;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .claim-header {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .expense-table {
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        a {
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    {% if expense_claims %}
+        <div class="claim-header">
+            All Expenses for Travel Request
+        </div>
+        <table class="expense-table">
+            <thead>
+                <tr>
+                    <th style="width: 14%;">Expense Claim</th>
+                    <th style="width: 14%;">Employee</th>
+                    <th style="width: 14%;">Expense Date</th>
+                    <th style="width: 14%;">Expense Type</th>
+                    <th style="width: 20%;">Description</th>
+                    <th style="width: 14%;">Amount</th>
+                    <th style="width: 14%;">Status</th>
+                    <th style="width: 14%;">Sanctioned Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for claim in expense_claims %}
+                    {% for expense in claim.expenses %}
+                        {% set has_expenses = True %}
+                        <tr>
+                            <td>
+                            <a href="{{ claim.url }}">{{ claim.name }}</a>
+                            </td>
+                            <td>{{ claim.employee }}</td>
+                            <td>{{ expense.expense_date }}</td>
+                            <td>{{ expense.expense_type }}</td>
+                            <td>{{ expense.description or 'None' }}</td>
+                            <td>{{ expense.amount }}</td>
+                            <td>{{ claim.status }}</td>
+                            <td>{{ expense.sanctioned_amount }}</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+    {% endif %}
+</body>
+</html>
+
