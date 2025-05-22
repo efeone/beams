@@ -21,7 +21,8 @@ frappe.ui.form.on('Employee Travel Request', {
                 frappe.model.set_value("Journal Entry", journal_entry.name, "employee_travel_request", frm.doc.name);
                 frappe.set_route("form", "Journal Entry", journal_entry.name);
             }, __("Create"));
-        }
+        };
+        set_expense_claim_html(frm);
 
         if (frm.doc.is_unplanned === 1 ) {
             frm.add_custom_button(__('Expense Claim'), function () {
@@ -339,3 +340,27 @@ function set_vehicle_filters(frm, cdt, cdn) {
       };
   };
 }
+
+
+function set_expense_claim_html(frm) {
+    frappe.call({
+        method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.get_expense_claim_html',
+        args: {
+            'doc': frm.doc.name,
+        },
+        freeze: true,
+        freeze_message: __('Loading Expense Claim...'),
+        callback: (r) => {
+            if (r.message && r.message.html) {
+                $(frm.fields_dict['expense_claim_html'].wrapper).html(r.message.html);
+                frm.refresh_field('expense_claim_html');
+            } else {
+                frappe.msgprint(__('Error: Unable to load expense claim data.'));
+            }
+        },
+        error: () => {
+            frappe.msgprint(__('Error: Server request failed.'));
+        }
+    });
+}
+
