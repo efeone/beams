@@ -41,16 +41,16 @@ class VehicleIncidentRecord(Document):
 
                 if not (start_date <= offense_date <= end_date):
                     frappe.throw(_("Offense Date must be between Start Date and End Date of the trip."))
-                    
+
     def create_journal_entry_for_payable_items(self):
         '''
         Automatically creates and submits a Journal Entry for each payable vehicle incident
         where the 'is_employee_payable' field is checked
         '''
         settings = frappe.get_single("BEAMS Admin Settings")
-        account = settings.default_employee_payable_account
+        debit_account = settings.default_employee_payable_account
 
-        if not account:
+        if not debit_account:
             frappe.throw("Default Employee Payable Account is not set in BEAMS Admin Settings.")
 
         employee_id = frappe.db.get_value("Driver", self.driver, "employee")
@@ -59,22 +59,35 @@ class VehicleIncidentRecord(Document):
 
         for row in self.vehicle_incident_details:
             if row.is_employee_payable and not row.get("journal_entry"):
+                # Fetch the default_account from the Expense Claim Type's accounts child table
+                credit_account = None
+                if row.expense_type:
+                    expense_type_doc = frappe.get_doc("Expense Claim Type", row.expense_type)
+                    for account_row in expense_type_doc.get("accounts", []):
+                        if account_row.default_account:
+                            credit_account = account_row.default_account
+                            break
+
+                if not credit_account:
+                    frappe.throw(f"No default account found for Expense Claim Type {row.expense_type}")
+
                 journal_entry = frappe.new_doc("Journal Entry")
                 journal_entry.voucher_type = "Journal Entry"
                 journal_entry.posting_date = self.posting_date or nowdate()
                 journal_entry.company = frappe.defaults.get_user_default("Company")
                 journal_entry.remark = f"Payable offense recorded in Vehicle Incident Record {self.name}"
 
+                # Debit entry (Employee Payable Account)
                 journal_entry.append("accounts", {
-                    "account": account,
+                    "account": debit_account,
                     "party_type": "Employee",
                     "party": employee_id,
                     "debit_in_account_currency": row.amount
                 })
+
+                # Credit entry (Default Account from Expense Claim Type)
                 journal_entry.append("accounts", {
-                    "account": account,
-                    "party_type": "Employee",
-                    "party": employee_id,
+                    "account": credit_account,
                     "credit_in_account_currency": row.amount
                 })
 
