@@ -4646,7 +4646,7 @@ def get_expense_claim_type_custom_fields():
             {
                 "fieldname": "vehicle_against",
                 "fieldtype": "Check",
-                "label": "Vehicle Against",
+                "label": "For Vehicle Incident",
                 "insert_after": "deferred_expense_account"
             }
         ]
