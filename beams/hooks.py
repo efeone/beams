@@ -148,7 +148,8 @@ before_uninstall = "beams.setup.before_uninstall"
 
 permission_query_conditions = {
 "Job Applicant": "beams.beams.custom_scripts.job_applicant.job_applicant.get_permission_query_conditions",
-"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions"
+"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions",
+"Employee Travel Request": "beams.beams.doctype.employee_travel_request.employee_travel_request.get_permission_query_conditions"
 }
 
 # has_permission = {
