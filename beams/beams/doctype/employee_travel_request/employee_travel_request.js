@@ -13,16 +13,86 @@ frappe.ui.form.on('Employee Travel Request', {
     refresh: function (frm) {
         if (!frm.is_new() && frappe.user.has_role("Admin")) {
             frm.add_custom_button(__('Journal Entry'), function () {
-                let journal_entry = frappe.model.get_new_doc("Journal Entry");
-                journal_entry.voucher_type = "Journal Entry";
-                journal_entry.posting_date = frm.doc.posting_date;
-                journal_entry.employee_travel_request = frm.doc.name;
-                journal_entry.user_remark = "Journal Entry for Travel Request " + frm.doc.name;
-                frappe.model.set_value("Journal Entry", journal_entry.name, "employee_travel_request", frm.doc.name);
-                frappe.set_route("form", "Journal Entry", journal_entry.name);
-            }, __("Create"));
-        };
-        set_expense_claim_html(frm);
+                const dialog = new frappe.ui.Dialog({
+                    title: 'Travel Claim Expenses',
+                    fields: [
+                        {
+                            fieldtype: 'Table',
+                            label: 'Expenses',
+                            fieldname: 'expenses',
+                            reqd: 1,
+                            fields: [
+                                {
+                                    label: 'Expense Date',
+                                    fieldtype: 'Date',
+                                    fieldname: 'expense_date',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Expense Claim Type',
+                                    fieldtype: 'Link',
+                                    options: 'Expense Claim Type',
+                                    fieldname: 'expense_type',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                },
+                                {
+                                    label: 'Budget Expense Type',
+                                    fieldtype: 'Link',
+                                    options: 'Budget Expense Type',
+                                    fieldname: 'budget_type',
+                                    in_list_view: 1
+                                },
+                                {
+                                    label: 'Amount',
+                                    fieldtype: 'Currency',
+                                    fieldname: 'amount',
+                                    in_list_view: 1,
+                                    reqd: 1
+                                }
+                            ]
+                        }
+                    ],
+                    size: 'large',
+                    primary_action_label: 'Submit',
+                    primary_action(values) {
+                        const expenses = values.expenses || [];
+                        if (!expenses.length) {
+                            frappe.msgprint(__('Please enter at least one expense item.'));
+                            return;
+                        }
+                        frappe.call({
+                            method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_journal_entry_from_travel',
+                            args: {
+                                employee: frm.doc.requested_by,
+                                travel_request: frm.doc.name,
+                                expenses: expenses
+                            },
+                            callback: function (r) {
+                                if (!r.exc) {
+                                    dialog.hide();
+                                    frappe.msgprint({
+                                        message: __('Journal Entry <a href="/app/journal-entry/' + r.message + '" target="_blank">' + r.message + '</a> created successfully.'),
+                                        indicator: 'green',
+                                        title: 'Success',
+                                        alert: true
+                                    });
+                                } else {
+                                    frappe.msgprint({
+                                        message: __('Failed to create Journal Entry. Please check the error log.'),
+                                        indicator: 'red',
+                                        title: 'Error',
+                                        alert: true
+                                    });
+                                }
+                            }
+                        });
+                    }
+                });
+                dialog.show();
+            }, __('Create'));
+        }
 
         if (frm.doc.is_unplanned === 1 ) {
             frm.add_custom_button(__('Expense Claim'), function () {
