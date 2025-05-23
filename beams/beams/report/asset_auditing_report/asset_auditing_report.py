@@ -14,6 +14,10 @@ def get_columns():
         {"label": "Item Code", "fieldname": "item_code", "fieldtype": "Data", "width": 150},
         {"label": "Total Asset Cost", "fieldname": "total_asset_cost", "fieldtype": "Currency", "width": 150},
         {"label": "Location", "fieldname": "location", "fieldtype": "Data", "width": 200},
+        {"label": "Room", "fieldname": "room", "fieldtype": "Link", "options": "Service Unit", "width": 150},
+        {"label": "Shelf", "fieldname": "shelf", "fieldtype": "Link", "options": "Shelf", "width": 150},
+        {"label": "Row", "fieldname": "row", "fieldtype": "Link", "options": "Row", "width": 150},
+        {"label": "Bin", "fieldname": "bin", "fieldtype": "Link", "options": "Container", "width": 150},
         {"label": "Audit ID", "fieldname": "audit_id", "fieldtype": "Link", "options": "Asset Auditing", "width": 150},
         {"label": "Has Damage", "fieldname": "has_damage", "fieldtype": "Data", "width": 100},
         {"label": "Remarks", "fieldname": "remarks", "fieldtype": "Data", "width": 300},
@@ -35,17 +39,28 @@ def get_data(filters):
         asset_filters["item_code"] = filters["item_code"]
     if filters.get("location"):
         asset_filters["location"] = filters["location"]
+
     asset_auditing_filters = {}
     if filters.get("employee"):
         asset_auditing_filters["employee"] = filters["employee"]
     if filters.get("audit_id"):
         asset_auditing_filters["name"] = filters["audit_id"]
+
     repair_filters = {}
     if filters.get("repair_status"):
         repair_filters["repair_status"] = filters["repair_status"]
     if filters.get("repair_id"):
         repair_filters["name"] = filters["repair_id"]
-    assets = frappe.get_all("Asset", fields=["name as asset", "item_code", "total_asset_cost", "location"], filters=asset_filters if asset_filters else None)
+
+    assets = frappe.get_all(
+        "Asset",
+        fields=[
+            "name as asset", "item_code", "total_asset_cost", "location",
+            "room", "shelf", "row", "bin"
+        ],
+        filters=asset_filters if asset_filters else None
+    )
+
     for asset in assets:
         audits = frappe.get_all(
             "Asset Auditing",
@@ -57,16 +72,15 @@ def get_data(filters):
             filters={"asset": asset["asset"], **repair_filters},
             fields=["name as repair_id", "description", "repair_cost", "failure_date", "repair_status"]
         )
+
         if filters.get("has_damage"):
             audits = [a for a in audits if a.get("has_damage")]
 
         if not audits:
-            continue
-        
-        if not audits:
             audits = [{"audit_id": None, "has_damage": None, "remarks": None, "employee": None, "posting_date": None}]
         if not repairs:
             repairs = [{"repair_id": None, "description": None, "repair_cost": None, "failure_date": None, "repair_status": None}]
+
         for audit in audits:
             for repair in repairs:
                 row = {
@@ -74,6 +88,10 @@ def get_data(filters):
                     "item_code": asset["item_code"],
                     "total_asset_cost": asset["total_asset_cost"],
                     "location": asset["location"],
+                    "room": asset.get("room"),
+                    "shelf": asset.get("shelf"),
+                    "row": asset.get("row"),
+                    "bin": asset.get("bin"),
                     "audit_id": audit["audit_id"],
                     "has_damage": "Yes" if audit["has_damage"] else "No" if audit["has_damage"] is not None else None,
                     "remarks": audit["remarks"],
