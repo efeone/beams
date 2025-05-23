@@ -8,6 +8,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form, today
+from frappe.utils import nowdate
 
 
 class EmployeeTravelRequest(Document):
@@ -323,7 +324,6 @@ def create_expense_claim(employee, travel_request, expenses):
 
     return expense_claim.name
 
-
 @frappe.whitelist()
 def get_expense_claim_html(doc):
     """
@@ -424,3 +424,73 @@ def get_permission_query_conditions(user):
         return "1=0"
 
     return " OR ".join(f"({cond.strip()})" for cond in conditions)
+
+@frappe.whitelist()
+def create_journal_entry_from_travel(employee, travel_request, expenses):
+    """
+        Create a Journal Entry from Travel Request
+    """
+    if isinstance(expenses, str):
+        expenses = frappe.parse_json(expenses)
+
+    if not isinstance(expenses, list):
+        frappe.throw(_("Expenses must be a list of expense items."))
+
+    jv = frappe.new_doc("Journal Entry")
+    jv.voucher_type = "Journal Entry"
+    jv.posting_date = nowdate()
+    jv.company = frappe.defaults.get_user_default("Company")
+    jv.user_remark = f"Journal Entry for Travel Request {travel_request}"
+    jv.employee = employee
+    jv.custom_travel_request = travel_request
+    jv.docstatus = 0
+
+    for expense in expenses:
+        budget_type = expense.get("budget_type")
+        debit_account = None
+        if budget_type:
+            budget_expense = frappe.get_doc("Budget Expense Type", budget_type)
+            for account_row in budget_expense.get("accounts", []):
+                if account_row.default_account:
+                    debit_account = account_row.default_account
+                    break
+            if not debit_account:
+                frappe.throw(_(f"No default account found for Budget Expense Type {budget_type}"))
+
+        expense_type = expense.get("expense_type")
+        credit_account = None
+        if expense_type:
+            expense_claim = frappe.get_doc("Expense Claim Type", expense_type)
+            for account_row in expense_claim.get("accounts", []):
+                if account_row.default_account:
+                    credit_account = account_row.default_account
+                    break
+            if not credit_account:
+                frappe.throw(_(f"No default account found for Expense Claim Type {expense_type}"))
+
+        amount = expense.get("amount")
+        expense_date = expense.get("expense_date")
+
+        if not amount or not expense_date:
+            frappe.throw(_("Amount and Expense Date are required for each expense item."))
+        if not debit_account or not credit_account:
+            frappe.throw(_("Both Budget Expense Type and Expense Claim Type must have valid default accounts."))
+
+        jv.append("accounts", {
+            "account": debit_account,
+            "party_type": "Employee",
+            "party": employee,
+            "debit_in_account_currency": amount,
+            "posting_date": expense_date
+        })
+
+        jv.append("accounts", {
+            "account": credit_account,
+            "party_type": "Employee",
+            "party": employee,
+            "credit_in_account_currency": amount,
+            "posting_date": expense_date
+        })
+
+    jv.insert()
+    return jv.name
