@@ -378,3 +378,49 @@ def get_expense_claim_html(doc):
 
     return {"html": html}
 
+@frappe.whitelist()
+def get_permission_query_conditions(user):
+    """
+    Returns SQL query conditions for controlling access to Employee Travel Requests.
+
+    Rules:
+    - "Admin" and "System Manager": full access.
+    - "HOD": requests from employees in their department.
+    - Employees: their own requests.
+    - Others: no access.
+
+    Args:
+        user (str): User ID. Defaults to current session user.
+
+    Returns:
+        str: SQL conditions or None for unrestricted access.
+    """
+    if not user:
+        user = frappe.session.user
+
+    user_roles = frappe.get_roles(user)
+
+    if "Admin" in user_roles or "System Manager" in user_roles:
+        return None
+
+    conditions = []
+
+    if "HOD" in user_roles:
+        department = frappe.db.get_value("Employee", {"user_id": user}, "department")
+        if department:
+            conditions.append(f"""
+                EXISTS (
+                    SELECT 1 FROM `tabEmployee` e
+                    WHERE e.name = `tabEmployee Travel Request`.requested_by
+                    AND e.department = '{department}'
+                )
+            """)
+
+    employee_id = frappe.db.get_value("Employee", {"user_id": user}, "name")
+    if employee_id:
+        conditions.append(f"`tabEmployee Travel Request`.requested_by = '{employee_id}'")
+
+    if not conditions:
+        return "1=0"
+
+    return " OR ".join(f"({cond.strip()})" for cond in conditions)
