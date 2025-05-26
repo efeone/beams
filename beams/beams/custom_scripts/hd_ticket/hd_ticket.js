@@ -50,7 +50,7 @@ frappe.ui.form.on('HD Ticket', {
 // Function to show/hide fields based on user's role
 function handle_agent_visibility(frm) {
     if (!frappe.user.has_role('Agent')) {
-        const visible_fields = ['subject', 'raised_by', 'description','ticket_type'];
+        const visible_fields = ['subject', 'raised_by','raised_for', 'description','ticket_type'];
         frm.fields.forEach(field => {
             const name = field.df.fieldname;
             if (name && !['Section Break', 'Column Break'].includes(field.df.fieldtype)) {
