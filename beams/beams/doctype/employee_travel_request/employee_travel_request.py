@@ -9,6 +9,7 @@ from frappe import _
 from frappe.model.document import Document
 from frappe.utils import get_url_to_form, today
 from frappe.utils import nowdate
+from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 
 
 class EmployeeTravelRequest(Document):
@@ -118,6 +119,7 @@ class EmployeeTravelRequest(Document):
         if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
         '''
         etr_name = doc.name
+
         linked_ts_rows = frappe.get_all(
             "Employee Travel Request Details",
             filters={"employee_travel_request": etr_name},
@@ -143,15 +145,21 @@ class EmployeeTravelRequest(Document):
         else:
             vehicles_to_create = [alloc for alloc in allocations if alloc["vehicle"] not in existing_vehicles_with_ts]
 
+        trip_sheet_columns = frappe.db.get_table_columns("Trip Sheet")
+
         for alloc in vehicles_to_create:
             vehicle = alloc["vehicle"]
             driver = alloc.get("driver")
+
+            initial_odometer = get_last_odometer(vehicle)
+
             safety_inspection = frappe.get_all(
                 "Vehicle Safety Inspection",
                 filters={"vehicle": vehicle},
                 fields=["name"],
                 limit=1
             )
+
             if not safety_inspection:
                 frappe.msgprint(
                     f"No Vehicle Safety Inspection found for Vehicle {vehicle}. Please create one to ensure compliance.",
@@ -165,10 +173,15 @@ class EmployeeTravelRequest(Document):
                 "posting_date": frappe.utils.today(),
                 "starting_date_and_time": doc.start_date,
                 "ending_date_and_time": doc.end_date,
+                "initial_odometer_reading": initial_odometer,
                 "travel_requests": [{
                     "employee_travel_request": etr_name
                 }],
             }
+
+            if "final_odometer" in trip_sheet_columns:
+                ts_data["final_odometer"] = None
+
             if safety_inspection:
                 ts_data["vehicle_template"] = safety_inspection[0].name
                 inspection_doc = frappe.get_doc("Vehicle Safety Inspection", safety_inspection[0].name)
@@ -189,12 +202,10 @@ class EmployeeTravelRequest(Document):
 
             ts = frappe.get_doc(ts_data)
             ts.insert()
-            
             frappe.msgprint(
                 f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
                 alert=True
             )
-
 
     @frappe.whitelist()
     def validate_posting_date(self):
@@ -328,10 +339,10 @@ def create_expense_claim(employee, travel_request, expenses):
 def get_expense_claim_html(doc):
     """
     Render HTML showing Expense Claims and their 'expenses'  for a given Travel Request.
-    
+
     Args:
         doc (str): The name/ID of the Travel Request document.
-    
+
     Returns:
         dict: A dictionary containing the rendered HTML.
     """
