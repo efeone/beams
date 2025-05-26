@@ -296,9 +296,13 @@ def create_expense_claim(employee, travel_request, expenses):
     expense_claim.approval_status = "Draft"
     expense_claim.posting_date = today()
 
-    # Get Company and payable account
     employee_doc = frappe.get_doc("Employee", employee)
     company = employee_doc.company
+
+    employee_doc = frappe.get_doc("Employee", employee)
+    expense_approver = employee_doc.expense_approver
+    expense_claim.expense_approver = expense_approver
+
 
     default_payable_account = frappe.get_cached_value('Company', company, 'default_payable_account')
     if not default_payable_account:

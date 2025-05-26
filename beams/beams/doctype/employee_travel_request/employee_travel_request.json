@@ -34,7 +34,6 @@
   "section_break_ktsj",
   "mark_attendance",
   "attendance_request",
-  "reference_documents",
   "travel_vehicle_allocation",
   "attachments",
   "expense_claim_html",
@@ -182,12 +181,6 @@
    "label": "Mark Attendance"
   },
   {
-   "fieldname": "reference_documents",
-   "fieldtype": "Table",
-   "label": "Reference Documents",
-   "options": "Reference Document"
-  },
-  {
    "depends_on": "eval:doc.accommodation_required;",
    "fieldname": "expected_check_in_time",
    "fieldtype": "Datetime",
@@ -283,7 +276,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-05-20 17:35:18.302367",
+ "modified": "2025-05-26 11:57:27.652846",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
