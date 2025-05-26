@@ -1,8 +1,7 @@
-import os
-import click
 import frappe
 from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+
 
 def after_install():
     #Creating BEAMS specific custom fields
@@ -1990,6 +1989,19 @@ def get_hd_ticket_custom_fields():
                 "insert_after": "spare_part_needed",
                 "options": "Spare Part Item",
                 "depends_on": "eval:doc.spare_part_needed == 1"
+            },
+            {
+                "fieldname": "raised_for",
+                "fieldtype": "Link",
+                "options": "User",
+                "label": "Raised For (Email)",
+                "insert_after": "raised_by"
+            },
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "agent_group"
             }
         ]
     }
