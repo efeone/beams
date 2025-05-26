@@ -9,6 +9,8 @@ frappe.ui.form.on('Employee Travel Request', {
                     if (r.message) frm.set_value('requested_by', r.message.name);
                 });
         }
+
+        set_expense_claim_html(frm)
     },
     refresh: function (frm) {
         if (!frm.is_new() && frappe.user.has_role("Admin")) {
@@ -30,7 +32,7 @@ frappe.ui.form.on('Employee Travel Request', {
                                     reqd: 1
                                 },
                                 {
-                                    label: 'Expense Claim Type',
+                                    label: 'Expense Type',
                                     fieldtype: 'Link',
                                     options: 'Expense Claim Type',
                                     fieldname: 'expense_type',
@@ -38,20 +40,26 @@ frappe.ui.form.on('Employee Travel Request', {
                                     reqd: 1
                                 },
                                 {
-                                    label: 'Budget Expense Type',
-                                    fieldtype: 'Link',
-                                    options: 'Budget Expense Type',
-                                    fieldname: 'budget_type',
-                                    in_list_view: 1
-                                },
-                                {
                                     label: 'Amount',
                                     fieldtype: 'Currency',
                                     fieldname: 'amount',
                                     in_list_view: 1,
                                     reqd: 1
+                                },
+                                {
+                                    label: 'Description',
+                                    fieldtype: 'Small Text',
+                                    fieldname: 'description',
+                                    in_list_view: 1
                                 }
                             ]
+                        },
+                        {
+                            label: 'Mode of Payment',
+                            fieldtype: 'Link',
+                            options: 'Mode of Payment',
+                            fieldname: 'mode_of_payment',
+                            reqd: 1
                         }
                     ],
                     size: 'large',
@@ -67,7 +75,8 @@ frappe.ui.form.on('Employee Travel Request', {
                             args: {
                                 employee: frm.doc.requested_by,
                                 travel_request: frm.doc.name,
-                                expenses: expenses
+                                expenses: expenses,
+                                mode_of_payment: values.mode_of_payment
                             },
                             callback: function (r) {
                                 if (!r.exc) {

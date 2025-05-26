@@ -441,7 +441,7 @@ def get_permission_query_conditions(user):
     return " OR ".join(f"({cond.strip()})" for cond in conditions)
 
 @frappe.whitelist()
-def create_journal_entry_from_travel(employee, travel_request, expenses):
+def create_journal_entry_from_travel(employee, travel_request, expenses, mode_of_payment):
     """
         Create a Journal Entry from Travel Request
     """
@@ -451,45 +451,47 @@ def create_journal_entry_from_travel(employee, travel_request, expenses):
     if not isinstance(expenses, list):
         frappe.throw(_("Expenses must be a list of expense items."))
 
+    company = frappe.defaults.get_user_default("Company")
+    mop_account = frappe.db.get_value(
+        "Mode of Payment Account",
+        {
+            "parent": mode_of_payment,
+            "company": company
+        },
+        "default_account"
+    )
+    if not mop_account:
+        frappe.throw(_(f"No default account found for Mode of Payment {mode_of_payment} for company {company}"))
     jv = frappe.new_doc("Journal Entry")
     jv.voucher_type = "Journal Entry"
     jv.posting_date = nowdate()
-    jv.company = frappe.defaults.get_user_default("Company")
+    jv.company = company
     jv.user_remark = f"Journal Entry for Travel Request {travel_request}"
     jv.employee = employee
     jv.custom_travel_request = travel_request
     jv.docstatus = 0
 
+    total_amount = 0
+
     for expense in expenses:
-        budget_type = expense.get("budget_type")
-        debit_account = None
-        if budget_type:
-            budget_expense = frappe.get_doc("Budget Expense Type", budget_type)
-            for account_row in budget_expense.get("accounts", []):
-                if account_row.default_account:
-                    debit_account = account_row.default_account
-                    break
-            if not debit_account:
-                frappe.throw(_(f"No default account found for Budget Expense Type {budget_type}"))
-
         expense_type = expense.get("expense_type")
-        credit_account = None
-        if expense_type:
-            expense_claim = frappe.get_doc("Expense Claim Type", expense_type)
-            for account_row in expense_claim.get("accounts", []):
-                if account_row.default_account:
-                    credit_account = account_row.default_account
-                    break
-            if not credit_account:
-                frappe.throw(_(f"No default account found for Expense Claim Type {expense_type}"))
-
         amount = expense.get("amount")
         expense_date = expense.get("expense_date")
 
+        if not expense_type:
+            frappe.throw(_("Expense Type is required for each expense item."))
         if not amount or not expense_date:
             frappe.throw(_("Amount and Expense Date are required for each expense item."))
-        if not debit_account or not credit_account:
-            frappe.throw(_("Both Budget Expense Type and Expense Claim Type must have valid default accounts."))
+
+        expense_claim = frappe.get_doc("Expense Claim Type", expense_type)
+        debit_account = None
+        for account_row in expense_claim.get("accounts", []):
+            if account_row.default_account:
+                debit_account = account_row.default_account
+                break
+        if not debit_account:
+            frappe.throw(_(f"No default account found for Expense Claim Type {expense_type}"))
+        
 
         jv.append("accounts", {
             "account": debit_account,
@@ -498,14 +500,13 @@ def create_journal_entry_from_travel(employee, travel_request, expenses):
             "debit_in_account_currency": amount,
             "posting_date": expense_date
         })
+        total_amount += amount
 
-        jv.append("accounts", {
-            "account": credit_account,
-            "party_type": "Employee",
-            "party": employee,
-            "credit_in_account_currency": amount,
-            "posting_date": expense_date
-        })
+    jv.append("accounts", {
+        "account": mop_account,
+        "credit_in_account_currency": total_amount,
+        "posting_date": expense_date
+    })
 
     jv.insert()
     return jv.name
