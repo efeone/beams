@@ -4532,7 +4532,15 @@ def get_vehicle_custom_fields():
             "label": "Vehicle Documents",
             "options": "Vehicle Documents",
             "insert_after": "vehicle_section_break"
+        },
+        {
+            "fieldname": "vehicle_safety_inspection",
+            "fieldtype": "Link",
+            "label": "Vehicle Safety Inspection",
+            "options": "Vehicle Safety Inspection",
+            "insert_after": "carbon_check_date"
         }
+
         ]
     }
 
