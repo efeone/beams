@@ -360,6 +360,8 @@ def get_expense_claim_html(doc):
     )
 
     full_claims = []
+    total_amount = 0
+    total_sanctioned_amount = 0
     for claim in expense_claims:
         ec_doc = frappe.get_doc("Expense Claim", claim.name)
         expenses = sorted(
@@ -367,6 +369,10 @@ def get_expense_claim_html(doc):
             key=lambda x: x.expense_date,
             reverse=True
         )
+        for row in expenses:
+            total_amount += row.amount or 0
+            total_sanctioned_amount += row.sanctioned_amount or 0
+
         full_claims.append({
             "name": ec_doc.name,
             "employee": ec_doc.employee,
@@ -388,7 +394,11 @@ def get_expense_claim_html(doc):
 
     html = frappe.render_template(
         "beams/doctype/employee_travel_request/expense_claim.html",
-        {"expense_claims": full_claims}
+        {
+            "expense_claims": full_claims,
+            "total_amount": total_amount,
+            "total_sanctioned_amount": total_sanctioned_amount
+        }
     )
 
     return {"html": html}
