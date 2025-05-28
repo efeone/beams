@@ -53,6 +53,10 @@ class EmployeeTravelRequest(Document):
         if self.reason_for_rejection:
             frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
+        if not self.is_unplanned:
+            if not self.attachments:
+                frappe.throw(title="Approval Error", msg="Attachments is required before final approval.")
+
         if self.is_vehicle_required:
             if not self.travel_vehicle_allocation:
                 frappe.throw(title="Approval Error", msg="Vehicle allocation is required before final approval.")

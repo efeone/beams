@@ -593,7 +593,7 @@ def get_customer_custom_fields():
                 "fieldtype": "Link",
                 "label": "Region",
                 "options": "Region",
-                "mandatory_depends_on": "eval:doc.is_agent",
+                "reqd": 1,
                 "insert_after": "msme_status"
             },
             {
@@ -2978,10 +2978,16 @@ def get_company_custom_fields():
                 "insert_after": "company_policy_tab"
             },
             {
+                "fieldname": "exception_budget_column",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "exception_budget_approver_role"
+            },
+            {
                 "fieldname": "exchange_rate_to_inr",
                 "fieldtype": "Float",
-                "label": "Exchange Rate to INR",
-                "insert_after": "exchange_gain_loss_account",
+                "label": "Budget Exchange Rate to INR",
+                "insert_after": "exception_budget_column",
                 "description": "1 Unit of Company Currency = [?] INR"
             }
         ]
@@ -4299,6 +4305,7 @@ def get_journal_entry_custom_fields():
                 "label": "Cost Center",
                 "read_only": 1,
                 "options": "Cost Center",
+                "in_list_view": 1,
                 "insert_after": "naming_series"
             },
             {
@@ -4525,7 +4532,15 @@ def get_vehicle_custom_fields():
             "label": "Vehicle Documents",
             "options": "Vehicle Documents",
             "insert_after": "vehicle_section_break"
+        },
+        {
+            "fieldname": "vehicle_safety_inspection",
+            "fieldtype": "Link",
+            "label": "Vehicle Safety Inspection",
+            "options": "Vehicle Safety Inspection",
+            "insert_after": "carbon_check_date"
         }
+
         ]
     }
 
