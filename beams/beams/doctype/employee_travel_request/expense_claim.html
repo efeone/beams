@@ -23,6 +23,10 @@
             margin-bottom: 20px;
             width: 100%;
         }
+        .total-row {
+            font-weight: bold;
+            background-color: #f9f9f9;
+        }
         a {
             text-decoration: none;
         }
@@ -52,11 +56,8 @@
             <tbody>
                 {% for claim in expense_claims %}
                     {% for expense in claim.expenses %}
-                        {% set has_expenses = True %}
                         <tr>
-                            <td>
-                            <a href="{{ claim.url }}">{{ claim.name }}</a>
-                            </td>
+                            <td><a href="{{ claim.url }}">{{ claim.name }}</a></td>
                             <td>{{ claim.employee }}</td>
                             <td>{{ expense.expense_date }}</td>
                             <td>{{ expense.expense_type }}</td>
@@ -67,9 +68,16 @@
                         </tr>
                     {% endfor %}
                 {% endfor %}
+                <tr class="total-row">
+                    <td colspan="5">Total</td>
+                    <td>{{ total_amount }}</td>
+                    <td></td>
+                    <td>{{ total_sanctioned_amount }}</td>
+                </tr>
             </tbody>
         </table>
     {% else %}
+        <p>No expense claims found for this travel request.</p>
     {% endif %}
 </body>
 </html>
