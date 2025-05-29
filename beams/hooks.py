@@ -376,8 +376,8 @@ doc_events = {
         "after_insert": "beams.beams.custom_scripts.expense_claim.expense_claim.notify_expense_approver_on_creation"
     },
     "Vehicle" :{
-        "on_update":"beams.beams.custom_scripts.vehicle.vehicle.create_vehicle_documents_log"    
-    }    
+        "on_update":"beams.beams.custom_scripts.vehicle.vehicle.create_vehicle_documents_log"
+    }
 }
 
 # Scheduled Tasks
@@ -436,6 +436,7 @@ override_doctype_dashboards = {
     'Job Applicant': 'beams.beams.custom_scripts.job_applicant.job_applicant_dashboard.get_data',
     'Project':'beams.beams.custom_scripts.project_dashboard.project_dashboard.get_data',
     'Department': 'beams.beams.custom_scripts.department.department_dashboard.get_data',
+    'Vehicle': 'beams.beams.custom_scripts.vehicle_dashboard.vehicle_dashboard.get_data',
 }
 
 # exempt linked doctypes from being automatically cancelled
