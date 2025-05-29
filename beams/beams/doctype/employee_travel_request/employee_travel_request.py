@@ -441,7 +441,7 @@ def get_permission_query_conditions(user):
     return " OR ".join(f"({cond.strip()})" for cond in conditions)
 
 @frappe.whitelist()
-def create_journal_entry_from_travel(employee, travel_request, expenses, mode_of_payment):
+def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment):
     """
         Create a Journal Entry from Travel Request
     """
@@ -462,13 +462,15 @@ def create_journal_entry_from_travel(employee, travel_request, expenses, mode_of
     )
     if not mop_account:
         frappe.throw(_(f"No default account found for Mode of Payment {mode_of_payment} for company {company}"))
+    posting_date = nowdate()
+
     jv = frappe.new_doc("Journal Entry")
     jv.voucher_type = "Journal Entry"
-    jv.posting_date = nowdate()
+    jv.posting_date = posting_date
     jv.company = company
-    jv.user_remark = f"Journal Entry for Travel Request {travel_request}"
+    jv.user_remark = f"Journal Entry for Travel Request {employee_travel_request}"
     jv.employee = employee
-    jv.custom_travel_request = travel_request
+    jv.employee_travel_request = employee_travel_request
     jv.docstatus = 0
 
     total_amount = 0
@@ -498,14 +500,14 @@ def create_journal_entry_from_travel(employee, travel_request, expenses, mode_of
             "party_type": "Employee",
             "party": employee,
             "debit_in_account_currency": amount,
-            "posting_date": expense_date
+            "posting_date": posting_date
         })
         total_amount += amount
 
     jv.append("accounts", {
         "account": mop_account,
         "credit_in_account_currency": total_amount,
-        "posting_date": expense_date
+        "posting_date": posting_date
     })
 
     jv.insert()
