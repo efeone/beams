@@ -74,12 +74,24 @@ frappe.ui.form.on('Employee Travel Request', {
                             method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_journal_entry_from_travel',
                             args: {
                                 employee: frm.doc.requested_by,
-                                travel_request: frm.doc.name,
+                                employee_travel_request: frm.doc.name,
                                 expenses: expenses,
                                 mode_of_payment: values.mode_of_payment
                             },
                             callback: function (r) {
                                 if (!r.exc) {
+                                    expenses.forEach(expense => {
+                                        frm.add_child("journal_entry_expenses_table", {
+                                            journal_entry: r.message,
+                                            expense_date: expense.expense_date,
+                                            expense_type: expense.expense_type,
+                                            description: expense.description || "",
+                                            amount: expense.amount
+                                        });
+                                    });
+                                    frm.refresh_field("journal_entry_expenses_table");
+                                    frm.save_or_update();
+
                                     dialog.hide();
                                     frappe.msgprint({
                                         message: __('Journal Entry <a href="/app/journal-entry/' + r.message + '" target="_blank">' + r.message + '</a> created successfully.'),

@@ -37,6 +37,7 @@
   "travel_vehicle_allocation",
   "attachments",
   "expense_claim_html",
+  "journal_entry_expenses_table",
   "reason_for_rejection",
   "section_break_fdom",
   "dynamic_link"
@@ -258,6 +259,13 @@
   {
    "fieldname": "expense_claim_html",
    "fieldtype": "HTML"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "journal_entry_expenses_table",
+   "fieldtype": "Table",
+   "label": "Journal Entry Expenses Table",
+   "options": "Journal Entry Expenses"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -276,7 +284,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-05-26 11:57:27.652846",
+ "modified": "2025-05-29 17:01:51.710862",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
