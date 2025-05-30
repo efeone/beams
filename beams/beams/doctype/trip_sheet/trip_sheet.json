@@ -211,8 +211,13 @@
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-05-22 11:06:53.708549",
+ "links": [
+  {
+   "link_doctype": "Vehicle Incident Record",
+   "link_fieldname": "trip_sheet"
+  }
+ ],
+ "modified": "2025-05-30 10:42:22.958496",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
