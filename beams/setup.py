@@ -4329,8 +4329,8 @@ def get_journal_entry_custom_fields():
                 "fieldtype": "Link",
                 "label": "Employee Travel Request",
                 "options": "Employee Travel Request",
-                "insert_after":"naming_series",
-                "read_only":1
+                "insert_after":"posting_date",
+                "read_only": 1
             }
 
         ]
