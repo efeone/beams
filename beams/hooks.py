@@ -437,6 +437,7 @@ override_doctype_dashboards = {
     'Project':'beams.beams.custom_scripts.project_dashboard.project_dashboard.get_data',
     'Department': 'beams.beams.custom_scripts.department.department_dashboard.get_data',
     'Vehicle': 'beams.beams.custom_scripts.vehicle_dashboard.vehicle_dashboard.get_data',
+    'Driver': 'beams.beams.custom_scripts.driver_dashboard.driver_dashboard.get_data',
 }
 
 # exempt linked doctypes from being automatically cancelled
