@@ -127,12 +127,22 @@ frappe.ui.form.on("Asset Transfer Request", {
     },
     refresh(frm) {
         frappe.db.get_list("Asset Transfer Request", {
-            fields: ["asset"], filters: { workflow_state: "Transferred" }
-        }).then(res => frm.set_query("asset", () => ({
-            filters: [["Asset", "status", "!=", "Transferred"], ["Asset", "name", "not in", res.map(a => a.asset)],
-            ["Asset", "docstatus", "=", 1]]
-
-        }))).catch(err => console.error("Error:", err));
+            fields: ["asset", "bundle"],
+            filters: { workflow_state: "Transferred" }
+        }).then(res => {
+            frm.set_query("asset", () => ({
+                filters: [
+                    ["Asset", "status", "!=", "Transferred"],
+                    ["Asset", "name", "not in", res.map(a => a.asset)],
+                    ["Asset", "docstatus", "=", 1]
+                ]
+            }));
+            frm.set_query("bundle", () => ({
+                filters: [
+                    ["Asset Bundle", "name", "not in", res.map(a => a.bundle)]
+                ]
+            }));
+        }).catch(err => console.error("Error:", err));
     }
 });
 
