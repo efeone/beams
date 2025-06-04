@@ -282,7 +282,7 @@ class AssetTransferRequest(Document):
                 ),
                 alert=True, indicator='green'
             )
-            
+
     def create_return_stock_entries(self):
         '''
             Create Stock Entry when the workflow state is 'Returned'.
@@ -304,6 +304,9 @@ class AssetTransferRequest(Document):
         for item in self.items:
             if item.item and item.item not in consumed_or_missing_items:
                 items_to_return.append(item)
+
+        if not items_to_return:
+            return
 
         warehouse = frappe.db.get_value("Beams Admin Settings", None, "asset_transfer_warehouse")
         if not warehouse:
