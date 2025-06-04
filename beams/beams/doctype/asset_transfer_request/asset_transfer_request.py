@@ -103,6 +103,15 @@ class AssetTransferRequest(Document):
                 if len(all_movements) < 2:
                     self.create_asset_movement_on_return()
 
+        if self.workflow_state == 'Returned':
+            existing_return_stock_entry = frappe.db.exists("Stock Entry", {
+                "stock_entry_type": "Material Receipt",
+                "remarks": ["like", f"%{self.name}%"]
+            })
+
+            if not existing_return_stock_entry:
+                self.create_return_stock_entries()
+
 
 
 
@@ -273,6 +282,59 @@ class AssetTransferRequest(Document):
                 ),
                 alert=True, indicator='green'
             )
+            
+    def create_return_stock_entries(self):
+        '''
+            Create Stock Entry when the workflow state is 'Returned'.
+        '''
+
+        if not self.asset_type == "Bundle":
+            return
+        if not self.items:
+            return
+
+        items_to_return = []
+
+        consumed_or_missing_items = set()
+        if hasattr(self, 'asset_return_checklist') and self.asset_return_checklist:
+            for checklist_item in self.asset_return_checklist:
+                if checklist_item.consumed == 1 or checklist_item.missinglost == 1:
+                    consumed_or_missing_items.add(checklist_item.checklist_item)
+
+        for item in self.items:
+            if item.item and item.item not in consumed_or_missing_items:
+                items_to_return.append(item)
+
+        warehouse = frappe.db.get_value("Beams Admin Settings", None, "asset_transfer_warehouse")
+        if not warehouse:
+            frappe.throw(_("Could not find asset_transfer_warehouse in Beams Admin Settings."))
+
+        stock_entry = frappe.new_doc('Stock Entry')
+        stock_entry.stock_entry_type = 'Material Receipt'
+        stock_entry.purpose = 'Material Receipt'
+        stock_entry.to_warehouse = warehouse
+        stock_entry.posting_time = self.posting_time
+        stock_entry.set("set_posting_time", 1)
+        stock_entry.posting_date = self.posting_date
+        stock_entry.set("set_posting_time", 1)
+        stock_entry.remarks = f"Return Stock Entry for Asset Transfer Request: {self.name}"
+
+        for item in items_to_return:
+            stock_entry.append('items', {
+                "item_code": item.item,
+                "qty": item.qty,
+                "t_warehouse": warehouse,
+            })
+
+        if not stock_entry.items:
+            frappe.throw(_("No items found to add to Return Stock Entry."))
+
+        stock_entry.insert()
+        stock_entry.submit()
+
+        frappe.msgprint(
+            _('Return Stock Entry Created: <a href="{0}">{1}</a>').format(get_url_to_form(stock_entry.doctype, stock_entry.name), stock_entry.name),
+            alert=True, indicator='green')
 
 @frappe.whitelist()
 def get_stock_items_from_bundle(bundle):
