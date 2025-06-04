@@ -1,15 +1,11 @@
 frappe.ui.form.on('Project', {
     refresh(frm) {
 
-        // Hide Asset Movement, Return Date , Returned & Returned Reason in Allocated Item Details
-        if (frm.fields_dict["allocated_item_details"] && frm.fields_dict["allocated_item_details"].grid) {
-            let grid = frm.fields_dict["allocated_item_details"].grid;
-            grid.toggle_display("asset_movement", false);
-            grid.toggle_display("return_date", false);
-            grid.toggle_display("returned_count", false);
-            grid.toggle_display("returned_reason", false);
-            frm.refresh_field("allocated_item_details");
-        }
+        // Hide Available Quantity , Return Date , Returned Count & Returned Reason in Allocated Item Details
+        frm.fields_dict['allocated_item_details'].grid.toggle_display('available_quantity', false);
+        frm.fields_dict['allocated_item_details'].grid.toggle_display('return_date', false);
+        frm.fields_dict['allocated_item_details'].grid.toggle_display('returned_count', false);
+        frm.fields_dict['allocated_item_details'].grid.toggle_display('returned_reason', false);
 
         // Hide Returned Date , Returned & Returned Reason in Allocated Manpower Details
         if (frm.fields_dict["allocated_manpower_details"] && frm.fields_dict["allocated_manpower_details"].grid) {
