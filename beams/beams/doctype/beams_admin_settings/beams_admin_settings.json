@@ -20,7 +20,8 @@
   "role_receiving_asset_reservation_notification",
   "notification_template_for_asset_reservation",
   "notification_for_asset_reservation_before",
-  "default_employee_payable_account"
+  "default_employee_payable_account",
+  "item_group"
  ],
  "fields": [
   {
@@ -130,12 +131,18 @@
    "fieldtype": "Link",
    "label": "Default Employee Payable Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Makeup Item Group",
+   "options": "Item Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-05-17 11:08:21.034982",
+ "modified": "2025-06-04 11:43:38.073135",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
@@ -152,6 +159,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
