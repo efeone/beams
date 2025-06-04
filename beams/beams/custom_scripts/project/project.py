@@ -721,8 +721,10 @@ def update_return_details_in_equipment_log(project, required_item, return_date, 
     for row in log_doc.item_log_details:
         if row.required_item == required_item:
             row.return_date = return_date
-            row.returned_reason = f"{returned_reason} | Returned On: {return_date} | Returned Count: {returned_count}"
-            row.returned_count = returned_count
+            existing_reason = row.returned_reason or ""
+            new_reason_entry = f"{returned_reason} | Returned On: {return_date} | Returned Count: {returned_count}"
+            row.returned_reason = existing_reason + ("\n" if existing_reason else "") + new_reason_entry
+            row.returned_count = (row.returned_count or 0) + int(returned_count)
             updated = True
             break
 
