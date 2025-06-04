@@ -3,6 +3,12 @@
 
 frappe.ui.form.on('Equipment Request', {
     refresh: function (frm) {
+        // Hide fields in child table "Required Items Detail"
+        frm.fields_dict['required_equipments'].grid.toggle_display('return_date', false);
+        frm.fields_dict['required_equipments'].grid.toggle_display('returned_count', false);
+        frm.fields_dict['required_equipments'].grid.toggle_display('returned_reason', false);
+        frm.fields_dict['required_equipments'].grid.toggle_display('return', false);
+
         if (frm.doc.workflow_state === "Approved") {
             frm.add_custom_button(__("Equipment Acquiral Request"), function () {
                 frappe.model.open_mapped_doc({
