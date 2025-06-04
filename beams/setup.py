@@ -1632,6 +1632,12 @@ def get_item_custom_fields():
                "options":"\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
                "depends_on": "eval:doc.item_audit_notification == 1",
                "insert_after": "item_audit_notification"
+           },
+           {
+               "fieldname": "is_makeup_item",
+               "fieldtype": "Check",
+               "label": "Is Makeup Item",
+               "insert_after": "is_exempt"
            }
         ]
     }
