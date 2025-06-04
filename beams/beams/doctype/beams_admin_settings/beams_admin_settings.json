@@ -135,14 +135,14 @@
   {
    "fieldname": "item_group",
    "fieldtype": "Link",
-   "label": "Item Group",
+   "label": "Makeup Item Group",
    "options": "Item Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-04 10:09:37.922822",
+ "modified": "2025-06-04 11:43:38.073135",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
