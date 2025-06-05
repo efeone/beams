@@ -44,6 +44,26 @@ class AssetBundle(Document):
 		_file.save()
 		self.db_set("bundle_qr_code", _file.file_url)
 
+	def validate(self):
+		self.validate_asset_locations()
+
+	def validate_asset_locations(self):
+		"""
+			Ensure all selected assets are from the same location.
+		"""
+		if not self.assets:
+			return
+
+		locations = set()
+
+		for asset in self.assets:
+			asset_doc = frappe.get_doc("Asset", asset.asset)
+			if asset_doc.location:
+				locations.add(asset_doc.location)
+
+		if len(locations) > 1:
+			frappe.throw("Selected assets belong to different locations. Please select assets from the same location.")
+
 	def get_si_file(self):
 		return self.name
 
