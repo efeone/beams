@@ -6,6 +6,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "room",
+  "shelf",
+  "row",
   "bin"
  ],
  "fields": [
@@ -14,11 +17,29 @@
    "fieldtype": "Data",
    "label": "Bin",
    "unique": 1
+  },
+  {
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "label": "Room",
+   "options": "Service Unit"
+  },
+  {
+   "fieldname": "shelf",
+   "fieldtype": "Link",
+   "label": "Shelf",
+   "options": "Shelf"
+  },
+  {
+   "fieldname": "row",
+   "fieldtype": "Link",
+   "label": "Row",
+   "options": "Row"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-19 14:49:51.465962",
+ "modified": "2025-06-05 10:22:31.030169",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Container",
@@ -38,6 +59,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

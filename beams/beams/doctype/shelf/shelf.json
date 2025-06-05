@@ -6,6 +6,7 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
+  "room",
   "shelf"
  ],
  "fields": [
@@ -14,11 +15,17 @@
    "fieldtype": "Data",
    "label": "Shelf",
    "unique": 1
+  },
+  {
+   "fieldname": "room",
+   "fieldtype": "Link",
+   "label": "Room",
+   "options": "Service Unit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-19 14:45:16.563262",
+ "modified": "2025-06-05 11:54:52.916235",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Shelf",
@@ -38,6 +45,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
