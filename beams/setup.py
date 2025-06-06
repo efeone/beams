@@ -60,6 +60,7 @@ def after_install():
     create_custom_fields(get_hd_ticket_custom_fields(),ignore_validate=True)
     create_custom_fields(get_hd_ticket_type_custom_fields(),ignore_validate=True)
     create_custom_fields(get_expense_claim_type_custom_fields(),ignore_validate=True)
+    create_custom_fields(get_supplier_quotation_custom_fields(), ignore_validate=True)
 
 
     #Creating BEAMS specific Property Setters
@@ -132,6 +133,7 @@ def before_uninstall():
     delete_custom_fields(get_hd_ticket_custom_fields())
     delete_custom_fields(get_hd_ticket_type_custom_fields())
     delete_custom_fields(get_expense_claim_type_custom_fields())
+    delete_custom_fields(get_supplier_quotation_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -589,12 +591,18 @@ def get_customer_custom_fields():
                 "insert_after": "customer_group"
             },
             {
+                "fieldname": "msme_number",
+                "fieldtype": "Int",
+                "label": "MSME Number",
+                "insert_after":"msme_status"
+            },
+            {
                 "fieldname": "region",
                 "fieldtype": "Link",
                 "label": "Region",
                 "options": "Region",
                 "reqd": 1,
-                "insert_after": "msme_status"
+                "insert_after": "msme_number"
             },
             {
                 "fieldname": "is_agent",
@@ -802,6 +810,12 @@ def get_purchase_order_custom_fields():
                 "no_copy":1,
                 "depends_on": "eval:doc.is_budget_exceed == 1"
 
+            },
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "base_net_total"
             }
         ],
         "Purchase Order Item": [
@@ -819,7 +833,7 @@ def get_purchase_order_custom_fields():
                 "label": "Reference Document",
                 "options":"reference_doctype",
                 "insert_after": "reference_doctype"
-            }
+            }  
         ]
     }
 
@@ -1504,6 +1518,12 @@ def get_purchase_invoice_custom_fields():
                 "read_only": 1,
                 "options": "Bureau",
                 "insert_after": "supplier"
+            },
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "base_net_total"
             }
         ]
     }
@@ -4688,6 +4708,21 @@ def get_expense_claim_type_custom_fields():
                 "fieldtype": "Check",
                 "label": "For Vehicle Incident",
                 "insert_after": "deferred_expense_account"
+            }
+        ]
+    }
+
+def get_supplier_quotation_custom_fields():
+    '''
+        Custom fields that need to be added to the Supplier Quotation DocType
+    '''
+    return {
+        "Supplier Quotation": [
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "base_net_total"
             }
         ]
     }
