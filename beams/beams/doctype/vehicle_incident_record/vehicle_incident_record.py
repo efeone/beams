@@ -58,7 +58,7 @@ class VehicleIncidentRecord(Document):
             frappe.throw(f"Employee not linked to Driver {self.driver}")
 
         for row in self.vehicle_incident_details:
-            if row.is_employee_payable and not row.get("journal_entry"):
+            if not row.get("journal_entry"):
                 # Fetch the default_account from the Expense Claim Type's accounts child table
                 credit_account = None
                 if row.expense_type:
@@ -77,21 +77,31 @@ class VehicleIncidentRecord(Document):
                 journal_entry.company = frappe.defaults.get_user_default("Company")
                 journal_entry.remark = f"Payable offense recorded in Vehicle Incident Record {self.name}"
 
-                # Debit entry (Employee Payable Account)
-                journal_entry.append("accounts", {
-                    "account": debit_account,
-                    "party_type": "Employee",
-                    "party": employee_id,
-                    "debit_in_account_currency": row.amount
-                })
+                if row.is_employee_payable:
+                    journal_entry.append("accounts", {
+                        "account": debit_account,
+                        "party_type": "Employee",
+                        "party": employee_id,
+                        "debit_in_account_currency": row.amount
+                    })
+                    journal_entry.append("accounts", {
+                        "account": credit_account,
+                        "credit_in_account_currency": row.amount
+                    })
+                else:
+                    journal_entry.append("accounts", {
+                        "account": credit_account,
+                        "debit_in_account_currency": row.amount
+                    })
+                    journal_entry.append("accounts", {
+                        "account": debit_account,
+                        "party_type": "Employee",
+                        "party": employee_id,
+                        "credit_in_account_currency": row.amount
+                    })
 
-                # Credit entry (Default Account from Expense Claim Type)
-                journal_entry.append("accounts", {
-                    "account": credit_account,
-                    "credit_in_account_currency": row.amount
-                })
 
-                journal_entry.insert()
+                journal_entry.insert(ignore_permissions=True)
                 row.journal_entry = journal_entry.name
                 frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True, indicator="green")
 
