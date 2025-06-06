@@ -110,7 +110,6 @@ def fetch_department_from_cost_center(doc, method):
 			else:
 				frappe.msgprint(_("No department found for the selected Cost Center {0}.").format(row.cost_center))
 
-
 @frappe.whitelist()
 def update_equipment_quantities(doc, method):
     """
@@ -123,6 +122,7 @@ def update_equipment_quantities(doc, method):
             if doc.items:
                 for item in doc.items:
                     if hasattr(item, 'reference_document') and item.reference_document:
+                        # Update acquired_qty in Required Acquiral Items Detail
                         ea_a_qty = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "acquired_qty")
                         frappe.db.set_value(
                             "Required Acquiral Items Detail",
@@ -130,24 +130,39 @@ def update_equipment_quantities(doc, method):
                             "acquired_qty",
                             (ea_a_qty + item.qty)
                         )
-                    equipment_a_request = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "parent")
-                    ea_item = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "item")
+                        equipment_a_request = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "parent")
+                        ea_item = frappe.db.get_value("Required Acquiral Items Detail", item.reference_document, "item")
 
-                    if equipment_a_request:
-                        equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
-                        if equipment_request:
-                            er_doc = frappe.get_doc("Equipment Request", equipment_request)
-                            for e_item in er_doc.required_equipments:
-                                if e_item.required_item == ea_item:
-                                    e_item.acquired_quantity = (e_item.acquired_quantity + item.qty)
-                            er_doc.save()
+                        if equipment_a_request:
+                            equipment_request = frappe.db.get_value("Equipment Acquiral Request", equipment_a_request, "equipment_request")
+                            if equipment_request:
+                                er_doc = frappe.get_doc("Equipment Request", equipment_request)
+                                for e_item in er_doc.required_equipments:
+                                    if e_item.required_item == ea_item:
+                                        e_item.acquired_quantity = (e_item.acquired_quantity + item.qty)
+                                er_doc.save()
 
-                            project = frappe.db.get_value("Equipment Request", equipment_request, "project")
-                            if project:
-                                project_doc = frappe.get_doc("Project", project)
+                                project = frappe.db.get_value("Equipment Request", equipment_request, "project")
+                                if project:
+                                    project_doc = frappe.get_doc("Project", project)
+                                    item_found = False
+                                    for p_item in project_doc.allocated_item_details:
+                                        if p_item.required_item == ea_item:
+                                            p_item.acquired_quantity = (p_item.acquired_quantity or 0) + item.qty
+                                            item_found = True
+                                            break
 
-                                for p_item in project_doc.allocated_item_details:
-                                    if p_item.required_item == ea_item:
-                                        p_item.acquired_quantity += item.qty
+                                    if not item_found:
+                                        required_qty = 0
+                                        for e_item in er_doc.required_equipments:
+                                            if e_item.required_item == ea_item:
+                                                required_qty = e_item.required_quantity
+                                                break
 
-                                project_doc.save()
+                                        project_doc.append("allocated_item_details", {
+                                            "required_item": ea_item,
+                                            "required_quantity": required_qty,
+											"acquired_quantity": item.qty
+                                        })
+
+                                    project_doc.save()
