@@ -41,7 +41,7 @@ class AssetTransferRequest(Document):
            Handles updates after submission by adding  assets,items,asset to the asset return checklist when the workflow state is 'Transferred'
         '''
 
-        if self.workflow_state == "Transferred" and self.asset_return_checklist_template:
+        if self.workflow_state == "Transferred and Received":
             existing_checklist_items = {row.checklist_item for row in self.get("asset_return_checklist")}
             assets_to_add = set()
 
@@ -362,18 +362,6 @@ def get_stock_items_from_bundle(bundle):
         fields=["item", "uom", "qty"]
     )
     return stock_items
-
-
-@frappe.whitelist()
-def get_asset_return_checklist_template(template_name):
-    if not frappe.db.exists("Asset Return Checklist Template", template_name):
-        frappe.msgprint(_("Asset Return Checklist Template '{}' not found").format(template_name))
-
-    return frappe.get_all(
-        "Asset Return Check",
-        filters={"parent": template_name},
-        fields=["checklist_item"]
-    )
 
 @frappe.whitelist()
 def get_bundle_assets(bundle):
