@@ -20,7 +20,7 @@ def get_columns():
 
 def get_data(filters):
     data = []
-    asset_filters = {}
+    asset_filters = {"custodian": ["!=", ""]}
 
     if filters.get("employee"):
         asset_filters["custodian"] = filters["employee"]
@@ -35,7 +35,8 @@ def get_data(filters):
             "location",
             "total_asset_cost"
         ],
-        filters=asset_filters if asset_filters else None
+        filters=asset_filters if asset_filters else None,
+        order_by="custodian asc"
     )
 
     for asset in assets:
