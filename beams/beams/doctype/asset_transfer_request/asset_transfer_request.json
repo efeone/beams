@@ -22,7 +22,6 @@
   "stock_entry",
   "section_break_sesi",
   "items",
-  "asset_return_checklist_template",
   "asset_return_checklist",
   "amended_from"
  ],
@@ -67,16 +66,7 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "eval:doc.workflow_state == \"Transferred\"",
-   "fieldname": "asset_return_checklist_template",
-   "fieldtype": "Link",
-   "label": "Asset Return Checklist template",
-   "mandatory_depends_on": "eval:doc.workflow_state == \"Transferred\"",
-   "options": "Asset Return Checklist Template"
-  },
-  {
-   "allow_on_submit": 1,
-   "depends_on": "eval:doc.asset_return_checklist_template",
+   "depends_on": "eval:doc.workflow_state == 'Transferred and Received'\n",
    "fieldname": "asset_return_checklist",
    "fieldtype": "Table",
    "label": "Asset Return Checklist",
@@ -171,7 +161,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-03 13:58:26.799954",
+ "modified": "2025-06-10 10:15:13.555858",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",
