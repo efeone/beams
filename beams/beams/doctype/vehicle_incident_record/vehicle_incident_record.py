@@ -6,14 +6,15 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.utils import today
-from frappe.utils import getdate
-
 
 
 class VehicleIncidentRecord(Document):
     def on_update(self):
         if self.workflow_state == "Approved":
             self.create_journal_entry_for_payable_items()
+
+    def validate(self):
+        self.validate_offense_date_and_time()
 
     @frappe.whitelist()
     def validate_posting_date(self):
