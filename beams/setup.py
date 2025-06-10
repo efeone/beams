@@ -177,7 +177,7 @@ def get_shift_assignment_custom_fields():
 
         ]
     }
-    
+
 def get_hd_ticket_type_custom_fields():
     '''
     Custom fields that need to be added to the HD Ticket Type DocType
@@ -742,6 +742,7 @@ def get_asset_custom_fields():
                 "label": "Room",
                 "options":"Service Unit",
                 "allow_on_submit": 1,
+                "reqd": 1,
                 "insert_after": "journal_entry_for_scrap"
             },
             {
@@ -750,6 +751,7 @@ def get_asset_custom_fields():
                 "label": "Shelf",
                 "options":"Shelf",
                 "allow_on_submit": 1,
+                "reqd": 1,
                 "insert_after": "room"
             },
             {
@@ -758,6 +760,7 @@ def get_asset_custom_fields():
                 "label": "Row",
                 "options":"Row",
                 "allow_on_submit": 1,
+                "reqd": 1,
                 "insert_after": "shelf"
             },
             {
@@ -766,6 +769,7 @@ def get_asset_custom_fields():
                 "label": "Bin",
                 "options":"Container",
                 "allow_on_submit": 1,
+                "reqd": 1,
                 "insert_after": "row"
             }
         ]
@@ -833,7 +837,7 @@ def get_purchase_order_custom_fields():
                 "label": "Reference Document",
                 "options":"reference_doctype",
                 "insert_after": "reference_doctype"
-            }  
+            }
         ]
     }
 
@@ -3392,7 +3396,7 @@ def get_property_setters():
         BEAMS specific property setters that need to be added to the Customer ,Account and Supplier DocTypes
     '''
     return [
-    
+
         {
             "doctype_or_field": "DocField",
             "doc_type": "Customer",
