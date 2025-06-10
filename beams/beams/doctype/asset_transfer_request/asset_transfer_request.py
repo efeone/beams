@@ -12,6 +12,21 @@ from datetime import datetime
 class AssetTransferRequest(Document):
     def before_save(self):
         self.validate_posting_date()
+        if self.workflow_state == "Draft":
+            self.validate_locations()
+
+    def validate_locations(self):
+        """Validate that source and target locations are not the same."""
+        if self.asset_type == "Single Asset" and self.asset:
+            asset_doc = frappe.get_doc("Asset", self.asset)
+            if asset_doc.location == self.location:
+                frappe.throw(_("Source and target location cannot be the same"))
+        elif self.asset_type == "Bundle":
+            for item in self.assets:
+                if item.asset:
+                    asset_doc = frappe.get_doc("Asset", item.asset)
+                    if asset_doc.location == self.location:
+                        frappe.throw(_("Source and target location cannot be the same"))
 
     @frappe.whitelist()
     def validate_posting_date(self):
