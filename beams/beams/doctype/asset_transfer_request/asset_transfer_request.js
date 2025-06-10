@@ -123,8 +123,6 @@ frappe.ui.form.on("Asset Transfer Request", {
                 ]
             }));
         }).catch(err => console.error("Error:", err));
-
-
         frm.set_df_property("asset_return_checklist", "cannot_add_rows", true);
         frm.fields_dict.asset_return_checklist.grid.update_docfield_property(
             'checklist_item', 'read_only', 1
