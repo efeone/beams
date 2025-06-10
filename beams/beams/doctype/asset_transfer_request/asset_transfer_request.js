@@ -105,26 +105,6 @@ frappe.ui.form.on("Asset Transfer Request", {
           frm.refresh_field('assets');
       }
   },
-    asset_return_checklist_template: function(frm) {
-        if (frm.doc.asset_return_checklist_template) {
-            frappe.call({
-                method: "beams.beams.doctype.asset_transfer_request.asset_transfer_request.get_asset_return_checklist_template",
-                args: {
-                    template_name: frm.doc.asset_return_checklist_template
-                },
-                callback: function(response) {
-                    if (response.message) {
-                        frm.clear_table("aresponse.messageet_return_checklist");
-                        response.message.forEach(item => {
-                            let row = frm.add_child("asset_return_checklist");
-                            row.checklist_item = item.checklist_item;
-                        });
-                        frm.refresh_field("asset_return_checklist");
-                    }
-                }
-            });
-        }
-    },
     refresh(frm) {
         frappe.db.get_list("Asset Transfer Request", {
             fields: ["asset", "bundle"],
@@ -143,6 +123,12 @@ frappe.ui.form.on("Asset Transfer Request", {
                 ]
             }));
         }).catch(err => console.error("Error:", err));
+
+
+        frm.set_df_property("asset_return_checklist", "cannot_add_rows", true);
+        frm.fields_dict.asset_return_checklist.grid.update_docfield_property(
+            'checklist_item', 'read_only', 1
+        );
     }
 });
 
