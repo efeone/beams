@@ -742,7 +742,7 @@ def get_asset_custom_fields():
                 "label": "Room",
                 "options":"Service Unit",
                 "allow_on_submit": 1,
-                "reqd": 1,
+                "read_only":1,
                 "insert_after": "journal_entry_for_scrap"
             },
             {
@@ -751,7 +751,7 @@ def get_asset_custom_fields():
                 "label": "Shelf",
                 "options":"Shelf",
                 "allow_on_submit": 1,
-                "reqd": 1,
+                "read_only":1,
                 "insert_after": "room"
             },
             {
@@ -760,7 +760,7 @@ def get_asset_custom_fields():
                 "label": "Row",
                 "options":"Row",
                 "allow_on_submit": 1,
-                "reqd": 1,
+                "read_only":1,
                 "insert_after": "shelf"
             },
             {
@@ -769,7 +769,7 @@ def get_asset_custom_fields():
                 "label": "Bin",
                 "options":"Container",
                 "allow_on_submit": 1,
-                "reqd": 1,
+                "read_only":1,
                 "insert_after": "row"
             }
         ]
