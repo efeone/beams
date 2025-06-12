@@ -1,0 +1,135 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{vehicle_no}-{project}-{#}",
+ "creation": "2025-04-25 12:38:31.843470",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_td0a",
+  "project",
+  "transportation_request",
+  "vehicle_type",
+  "vehicle_no",
+  "required_on",
+  "column_break_fkbx",
+  "from",
+  "to",
+  "returned",
+  "required_to",
+  "section_break_r6q4",
+  "purpose",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_td0a",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "External Vehicle Details",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "vehicle_type",
+   "fieldtype": "Link",
+   "label": "Vehicle Type",
+   "options": "Vehicle Type"
+  },
+  {
+   "fieldname": "required_on",
+   "fieldtype": "Datetime",
+   "label": "Required On"
+  },
+  {
+   "depends_on": "eval:doc.returned",
+   "fieldname": "required_to",
+   "fieldtype": "Datetime",
+   "label": "Return Date"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Link",
+   "label": "From",
+   "options": "Location"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "label": "To",
+   "options": "Location"
+  },
+  {
+   "default": "0",
+   "fieldname": "returned",
+   "fieldtype": "Check",
+   "label": "Returned"
+  },
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_fkbx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "transportation_request",
+   "fieldtype": "Link",
+   "label": "Transportation Request",
+   "options": "Transportation Request",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "purpose"
+  },
+  {
+   "fieldname": "section_break_r6q4",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_no",
+   "fieldtype": "Data",
+   "label": "Vehicle No.",
+   "unique": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-04-28 13:17:49.111299",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "External Vehicle Details",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

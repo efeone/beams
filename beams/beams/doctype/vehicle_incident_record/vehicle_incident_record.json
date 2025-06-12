@@ -8,13 +8,19 @@
  "field_order": [
   "section_break_ue5d",
   "trip_sheet",
-  "offense_type",
   "driver",
   "driver_name",
+  "vehicle",
   "column_break_hwrj",
+  "offense_type",
+  "trip_start_date",
+  "trip_end_date",
+  "column_break_trzy",
   "posting_date",
   "offense_date_and_time",
-  "amended_from"
+  "amended_from",
+  "section_break_ezbs",
+  "vehicle_incident_details"
  ],
  "fields": [
   {
@@ -77,14 +83,47 @@
    "fieldname": "driver_name",
    "fieldtype": "Data",
    "label": "Driver Name",
-   "read_only": 1,
+   "read_only": 1
+  },
+  {
+   "fetch_from": "trip_sheet.starting_date_and_time",
+   "fieldname": "trip_start_date",
+   "fieldtype": "Date",
+   "label": "Trip Start Date"
+  },
+  {
+   "fetch_from": "trip_sheet.ending_date_and_time",
+   "fieldname": "trip_end_date",
+   "fieldtype": "Date",
+   "label": "Trip End Date"
+  },
+  {
+   "fieldname": "section_break_ezbs",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "vehicle_incident_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Incident Details",
+   "options": "Vehicle Incident Details"
+  },
+  {
+   "fieldname": "column_break_trzy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "trip_sheet.vehicle",
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle",
    "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-31 15:12:22.481381",
+ "modified": "2025-05-22 11:26:14.062368",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Incident Record",

@@ -63,7 +63,12 @@ doctype_js = {
     "Appraisal Template":"beams/custom_scripts/appraisal_template/appraisal_template.js",
     "Opportunity":"beams/custom_scripts/opportunity/opportunity.js",
     "Lead":"beams/custom_scripts/lead/lead.js",
-    "Payment Entry":"beams/custom_scripts/payment_entry/payment_entry.js"
+    "Payment Entry":"beams/custom_scripts/payment_entry/payment_entry.js",
+    "Full and Final Statement":"beams/custom_scripts/full_and_final_statement/full_and_final_statement.js",
+    "HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js",
+    "Vehicle":"beams/custom_scripts/vehicle/vehicle.js",
+    "Material Request":"beams/custom_scripts/material_request/material_request.js",
+    "Asset":"beams/custom_scripts/asset/asset.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -144,7 +149,8 @@ before_uninstall = "beams.setup.before_uninstall"
 
 permission_query_conditions = {
 "Job Applicant": "beams.beams.custom_scripts.job_applicant.job_applicant.get_permission_query_conditions",
-"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions"
+"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions",
+"Employee Travel Request": "beams.beams.doctype.employee_travel_request.employee_travel_request.get_permission_query_conditions"
 }
 
 # has_permission = {
@@ -158,11 +164,8 @@ permission_query_conditions = {
 override_doctype_class = {
     "Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
     "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
-    "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride"
-}
-
-standard_queries = {
-    "Cost Center": "beams.beams.overrides.queries.get_cost_center_list"
+    "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
+    "HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride"
 }
 
 # Document Events
@@ -210,6 +213,7 @@ doc_events = {
     },
     "Material Request":{
         "before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+        "after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers"
         # "validate":"beams.beams.custom_scripts.purchase_order.purchase_order.fetch_department_from_cost_center"
     },
     "Sales Order": {
@@ -264,7 +268,12 @@ doc_events = {
         "on_submit": "beams.beams.custom_scripts.interview_feedback.interview_feedback.update_applicant_interview_round_from_feedback"
     },
     "Employee Checkin":{
-        "after_insert":"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
+        "after_insert": [
+            "beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out",
+            "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
+        ],
+        "on_update" : "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
+
     },
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
@@ -323,8 +332,21 @@ doc_events = {
         ]
     },
     "Project": {
-         "on_update": "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion",
-         "validate":"beams.beams.custom_scripts.project.project.validate_employee_assignment"
+         "on_update":  [
+            "beams.beams.custom_scripts.project.project.update_program_request_status_on_project_completion",
+            "beams.beams.custom_scripts.project.project.validate_project",
+            "beams.beams.custom_scripts.project.project.sync_manpower_logs",
+            "beams.beams.custom_scripts.project.project.on_update_project",
+            "beams.beams.custom_scripts.project.project.sync_vehicle_logs",
+            "beams.beams.custom_scripts.project.project.auto_return_vehicles_on_project_completion",
+            "beams.beams.custom_scripts.project.project.sync_equipment_logs",
+            "beams.beams.custom_scripts.project.project.auto_return_equipment_on_project_completion"
+        ],
+        "validate": [
+           "beams.beams.custom_scripts.project.project.validate_employee_assignment",
+           "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project",
+           "beams.beams.custom_scripts.project.project.validate_vehicle_assignment_in_same_project"
+        ],
     },
     "Item": {
         "before_insert": [
@@ -332,13 +354,18 @@ doc_events = {
         ]
     },
     "Asset Movement": {
-        "on_submit": "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
-        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save"
+        "on_submit": [
+            "beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
+            "beams.beams.custom_scripts.asset_movement.asset_movement.update_asset_location_from_movement"
+            ],
+        "before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save",
     },
     "Asset":{
-        "after_insert":"beams.beams.custom_scripts.asset.asset.generate_asset_qr",
-        "on_submit":"beams.beams.custom_scripts.asset.asset.generate_asset_details_qr"
-
+        "on_submit": [
+            "beams.beams.custom_scripts.asset.asset.generate_asset_qr",
+            "beams.beams.custom_scripts.asset.asset.generate_asset_details_qr"
+        ],
+        "on_update_after_submit":"beams.beams.custom_scripts.asset.asset.create_asset_location_log"
     },
     "Budget":{
         "validate":"beams.beams.custom_scripts.budget.budget.beams_budget_validate",
@@ -350,8 +377,11 @@ doc_events = {
     "Voucher Entry Type": {
         "validate" :"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
     },
-    "Attendance Request":{
-        "before_save":"beams.beams.custom_scripts.attendance_request.attendance_request.validate_to_date"
+    "Expense Claim": {
+        "after_insert": "beams.beams.custom_scripts.expense_claim.expense_claim.notify_expense_approver_on_creation"
+    },
+    "Vehicle" :{
+        "on_update":"beams.beams.custom_scripts.vehicle.vehicle.create_vehicle_documents_log"
     }
 }
 
@@ -411,6 +441,8 @@ override_doctype_dashboards = {
     'Job Applicant': 'beams.beams.custom_scripts.job_applicant.job_applicant_dashboard.get_data',
     'Project':'beams.beams.custom_scripts.project_dashboard.project_dashboard.get_data',
     'Department': 'beams.beams.custom_scripts.department.department_dashboard.get_data',
+    'Vehicle': 'beams.beams.custom_scripts.vehicle_dashboard.vehicle_dashboard.get_data',
+    'Driver': 'beams.beams.custom_scripts.driver_dashboard.driver_dashboard.get_data',
 }
 
 # exempt linked doctypes from being automatically cancelled

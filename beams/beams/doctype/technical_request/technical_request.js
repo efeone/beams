@@ -3,17 +3,14 @@
 
 frappe.ui.form.on('Technical Request', {
     refresh: function(frm) {
-        // Initially hide the "Reason for Rejection" field
-        frm.set_df_property("employee", "read_only", false);
-        frm.set_df_property("employee", "hidden", false);
-
-        if (frm.doc.workflow_state === "Pending Approval" || frm.doc.workflow_state === "Draft") {
-            frm.set_df_property("employee", "read_only", false);
-        } else {
-            frm.set_df_property("employee", "read_only", true);
-        }
-
+        set_employee_field_read_only(frm);
         set_employee_query(frm);
+
+        const read_only_fields = ['project','bureau', 'location','posting_date', 'required_from', 'required_to'];
+        const should_be_read_only = !frm.is_new() && frm.doc.workflow_state === 'Draft';
+        read_only_fields.forEach(field => {
+            frm.set_df_property(field, 'read_only', should_be_read_only);
+        });
 
         if (!frm.is_new() && frm.doc.workflow_state === "Approved") {
             frm.add_custom_button("External Resource Request", function() {
@@ -31,6 +28,10 @@ frappe.ui.form.on('Technical Request', {
               }, __("Create"));
         }
       },
+      workflow_state: function(frm) {
+        set_employee_field_read_only(frm);
+    },
+
     posting_date:function (frm){
         frm.call("validate_posting_date");
       },
@@ -70,4 +71,14 @@ function set_employee_query(frm) {
             }
         };
     };
+}
+
+
+function set_employee_field_read_only(frm) {
+    if (frm.doc.workflow_state === "Draft") {
+        frm.fields_dict["required_employees"].grid.update_docfield_property("employee", "read_only", 1);
+    } else {
+        frm.fields_dict["required_employees"].grid.update_docfield_property("employee", "read_only", 0);
+    }
+    frm.refresh_field("required_employees");
 }

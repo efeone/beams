@@ -14,11 +14,14 @@
   "notifcation_frequency",
   "notification_template",
   "column_break_qndy",
+  "default_asset_location",
   "asset_transfer_warehouse",
   "notification_for_asset_reservation",
   "role_receiving_asset_reservation_notification",
   "notification_template_for_asset_reservation",
-  "notification_for_asset_reservation_before"
+  "notification_for_asset_reservation_before",
+  "default_employee_payable_account",
+  "item_group"
  ],
  "fields": [
   {
@@ -116,12 +119,30 @@
    "fieldtype": "Int",
    "label": "Notification for Asset Reservation Before",
    "mandatory_depends_on": "eval:doc.notification_for_asset_reservation == 1;"
+  },
+  {
+   "fieldname": "default_asset_location",
+   "fieldtype": "Link",
+   "label": "Default Asset Location ",
+   "options": "Location"
+  },
+  {
+   "fieldname": "default_employee_payable_account",
+   "fieldtype": "Link",
+   "label": "Default Employee Payable Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "item_group",
+   "fieldtype": "Link",
+   "label": "Makeup Item Group",
+   "options": "Item Group"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-03-05 11:04:59.008809",
+ "modified": "2025-06-04 11:43:38.073135",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
@@ -138,6 +159,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

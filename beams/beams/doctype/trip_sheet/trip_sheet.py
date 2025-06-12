@@ -5,25 +5,85 @@ from frappe.model.document import Document
 from frappe.utils import get_datetime
 from frappe.utils import today
 from frappe import _
+from frappe.utils import getdate
 
 class TripSheet(Document):
     def validate(self):
-        # Ensure the final_odometer_reading is not None and is an integer
-        if self.final_odometer_reading is None:
-            frappe.throw("Please enter an integer value for Final Odometer Reading.")
-
-        if not isinstance(self.final_odometer_reading, int):
-            frappe.throw("Please enter an integer value for Final Odometer Reading.")
-            
         if not self.travel_requests and not self.transportation_requests:
             frappe.throw("Please provide at least one of Travel Requests or Transportation Requests.")
 
         self.validate_start_datetime_and_end_datetime()
         self.calculate_and_validate_fuel_data()
+        self.calculate_hours()
+        self.validate_trip_times()
 
 
     def before_save(self):
         self.validate_posting_date()
+        # Set safety_inspection_completed based on fit_for_use are checked
+        if self.vehicle_safety_inspection_details:
+            all_fit_for_use = all(row.fit_for_use == 1 for row in self.vehicle_safety_inspection_details)
+            self.safety_inspection_completed = 1 if all_fit_for_use else 0
+        else:
+            self.safety_inspection_completed = 0
+
+    def on_submit(self):
+        self.validate_final_odometer_reading()
+
+    def validate_final_odometer_reading(self):
+        if self.final_odometer_reading is None:
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
+
+        if not isinstance(self.final_odometer_reading, int):
+            frappe.throw("Please enter an integer value for Final Odometer Reading.")
+
+    @frappe.whitelist()
+    def calculate_hours(self):
+        '''
+        Calculate hours between from_time and to_time for each trip, validating their order.
+        '''
+        for trip in self.trip_details:
+            if trip.from_time and trip.to_time:
+                from_time = frappe.utils.get_datetime(trip.from_time)
+                to_time = frappe.utils.get_datetime(trip.to_time)
+
+                if to_time > from_time:
+                    diff = to_time - from_time
+                    trip.hrs = round(diff.total_seconds() / 3600, 2)
+                else:
+                    trip.hrs = 0
+                    frappe.throw(f"To Time must be after From Time for trip from {trip.departure} to {trip.destination}")
+            else:
+                trip.hrs = None
+
+    @frappe.whitelist()
+    def validate_trip_times(self):
+        '''
+        Validates that all `from_time` and `to_time` values in the trip_details table fall
+        within the range defined by `starting_date_and_time` and `ending_date_and_time`.
+        '''
+        if not self.starting_date_and_time or not self.ending_date_and_time:
+            return
+
+        starting_date = frappe.utils.getdate(self.starting_date_and_time)
+        ending_date = frappe.utils.getdate(self.ending_date_and_time)
+
+        for row in self.trip_details:
+            if row.get("from_time"):
+                from_date = frappe.utils.getdate(row.from_time)
+                if not (starting_date <= from_date <= ending_date):
+                    frappe.throw(
+                        _("Row #{0}: From Date must be between Starting Date and Ending Date.").format(row.idx),
+                        title=_("Message")
+                    )
+            if row.get("to_time"):
+                to_date = frappe.utils.getdate(row.to_time)
+                if not (starting_date <= to_date <= ending_date):
+                    frappe.throw(
+                        _("Row #{0}: To Date must be between Starting Date and Ending Date.").format(row.idx),
+                        title=_("Message")
+                    )
+
 
     @frappe.whitelist()
     def validate_start_datetime_and_end_datetime(self):
@@ -34,8 +94,9 @@ class TripSheet(Document):
         if not self.starting_date_and_time or not self.ending_date_and_time:
             return
 
-        starting_date_and_time = get_datetime(self.starting_date_and_time)
-        ending_date_and_time = get_datetime(self.ending_date_and_time)
+        starting_date_and_time = getdate(self.starting_date_and_time)
+        ending_date_and_time = getdate(self.ending_date_and_time)
+
 
         if starting_date_and_time > ending_date_and_time:
             frappe.throw(
@@ -49,6 +110,8 @@ class TripSheet(Document):
         Validate odometer readings and calculate distance traveled and fuel consumption per km.
         Automatically updates the fields on the same document.
         '''
+        if self.final_odometer_reading is None or self.initial_odometer_reading is None:
+            return
         if self.initial_odometer_reading > self.final_odometer_reading:
             frappe.throw(_("Initial Odometer Reading must be less than  Final Odometer Reading"))
 
@@ -75,21 +138,18 @@ def get_last_odometer(vehicle):
     if not vehicle:
         return 0
 
-    last_trip_exists = frappe.db.exists(
+    final_odometer = frappe.db.get_value(
         "Trip Sheet",
         {"vehicle": vehicle, "docstatus": 1},
+        "final_odometer_reading",
+        order_by="starting_date_and_time desc"
     )
 
-    if last_trip_exists:
-        final_odometer = frappe.db.get_value(
-            "Trip Sheet",
-            {"vehicle": vehicle, "docstatus": 1},
-            "final_odometer_reading",
-            order_by="creation desc",
-        )
+    if final_odometer is not None:
         return final_odometer or 0
-    else:
-        return 0
+    vehicle_odometer = frappe.db.get_value("Vehicle", vehicle, "last_odometer") or 0
+    return vehicle_odometer
+
 
 @frappe.whitelist()
 def get_selected_requests(child_table, fieldname):
@@ -130,11 +190,41 @@ def create_vehicle_incident_record(trip_sheet):
 
     trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
 
-    vehicle_incident = frappe.get_doc({
+    vehicle_incident_data = {
         "doctype": "Vehicle Incident Record",
         "trip_sheet": trip_sheet
-    })
+    }
 
-    vehicle_incident.insert(ignore_mandatory=True)
+    return vehicle_incident_data
 
-    return vehicle_incident.name
+@frappe.whitelist()
+def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):
+    driver = filters.get("driver") if filters else None
+    if not driver:
+        return []
+
+    conditions = []
+    if txt:
+        conditions.append(f"etr.name LIKE %(txt)s")
+
+    query = """
+        SELECT DISTINCT etr.name, etr.requested_by
+        FROM `tabEmployee Travel Request` etr
+        INNER JOIN `tabVehicle Allocation` tva
+            ON tva.parent = etr.name
+        WHERE tva.driver = %(driver)s
+        {conditions}
+        ORDER BY etr.name
+        LIMIT %(start)s, %(page_len)s
+    """.format(conditions=" AND " + " AND ".join(conditions) if conditions else "")
+
+    return frappe.db.sql(
+        query,
+        {
+            "driver": driver,
+            "txt": f"%{txt}%" if txt else None,
+            "start": start,
+            "page_len": page_len,
+        },
+        as_list=True,
+    )

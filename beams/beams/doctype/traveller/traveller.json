@@ -12,6 +12,7 @@
   {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
@@ -21,7 +22,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-01-21 15:01:41.141357",
+ "modified": "2025-05-08 11:48:05.048084",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Traveller",

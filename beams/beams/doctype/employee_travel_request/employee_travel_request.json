@@ -10,6 +10,8 @@
   "requested_by",
   "is_group",
   "travellers",
+  "number_of_travellers",
+  "is_vehicle_required",
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
@@ -32,7 +34,10 @@
   "section_break_ktsj",
   "mark_attendance",
   "attendance_request",
-  "reference_documents",
+  "travel_vehicle_allocation",
+  "attachments",
+  "expense_claim_html",
+  "journal_entry_expenses_table",
   "reason_for_rejection",
   "section_break_fdom",
   "dynamic_link"
@@ -76,6 +81,7 @@
    "depends_on": "eval:doc.is_group;",
    "fieldname": "travellers",
    "fieldtype": "Table MultiSelect",
+   "ignore_user_permissions": 1,
    "label": "Travellers",
    "options": "Traveller"
   },
@@ -93,7 +99,7 @@
   {
    "fieldname": "travel_type",
    "fieldtype": "Link",
-   "label": "Propose of Travel",
+   "label": "Purpose of Travel",
    "options": "Purpose of Travel",
    "reqd": 1
   },
@@ -176,12 +182,6 @@
    "label": "Mark Attendance"
   },
   {
-   "fieldname": "reference_documents",
-   "fieldtype": "Table",
-   "label": "Reference Documents",
-   "options": "Reference Document"
-  },
-  {
    "depends_on": "eval:doc.accommodation_required;",
    "fieldname": "expected_check_in_time",
    "fieldtype": "Datetime",
@@ -229,12 +229,62 @@
    "fieldname": "section_break_fdom",
    "fieldtype": "Section Break",
    "label": "Links"
+  },
+  {
+   "fieldname": "number_of_travellers",
+   "fieldtype": "Int",
+   "label": "Number of Travellers",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_vehicle_required",
+   "fieldtype": "Check",
+   "label": "Vehicle Required"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "travel_vehicle_allocation",
+   "fieldtype": "Table",
+   "label": "Travel Vehicle Allocation",
+   "options": "Vehicle Allocation"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "attachments",
+   "fieldtype": "Table",
+   "label": "Attachments",
+   "options": "Attachment Detail"
+  },
+  {
+   "fieldname": "expense_claim_html",
+   "fieldtype": "HTML"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "journal_entry_expenses_table",
+   "fieldtype": "Table",
+   "label": "Journal Entry Expenses Table",
+   "options": "Journal Entry Expenses"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-03-13 16:21:47.792111",
+ "links": [
+  {
+   "link_doctype": "Expense Claim",
+   "link_fieldname": "travel_request"
+  },
+  {
+   "link_doctype": "Journal Entry",
+   "link_fieldname": "employee_travel_request"
+  },
+  {
+   "link_doctype": "Trip Sheet",
+   "link_fieldname": "employee_travel_request"
+  }
+ ],
+ "modified": "2025-05-29 17:01:51.710862",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

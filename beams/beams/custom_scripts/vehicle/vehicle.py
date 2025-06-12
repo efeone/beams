@@ -3,6 +3,7 @@ from frappe.utils import today, add_days, formatdate, getdate
 from datetime import datetime
 from frappe.utils.user import get_users_with_role
 from frappe.email.doctype.email_account.email_account import EmailAccount
+from frappe.utils import nowdate, nowtime
 
 @frappe.whitelist()
 def send_vehicle_document_reminders():
@@ -84,3 +85,43 @@ def send_vehicle_document_reminders():
                     subject="Vehicle Document Expiry Reminder",
                     message=email_content,
                 )
+
+
+def create_vehicle_documents_log(doc, method):
+    """Log changes to Vehicle Documents in a single log per Vehicle, appending changed rows without duplicates."""
+
+    prev_docs = doc.get_doc_before_save().get("vehicle_documents") if doc.get_doc_before_save() else []
+    curr_docs = doc.get("vehicle_documents") or []
+    log_name = frappe.db.get_value("Vehicle Documents Log", {"vehicle": doc.name}, "name")
+    log = frappe.get_doc("Vehicle Documents Log", log_name) if log_name else frappe.new_doc("Vehicle Documents Log")
+    if not log_name:
+        log.update({
+            "vehicle": doc.name,
+            "license_plate": doc.license_plate,
+            "make": doc.make,
+            "model": doc.model
+        })
+    prev_dict = {row.name: row.as_dict() for row in prev_docs}
+    curr_dict = {row.name: row.as_dict() for row in curr_docs}
+    changed = False
+    def is_duplicate_in_log(log, row):
+        for log_row in log.get("vehicle_documents", []):
+            if (log_row.document == row.document and
+                log_row.reference_no == row.reference_no and
+                log_row.expiry_date == row.expiry_date and
+                log_row.remarks == row.remarks):
+                return True
+        return False
+    for row_name, row in curr_dict.items():
+        if row_name not in prev_dict:
+            row_data = {
+                "document": row.document,
+                "reference_no": row.reference_no,
+                "expiry_date": row.expiry_date,
+                "remarks": row.remarks
+            }
+            if not is_duplicate_in_log(log, row):
+                log.append("vehicle_documents", row_data)
+                changed = True
+    if changed or not log_name:
+        log.save(ignore_permissions=True)

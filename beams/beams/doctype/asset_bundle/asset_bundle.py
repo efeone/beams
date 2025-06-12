@@ -13,9 +13,9 @@ class AssetBundle(Document):
 	def before_save(self):
 		if not(self.assets or self.bundles or self.stock_items):
 			frappe.throw("At least one of Stock Items, Assets, or Bundles must be filled in.")
+		self.generate_asset_bundle_qr()
 
 	def after_insert(self):
-		self.generate_asset_bundle_qr()
 		self.generate_asset_bundle_qr_file()
 
 
@@ -44,14 +44,30 @@ class AssetBundle(Document):
 		_file.save()
 		self.db_set("bundle_qr_code", _file.file_url)
 
+	def validate(self):
+		self.validate_asset_locations()
+
+	def validate_asset_locations(self):
+		"""
+			Ensure all selected assets are from the same location.
+		"""
+		if not self.assets:
+			return
+
+		locations = set()
+
+		for asset in self.assets:
+			asset_doc = frappe.get_doc("Asset", asset.asset)
+			if asset_doc.location:
+				locations.add(asset_doc.location)
+
+		if len(locations) > 1:
+			frappe.throw("Selected assets belong to different locations. Please select assets from the same location.")
+
 	def get_si_file(self):
 		return self.name
 
 	def generate_asset_bundle_qr(self):
-		qr_code = self.get("qr_code")
-		if qr_code and frappe.db.exists({"doctype": "File", "file_url": qr_code}):
-			return
-
 		doc_url = self.get_si_json()
 		qr_image = io.BytesIO()
 		url = create(doc_url, error="L")

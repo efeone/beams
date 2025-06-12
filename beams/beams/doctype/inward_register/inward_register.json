@@ -9,9 +9,11 @@
   "section_break_65yf",
   "visitor_type",
   "visitor_name",
+  "courier_service",
   "column_break_weuy",
   "posting_date",
   "posting_time",
+  "visit_date",
   "section_break_zgfs",
   "received_by",
   "purpose_of_visit",
@@ -101,12 +103,23 @@
    "in_list_view": 1,
    "label": "Visitor Name ",
    "reqd": 1
+  },
+  {
+   "depends_on": "eval:doc.visitor_type == 'Courier'",
+   "fieldname": "courier_service",
+   "fieldtype": "Data",
+   "label": "Courier Service"
+  },
+  {
+   "fieldname": "visit_date",
+   "fieldtype": "Date",
+   "label": "Visit Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-27 11:15:43.490320",
+ "modified": "2025-05-14 12:08:44.095780",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",
@@ -127,6 +140,7 @@
    "write": 1
   }
  ],
+ "search_fields": "visitor_type,visitor_name,posting_date",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -9,8 +9,10 @@
   "section_break_wyyd",
   "driver",
   "vehicle",
-  "column_break_abgb",
   "posting_date",
+  "column_break_abgb",
+  "starting_date_and_time",
+  "ending_date_and_time",
   "section_break_ziua",
   "references_column",
   "travel_requests",
@@ -18,20 +20,21 @@
   "transportation_requests",
   "pre_trip_checklist_section",
   "clean_vehicle",
-  "safety_inspection",
-  "remarks",
+  "vehicle_template",
+  "vehicle_safety_inspection_details",
+  "safety_inspection_completed",
   "trip_details_section",
-  "departure_location",
-  "destination_location",
+  "trip_details",
+  "section_break_ygej",
   "initial_odometer_reading",
   "final_odometer_reading",
   "distance_traveledkm",
   "column_break_anpp",
-  "starting_date_and_time",
-  "ending_date_and_time",
   "fuel_consumed",
   "mileage",
-  "amended_from"
+  "amended_from",
+  "section_break_kwfq",
+  "remarks"
  ],
  "fields": [
   {
@@ -94,13 +97,7 @@
    "default": "0",
    "fieldname": "clean_vehicle",
    "fieldtype": "Check",
-   "label": "Clean Vehicle"
-  },
-  {
-   "default": "0",
-   "fieldname": "safety_inspection",
-   "fieldtype": "Check",
-   "label": "Safety Inspection"
+   "label": "Is Cleaned"
   },
   {
    "fieldname": "remarks",
@@ -122,28 +119,14 @@
   },
   {
    "fieldname": "starting_date_and_time",
-   "fieldtype": "Datetime",
-   "label": "Starting Date and Time ",
+   "fieldtype": "Date",
+   "label": "Starting Date",
    "reqd": 1
   },
   {
    "fieldname": "ending_date_and_time",
-   "fieldtype": "Datetime",
-   "label": " Ending Date and Time",
-   "reqd": 1
-  },
-  {
-   "fieldname": "departure_location",
-   "fieldtype": "Link",
-   "label": "Departure Location ",
-   "options": "Location",
-   "reqd": 1
-  },
-  {
-   "fieldname": "destination_location",
-   "fieldtype": "Link",
-   "label": "Destination Location ",
-   "options": "Location",
+   "fieldtype": "Date",
+   "label": " Ending Date",
    "reqd": 1
   },
   {
@@ -169,7 +152,7 @@
   {
    "fieldname": "fuel_consumed",
    "fieldtype": "Float",
-   "label": "Fuel Consumed"
+   "label": "Fuel Consumed(Ltr)"
   },
   {
    "fieldname": "column_break_anpp",
@@ -178,7 +161,7 @@
   {
    "fieldname": "mileage",
    "fieldtype": "Float",
-   "label": "Mileage",
+   "label": "Mileage(kmpl)",
    "read_only": 1
   },
   {
@@ -188,12 +171,53 @@
    "in_list_view": 1,
    "label": "Posting Date",
    "reqd": 1
+  },
+  {
+   "fieldname": "trip_details",
+   "fieldtype": "Table",
+   "label": "Trip Details",
+   "options": "Trip Details"
+  },
+  {
+   "fieldname": "section_break_ygej",
+   "fieldtype": "Section Break"
+  },
+  {
+   "depends_on": "eval:doc.vehicle\n",
+   "fieldname": "vehicle_template",
+   "fieldtype": "Link",
+   "label": "Vehicle Safety Template",
+   "options": "Vehicle Safety Inspection",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.vehicle",
+   "fieldname": "vehicle_safety_inspection_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Safety Inspection Details",
+   "options": "Vehicle Inspection Details"
+  },
+  {
+   "default": "0",
+   "fieldname": "safety_inspection_completed",
+   "fieldtype": "Check",
+   "label": "Safety Inspection Completed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_kwfq",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-01-31 13:52:37.720123",
+ "links": [
+  {
+   "link_doctype": "Vehicle Incident Record",
+   "link_fieldname": "trip_sheet"
+  }
+ ],
+ "modified": "2025-05-30 10:42:22.958496",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
@@ -214,6 +238,7 @@
    "write": 1
   }
  ],
+ "search_fields": "driver,vehicle,starting_date_and_time",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

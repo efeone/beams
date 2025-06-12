@@ -1,0 +1,91 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VTL-{YYYY}-{#####}",
+ "creation": "2025-04-19 11:17:21.937176",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "project",
+  "transportation_request",
+  "vehicle_hire_request",
+  "section_break_iztv",
+  "location",
+  "bureau",
+  "section_break_xcxm",
+  "vehicle_log_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "project",
+   "fieldtype": "Link",
+   "label": "Project",
+   "options": "Project"
+  },
+  {
+   "fieldname": "transportation_request",
+   "fieldtype": "Link",
+   "label": "Transportation Request",
+   "options": "Transportation Request"
+  },
+  {
+   "fieldname": "vehicle_hire_request",
+   "fieldtype": "Link",
+   "label": "Vehicle Hire Request",
+   "options": "Vehicle Hire Request"
+  },
+  {
+   "fieldname": "vehicle_log_details",
+   "fieldtype": "Table",
+   "label": "Vehicle Log Details",
+   "options": "Vehicle Log Detail"
+  },
+  {
+   "fieldname": "section_break_iztv",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "project.location",
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
+  },
+  {
+   "fetch_from": "project.bureau",
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "section_break_xcxm",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-22 11:10:05.592968",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Vehicle Transaction Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

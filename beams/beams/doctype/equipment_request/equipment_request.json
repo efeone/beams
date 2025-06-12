@@ -10,6 +10,7 @@
   "project",
   "bureau",
   "location",
+  "requested_by",
   "column_break_dsby",
   "posting_date",
   "required_from",
@@ -52,6 +53,7 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Required From",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -59,6 +61,7 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Required To",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -106,12 +109,19 @@
    "fieldtype": "Select",
    "label": "Priority",
    "options": "Low\nMedium\nHigh"
+  },
+  {
+   "default": "__user",
+   "fieldname": "requested_by",
+   "fieldtype": "Link",
+   "label": "Requested By",
+   "options": "User"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-19 12:09:30.504937",
+ "modified": "2025-04-10 23:12:54.804433",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Request",

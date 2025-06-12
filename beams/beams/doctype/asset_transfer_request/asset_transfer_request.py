@@ -12,6 +12,21 @@ from datetime import datetime
 class AssetTransferRequest(Document):
     def before_save(self):
         self.validate_posting_date()
+        if self.workflow_state == "Draft":
+            self.validate_locations()
+
+    def validate_locations(self):
+        """Validate that source and target locations are not the same."""
+        if self.asset_type == "Single Asset" and self.asset:
+            asset_doc = frappe.get_doc("Asset", self.asset)
+            if asset_doc.location == self.location:
+                frappe.throw(_("Source and target location cannot be the same"))
+        elif self.asset_type == "Bundle":
+            for item in self.assets:
+                if item.asset:
+                    asset_doc = frappe.get_doc("Asset", item.asset)
+                    if asset_doc.location == self.location:
+                        frappe.throw(_("Source and target location cannot be the same"))
 
     @frappe.whitelist()
     def validate_posting_date(self):
@@ -26,7 +41,7 @@ class AssetTransferRequest(Document):
            Handles updates after submission by adding  assets,items,asset to the asset return checklist when the workflow state is 'Transferred'
         '''
 
-        if self.workflow_state == "Transferred" and self.asset_return_checklist_template:
+        if self.workflow_state == "Transferred and Received":
             existing_checklist_items = {row.checklist_item for row in self.get("asset_return_checklist")}
             assets_to_add = set()
 
@@ -85,6 +100,35 @@ class AssetTransferRequest(Document):
                 asset_doc.in_transit = 1 if self.workflow_state == 'Approved' else 0
                 asset_doc.save()
         self.validate_recieved_by()
+
+        old_doc = self.get_doc_before_save()
+
+        if old_doc:
+            previous_state = old_doc.workflow_state
+            current_state = self.workflow_state
+
+            if previous_state != current_state and current_state == "Returned":
+                # Workflow has changed to "Returned"
+                all_movements = frappe.get_all("Asset Movement", filters={
+                    "reference_doctype": "Asset Transfer Request",
+                    "reference_name": self.name,
+                    "purpose": "Transfer"
+                })
+
+                if len(all_movements) < 2:
+                    self.create_asset_movement_on_return()
+
+        if self.workflow_state == 'Returned':
+            existing_return_stock_entry = frappe.db.exists("Stock Entry", {
+                "stock_entry_type": "Material Receipt",
+                "remarks": ["like", f"%{self.name}%"]
+            })
+
+            if not existing_return_stock_entry:
+                self.create_return_stock_entries()
+
+
+
 
     def validate_recieved_by(self):
         '''
@@ -179,6 +223,137 @@ class AssetTransferRequest(Document):
             _('Stock Entry Created: <a href="{0}">{1}</a>').format(get_url_to_form(stock_entry.doctype, stock_entry.name),stock_entry.name),
             alert=True, indicator='green')
 
+    def get_valid_previous_movement_row(self, asset_name, current_location):
+        """
+            fetches the most recent asset movement row with full location details
+            (room, shelf, row, bin) before the current location
+        """
+        rows = frappe.get_all(
+            "Asset Movement Item",
+            filters={"asset": asset_name, "docstatus": 1},
+            fields=["asset", "parent", "source_location", "target_location", "room", "shelf", "row", "bin", "modified"],
+            order_by="modified desc"
+        )
+        for row in rows:
+            if row.target_location == current_location:
+                continue
+            if all([row.room, row.shelf, row.row, row.bin]):
+                return row
+        return None
+
+    def create_asset_movement_on_return(self):
+        """
+            asset movement to return the asset to its previous location
+            when the workflow state is set to "Returned"
+        """
+        asset_movement = frappe.new_doc('Asset Movement')
+        asset_movement.purpose = 'Transfer'
+        asset_movement.posting_time = self.posting_time
+        asset_movement.reference_doctype = "Asset Transfer Request"
+        asset_movement.reference_name = self.name
+        asset_movement.transaction_date = datetime.strptime(f"{self.posting_date} {self.posting_time}", "%Y-%m-%d %H:%M:%S")
+
+        added_assets = False
+
+        if self.asset_type == "Single Asset" and self.asset:
+            asset_doc = frappe.get_doc("Asset", self.asset)
+            prev_row = self.get_valid_previous_movement_row(self.asset, asset_doc.location)
+            if prev_row and asset_doc.location != prev_row.target_location:
+                asset_movement.append('assets', {
+                    "asset": self.asset,
+                    "source_location": asset_doc.location,
+                    "target_location": prev_row.target_location,
+                    "room": prev_row.room,
+                    "shelf": prev_row.shelf,
+                    "row": prev_row.row,
+                    "bin": prev_row.bin
+                })
+                added_assets = True
+
+        elif self.asset_type == "Bundle":
+            for item in self.assets:
+                if item.asset:
+                    asset_doc = frappe.get_doc("Asset", item.asset)
+                    prev_row = self.get_valid_previous_movement_row(item.asset, asset_doc.location)
+                    if prev_row and asset_doc.location != prev_row.target_location:
+                        asset_movement.append('assets', {
+                            "asset": item.asset,
+                            "source_location": asset_doc.location,
+                            "target_location": prev_row.target_location,
+                            "room": prev_row.room,
+                            "shelf": prev_row.shelf,
+                            "row": prev_row.row,
+                            "bin": prev_row.bin
+                        })
+                        added_assets = True
+
+        if added_assets:
+            asset_movement.insert()
+            asset_movement.submit()
+            frappe.msgprint(
+                _('Asset Return Movement Created: <a href="{0}">{1}</a>').format(
+                    get_url_to_form(asset_movement.doctype, asset_movement.name),
+                    asset_movement.name
+                ),
+                alert=True, indicator='green'
+            )
+
+    def create_return_stock_entries(self):
+        '''
+            Create Stock Entry when the workflow state is 'Returned'.
+        '''
+
+        if not self.asset_type == "Bundle":
+            return
+        if not self.items:
+            return
+
+        items_to_return = []
+
+        consumed_or_missing_items = set()
+        if hasattr(self, 'asset_return_checklist') and self.asset_return_checklist:
+            for checklist_item in self.asset_return_checklist:
+                if checklist_item.consumed == 1 or checklist_item.missinglost == 1:
+                    consumed_or_missing_items.add(checklist_item.checklist_item)
+
+        for item in self.items:
+            if item.item and item.item not in consumed_or_missing_items:
+                items_to_return.append(item)
+
+        if not items_to_return:
+            return
+
+        warehouse = frappe.db.get_value("Beams Admin Settings", None, "asset_transfer_warehouse")
+        if not warehouse:
+            frappe.throw(_("Could not find asset_transfer_warehouse in Beams Admin Settings."))
+
+        stock_entry = frappe.new_doc('Stock Entry')
+        stock_entry.stock_entry_type = 'Material Receipt'
+        stock_entry.purpose = 'Material Receipt'
+        stock_entry.to_warehouse = warehouse
+        stock_entry.posting_time = self.posting_time
+        stock_entry.set("set_posting_time", 1)
+        stock_entry.posting_date = self.posting_date
+        stock_entry.set("set_posting_time", 1)
+        stock_entry.remarks = f"Return Stock Entry for Asset Transfer Request: {self.name}"
+
+        for item in items_to_return:
+            stock_entry.append('items', {
+                "item_code": item.item,
+                "qty": item.qty,
+                "t_warehouse": warehouse,
+            })
+
+        if not stock_entry.items:
+            frappe.throw(_("No items found to add to Return Stock Entry."))
+
+        stock_entry.insert()
+        stock_entry.submit()
+
+        frappe.msgprint(
+            _('Return Stock Entry Created: <a href="{0}">{1}</a>').format(get_url_to_form(stock_entry.doctype, stock_entry.name), stock_entry.name),
+            alert=True, indicator='green')
+
 @frappe.whitelist()
 def get_stock_items_from_bundle(bundle):
     stock_items = frappe.get_all(
@@ -187,18 +362,6 @@ def get_stock_items_from_bundle(bundle):
         fields=["item", "uom", "qty"]
     )
     return stock_items
-
-
-@frappe.whitelist()
-def get_asset_return_checklist_template(template_name):
-    if not frappe.db.exists("Asset Return Checklist Template", template_name):
-        frappe.msgprint(_("Asset Return Checklist Template '{}' not found").format(template_name))
-
-    return frappe.get_all(
-        "Asset Return Check",
-        filters={"parent": template_name},
-        fields=["checklist_item"]
-    )
 
 @frappe.whitelist()
 def get_bundle_assets(bundle):

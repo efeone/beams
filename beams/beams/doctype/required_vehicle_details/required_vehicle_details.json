@@ -10,8 +10,6 @@
   "no_of_travellers",
   "from",
   "to",
-  "allocated",
-  "hired",
   "required_vehicle_details"
  ],
  "fields": [
@@ -37,29 +35,15 @@
   },
   {
    "fieldname": "required_vehicle_details",
-   "fieldtype": "Text Editor",
+   "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Required Vehicle Details"
-  },
-  {
-   "default": "0",
-   "fieldname": "allocated",
-   "fieldtype": "Check",
-   "in_standard_filter": 1,
-   "label": "Allocated"
-  },
-  {
-   "default": "0",
-   "fieldname": "hired",
-   "fieldtype": "Check",
-   "in_list_view": 1,
-   "label": "Hired"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-19 14:15:50.836054",
+ "modified": "2025-04-03 10:42:18.913207",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Vehicle Details",

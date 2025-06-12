@@ -1,15 +1,15 @@
-# # Copyright (c) 2025, efeone and contributors
-# # For license information, please see license.txt
+# Copyright (c) 2025, efeone and contributors
+# For license information, please see license.txt
+
+import json
+from datetime import datetime
 
 import frappe
-from frappe.model.document import Document
-from frappe.utils import date_diff,today,getdate
-import json
-from frappe.utils import get_url_to_form
-from frappe.utils import today
-from datetime import datetime
 from frappe import _
-
+from frappe.model.document import Document
+from frappe.utils import get_url_to_form, today
+from frappe.utils import nowdate
+from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 
 
 class EmployeeTravelRequest(Document):
@@ -22,7 +22,6 @@ class EmployeeTravelRequest(Document):
         self.validate_dates()
         self.validate_expected_time()
         self.total_days_calculate()
-
 
     def before_save(self):
         self.validate_posting_date()
@@ -42,31 +41,175 @@ class EmployeeTravelRequest(Document):
                 if self.start_date < today():
                     frappe.throw("Start Date cannot be in the past.")
 
-
-
     def on_update_after_submit(self):
-        """
-        Create an Attendance Regularization record in 'Draft' when mark_attendance is checked.
-        """
-        if self.mark_attendance == 1 and self.workflow_state == "Approved":
-                attn_reg = frappe.new_doc("Attendance Request")
-                attn_reg.employee = self.requested_by
-                attn_reg.reason = "On Duty"
-                attn_reg.from_date = self.start_date
-                attn_reg.to_date = self.end_date
-                attn_reg.explanation = "From Travel Request: {}".format(self.name)
-                attn_reg.insert()
-                self.db_set("attendance_request", attn_reg.name)
+        if self.workflow_state == "Approved":
+            self.create_missing_trip_sheets_for_etr()
+
+        # Trigger only when state becomes Approved
+        if self.workflow_state != "Approved":
+            return
+
+        # Validation: Rejection reason must be empty when approved
+        if self.reason_for_rejection:
+            frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
+
+        if not self.is_unplanned:
+            if not self.attachments:
+                frappe.throw(title="Approval Error", msg="Attachments is required before final approval.")
+
+        if self.is_vehicle_required:
+            if not self.travel_vehicle_allocation:
+                frappe.throw(title="Approval Error", msg="Vehicle allocation is required before final approval.")
+
+            has_complete_allocation = False
+            for allocation in self.travel_vehicle_allocation:
+                if allocation.vehicle and allocation.driver:
+                    has_complete_allocation = True
+                    break
+
+            if not has_complete_allocation:
+                frappe.throw(title="Approval Error",
+                            msg="You must allocate driver and vehicle before final approval.")
+
+
+        if not self.mark_attendance:
+            return
+
+        employees = []
+
+        # Add main employee
+        if self.requested_by:
+            employees.append(self.requested_by)
+
+        # Add employees from child table
+        for row in self.travellers:
+            if row.employee:
+                employees.append(row.employee)
+
+        # Remove duplicates and empty entries
+        employees = list(set(filter(None, employees)))
+
+        for emp in employees:
+            overlapping = frappe.db.exists(
+                "Attendance Request",
+                {
+                    "employee": emp,
+                    "from_date": ["<=", self.end_date],
+                    "to_date": [">=", self.start_date],
+                    "docstatus": ["!=", 2]
+                }
+            )
+
+            if overlapping:
+                continue
+
+            attendance = frappe.get_doc({
+                "doctype": "Attendance Request",
+                "employee": emp,
+                "from_date": self.start_date,
+                "to_date": self.end_date,
+                "request_type": "On Duty",
+                "company": frappe.db.get_value("Employee", emp, "company"),
+                "description": f"From Travel Request {self.name}",
+                "reason": "On Duty"
+            })
+
+            attendance.insert(ignore_permissions=True)
+            frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
+
+    def create_missing_trip_sheets_for_etr(doc):
+        '''
+        Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
+        if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
+        '''
+        etr_name = doc.name
+
+        linked_ts_rows = frappe.get_all(
+            "Employee Travel Request Details",
+            filters={"employee_travel_request": etr_name},
+            fields=["parent"]
+        )
+        ts_names = [row.parent for row in linked_ts_rows]
+
+        existing_ts = frappe.get_all(
+            "Trip Sheet",
+            filters={"name": ["in", ts_names], "docstatus": ["!=", 2]},
+            fields=["name", "vehicle"]
+        )
+
+        existing_vehicles_with_ts = {ts.vehicle for ts in existing_ts}
+
+        allocations = [{
+            "vehicle": row.vehicle,
+            "driver": row.driver
+        } for row in doc.travel_vehicle_allocation]
+
+        if not existing_ts:
+            vehicles_to_create = allocations
+        else:
+            vehicles_to_create = [alloc for alloc in allocations if alloc["vehicle"] not in existing_vehicles_with_ts]
+
+        trip_sheet_columns = frappe.db.get_table_columns("Trip Sheet")
+
+        for alloc in vehicles_to_create:
+            vehicle = alloc["vehicle"]
+            driver = alloc.get("driver")
+
+            initial_odometer = get_last_odometer(vehicle)
+
+            safety_inspection = frappe.get_all(
+                "Vehicle Safety Inspection",
+                filters={"vehicle": vehicle},
+                fields=["name"],
+                limit=1
+            )
+
+            if not safety_inspection:
                 frappe.msgprint(
-                    'Attendance Request Created: <a href="{0}">{1}</a>'.format(
-                        get_url_to_form(attn_reg.doctype, attn_reg.name), attn_reg.name
-                    ),
-                    alert=True, indicator="green"
+                    f"No Vehicle Safety Inspection found for Vehicle {vehicle}. Please create one to ensure compliance.",
+                    alert=True
                 )
 
-        # Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
-        if self.workflow_state == "Approved" and self.reason_for_rejection:
-            frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
+            ts_data = {
+                "doctype": "Trip Sheet",
+                "vehicle": vehicle,
+                "driver": driver,
+                "posting_date": frappe.utils.today(),
+                "starting_date_and_time": doc.start_date,
+                "ending_date_and_time": doc.end_date,
+                "initial_odometer_reading": initial_odometer,
+                "travel_requests": [{
+                    "employee_travel_request": etr_name
+                }],
+            }
+
+            if "final_odometer" in trip_sheet_columns:
+                ts_data["final_odometer"] = None
+
+            if safety_inspection:
+                ts_data["vehicle_template"] = safety_inspection[0].name
+                inspection_doc = frappe.get_doc("Vehicle Safety Inspection", safety_inspection[0].name)
+                ts_data["vehicle_safety_inspection_details"] = []
+                for detail in inspection_doc.vehicle_safety_inspection:
+                    ts_data["vehicle_safety_inspection_details"].append({
+                        "item": detail.item,
+                        "fit_for_use": detail.fit_for_use,
+                        "remarks": detail.remarks
+                    })
+            else:
+                ts_data["vehicle_template"] = None
+                frappe.msgprint(
+                    f"No Vehicle Safety Inspection found for Vehicle {vehicle}. "
+                    f"Fields vehicle_template and vehicle_safety_inspection_details will be empty in Trip Sheet.",
+                    alert=True
+                )
+
+            ts = frappe.get_doc(ts_data)
+            ts.insert()
+            frappe.msgprint(
+                f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
+                alert=True
+            )
 
     @frappe.whitelist()
     def validate_posting_date(self):
@@ -80,22 +223,15 @@ class EmployeeTravelRequest(Document):
         if self.expected_check_in_time and self.expected_check_out_time:
             if self.expected_check_out_time < self.expected_check_in_time:
                 frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
-
     @frappe.whitelist()
     def total_days_calculate(self):
         """Calculate the total number of travel days, ensuring at least one day."""
         if self.start_date and self.end_date:
-            if isinstance(self.start_date, str):
-                start_date = datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S").date()
-            else:
-                start_date = self.start_date.date()
+            start_date = self.start_date if isinstance(self.start_date, datetime) else datetime.strptime(self.start_date, "%Y-%m-%d %H:%M:%S")
+            end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
 
-            if isinstance(self.end_date, str):
-                end_date = datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S").date()
-            else:
-                end_date = self.end_date.date()
+            self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
 
-            self.total_days = 1 if start_date == end_date else (end_date - start_date).days + 1
 
 @frappe.whitelist()
 def get_batta_policy(requested_by):
@@ -143,3 +279,250 @@ def filter_mode_of_travel(batta_policy_name):
         return mode_of_travel
     else:
         return []
+
+@frappe.whitelist()
+def create_expense_claim(employee, travel_request, expenses):
+    '''
+    Create an Expense Claim from Travel Request.
+    '''
+
+    if isinstance(expenses, str):
+        expenses = json.loads(expenses)
+
+    if not expenses:
+        frappe.throw(_("Please provide at least one expense item."))
+
+    travel_doc = frappe.get_doc("Employee Travel Request", travel_request)
+
+    expense_claim = frappe.new_doc("Expense Claim")
+    expense_claim.travel_request = travel_request
+    expense_claim.employee = employee
+    expense_claim.approval_status = "Draft"
+    expense_claim.posting_date = today()
+
+    employee_doc = frappe.get_doc("Employee", employee)
+    company = employee_doc.company
+
+    employee_doc = frappe.get_doc("Employee", employee)
+    expense_approver = employee_doc.expense_approver
+    expense_claim.expense_approver = expense_approver
+
+
+    default_payable_account = frappe.get_cached_value('Company', company, 'default_payable_account')
+    if not default_payable_account:
+        default_payable_account = frappe.db.get_value("Account", {
+            "company": company,
+            "account_type": "Payable",
+            "is_group": 0
+        }, "name")
+
+    if not default_payable_account:
+        frappe.throw(_("Please set a Default Payable Account in Company {0}").format(company))
+
+    expense_claim.payable_account = default_payable_account
+
+    for expense in expenses:
+        amount = expense.get("amount")
+        if amount in [None, ""]:
+            frappe.throw(_("Expense Amount is required for all items."))
+
+        expense_entry = {
+            "amount": amount,
+            "expense_date": expense.get("expense_date"),
+            "expense_type": expense.get("expense_type"),
+            "description": expense.get("description")
+        }
+        expense_claim.append("expenses", expense_entry)
+
+    expense_claim.total_claimed_amount = sum((item.amount or 0) for item in expense_claim.expenses)
+    expense_claim.save()
+
+    frappe.msgprint(
+        _('Expense Claim Created: <a href="{0}">{1}</a>').format(get_url_to_form("Expense Claim", expense_claim.name), expense_claim.name),
+        alert=True,indicator='green')
+
+    return expense_claim.name
+
+@frappe.whitelist()
+def get_expense_claim_html(doc):
+    """
+    Render HTML showing Expense Claims and their 'expenses'  for a given Travel Request.
+
+    Args:
+        doc (str): The name/ID of the Travel Request document.
+
+    Returns:
+        dict: A dictionary containing the rendered HTML.
+    """
+    if not doc:
+        frappe.throw(_("Travel Request ID is required."))
+
+    expense_claims = frappe.get_all(
+        "Expense Claim",
+        filters={"travel_request": doc},
+        fields=["name", "employee", "total_claimed_amount", "posting_date", "status"]
+    )
+
+    full_claims = []
+    total_amount = 0
+    total_sanctioned_amount = 0
+    for claim in expense_claims:
+        ec_doc = frappe.get_doc("Expense Claim", claim.name)
+        expenses = sorted(
+            ec_doc.expenses,
+            key=lambda x: x.expense_date,
+            reverse=True
+        )
+        for row in expenses:
+            total_amount += row.amount or 0
+            total_sanctioned_amount += row.sanctioned_amount or 0
+
+        full_claims.append({
+            "name": ec_doc.name,
+            "employee": ec_doc.employee,
+            "posting_date": ec_doc.posting_date,
+            "status": ec_doc.status,
+            "url": frappe.utils.get_url_to_form("Expense Claim", claim.name),
+            "expenses": [
+                {
+                    "expense_date": row.expense_date,
+                    "expense_type": row.expense_type,
+                    "default_account": row.default_account,
+                    "description": row.description,
+                    "amount": row.amount,
+                    "sanctioned_amount": row.sanctioned_amount,
+                }
+                for row in expenses
+            ]
+        })
+
+    html = frappe.render_template(
+        "beams/doctype/employee_travel_request/expense_claim.html",
+        {
+            "expense_claims": full_claims,
+            "total_amount": total_amount,
+            "total_sanctioned_amount": total_sanctioned_amount
+        }
+    )
+
+    return {"html": html}
+
+@frappe.whitelist()
+def get_permission_query_conditions(user):
+    """
+    Returns SQL query conditions for controlling access to Employee Travel Requests.
+
+    Rules:
+    - "Admin" and "System Manager": full access.
+    - "HOD": requests from employees in their department.
+    - Employees: their own requests.
+    - Others: no access.
+
+    Args:
+        user (str): User ID. Defaults to current session user.
+
+    Returns:
+        str: SQL conditions or None for unrestricted access.
+    """
+    if not user:
+        user = frappe.session.user
+
+    user_roles = frappe.get_roles(user)
+
+    if "Admin" in user_roles or "System Manager" in user_roles:
+        return None
+
+    conditions = []
+
+    if "HOD" in user_roles:
+        department = frappe.db.get_value("Employee", {"user_id": user}, "department")
+        if department:
+            conditions.append(f"""
+                EXISTS (
+                    SELECT 1 FROM `tabEmployee` e
+                    WHERE e.name = `tabEmployee Travel Request`.requested_by
+                    AND e.department = '{department}'
+                )
+            """)
+
+    employee_id = frappe.db.get_value("Employee", {"user_id": user}, "name")
+    if employee_id:
+        conditions.append(f"`tabEmployee Travel Request`.requested_by = '{employee_id}'")
+
+    if not conditions:
+        return "1=0"
+
+    return " OR ".join(f"({cond.strip()})" for cond in conditions)
+
+@frappe.whitelist()
+def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment):
+    """
+        Create a Journal Entry from Travel Request
+    """
+    if isinstance(expenses, str):
+        expenses = frappe.parse_json(expenses)
+
+    if not isinstance(expenses, list):
+        frappe.throw(_("Expenses must be a list of expense items."))
+
+    company = frappe.defaults.get_user_default("Company")
+    mop_account = frappe.db.get_value(
+        "Mode of Payment Account",
+        {
+            "parent": mode_of_payment,
+            "company": company
+        },
+        "default_account"
+    )
+    if not mop_account:
+        frappe.throw(_(f"No default account found for Mode of Payment {mode_of_payment} for company {company}"))
+    posting_date = nowdate()
+
+    jv = frappe.new_doc("Journal Entry")
+    jv.voucher_type = "Journal Entry"
+    jv.posting_date = posting_date
+    jv.company = company
+    jv.user_remark = f"Journal Entry for Travel Request {employee_travel_request}"
+    jv.employee = employee
+    jv.employee_travel_request = employee_travel_request
+    jv.docstatus = 0
+
+    total_amount = 0
+
+    for expense in expenses:
+        expense_type = expense.get("expense_type")
+        amount = expense.get("amount")
+        expense_date = expense.get("expense_date")
+
+        if not expense_type:
+            frappe.throw(_("Expense Type is required for each expense item."))
+        if not amount or not expense_date:
+            frappe.throw(_("Amount and Expense Date are required for each expense item."))
+
+        expense_claim = frappe.get_doc("Expense Claim Type", expense_type)
+        debit_account = None
+        for account_row in expense_claim.get("accounts", []):
+            if account_row.default_account:
+                debit_account = account_row.default_account
+                break
+        if not debit_account:
+            frappe.throw(_(f"No default account found for Expense Claim Type {expense_type}"))
+        
+
+        jv.append("accounts", {
+            "account": debit_account,
+            "party_type": "Employee",
+            "party": employee,
+            "debit_in_account_currency": amount,
+            "posting_date": posting_date
+        })
+        total_amount += amount
+
+    jv.append("accounts", {
+        "account": mop_account,
+        "credit_in_account_currency": total_amount,
+        "posting_date": posting_date
+    })
+
+    jv.insert()
+    return jv.name

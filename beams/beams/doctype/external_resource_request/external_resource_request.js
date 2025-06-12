@@ -48,7 +48,7 @@ frappe.ui.form.on("External Resource Request", {
                                 get_query: function () {
                                     return {
                                         filters: {
-                                            hireable: 1 
+                                            hireable: 1
                                         }
                                     };
                                 }
@@ -70,12 +70,12 @@ frappe.ui.form.on("External Resource Request", {
                         primary_action_label: __('Create Purchase Order'),
                         primary_action: function () {
                             let values = dialog.get_values();
-    
+
                             if (!values.supplier || !values.schedule_date || !values.service_item || !values.qty || !values.rate) {
                                 frappe.msgprint(__('All fields are required!'));
                                 return;
                             }
-    
+
                             frappe.call({
                                 method: "frappe.client.insert",
                                 args: {
@@ -101,17 +101,28 @@ frappe.ui.form.on("External Resource Request", {
                                     }
                                 }
                             });
-    
+
                             dialog.hide();
                         }
                     });
-    
+
                     dialog.show();
                 }, __("Create"));
             }
+            frm.fields_dict.required_resources.grid.get_field("hired_personnel").get_query = function(doc, cdt, cdn) {
+                let row = locals[cdt][cdn];
+                if (row.designation) {
+                    return {
+                        filters: {
+                            designation: row.designation
+                        }
+                    };
+                }
+                return {};
+            };
         }
     });
-    
+
 
     frappe.ui.form.on("External Resources Detail", {
         required_resources_add: function (frm, cdt, cdn) {

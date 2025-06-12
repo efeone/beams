@@ -1,0 +1,114 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:VL-{YY}-{####}",
+ "creation": "2025-04-23 14:59:00.182504",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_mzzx",
+  "visitor_name",
+  "contact_number",
+  "purpose_of_visit",
+  "purpose",
+  "person_visited",
+  "column_break_mnww",
+  "in_time",
+  "out_time",
+  "visitor_type",
+  "pass_issued",
+  "identification"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_mzzx",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "visitor_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Visitor Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "contact_number",
+   "fieldtype": "Data",
+   "label": "Contact Number"
+  },
+  {
+   "fieldname": "purpose_of_visit",
+   "fieldtype": "Select",
+   "label": "Purpose of Visit ",
+   "options": "\nMeeting\nInterview\nDelivery\nOther"
+  },
+  {
+   "fieldname": "person_visited",
+   "fieldtype": "Link",
+   "label": "Person Visited ",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "in_time",
+   "fieldtype": "Datetime",
+   "label": "In Time "
+  },
+  {
+   "fieldname": "out_time",
+   "fieldtype": "Datetime",
+   "label": "Out Time "
+  },
+  {
+   "fieldname": "visitor_type",
+   "fieldtype": "Select",
+   "label": "Visitor Type ",
+   "options": "\nRegular\nContractor\nSupplier\nEx-Employee\nNews Guest\nPersonal"
+  },
+  {
+   "default": "0",
+   "fieldname": "pass_issued",
+   "fieldtype": "Check",
+   "label": "Pass Issued "
+  },
+  {
+   "fieldname": "identification",
+   "fieldtype": "Data",
+   "label": "Identification "
+  },
+  {
+   "fieldname": "column_break_mnww",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.purpose_of_visit=='Other'",
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-24 12:32:09.117912",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Visitor Log",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

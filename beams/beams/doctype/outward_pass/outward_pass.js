@@ -28,6 +28,80 @@ frappe.ui.form.on("Outward Pass", {
             });
         }
     },
+    scan_bundle: function (frm) {
+        if (!frm.doc.scan_bundle) {
+            frappe.msgprint(__('Please ensure a bundle is scanned.'));
+            return;
+        }
+
+        let scanned_value = frm.doc.scan_bundle.trim();
+
+        frappe.call({
+            method: "frappe.client.get",
+            args: {
+                doctype: "Asset Bundle",
+                name: scanned_value,
+                fields: ["name", "assets"]
+            },
+            callback: function (r) {
+                if (r.message) {
+                    let asset_bundle = r.message;
+                    let existing_bundle = (frm.doc.bundles || []).find(
+                        row => row.asset_bundle === asset_bundle.name
+                    );
+
+                    if (!existing_bundle) {
+                        let new_row = frm.add_child("bundles");
+                        new_row.asset_bundle = asset_bundle.name;
+                        frm.refresh_field("bundles");
+
+                        if (asset_bundle.assets && asset_bundle.assets.length > 0) {
+                            let existing_assets = frm.doc.assets || [];
+                            let new_assets = asset_bundle.assets.map(asset => ({ asset: asset.asset }));
+                            let merged_assets = [...existing_assets];
+                            new_assets.forEach(new_asset => {
+                                if (!merged_assets.some(existing => existing.asset === new_asset.asset)) {
+                                    merged_assets.push(new_asset);
+                                }
+                            });
+
+                            frm.set_value("assets", merged_assets);
+                            frm.refresh_field("assets");
+                        } else {
+                            frappe.msgprint(__('No assets found in this bundle!'));
+                        }
+                    } else {
+                        frappe.msgprint(__('Bundle is already added!'));
+                    }
+
+                    frm.set_value("scan_bundle", "");
+                } else {
+                    frappe.msgprint(__('No bundle found with this QR code!'));
+                }
+            },
+            error: function (err) {
+                frappe.msgprint(__('Error occurred while fetching bundle: ') + err.message);
+            }
+        });
+    },
+    scan_asset: function (frm) {
+        if (!frm.doc.scan_asset) {
+            frappe.msgprint(__('Please scan an asset.'));
+            return;
+        }
+        let scanned_asset = frm.doc.scan_asset.trim();
+        let existing_assets = frm.doc.assets || [];
+        let already_exists = existing_assets.some(row => row.asset === scanned_asset);
+
+        if (already_exists) {
+            frappe.msgprint(__('This asset is already added.'));
+        } else {
+            let new_row = frm.add_child("assets");
+            new_row.asset = scanned_asset;
+            frm.refresh_field("assets");
+        }
+        frm.set_value("scan_asset", "");
+    }
 });
 
 function mergeArrays(arr1, arr2, key) {

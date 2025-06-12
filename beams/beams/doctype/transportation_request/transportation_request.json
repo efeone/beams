@@ -15,6 +15,7 @@
   "posting_date",
   "required_on",
   "noof_travallers",
+  "vehicle_hire_request",
   "section_break_yjlc",
   "requirements",
   "required_vehicle",
@@ -48,22 +49,6 @@
    "fieldname": "required_on",
    "fieldtype": "Datetime",
    "label": "Required On",
-   "reqd": 1
-  },
-  {
-   "fieldname": "from",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "From",
-   "options": "Location",
-   "reqd": 1
-  },
-  {
-   "fieldname": "to",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "To",
-   "options": "Location",
    "reqd": 1
   },
   {
@@ -138,12 +123,35 @@
    "fieldtype": "Table",
    "label": " Required Vehicle",
    "options": "Required Vehicle Details"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "From",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To",
+   "options": "Location",
+   "reqd": 1
+  },
+  {
+   "fieldname": "vehicle_hire_request",
+   "fieldtype": "Link",
+   "label": " Vehicle Hire Request",
+   "options": "Vehicle Hire Request",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-21 15:06:46.314975",
+ "modified": "2025-04-07 15:09:44.880644",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",

@@ -8,7 +8,10 @@
  "field_order": [
   "section_break_iy51",
   "vehicle_type",
-  "no_of_vehicles",
+  "vehicle_number",
+  "from",
+  "to",
+  "no_of_travellers",
   "amended_from"
  ],
  "fields": [
@@ -35,10 +38,30 @@
    "reqd": 1
   },
   {
-   "fieldname": "no_of_vehicles",
-   "fieldtype": "Int",
+   "fieldname": "from",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "No. of Vehicles",
+   "label": "From",
+   "options": "Location"
+  },
+  {
+   "fieldname": "to",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "To",
+   "options": "Location"
+  },
+  {
+   "fieldname": "no_of_travellers",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "No. of Travellers"
+  },
+  {
+   "fieldname": "vehicle_number",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Vehicle Number",
    "non_negative": 1,
    "reqd": 1
   }
@@ -47,7 +70,7 @@
  "is_submittable": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-17 13:44:48.687888",
+ "modified": "2025-04-17 17:30:36.680038",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Hired Vehicle Detail",

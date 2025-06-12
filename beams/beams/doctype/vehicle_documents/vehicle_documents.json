@@ -8,6 +8,7 @@
  "engine": "InnoDB",
  "field_order": [
   "document",
+  "attach",
   "reference_no",
   "expiry_date",
   "remarks"
@@ -19,8 +20,7 @@
    "in_list_view": 1,
    "label": "Document",
    "options": "Vehicle Document",
-   "reqd": 1,
-   "unique": 1
+   "reqd": 1
   },
   {
    "default": "Today",
@@ -43,12 +43,18 @@
    "fieldtype": "Small Text",
    "in_list_view": 1,
    "label": "Remarks"
+  },
+  {
+   "fieldname": "attach",
+   "fieldtype": "Attach",
+   "in_list_view": 1,
+   "label": "Attach"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-17 15:17:06.506556",
+ "modified": "2025-05-29 10:21:37.173600",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Documents",
