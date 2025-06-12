@@ -78,7 +78,6 @@ class VehicleHireRequest(Document):
         """
         Generate External Vehicle Details records from the Vehicle Hire Request child table
         """
-        project = frappe.get_doc("Project", self.project)
 
         for vehicle in self.required_vehicles:
             external_vehicle_detail = frappe.new_doc("External Vehicle Details")
