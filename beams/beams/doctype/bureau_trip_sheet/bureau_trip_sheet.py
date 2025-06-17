@@ -3,7 +3,6 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe import _
 from frappe.utils import get_datetime, getdate
 
 
@@ -31,8 +30,8 @@ class BureauTripSheet(Document):
 
         if self.work_details:
             for row in self.work_details:
-                if row.distance_travelled_km:
-                    total_distance += row.distance_travelled_km
+                if row.distance_traveled:
+                    total_distance += row.distance_traveled
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_distance_travelled_km = total_distance
@@ -45,8 +44,8 @@ class BureauTripSheet(Document):
 
         if self.work_details:
             for row in self.work_details:
-                if row.total_hours:
-                    total_hours += float(row.total_hours)
+                if row.hrs:
+                    total_hours += float(row.hrs)
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_hours = total_hours
