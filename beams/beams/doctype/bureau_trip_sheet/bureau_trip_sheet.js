@@ -1,7 +1,7 @@
 // Copyright (c) 2024, efeone and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Trip Details', {
+frappe.ui.form.on('Bureau Trip Details', {
     from_date_and_time: function (frm, cdt, cdn) {
         calculate_hours_and_days(frm, cdt, cdn);
         setTimeout(() => {
@@ -46,7 +46,7 @@ frappe.ui.form.on('Trip Details', {
     dinner: function (frm, cdt, cdn) {
        calculate_total_food_allowance(frm, cdt, cdn);
     },
-    total_distance_travelled_km: function(frm, cdt, cdn) {
+    distance_travelled_km: function(frm, cdt, cdn) {
         calculate_total_distance_travelled(frm, cdt, cdn);
         setTimeout(() => {
             set_batta_for_food_allowance(frm, cdt, cdn);
@@ -303,7 +303,7 @@ function calculate_total_food_allowance(frm, cdt, cdn) {
 function calculate_total_distance_travelled(frm) {
     let total_distance = 0;
     frm.doc.work_details.forEach(row => {
-        total_distance += row.distance_traveled || 0;
+        total_distance += row.distance_travelled_km || 0;
     });
     frm.set_value('total_distance_travelled_km', total_distance);
     frm.refresh_field("total_distance_travelled_km");
@@ -357,7 +357,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
     let is_overnight_stay = frm.doc.is_overnight_stay;
 
     let is_eligible = false;
-    if (child.distance_traveled >= 50 && child.distance_traveled <= 100 && child.total_hours > 6) {
+    if (child.distance_travelled_km >= 50 && child.distance_travelled_km <= 100 && child.total_hours > 6) {
         is_eligible = true;
     }
 

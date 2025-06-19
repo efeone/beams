@@ -1,0 +1,210 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-06-19 10:01:52.888802",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "origin",
+  "destination",
+  "distance_travelled_km",
+  "number_of_days",
+  "batta_type",
+  "column_break_aerg",
+  "from_date_and_time",
+  "to_date_and_time",
+  "on_air_date",
+  "section_break_ikdi",
+  "breakfast",
+  "column_break_vnsw",
+  "lunch",
+  "column_break_atwg",
+  "dinner",
+  "column_break_gaok",
+  "total_food_allowance",
+  "section_break_wigg",
+  "daily_batta",
+  "column_break_uihk",
+  "ot_batta",
+  "column_break_cjsx",
+  "total_batta",
+  "section_break_elqj",
+  "purpose",
+  "total_hours",
+  "ot_hours"
+ ],
+ "fields": [
+  {
+   "fieldname": "origin",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Origin",
+   "options": "Location"
+  },
+  {
+   "fieldname": "destination",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Destination ",
+   "options": "Location"
+  },
+  {
+   "fieldname": "distance_travelled_km",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Distance Travelled(km) "
+  },
+  {
+   "fieldname": "number_of_days",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Number of Days",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batta_type",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Batta Type",
+   "options": "External\nInternal",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_aerg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "from_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Start Date and Time"
+  },
+  {
+   "fieldname": "to_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "End Date and Time"
+  },
+  {
+   "fieldname": "on_air_date",
+   "fieldtype": "Date",
+   "in_list_view": 1,
+   "label": "On Air date"
+  },
+  {
+   "fieldname": "section_break_ikdi",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "breakfast",
+   "fieldtype": "Currency",
+   "label": "BreakFast",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_vnsw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_atwg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner",
+   "precision": "2"
+  },
+  {
+   "fieldname": "column_break_gaok",
+   "fieldtype": "Column Break",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_food_allowance",
+   "fieldtype": "Currency",
+   "label": "Total Food Allowance",
+   "precision": "2"
+  },
+  {
+   "fieldname": "section_break_wigg",
+   "fieldtype": "Section Break"
+  },
+  {
+   "description": "Daily Batta Without Food Allowance",
+   "fieldname": "daily_batta",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "  Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_uihk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:doc.batta_type == 'External'",
+   "fieldname": "ot_batta",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "OT Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_cjsx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_elqj",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "total_hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Total Hours",
+   "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.batta_type == 'External'",
+   "fieldname": "ot_hours",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "OT Hours",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-06-19 10:36:52.888802",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Bureau Trip Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
