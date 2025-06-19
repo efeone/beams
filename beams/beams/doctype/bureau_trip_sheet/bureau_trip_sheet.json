@@ -118,7 +118,7 @@
    "fieldname": "work_details",
    "fieldtype": "Table",
    "label": "Work Details",
-   "options": "Trip Details"
+   "options": "Bureau Trip Details"
   },
   {
    "fieldname": "trip_details_section",
@@ -221,7 +221,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-26 12:37:56.781474",
+ "modified": "2025-06-19 10:05:11.106938",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
