@@ -36,9 +36,7 @@ $(document).ready(function () {
         event.preventDefault();
         const fields = [
             "father_name", "applicant_name", "date_of_birth", "gender", "country", "marital_status",
-            "current_address", "current_period_from", "current_period_to", "current_residence_no",
-            "current_mobile_no", "permanent_address", "permanent_period_from", "permanent_period_to",
-            "permanent_residence_no", "permananet_email_id", "email_id_1", "name_of_employer",
+            "current_address", "current_mobile_no", "permanent_address","email_id_1", "aadhar_number","name_of_employer",
             "address_of_employer", "telephone_no", "employee_code", "current_designation",
             "current_department", "employment_period_from", "employment_period_to", "manager_name",
             "manager_contact_no", "manager_email", "duties_and_reponsibilities", "reason_for_leaving",
