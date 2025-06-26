@@ -129,7 +129,9 @@ def update_register_form(docname, data):
         else:
             frappe.throw(f"No document found for applicant: {docname}")
     except Exception as e:
-        frappe.log_error("Error in update_register_form", e)
+        frappe.log_error(
+             title="Job Application Update Failed",
+             message=f"Error updating applicant '{docname}' with data: {data}\nException: {str(e)}")
         return {"message": str(e)}
 
 @frappe.whitelist(allow_guest=True)
