@@ -209,13 +209,13 @@
                         <label for="manager_name">Manager's Name</label>
                         <input type="text" id="manager_name" name="manager_name" >
                     </div>
-                    <div class="column">
-                        <label for="current_designation">Manager's Contact No</label>
-                        <input type="text" id="current_designation" name="current_designation" >
+                     <div class="column">
+                        <label for="manager_contact_no">Manager's Contact No</label>
+                        <input type="tel" id="manager_contact_no" name="manager_contact_no"  pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
                     </div>
                     <div class="column">
-                        <label for="current_department">Manager's Email</label>
-                        <input type="text" id="current_department" name="current_department" >
+                        <label for="manager_email">Manager's Email</label>
+                        <input type="email" id="manager_email" name="manager_email" >
                     </div>
                 </div>
                 <div class="row">
@@ -573,24 +573,18 @@
 
                 // Get the current address section fields
                 const currentAddress = document.getElementById("current_address").value;
-                const currentPeriodFrom = document.getElementById("current_period_from").value;
-                const currentResidenceNo = document.getElementById("current_residence_no").value;
-
                 // Get the permanent address section fields
                 const permanentAddress = document.getElementById("permanent_address");
-                const permanentPeriodFrom = document.getElementById("permanent_period_from");
-                const permanentResidenceNo = document.getElementById("permanent_residence_no");
+                if (!currentAddress  || !permanentAddress) {
+                    return;
+                }
 
                 // If the checkbox is checked, copy values from current address fields
                 if (checkbox.checked) {
                     permanentAddress.value = currentAddress;
-                    permanentPeriodFrom.value = currentPeriodFrom;
-                    permanentResidenceNo.value = currentResidenceNo;
                 } else {
                     // Clear the permanent address fields if unchecked
                     permanentAddress.value = "";
-                    permanentPeriodFrom.value = "";
-                    permanentResidenceNo.value = "";
                 }
             }
 

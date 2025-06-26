@@ -2388,6 +2388,18 @@ def get_job_applicant_custom_fields():
                 "insert_after": "email_address_session_break"
             },
             {
+               "fieldname": "aadhar_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "email_id_1"
+            },
+            {
+               "fieldname": "aadhar_number",
+                "fieldtype": "Data",
+                "label": "Aadhar Number",
+                "insert_after": "aadhar_column_break"
+            },
+            {
                "fieldname": "min_education_qual",
                 "fieldtype": "Link",
                 "label": "Educational Qualification",
