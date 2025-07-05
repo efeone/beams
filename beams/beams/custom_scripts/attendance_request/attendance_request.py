@@ -59,9 +59,7 @@ class AttendanceRequestOverride(AttendanceRequest):
 		'''
 			Prevents the attendance request if the from date exceeds the limit configured in Beams HR Settings
 		'''
-		settings = frappe.get_single("Beams HR Settings")
-		limit_days = settings.attendance_request_submission_limit_days
-
+		limit_days = frappe.db.get_single_value("Beams HR Settings", "attendance_request_submission_limit_days")
 		if self.from_date and date_diff(today(), self.from_date) > limit_days:
 			frappe.throw(
 				_("You can only submit an Attendance Request within {0} days from the From Date.").format(limit_days)
