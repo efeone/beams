@@ -39,6 +39,9 @@ frappe.ui.form.on('Job Requisition', {
             if (frm.doc.request_for === 'Employee Exit') {
                 frm.set_df_property('employee_left', 'reqd', 1);
             }
+			if (frm.doc.request_for === 'Employee Replacement') {
+				frm.set_value('no_of_positions', 1);
+			}
         }
     },
     job_description_template: function (frm) {
@@ -66,7 +69,18 @@ frappe.ui.form.on('Job Requisition', {
                 frappe.throw(__('Expected By date must be a future date.'));
             }
         }
-    }
+    },
+	travel_required: function (frm) {
+		if (!frm.doc.travel_required) {
+			frm.set_value('driving_license_needed', 0);
+			frm.set_value('license_type', '');
+		}
+	},
+	driving_license_needed: function (frm) {
+		if (!frm.doc.driving_license_needed) {
+			frm.set_value('license_type', '');
+		}
+	},
 });
 
 function set_filters(frm) {

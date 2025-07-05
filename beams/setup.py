@@ -2929,7 +2929,7 @@ def get_job_opening_custom_fields():
                 "fieldtype": "Link",
                 "label": "License Type",
                 "options": "License Type",
-                "depends_on": "eval:doc.driving_license_needed == 1",
+                "depends_on": "eval:doc.driving_license_needed == 1 && doc.travel_required == 1",
                 "insert_after": "driving_license_needed"
             },
             {
@@ -3404,805 +3404,856 @@ def create_property_setters(property_setter_datas):
         property_setter.insert()
 
 def get_property_setters():
-    '''
-        BEAMS specific property setters that need to be added to the Customer ,Account and Supplier DocTypes
-    '''
-    return [
+	'''
+		BEAMS specific property setters that need to be added to the Customer ,Account and Supplier DocTypes
+	'''
+	return [
 
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Customer",
-            "field_name": "disabled",
-            "property": "default",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal Template",
-            "field_name": "rating_criteria",
-            "property": "label",
-            "value": "Employee Criteria"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Feedback Rating",
-            "field_name": "rating_criteria",
-            "property": "read_only",
-            "property_type": "Table",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "status",
-            "property": "read_only",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Leave Allocation",
-            "field_name": "to_date",
-            "property": "allow_on_submit",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Customer",
-            "field_name": "disabled",
-            "property": "read_only",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Account",
-            "field_name": "disabled",
-            "property": "default",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Account",
-            "field_name": "disabled",
-            "property": "read_only",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Supplier",
-            "field_name": "disabled",
-            "property": "default",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Supplier",
-            "field_name": "disabled",
-            "property": "read_only",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Advance",
-            "field_name": "purpose",
-            "property": "hidden",
-            "property_type": "Small Text",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Purchase Invoice",
-            "field_name": "update_stock",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Customer",
-            "field_name": "sales_team_tab",
-            "property": "hidden",
-            "property_type": "TabBreak",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Purchase Invoice",
-            "field_name": "is_subcontracted",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Purchase Invoice",
-            "field_name": "scan_barcode",
-            "property": "hidden",
-            "property_type": "Data",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Advance",
-            "field_name": "naming_series",
-            "property": "hidden",
-            "property_type": "Data",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Item",
-            "field_name": "grant_commission",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "scan_barcode",
-            "property": "hidden",
-            "property_type": "Data",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "shipping_rule",
-            "property": "hidden",
-            "property_type": "Link",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "incoterm",
-            "property": "hidden",
-            "property_type": "Link",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Customer",
-            "field_name": "dn_required",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Item",
-            "field_name": "include_item_in_manufacturing",
-            "property": "default",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Item",
-            "field_name": "inspection_required_before_delivery",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Item",
-            "field_name": "manufacturing",
-            "property": "depends_on",
-            "property_type": "TabBreak",
-            "value": "eval:doc.is_stock_item == 0"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Applicant",
-            "field_name": "status",
-            "property": "options",
-            "value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Item",
-            "property": "quick_entry",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "posting_date",
-            "property": "read_only",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Leave Application",
-            "field_name": "posting_date",
-            "property": "read_only",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "status",
-            "property": "options",
-            "value": "Pending\nOpen & Approved\nRejected\nOn Hold\nCancelled"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Event",
-            "field_name": "event_category",
-            "property": "options",
-            "value": "Event\nMeeting\nCall\nSent/Received Email\nOne to One Meeting\nOther"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Opening",
-            "field_name": "location",
-            "property": "hidden",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Boarding Activity",
-            "field_name": "required_for_employee_creation",
-            "property": "hidden",
-            "property_type": "Check",
-            "value":1
-        },
-        {
-            "doctype_or_field":"DocField",
-            "doc_type": "Attendance Request",
-            "field_name": "reason",
-            "property": "options",
-            "value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Skill Assessment",
-            "field_name": "rating",
-            "property": "reqd",
-            "property_type": "Check",
-            "value":0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Skill Assessment",
-            "field_name": "rating",
-            "property": "read_only",
-            "property_type": "Check",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee External Work History",
-            "field_name": "designation",
-            "property": "label",
-            "value":"Designation At The Time Of Joining"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Project",
-            "field_name": "expected_start_date",
-            "property": "fieldtype",
-            "value":"Datetime"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Project",
-            "field_name": "expected_end_date",
-            "property": "fieldtype",
-            "value":"Datetime"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "designation",
-            "property": "fetch_from",
-            "property_type": "Link",
-            "value":"employee_left.designation"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "department",
-            "property": "fetch_from",
-            "property_type": "Link",
-            "value":"employee_left.department"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Performance Feedback",
-            "field_name": "total_score",
-            "property": "hidden",
-            "property_type": "Float",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Feedback Rating",
-            "field_name": "Rating",
-            "property": "read_only",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Performance Feedback",
-            "field_name": "feedback_ratings",
-            "property": "label",
-            "property_type": "Table",
-            "value":"Employee Criteria"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "rate_goals_manually",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "goal_score_percentage",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "total_score",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal KRA",
-            "field_name": "goal_completion",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal KRA",
-            "field_name": "goal_score",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Feedback Rating",
-            "field_name": "rating",
-            "property": "read_only",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "goals",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "appraisal_kra",
-            "property": "label",
-            "property_type": "Table",
-            "value":"KRA's",
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Applicant",
-            "field_name": "resume_link",
-            "property": "hidden",
-            "property_type": "Data",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "self_ratings",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Appraisal",
-            "field_name": "self_score",
-            "property": "hidden",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Budget",
-            "field_name": "monthly_distribution",
-            "property": "hidden",
-            "property_type": "Link",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "designation",
-            "property": "reqd",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Vehicle",
-            "field_name": "insurance_details",
-            "property": "hidden",
-            "property_type": "Section Break",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Interview",
-            "field_name": "resume_link",
-            "property": "hidden",
-            "property_type": "",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "HR Settings",
-            "field_name": "emp_created_by",
-            "property": "depends_on",
-            "property_type": "Code",
-            "value": "eval: doc.employee_naming_by_department === 0 "
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Budget Account",
-            "field_name": "account",
-            "property": "read_only",
-            "property_type": "Link",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "no_of_positions",
-            "property": "reqd",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "expected_compensation",
-            "property": "reqd",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "expected_compensation",
-            "property": "default",
-            "value": 0.0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "expected_compensation",
-            "property": "mandatory_depends_on",
-            "value": "eval: frappe.user_roles.includes('HR Manager')"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "expected_compensation",
-            "property": "depends_on",
-            "value": "eval: frappe.user_roles.includes('HR Manager')"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "employee_left",
-            "property": "ignore_user_permissions",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "requested_by",
-            "property": "ignore_user_permissions",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "swap_with_employee",
-            "property": "ignore_user_permissions",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "start_date",
-            "property": "read_only_depends_on",
-            "value": "eval:doc.docstatus == 1"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "end_date",
-            "property": "read_only_depends_on",
-            "value": "eval:doc.docstatus == 1"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "start_date",
-            "property": "allow_on_submit",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "end_date",
-            "property": "allow_on_submit",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Shift Assignment",
-            "field_name": "employee",
-            "property": "ignore_user_permissions",
-            "value": 1
-        },
-        {
-           "doctype_or_field": "DocField",
-           "doc_type": "Job Requisition",
-           "field_name": "designation",
-           "property": "reqd",
-           "property_type": "Check",
-           "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "department",
-            "property_type": "Check",
-            "property": "reqd",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "section_break_7",
-            "property": "collapsible",
-            "property_type": "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Job Requisition",
-            "field_name": "designation",
-            "property": "depends_on",
-            "value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Applicant",
-            "property": "show_title_field_in_link",
-            "property_type" : "Check",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee",
-            "field_name": "permanent_accommodation_type",
-            "property": "hidden",
-            "property_type": "Select",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Attendance Request",
-            "field_name": "reports_to",
-            "property": "ignore_user_permissions",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee",
-            "field_name": "current_accommodation_type",
-            "property": "hidden",
-            "property_type": "Select",
-            "value": 1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee",
-            "field_name": "cell_number",
-            "property": "label",
-            "value": "Personal Mobile Number"
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Employee Feedback Rating",
-            "property": "field_order",
-            "value": "[\"criteria\", \"per_weightage\", \"marks\", \"rating\"]"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Employee Feedback Rating",
-            "field_name": "rating",
-            "property": "in_list_view",
-            "property_type": "Check",
-            "value": 0
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Applicant",
-            "property": "show_title_field_in_link",
-            "property_type" : "Check",
-            "value": 1
-        },
-        {
-            "doc_type": "Sales Order",
-            "doctype_or_field": "DocField",
-            "field_name": "set_warehouse",
-            "property": "hidden",
-            "property_type": "Link",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Sales Order",
-            "field_name": "scan_barcode",
-            "property": "hidden",
-            "property_type": "Data",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "quotation_to",
-            "property": "default",
-            "property_type": "Link",
-            "value":"Customer"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "quotation_to",
-            "property": "read_only",
-            "property_type": "Link",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "order_type",
-            "property": "default",
-            "property_type": "Link",
-            "value":"Sales"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "order_type",
-            "property": "read_only",
-            "property_type": "Link",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation Item",
-            "field_name": "shopping_cart_section",
-            "property": "hidden",
-            "property_type": "Section Break",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation Item",
-            "field_name": "item_weight_details",
-            "property": "hidden",
-            "property_type": "Section Break",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation Item",
-            "field_name": "available_quantity_section",
-            "property": "hidden",
-            "property_type": "Section Break",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation Item",
-            "field_name": "gst_details_section",
-            "property": "hidden",
-            "property_type": "Section Break",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation Item",
-            "field_name": "item_code",
-            "property": "label",
-            "property_type": "Link",
-            "value":"Service Item"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Quotation",
-            "field_name": "coupon_code",
-            "property": "hidden",
-            "property_type": "Link",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Budget",
-            "field_name": "accounts",
-            "property": "hidden",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Budget",
-            "field_name": "accounts",
-            "property": "read_only",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Budget",
-            "field_name": "accounts",
-            "property": "reqd",
-            "value":0
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Payment Entry",
-            "field_name": "party_type",
-            "property": "default",
-            "property_type": "Link",
-            "value":"Employee"
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Voucher Entry",
-            "field_name": "bureau",
-            "property": "in_standard_filter",
-            "property_type": "Check",
-            "value":1
-        },
-        {
-            "doctype_or_field": "DocType",
-            "doc_type": "Job Requisition",
-            "property": "field_order",
-            "value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "reason_for_requesting", "column_break_4", "company", "status", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
-        },
-        {
-            "doctype_or_field": "DocField",
-            "doc_type": "Asset",
-            "field_name": "location",
-            "property": "allow_on_submit",
-            "value": 1
-        }
-    ]
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Customer",
+			"field_name": "disabled",
+			"property": "default",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal Template",
+			"field_name": "rating_criteria",
+			"property": "label",
+			"value": "Employee Criteria"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Feedback Rating",
+			"field_name": "rating_criteria",
+			"property": "read_only",
+			"property_type": "Table",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "status",
+			"property": "read_only",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Leave Allocation",
+			"field_name": "to_date",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Customer",
+			"field_name": "disabled",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Account",
+			"field_name": "disabled",
+			"property": "default",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Account",
+			"field_name": "disabled",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Supplier",
+			"field_name": "disabled",
+			"property": "default",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Supplier",
+			"field_name": "disabled",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Advance",
+			"field_name": "purpose",
+			"property": "hidden",
+			"property_type": "Small Text",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Purchase Invoice",
+			"field_name": "update_stock",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Customer",
+			"field_name": "sales_team_tab",
+			"property": "hidden",
+			"property_type": "TabBreak",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Purchase Invoice",
+			"field_name": "is_subcontracted",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Purchase Invoice",
+			"field_name": "scan_barcode",
+			"property": "hidden",
+			"property_type": "Data",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Advance",
+			"field_name": "naming_series",
+			"property": "hidden",
+			"property_type": "Data",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Item",
+			"field_name": "grant_commission",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "scan_barcode",
+			"property": "hidden",
+			"property_type": "Data",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "shipping_rule",
+			"property": "hidden",
+			"property_type": "Link",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "incoterm",
+			"property": "hidden",
+			"property_type": "Link",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Customer",
+			"field_name": "dn_required",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Item",
+			"field_name": "include_item_in_manufacturing",
+			"property": "default",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Item",
+			"field_name": "inspection_required_before_delivery",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Item",
+			"field_name": "manufacturing",
+			"property": "depends_on",
+			"property_type": "TabBreak",
+			"value": "eval:doc.is_stock_item == 0"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Applicant",
+			"field_name": "status",
+			"property": "options",
+			"value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Item",
+			"property": "quick_entry",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "posting_date",
+			"property": "read_only",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Leave Application",
+			"field_name": "posting_date",
+			"property": "read_only",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "status",
+			"property": "options",
+			"value": "Pending\nOpen & Approved\nRejected\nOn Hold\nCancelled"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Event",
+			"field_name": "event_category",
+			"property": "options",
+			"value": "Event\nMeeting\nCall\nSent/Received Email\nOne to One Meeting\nOther"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Opening",
+			"field_name": "location",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Boarding Activity",
+			"field_name": "required_for_employee_creation",
+			"property": "hidden",
+			"property_type": "Check",
+			"value":1
+		},
+		{
+			"doctype_or_field":"DocField",
+			"doc_type": "Attendance Request",
+			"field_name": "reason",
+			"property": "options",
+			"value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Skill Assessment",
+			"field_name": "rating",
+			"property": "reqd",
+			"property_type": "Check",
+			"value":0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Skill Assessment",
+			"field_name": "rating",
+			"property": "read_only",
+			"property_type": "Check",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee External Work History",
+			"field_name": "designation",
+			"property": "label",
+			"value":"Designation At The Time Of Joining"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Project",
+			"field_name": "expected_start_date",
+			"property": "fieldtype",
+			"value":"Datetime"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Project",
+			"field_name": "expected_end_date",
+			"property": "fieldtype",
+			"value":"Datetime"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "designation",
+			"property": "fetch_from",
+			"property_type": "Link",
+			"value":"employee_left.designation"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "department",
+			"property": "fetch_from",
+			"property_type": "Link",
+			"value":"employee_left.department"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Performance Feedback",
+			"field_name": "total_score",
+			"property": "hidden",
+			"property_type": "Float",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Feedback Rating",
+			"field_name": "Rating",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Performance Feedback",
+			"field_name": "feedback_ratings",
+			"property": "label",
+			"property_type": "Table",
+			"value":"Employee Criteria"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "rate_goals_manually",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "goal_score_percentage",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "total_score",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal KRA",
+			"field_name": "goal_completion",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal KRA",
+			"field_name": "goal_score",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Feedback Rating",
+			"field_name": "rating",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "goals",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "appraisal_kra",
+			"property": "label",
+			"property_type": "Table",
+			"value":"KRA's",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Applicant",
+			"field_name": "resume_link",
+			"property": "hidden",
+			"property_type": "Data",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "self_ratings",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "self_score",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Budget",
+			"field_name": "monthly_distribution",
+			"property": "hidden",
+			"property_type": "Link",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "designation",
+			"property": "reqd",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Vehicle",
+			"field_name": "insurance_details",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Interview",
+			"field_name": "resume_link",
+			"property": "hidden",
+			"property_type": "",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HR Settings",
+			"field_name": "emp_created_by",
+			"property": "depends_on",
+			"property_type": "Code",
+			"value": "eval: doc.employee_naming_by_department === 0 "
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Budget Account",
+			"field_name": "account",
+			"property": "read_only",
+			"property_type": "Link",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "no_of_positions",
+			"property": "reqd",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "expected_compensation",
+			"property": "reqd",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "expected_compensation",
+			"property": "default",
+			"value": 0.0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "expected_compensation",
+			"property": "mandatory_depends_on",
+			"value": "eval: frappe.user_roles.includes('HR Manager')"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "expected_compensation",
+			"property": "depends_on",
+			"value": "eval: frappe.user_roles.includes('HR Manager')"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "employee_left",
+			"property": "ignore_user_permissions",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "requested_by",
+			"property": "ignore_user_permissions",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "swap_with_employee",
+			"property": "ignore_user_permissions",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "start_date",
+			"property": "read_only_depends_on",
+			"value": "eval:doc.docstatus == 1"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "end_date",
+			"property": "read_only_depends_on",
+			"value": "eval:doc.docstatus == 1"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "start_date",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "end_date",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Shift Assignment",
+			"field_name": "employee",
+			"property": "ignore_user_permissions",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "department",
+			"property_type": "Check",
+			"property": "reqd",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "section_break_7",
+			"property": "collapsible",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "designation",
+			"property": "depends_on",
+			"value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Job Applicant",
+			"property": "show_title_field_in_link",
+			"property_type" : "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "permanent_accommodation_type",
+			"property": "hidden",
+			"property_type": "Select",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Attendance Request",
+			"field_name": "reports_to",
+			"property": "ignore_user_permissions",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "current_accommodation_type",
+			"property": "hidden",
+			"property_type": "Select",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "cell_number",
+			"property": "label",
+			"value": "Personal Mobile Number"
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Employee Feedback Rating",
+			"property": "field_order",
+			"value": "[\"criteria\", \"per_weightage\", \"marks\", \"rating\"]"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Feedback Rating",
+			"field_name": "rating",
+			"property": "in_list_view",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Job Applicant",
+			"property": "show_title_field_in_link",
+			"property_type" : "Check",
+			"value": 1
+		},
+		{
+			"doc_type": "Sales Order",
+			"doctype_or_field": "DocField",
+			"field_name": "set_warehouse",
+			"property": "hidden",
+			"property_type": "Link",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Sales Order",
+			"field_name": "scan_barcode",
+			"property": "hidden",
+			"property_type": "Data",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "quotation_to",
+			"property": "default",
+			"property_type": "Link",
+			"value":"Customer"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "quotation_to",
+			"property": "read_only",
+			"property_type": "Link",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "order_type",
+			"property": "default",
+			"property_type": "Link",
+			"value":"Sales"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "order_type",
+			"property": "read_only",
+			"property_type": "Link",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation Item",
+			"field_name": "shopping_cart_section",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation Item",
+			"field_name": "item_weight_details",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation Item",
+			"field_name": "available_quantity_section",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation Item",
+			"field_name": "gst_details_section",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation Item",
+			"field_name": "item_code",
+			"property": "label",
+			"property_type": "Link",
+			"value":"Service Item"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Quotation",
+			"field_name": "coupon_code",
+			"property": "hidden",
+			"property_type": "Link",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Budget",
+			"field_name": "accounts",
+			"property": "hidden",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Budget",
+			"field_name": "accounts",
+			"property": "read_only",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Budget",
+			"field_name": "accounts",
+			"property": "reqd",
+			"value":0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Payment Entry",
+			"field_name": "party_type",
+			"property": "default",
+			"property_type": "Link",
+			"value":"Employee"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "bureau",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value":1
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Job Requisition",
+			"property": "field_order",
+			"value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "reason_for_requesting", "column_break_4", "company", "status", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Asset",
+			"field_name": "location",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "no_of_positions",
+			"property": "label",
+			"property_type": "Data",
+			"value": "No of Positions",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "no_of_positions",
+			"property": "read_only_depends_on",
+			"value": "eval:doc.request_for=='Employee Replacement'",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "reason_for_requesting",
+			"property": "fieldtype",
+			"property_type": "Data",
+			"value": "Small Text",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "description",
+			"property": "reqd",
+			"property_type": "Check",
+			"value": 0,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "description",
+			"property": "depends_on",
+			"value": "eval: doc.workflow_state != 'Draft'",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "description",
+			"property": "mandatory_depends_on",
+			"value": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "job_description_template",
+			"property": "mandatory_depends_on",
+			"value": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "designation",
+			"property": "mandatory_depends_on",
+			"value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
+		},
+	]
 
 def get_material_request_custom_fields():
     '''
