@@ -38,7 +38,7 @@
                     <div class="column">
                         <label for="phone-number">Mobile Number</label>
                         <input type="tel" id="phone_number" name="phone_number" pattern="[0-9]{10}" maxlength="10"
-                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);">
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);" required>
                     </div>
                     <div class="column">
                         <label for="email">Email ID</label>
@@ -47,7 +47,7 @@
                 </div>
                 <div class="row">
                     <div class="column">
-                        <label for="experience">Experience</label>
+                        <label for="experience">Experience (In Years)</label>
                         <input type="number" id="min_experience" name="experience" step="0" min="0">
                     </div>
                     <div class="column">
