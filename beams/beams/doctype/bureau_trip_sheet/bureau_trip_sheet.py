@@ -30,8 +30,8 @@ class BureauTripSheet(Document):
 
         if self.work_details:
             for row in self.work_details:
-                if row.distance_traveled:
-                    total_distance += row.distance_traveled
+                if row.distance_travelled_km:
+                    total_distance += row.distance_travelled_km
 
         # Set the 'total_distance_travelled_km' field with the calculated sum
         self.total_distance_travelled_km = total_distance
