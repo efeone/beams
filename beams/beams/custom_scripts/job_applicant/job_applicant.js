@@ -1,32 +1,53 @@
 frappe.ui.form.on('Job Applicant', {
     refresh: function (frm) {
+        frm.remove_custom_button(__('Interview'), __('Create'));
         handle_custom_buttons(frm);
         frm.toggle_display('applicant_interview_rounds', !frm.is_new());
+        const statuses = [
+            'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
+            'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
+            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Job Proposal Accepted', 'Job Proposal Created'
+        ];
+
+        if (statuses.includes(frm.doc.status)) {
+            frm.remove_custom_button(__('Local Enquiry Report'), __('Create'));
+        }
+
+        if (frm.doc.status === 'Accepted' || frm.doc.status === 'Training Completed') {
+            // Remove "View" button and its inner options
+            frm.remove_custom_button('View');
+            frm.page.remove_inner_button('Job Offer', 'View');
+
+            // Remove "Send Magic Link" button
+            frm.remove_custom_button('Send Magic Link');
+
+            // Remove "Rejected" and "Hold" options under "Set Status" button
+            frm.page.remove_inner_button('Rejected', 'Set Status');
+            frm.page.remove_inner_button('Hold', 'Set Status');
+            frm.remove_custom_button(__('Job Offer'), __('Create'));
+        }
+
+        const magic_link_statuses = [
+            'Interview Completed', 'Local Enquiry Approved', 'Selected',
+            'Job Proposal Created', 'Job Proposal Accepted',
+            'Interview Scheduled', 'Interview Ongoing'
+        ];
+
+        if (magic_link_statuses.includes(frm.doc.status)) {
+            frm.remove_custom_button('Send Magic Link');
+        }
+
+        if (frm.doc.status === 'Job Proposal Created' || frm.doc.status === 'Job Proposal Accepted') {
+            frm.page.remove_inner_button('Rejected', 'Set Status');
+            frm.page.remove_inner_button('Hold', 'Set Status');
+        }
+
+        if (frm.doc.status === 'Interview Scheduled' || frm.doc.status === 'Interview Ongoing') {
+            frm.page.remove_inner_button('Local Enquiry Report', 'Create');
+        }
     },
     status: function (frm) {
         frm.trigger('refresh');
-    },
-    willing_to_work_on_location: function (frm) {
-        if (frm.doc.willing_to_work_on_location) {
-            if (frm.doc.job_title) {
-                frappe.call({
-                    method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_job_opening_location',
-                    args: {
-                        'job_opening': frm.doc.job_title
-                    },
-                    callback: function (r) {
-                        if (r.message) {
-                            frm.set_value('location', r.message);
-                        } else {
-                            frm.set_value('location', '');
-                        }
-                    }
-                });
-            }
-        } else {
-            // Clear location if checkbox is unchecked
-            frm.set_value('location', '');
-        }
     }
 });
 
@@ -44,8 +65,6 @@ function handle_custom_buttons(frm) {
                         }, __('Create'));
                     }
                 });
-                // Remove the "Interview" button when status is "Training Completed"
-                frm.remove_custom_button(__('Interview'), __('Create'));
             }
 
             // Handle "Job Proposal" button for "Selected" status
@@ -146,11 +165,6 @@ function handle_custom_buttons(frm) {
                 }, __('Set Status'));
             }
 
-            // Remove "Interview" button if status is "Training Completed", "Job Proposal Created", "Job Proposal Accepted ,"Interview Completed" or "Selected"
-            if (['Training Completed', 'Job Proposal Created', 'Job Proposal Accepted', 'Interview Completed', 'Selected'].includes(frm.doc.status)) {
-                frm.remove_custom_button(__('Interview'), __('Create'));
-            }
-
             if (frm.doc.status === 'Open') {
                 frm.add_custom_button(__('Shortlisted'), function () {
                     frm.set_value('status', 'Shortlisted');
@@ -188,57 +202,5 @@ frappe.ui.form.on('Applicant Interview Round', {
                 frappe.set_route('Form', 'Interview', new_interview.name);
             });
         }
-    }
-});
-
-frappe.ui.form.on('Job Applicant', {
-    refresh: function (frm) {
-        const statuses = [
-            'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
-            'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
-            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Job Proposal Accepted', 'Job Proposal Created'
-        ];
-
-        if (statuses.includes(frm.doc.status)) {
-            frm.remove_custom_button(__('Local Enquiry Report'), __('Create'));
-
-            if (frm.doc.status !== 'Document Uploaded') {
-                frm.remove_custom_button(__('Interview'), __('Create'));
-            }
-        }
-
-        if (frm.doc.status === 'Accepted' || frm.doc.status === 'Training Completed') {
-            // Remove "View" button and its inner options
-            frm.remove_custom_button('View');
-            frm.page.remove_inner_button('Job Offer', 'View');
-
-            // Remove "Send Magic Link" button
-            frm.remove_custom_button('Send Magic Link');
-
-            // Remove "Rejected" and "Hold" options under "Set Status" button
-            frm.page.remove_inner_button('Rejected', 'Set Status');
-            frm.page.remove_inner_button('Hold', 'Set Status');
-            frm.remove_custom_button(__('Job Offer'), __('Create'));
-        }
-
-        const magic_link_statuses = [
-            'Interview Completed', 'Local Enquiry Approved', 'Selected',
-            'Job Proposal Created', 'Job Proposal Accepted',
-            'Interview Scheduled', 'Interview Ongoing'
-        ];
-
-        if (magic_link_statuses.includes(frm.doc.status)) {
-            frm.remove_custom_button('Send Magic Link');
-        }
-
-        if (frm.doc.status === 'Job Proposal Created' || frm.doc.status === 'Job Proposal Accepted') {
-            frm.page.remove_inner_button('Rejected', 'Set Status');
-            frm.page.remove_inner_button('Hold', 'Set Status');
-        }
-
-        if (frm.doc.status === 'Interview Scheduled' || frm.doc.status === 'Interview Ongoing') {
-            frm.page.remove_inner_button('Local Enquiry Report', 'Create');
-        }
-
     }
 });

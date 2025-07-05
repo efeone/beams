@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,45 +13,51 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
 </head>
+
 <body>
-  <div id="form_upload_doc">
-    <h1><b>APPLICATION FOR EMPLOYEMENT</b></h1>
-    <center><h3>Madhyamam Broadcasting Limited</h3></center>
-    <div class="container">
-        <div class="tabs">
-            <button class="tab-button active" onclick="showTab(0)">Personal Information</button>
-            <button class="tab-button" id="currentEmployerTab" onclick="showTab(1)">Current Employer / Immediate Previous Employer</button>
-            <button class="tab-button" onclick="showTab(2)">More Details</button>
-        </div>
-        <form id="submit_application" method="post">
-          <input type="hidden" id="docname" value="{{ doc.name }}">
-            <div class="form-section active" id="tab-0">
-                <h5><b>General Details</b></h5>
-                <div class="row tax-details" style="width: 31%;">
-                    <div class="column">
-                        <label for="designation">Position Applied For</label>
-                        <input type="text" id="designation" name="designation"  value="{{ doc.designation }}" {% if doc.designation %} readonly {% endif %}>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="applicant_name">Full Name</label>
-                        <input type="text" id="applicant_name" name="applicant_name"  value="{{ doc.applicant_name }}" {% if doc.applicant_name %} readonly {% endif %}>
-                    </div>
-                    <div class="column">
-                        <label for="father_name">Father's Name</label>
-                        <input type="text" id="father_name" name="father_name">
-                    </div>
-                    <div class="column">
-                <label for="date_of_birth">Date of Birth:</label>
-                <input type="date" id="date_of_birth" name="date_of_birth" >
+    <div id="form_upload_doc">
+        <h1><b>APPLICATION FOR EMPLOYEMENT</b></h1>
+        <center>
+            <h3>Madhyamam Broadcasting Limited</h3>
+        </center>
+        <div class="container">
+            <div class="tabs">
+                <button class="tab-button active" onclick="showTab(0)">Personal Information</button>
+                <button class="tab-button" id="currentEmployerTab" onclick="showTab(1)">Current Employer / Immediate
+                    Previous Employer</button>
+                <button class="tab-button" onclick="showTab(2)">More Details</button>
             </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="gender">Gender</label>
-                        {% set genders = frappe.get_all('Gender', fields=['gender', 'name']) %}
-                        <div class="col-14"></div>
+            <form id="submit_application" method="post">
+                <input type="hidden" id="docname" value="{{ doc.name }}">
+                <div class="form-section active" id="tab-0">
+                    <h5><b>General Details</b></h5>
+                    <div class="row tax-details" style="width: 31%;">
+                        <div class="column">
+                            <label for="designation">Position Applied For</label>
+                            <input type="text" id="designation" name="designation" value="{{ doc.designation }}" {% if
+                                doc.designation %} disabled {% endif %}>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="applicant_name">Full Name</label>
+                            <input type="text" id="applicant_name" name="applicant_name"
+                                value="{{ doc.applicant_name }}" {% if doc.applicant_name %} disabled {% endif %}>
+                        </div>
+                        <div class="column">
+                            <label for="father_name">Father's Name</label>
+                            <input type="text" id="father_name" name="father_name">
+                        </div>
+                        <div class="column">
+                            <label for="date_of_birth">Date of Birth:</label>
+                            <input type="date" id="date_of_birth" name="date_of_birth">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="gender">Gender</label>
+                            {% set genders = frappe.get_all('Gender', fields=['gender', 'name']) %}
+                            <div class="col-14"></div>
                             <select class="form-control" id="gender" name="gender"
                                 style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
                                 <option value="">Select Gender</option>
@@ -59,68 +66,74 @@
                                 {% endfor %}=
                             </select>
                         </div>
-                    <div class="column">
-                        <label for="country">Country</label>
-                        {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
-                        <div class="col-14">
-                            <select class="form-control" id="country" name="country"
-                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
-                                <option value="">Select Country</option>
-                                {% for country in countries %}
-                                <option value="{{ country.name }}">{{ country.country_name }}</option>
-                                {% endfor %}
+                        <div class="column">
+                            <label for="country">Country</label>
+                            {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
+                            <div class="col-14">
+                                <select class="form-control" id="country" name="country"
+                                    style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
+                                    <option value="">Select Country</option>
+                                    {% for country in countries %}
+                                    <option value="{{ country.name }}">{{ country.country_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <label for="marital_status">Maritial Status</label>
+                            <select id="marital_status" name="marital_status">
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
                             </select>
                         </div>
                     </div>
-                    <div class="column">
-                        <label for="marital_status">Maritial Status</label>
-                        <select id="marital_status" name="marital_status" >
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                            <option value="Divorced">Divorced</option>
-                            <option value="Widowed">Widowed</option>
-                        </select>
+                    <h5><b>Current Address</b></h5>
+                    <div class="row tax-details">
+                        <div class="column">
+                            <label for="current_address">Current Address</label>
+                            <textarea id="current_address" name="current_address"
+                                style="width :500px; height:100px;"></textarea>
+                        </div>
                     </div>
-                </div>
-                <h5><b>Current Address</b></h5>
-                <div class="row tax-details">
-                    <div class="column">
-                        <label for="current_address">Current Address</label>
-                        <textarea id="current_address" name="current_address" style = "width :500px; height:100px;"></textarea>
+                    <h5><b>Permanent Address</b></h5>
+                    <div class="row tax-details">
+                        <div>
+                            <label>
+                                <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as
+                                Current Address
+                            </label>
+                        </div>
+                        <div class="column"></div>
+                        <div class="column"></div>
+                        <div class="column">
+                            <label for="permanent_address">Permanent Address</label>
+                            <textarea id="permanent_address" name="permanent_address"
+                                style="width :500px; height:100px;"></textarea>
+                        </div>
                     </div>
-                </div>
-                <h5><b>Permanent Address</b></h5>
-                <div class="row tax-details">
-                    <div>
-                        <label>
-                            <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as Current Address
-                        </label>
+                    <h5><b>Contact Details</h5></b>
+                    <div class="row tax-details">
+                        <div class="column">
+                            <label for="email_id">Email ID</label>
+                            <input type="text" id="email_id" name="email_id" value="{{ doc.email_id }}" {% if
+                                doc.email_id %} disabled {% endif %}>
+                        </div>
+                        <div class="column">
+                            <label for="phone_number">Mobile Number</label>
+                            <input type="tel" id="phone_number" name="phone_number" value="{{ doc.phone_number or '' }}"
+                                {% if doc.phone_number %} disabled {% endif %}>
+                        </div>
+                        <div class="column">
+                            <label for="aadhar_number">Aadhar Number</label>
+                            <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Enter Aadhar Number"
+                                maxlength="12" style="width: 100%; max-width: 300px;" oninput="validateDigits(this)">
+                        </div>
+                        <div class="column">
+                        </div>
                     </div>
-                    <div class="column"></div>
-                    <div class="column"></div>
-                  <div class="column">
-                      <label for="permanent_address">Permanent Address</label>
-                      <textarea id="permanent_address" name="permanent_address" style = "width :500px; height:100px;"></textarea>
-                  </div>
-                </div>
-                <h5><b>Contact Details</h5></b>
-                <div class="row tax-details">
-                    <div class="column">
-                        <label for="email_id_1">Email Id</label>
-                        <input type="text" id="email_id_1" name="email_id_1"  value="{{ doc.email_id }}" {% if doc.email_id %} readonly {% endif %}>
-                    </div>
-                    <div class="column">
-                        <label for="current_mobile_no">Mobile Number</label>
-                        <input type="tel" id="current_mobile_no" name="current_mobile_no"   value="{{ doc.phone_number or '' }}" {% if doc.phone_number %} readonly {% endif %}>
-                    </div>
-                    <div class="column">
-                        <label for="aadhar_number">Aadhar Number</label>
-                        <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Enter Aadhar Number" maxlength="12" style="width: 100%; max-width: 300px;" oninput="validateDigits(this)">
-                    </div>
-                    <div class="column">
-                    </div>
-                </div>
-                <h5><b>Educational Qualification</h5></b>
+                    <h5><b>Educational Qualification</h5></b>
                     <div class="row tax-details">
                         <table id="educational_qualification_table">
                             <thead>
@@ -138,12 +151,20 @@
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td><input type="text" name="course_university_1" class="name_of_course_university" style="background-color: #fff;"></td>
-                                    <td><input type="text" name="institution_location_1" class="name_location_of_institution" style="background-color: #fff;"></td>
-                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
-                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
-                                    <td><input type="Float" name="results_1" class="result" style="background-color: #fff;"></td>
-                                    <td><input type="file" id="qualification_file" class="home-textinput" style="background-color: #fff;"/></td>
+                                    <td><input type="text" name="course_university_1" class="name_of_course_university"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="institution_location_1"
+                                            class="name_location_of_institution" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="Float" name="results_1" class="result"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="file" id="qualification_file" class="home-textinput"
+                                            style="background-color: #fff;" /></td>
                                     <td><button type="button" onclick="removeRow(this)">Delete</button></td>
                                 </tr>
                             </tbody>
@@ -152,374 +173,431 @@
                             <button type="button" id="add-row">Add Row</button>
                         </div>
                     </div>
-            <h5><b>Professional Certification</h5></b>
-                <div class="row tax-details">
-                    <table id="professional_qualification_table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Course</th>
-                                <th>Institute Name</th>
-                                <th>Date Attended From</th>
-                                <th>Date Attended To</th>
-                                <th> Type of Cerfification</th>
-                                <th>Subject Major</th>
-                                <th>Attachment</th>
-                                <th></th>
-                            </tr>
-                            <tr>
-                  </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" name="course_1" class="course" style="background-color: #fff;"></td>
-                                <td><input type="text" name="institute_name_1" class="institute_name" style="background-color: #fff;" ></td>
-                                <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
-                                <td><input type="text" name="date_to_1" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;"></td>
-                                <td><input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;"></td>
-                                <td><input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;"></td>
-                                <td><input type="file" id="certification_file" class="home-textinput" style="background-color: #fff;"/></td>
-                                <td><button type="button" onclick="removeRow(this)">Delete</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="add-buttons">
-                        <button type="button" id="add-row-prof">Add Row</button>
+                    <h5><b>Professional Certification</h5></b>
+                    <div class="row tax-details">
+                        <table id="professional_qualification_table">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Course</th>
+                                    <th>Institute Name</th>
+                                    <th>Date Attended From</th>
+                                    <th>Date Attended To</th>
+                                    <th> Type of Cerfification</th>
+                                    <th>Subject Major</th>
+                                    <th>Attachment</th>
+                                    <th></th>
+                                </tr>
+                                <tr>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td><input type="text" name="course_1" class="course"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="institute_name_1" class="institute_name"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="type_of_certification_1" class="type_of_certification"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="text" name="sub_major_1" class="subject_major"
+                                            style="background-color: #fff;"></td>
+                                    <td><input type="file" id="certification_file" class="home-textinput"
+                                            style="background-color: #fff;" /></td>
+                                    <td><button type="button" onclick="removeRow(this)">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="add-buttons">
+                            <button type="button" id="add-row-prof">Add Row</button>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-section" id="tab-1">
-                <div class="row">
-                    <div class="column">
-                        <label for="name_of_employer">Name of Employer</label>
-                        <input type="text" id="name_of_employer" name="name_of_employer" >
-                    </div>
-                    <div class="column">
-                        <label for="current_designation">Designation</label>
-                        <input type="text" id="current_designation" name="current_designation" >
-                    </div>
-                    <div class="column">
-                        <label for="current_department">Department</label>
-                        <input type="text" id="current_department" name="current_department" >
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="manager_name">Manager's Name</label>
-                        <input type="text" id="manager_name" name="manager_name" >
-                    </div>
-                    <div class="column">
-                        <label for="manager_contact_no">Manager's Contact No</label>
-                        <input type="tel" id="manager_contact_no" name="manager_contact_no"  pattern="[0-9]{10}" title="Please enter a valid 10-digit mobile number">
-                    </div>
-                    <div class="column">
-                        <label for="manager_email">Manager's Email</label>
-                        <input type="email" id="manager_email" name="manager_email" >
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label for="employment_period_from">Employment Period From</label>
-                        <input type="text" id="employment_period_from" name="employment_period_from"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
-                    </div>
-                    <div class="column">
-                        <label for="employment_period_to">Employment Period To</label>
-                        <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" >
-                    </div>
-                    <div class="column">
-                       <label for="reference_taken">Can a Reference be Taken Now?</label>
-                       <select id="reference_taken" name="reference_taken">
-                           <option value="Yes">Yes</option>
-                           <option value="No">No</option>
-                       </select>
-                   </div>
-                    <div class="column">
-                        <label for="address_of_employer">Address of Employer</label>
-                        <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
-                    </div>
-                    <div class="column">
-                        <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
-                        <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4" cols="50"></textarea>
-                    </div>
-
-                    <div class="column">
-                        <label for="reason_for_leaving">Reasons for leaving</label>
-                        <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="column" style="max-width: 250px;">
-                        <label for="was_this_position">Current Employment Type</label>
-                        <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()" style="width: 90%;">
-                            <option value="Permanent">Permanent</option>
-                            <option value="Temporary">Temporary</option>
-                            <option value="Contractual">Contractual</option>
-                        </select>
-                    </div>
+                <div class="form-section" id="tab-1">
+                    <div class="row">
+                        <div class="column">
+                            <label for="name_of_employer">Name of Employer</label>
+                            <input type="text" id="name_of_employer" name="name_of_employer">
+                        </div>
+                        <div class="column">
+                            <label for="current_designation">Designation</label>
+                            <input type="text" id="current_designation" name="current_designation">
+                        </div>
+                        <div class="column">
+                            <label for="current_department">Department</label>
+                            <input type="text" id="current_department" name="current_department">
+                        </div>
                     </div>
                     <div class="row">
-                    <div class="column" id="agencies_details" style="display: none;">
-                        <label for="agency_details">Agency Details</label>
-                        <textarea id="agency_details" name="agency_details" rows="4" cols="40" style="width: 100%; max-width: 300px;"></textarea>
+                        <div class="column">
+                            <label for="manager_name">Manager's Name</label>
+                            <input type="text" id="manager_name" name="manager_name">
+                        </div>
+                        <div class="column">
+                            <label for="manager_contact_no">Manager's Contact No</label>
+                            <input type="tel" id="manager_contact_no" name="manager_contact_no" pattern="[0-9]{10}"
+                                title="Please enter a valid 10-digit mobile number">
+                        </div>
+                        <div class="column">
+                            <label for="manager_email">Manager's Email</label>
+                            <input type="email" id="manager_email" name="manager_email">
+                        </div>
                     </div>
-                    <div class="column"></div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="employment_period_from">Employment Period From</label>
+                            <input type="text" id="employment_period_from" name="employment_period_from" maxlength="4"
+                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
+                        </div>
+                        <div class="column">
+                            <label for="employment_period_to">Employment Period To</label>
+                            <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4"
+                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
+                        </div>
+                        <div class="column">
+                            <label for="reference_taken">Can a Reference be Taken Now?</label>
+                            <select id="reference_taken" name="reference_taken">
+                                <option value="Yes">Yes</option>
+                                <option value="No">No</option>
+                            </select>
+                        </div>
+                        <div class="column">
+                            <label for="address_of_employer">Address of Employer</label>
+                            <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                        </div>
+                        <div class="column">
+                            <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
+                            <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4"
+                                cols="50"></textarea>
+                        </div>
 
-                  </div>
-                    <div class="column">
+                        <div class="column">
+                            <label for="reason_for_leaving">Reasons for leaving</label>
+                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                        </div>
                     </div>
-                <h5><b>Previous Employment History</h3></b>
-                <div class="row tax-details">
-                    <table id="previous_emplyoment_history_table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Organization Name</th>
-                                <th>Designation</th>
-                                <th> Last Salary CTC</th>
-                                <th>Name of Manager/Reporting Head</th>
-                                <th>Period of Employment</th>
-                                <th>Reason for Leaving</th>
-                                <th>Attachment</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td><input type="text" name="name_of_org" class="name_of_org" style="background-color: #fff;" ></td>
-                                <td><input type="text" name="designation" class="prev_designation" style="background-color: #fff;"></td>
-                                <td><input type="text" name="last_sal" class="last_salary_drawn" style="background-color: #fff;" ></td>
-                                <td><input type="text" name="name_of_manager" class="name_of_manager" style="background-color: #fff;"></td>
-                                <td><input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;"></td>
-                                <td><input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;"></td>
-                                <td><input type="file" id="prev_emp_file" class="home-textinput" style="background-color: #fff;"/></td>
-                                <td><button type="button" onclick="removeRow(this)">Delete</button></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="add-buttons">
-                        <button type="button" id="add-row-prev">Add Row</button>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div style="width: 100%;">
-                    <label><h5><b>Upload Last 3 Months Payslips</b></b></label><br>
-                      <hr></hr>
-                    </div>
-
-                    <div class="column">
-                        <label for="payslip_month_1">Payslip - Month 1</label>
-                        <input type="file" id="payslip_month_1" name="payslip_month_1" accept=".pdf,.jpg,.png,.jpeg" />
-                    </div>
-
-                    <div class="column">
-                        <label for="payslip_month_2">Payslip - Month 2</label>
-                        <input type="file" id="payslip_month_2" name="payslip_month_2" accept=".pdf,.jpg,.png,.jpeg" />
-                    </div>
-
-                    <div class="column">
-                        <label for="payslip_month_3">Payslip - Month 3</label>
-                        <input type="file" id="payslip_month_3" name="payslip_month_3" accept=".pdf,.jpg,.png,.jpeg" />
-                    </div>
-                </div>
-            </div>
-            <div class="form-section" id="tab-2">
-                <div class="row">
-                    <div class="column">
-                        <label for="expected_salary">Expected Salary</label>
-                        <input type="text" id="expected_salary" name="expected_salary" >
-                    </div>
-                    <div class="column">
-                        <label for="telephone-no">Telephone No</label>
-                        <input type="tel" name="telphone" id="telephone_number" pattern="[0-9]{4} [0-9]{7}" placeholder="eg : 0496 2839568" />
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="column">
-                        <label>
-                            <input type="checkbox" id="achievements_checkbox">
-                            Do you have any Professional or other Achievements, Awards, or Accomplishments? </label>
-                    </div>
-                </div>
-                <div class="row" id="achievements_row" style="display: none;">
-                    <div class="column">
-                        <label for="other_achievments">
-                        </label>
-                        <textarea id="other_achievments" name="other_achievments" rows="4" cols="50"></textarea>
-                    </div>
-                </div>
-                <div class="row">
-                    <label>
-                        <input type="checkbox" id="interviewed_before_checkbox">
-                        Have you been interviewed before by Madhyamam Group?
-                    </label>
-                </div>
-                <div id="interview_details_section" style="display: none;">
-                <div class="row">
-                    <div class="column">
-                        <label for="position">Position</label>
-                        <input type="text" id="position" name="position" >
-                    </div>
-                    <div class="column">
-                        <label for="interviewed_location">Location </label>
-                        {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
-                        <div class="col-14">
-                            <select class="form-control" id="interviewed_location" name="location"
-                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
-                                <option value="">Select Location</option>
-                                {% for location in locations %}
-                                <option value="{{ location.name }}">{{ location.location_name }}</option>
-                                {% endfor %}
+                    <div class="row">
+                        <div class="column" style="max-width: 250px;">
+                            <label for="was_this_position">Current Employment Type</label>
+                            <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()"
+                                style="width: 90%;">
+                                <option value="Permanent">Permanent</option>
+                                <option value="Temporary">Temporary</option>
+                                <option value="Contractual">Contractual</option>
                             </select>
                         </div>
                     </div>
-                  </div>
-                  <div class="row">
-                    <div class="column">
-                        <label for="interviewed_date">Date</label>
-                        <input type="date" id="interviewed_date" name="interviewed_date">
-                    </div>
-                    <div class="column">
-                        <label for="interviewed_outcome">Outcome</label>
-                        <input type="text" id="interviewed_outcome" name="interviewed_outcome">
-                    </div>
-                    </div>
-                </div>
-                <h5><b>Languages Known</h5></b>
-                <div class="row tax-details">
-                  <table id="table_3">
-                  <thead>
-                    <tr>
-                      <th>No.</th>
-                      <th>Language</th>
-                      <th>Speak</th>
-                      <th>Read</th>
-                      <th>Write</th>
-                      <th></th>
-                  </tr>
-                      </thead>
-                      <tbody>
-                          <tr>
-                              <td>1</td>
-                              <td>
-                              <select name="language" class="form-control"  style="background-color: #fff;" >
-                                  <option value="">Select language</option>
-                                  {% for language in languages %}
-                                  <option value="{{ language.name }}">{{ language.language_name }}</option>
-                                  {% endfor %}
-                              </select>
-                          </td>
-                              <td>
-                                  <div class="star-rating">
-                                      <input type="radio" id="speak-5" name="speak" value="1"><label for="speak-5">&#9733;</label>
-                                      <input type="radio" id="speak-4" name="speak" value="0.8"><label for="speak-4">&#9733;</label>
-                                      <input type="radio" id="speak-3" name="speak" value="0.6"><label for="speak-3">&#9733;</label>
-                                      <input type="radio" id="speak-2" name="speak" value="0.4"><label for="speak-2">&#9733;</label>
-                                      <input type="radio" id="speak-1" name="speak" value="0.2"><label for="speak-1">&#9733;</label>
-                                  </div>
-                              </td>
-                              <td>
-                                  <div class="star-rating">
-                                      <input type="radio" id="read-5" name="read" value="1"><label for="read-5">&#9733;</label>
-                                      <input type="radio" id="read-4" name="read" value="0.8"><label for="read-4">&#9733;</label>
-                                      <input type="radio" id="read-3" name="read" value="0.6"><label for="read-3">&#9733;</label>
-                                      <input type="radio" id="read-2" name="read" value="0.4"><label for="read-2">&#9733;</label>
-                                      <input type="radio" id="read-1" name="read" value="0.2"><label for="read-1">&#9733;</label>
-                                  </div>
-                              </td>
-                              <td>
-                                  <div class="star-rating">
-                                      <input type="radio" id="write-5" name="write" value="1"><label for="write-5">&#9733;</label>
-                                      <input type="radio" id="write-4" name="write" value="0.8"><label for="write-4">&#9733;</label>
-                                      <input type="radio" id="write-3" name="write" value="0.6"><label for="write-3">&#9733;</label>
-                                      <input type="radio" id="write-2" name="write" value="0.4"><label for="write-2">&#9733;</label>
-                                      <input type="radio" id="write-1" name="write" value="0.2"><label for="write-1">&#9733;</label>
-                                  </div>
-                              </td>
-                              <td><button type="button" onclick="removeRow(this)">Delete</button></td>
-                          </tr>
-                      </tbody>
-                  </table>
-                   <div class="add-buttons">
-                      <button type="button" id="add-row-lang">Add Row</button>
-                  </div>
-                </div>
+                    <div class="row">
+                        <div class="column" id="agencies_details" style="display: none;">
+                            <label for="agency_details">Agency Details</label>
+                            <textarea id="agency_details" name="agency_details" rows="4" cols="40"
+                                style="width: 100%; max-width: 300px;"></textarea>
+                        </div>
+                        <div class="column"></div>
 
-              <div class="row">
-                  <label>
-                    <input type="checkbox" id="related_to_employee_checkbox">
-                    Are you related to any of the Madhyamam Group?
-                  </label>
-              </div>
-              <div id="relationship_details_section" style="display: none;">
-                <div class="row">
-                    <div class="column">
-                        <label for="related_employee">Name</label>
-                        <input type="text" id="related_employee" name="related_employee" >
                     </div>
                     <div class="column">
-                        <label for="related_employee_org">Organization</label>
-                        <input type="text" id="related_employee_org" name="related_employee_org" >
                     </div>
-              </div>
-              <div class="row">
-                <div class="column">
-                    <label for="related_employee_pos">Position</label>
-                    <input type="text" id="related_employee_pos" name="related_employee_pos" >
+                    <h5><b>Previous Employment History</h3></b>
+                        <div class="row tax-details">
+                            <table id="previous_emplyoment_history_table">
+                                <thead>
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Organization Name</th>
+                                        <th>Designation</th>
+                                        <th> Last Salary CTC</th>
+                                        <th>Name of Manager/Reporting Head</th>
+                                        <th>Period of Employment</th>
+                                        <th>Reason for Leaving</th>
+                                        <th>Attachment</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td><input type="text" name="name_of_org" class="name_of_org"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="text" name="designation" class="prev_designation"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="text" name="last_sal" class="last_salary_drawn"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="text" name="name_of_manager" class="name_of_manager"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="text" name="prd_of_emp" class="period_of_employment"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="text" name="reason_for_leaving" class="reason_for_leaving"
+                                                style="background-color: #fff;"></td>
+                                        <td><input type="file" id="prev_emp_file" class="home-textinput"
+                                                style="background-color: #fff;" /></td>
+                                        <td><button type="button" onclick="removeRow(this)">Delete</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="add-buttons">
+                                <button type="button" id="add-row-prev">Add Row</button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div style="width: 100%;">
+                                <label>
+                                    <h5><b>Upload Last 3 Months Payslips</b></b>
+                                </label><br>
+                                <hr>
+                                </hr>
+                            </div>
+
+                            <div class="column">
+                                <label for="payslip_month_1">Payslip - Month 1</label>
+                                <input type="file" id="payslip_month_1" name="payslip_month_1"
+                                    accept=".pdf,.jpg,.png,.jpeg" />
+                            </div>
+
+                            <div class="column">
+                                <label for="payslip_month_2">Payslip - Month 2</label>
+                                <input type="file" id="payslip_month_2" name="payslip_month_2"
+                                    accept=".pdf,.jpg,.png,.jpeg" />
+                            </div>
+
+                            <div class="column">
+                                <label for="payslip_month_3">Payslip - Month 3</label>
+                                <input type="file" id="payslip_month_3" name="payslip_month_3"
+                                    accept=".pdf,.jpg,.png,.jpeg" />
+                            </div>
+                        </div>
                 </div>
-                <div class="column">
-                    <label for="related_employee_rel">Relationship</label>
-                    <input type="text" id="related_employee_rel" name="related_employee_rel" >
-                </div>
-              </div>
-            </div>
-            <div class="row">
-                <label>
-                    <input type="checkbox" id="professional_org_checkbox">
-                    Are you a member of any Professional Organization?
-                </label>
-                <div id="professional_org_section" style="display: none;">
-                    <textarea id="professional_org" name="professional_org" rows="4" cols="90"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <label>
-                    <input type="checkbox" id="political_org_checkbox">
-                    Are you a member of any Political Organization?
-                </label>
-                <div id="political_org_section" style="display: none;">
-                    <textarea id="political_org" name="political_org" rows="4" cols="90"></textarea>
-                </div>
-            </div>
-            <div class="row">
-                <label>
-                    <input type="checkbox" id="specialised_training_checkbox">
-                    Have you attended any specialized training program?
-                </label>
-                <div id="specialised_training_section" style="display: none;">
-                    <textarea id="specialised_training" name="specialised_training" rows="4" cols="90"></textarea>
-                </div>
-            </div>
-            <h5><b>Declaration and Authorization </h3></b>
-            <hr></hr>
-            <div class="row">
-              <p class="declaration">
-        I hereby authorize Madhyamam Broadcasting Limited (or a third party agent appointed by the Company) to contact any former employers as indicated above and carry out all Background Checks not restricted to education and employment deemed appropriate through this selection procedure. I authorize former employers, agencies, educational institutes, etc., to release any information pertaining to my employment/education and I release them from any liability in doing so.
-        <br><br>
-        <input type="checkbox" name="confirm" id="confirm" style="width: 1%;">        I confirm that the above information is correct to the best of my knowledge and I understand that any misrepresentation of information on this application may, in the event of my obtaining employment, result in action based on company policy.
-      </p> </div>
-<p id="error-message" style="color: red; display: none;">Please check the checkbox to proceed.</p>
-<button id="submitBtn" type="submit">Submit</button>
-<div class="row">
-    <input type="hidden" id="min_experience" name="min_experience" value="{{ doc.min_experience }}">
-  </div>
-    </form>
+                <div class="form-section" id="tab-2">
+                    <div class="row">
+                        <div class="column">
+                            <label for="expected_salary">Expected Salary</label>
+                            <input type="number" id="expected_salary" name="expected_salary">
+                        </div>
+                        <div class="column">
+                            <label for="telephone-no">Telephone No</label>
+                            <input type="text" name="telphone" id="telephone_number" maxlength="12"
+                                placeholder="eg : 0496 2839568" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label>
+                                <input type="checkbox" id="achievements_checkbox">
+                                Do you have any Professional or other Achievements, Awards, or Accomplishments? </label>
+                        </div>
+                    </div>
+                    <div class="row" id="achievements_row" style="display: none;">
+                        <div class="column">
+                            <label for="other_achievments">
+                            </label>
+                            <textarea id="other_achievments" name="other_achievments" rows="4" cols="50"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="checkbox" id="interviewed_before_checkbox">
+                            Have you been interviewed before by Madhyamam Group?
+                        </label>
+                    </div>
+                    <div id="interview_details_section" style="display: none;">
+                        <div class="row">
+                            <div class="column">
+                                <label for="position">Position</label>
+                                <input type="text" id="position" name="position">
+                            </div>
+                            <div class="column">
+                                <label for="interviewed_location">Location </label>
+                                {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
+                                <div class="col-14">
+                                    <select class="form-control" id="interviewed_location" name="location"
+                                        style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
+                                        <option value="">Select Location</option>
+                                        {% for location in locations %}
+                                        <option value="{{ location.name }}">{{ location.location_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <label for="interviewed_date">Date</label>
+                                <input type="date" id="interviewed_date" name="interviewed_date">
+                            </div>
+                            <div class="column">
+                                <label for="interviewed_outcome">Outcome</label>
+                                <input type="text" id="interviewed_outcome" name="interviewed_outcome">
+                            </div>
+                        </div>
+                    </div>
+                    <h5><b>Languages Known</h5></b>
+                    <div class="row tax-details">
+                        <table id="table_3">
+                            <thead>
+                                <tr>
+                                    <th>No.</th>
+                                    <th>Language</th>
+                                    <th>Speak</th>
+                                    <th>Read</th>
+                                    <th>Write</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>
+                                        <select name="language" class="form-control" style="background-color: #fff;">
+                                            <option value="">Select language</option>
+                                            {% for language in languages %}
+                                            <option value="{{ language.name }}">{{ language.language_name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <div class="star-rating">
+                                            <input type="radio" id="speak-5" name="speak" value="1"><label
+                                                for="speak-5">&#9733;</label>
+                                            <input type="radio" id="speak-4" name="speak" value="0.8"><label
+                                                for="speak-4">&#9733;</label>
+                                            <input type="radio" id="speak-3" name="speak" value="0.6"><label
+                                                for="speak-3">&#9733;</label>
+                                            <input type="radio" id="speak-2" name="speak" value="0.4"><label
+                                                for="speak-2">&#9733;</label>
+                                            <input type="radio" id="speak-1" name="speak" value="0.2"><label
+                                                for="speak-1">&#9733;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="star-rating">
+                                            <input type="radio" id="read-5" name="read" value="1"><label
+                                                for="read-5">&#9733;</label>
+                                            <input type="radio" id="read-4" name="read" value="0.8"><label
+                                                for="read-4">&#9733;</label>
+                                            <input type="radio" id="read-3" name="read" value="0.6"><label
+                                                for="read-3">&#9733;</label>
+                                            <input type="radio" id="read-2" name="read" value="0.4"><label
+                                                for="read-2">&#9733;</label>
+                                            <input type="radio" id="read-1" name="read" value="0.2"><label
+                                                for="read-1">&#9733;</label>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="star-rating">
+                                            <input type="radio" id="write-5" name="write" value="1"><label
+                                                for="write-5">&#9733;</label>
+                                            <input type="radio" id="write-4" name="write" value="0.8"><label
+                                                for="write-4">&#9733;</label>
+                                            <input type="radio" id="write-3" name="write" value="0.6"><label
+                                                for="write-3">&#9733;</label>
+                                            <input type="radio" id="write-2" name="write" value="0.4"><label
+                                                for="write-2">&#9733;</label>
+                                            <input type="radio" id="write-1" name="write" value="0.2"><label
+                                                for="write-1">&#9733;</label>
+                                        </div>
+                                    </td>
+                                    <td><button type="button" onclick="removeRow(this)">Delete</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="add-buttons">
+                            <button type="button" id="add-row-lang">Add Row</button>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <label>
+                            <input type="checkbox" id="related_to_employee_checkbox">
+                            Are you related to any of the Madhyamam Group?
+                        </label>
+                    </div>
+                    <div id="relationship_details_section" style="display: none;">
+                        <div class="row">
+                            <div class="column">
+                                <label for="related_employee">Name</label>
+                                <input type="text" id="related_employee" name="related_employee">
+                            </div>
+                            <div class="column">
+                                <label for="related_employee_org">Organization</label>
+                                <input type="text" id="related_employee_org" name="related_employee_org">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="column">
+                                <label for="related_employee_pos">Position</label>
+                                <input type="text" id="related_employee_pos" name="related_employee_pos">
+                            </div>
+                            <div class="column">
+                                <label for="related_employee_rel">Relationship</label>
+                                <input type="text" id="related_employee_rel" name="related_employee_rel">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="checkbox" id="professional_org_checkbox">
+                            Are you a member of any Professional Organization?
+                        </label>
+                        <div id="professional_org_section" style="display: none;">
+                            <textarea id="professional_org" name="professional_org" rows="4" cols="90"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="checkbox" id="political_org_checkbox">
+                            Are you a member of any Political Organization?
+                        </label>
+                        <div id="political_org_section" style="display: none;">
+                            <textarea id="political_org" name="political_org" rows="4" cols="90"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="checkbox" id="specialised_training_checkbox">
+                            Have you attended any specialized training program?
+                        </label>
+                        <div id="specialised_training_section" style="display: none;">
+                            <textarea id="specialised_training" name="specialised_training" rows="4"
+                                cols="90"></textarea>
+                        </div>
+                    </div>
+                    <h5><b>Declaration and Authorization </h3></b>
+                        <hr>
+                        </hr>
+                        <div class="row">
+                            <p class="declaration">
+                                I hereby authorize Madhyamam Broadcasting Limited (or a third party agent appointed by
+                                the Company) to contact any former employers as indicated above and carry out all
+                                Background Checks not restricted to education and employment deemed appropriate through
+                                this selection procedure. I authorize former employers, agencies, educational
+                                institutes, etc., to release any information pertaining to my employment/education and I
+                                release them from any liability in doing so.
+                                <br><br>
+                                <input type="checkbox" name="confirm" id="confirm" style="width: 1%;"> I confirm that
+                                the above information is correct to the best of my knowledge and I understand that any
+                                misrepresentation of information on this application may, in the event of my obtaining
+                                employment, result in action based on company policy.
+                            </p>
+                        </div>
+                        <p id="error-message" style="color: red; display: none;">Please check the checkbox to proceed.
+                        </p>
+                        <button id="submitBtn" type="submit">Submit</button>
+                        <div class="row">
+                            <input type="hidden" id="min_experience" name="min_experience"
+                                value="{{ doc.min_experience }}">
+                        </div>
+            </form>
+        </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function () {
@@ -534,14 +612,14 @@
 
         // Change button color based on checkbox state
         document.getElementById("confirm").addEventListener("change", function () {
-                const submitBtn = document.getElementById("submitBtn");
-                if (this.checked) {
-                    submitBtn.style.backgroundColor = "black";
-                    submitBtn.style.color = "white";
-                } else {
-                    submitBtn.style.backgroundColor = "gray";
-                }
-            });
+            const submitBtn = document.getElementById("submitBtn");
+            if (this.checked) {
+                submitBtn.style.backgroundColor = "black";
+                submitBtn.style.color = "white";
+            } else {
+                submitBtn.style.backgroundColor = "gray";
+            }
+        });
         // Redirect on submit button click
         document.getElementById("submitBtn").addEventListener("click", function () {
             const checkbox = document.getElementById("confirm");
@@ -554,45 +632,45 @@
             }
         });
         function toggleAgencyDetails() {
-                const employmentType = document.getElementById("was_this_position").value;
-                const agencyDetailsWrapper = document.getElementById("agencies_details");
+            const employmentType = document.getElementById("was_this_position").value;
+            const agencyDetailsWrapper = document.getElementById("agencies_details");
 
-                // Show or hide the Agency Details field based on the selected value
-                if (employmentType === "Temporary" || employmentType === "Contractual") {
-                    agencies_details.style.display = "block";
-                } else {
-                    agencies_details.style.display = "none";
-                }
+            // Show or hide the Agency Details field based on the selected value
+            if (employmentType === "Temporary" || employmentType === "Contractual") {
+                agencies_details.style.display = "block";
+            } else {
+                agencies_details.style.display = "none";
             }
-            window.onload = function() {
-                toggleAgencyDetails();
-            };
+        }
+        window.onload = function () {
+            toggleAgencyDetails();
+        };
 
-            function copyCurrentAddress() {
-                const checkbox = document.getElementById("same_as_current");
+        function copyCurrentAddress() {
+            const checkbox = document.getElementById("same_as_current");
 
-                // Get the current address section fields
-                const currentAddress = document.getElementById("current_address").value;
-                // Get the permanent address section fields
-                const permanentAddress = document.getElementById("permanent_address");
-                if (!currentAddress  || !permanentAddress) {
-                    return;
-                }
-
-                // If the checkbox is checked, copy values from current address fields
-                if (checkbox.checked) {
-                    permanentAddress.value = currentAddress;
-                } else {
-                    // Clear the permanent address fields if unchecked
-                    permanentAddress.value = "";
-                }
+            // Get the current address section fields
+            const currentAddress = document.getElementById("current_address").value;
+            // Get the permanent address section fields
+            const permanentAddress = document.getElementById("permanent_address");
+            if (!currentAddress || !permanentAddress) {
+                return;
             }
+
+            // If the checkbox is checked, copy values from current address fields
+            if (checkbox.checked) {
+                permanentAddress.value = currentAddress;
+            } else {
+                // Clear the permanent address fields if unchecked
+                permanentAddress.value = "";
+            }
+        }
 
         // Function to toggle visibility based on checkbox state
         function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
             const checkbox = document.getElementById(checkboxId);
             const section = document.getElementById(sectionId);
-            checkbox.addEventListener('change', function() {
+            checkbox.addEventListener('change', function () {
                 if (checkbox.checked) {
                     section.style.display = 'block'; // Show section
                 } else {
@@ -630,16 +708,16 @@
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('error-message');
             function validateSubmit(event) {
-                  if (!checkbox.checked) {
+                if (!checkbox.checked) {
                     event.preventDefault();
                     errorMessage.style.display = 'block';
-                  } else {
+                } else {
                     errorMessage.style.display = 'none';
-                  }
-                  }
-                  submitBtn.addEventListener('click', validateSubmit);
-                  }
-            document.addEventListener('DOMContentLoaded', handleSubmitValidation);
+                }
+            }
+            submitBtn.addEventListener('click', validateSubmit);
+        }
+        document.addEventListener('DOMContentLoaded', handleSubmitValidation);
 
         // Function to show specific tab content based on index and set active class
         function showTab(index) {
@@ -691,7 +769,7 @@
         }
 
 
-         // Function to add a new row in the Professional Qualifications table
+        // Function to add a new row in the Professional Qualifications table
         function addRow_prof(tableId) {
             var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
             var rowCount = table.rows.length;
@@ -721,7 +799,7 @@
 
         }
 
-         // Function to add a new row in the Previous Employment History table
+        // Function to add a new row in the Previous Employment History table
         function addRow_prev(tableId) {
             var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
             var rowCount = table.rows.length;
@@ -753,32 +831,32 @@
 
         // Function to add a new row in the Language Skills table with star rating inputs
         function addRow_lang(tableId) {
-              var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
-              var rowCount = table.rows.length;
-              var row = table.insertRow(rowCount);
+            var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
 
-              // Insert cells and their contents
-              var cell1 = row.insertCell(0);
-              var cell2 = row.insertCell(1);
-              var cell3 = row.insertCell(2);
-              var cell4 = row.insertCell(3);
-              var cell5 = row.insertCell(4);
-              var cell6 = row.insertCell(5);
+            // Insert cells and their contents
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            var cell6 = row.insertCell(5);
 
-              // Add content to cells
-              cell1.innerHTML = rowCount + 1;
-              cell2.innerHTML = '<select name="language" class="form-control"><option value="">Select language</option>{% for language in languages %}<option value="{{ language.name }}">{{ language.language_name }}</option>{% endfor %}</select>';
-              cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
-              cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
-              cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
-              cell6.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
-          }
+            // Add content to cells
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = '<select name="language" class="form-control"><option value="">Select language</option>{% for language in languages %}<option value="{{ language.name }}">{{ language.language_name }}</option>{% endfor %}</select>';
+            cell3.innerHTML = getStarRatingHTML('speak' + (rowCount + 1));
+            cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
+            cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
+            cell6.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
+        }
 
-          function validateDigits(input) {
-              input.value = input.value.replace(/[^0-9]/g, ''); // Removes non-numeric characters
-          }
+        function validateDigits(input) {
+            input.value = input.value.replace(/[^0-9]/g, ''); // Removes non-numeric characters
+        }
 
-         // Function to generate HTML for star rating input for language proficiency
+        // Function to generate HTML for star rating input for language proficiency
         function getStarRatingHTML(name) {
             return `
                 <div class="star-rating">
@@ -792,28 +870,28 @@
         }
 
         // Attach event listeners for buttons on all tables
-        document.getElementById('add-row').addEventListener('click', function() {
+        document.getElementById('add-row').addEventListener('click', function () {
             addRow_educ('educational_qualification_table');
         });
 
-        document.getElementById('add-row-prof').addEventListener('click', function() {
+        document.getElementById('add-row-prof').addEventListener('click', function () {
             addRow_prof('professional_qualification_table');
         });
 
-        document.getElementById('add-row-prev').addEventListener('click', function() {
+        document.getElementById('add-row-prev').addEventListener('click', function () {
             addRow_prev('previous_emplyoment_history_table');
         });
-        document.getElementById('add-row-lang').addEventListener('click', function() {
+        document.getElementById('add-row-lang').addEventListener('click', function () {
             addRow_lang('table_3');
         });
 
         <!-- change date format -->
         flatpickr("#date_of_birth", {
-          dateFormat: "d-m-Y",  // Format as DD-MM-YYYY
+            dateFormat: "d-m-Y",  // Format as DD-MM-YYYY
         });
 
         flatpickr('#interviewed_date', {
-          dateFormat: "d-m-Y",
+            dateFormat: "d-m-Y",
         })
 
 
@@ -821,6 +899,7 @@
 </body>
 </div>
 <div id="exception_msgs"></div>
+
 </html>
 
 {%- endblock -%}

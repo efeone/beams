@@ -1,6 +1,17 @@
 $(document).ready(function () {
+    $('.navbar').hide();
+    $('.web-footer').hide();
     const { get_query_params, get_query_string } = frappe.utils;
     const applicant_id = $("#docname").val();
+
+    const telPhoneInput = document.getElementById('telephone_number');
+    telPhoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+        if (value.length > 4) {
+            value = value.slice(0, 4) + ' ' + value.slice(4, 11);
+        }
+        e.target.value = value;
+    });
 
     // Handle file selection and reading for each file input
     var $form = $("form[id='submit_application']");
@@ -36,7 +47,7 @@ $(document).ready(function () {
         event.preventDefault();
         const fields = [
             "father_name", "applicant_name", "date_of_birth", "gender", "country", "marital_status",
-            "current_address", "current_mobile_no", "permanent_address","email_id_1", "aadhar_number","name_of_employer",
+            "current_address", "permanent_address", "email_id", "aadhar_number", "name_of_employer",
             "address_of_employer", "telephone_no", "employee_code", "current_designation",
             "current_department", "employment_period_from", "employment_period_to", "manager_name",
             "manager_contact_no", "manager_email", "duties_and_reponsibilities", "reason_for_leaving",
@@ -54,7 +65,7 @@ $(document).ready(function () {
             obj[field] = safeValue($(`#${field}`).val());
             return obj;
         }, {
-            docname: applicant_id ,
+            docname: applicant_id,
             date_of_birth: date_of_birth,
             interviewed_date: interviewed_date
         });
