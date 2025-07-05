@@ -30,6 +30,10 @@ def create_job_opening_from_job_requisition(doc, method):
             job_opening.no_of_days_off = doc.no_of_days_off
             job_opening.preffered_location = doc.location
             job_opening.publish = doc.publish_on_job_opening
+            job_opening.travel_required = doc.travel_required
+            job_opening.driving_license_needed = doc.driving_license_needed
+            job_opening.license_type = doc.license_type
+            job_opening.is_work_shift_needed = doc.is_work_shift_needed
             #Setting Skill Proficiency
             for skill in doc.skill_proficiency:
                 job_opening.append('skill_proficiency', {
