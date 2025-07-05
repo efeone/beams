@@ -41,7 +41,9 @@
   "appraisal_settings_tab",
   "enable_appraisal_reminder",
   "appraisal_creation_period",
-  "appraisal_reminder_template"
+  "appraisal_reminder_template",
+  "column_break_dwmr",
+  "assessment_reminder_template"
  ],
  "fields": [
   {
@@ -252,12 +254,23 @@
   {
    "fieldname": "column_break_dskf",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_break_dwmr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "assessment_reminder_template",
+   "fieldtype": "Link",
+   "label": "Assessment Reminder Template ",
+   "options": "Email Template"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-03-03 09:16:53.713255",
+ "modified": "2025-07-05 13:21:41.761656",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
@@ -281,6 +294,7 @@
    "share": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
