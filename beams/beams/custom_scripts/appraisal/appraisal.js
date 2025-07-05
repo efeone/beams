@@ -214,7 +214,7 @@ frappe.ui.form.on('Appraisal', {
                             reqd: 1
                         },
                         {
-                            label: 'Marks',
+                            label: 'Marks (out of 5)',
                             fieldname: 'marks',
                             fieldtype: 'Float',
                             in_list_view: 1,
@@ -248,7 +248,7 @@ frappe.ui.form.on('Appraisal', {
                             reqd: 1,
                         },
                         {
-                            label: 'Marks',
+                            label: 'Marks (out of 5)',
                             fieldname: 'marks',
                             fieldtype: 'Float',
                             in_list_view: 1,
@@ -281,7 +281,7 @@ frappe.ui.form.on('Appraisal', {
                             reqd: 1,
                         },
                         {
-                            label: 'Marks',
+                            label: 'Marks (out of 5)',
                             fieldname: 'marks',
                             fieldtype: 'Float',
                             in_list_view: 1,
