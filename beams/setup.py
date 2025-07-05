@@ -2089,209 +2089,221 @@ def get_interview_custom_fields():
     }
 
 def get_job_requisition_custom_fields():
-    '''
-    Custom fields that need to be added to the Job Requisition Doctype
-    '''
-    return {
-        "Job Requisition": [
-            {
-                "fieldname": "work_details",
-                "fieldtype": "Section Break",
-                "label": "Work Details",
-                "insert_after": "requested_by_designation"
-            },
-            {
-                "fieldname": "employment_type",
-                "fieldtype": "Link",
-                "options": "Employment Type",
-                "label": "Employment Type",
-                "insert_after": "department",
-                "permlevel": 1
-            },
+	'''
+	Custom fields that need to be added to the Job Requisition Doctype
+	'''
+	return {
+		"Job Requisition": [
+			{
+				"fieldname": "work_details",
+				"fieldtype": "Section Break",
+				"label": "Work Details",
+				"insert_after": "requested_by_designation"
+			},
+			{
+				"fieldname": "employment_type",
+				"fieldtype": "Link",
+				"options": "Employment Type",
+				"label": "Employment Type",
+				"insert_after": "department",
+				"permlevel": 1
+			},
 
-            {
-                "fieldname": "no_of_days_off",
-                "fieldtype": "Int",
-                "label": "Number of Days Off",
-                "description": "Number Of Days Off within a 30-day Period",
-                "insert_after": "work_details",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "work_details_column_break",
-                "fieldtype": "Column Break",
-                "label": "",
-                "insert_after": "min_experience"
-            },
-            {
-                "fieldname": "is_work_shift_needed",
-                "fieldtype": "Check",
-                "label": "Is Shift Work Needed",
-                "insert_after": "work_details_column_break",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "travel_required",
-                "fieldtype": "Check",
-                "label": "Travel required for the position",
-                "insert_after": "is_work_shift_needed",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "driving_license_needed",
-                "fieldtype": "Check",
-                "label": "Driving License Needed for this Position",
-                "depends_on": "eval:doc.travel_required == 1",
-                "insert_after": "travel_required",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "license_type",
-                "fieldtype": "Link",
-                "label": "License Type",
-                "options": "License Type",
-                "depends_on": "eval:doc.driving_license_needed == 1",
-                "mandatory_depends_on":"eval:doc.driving_license_needed == 1",
-                "insert_after": "driving_license_needed",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "education",
-                "fieldtype": "Section Break",
-                "label": "Education and Qualification Details",
-                "insert_after": "license_type"
-            },
-            {
-               "fieldname": "min_education_qual",
-                "fieldtype": "Table MultiSelect",
-                "label": "Preferred Educational Qualification",
-                'options':"Educational Qualifications",
-                "insert_after": "education",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "min_experience",
-                "fieldtype": "Float",
-                "label": "Minimum Experience Required (Years)",
-                "insert_after": "no_of_days_off",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "reset_column",
-                "fieldtype": "Section Break",
-                "label": "",
-                "insert_after": "license_type"
-            },
-            {
-                "fieldname": "language_proficiency",
-                "fieldtype": "Table",
-                "options": "Language Proficiency",
-                "label": "Language Proficiency",
-                "insert_after": "reset_column",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "skill_proficiency",
-                "fieldtype": "Table",
-                "options": "Skill Proficiency",
-                "label": "Skill Proficiency",
-                "description": "Proficency selected here is the minimum proficency needed.",
-                "insert_after": "language_proficiency"
-            },
-            {
-                "fieldname": "job_description_template",
-                "fieldtype": "Link",
-                "label": "Job Description Template",
-                "options": "Job Description Template",
-                "insert_after": "job_description_tab",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "request_for",
-                "label": "Request For",
-                "fieldtype": "Select",
-                "options": "Employee Replacement\nExisting Vacancy\nNew Vacancy",
-                "insert_after": "naming_series"
-            },
-            {
-                "fieldname": "employee_left",
-                "label": "Employees Who Replaced",
-                "fieldtype": "Link",
-                "options": "Employee",
-                "insert_after": "request_for",
-                "depends_on": "eval:doc.request_for == 'Employee Replacement'"
-            },
-            {
-                "fieldname": "relieving_date",
-                "fieldtype": "Date",
-                "label": "Relieving Date",
-                "insert_after": "employee_left",
-                "fetch_from":"employee_left.relieving_date",
-                "depends_on":"eval:doc.request_for == 'Employee Replacement'",
-                "read_only": 1
-            },
-            {
-                "fieldname": "interview",
-                "fieldtype": "Section Break",
-                "label": "Interview Details",
-                "insert_after": "requested_by_designation"
-            },
-            {
-                "fieldname": "interview_rounds",
-                "fieldtype": "Table MultiSelect",
-                "options": "Interview Rounds",
-                "label": "Interview Rounds",
-                "insert_after": "interview",
-                "permlevel": 1
-            },
+			{
+				"fieldname": "no_of_days_off",
+				"fieldtype": "Int",
+				"label": "Number of Days Off",
+				"description": "Number Of Days Off within a 30-day Period",
+				"insert_after": "work_details",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "work_details_column_break",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "min_experience"
+			},
+			{
+				"fieldname": "is_work_shift_needed",
+				"fieldtype": "Check",
+				"label": "Is Shift Work Needed",
+				"insert_after": "work_details_column_break",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "travel_required",
+				"fieldtype": "Check",
+				"label": "Travel required for the position",
+				"insert_after": "is_work_shift_needed",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "driving_license_needed",
+				"fieldtype": "Check",
+				"label": "Driving License Needed for this Position",
+				"depends_on": "eval:doc.travel_required == 1",
+				"insert_after": "travel_required",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "license_type",
+				"fieldtype": "Link",
+				"label": "License Type",
+				"options": "License Type",
+				"depends_on": "eval:doc.driving_license_needed == 1",
+				"mandatory_depends_on":"eval:doc.driving_license_needed == 1",
+				"insert_after": "driving_license_needed",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "education",
+				"fieldtype": "Section Break",
+				"label": "Education and Qualification Details",
+				"insert_after": "license_type"
+			},
+			{
+				"fieldname": "min_education_qual",
+				"fieldtype": "Table MultiSelect",
+				"label": "Preferred Educational Qualification",
+				'options':"Educational Qualifications",
+				"insert_after": "education",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "min_experience",
+				"fieldtype": "Float",
+				"label": "Minimum Experience Required (Years)",
+				"insert_after": "no_of_days_off",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "reset_column",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "license_type"
+			},
+			{
+				"fieldname": "language_proficiency",
+				"fieldtype": "Table",
+				"options": "Language Proficiency",
+				"label": "Language Proficiency",
+				"insert_after": "reset_column",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "skill_proficiency",
+				"fieldtype": "Table",
+				"options": "Skill Proficiency",
+				"label": "Skill Proficiency",
+				"description": "Proficency selected here is the minimum proficency needed.",
+				"insert_after": "language_proficiency"
+			},
+			{
+				"fieldname": "job_description_template",
+				"fieldtype": "Link",
+				"label": "Job Description Template",
+				"options": "Job Description Template",
+				"insert_after": "job_description_tab",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "request_for",
+				"label": "Request For",
+				"fieldtype": "Select",
+				"options": "Employee Replacement\nExisting Vacancy\nNew Vacancy",
+				"insert_after": "naming_series"
+			},
+			{
+				"fieldname": "employee_left",
+				"label": "Employees Who Replaced",
+				"fieldtype": "Link",
+				"options": "Employee",
+				"insert_after": "request_for",
+				"depends_on": "eval:doc.request_for == 'Employee Replacement'"
+			},
+			{
+				"fieldname": "relieving_date",
+				"fieldtype": "Date",
+				"label": "Relieving Date",
+				"insert_after": "employee_left",
+				"fetch_from":"employee_left.relieving_date",
+				"depends_on":"eval:doc.request_for == 'Employee Replacement'",
+				"read_only": 1
+			},
+			{
+				"fieldname": "interview",
+				"fieldtype": "Section Break",
+				"label": "Interview Details",
+				"insert_after": "requested_by_designation"
+			},
+			{
+				"fieldname": "interview_rounds",
+				"fieldtype": "Table MultiSelect",
+				"options": "Interview Rounds",
+				"label": "Interview Rounds",
+				"insert_after": "interview",
+				"permlevel": 1
+			},
 
-             {
-                "fieldname": "location",
-                "label": "Preferred Location",
-                "fieldtype": "Link",
-                "options": "Location",
-                "insert_after": "employment_type",
-                "permlevel": 1
-            },
-            {
-                "fieldname": "job_title",
-                "fieldtype": "Data",
-                "label": "Job Title",
-                "insert_after": "job_description_template",
-                "reqd": 1,
-            },
-            {
-                "fieldname": "suggested_designation",
-                "fieldtype": "Link",
-                "label": "Suggested Designation",
-                "options": "Designation",
-                "insert_after": "request_for",
-                "permlevel": 2,
-                "depends_on": "eval:doc.request_for == 'New Vacancy'"
-            },
-            {
-                "fieldname": "suggestions",
-                "fieldtype": "Small Text",
-                "label": "Suggestions/Feedback",
-                "insert_after": "description",
-                "permlevel": 3
-            },
-            {
-                "fieldname": "publish_on_job_section",
-                "fieldtype": "Section Break",
-                "label": "",
-                "insert_after": "requested_by_designation"
-            },
-            {
-                "fieldname": "publish_on_job_opening",
-                "fieldtype": "Check",
-                "default": "1",
-                "label": "Publish on Job Opening",
-                "insert_after": "publish_on_job_section",
-                "permlevel":4
-            }
-        ]
-    }
+			{
+				"fieldname": "location",
+				"label": "Preferred Location",
+				"fieldtype": "Link",
+				"options": "Location",
+				"insert_after": "employment_type",
+				"permlevel": 1
+			},
+			{
+				"fieldname": "job_title",
+				"fieldtype": "Data",
+				"label": "Job Title",
+				"insert_after": "job_description_template",
+				"reqd": 1,
+			},
+			{
+				"fieldname": "suggested_designation",
+				"fieldtype": "Link",
+				"label": "Suggested Designation",
+				"options": "Designation",
+				"insert_after": "request_for",
+				"permlevel": 2,
+				"depends_on": "eval:doc.request_for == 'New Vacancy'"
+			},
+			{
+				"fieldname": "suggestions",
+				"fieldtype": "Small Text",
+				"label": "Suggestions/Feedback",
+				"insert_after": "description",
+				"permlevel": 3
+			},
+			{
+				"fieldname": "publish_on_job_section",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "requested_by_designation"
+			},
+			{
+				"fieldname": "publish_on_job_opening",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Publish on Job Opening",
+				"insert_after": "publish_on_job_section",
+				"permlevel":4
+			},
+			{
+				"fieldname": "reason_for_request_section",
+				"insert_after": "status",
+				"fieldtype": "Section Break",
+			},
+			{
+				"label": "Unwated Fields",
+				"fieldname": "custom_unwated_fields",
+				"insert_after": "status",
+				"fieldtype": "Section Break",
+				"hidden": 1,
+			}
+		]
+	}
 
 def get_job_applicant_custom_fields():
     '''
@@ -4185,7 +4197,7 @@ def get_property_setters():
 			"doctype_or_field": "DocType",
 			"doc_type": "Job Requisition",
 			"property": "field_order",
-			"value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "reason_for_requesting", "column_break_4", "company", "status", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
+			"value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "company", "status", "custom_unwated_fields", "column_break_4", "reason_for_request_section", "reason_for_requesting", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "education_column_break", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
 		},
 		{
 			"doctype_or_field": "DocField",
