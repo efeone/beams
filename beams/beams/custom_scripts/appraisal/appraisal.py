@@ -488,3 +488,40 @@ def send_assessment_reminder(doc):
 
     frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
     return {"status": "ok"}
+
+def set_self_appraisal(doc, method=None):
+    """
+    Set self appraisal criteria based on the selected Appraisal Template.
+    """
+    if not doc.appraisal_template:
+        frappe.throw("Please select an Appraisal Template.")
+
+    try:
+        template_doc = frappe.get_doc("Appraisal Template", doc.appraisal_template)
+    except frappe.DoesNotExistError:
+        frappe.throw(f"Appraisal Template {doc.appraisal_template} not found")
+        
+    doc.employee_self_kra_rating = []
+    doc.dept_self_kra_rating = []
+    doc.company_self_kra_rating = []
+
+	# --- Employee Rating Criteria
+    for row in template_doc.rating_criteria:
+        doc.append("employee_self_kra_rating", {
+			"criteria": row.criteria,
+			"per_weightage": row.per_weightage
+		})
+
+	# --- Department Rating Criteria 
+    for row in template_doc.department_rating_criteria:
+        doc.append("dept_self_kra_rating", {
+			"criteria": row.criteria,
+			"per_weightage": row.per_weightage
+		})
+
+	# --- Company Rating Criteria
+    for row in template_doc.company_rating_criteria:
+        doc.append("company_self_kra_rating", {
+			"criteria": row.criteria,
+			"per_weightage": row.per_weightage
+		})
