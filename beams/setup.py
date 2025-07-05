@@ -3672,7 +3672,7 @@ def get_property_setters():
 			"doc_type": "Attendance Request",
 			"field_name": "reason",
 			"property": "options",
-			"value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit"
+			"value": "\nWork From Home\nOn Duty\nOn Deputation\nForgot to Checkin\nForgot to Checkout\nPermitted Late Arrival\nPermitted Early Exit\nOff-Shift"
 		},
 		{
 			"doctype_or_field": "DocField",
