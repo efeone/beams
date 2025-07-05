@@ -315,6 +315,7 @@ doc_events = {
             "beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
             "beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
             "beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks",
+            "beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal"
         ]
     },
     "Event" :{
