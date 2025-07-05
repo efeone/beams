@@ -3,6 +3,7 @@ from frappe import _
 from frappe.utils import format_date, get_link_to_form
 from hrms.hr.doctype.attendance_request.attendance_request import AttendanceRequest
 from frappe.utils import today
+from frappe.utils import date_diff, today
 
 
 class AttendanceRequestOverride(AttendanceRequest):
@@ -53,6 +54,18 @@ class AttendanceRequestOverride(AttendanceRequest):
 			doc.status = status
 			doc.insert(ignore_permissions=True)
 			doc.submit()
+
+	def before_insert(self):
+		'''
+			Prevents the attendance request if the from date exceeds the limit configured in Beams HR Settings
+		'''
+		settings = frappe.get_single("Beams HR Settings")
+		limit_days = settings.attendance_request_submission_limit_days
+
+		if self.from_date and date_diff(today(), self.from_date) > limit_days:
+			frappe.throw(
+				_("You can only submit an Attendance Request within {0} days from the From Date.").format(limit_days)
+			)
 
 def get_checkin_checkout_time(employee, attendance_date):
 	'''

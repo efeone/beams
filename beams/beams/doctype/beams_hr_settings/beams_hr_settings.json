@@ -43,7 +43,9 @@
   "appraisal_creation_period",
   "appraisal_reminder_template",
   "column_break_dwmr",
-  "assessment_reminder_template"
+  "assessment_reminder_template",
+  "tab_6_tab",
+  "attendance_request_submission_limit_days"
  ],
  "fields": [
   {
@@ -264,13 +266,23 @@
    "fieldtype": "Link",
    "label": "Assessment Reminder Template ",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "tab_6_tab",
+   "fieldtype": "Tab Break",
+   "label": "Attendance Settings"
+  },
+  {
+   "fieldname": "attendance_request_submission_limit_days",
+   "fieldtype": "Int",
+   "label": "Attendance Request Submission Limit (Days)"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-05 13:21:41.761656",
+ "modified": "2025-07-05 14:36:09.302029",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
