@@ -304,6 +304,7 @@ doc_events = {
     },
     "Appraisal Template" : {
         "before_save": "beams.beams.custom_scripts.appraisal_template.appraisal_template.create_feedback_criteria",
+        "validate": "beams.beams.custom_scripts.appraisal_template.appraisal_template.validate_rating_criteria"
     },
     "Employee Performance Feedback":{
         "before_save": "beams.beams.custom_scripts.employee_performance_feedback.employee_performance_feedback.update_criteria",
