@@ -96,7 +96,8 @@ def send_magic_link(applicant_id):
 			frappe.sendmail(
 				recipients=[email_id],
 				subject=subject,
-				message=response
+				message=response,
+				delayed= False
 			)
 			frappe.msgprint(f'Magic link sent to {email_id}')
 			frappe.db.set_value('Job Applicant', applicant_id, 'status', 'Pending Document Upload')
