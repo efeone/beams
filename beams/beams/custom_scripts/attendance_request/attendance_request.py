@@ -10,7 +10,8 @@ class AttendanceRequestOverride(AttendanceRequest):
 		'''
 			Method to Create or Update Attendance from Attendance Request
 		'''
-		attendance_name = self.get_attendance_record(date)
+		attendance_doc = self.get_attendance_doc(date)
+		attendance_name = attendance_doc.name if attendance_doc else None
 		status = self.get_attendance_status(date)
 
 		if attendance_name:
