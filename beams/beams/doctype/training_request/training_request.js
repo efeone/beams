@@ -7,6 +7,7 @@ frappe.ui.form.on('Training Request', {
                 // Create a new Training Event
                 frappe.model.with_doctype('Training Event', function() {
                     let training_event = frappe.model.get_new_doc('Training Event');
+                    training_event.training_request = frm.doc.name;
                     // Add the employee from Training Request to the child table in Training Event
                     if (frm.doc.employee) {
                         let child = frappe.model.add_child(training_event, 'employees');
