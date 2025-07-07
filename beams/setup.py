@@ -61,6 +61,7 @@ def after_install():
 	create_custom_fields(get_hd_ticket_type_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_expense_claim_type_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_training_event_custom_fields(), ignore_validate=True)
 
 
 	#Creating BEAMS specific Property Setters
@@ -134,6 +135,7 @@ def before_uninstall():
 	delete_custom_fields(get_hd_ticket_type_custom_fields())
 	delete_custom_fields(get_expense_claim_type_custom_fields())
 	delete_custom_fields(get_supplier_quotation_custom_fields())
+	delete_custom_fields(get_training_event_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -4525,6 +4527,24 @@ def get_training_event_employee_custom_fields():
 			  }
 		]
 	}
+
+def get_training_event_custom_fields():
+    '''
+    Custom fields to be added to the Training Event Doctype
+    '''
+    return {
+        "Training Event": [
+           {
+                "fieldname": "training_request",
+                "fieldtype": "Link",
+                "label": "Training Request",
+                "options": "Training Request",
+                "insert_after": "company",
+                "hidden": 1
+
+            }
+        ]
+    }
 
 def get_beams_roles():
 	'''
