@@ -99,8 +99,13 @@
   }
  ],
  "index_web_pages_for_search": 1,
- "links": [],
- "modified": "2024-11-12 12:42:55.187000",
+ "links": [
+  {
+   "link_doctype": "Training Event",
+   "link_fieldname": "training_request"
+  }
+ ],
+ "modified": "2025-07-07 12:37:00.960500",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Training Request",
@@ -144,6 +149,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
