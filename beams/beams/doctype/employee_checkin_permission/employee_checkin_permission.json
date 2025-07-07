@@ -44,6 +44,7 @@
    "reqd": 1
   },
   {
+   "fetch_from": "employee.default_shift",
    "fieldname": "shift",
    "fieldtype": "Link",
    "label": "Shift",
@@ -117,7 +118,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-01 12:27:22.637469",
+ "modified": "2025-07-07 10:13:22.263951",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Checkin Permission",
@@ -137,6 +138,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
