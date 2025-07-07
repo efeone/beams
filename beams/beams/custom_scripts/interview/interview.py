@@ -173,31 +173,43 @@ def mark_interview_completed(doc, method):
 
 @frappe.whitelist()
 def update_job_applicant_status(doc, method=None):
-    # Extract job applicant from the submitted document
     job_applicant = doc.job_applicant
 
-    # Get all interviews scheduled for the given job applicant
-    interviews = frappe.get_all(
-        "Interview",
-        filters={"job_applicant": job_applicant},
-        fields=["name", "status"]
+    # Get the job opening linked to the interview
+    job_opening = doc.job_opening
+    if not job_opening:
+        return
+
+    # Get the job requisition from job opening
+    job_requisition = frappe.db.get_value("Job Opening", job_opening, "job_requisition")
+    if not job_requisition:
+        return
+
+    # Get required interview rounds from job requisition
+    required_rounds = frappe.get_all(
+        "Interview Rounds",
+        filters={"parent": job_requisition},
+        pluck="interview_round"
     )
 
-    # Check the statuses of all interviews
-    total_interviews = len(interviews)
-    cleared_interviews = sum(1 for interview in interviews if interview["status"] == "Cleared")
-    rejected_interviews = sum(1 for interview in interviews if interview["status"] == "Rejected")
+    # Get completed interview rounds from applicant
+    completed_rounds = frappe.get_all(
+        "Interview",
+        filters={
+            "job_applicant": job_applicant,
+            "status": ["in", ["Cleared", "Rejected"]],
+            "interview_round": ["is", "set"]
+        },
+        pluck="interview_round"
+    )
 
-    # Update Job Applicant status
-    if total_interviews == cleared_interviews and total_interviews > 0:
-        # If all interviews are cleared
+    # Compare sets
+    if set(required_rounds).issubset(set(completed_rounds)):
         frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Completed")
-    elif rejected_interviews > 0:
-        # If any interview is rejected
-        frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
     else:
-        # Default case: If interviews are pending or under review
         frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
+
+
 
 @frappe.whitelist()
 def get_permission_query_conditions(user):
