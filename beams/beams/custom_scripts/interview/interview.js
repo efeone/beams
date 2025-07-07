@@ -112,9 +112,21 @@ frappe.ui.form.on('Interview', {
         }
 
         dialog_fields.push(
-            { fieldname: 'result', fieldtype: 'Select', options: ['', 'Cleared', 'Rejected'], label: __('Result') },
-            { fieldname: 'feedback', fieldtype: 'Small Text', label: __('Feedback') }
-        );
+        {
+            fieldname: 'result',
+            fieldtype: 'Select',
+            label: __('Result'),
+            options: ['', 'Cleared', 'Rejected'],
+            default: '',
+            reqd: 1
+        },
+        {
+            fieldname: 'feedback',
+            fieldtype: 'Small Text',
+            label: __('Feedback')
+        }
+    );
+
 
         let d = new frappe.ui.Dialog({
             title: __('Submit Feedback'),
@@ -123,17 +135,21 @@ frappe.ui.form.on('Interview', {
             minimizable: true,
             primary_action_label: __("Save"),
             primary_action: function (values) {
+                if (!validate_feedback_dialog(d)) return;
                 create_interview_feedback(frm, values, feedback_exists, 'save');
                 d.hide();
             },
             secondary_action_label: __("Save and Submit"),
             secondary_action: function () {
+                let values = d.get_values();
+                if (!validate_feedback_dialog(d)) return;
                 create_interview_feedback(frm, d.get_values(), feedback_exists, 'submit');
                 d.hide();
             }
         });
 
         d.show();
+        d.set_value('result', '');
 
         frappe.db.get_value('Interview Feedback', { "job_applicant": frm.doc.job_applicant }, ['result', 'feedback'])
             .then(r => {
@@ -201,6 +217,57 @@ frappe.ui.form.on('Interview', {
         ];
     }
 });
+
+function validate_feedback_dialog(dialog) {
+    const missing_fields = [];
+    const skill_data = dialog.get_value('skill_set') || [];
+    const question_data = dialog.fields_dict.questions ? (dialog.get_value('questions') || []) : [];
+
+    // Check if Skill Assessment has data
+    if (!skill_data.length) {
+        missing_fields.push(__('Skill Assessment'));
+    }
+
+    for (let skill of skill_data) {
+        if (!skill.skill || skill.score == null) {
+            missing_fields.push(__('Skill (in Skill Assessment)'));
+            break;
+        }
+        if (skill.score < 0 || skill.score > 10) {
+            frappe.msgprint(__('Skill Score must be between 0 and 10.'));
+            return false;
+        }
+    }
+
+    // Check Question Assessment
+    if (dialog.fields_dict.questions) {
+        if (!question_data.length) {
+            missing_fields.push(__('Question Assessment'));
+        }
+
+        for (let q of question_data) {
+            if (!q.applicant_answer || q.score == null) {
+                missing_fields.push(__('Answer (in Question Assessment)'));
+                break;
+            }
+            if (q.score < 0 || q.score > 10) {
+                frappe.msgprint(__('Question Score must be between 0 and 10.'));
+                return false;
+            }
+        }
+    }
+
+    // Show unified missing fields error
+    if (missing_fields.length > 0) {
+        frappe.throw({
+            title: __('Missing Values Required'),
+            message: __('Following fields have missing values:') + '<br><ul>' + missing_fields.map(f => `<li>${f}</li>`).join('') + '</ul>'
+        });
+        return false;
+    }
+
+    return true;
+}
 
 var remove_custom_button_from_mobile_view = function (frm, label) {
     // Find the span element with the specified data-label attribute
