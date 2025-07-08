@@ -115,26 +115,27 @@ function handle_custom_buttons(frm) {
                 }
             });
 
-            frm.add_custom_button(__('Send Magic Link'), function () {
-                frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
-                    frappe.call({
-                        method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link',
-                        args: {
-                            applicant_id: frm.doc.name
-                        },
-                        callback: function (r) {
-                            if (r.message) {
-                                // Coping the magic link to clipboard
-                                navigator.clipboard.writeText(r.message).then(function () {
-                                    frappe.show_alert(__('Magic Link copied to clipboard!'));
-                                }).catch(function (err) {
-                                    frappe.show_alert(__('Failed to copy Magic Link to clipboard'));
-                                });
+            if (frm.doc.status == 'Shortlisted') {
+                frm.add_custom_button(__('Send Magic Link'), function () {
+                    frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
+                        frappe.call({
+                            method: 'beams.beams.custom_scripts.job_applicant.job_applicant.send_magic_link',
+                            args: {
+                                applicant_id: frm.doc.name
+                            },
+                            callback: function (r) {
+                                if (r.message) {
+                                    navigator.clipboard.writeText(r.message).then(function () {
+                                        frappe.show_alert(__('Magic Link copied to clipboard!'));
+                                    }).catch(function (err) {
+                                        frappe.show_alert(__('Failed to copy Magic Link to clipboard'));
+                                    });
+                                }
                             }
-                        }
+                        });
                     });
                 });
-            });
+            }
 
             if (frm.doc.status === 'Accepted') {
                 frm.add_custom_button(__('Training Completed'), function () {
