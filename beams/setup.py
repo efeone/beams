@@ -2206,7 +2206,8 @@ def get_job_requisition_custom_fields():
 				"label": "Job Description Template",
 				"options": "Job Description Template",
 				"insert_after": "job_description_tab",
-				"permlevel": 1
+				"permlevel": 1,
+				"mandatory_depends_on": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'"
 			},
 			{
 				"fieldname": "request_for",
@@ -4237,16 +4238,9 @@ def get_property_setters():
 		{
 			"doctype_or_field": "DocField",
 			"doc_type": "Job Requisition",
-			"field_name": "job_description_template",
-			"property": "mandatory_depends_on",
-			"value": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'",
-		},
-		{
-			"doctype_or_field": "DocField",
-			"doc_type": "Job Requisition",
 			"field_name": "designation",
 			"property": "mandatory_depends_on",
-			"value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
+			"value": "eval: !(doc.workflow_state == 'Draft' || doc.request_for == 'New Vacancy')"
 		},
 		{
 			"doctype_or_field": "DocField",
