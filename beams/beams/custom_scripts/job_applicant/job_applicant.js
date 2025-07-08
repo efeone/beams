@@ -82,38 +82,41 @@ function handle_custom_buttons(frm) {
                 });
             }
 
-            frappe.call({
-                method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_existing_local_enquiry_report',
-                args: {
-                    doc_name: frm.doc.name
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        frappe.db.get_doc('Local Enquiry Report', response.message).then(report => {
-                            frm.add_custom_button(__('Local Enquiry Report'), function () {
-                                frappe.set_route('Form', 'Local Enquiry Report', report.name);
-                            }, __('View'));
-                        });
-                    } else {
-                        frm.add_custom_button(__('Local Enquiry Report'), function () {
-                            frappe.call({
-                                method: 'beams.beams.custom_scripts.job_applicant.job_applicant.create_and_return_report',
-                                args: {
-                                    job_applicant: frm.doc.name
-                                },
-                                callback: function (createResponse) {
-                                    if (createResponse.message) {
-                                        frm.add_custom_button(__('Local Enquiry Report'), function () {
-                                            frappe.set_route('Form', 'Local Enquiry Report', createResponse.message);
-                                        }, __('View'));
-                                        frm.refresh();
-                                    }
-                                }
-                            });
-                        }, __('Create'));
-                    }
-                }
-            });
+            // Add Local Enquiry Report (LER) buttons only if not "Open"
+            if (frm.doc.status !== 'Open') {
+				frappe.call({
+					method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_existing_local_enquiry_report',
+					args: {
+						doc_name: frm.doc.name
+					},
+					callback: function (response) {
+						if (response.message) {
+							frappe.db.get_doc('Local Enquiry Report', response.message).then(report => {
+								frm.add_custom_button(__('Local Enquiry Report'), function () {
+									frappe.set_route('Form', 'Local Enquiry Report', report.name);
+								}, __('View'));
+							});
+						} else {
+							frm.add_custom_button(__('Local Enquiry Report'), function () {
+								frappe.call({
+									method: 'beams.beams.custom_scripts.job_applicant.job_applicant.create_and_return_report',
+									args: {
+										job_applicant: frm.doc.name
+									},
+									callback: function (createResponse) {
+										if (createResponse.message) {
+											frm.add_custom_button(__('Local Enquiry Report'), function () {
+												frappe.set_route('Form', 'Local Enquiry Report', createResponse.message);
+											}, __('View'));
+											frm.refresh();
+										}
+									}
+								});
+							}, __('Create'));
+						}
+					}
+				});
+			}
 
             if (frm.doc.status == 'Shortlisted') {
                 frm.add_custom_button(__('Send Magic Link'), function () {
