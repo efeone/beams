@@ -209,8 +209,6 @@ def update_job_applicant_status(doc, method=None):
     else:
         frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
 
-
-
 @frappe.whitelist()
 def get_permission_query_conditions(user):
     if not user:
