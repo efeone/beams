@@ -112,21 +112,20 @@ frappe.ui.form.on('Interview', {
 		}
 
 		dialog_fields.push(
-		{
-			fieldname: 'result',
-			fieldtype: 'Select',
-			label: __('Result'),
-			options: ['', 'Cleared', 'Rejected'],
-			default: '',
-			reqd: 1
-		},
-		{
-			fieldname: 'feedback',
-			fieldtype: 'Small Text',
-			label: __('Feedback')
-		}
-	);
-
+			{
+				fieldname: 'result',
+				fieldtype: 'Select',
+				label: __('Result'),
+				options: ['', 'Cleared', 'Rejected'],
+				default: '',
+				reqd: 1
+			},
+			{
+				fieldname: 'feedback',
+				fieldtype: 'Small Text',
+				label: __('Feedback')
+			}
+		);
 
 		let d = new frappe.ui.Dialog({
 			title: __('Submit Feedback'),
