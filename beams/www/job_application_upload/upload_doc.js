@@ -78,6 +78,8 @@ $(document).ready(function () {
         data.travel_required = $('#travel_required').is(':checked') ? 1 : 0; 
         data.driving_license_needed = $('#driving_license_needed').is(':checked') ? 1 : 0; 
         data.is_work_shift_needed = $('#is_work_shift_needed').is(':checked') ? 1 : 0;
+        
+        data.license_type = document.getElementById('license_type').value || "NO VALUE"; 
 
         // Handling educational qualifications
         data.educational_qualification = [];

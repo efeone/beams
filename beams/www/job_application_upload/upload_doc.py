@@ -1,10 +1,12 @@
-import frappe
-import json
-from frappe import _
-from frappe.utils import escape_html, getdate, get_datetime
-from frappe.utils.password import decrypt, encrypt
-from frappe.utils.file_manager import save_file
 import datetime
+import json
+
+import frappe
+from frappe import _
+from frappe.utils import escape_html
+from frappe.utils.file_manager import save_file
+from frappe.utils.password import decrypt
+
 
 def get_context(context):
     '''
@@ -33,7 +35,7 @@ def authorize_applicant_id(encrypted_applicant_id):
 	decrypted_applicant_id = False
 	try:
 		decrypted_applicant_id = decrypt(encrypted_applicant_id)
-	except Exception as e:
+	except Exception:
 		frappe.log_error(str(encrypted_applicant_id), 'Dirty Applicant Link')
 		frappe.throw(_("Sorry, we were not able to decrypt the applicant link"), frappe.PermissionError)
 
@@ -58,6 +60,7 @@ def update_register_form(docname, data):
     '''
     try:
         data = json.loads(data)
+        print(f"[DEBUG] pdating Job Applicant: {docname} with data: {data}", "Job Application Update")
         if not data.get("applicant_name"):
             frappe.throw("Missing required fields: Applicant Name")
         if frappe.db.exists('Job Applicant', docname):
@@ -74,6 +77,7 @@ def update_register_form(docname, data):
             doc.travel_required = bool(data.get("travel_required"))
             doc.driving_license_needed = bool(data.get("driving_license_needed"))
             doc.is_work_shift_needed = bool(data.get("is_work_shift_needed"))
+            doc.license_type = data.get("license_type", "")
 
 			# Upload payslip documents
             for field in ["payslip_month_1", "payslip_month_2", "payslip_month_3"]:

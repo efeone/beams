@@ -580,17 +580,18 @@
                    Do you have a Driving License?
                </label>
                </div>
-               <label id="license_type" style="display: none;">
+               <div id="license_type_wrapper" style="display: none;">
+               <label>
                    License Type <br>
-                   <input type="text" id="license_type">
-                   {% set license_types = frappe.get_all('License Type', fields=['name', 'license_type']) %}
-                   <select name="license" class="form-control"  style="background-color: #fff;" >
-                       <option value="">Select License Type</option>
-                       {% for license in license_types %}
-                       <option value="{{ license.name }}">{{ license.license_type }}</option>
-                       {% endfor %}
-                   </select>
                </label>
+               <select class="form-control" id="license_type" name="license_type"
+                    style="height:40px; width: 110%; font-size:13px;background-color: #004eff17;">
+                    <option value="">Select License Type</option>
+                    {% for license in license_types %}
+                    <option value="{{ license.name }}">{{ license.license_type }}</option>
+                    {% endfor %}
+                </select>
+                </div>
                <br>
                <label>
                    <input type="checkbox" id="is_work_shift_needed">
@@ -732,7 +733,7 @@
         toggleSection('political_org_checkbox', 'political_org_section', ['political_org']);
         toggleSection('specialised_training_checkbox', 'specialised_training_section', ['specialised_training']);
         toggleSection('travel_required','driving_license_needed_section' ,['driving_license_needed'])
-        toggleSection('driving_license_needed', 'license_type', ['license_type']);
+        toggleSection('driving_license_needed', 'license_type_wrapper', ['license_type_wrapper']);
 
         // Function to handle form submission validation based on checkbox status
         function handleSubmitValidation() {
