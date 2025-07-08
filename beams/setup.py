@@ -2221,7 +2221,8 @@ def get_job_requisition_custom_fields():
 				"fieldtype": "Link",
 				"options": "Employee",
 				"insert_after": "request_for",
-				"depends_on": "eval:doc.request_for == 'Employee Replacement'"
+				"depends_on": "eval:doc.request_for == 'Employee Replacement'",
+				"mandatory_depends_on": "eval:doc.request_for == 'Employee Replacement'"
 			},
 			{
 				"fieldname": "relieving_date",
