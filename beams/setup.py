@@ -4247,6 +4247,13 @@ def get_property_setters():
 			"property": "mandatory_depends_on",
 			"value": "eval: !(doc.workflow_state == 'Draft' && doc.request_for == 'New Vacancy')"
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
+			"field_name": "description",
+			"property": "fetch_from",
+			"value": "job_description_template.description"
+		},
 	]
 
 def get_material_request_custom_fields():
