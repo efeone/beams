@@ -82,8 +82,8 @@ function handle_custom_buttons(frm) {
                 });
             }
 
-            // Add Local Enquiry Report (LER) buttons only if not "Open"
-            if (frm.doc.status !== 'Open') {
+            // Show a "Local Enquiry Report (LER)" button in the Job Applicant form only when the status is "Interview Completed"
+            if (frm.doc.status == 'Interview Completed') {
 				frappe.call({
 					method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_existing_local_enquiry_report',
 					args: {
