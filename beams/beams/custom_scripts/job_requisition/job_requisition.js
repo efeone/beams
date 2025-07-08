@@ -92,3 +92,13 @@ function set_filters(frm) {
 		};
 	});
 }
+
+frappe.ui.form.on('Language Proficiency', {
+	language_proficiency_add(frm, cdt, cdn) {
+		row = locals[cdt][cdn];
+		if (row.language) {
+			row.language = "";
+		}
+		frm.refresh_fields();
+	}
+})
