@@ -115,7 +115,7 @@ function handle_custom_buttons(frm) {
                 }
             });
 
-            if (frm.doc.status !== 'Open'&& frm.doc.status !== 'Rejected') {
+            if (frm.doc.status == 'Shortlisted') {
                 frm.add_custom_button(__('Send Magic Link'), function () {
                     frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
                         frappe.call({
