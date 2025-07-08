@@ -568,6 +568,36 @@
                                 cols="90"></textarea>
                         </div>
                     </div>
+                    <div class="row">
+               <label>
+                   <input type="checkbox" id="travel_required">
+                   Are you willing to travel for work?
+               </label>
+               <br>
+               <div id="driving_license_needed_section" style="display: none;">
+               <label>
+                   <input type="checkbox" id="driving_license_needed">
+                   Do you have a Driving License?
+               </label>
+               </div>
+               <label id="license_type" style="display: none;">
+                   License Type <br>
+                   <input type="text" id="license_type">
+                   {% set license_types = frappe.get_all('License Type', fields=['name', 'license_type']) %}
+                   <select name="license" class="form-control"  style="background-color: #fff;" >
+                       <option value="">Select License Type</option>
+                       {% for license in license_types %}
+                       <option value="{{ license.name }}">{{ license.license_type }}</option>
+                       {% endfor %}
+                   </select>
+               </label>
+               <br>
+               <label>
+                   <input type="checkbox" id="is_work_shift_needed">
+                   Are you willing to work in shifts?
+               </label>
+           </div>
+
                     <h5><b>Declaration and Authorization </h3></b>
                         <hr>
                         </hr>
@@ -701,6 +731,8 @@
         toggleSection('professional_org_checkbox', 'professional_org_section', ['professional_org']);
         toggleSection('political_org_checkbox', 'political_org_section', ['political_org']);
         toggleSection('specialised_training_checkbox', 'specialised_training_section', ['specialised_training']);
+        toggleSection('travel_required','driving_license_needed_section' ,['driving_license_needed'])
+        toggleSection('driving_license_needed', 'license_type', ['license_type']);
 
         // Function to handle form submission validation based on checkbox status
         function handleSubmitValidation() {

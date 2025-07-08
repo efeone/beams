@@ -3029,6 +3029,773 @@ def get_company_custom_fields():
 		]
 	}
 
+def get_job_applicant_custom_fields():
+    '''
+    Custom fields that need to be added to the Job Applicant Doctype
+    '''
+    return {
+        "Job Applicant": [
+            {
+               "fieldname": "date_of_birth",
+                "fieldtype": "Date",
+                "label": "Date of Birth",
+                "insert_after": "email_id"
+            },
+            {
+               "fieldname": "gender",
+                "fieldtype": "Link",
+                "label": "Gender",
+                "options": "Gender",
+                "insert_after": "date_of_birth"
+            },
+            {
+                "fieldname": "willing_to_work_on_location",
+                "fieldtype": "Check",
+                "label": "Willing to Work in the Selected Location?",
+                "insert_after": "country"
+            },
+            {
+               "fieldname": "father_name",
+                "fieldtype": "Data",
+                "label": "Father's Name",
+                "insert_after": "job_title"
+            },
+            {
+               "fieldname": "marital_status",
+                "fieldtype": "Select",
+                "label": "Marital Status",
+                "options": "\nSingle\nMarried\nDivorced\nWidowed",
+                "insert_after": "location"
+            },
+            {
+                "fieldname": "current_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "Current Address",
+                "insert_after": "marital_status"
+            },
+            {
+               "fieldname": "current_address",
+                "fieldtype": "Small Text",
+                "label": "Current Address",
+                "insert_after": "current_address_session_break"
+            },
+            {
+               "fieldname": "current_mobile_no",
+                "fieldtype": "Data",
+                "options": "Phone",
+                "label": "Mobile Number",
+                "insert_after": "current_address"
+            },
+            {
+               "fieldname": "current_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "current_mobile_no"
+            },
+            {
+                "fieldname": "permanent_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "Permanent Address",
+                "insert_after": "current_column_break"
+            },
+            {
+               "fieldname": "permanent_address",
+                "fieldtype": "Small Text",
+                "label": "Permanent Address",
+                "insert_after": "permanent_address_session_break"
+            },
+            {
+               "fieldname": "permanent_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "permanent_address"
+            },
+            {
+                "fieldname": "email_address_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "permanent_column_break"
+            },
+            {
+               "fieldname": "email_id_1",
+                "fieldtype": "Data",
+                "options": "Email",
+                "label": "Email ID",
+                "insert_after": "email_address_session_break"
+            },
+            {
+               "fieldname": "aadhar_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "email_id_1"
+            },
+            {
+               "fieldname": "aadhar_number",
+                "fieldtype": "Data",
+                "label": "Aadhar Number",
+                "insert_after": "aadhar_column_break"
+            },
+            {
+               "fieldname": "min_education_qual",
+                "fieldtype": "Link",
+                "label": "Educational Qualification",
+                'options':"Educational Qualification",
+                "insert_after": "details"
+            },
+            {
+                "fieldname": "details",
+                "fieldtype": "Section Break",
+                "label": "Qualification Details",
+                "insert_after": "applicant_rating"
+            },
+            {
+                "fieldname": "department",
+                "fieldtype": "Link",
+                "label": "Department",
+                "options": "Department",
+                "insert_after": "designation"
+            },
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Work Experience (Years)",
+                "insert_after": "details_column_break",
+            },
+            {
+                "fieldname": "details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_education_qual"
+            },
+            {
+                "fieldname": "reset_column",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "label": "Language Proficiency",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "insert_after": "language_proficiency"
+            },
+            {
+                "fieldname": "education_qualification",
+                "fieldtype": "Table",
+                "options": "Education Qualification",
+                "label": "Education Qualification",
+                "insert_after": "applicant_interview_rounds"
+            },
+            {
+                "fieldname": "professional_certification",
+                "fieldtype": "Table",
+                "options": "Professional Certification",
+                "label": "Professional Certification",
+                "insert_after": "education_qualification"
+            },
+            {
+                "fieldname": "location",
+                "label": "Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "status"
+            },
+            {
+                "fieldname": "interview_process_break",
+                "fieldtype": "Section Break",
+                "label": "Interview Process",
+                "insert_after": "skill_proficiency"
+            },
+            {
+                "fieldname": "applicant_interview_rounds",
+                "fieldtype": "Table",
+                "options": "Applicant Interview Round",
+                "label": "Interview Rounds",
+                "insert_after": "interview_process_break"
+            },
+            {
+                "fieldname": "current_employer_tab_break",
+                "fieldtype": "Tab Break",
+                "label": "Current Employer Details",
+                "insert_after": "upper_range"
+            },
+            {
+                "fieldname": "current_employer",
+                "fieldtype": "Section Break",
+                "label": "Current Employer / Immediate Previous Employer",
+                "insert_after": "current_employer_tab_break"
+            },
+            {
+                "fieldname": "name_of_employer",
+                "fieldtype": "Data",
+                "label": "Name of Employer",
+                "insert_after": "current_employer"
+            },
+            {
+                "fieldname": "employment_period_from",
+                "fieldtype": "Int",
+                "label": "Employment Period From",
+                "insert_after": "name_of_employer"
+            },
+            {
+                "fieldname": "employment_period_to",
+                "fieldtype": "Int",
+                "label": "Employment Period To",
+                "insert_after": "employment_period_from"
+            },
+            {
+                "fieldname": "current_employer_1_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "employment_period_to"
+            },
+            {
+                "fieldname": "current_designation",
+                "fieldtype": "Data",
+                "label": "Designation",
+                "insert_after": "current_employer_1_column_break"
+            },
+            {
+                "fieldname": "reference_taken",
+                "fieldtype": "Select",
+                "label": "Can I take Reference Now?",
+                "options": "\nYes\nNo",
+                "insert_after": "current_designation"
+            },
+            {
+                "fieldname": "was_this_position",
+                "fieldtype": "Select",
+                "label": "Was this Position Permanent,Temporary,Contractual?",
+                "options": "\nPermanent\nTemporary\nContractual",
+                "insert_after": "reference_taken"
+            },
+            {
+                "fieldname": "duties_and_reponsibilities",
+                "fieldtype": "Small Text",
+                "label": "Duties and Responsibilities",
+                "insert_after": "column_break_agency"
+            },
+            {
+                "fieldname": "current_employer_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "was_this_position"
+            },
+            {
+                "fieldname": "current_department",
+                "fieldtype": "Data",
+                "label": "Department",
+                "insert_after": "current_employer_column_break"
+            },
+            {
+                "fieldname": "manager_name",
+                "fieldtype": "Data",
+                "label": "Manager's Name",
+                "insert_after": "current_department"
+            },
+            {
+                "fieldname": "manager_contact_no",
+                "fieldtype": "Data",
+                "options": "Phone",
+                "label": "Manager's Contact No",
+                "insert_after": "manager_name"
+            },
+            {
+                "fieldname": "manager_email",
+                "fieldtype": "Data",
+                "options": "Email",
+                "label": "Manager's Email",
+                "insert_after": "manager_contact_no"
+            },
+            {
+                "fieldname": "reason_for_leaving",
+                "fieldtype": "Small Text",
+                "label": "Reason For Leaving",
+                "insert_after": "duties_and_reponsibilities"
+            },
+            {
+                "fieldname": "agency_details",
+                "fieldtype": "Small Text",
+                "label": "Agency Details  (if Temporary or Contractual)",
+                "insert_after": "address_of_employer"
+            },
+            {
+                "fieldname": "column_break_agency",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "agency_details"
+            },
+            {
+                "fieldname": "previous_emp",
+                "fieldtype": "Section Break",
+                "insert_after": "manager_email"
+            },
+            {
+                "fieldname": "address_of_employer",
+                "fieldtype": "Small Text",
+                "label": "Address of Employer",
+                "insert_after": "previous_emp"
+            },
+            {
+                "fieldname": "previous_emplyoment",
+                "fieldtype": "Section Break",
+                "label": "Previous Employment History",
+                "insert_after": "previous_emp"
+            },
+            {
+                "fieldname": "prev_emp_his",
+                "fieldtype": "Table",
+                "options": "Previous Employment History",
+                "insert_after": "previous_emplyoment"
+            },
+            {
+                "fieldname": "more_details_tab_break",
+                "fieldtype": "Tab Break",
+                "label": "More Details",
+                "insert_after": "prev_emp_his"
+            },
+            {
+                "fieldname": "current_salary",
+                "fieldtype": "Currency",
+                "label": "Current Salary",
+                "insert_after": "more_details_tab_break"
+            },
+            {
+                "fieldname": "current_salary_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "current_salary"
+            },
+            {
+                "fieldname": "expected_salary",
+                "fieldtype": "Currency",
+                "label": "Expected Salary",
+                "insert_after": "current_salary_column_break"
+            },
+            {
+                "fieldname": "expected_salary_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "expected_salary"
+            },
+            {
+                "fieldname": "telephone_number",
+                "fieldtype": "Data",
+                "options": "Phone",
+                "label": "Telephone Number",
+                "insert_after": "expected_salary_column_break"
+            },
+            {
+                "fieldname": "other_achievments_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "current_employer_tab_break"
+            },
+            {
+                "fieldname": "other_achievments",
+                "fieldtype": "Small Text",
+                "label": "Please add details of Professional and other achievements,awards and accomplishments,if any",
+                "insert_after": "other_achievments_session_break"
+            },
+            {
+                "fieldname": "interviewed_session_break",
+                "fieldtype": "Section Break",
+                "label": "Have you been interviewed before by Madhyamam Group?If yes, Please give details below :",
+                "insert_after": "other_achievments"
+            },
+            {
+                "fieldname": "position",
+                "fieldtype": "Data",
+                "label": "Position",
+                "insert_after": "interviewed_session_break"
+            },
+            {
+                "fieldname": "interviewed_date",
+                "fieldtype": "Date",
+                "label": "Date",
+                "insert_after": "position"
+            },
+            {
+                "fieldname": "interviewed_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "interviewed_date"
+            },
+            {
+                "fieldname": "interviewed_location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "label": "Location",
+                "insert_after": "interviewed_column_break"
+            },
+            {
+                "fieldname": "interviewed_outcome",
+                "fieldtype": "Data",
+                "label": "Outcome",
+                "insert_after": "interviewed_location"
+            },
+            {
+                "fieldname": "travel_session_break",
+                "fieldtype": "Section Break",
+                "label": "Are you willing to travel :",
+                "insert_after": "interviewed_outcome"
+            },
+            {
+                "fieldname": "in_india",
+                "fieldtype": "Check",
+                "label": "In India",
+                "insert_after": "travel_session_break"
+            },
+            {
+                "fieldname": "state_restriction",
+                "fieldtype": "Data",
+                "label": "State Restriction If any",
+                "depends_on": "eval:doc.in_india",
+                "insert_after": "in_india"
+            },
+            {
+                "fieldname": "india_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "state_restriction"
+            },
+            {
+                "fieldname": "abroad",
+                "fieldtype": "Check",
+                "label": "Abroad",
+                "insert_after": "india_column_break"
+            },
+            {
+                "fieldname": "related_session_break",
+                "fieldtype": "Section Break",
+                "label": "Are you related to any of employee of the Madhyamam Group? If yes,please give details :",
+                "insert_after": "state_restriction"
+            },
+            {
+                "fieldname": "related_employee",
+                "fieldtype": "Data",
+                "label": "Name",
+                "insert_after": "related_session_break"
+            },
+            {
+                "fieldname": "related_employee_org",
+                "fieldtype": "Data",
+                "label": "Organization",
+                "insert_after": "related_employee"
+            },
+            {
+                "fieldname": "related_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "related_employee_org"
+            },
+            {
+                "fieldname": "related_employee_pos",
+                "fieldtype": "Data",
+                "label": "Position",
+                "insert_after": "related_column_break",
+            },
+            {
+                "fieldname": "related_employee_rel",
+                "fieldtype": "Data",
+                "label": "Relationship",
+                "insert_after": "related_employee_pos"
+            },
+            {
+                "fieldname": "prof_session_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "related_employee_rel"
+            },
+            {
+                "fieldname": "professional_org",
+                "fieldtype": "Small Text",
+                "label": "Are you a member of any Professional Organization? If yes, Please give details :",
+                "insert_after": "prof_session_break"
+            },
+            {
+                "fieldname": "political_org",
+                "fieldtype": "Small Text",
+                "label": "Are you a member of any Political Organization? If yes, Please give details :",
+                "insert_after": "professional_org"
+            },
+            {
+                "fieldname": "specialised_training",
+                "fieldtype": "Small Text",
+                "label": "Have you attended any specialised training program?If yes, Please give detais :",
+                "insert_after": "political_org"
+            },
+            {
+                "fieldname": "is_form_submitted",
+                "fieldtype": "Check",
+                "label": "Is Form Submitted",
+                "read_only":1,
+                "insert_after": "specialised_training"
+            },
+            {
+                "fieldname": "payslip_month_1",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 1",
+                "insert_after": "section_break_001"
+            },
+            {
+                "fieldname": "break_oo1",
+                "fieldtype": "Column Break",
+                "insert_after": "payslip_month_1"
+            },
+            {
+                "fieldname": "payslip_month_2",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 2",
+                "insert_after": "break_oo1"
+            },
+            {
+                "fieldname": "section_break_001",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "prev_emp_his"
+            },
+            {
+                "fieldname": "break_oo2",
+                "fieldtype": "Column Break",
+                "insert_after": "payslip_month_2"
+            },
+            {
+                "fieldname": "payslip_month_3",
+                "fieldtype": "Attach",
+                "label": "Payslip - Month 3",
+                "insert_after": "break_oo2"
+            },
+            {
+				"fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Are you willing to travel for work?",
+                "insert_after": "abroad"
+			},
+            {
+				"fieldname": "driving_license_needed",
+                "fieldtype": "Check",
+                "label": "Do you have a Driving License?",
+                "insert_after": "travel_required"
+			},
+            {
+				"fieldname": "license_type",
+                "fieldtype": "Link",
+                "label": "License Type",
+                "insert_after": "driving_license_needed",
+                "options": "License Type"
+			},
+            {
+				"fieldname": "is_work_shift_needed",
+                "fieldtype": "Check",
+                "label": "Are you willing to work in shifts?",
+                "insert_after": "license_type"
+			}
+        ]
+    }
+
+def get_contract_custom_fields():
+    '''
+    Custom fields that need to be added to the Contract Doctype
+    '''
+    return {
+        "Contract": [
+            {
+                "fieldname": "services_section",
+                "fieldtype": "Section Break",
+                "label": "Services",
+                "insert_after": "ip_address"
+            },
+            {
+                "fieldname": "services",
+                "fieldtype": "Table",
+                "options": "Services",
+                "label": "Services",
+                "insert_after": "services_section",
+                "depends_on": "eval:doc.party_type == 'Supplier'"
+            },
+            {
+                "fieldname": "total_amount",
+                "fieldtype": "Currency",
+                "label": "Total Amount",
+                "insert_after": "services",
+                "read_only":1,
+                "no_copy":1
+            }
+        ]
+    }
+
+def get_job_opening_custom_fields():
+    '''
+        Custom fields that need to be added to the Job Opening Doctype
+    '''
+    return {
+        "Job Opening": [
+            {
+                "fieldname": "job_details",
+                "fieldtype": "Section Break",
+                "label": "Job Details",
+                "insert_after": "location"
+            },
+            {
+                "fieldname": "no_of_positions",
+                "fieldtype": "Int",
+                "label": "No of.Positions",
+                "insert_after": "employment_type",
+            },
+            {
+                "fieldname": "no_of_days_off",
+                "fieldtype": "Int",
+                "label": "Number of Days Off",
+                "insert_after": "job_details",
+                "non_negative": 1
+            },
+            {
+                "fieldname": "preffered_location",
+                "label": "Preffered Location",
+                "fieldtype": "Link",
+                "options": "Location",
+                "insert_after": "no_of_days_off"
+            },
+            {
+                "fieldname": "job_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "preffered_location"
+            },
+            {
+                "fieldname": "travel_required",
+                "fieldtype": "Check",
+                "label": "Travel required for the position",
+                "insert_after": "job_details_column_break"
+            },
+            {
+                "fieldname": "driving_license_needed",
+                "fieldtype": "Check",
+                "label": "Driving License Needed for this Position",
+                "depends_on": "eval:doc.travel_required == 1",
+                "insert_after": "travel_required"
+            },
+            {
+                "fieldname": "license_type",
+                "fieldtype": "Link",
+                "label": "License Type",
+                "options": "License Type",
+                "depends_on": "eval:doc.driving_license_needed == 1 && doc.travel_required == 1",
+                "insert_after": "driving_license_needed"
+            },
+            {
+                "fieldname": "is_work_shift_needed",
+                "fieldtype": "Check",
+                "label": "Is Shift Work Needed",
+                "insert_after": "license_type"
+            },
+            {
+                "fieldname": "qualification_details",
+                "fieldtype": "Section Break",
+                "label": "Education and Qualification Details",
+                "insert_after": "license_type",
+            },
+            {
+               "fieldname": "min_education_qual",
+                "fieldtype": "Table MultiSelect",
+                "label": "Preferred Educational Qualification",
+                'options':"Educational Qualifications",
+                "insert_after": "qualification_details"
+            },
+            {
+                "fieldname": "qualification_details_column_break",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "min_education_qual"
+            },
+            {
+                "fieldname": "min_experience",
+                "fieldtype": "Float",
+                "label": "Minimum Experience Required (Years)",
+                "insert_after": "is_work_shift_needed"
+            },
+            {
+                "fieldname": "proficiency_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "min_experience"
+            },
+            {
+                "fieldname": "language_proficiency",
+                "fieldtype": "Table",
+                "options": "Language Proficiency",
+                "label": "Language Proficiency",
+                "insert_after": "proficiency_break",
+                "description": "Proficency selected here is the minimum proficency needed"
+            },
+            {
+                "fieldname": "skill_proficiency",
+                "fieldtype": "Table",
+                "options": "Skill Proficiency",
+                "label": "Skill Proficiency",
+                "insert_after": "language_proficiency",
+                "description": "Proficency selected here is the minimum proficency needed"
+            },
+            {
+                "fieldname": "interview_details_sb",
+                "fieldtype": "Section Break",
+                "label": "Interview Details",
+                "insert_after": "skill_proficiency"
+            },
+            {
+               "fieldname": "interview_rounds",
+                "fieldtype": "Table MultiSelect",
+                "label": "Interview Rounds",
+                'options':"Interview Rounds",
+                "insert_after": "interview_details_sb"
+            }
+        ]
+    }
+
+def get_company_custom_fields():
+    '''
+        Custom fields that need to be added to the Company Doctype
+    '''
+    return {
+        "Company": [
+            {
+                "fieldname": "company_policy_tab",
+                "fieldtype": "Tab Break",
+                "label": "Company Policy",
+                "insert_after": "dashboard_tab"
+            },
+            {
+                "fieldname": "company_policy",
+                "fieldtype": "Text Editor",
+                "label": "Company Policy",
+                "insert_after": "company_policy_tab"
+            },
+            {
+                "fieldname": "exception_budget_column",
+                "fieldtype": "Column Break",
+                "label": "",
+                "insert_after": "exception_budget_approver_role"
+            },
+            {
+                "fieldname": "exchange_rate_to_inr",
+                "fieldtype": "Float",
+                "label": "Budget Exchange Rate to INR",
+                "insert_after": "exception_budget_column",
+                "description": "1 Unit of Company Currency = [?] INR"
+            }
+        ]
+    }
+
 def get_employee_performance_feedback():
 	'''Custom fields that need to be added to
 		Employee Performance Feedback doctype
@@ -4799,16 +5566,17 @@ def get_expense_claim_type_custom_fields():
 	}
 
 def get_supplier_quotation_custom_fields():
-	'''
-		Custom fields that need to be added to the Supplier Quotation DocType
-	'''
-	return {
-		"Supplier Quotation": [
-			{
-				"fieldname": "attach",
-				"fieldtype": "Attach",
-				"label": "Attachments",
-				"insert_after": "base_net_total"
-			}
-		]
-	}
+    '''
+        Custom fields that need to be added to the Supplier Quotation DocType
+    '''
+    return {
+        "Supplier Quotation": [
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "base_net_total"
+            }
+        ]
+    }
+
