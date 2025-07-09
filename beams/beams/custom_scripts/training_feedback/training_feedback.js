@@ -1,4 +1,13 @@
 frappe.ui.form.on("Training Feedback", {
+    onload(frm) {
+        if (frm.is_new() && !frm.doc.employee) {
+            frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+                .then(r => {
+                    if (r.message) frm.set_value('employee', r.message.name);
+                });
+        }
+    },
+
     training_event: function(frm) {
         if (!frm.doc.training_event) {
             frm.set_query("employee", () => ({}));
