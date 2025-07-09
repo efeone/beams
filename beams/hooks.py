@@ -297,7 +297,7 @@ doc_events = {
         "validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
     },
     "Employee Separation": {
-        "on_submit": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
+        "on_update": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
         },
     "Task":{
         "on_update":"beams.beams.custom_scripts.task.task.on_task_update"
