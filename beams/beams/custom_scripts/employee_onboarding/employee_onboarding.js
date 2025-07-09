@@ -43,15 +43,22 @@ frappe.ui.form.on('Employee Onboarding', {
                     let excluded_applicants = r.message;
 
                     frm.set_query("job_applicant", function () {
-                        return {
-                            filters: {
-                                name: ["not in", excluded_applicants]
-                            }
+                        let filters = {
+                            name: ["not in", excluded_applicants]
                         };
+                        if (frm.doc.designation) {
+                            filters["designation"] = frm.doc.designation;
+                        }
+                        if (frm.doc.department) {
+                            filters["department"] = frm.doc.department;
+                        }
+
+                        return { filters };
                     });
                 }
             }
         });
+        apply_template_filter(frm);
     },
 
     employee: function(frm) {
@@ -88,5 +95,32 @@ frappe.ui.form.on('Employee Onboarding', {
                 }
             });
         }
-    }
+    },
+    department: function(frm) {
+        apply_template_filter(frm);
+    },
+
+    designation: function(frm) {
+        apply_template_filter(frm);
+    },
 });
+
+
+function apply_template_filter(frm) {
+    /**
+    * Applies a dynamic filter to the "employee_onboarding_template" field,
+    * showing only templates that match the current department and designation.
+    */
+    if (frm.doc.department && frm.doc.designation) {
+        frm.set_query("employee_onboarding_template", function () {
+            return {
+                filters: {
+                    department: frm.doc.department,
+                    designation: frm.doc.designation
+                }
+            };
+        });
+    }
+}
+
+
