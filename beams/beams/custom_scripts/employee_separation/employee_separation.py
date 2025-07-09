@@ -33,10 +33,7 @@ def create_exit_clearance(doc, method):
 
         # Fetch Department Head from the Department doctype
         department_head = frappe.db.get_value("Department", department, "head_of_department")
-        department_head_user = frappe.db.get_value("Employee", department_head, "user_id")
-        if not department_head_user:
-            frappe.msgprint(f"No Head of Department user found for department: {department}")
-            continue
+        department_head_user = frappe.db.get_value("Employee", department_head, "user_id") if department_head else None
 
         # Create the Employee Exit Clearance document
         exit_clearance = frappe.get_doc({
@@ -44,7 +41,7 @@ def create_exit_clearance(doc, method):
             "employee": doc.employee,
             "department": department,
             "status": "Pending",
-            "assigned_to": department_head_user
+            "assigned_to": department_head_user or " "
         })
         exit_clearance.insert(ignore_permissions=True)
 

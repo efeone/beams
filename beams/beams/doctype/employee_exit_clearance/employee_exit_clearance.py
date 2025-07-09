@@ -8,6 +8,21 @@ class EmployeeExitClearance(Document):
     def on_submit(self):
         self.update_status()
 
+    def before_submit(self):
+        self.ensure_all_dues_cleared()
+
+    def ensure_all_dues_cleared(self):
+        '''
+        Prevent submission if any row in Dues table is not "Cleared".
+        '''
+        for row in self.dues:
+            if row.status != "Cleared":
+                frappe.throw(
+                    f"Dues not cleared: <br>"
+                    f"<b>Description:</b> {row.description or 'N/A'}<br>"
+                    f"<b>Amount:</b> {row.amount or 0}<br>"
+                    f"All dues must be <b>cleared</b> before submitting.")
+
     def update_status(self):
         '''
         Updates the 'status' field in the Employee Clearance child table of Employee Separation to 'Completed'.
