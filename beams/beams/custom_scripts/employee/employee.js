@@ -13,7 +13,7 @@ frappe.ui.form.on('Employee', {
 				frm.set_value('date_of_birth', job_applicant.date_of_birth);
 				frm.set_value('gender', job_applicant.gender);
 				frm.set_value('cell_number', job_applicant.phone_number);
-				frm.set_value('name_of_father_or_spouse', job_applicant.father_name);
+				frm.set_value('name_of_father', job_applicant.father_name);
 				frm.set_value('designation', job_applicant.designation);
 				frm.set_value('department', job_applicant.department);
 				frm.set_value('current_address', job_applicant.current_address);
