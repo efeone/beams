@@ -2,6 +2,8 @@ import frappe
 from frappe.utils import add_days, today
 from datetime import datetime
 from frappe.utils import nowdate, get_datetime
+from frappe import _ 
+from frappe.utils import get_url_to_form 
 
 
 def handle_employee_checkin_out(doc, method):
@@ -22,15 +24,14 @@ def handle_employee_checkin_out(doc, method):
     doc_time = datetime.strptime(doc.time, "%Y-%m-%d %H:%M:%S") if isinstance(doc.time, str) else doc.time
     start_date = doc_time.date()
     end_date = add_days(start_date, 30)
-    today_date = today()
-
-    # Verify Shift Assignment with roster_type 'OT'
+    
+    # Use check-out date to verify shift assignment
     shift_assignment = frappe.db.sql("""
         SELECT name FROM `tabShift Assignment`
         WHERE employee = %s
           AND roster_type = 'Double Shift'
           AND %s BETWEEN start_date AND end_date
-    """, (doc.employee, today_date), as_dict=True)
+    """, (doc.employee, start_date), as_dict=True)
 
     if not shift_assignment:
         return
@@ -63,6 +64,16 @@ def handle_employee_checkin_out(doc, method):
         })
         leave_allocation_doc.insert(ignore_permissions=True)
         leave_allocation_doc.submit()
+        
+    allocation_name = allocation.name if leave_allocation else leave_allocation_doc.name
+
+    frappe.msgprint(
+        _('Double Shift found for <b>{employee}</b>.<br>'
+          'Compensatory Leave has been <b>allocated</b>: <a href="{url}">{name}</a>').format(
+            employee=doc.employee,
+            url=get_url_to_form("Leave Allocation", allocation_name),
+            name=allocation_name
+        ),alert=True,indicator='green')
 
 def set_hd_agent_active_status(doc, method=None):
 
