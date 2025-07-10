@@ -8,29 +8,28 @@ def on_task_update(task_doc, method):
     Triggered when a Task is updated. Checks if the task is part of the activities
     table of an Employee Separation DocType. If all tasks are completed, perform the required actions.
     """
-    # Check if the task exists in the Employee Boarding Activity (child table of Employee Separation)
+
     cdn = frappe.db.exists("Employee Boarding Activity", {"task": task_doc.name})
-
     if not cdn:
-        return  # Task is not linked to any Employee Separation
+        return
 
-    # Get the parent Employee Separation DocType
-    emp_separation = frappe.db.get_value("Employee Boarding Activity", cdn, "parent")
-    emp_separation_doc = frappe.get_doc("Employee Separation", emp_separation)
+    parent_info = frappe.db.get_value(
+        "Employee Boarding Activity", cdn, ["parent", "parenttype"], as_dict=True
+    )
 
-    # Check the status of all tasks in the activities child table
+    if not parent_info or parent_info.parenttype != "Employee Separation":
+        return
+
+    emp_separation_doc = frappe.get_doc("Employee Separation", parent_info.parent)
+
     all_completed = True
     for row in emp_separation_doc.activities:
         if frappe.db.get_value("Task", row.task, "status") != "Completed":
             all_completed = False
             break
 
-    # If all tasks are completed, update the boarding status and create a ToDo for HR Managers
     if all_completed:
-        # Update the boarding_status
         emp_separation_doc.db_set("boarding_status", "Completed")
-
-        # Create ToDo for HR Managers
         create_todo_for_hr_manager(emp_separation_doc)
 
 
