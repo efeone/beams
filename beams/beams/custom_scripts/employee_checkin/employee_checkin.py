@@ -35,7 +35,7 @@ def handle_employee_checkin_out(doc, method):
 
     if not shift_assignment:
         return
-    
+
     # Fetch Leave Allocation
     leave_allocation = frappe.get_all(
         "Leave Allocation",
