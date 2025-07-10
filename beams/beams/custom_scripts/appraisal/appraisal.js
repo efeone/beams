@@ -515,3 +515,20 @@ function set_table_properties(frm, table_name) {
     frm.set_df_property(table_name, 'cannot_delete_rows', true);
     frm.set_df_property(table_name, 'cannot_delete_all_rows', true);
 }
+
+frappe.ui.form.on('Employee Feedback Rating', {
+    marks: function (frm, cdt, cdn) {
+        const row = locals[cdt][cdn];
+        if (row.marks > 5) {
+            frappe.msgprint(__('Marks cannot be greater than 5.'));
+            frappe.model.set_value(cdt, cdn, 'marks', 0);
+        } else if (row.marks < 0) {
+            frappe.msgprint(__('Marks cannot be less than 0.'));
+            frappe.model.set_value(cdt, cdn, 'marks', 0);
+        }
+        else {
+            row.rating = row.marks/5
+        }
+        frm.refresh_fields();
+    }
+});

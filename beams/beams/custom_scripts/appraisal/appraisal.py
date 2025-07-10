@@ -1,10 +1,10 @@
-import frappe
-import json
-from frappe import _
-from six import string_types
-from frappe.utils import get_link_to_form
 import datetime
-from frappe.desk.form.assign_to import add as add_assign
+import json
+
+import frappe
+from frappe import _
+from frappe.utils import get_link_to_form
+from six import string_types
 
 
 def validate_kra_marks(doc, method):
@@ -15,6 +15,8 @@ def validate_kra_marks(doc, method):
 			for row in doc.get(field):
 				if row.marks and float(row.marks) > 5:
 					frappe.throw(_("Marks cannot be greater than 5."))
+				if row.marks and float(row.marks) < 0:
+					frappe.throw(_("Marks cannot be less than 0."))
 
 @frappe.whitelist()
 def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
@@ -220,7 +222,7 @@ def add_to_category_details(parent_docname, category, remarks):
 
 		parent_doc.save(ignore_permissions=True)
 		return "Success"
-	except Exception as e:
+	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Add to Category Details Error")
 		return "Failed"
 
