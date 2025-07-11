@@ -3149,7 +3149,7 @@ def get_leave_type_custom_fields():
 				"fieldtype": "Int",
 				"label": "Minimum Advance Days",
 				"description": "Specifies the minimum number of days required to apply for this leave.",
-				"insert_after": "max_continuous_days_allowed"
+				"insert_after": "min_continuous_days_allowed"
 			},
 			{
 			   "fieldname": "is_proof_document",
@@ -3171,6 +3171,12 @@ def get_leave_type_custom_fields():
 			   "label": "Allow in Notice Period",
 			   "insert_after": "is_compensatory"
 
+			},
+			{
+				"fieldname": "min_continuous_days_allowed",
+				"fieldtype": "Int",
+				"label": "Minimum Consecutive Leaves Allowed",
+				"insert_after": "max_continuous_days_allowed"
 			}
 		]
 	}
