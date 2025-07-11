@@ -57,7 +57,8 @@ $(document).ready(function () {
             "related_employee_rel", "professional_org", "political_org", "specialised_training",
             "reference_taken", "was_this_position", "state_restriction", "achievements_checkbox",
             "interviewed_before_checkbox", "related_to_employee_checkbox", "professional_org_checkbox",
-            "political_org_checkbox", "specialised_training_checkbox"
+            "political_org_checkbox", "specialised_training_checkbox", "travel_required", "driving_license_needed",
+            "license_type", "is_work_shift_needed"
         ];
 
         // Constructing the main data object
@@ -74,6 +75,11 @@ $(document).ready(function () {
         data.in_india = $('#in_india_checkbox').is(':checked') ? 1 : 0;
         data.abroad = $('#abroad_checkbox').is(':checked') ? 1 : 0;
         data.is_form_submitted = $('#confirm').is(':checked') ? 1 : 0;
+        data.travel_required = $('#travel_required').is(':checked') ? 1 : 0; 
+        data.driving_license_needed = $('#driving_license_needed').is(':checked') ? 1 : 0; 
+        data.is_work_shift_needed = $('#is_work_shift_needed').is(':checked') ? 1 : 0;
+        
+        data.license_type = document.getElementById('license_type').value || "NO VALUE"; 
 
         // Handling educational qualifications
         data.educational_qualification = [];
