@@ -65,7 +65,6 @@ doctype_js = {
     "Lead":"beams/custom_scripts/lead/lead.js",
     "Payment Entry":"beams/custom_scripts/payment_entry/payment_entry.js",
     "Full and Final Statement":"beams/custom_scripts/full_and_final_statement/full_and_final_statement.js",
-    "HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js",
     "Vehicle":"beams/custom_scripts/vehicle/vehicle.js",
     "Material Request":"beams/custom_scripts/material_request/material_request.js",
     "Asset":"beams/custom_scripts/asset/asset.js"
@@ -165,7 +164,6 @@ override_doctype_class = {
     "Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
     "Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
     "Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
-    "HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride"
 }
 
 # Document Events
@@ -269,11 +267,8 @@ doc_events = {
     },
     "Employee Checkin":{
         "after_insert": [
-            "beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out",
-            "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
-        ],
-        "on_update" : "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
-
+            "beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
+        ]
     },
     "Leave Allocation":{
         "on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
