@@ -2,6 +2,8 @@ import frappe
 from frappe import _
 from frappe.utils import add_days, nowdate, getdate
 from hrms.hr.doctype.leave_application.leave_application import get_leave_details
+from frappe.utils import cint
+from frappe.utils import get_link_to_form
 
 
 def validate(doc, method):
@@ -9,7 +11,7 @@ def validate(doc, method):
     validate_leave_advance_days(doc.from_date, doc.leave_type)
     validate_sick_leave(doc)
     validate_leave_application(doc)
-
+    validate_min_days(doc)
 
 @frappe.whitelist()
 def validate_leave_advance_days(from_date, leave_type):
@@ -156,3 +158,24 @@ def validate_notice_period(doc):
                     _("You are not allowed to apply for {0} during the <b>Notice Period</b>.")
                     .format(frappe.bold(doc.leave_type))
                 )
+
+def validate_min_days(doc):
+    '''Validate that the total consecutive leaves meet the minimum days set in the Leave Type.'''
+    min_days = frappe.db.get_value("Leave Type", doc.leave_type, "min_continuous_days_allowed")
+    if not min_days:
+        return
+
+    details = doc.get_consecutive_leave_details()
+
+    if details.total_consecutive_leaves < cint(min_days):
+        msg = _("Leave of type {0} should be at least {1} day(s).").format(
+            get_link_to_form("Leave Type", doc.leave_type), min_days
+        )
+        if details.leave_applications:
+            msg += "<br><br>" + _("Reference: {0}").format(
+                ", ".join(
+                    get_link_to_form("Leave Application", name) for name in details.leave_applications
+                )
+            )
+
+        frappe.throw(msg, title=_("Minimum Consecutive Leaves Not Met"))
