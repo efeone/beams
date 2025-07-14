@@ -160,7 +160,7 @@ def validate_notice_period(doc):
                 )
 
 def validate_min_days(doc):
-	'''Validate that the total consecutive leaves meet the minimum days set in the Leave Type.'''
+    '''Validate that the total consecutive leaves meet the minimum days set in the Leave Type.'''
     min_days = frappe.db.get_value("Leave Type", doc.leave_type, "min_continuous_days_allowed")
     if not min_days:
         return
