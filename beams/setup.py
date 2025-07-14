@@ -3172,14 +3172,14 @@ def get_leave_type_custom_fields():
 			   "insert_after": "is_compensatory"
 
 			},
-			{
-				"fieldname": "min_continuous_days_allowed",
-				"fieldtype": "Int",
-				"label": "Minimum Consecutive Leaves Allowed",
-				"insert_after": "max_continuous_days_allowed"
-			}
-		]
-	}
+            {
+                "fieldname": "min_continuous_days_allowed",
+                "fieldtype": "Int",
+                "label": "Minimum Consecutive Leaves Allowed",
+                "insert_after": "max_continuous_days_allowed"
+            }
+        ]
+    }
 
 def get_employee_separation_custom_fields():
 	'''
