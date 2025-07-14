@@ -17,16 +17,13 @@ frappe.ui.form.on('Appraisal', {
 
         frm.set_df_property('final_score', 'hidden', 1);
 
-        if (!frm.is_new()) {
-            // Get the logged-in user
+        // Show "New Feedback" button only if the user is an assessment officer and not the appraised employee, before submission
+        if (!frm.is_new() && frm.doc.docstatus !== 1) {
             let user = frappe.session.user;
-
-            // Fetch the logged-in user's linked Employee record
-            frappe.db.get_value('Employee', { 'user_id': user }, 'name').then(r => {
+            frappe.db.get_value('Employee', { 'user_id': user }, ['name', 'assessment_officer']).then(r => {
                 let employee = r.message?.name;
-
-                // Add "New Feedback" button only if the logged-in user is NOT the appraised employee
-                if (frm.doc.employee !== employee) {
+                let is_assessment_officer = r.message?.assessment_officer;
+                if (frm.doc.employee !== employee && is_assessment_officer) {
                     frm.add_custom_button(__('New Feedback'), function () {
                         frm.events.show_feedback_dialog(frm);
                     });
@@ -118,15 +115,18 @@ frappe.ui.form.on('Appraisal', {
                     }
                 }
             });
-
             // Add "One to One Meeting" inside the "Create" dropdown
-            frm.add_custom_button(__('One to One Meeting'), function () {
-                frappe.model.open_mapped_doc({
-                    method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
-                    args: { source_name: frm.doc.name },
-                    frm: frm
-                });
-            }, __('Create'));
+            const allowed_roles = ['HR Manager', 'HOD'];
+            const user_has_access = frappe.user_roles.some(role => allowed_roles.includes(role));
+            if (user_has_access) {
+                frm.add_custom_button(__('One to One Meeting'), function () {
+                    frappe.model.open_mapped_doc({
+                        method: "beams.beams.custom_scripts.appraisal.appraisal.map_appraisal_to_event",
+                        args: { source_name: frm.doc.name },
+                        frm: frm
+                    });
+                }, __('Create'));
+            }
         }
 
         frappe.call({
