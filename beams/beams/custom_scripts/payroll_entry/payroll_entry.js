@@ -14,11 +14,11 @@ frappe.ui.form.on('Payroll Entry', {
 	}
 });
 
+/**
+* Set the start and end dates to cover the previous month
+* relative to the selected `posting_date`.
+*/
 function set_previous_month_dates(frm) {
-	/**
-	* Set the start and end dates to cover the previous month
-	* relative to the selected `posting_date`.
-	*/
 	if (!frm.doc.posting_date) {
 		return;
 	}
