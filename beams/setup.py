@@ -3301,7 +3301,8 @@ def get_appraisal_custom_fields():
 				"fieldtype": "Float",
 				"label": "Final Average Score",
 				"insert_after": "employee_image",
-				"precision": 3
+				"precision": 3,
+				"read_only": 1
 			}
 		]
 	}

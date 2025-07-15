@@ -1,6 +1,8 @@
 frappe.ui.form.on("Appraisal Template", {
     refresh: function(frm) {
         hide_marks_field(frm);
+        make_rating_criteria_readonly(frm);
+
     }
 });
 
@@ -18,4 +20,15 @@ function hide_marks_field(frm) {
             frm.refresh_field(table_name);
         }
     });
+}
+function make_rating_criteria_readonly(frm) {
+    /**
+     * Makes the rating_criteria table read-only in the Appraisal Template doctype.
+     */
+    if (frm.fields_dict["rating_criteria"]) {
+        frm.fields_dict["rating_criteria"].grid.cannot_add_rows = true;
+        frm.fields_dict["rating_criteria"].grid.cannot_delete_rows = true;
+        frm.fields_dict["rating_criteria"].grid.df.read_only = 1;
+        frm.refresh_field("rating_criteria");
+    }
 }
