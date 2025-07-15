@@ -178,3 +178,24 @@ def validate_offer_dates(doc, method):
     if doc.scheduled_confirmation_date and doc.final_confirmation_date:
         if getdate(doc.final_confirmation_date) <= getdate(doc.scheduled_confirmation_date):
             frappe.throw(_("Confirmation Date must be after Offer Date."))
+
+def manage_user_status(doc, method=None):
+    """
+    Automatically enable or disable a linked User account
+    based on the Employee's status.
+    - If Employee is 'Active' → Enable User
+    - If Employee is 'Inactive', 'Suspended', 'Left' → Disable User
+    """
+
+    if not doc.user_id:
+        return
+
+    user_enabled_status = frappe.db.get_value("User", doc.user_id, "enabled")
+
+    if doc.status == "Active":
+        if user_enabled_status == 0:
+            frappe.db.set_value("User", doc.user_id, "enabled", 1)
+
+    elif doc.status in ["Inactive", "Suspended", "Left"]:
+        if user_enabled_status == 1:
+            frappe.db.set_value("User", doc.user_id, "enabled", 0)
