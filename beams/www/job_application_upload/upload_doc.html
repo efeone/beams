@@ -79,6 +79,16 @@
                                 </select>
                             </div>
                         </div>
+                        <!-- Aadhaar Field (Initially Hidden) -->
+                        <div class="column" id="aadhaar-field" style="display:none;">
+                            <label for="aadhaar_number">Aadhaar Number</label>
+                            <div class="col-14">
+                                <input type="text" class="form-control" id="aadhaar_number" name="aadhaar_number"
+                                       style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;"
+                                       placeholder="Enter Aadhaar Number"  pattern="\d{12}" maxlength="12">
+                            </div>
+                        </div>
+
                         <div class="column">
                             <label for="marital_status">Maritial Status</label>
                             <select id="marital_status" name="marital_status">
@@ -88,30 +98,144 @@
                                 <option value="Widowed">Widowed</option>
                             </select>
                         </div>
+                        <div class="column"></div>
+                        <div class="column"></div>
+
                     </div>
                     <h5><b>Current Address</b></h5>
                     <div class="row tax-details">
-                        <div class="column">
-                            <label for="current_address">Current Address</label>
-                            <textarea id="current_address" name="current_address"
-                                style="width :500px; height:100px;"></textarea>
-                        </div>
+
+                          <!-- House No./Name and Period of Stay -->
+                          <div class="column">
+                              <label for="house_no">House No./Name</label>
+                              <input type="text" id="current_house_no" name="current_house_no" style="width: 90%;" />
+                          </div>
+
+                          <!-- City -->
+                          <div class="column" style="width: 100%;">
+                              <label for="city">City</label>
+                              <input type="text" id="current_city" name="current_city" style="width: 95%;" />
+                          </div>
+
+                          <!-- Post Office -->
+                          <div class="column" style="width: 100%;">
+                              <label for="perm_post_office">Post Office</label>
+                              <input type="text" id="current_perm_post_office" name="current_perm_post_office" style="width: 95%;" />
+                          </div>
+
+                          <!-- Street/Road -->
+                          <div class="column" style="width: 100%;">
+                              <label for="street">Street/Road</label>
+                              <input type="text" id="current_street" name="current_street" style="width: 95%;" />
+                          </div>
+
+                          <!-- District -->
+                          <div class="column" style="width: 100%;">
+                              <label for="district">District</label>
+                              <input type="text" id="current_district" name="current_district" style="width: 95%;" />
+                          </div>
+
+                          <!-- PIN Code -->
+                          <div class="column" style="width: 100%;">
+                              <label for="pin">PIN Code</label>
+                              <input type="text" id="current_pin" name="current_pin" maxlength="6" pattern="\d{6}"
+                                     style="width: 95%;" placeholder="Enter 6-digit PIN" />
+                          </div>
+                          <!-- Street/Road -->
+                          <div class="column" style="width: 100%;">
+                              <label for="locality">Locality/Village</label>
+                              <input type="text" id="current_locality" name="current_locality" style="width: 95%;" />
+                          </div>
+
+
+                          <!-- State -->
+                          <div class="column" style="width: 100%;">
+                              <label for="state">State</label>
+                              <input type="text" id="current_state" name="current_state" style="width: 95%;" />
+                          </div>
+
+                          <div class="column">
+                              <label for="period_years">Period of Stay</label>
+                              <div style="display: flex; gap: 5px;">
+                                  <select id="period_years" name="period_years" style="width: 30%;">
+                                      <option value="">Years</option>
+                                      {% for i in range(0, 61) %}
+                                      <option value="{{ i }}">{{ i }} Years</option>
+                                      {% endfor %}
+                                  </select>
+                                  <select id="current_period_months" name="current_period_months" style="width: 30%;">
+                                      <option value="">Months</option>
+                                      {% for i in range(0, 12) %}
+                                      <option value="{{ i }}">{{ i }} Months</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+
                     </div>
                     <h5><b>Permanent Address</b></h5>
                     <div class="row tax-details">
-                        <div>
-                            <label>
-                                <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as
-                                Current Address
-                            </label>
-                        </div>
-                        <div class="column"></div>
-                        <div class="column"></div>
-                        <div class="column">
-                            <label for="permanent_address">Permanent Address</label>
-                            <textarea id="permanent_address" name="permanent_address"
-                                style="width :500px; height:100px;"></textarea>
-                        </div>
+                      <!-- Same as Current Checkbox -->
+                      <div class="column" style="width: 100%; margin-bottom: 10px;">
+                          <label>
+                              <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as Current Address
+                          </label>
+                      </div>
+                      <div class="column"></div>
+                      <div class="column"></div>
+
+                      <!-- House No./Name and Period of Stay -->
+                      <div class="column">
+                          <label for="house_no">House No./Name</label>
+                          <input type="text" id="permanent_house_no" name="permanent_house_no" style="width: 90%;" />
+                      </div>
+
+                      <!-- City -->
+                      <div class="column" style="width: 100%;">
+                          <label for="city">City</label>
+                          <input type="text" id="permanent_city" name="permanent_city" style="width: 95%;" />
+                      </div>
+
+                      <!-- Post Office -->
+                      <div class="column" style="width: 100%;">
+                          <label for="perm_post_office">Post Office</label>
+                          <input type="text" id="permanent_perm_post_office" name="permanent_perm_post_office" style="width: 95%;" />
+                      </div>
+
+                      <!-- Street/Road -->
+                      <div class="column" style="width: 100%;">
+                          <label for="street">Street/Road</label>
+                          <input type="text" id="permanent_street" name="permanent_street" style="width: 95%;" />
+                      </div>
+
+                      <!-- District -->
+                      <div class="column" style="width: 100%;">
+                          <label for="district">District</label>
+                          <input type="text" id="permanent_district" name="permanent_district" style="width: 95%;" />
+                      </div>
+
+                      <!-- PIN Code -->
+                      <div class="column" style="width: 100%;">
+                          <label for="pin">PIN Code</label>
+                          <input type="text" id="permanent_pin" name="permanent_pin" maxlength="6" pattern="\d{6}"
+                                 style="width: 95%;" placeholder="Enter 6-digit PIN" />
+                      </div>
+                      <!-- Street/Road -->
+                      <div class="column" style="width: 100%;">
+                          <label for="locality">Locality/Village</label>
+                          <input type="text" id="permanent_locality" name="permanent_locality" style="width: 95%;" />
+                      </div>
+
+
+                      <!-- State -->
+                      <div class="column" style="width: 100%;">
+                          <label for="state">State</label>
+                          <input type="text" id="permanent_state" name="permanent_state" style="width: 95%;" />
+                      </div>
+
+                      <div class="column">
+                      </div>
+
                     </div>
                     <h5><b>Contact Details</h5></b>
                     <div class="row tax-details">
@@ -139,8 +263,8 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Name of Course & University</th>
-                                    <th>Name & Location of Institute</th>
+                                    <th>Course</th>
+                                    <th>Name of School/ College Name of University/ Board of Exam </th>
                                     <th>Date Attended From</th>
                                     <th>Date Attended To</th>
                                     <th>Result(%)</th>
@@ -226,70 +350,49 @@
                             <input type="text" id="name_of_employer" name="name_of_employer">
                         </div>
                         <div class="column">
-                            <label for="current_designation">Designation</label>
-                            <input type="text" id="current_designation" name="current_designation">
-                        </div>
-                        <div class="column">
                             <label for="current_department">Department</label>
                             <input type="text" id="current_department" name="current_department">
+                        </div>
+                        <div class="column">
+                            <label for="current_designation">Designation</label>
+                            <input type="text" id="current_designation" name="current_designation">
                         </div>
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="manager_name">Manager's Name</label>
+                            <label for="reports_to">Reports To</label>
+                            <input type="text" id="reports_to" name="reports_to"placeholder="CEO,CFO,Accounts Manager,Chief Editor....">
+                        </div>
+                        <div class="column">
+                        </div>
+                        <div class="column">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="manager_name">Name</label>
                             <input type="text" id="manager_name" name="manager_name">
                         </div>
                         <div class="column">
-                            <label for="manager_contact_no">Manager's Contact No</label>
+                            <label for="manager_contact_no">Contact No</label>
                             <input type="tel" id="manager_contact_no" name="manager_contact_no" pattern="[0-9]{10}"
                                 title="Please enter a valid 10-digit mobile number">
                         </div>
                         <div class="column">
-                            <label for="manager_email">Manager's Email</label>
+                            <label for="manager_email">Email</label>
                             <input type="email" id="manager_email" name="manager_email">
                         </div>
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="employment_period_from">Employment Period From</label>
-                            <input type="text" id="employment_period_from" name="employment_period_from" maxlength="4"
-                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
-                            <label for="employment_period_to">Employment Period To</label>
-                            <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4"
-                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
                             <label for="reference_taken">Can a Reference be Taken Now?</label>
                             <select id="reference_taken" name="reference_taken">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
-                            </select>
-                        </div>
-                        <div class="column">
-                            <label for="address_of_employer">Address of Employer</label>
-                            <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
-                        </div>
-                        <div class="column">
-                            <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
-                            <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4"
-                                cols="50"></textarea>
-                        </div>
-
-                        <div class="column">
-                            <label for="reason_for_leaving">Reasons for leaving</label>
-                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column" style="max-width: 250px;">
-                            <label for="was_this_position">Current Employment Type</label>
-                            <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()"
-                                style="width: 90%;">
-                                <option value="Permanent">Permanent</option>
-                                <option value="Temporary">Temporary</option>
-                                <option value="Contractual">Contractual</option>
                             </select>
                         </div>
                     </div>
@@ -381,9 +484,6 @@
                             <input type="number" id="expected_salary" name="expected_salary">
                         </div>
                         <div class="column">
-                            <label for="telephone-no">Telephone No</label>
-                            <input type="text" name="telphone" id="telephone_number" maxlength="12"
-                                placeholder="eg : 0496 2839568" />
                         </div>
                     </div>
                     <div class="row">
@@ -568,6 +668,12 @@
                                 cols="90"></textarea>
                         </div>
                     </div>
+                    <!-- Section for Additional Comments -->
+                    <h5><b>Share Your Thoughts</b></h5>
+                    <hr>
+                    <div class="row">
+                        <textarea name="additional_comments" id="additional_comments" rows="4" style="width: 100%;" placeholder="You may include any remarks or suggestions here..."></textarea>
+                    </div>
                     <h5><b>Declaration and Authorization </h3></b>
                         <hr>
                         </hr>
@@ -600,6 +706,41 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const countrySelect = document.getElementById('country');
+            const aadhaarField = document.getElementById('aadhaar-field');
+            const aadhaarInput = document.getElementById('aadhaar_number');
+            const form = document.querySelector('form');
+
+            // Show/hide Aadhaar field based on country
+            countrySelect.addEventListener('change', function () {
+                if (this.value === "India") {
+                    aadhaarField.style.display = "block";
+                } else {
+                    aadhaarField.style.display = "none";
+                    aadhaarInput.value = "";
+                }
+            });
+
+            // Block all non-numeric input on Aadhaar field
+            aadhaarInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '');  // Remove non-digits
+            });
+
+            // Validate Aadhaar on submit
+            form.addEventListener('submit', function (e) {
+                if (countrySelect.value === "India") {
+                    const aadhaar = aadhaarInput.value.trim();
+                    if (!/^\d{12}$/.test(aadhaar)) {
+                        e.preventDefault();
+                        alert("Please enter a valid 12-digit Aadhaar number (numbers only).");
+                        aadhaarInput.focus();
+                    }
+                }
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
             const minExperience = parseInt(document.getElementById("min_experience").value, 10);
             const currentEmployerTab = document.getElementById("currentEmployerTab");
@@ -649,22 +790,27 @@
         function copyCurrentAddress() {
             const checkbox = document.getElementById("same_as_current");
 
-            // Get the current address section fields
-            const currentAddress = document.getElementById("current_address").value;
-            // Get the permanent address section fields
-            const permanentAddress = document.getElementById("permanent_address");
-            if (!currentAddress || !permanentAddress) {
-                return;
-            }
+            const fields = [
+                "house_no",
+                "city",
+                "perm_post_office",
+                "street",
+                "district",
+                "pin",
+                "locality",
+                "state",
+            ];
 
-            // If the checkbox is checked, copy values from current address fields
-            if (checkbox.checked) {
-                permanentAddress.value = currentAddress;
-            } else {
-                // Clear the permanent address fields if unchecked
-                permanentAddress.value = "";
-            }
+            fields.forEach(field => {
+                const currentField = document.getElementById("current_" + field);
+                const permanentField = document.getElementById("permanent_" + field);
+
+                if (currentField && permanentField) {
+                    permanentField.value = checkbox.checked ? currentField.value : "";
+                }
+            });
         }
+
 
         // Function to toggle visibility based on checkbox state
         function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
