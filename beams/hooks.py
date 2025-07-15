@@ -67,7 +67,8 @@ doctype_js = {
     "Full and Final Statement":"beams/custom_scripts/full_and_final_statement/full_and_final_statement.js",
     "Vehicle":"beams/custom_scripts/vehicle/vehicle.js",
     "Material Request":"beams/custom_scripts/material_request/material_request.js",
-    "Asset":"beams/custom_scripts/asset/asset.js"
+    "Asset":"beams/custom_scripts/asset/asset.js",
+    "Payroll Entry":"beams/custom_scripts/payroll_entry/payroll_entry.js"
 }
 doctype_list_js = {
     "Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
