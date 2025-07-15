@@ -14,17 +14,16 @@ frappe.ui.form.on('Payroll Entry', {
 	}
 });
 
-/**
- * Set the start and end dates to cover the previous month
- * relative to the selected `posting_date`.
- */
 function set_previous_month_dates(frm) {
+	/**
+	* Set the start and end dates to cover the previous month
+	* relative to the selected `posting_date`.
+	*/
 	if (!frm.doc.posting_date) {
 		return;
 	}
 	
 	let posting_date = frappe.datetime.str_to_obj(frm.doc.posting_date);
-	
 	let prev_year = posting_date.getFullYear();
 	let prev_month = posting_date.getMonth() - 1;
 	
@@ -35,7 +34,6 @@ function set_previous_month_dates(frm) {
 	
 	let start_date = new Date(prev_year, prev_month, 1);
 	let end_date = new Date(prev_year, prev_month + 1, 0);
-	
 	let start_date_formatted = frappe.datetime.obj_to_str(start_date);
 	let end_date_formatted = frappe.datetime.obj_to_str(end_date);
 	
