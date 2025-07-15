@@ -282,10 +282,11 @@ doc_events = {
     "Employee" : {
         "autoname": "beams.beams.custom_scripts.employee.employee.autoname",
         "after_insert": "beams.beams.custom_scripts.employee.employee.after_insert",
+        "before_validate": "beams.beams.custom_scripts.employee.employee.manage_user_status",
         "validate":  [
             "beams.beams.custom_scripts.employee.employee.validate",
             "beams.beams.custom_scripts.employee.employee.validate_offer_dates"
-        ],
+        ]
     },
     "Job Offer" : {
         "on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
