@@ -207,16 +207,34 @@ def add_to_category_details(parent_docname, category, remarks):
 	"""
 	Adds a new row with category details (category, remarks, employee, designation)
 	to the category_details child table of an Appraisal document and saves it.
+	The employee and designation are fetched from the session user.
 	"""
 	try:
-		parent_doc = frappe.get_doc("Appraisal", parent_docname)
-		employee = parent_doc.employee
-		designation = parent_doc.designation
+		# Get current user
+		current_user = frappe.session.user
 
+		# Get Employee document linked to current user
+		employee_doc = frappe.get_all(
+			"Employee",
+			filters={"user_id": current_user},
+			fields=["name", "designation"],
+			limit=1
+		)
+
+		if not employee_doc:
+			frappe.throw(f"No Employee linked to user {current_user}")
+
+		employee_name = employee_doc[0].name
+		designation = employee_doc[0].designation
+
+		# Get Appraisal document
+		parent_doc = frappe.get_doc("Appraisal", parent_docname)
+
+		# Append new category details row
 		parent_doc.append("category_details", {
 			"category": category,
 			"remarks": remarks,
-			"employee": employee,
+			"employee": employee_name,
 			"designation": designation
 		})
 
@@ -511,7 +529,7 @@ def set_self_appraisal(doc, method=None):
 				"per_weightage": row.per_weightage
 			})
 
-	# --- Department Rating Criteria 
+	# --- Department Rating Criteria
 	if doc.dept_self_kra_rating == []:
 		for row in template_doc.department_rating_criteria:
 			doc.append("dept_self_kra_rating", {
