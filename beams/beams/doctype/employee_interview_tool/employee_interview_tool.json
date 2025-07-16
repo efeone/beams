@@ -1,0 +1,120 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-07-15 13:24:02.959798",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "date",
+  "company",
+  "branch",
+  "job_opening",
+  "interview_round",
+  "column_break_zrwf",
+  "department",
+  "designation",
+  "scheduled_on",
+  "from_time",
+  "to_time",
+  "section_break_mim4",
+  "job_applicants"
+ ],
+ "fields": [
+  {
+   "default": "Today",
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "label": "Company",
+   "options": "Company"
+  },
+  {
+   "fieldname": "branch",
+   "fieldtype": "Link",
+   "label": "Branch",
+   "options": "Branch"
+  },
+  {
+   "fieldname": "job_opening",
+   "fieldtype": "Link",
+   "label": "Job Opening",
+   "options": "Job Opening"
+  },
+  {
+   "fieldname": "interview_round",
+   "fieldtype": "Link",
+   "label": "Interview Round",
+   "options": "Interview Round"
+  },
+  {
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "label": "Department",
+   "options": "Department"
+  },
+  {
+   "fieldname": "designation",
+   "fieldtype": "Link",
+   "label": "Designation",
+   "options": "Designation"
+  },
+  {
+   "fieldname": "scheduled_on",
+   "fieldtype": "Date",
+   "label": "Scheduled On"
+  },
+  {
+   "fieldname": "from_time",
+   "fieldtype": "Time",
+   "label": "From time "
+  },
+  {
+   "fieldname": "to_time",
+   "fieldtype": "Time",
+   "label": "To Time"
+  },
+  {
+   "fieldname": "job_applicants",
+   "fieldtype": "Table",
+   "label": "Job Applicants",
+   "options": "Job Applicant Interview Detail"
+  },
+  {
+   "fieldname": "column_break_zrwf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_mim4",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2025-07-15 14:14:58.220822",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Interview Tool",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
