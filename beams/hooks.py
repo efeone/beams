@@ -503,4 +503,10 @@ override_doctype_dashboards = {
 # "Logging DocType Name": 30  # days to retain logs
 # }
 fixtures = [
+    {
+        "dt": "Custom HTML Block",
+        "filters": [
+            ["name", "in", ["Media One HR", "Employee View"]]
+        ]
+    }
 ]

@@ -3173,6 +3173,13 @@ def get_appraisal_template_custom_fields():
 				"fieldtype": "Data",
 				"label": "Label for Company KRA",
 				"insert_after": "company_rating_criteria"
+			},
+			{
+				"fieldname": "assessment_officers",
+				"fieldtype": "Table",
+				"label": "Assessment Officers",
+				"options": "Assessment Officer",
+				"insert_after": "label_for_company_kra"
 			}
 		]
 	}
