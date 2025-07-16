@@ -1,0 +1,100 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:IP-{YY}-{#####}",
+ "creation": "2025-06-04 11:33:45.729290",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "employee_in_charge",
+  "assets",
+  "scan_asset",
+  "column_break_q4do",
+  "posting_date_and_time",
+  "bundles",
+  "scan_bundle",
+  "section_break_d447",
+  "stock_items"
+ ],
+ "fields": [
+  {
+   "fieldname": "employee_in_charge",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Employee in Charge",
+   "options": "Employee",
+   "reqd": 1
+  },
+  {
+   "fieldname": "assets",
+   "fieldtype": "Table MultiSelect",
+   "label": "Assets",
+   "options": "Assets",
+   "reqd": 1
+  },
+  {
+   "fieldname": "scan_asset",
+   "fieldtype": "Data",
+   "label": "Scan Asset",
+   "options": "Barcode"
+  },
+  {
+   "fieldname": "posting_date_and_time",
+   "fieldtype": "Datetime",
+   "in_list_view": 1,
+   "label": "Posting Date and Time",
+   "reqd": 1
+  },
+  {
+   "fieldname": "bundles",
+   "fieldtype": "Table MultiSelect",
+   "label": "Bundles",
+   "options": "Bundles"
+  },
+  {
+   "fieldname": "scan_bundle",
+   "fieldtype": "Data",
+   "label": "Scan Bundle",
+   "options": "Barcode"
+  },
+  {
+   "fieldname": "stock_items",
+   "fieldtype": "Table",
+   "label": "Stock Items",
+   "options": "Asset Bundle Stock Item"
+  },
+  {
+   "fieldname": "column_break_q4do",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_d447",
+   "fieldtype": "Section Break"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-06-04 12:13:06.801047",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Inward Pass",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
