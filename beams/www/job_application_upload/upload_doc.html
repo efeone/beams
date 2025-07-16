@@ -264,7 +264,8 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Course</th>
-                                    <th>Name of School/ College Name of University/ Board of Exam </th>
+                                    <th>Name of School/ College </th>
+                                    <th>Name of University/ Board of Exam </th>
                                     <th>Date Attended From</th>
                                     <th>Date Attended To</th>
                                     <th>Result(%)</th>
@@ -279,6 +280,8 @@
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="institution_location_1"
                                             class="name_location_of_institution" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="university_1"
+                                            class="name_university_of_institution" style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
                                             placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
                                             style="background-color: #fff;"></td>
@@ -394,6 +397,37 @@
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="address_of_employer">Address of Employer</label>
+                            <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                        </div>
+                        <div class="column">
+                            <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
+                            <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4"
+                                cols="50"></textarea>
+                        </div>
+
+                        <div class="column">
+                            <label for="reason_for_leaving">Reasons for leaving</label>
+                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column" style="max-width: 250px;">
+                            <label for="was_this_position">Current Employment Type</label>
+                            <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()"
+                                style="width: 90%;">
+                                <option value="Permanent">Permanent</option>
+                                <option value="Temporary">Temporary</option>
+                                <option value="Contractual">Contractual</option>
+                            </select>
+                        </div>
+                        <div class="column">
+                        </div>
+                        <div class="column">
                         </div>
                     </div>
                     <div class="row">
@@ -877,6 +911,11 @@
             tabButtons[index].classList.add('active');
         }
 
+        // Function to validate digits (year input)
+        function validateDigits(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 4);
+        }
+
         // Function to add a new row in the Education Qualifications table
         function addRow_educ(tableId) {
             var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
@@ -884,25 +923,29 @@
             var row = table.insertRow(rowCount);
 
             // Insert cells and their contents
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-            var cell5 = row.insertCell(4);
-            var cell6 = row.insertCell(5);
-            var cell7 = row.insertCell(6);
-            var cell8 = row.insertCell(7);
+            var cell1 = row.insertCell(0); // No
+            var cell2 = row.insertCell(1); // Course
+            var cell3 = row.insertCell(2); // Name of School/College
+            var cell4 = row.insertCell(3); // Name of University/Board of Exam
+            var cell5 = row.insertCell(4); // Date Attended From
+            var cell6 = row.insertCell(5); // Date Attended To
+            var cell7 = row.insertCell(6); // Result
+            var cell8 = row.insertCell(7); // Attachment
+            var cell9 = row.insertCell(8); // Delete Button
 
-            // Add content to cells
-            cell1.innerHTML = rowCount + 1;
-            cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" style="background-color: #fff;" >';
-            cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" style="background-color: #fff;">';
-            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
-            cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
-            cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result"  style="background-color: #fff;">';
-            cell7.innerHTML = '<input type="file" name=qualification_file[] class="file"  style="background-color: #fff;">';
-            cell8.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
+            var index = rowCount + 1;
+
+            cell1.innerHTML = index;
+            cell2.innerHTML = `<input type="text" name="course_university_${index}[]" class="name_of_course_university" style="background-color: #fff;">`;
+            cell3.innerHTML = `<input type="text" name="institution_location_${index}[]" class="name_location_of_institution" style="background-color: #fff;">`;
+            cell4.innerHTML = `<input type="text" name="university_${index}[]" class="name_university_of_institution" style="background-color: #fff;">`;
+            cell5.innerHTML = `<input type="text" name="date_from_${index}[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
+            cell6.innerHTML = `<input type="text" name="date_to_${index}[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
+            cell7.innerHTML = `<input type="number" step="0.01" name="results_${index}[]" class="result" style="background-color: #fff;">`;
+            cell8.innerHTML = `<input type="file" name="qualification_file_${index}[]" class="file" style="background-color: #fff;">`;
+            cell9.innerHTML = `<button type="button" onclick="removeRow(this)">Delete</button>`;
         }
+
         function removeRow(button) {
             const row = button.closest("tr");
             const tbody = row.parentNode;
