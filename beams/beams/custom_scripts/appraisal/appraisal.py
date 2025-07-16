@@ -436,61 +436,6 @@ def set_category_based_on_marks(doc, method):
 		doc.category_based_on_marks = category
 
 
-@frappe.whitelist()
-def send_assessment_reminder(doc):
-	"""
-	Sends an email notification and Notification Log to the Assessment Officer to review the appraisal.
-	"""
-	appraisal = frappe.get_doc("Appraisal", doc)
-	assessment_officer_id = frappe.db.get_value("Employee", appraisal.employee, "assessment_officer")
-
-	if not assessment_officer_id:
-		frappe.throw(f"Assessment Officer not set for employee {appraisal.employee}")
-
-	user_id, officer_name = frappe.db.get_value("Employee", assessment_officer_id, ["user_id", "employee_name"])
-	if not user_id:
-		frappe.throw(f"No User ID found for assessment officer {assessment_officer_id}")
-
-	email_id = frappe.db.get_value("User", user_id, "email")
-	if not email_id:
-		frappe.throw(f"No Email ID found for user {user_id}")
-
-	# Fetch Email Template from settings
-	template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
-	if not template_name:
-		frappe.throw("Please set 'Assessment Reminder Template' in Beams HR Settings.")
-
-	template = frappe.get_doc("Email Template", template_name)
-	context = {
-		"doc": appraisal,
-		"employee_name": appraisal.employee_name,
-		"officer_name": officer_name,
-	}
-	subject = frappe.render_template(template.subject or '', context)
-	message = frappe.render_template(template.response or template.message or '', context)
-
-	# Send Email
-	frappe.sendmail(
-		recipients=email_id,
-		subject=subject,
-		message=message
-	)
-
-	# Notification Log
-	frappe.get_doc({
-		"doctype": "Notification Log",
-		"subject": subject,
-		"for_user": user_id,
-		"type": "Alert",
-		"document_type": "Appraisal",
-		"document_name": appraisal.name,
-		"from_user": frappe.session.user,
-		"email_content": message
-	}).insert(ignore_permissions=True)
-
-	frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
-	return {"status": "ok"}
-
 def set_self_appraisal(doc, method=None):
 	"""
 	Set self appraisal criteria based on the selected Appraisal Template.
@@ -526,3 +471,13 @@ def set_self_appraisal(doc, method=None):
 				"criteria": row.criteria,
 				"per_weightage": row.per_weightage
 			})
+
+@frappe.whitelist()
+def check_feedback_exists(appraisal_name, assessment_officer_user_id, employee):
+    """Check if the assessment officer (by user ID) has submitted feedback for the appraisal."""
+    return bool(frappe.db.exists("Employee Performance Feedback", {
+        "appraisal": appraisal_name,
+        "employee": employee,
+        "reviewer": assessment_officer_user_id  
+    }))
+

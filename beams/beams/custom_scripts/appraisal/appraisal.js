@@ -150,7 +150,7 @@ frappe.ui.form.on('Appraisal', {
 
             // Button click event for adding a category
             $('#add_category_button').on('click', function () {
-                frm.events.open_add_category_dialog(frm);
+                frm.events.show_add_category_dialog(frm);
             });
         }
         // Hide the chart by targeting its container
@@ -412,18 +412,6 @@ frappe.ui.form.on('Appraisal', {
                       callback(res) {
                           if (res.message === "Success") {
                               frappe.msgprint(__('Category successfully added to Category Details.'));
-
-                              // Notify assessment officer
-                              frappe.call({
-                                  method: "beams.beams.custom_scripts.appraisal.appraisal.send_assessment_reminder",
-                                  args: { doc: frm.doc.name },
-                                  callback(response) {
-                                      if (!response.exc) {
-                                          frappe.msgprint(__('Notification sent to Assessment Officer.'));
-                                      }
-                                  }
-                              });
-
                               frm.reload_doc();
                               dialog.hide();
                           } else {
@@ -439,6 +427,42 @@ frappe.ui.form.on('Appraisal', {
 
       dialog.show();
   },
+    show_add_category_dialog: function (frm) {
+        /**
+        * Shows the "Add Category" dialog if the user is permitted and feedback exists.
+        * For assessmnet officer
+        */
+        const current_user = frappe.session.user;
+
+        frappe.db.get_value("Employee", { user_id: current_user }, ["name"]).then(emp_res => {
+            const current_emp_id = emp_res.message?.name;
+
+            frappe.db.get_value("Employee", frm.doc.employee, ["assessment_officer"]).then(res => {
+                const assigned_officer = res.message?.assessment_officer;
+                if (current_emp_id === assigned_officer) {
+                    frappe.call({
+                        method: "beams.beams.custom_scripts.appraisal.appraisal.check_feedback_exists",
+                        args: {
+                            appraisal_name: frm.doc.name,
+                            assessment_officer_user_id: current_user, 
+                            employee: frm.doc.employee
+                        },
+                        callback: function (res) {
+                            console.log("Feedback Exists Response:", res.message);
+                            if (res.message) {
+                                frm.events.open_add_category_dialog(frm);
+                            } else {
+                                frappe.msgprint(__('You must add performance feedback before adding a category.'));
+                            }
+                        }
+                    });
+                } else {
+                    frm.events.open_add_category_dialog(frm);
+                }
+            });
+        });
+    },
+
 
  //Updates or clears child tables based on the selected appraisal template by fetching and populating criteria data
   appraisal_template: function (frm) {
