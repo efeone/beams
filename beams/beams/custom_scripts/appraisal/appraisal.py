@@ -5,6 +5,7 @@ import frappe
 from frappe import _
 from frappe.utils import get_link_to_form
 from six import string_types
+from frappe.utils import get_fullname
 
 
 def validate_kra_marks(doc, method):
@@ -229,6 +230,9 @@ def add_to_category_details(parent_docname, category, remarks):
 
 		# Get Appraisal document
 		parent_doc = frappe.get_doc("Appraisal", parent_docname)
+		for row in parent_doc.category_details:
+			if row.employee == employee_name:
+				frappe.throw(_("You have already added a category."))
 
 		# Append new category details row
 		parent_doc.append("category_details", {
@@ -309,7 +313,7 @@ def check_existing_event(appraisal_reference):
 	return event if event else None
 
 @frappe.whitelist()
-def assign_tasks_sequentially(doc):
+def notify_assestment_officer(doc):
 	"""
 	Sends an email notification to the assessment officer to review the appraisal.
 	"""
@@ -499,3 +503,55 @@ def check_feedback_exists(appraisal_name, assessment_officer_user_id, employee):
         "reviewer": assessment_officer_user_id  
     }))
 
+
+@frappe.whitelist()
+def send_next_officer_notification(appraisal_name):
+    """
+    Sends a notification to the next assessment officer (based on sequence)
+    who has not yet provided feedback in the given Appraisal.
+    Args:
+        appraisal_name (str): The name (ID) of the Appraisal document.
+    """
+    appraisal = frappe.get_doc("Appraisal", appraisal_name)
+    if not appraisal.appraisal_template:
+        return "No Appraisal Template"
+    officers = frappe.get_all(
+        "Assessment Officer",
+        filters={"parent": appraisal.appraisal_template},
+        fields=["assessment_officer"],
+        order_by="idx asc"
+    )
+    officer_list = [o.assessment_officer for o in officers if o.assessment_officer]
+    added_officers = []
+    for row in appraisal.category_details or []:
+        if not row.employee:
+            continue
+        user_id = frappe.db.get_value("Employee", row.employee, "user_id")
+        if user_id in officer_list and user_id not in added_officers:
+            added_officers.append(user_id)
+    for officer in officer_list:
+        if officer not in added_officers:
+            fullname = get_fullname(officer)
+            template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
+            if not template_name:
+                frappe.throw(_("Please set 'Assessment Reminder Template' in Beams HR Settings."))
+            template = frappe.get_doc("Email Template", template_name)
+            context = {
+                "doc": appraisal,
+                "employee_name": appraisal.employee_name,
+                "officer_name": fullname
+            }
+            subject = frappe.render_template(template.subject or "", context)
+            email_content = frappe.render_template(template.response or template.message or "", context)
+            log = frappe.get_doc({
+                "doctype": "Notification Log",
+                "subject": subject,
+                "for_user": officer,
+                "type": "Alert",
+                "document_type": "Appraisal",
+                "document_name": appraisal.name,
+                "from_user": frappe.session.user,
+                "email_content": email_content
+            }).insert(ignore_permissions=True)
+            return f"Notification logged for {officer}"
+    return "All officers already notified"
