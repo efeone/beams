@@ -29,7 +29,7 @@ def create_employee_feedback(data, employee , appraisal_name , feedback_exists=F
 	# If the data is a string, convert it to a dictionary
 	if isinstance(data, string_types):
 		data = frappe._dict(json.loads(data))
-		
+
 	# Fetch the feedback document if it exists, otherwise create a new one
 	if feedback_exists:
 		feedback_doc = frappe.get_doc('Employee Performance Feedback', feedback_exists)
