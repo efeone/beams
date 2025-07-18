@@ -29,6 +29,20 @@ def create_employee_feedback(data, employee , appraisal_name , feedback_exists=F
 	# If the data is a string, convert it to a dictionary
 	if isinstance(data, string_types):
 		data = frappe._dict(json.loads(data))
+	current_user = frappe.session.user
+	if not feedback_exists:
+		if not feedback_exists:
+			existing_feedback = frappe.db.exists(
+				"Employee Performance Feedback",
+				{
+					"appraisal": appraisal_name,
+					"reviewer": current_user,
+					"docstatus": 1
+				}
+			)
+			if existing_feedback:
+				frappe.throw(_("You have already submitted feedback for this appraisal."))
+
 
 	# Fetch the feedback document if it exists, otherwise create a new one
 	if feedback_exists:
