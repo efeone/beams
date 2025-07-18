@@ -29,21 +29,7 @@ def create_employee_feedback(data, employee , appraisal_name , feedback_exists=F
 	# If the data is a string, convert it to a dictionary
 	if isinstance(data, string_types):
 		data = frappe._dict(json.loads(data))
-	current_user = frappe.session.user
-	if not feedback_exists:
-		if not feedback_exists:
-			existing_feedback = frappe.db.exists(
-				"Employee Performance Feedback",
-				{
-					"appraisal": appraisal_name,
-					"reviewer": current_user,
-					"docstatus": 1
-				}
-			)
-			if existing_feedback:
-				frappe.throw(_("You have already submitted feedback for this appraisal."))
-
-
+		
 	# Fetch the feedback document if it exists, otherwise create a new one
 	if feedback_exists:
 		feedback_doc = frappe.get_doc('Employee Performance Feedback', feedback_exists)
@@ -529,13 +515,12 @@ def send_next_officer_notification(appraisal_name):
     appraisal = frappe.get_doc("Appraisal", appraisal_name)
     if not appraisal.appraisal_template:
         return "No Appraisal Template"
-    officers = frappe.get_all(
+    officer_list = frappe.db.get_all(
         "Assessment Officer",
         filters={"parent": appraisal.appraisal_template},
-        fields=["assessment_officer"],
+		pluck="assessment_officer",
         order_by="idx asc"
     )
-    officer_list = [o.assessment_officer for o in officers if o.assessment_officer]
     added_officers = []
     for row in appraisal.category_details or []:
         if not row.employee:
@@ -569,3 +554,4 @@ def send_next_officer_notification(appraisal_name):
             }).insert(ignore_permissions=True)
             return f"Notification logged for {officer}"
     return "All officers already notified"
+

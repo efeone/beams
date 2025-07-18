@@ -39,7 +39,7 @@ frappe.ui.form.on('Appraisal', {
                 }
 
                 frappe.confirm(
-                    'Do you want to send the notification for your Assessment Officer?',
+                    'Do you want to send the notification to your Assessment Officer?',
                     () => {
                         frappe.call({
                             method: "beams.beams.custom_scripts.appraisal.appraisal.notify_assestment_officer",
@@ -49,7 +49,7 @@ frappe.ui.form.on('Appraisal', {
                             },
                             callback: (response) => {
                                 if (!response.exc) {
-                                    frappe.msgprint('Notification has been Sented');
+                                    frappe.msgprint('Notification has been Sent');
                                 }
                             }
                         });
