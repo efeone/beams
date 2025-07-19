@@ -9,18 +9,20 @@
   "section_break_za7i",
   "employee",
   "employee_name",
-  "department",
   "designation",
-  "date_of_joining",
   "column_break_ohlh",
+  "date",
+  "date_of_joining",
+  "department",
+  "section_break_xlns",
   "company",
   "company_policy",
-  "date",
+  "amended_from",
   "section_break_nxcd",
-  "digital_sign",
-  "column_break_qvpd",
   "read_and_accepted",
-  "amended_from"
+  "status",
+  "column_break_qvpd",
+  "digital_sign"
  ],
  "fields": [
   {
@@ -113,12 +115,23 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "section_break_xlns",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "hidden": 1,
+   "label": "Status",
+   "options": "Draft\nAccepted"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2024-11-14 13:55:03.631141",
+ "modified": "2025-07-19 10:14:30.035277",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Company Policy Acceptance Log",
@@ -139,7 +152,13 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [
+  {
+   "color": "Blue",
+   "title": "Accepted"
+  }
+ ]
 }
