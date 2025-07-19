@@ -150,7 +150,7 @@ frappe.ui.form.on('Interview', {
 		d.show();
 		d.set_value('result', '');
 
-		frappe.db.get_value('Interview Feedback', { "job_applicant": frm.doc.job_applicant }, ['result', 'feedback'])
+		frappe.db.get_value('Interview Feedback', { "job_applicant": frm.doc.job_applicant,"interview": frm.doc.name,"interviewer": frappe.session.user}, ['result', 'feedback'])
 			.then(r => {
 				if (r && r.message) {
 					d.set_values({
