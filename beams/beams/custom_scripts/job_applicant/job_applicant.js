@@ -192,7 +192,7 @@ frappe.ui.form.on('Applicant Interview Round', {
             frappe.set_route('Form', 'Interview', row.interview_reference);
         }
         else {
-            if (frm.doc.status !== "Document Uploaded") {
+            if (!["Document Uploaded", "Interview Scheduled", "Interview Ongoing"].includes(frm.doc.status)){
                 frappe.msgprint(__('Please upload the required documents before creating or viewing an interview.'));
                 return;
             }

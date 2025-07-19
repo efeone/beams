@@ -117,8 +117,9 @@
   }
  ],
  "index_web_pages_for_search": 1,
+ "is_submittable": 1,
  "links": [],
- "modified": "2025-07-07 10:13:22.263951",
+ "modified": "2025-07-19 14:48:12.549456",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Checkin Permission",
