@@ -28,3 +28,6 @@ class CompanyPolicyAcceptanceLog(Document):
         # Ensure only the selected employee can submit
         if frappe.session.user != employee_user_id:
             frappe.throw(_("Only the selected employee can submit this document."))
+
+		# ✅ Set status to Accepted
+        self.status = "Accepted"
