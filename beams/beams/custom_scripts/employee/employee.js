@@ -19,6 +19,7 @@ frappe.ui.form.on('Employee', {
 				frm.set_value('current_address', job_applicant.current_address);
 				frm.set_value('permanent_address', job_applicant.permanent_address);
 				frm.set_value('marital_status', job_applicant.marital_status);
+				frm.set_value('aadhar_id', job_applicant.aadhar_number);
 
 				frm.refresh_fields();
 			});
