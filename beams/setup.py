@@ -3137,7 +3137,8 @@ def get_employee_separation_custom_fields():
 				"fieldtype": "Select",
 				"label": "Employee Exit Clearance Status",
 				"options":"Pending\nCompleted",
-				"insert_after": "employee_clearance"
+				"insert_after": "employee_clearance",
+				"read_only": 1
 			}
 		]
 	}
@@ -4200,6 +4201,14 @@ def get_property_setters():
 			"property": "fetch_from",
 			"value": "job_description_template.description"
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee Clearance",
+			"field_name": "status",
+			"property": "read_only",
+			"property_type": "Select",
+			"value": 1
+		},
 	]
 
 def get_material_request_custom_fields():
@@ -4482,22 +4491,22 @@ def get_training_event_employee_custom_fields():
 	}
 
 def get_training_event_custom_fields():
-    '''
-    Custom fields to be added to the Training Event Doctype
-    '''
-    return {
-        "Training Event": [
-           {
-                "fieldname": "training_request",
-                "fieldtype": "Link",
-                "label": "Training Request",
-                "options": "Training Request",
-                "insert_after": "company",
-                "hidden": 1
+	'''
+	Custom fields to be added to the Training Event Doctype
+	'''
+	return {
+		"Training Event": [
+		   {
+				"fieldname": "training_request",
+				"fieldtype": "Link",
+				"label": "Training Request",
+				"options": "Training Request",
+				"insert_after": "company",
+				"hidden": 1
 
-            }
-        ]
-    }
+			}
+		]
+	}
 
 def get_beams_roles():
 	'''
