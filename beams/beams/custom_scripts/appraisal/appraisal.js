@@ -20,16 +20,41 @@ frappe.ui.form.on('Appraisal', {
         // Show "New Feedback" button only if the user is an assessment officer and not the appraised employee, before submission
         if (!frm.is_new() && frm.doc.docstatus !== 1) {
             let user = frappe.session.user;
-            frappe.db.get_value('Employee', { 'user_id': user }, ['name', 'assessment_officer']).then(r => {
-                let employee = r.message?.name;
-                let is_assessment_officer = r.message?.assessment_officer;
-                if (frm.doc.employee !== employee && is_assessment_officer) {
-                    frm.add_custom_button(__('New Feedback'), function () {
-                        frm.events.show_feedback_dialog(frm);
-                    });
+    frappe.db.get_value('Employee', { 'user_id': user }, ['name', 'assessment_officer']).then(res => {
+        let employee = res.message?.name;
+        let is_assessment_officer = res.message?.assessment_officer;
+        if (frm.doc.employee !== employee && is_assessment_officer) {
+            // Check if feedback exists
+            frappe.call({
+                method: 'beams.beams.custom_scripts.appraisal.appraisal.get_feedback_for_appraisal',
+                args: { appraisal_name: frm.doc.name },
+                callback: function (r) {
+                    const feedback_name = r.message;
+
+                    if (!feedback_name) {
+                        // No feedback exists → show New Feedback button
+                        frm.add_custom_button(__('New Feedback'), () => {
+                            frm.events.show_feedback_dialog(frm);
+                        });
+                    } else {
+                        // Check docstatus of existing feedback
+                        frappe.db.get_value('Employee Performance Feedback', feedback_name, 'docstatus').then(val => {
+                            const docstatus = val.message?.docstatus;
+
+                            if (docstatus === 0) {
+                                // Draft feedback exists → show Edit button
+                                frm.add_custom_button(__('Edit Feedback'), () => {
+                                    frm.events.show_feedback_dialog(frm);
+                                });
+                            }
+                            // If docstatus === 1 (submitted), show nothing
+                        });
+                    }
                 }
             });
         }
+    });
+}
 
         if (!frm.is_new() && frm.doc.category_details.length <= 0) {
             frm.add_custom_button(__('Assessment Officers'), function () {
@@ -177,220 +202,260 @@ frappe.ui.form.on('Appraisal', {
         }
     },
 
-    show_feedback_dialog: function (frm) {
-        let dialog = new frappe.ui.Dialog({
-            title: 'New Feedback',
-            fields: [
-                {
-                    label: 'Employee Criteria',
-                    fieldname: 'employee_criteria',
-                    fieldtype: 'Table',
-                    fields: [
-                        {
-                            label: 'Criteria',
-                            fieldname: 'criteria',
-                            fieldtype: 'Link',
-                            options: 'Employee Feedback Criteria',
-                            in_list_view: 1,
-                            reqd: 1,
-                            read_only: 1,
-                            columns: 3
-                        },
-                        {
-                            label: 'Goals',
-                            fieldname: 'goals',
-                            fieldtype: 'Text Editor',
-                            in_list_view: 1,
-                            read_only: 1,
-                            columns: 3
-                        },
-                        {
-                            label: 'Weightage(%)',
-                            fieldname: 'per_weightage',
-                            fieldtype: 'Percent',
-                            in_list_view: 1,
-                            columns: 2,
-                            read_only: 1,
-                            reqd: 1
-                        },
-                        {
-                            label: 'Marks (out of 5)',
-                            fieldname: 'marks',
-                            fieldtype: 'Float',
-                            in_list_view: 1,
-                            reqd: 1,
-                            columns: 2,
-                            description: 'Enter Marks (0 - 5)'
-                        },
-                    ],
+   show_feedback_dialog: function (frm) {
+    let dialog = new frappe.ui.Dialog({
+        title: 'New Feedback',
+        fields: [
+            {
+                label: 'Employee Criteria',
+                fieldname: 'employee_criteria',
+                fieldtype: 'Table',
+                fields: [
+                    {
+                        label: 'Criteria',
+                        fieldname: 'criteria',
+                        fieldtype: 'Link',
+                        options: 'Employee Feedback Criteria',
+                        in_list_view: 1,
+                        reqd: 1,
+                        read_only: 1,
+                        columns: 3
+                    },
+                    {
+                        label: 'Goals',
+                        fieldname: 'goals',
+                        fieldtype: 'Text Editor',
+                        in_list_view: 1,
+                        read_only: 1,
+                        columns: 3
+                    },
+                    {
+                        label: 'Weightage(%)',
+                        fieldname: 'per_weightage',
+                        fieldtype: 'Percent',
+                        in_list_view: 1,
+                        columns: 2,
+                        read_only: 1,
+                        reqd: 1
+                    },
+                    {
+                        label: 'Marks (out of 5)',
+                        fieldname: 'marks',
+                        fieldtype: 'Float',
+                        in_list_view: 1,
+                        reqd: 1,
+                        columns: 2,
+                        description: 'Enter Marks (0 - 5)'
+                    },
+                ],
                     cannot_add_rows: true, // Disable adding rows manually
-                },
-                {
-                    label: 'Department Criteria',
-                    fieldname: 'department_criteria',
-                    fieldtype: 'Table',
-                    fields: [
-                        {
-                            label: 'Criteria',
-                            fieldname: 'criteria',
-                            fieldtype: 'Link',
-                            options: 'Employee Feedback Criteria',
-                            in_list_view: 1,
-                            read_only: 1,
-                            reqd: 1,
-                        },
-                        {
-                            label: 'Weightage(%)',
-                            fieldname: 'per_weightage',
-                            fieldtype: 'Percent',
-                            in_list_view: 1,
-                            read_only: 1,
-                            reqd: 1,
-                        },
-                        {
-                            label: 'Marks (out of 5)',
-                            fieldname: 'marks',
-                            fieldtype: 'Float',
-                            in_list_view: 1,
-                            reqd: 1,
-                            description: 'Enter Marks (0 - 5)',
-                        },
-                    ],
+            },
+            {
+                label: 'Department Criteria',
+                fieldname: 'department_criteria',
+                fieldtype: 'Table',
+                fields: [
+                    {
+                        label: 'Criteria',
+                        fieldname: 'criteria',
+                        fieldtype: 'Link',
+                        options: 'Employee Feedback Criteria',
+                        in_list_view: 1,
+                        read_only: 1,
+                        reqd: 1,
+                    },
+                    {
+                        label: 'Weightage(%)',
+                        fieldname: 'per_weightage',
+                        fieldtype: 'Percent',
+                        in_list_view: 1,
+                        read_only: 1,
+                        reqd: 1,
+                    },
+                    {
+                        label: 'Marks (out of 5)',
+                        fieldname: 'marks',
+                        fieldtype: 'Float',
+                        in_list_view: 1,
+                        reqd: 1,
+                        description: 'Enter Marks (0 - 5)',
+                    },
+                ],
                     cannot_add_rows: true, // Disable adding rows manually
-                },
-                {
-                    label: 'Company Criteria',
-                    fieldname: 'company_criteria',
-                    fieldtype: 'Table',
-                    fields: [
-                        {
-                            label: 'Criteria',
-                            fieldname: 'criteria',
-                            fieldtype: 'Link',
-                            options: 'Employee Feedback Criteria',
-                            in_list_view: 1,
-                            read_only: 1,
-                            reqd: 1,
-                        },
-                        {
-                            label: 'Weightage(%)',
-                            fieldname: 'per_weightage',
-                            fieldtype: 'Percent',
-                            in_list_view: 1,
-                            read_only: 1,
-                            reqd: 1,
-                        },
-                        {
-                            label: 'Marks (out of 5)',
-                            fieldname: 'marks',
-                            fieldtype: 'Float',
-                            in_list_view: 1,
-                            reqd: 1,
-                            description: 'Enter Marks (0 - 5)',
-                        },
-                    ],
+            },
+            {
+                label: 'Company Criteria',
+                fieldname: 'company_criteria',
+                fieldtype: 'Table',
+                fields: [
+                    {
+                        label: 'Criteria',
+                        fieldname: 'criteria',
+                        fieldtype: 'Link',
+                        options: 'Employee Feedback Criteria',
+                        in_list_view: 1,
+                        read_only: 1,
+                        reqd: 1,
+                    },
+                    {
+                        label: 'Weightage(%)',
+                        fieldname: 'per_weightage',
+                        fieldtype: 'Percent',
+                        in_list_view: 1,
+                        read_only: 1,
+                        reqd: 1,
+                    },
+                    {
+                        label: 'Marks (out of 5)',
+                        fieldname: 'marks',
+                        fieldtype: 'Float',
+                        in_list_view: 1,
+                        reqd: 1,
+                        description: 'Enter Marks (0 - 5)',
+                    },
+                ],
                     cannot_add_rows: true, // Disable adding rows manually
-                },
-                {
-                    label: 'Feedback',
-                    fieldname: 'feedback',
+            },
+            {
+                label: 'Feedback',
+                fieldname: 'feedback',
                     fieldtype: 'Text Editor', // For richer feedback
-                    reqd: true,
-                    enable_mentions: true,
-                },
-            ],
-            size: 'extra-large',
-            primary_action_label: 'Submit',
-            primary_action(values) {
+                enable_mentions: true,
+            },
+        ],
+        size: 'extra-large',
+        primary_action_label: 'Submit',
+        primary_action(values) {
                 // Validate Marks (should be between 0 and 5 and not null)
-                const validate_marks = (table) => {
-                    let is_valid = true;
-                    let empty_marks_error_shown = false;
-                    let range_error_shown = false;
+            const validate_marks = (table) => {
+                let is_valid = true;
+                table.forEach(row => {
+                    if (row.marks === '' || row.marks == null) {
+                        frappe.msgprint(__('Marks cannot be empty.'));
+                        is_valid = false;
+                    } else if (row.marks < 0 || row.marks > 5) {
+                        frappe.msgprint(__('Marks must be between 0 and 5.'));
+                        is_valid = false;
+                    }                   
+                });
 
-                    table.forEach(row => {
-                        if ((row.marks === null || row.marks === undefined || row.marks === '') && !empty_marks_error_shown) {
-                            frappe.msgprint(__('Marks cannot be empty.'));
-                            empty_marks_error_shown = true;
-                            is_valid = false;
-                        } else if ((row.marks < 0 || row.marks > 5) && !range_error_shown) {
-                            frappe.msgprint(__('Marks should be between 0 and 5.'));
-                            range_error_shown = true;
-                            is_valid = false;
-                        }
+                return is_valid;
+            };
+            const feedback_is_empty = !values.feedback || values.feedback.replace(/<[^>]*>/g, '').trim() === '';
+            if (feedback_is_empty) {
+                frappe.msgprint(__('Please enter feedback before submitting.'));
+                return;
+            }
+
+            if (
+                validate_marks(values.employee_criteria) &&
+                validate_marks(values.department_criteria) &&
+                validate_marks(values.company_criteria)
+            ) {
+                frappe.call({
+                    method: "beams.beams.custom_scripts.appraisal.appraisal.create_employee_feedback",
+                    args: {
+                        data: values,
+                        appraisal_name: frm.doc.name,
+                        employee: frm.doc.employee,
+                        method: 'submit',
+                        feedback_exists: dialog.feedback_exists || null
+                    },
+                    callback: function () {
+                        frappe.msgprint(__('Feedback has been submitted successfully.'));
+                        frm.refresh();
+                        dialog.hide();
+                    }
+                });
+            }
+        },
+        secondary_action_label: 'Save',
+        secondary_action() {
+        const values = dialog.get_values();
+        if (!values) return;
+
+
+        frappe.call({
+            method: "beams.beams.custom_scripts.appraisal.appraisal.create_employee_feedback",
+            args: {
+                data: JSON.stringify(values),  
+                appraisal_name: frm.doc.name,
+                employee: frm.doc.employee,
+                method: 'save',
+                feedback_exists: dialog.feedback_exists || null
+            },
+            callback: function () {
+                frappe.msgprint(__('Feedback has been saved successfully.'));
+                frm.refresh();
+                dialog.hide();
+            }
+        });
+    }
+
+    });
+
+    dialog.fields_dict.employee_criteria.df.data = frm.doc.appraisal_kra.map(row => ({
+        criteria: row.kra,
+        goals: row.kra_goals,
+        per_weightage: row.per_weightage,
+    }));
+    dialog.fields_dict.employee_criteria.refresh();
+
+    if (frm.doc.appraisal_template) {
+        frappe.call({
+            method: "frappe.client.get",
+            args: {
+                doctype: "Appraisal Template",
+                name: frm.doc.appraisal_template
+            },
+            callback: function (res) {
+                if (res.message) {
+                    dialog.fields_dict.department_criteria.df.data = res.message.department_rating_criteria.map(row => ({
+                        criteria: row.criteria,
+                        per_weightage: row.per_weightage
+                    }));
+                    dialog.fields_dict.company_criteria.df.data = res.message.company_rating_criteria.map(row => ({
+                        criteria: row.criteria,
+                        per_weightage: row.per_weightage
+                    }));
+                    dialog.fields_dict.department_criteria.refresh();
+                    dialog.fields_dict.company_criteria.refresh();
+                }
+            }
+        });
+    }
+
+    frappe.call({
+        method: "beams.beams.custom_scripts.appraisal.appraisal.get_existing_feedback_data",
+        args: { appraisal_name: frm.doc.name },
+        callback: function (r) {
+            if (r.message) {
+                const feedback = r.message;
+                dialog.feedback_exists = feedback.name;
+
+                const set_marks = (source_list, fieldname) => {
+                    const table = dialog.fields_dict[fieldname].df.data;
+                    source_list.forEach(src => {
+                        const row = table.find(r => r.criteria === src.criteria);
+                        if (row) row.marks = src.marks;
                     });
-
-                    return is_valid;
+                    dialog.fields_dict[fieldname].refresh();
                 };
 
-                if (
-                    validate_marks(values.employee_criteria) &&
-                    validate_marks(values.department_criteria) &&
-                    validate_marks(values.company_criteria)
-                ) {
-                    frappe.call({
-                        method: "beams.beams.custom_scripts.appraisal.appraisal.create_employee_feedback",
-                        args: {
-                            data: values,
-                            appraisal_name: frm.doc.name,
-                            employee: frm.doc.employee,
-                        },
-                        callback: function () {
-                            frappe.msgprint(__('Feedback has been submitted successfully.'));
-                            frm.refresh();
-                            dialog.hide();
-                        }
-                    });
+                if (feedback.employee_criteria && feedback.employee_criteria.length) {
+                    dialog.fields_dict.employee_criteria.df.data = feedback.employee_criteria;
                 }
-            },
-        });
+                dialog.fields_dict.employee_criteria.refresh();
+                set_marks(feedback.employee_criteria || [], "employee_criteria");
+                set_marks(feedback.department_criteria || [], "department_criteria");
+                set_marks(feedback.company_criteria || [], "company_criteria");
 
-        const employee_criteria_table = [];
-        frm.doc.appraisal_kra.forEach(row => {
-            employee_criteria_table.push({
-                criteria: row.kra,
-                goals: row.kra_goals,
-                per_weightage: row.per_weightage,
-            });
-        });
-
-        // Set the data and refresh the table in the dialog
-        dialog.fields_dict.employee_criteria.df.data = employee_criteria_table;
-        dialog.fields_dict.employee_criteria.refresh();
-
-        // Fetch data from `appraisal_template`
-        if (frm.doc.appraisal_template) {
-            frappe.call({
-                method: "frappe.client.get",
-                args: {
-                    doctype: "Appraisal Template",
-                    name: frm.doc.appraisal_template
-                },
-                callback: function (response) {
-                    if (response.message) {
-                        // Populate department_criteria from department_rating_criteria
-                        const department_criteria_table = response.message.department_rating_criteria.map(row => ({
-                            criteria: row.criteria,
-                            per_weightage: row.per_weightage
-                        }));
-                        dialog.fields_dict.department_criteria.df.data = department_criteria_table;
-
-                        // Populate company_criteria from company_rating_criteria
-                        const company_criteria_table = response.message.company_rating_criteria.map(row => ({
-                            criteria: row.criteria,
-                            per_weightage: row.per_weightage
-                        }));
-                        dialog.fields_dict.company_criteria.df.data = company_criteria_table;
-
-                        dialog.fields_dict.department_criteria.refresh();
-                        dialog.fields_dict.company_criteria.refresh();
-                    }
-                }
-            });
+                dialog.set_value("feedback", feedback.feedback || '');
+            }
         }
-
-        dialog.show();
-    },
+    });
+    dialog.show();
+},
 
   open_add_category_dialog: function (frm) {
       const dialog = new frappe.ui.Dialog({
