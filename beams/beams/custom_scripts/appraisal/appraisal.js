@@ -60,17 +60,17 @@ frappe.ui.form.on('Appraisal', {
 
 
         if (!frm.is_new() && frm.doc.category_details.length <= 0) {
-            frm.add_custom_button(__('Assessment Officers'), function () {
+            frm.add_custom_button(__('Notify Assessment Officers'), function () {
                 if (frm.doc.__unsaved) {
-                    frappe.msgprint(__('Please save the form before assigning tasks.'));
+                    frappe.msgprint(__('Please save the form before sending notification.'));
                     return;
                 }
 
                 frappe.confirm(
-                    'Do you want to send the notification and assign tasks now?',
+                    'Do you want to send the notification to your Assessment Officer?',
                     () => {
                         frappe.call({
-                            method: "beams.beams.custom_scripts.appraisal.appraisal.assign_tasks_sequentially",
+                            method: "beams.beams.custom_scripts.appraisal.appraisal.notify_assestment_officer",
                             args: {
                                 doc: frm.doc.name,
                                 employee_id: frm.doc.employee
