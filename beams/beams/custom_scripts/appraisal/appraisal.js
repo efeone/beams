@@ -17,7 +17,6 @@ frappe.ui.form.on('Appraisal', {
 
 		frm.set_df_property('final_score', 'hidden', 1);
 
-<<<<<<< HEAD
         // Show "New Feedback" button only if the user is an assessment officer and not the appraised employee, before submission
         if (!frm.is_new() && frm.doc.docstatus !== 1) {
             let user = frappe.session.user;
@@ -56,7 +55,6 @@ frappe.ui.form.on('Appraisal', {
         }
     });
 }
-=======
 		// Show "New Feedback" button only if the user is an assessment officer and not the appraised employee, before submission
 		if (!frm.is_new() && frm.doc.docstatus !== 1) {
 			let user = frappe.session.user;
@@ -70,7 +68,6 @@ frappe.ui.form.on('Appraisal', {
 				}
 			});
 		}
->>>>>>> upstream/develop
 
 		if (!frm.is_new() && frm.doc.category_details.length <= 0) {
 			frm.add_custom_button(__(' Notify Assessment Officers'), function () {
@@ -218,7 +215,6 @@ frappe.ui.form.on('Appraisal', {
 		}
 	},
 
-<<<<<<< HEAD
    show_feedback_dialog: function (frm) {
     let dialog = new frappe.ui.Dialog({
         title: 'New Feedback',
@@ -473,7 +469,6 @@ frappe.ui.form.on('Appraisal', {
     });
     dialog.show();
 },
-=======
 	show_feedback_dialog: function (frm) {
 		let dialog = new frappe.ui.Dialog({
 			title: 'New Feedback',
@@ -688,7 +683,6 @@ frappe.ui.form.on('Appraisal', {
 
 		dialog.show();
 	},
->>>>>>> upstream/develop
 
 	open_add_category_dialog: function (frm) {
 		const dialog = new frappe.ui.Dialog({
