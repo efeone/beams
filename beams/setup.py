@@ -4209,6 +4209,14 @@ def get_property_setters():
 			"property_type": "Select",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Applicant",
+			"field_name": "status",
+			"property": "read_only",
+			"property_type": "Select",
+			"value": 1
+		},
 	]
 
 def get_material_request_custom_fields():
