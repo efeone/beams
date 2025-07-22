@@ -68,4 +68,65 @@ def create_bulk_interviews(applicants):
 	return {
 	"created": created_interviews,
 	"skipped_applicants": existing_interviews
-}
+	}
+
+@frappe.whitelist()
+def create_bulk_ler(applicants):
+	"""
+	Creates multiple Local Enquiry Report documents for selected job applicants,
+	skipping those for whom a report already exists.
+	"""
+	applicants = json.loads(applicants)
+	created_lers = []
+	existing_lers = []
+
+	for app in applicants:
+		job_applicant = app.get("job_applicant")
+		applicant_name = app.get("applicant_name")
+
+		# Check if LER already exists
+		if frappe.db.exists("Local Enquiry Report", {"job_applicant": job_applicant}):
+			existing_lers.append(applicant_name or job_applicant)
+			continue
+
+		# Create LER
+		ler = frappe.get_doc({
+			"doctype": "Local Enquiry Report",
+			"job_applicant": job_applicant,
+			"job_applicant_name": applicant_name,
+		})
+
+		ler.insert()
+		created_lers.append({
+			"ler": ler.name,
+			"job_applicant": job_applicant,
+			"applicant_name": applicant_name
+		})
+
+	return {
+		"created": created_lers,
+		"skipped_applicants": existing_lers
+	}
+
+@frappe.whitelist()
+def fetch_filtered_job_applicants(filters=None):
+    """
+    Fetch job applicants based on filters like job_title, department, designation, status.
+    """
+    if isinstance(filters, str):
+        filters = frappe.parse_json(filters)
+
+    if not isinstance(filters, dict):
+        frappe.throw(_("Invalid filter format"))
+
+    try:
+        applicants = frappe.get_all(
+            'Job Applicant',
+            filters=filters,
+            fields=['name', 'applicant_name', 'designation', 'status'],
+            limit_page_length=50
+        )
+        return applicants
+
+    except Exception as e:
+        frappe.log_error(frappe.get_traceback(), _("Failed to fetch job applicants"))
