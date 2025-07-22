@@ -15,7 +15,9 @@ frappe.ui.form.on('Employee Separation', {
 	},
 });
 
-//  Added filters in employee separation template based on employee designation and department
+/**
+ * Added filters in employee separation template based on employee designation and department
+*/
 
 function apply_template_filter(frm) {
 	if (frm.doc.department && frm.doc.designation) {
