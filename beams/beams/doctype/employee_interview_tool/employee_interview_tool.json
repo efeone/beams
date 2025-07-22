@@ -6,16 +6,21 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
-  "company",
   "branch",
-  "job_opening",
-  "interview_round",
   "column_break_zrwf",
-  "department",
-  "designation",
+  "company",
+  "section_break_ndqh",
+  "interview_round",
   "scheduled_on",
+  "column_break_hreb",
   "from_time",
   "to_time",
+  "section_break_lgjw",
+  "job_opening",
+  "applicant_status",
+  "column_break_kxyk",
+  "department",
+  "designation",
   "section_break_mim4",
   "job_applicants"
  ],
@@ -90,13 +95,40 @@
   {
    "fieldname": "section_break_mim4",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "applicant_status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nOpen\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
+  },
+  {
+   "fieldname": "section_break_ndqh",
+   "fieldtype": "Section Break",
+   "label": "Interview Schedule Details"
+  },
+  {
+   "fieldname": "column_break_hreb",
+   "fieldtype": "Column Break"
+  },
+  {
+   "collapsible": 1,
+   "collapsible_depends_on": "eval:true",
+   "description": "Set filters to fetch Job Applicants",
+   "fieldname": "section_break_lgjw",
+   "fieldtype": "Section Break",
+   "label": "Get Job Applicants"
+  },
+  {
+   "fieldname": "column_break_kxyk",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-15 14:14:58.220822",
+ "modified": "2025-07-21 16:30:44.551220",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Interview Tool",
