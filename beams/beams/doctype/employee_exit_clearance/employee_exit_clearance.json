@@ -47,22 +47,23 @@
    "options": "Department"
   },
   {
-   "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "read_only": 1
   },
   {
    "fieldname": "employee_separation_begins_on",
    "fieldtype": "Date",
-   "label": "Employee Separation Begins On"
+   "label": "Employee Separation Begins On",
+   "read_only": 1
   },
   {
-   "fetch_from": "employee.relieving_date",
    "fieldname": "relieving_date",
    "fieldtype": "Date",
-   "label": "Relieving Date"
+   "label": "Relieving Date",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_hpbb",
@@ -104,7 +105,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-09 15:48:59.820914",
+ "modified": "2025-07-22 12:31:32.148892",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Exit Clearance",
