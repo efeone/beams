@@ -3673,14 +3673,6 @@ def get_property_setters():
 		},
 		{
 			"doctype_or_field": "DocField",
-			"doc_type": "Employee Feedback Rating",
-			"field_name": "Rating",
-			"property": "read_only",
-			"property_type": "Check",
-			"value": 1
-		},
-		{
-			"doctype_or_field": "DocField",
 			"doc_type": "Employee Performance Feedback",
 			"field_name": "feedback_ratings",
 			"property": "label",
@@ -3731,7 +3723,7 @@ def get_property_setters():
 			"doctype_or_field": "DocField",
 			"doc_type": "Employee Feedback Rating",
 			"field_name": "rating",
-			"property": "read_only",
+			"property": "hidden",
 			"property_type": "Check",
 			"value": 1
 		},
