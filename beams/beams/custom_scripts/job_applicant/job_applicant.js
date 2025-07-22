@@ -118,7 +118,7 @@ function handle_custom_buttons(frm) {
 				});
 			}
 
-            if (frm.doc.status == 'Shortlisted') {
+            if (frm.doc.status == 'Shortlisted' || frm.doc.status == 'Pending Document Upload') {
                 frm.add_custom_button(__('Send Magic Link'), function () {
                     frappe.confirm('Are you sure you want to send the magic link to the candidate?', function () {
                         frappe.call({
