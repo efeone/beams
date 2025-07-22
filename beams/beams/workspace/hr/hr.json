@@ -5,7 +5,7 @@
    "label": "Hiring vs Attrition Count"
   }
  ],
- "content": "[{\"id\":\"wmfJHOwllS\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hiring vs Attrition Count\",\"col\":12}},{\"id\":\"3qrl2p4MvG\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"trZZ2IJeyM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":5}},{\"id\":\"WsnP9kuajc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":4}},{\"id\":\"PPEshpReVp\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"aIe1gOpRXA\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LgZL_nRvRl\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b><b></b></span>\",\"col\":12}},{\"id\":\"IK0MSDnotw\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"PuHLyBRJtq\",\"type\":\"card\",\"data\":{\"card_name\":\"Recruitment\",\"col\":4}},{\"id\":\"8POZrUC_ak\",\"type\":\"card\",\"data\":{\"card_name\":\"Key Reports\",\"col\":4}},{\"id\":\"bl4nY-l21y\",\"type\":\"card\",\"data\":{\"card_name\":\"Onboarding\",\"col\":4}},{\"id\":\"CE0CHVkhTf\",\"type\":\"card\",\"data\":{\"card_name\":\"Employee\",\"col\":4}},{\"id\":\"cWl8QObV9q\",\"type\":\"card\",\"data\":{\"card_name\":\"Company\",\"col\":4}},{\"id\":\"fqwEXqwfjG\",\"type\":\"card\",\"data\":{\"card_name\":\"Training\",\"col\":4}},{\"id\":\"9HzhksLiVI\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"JY4evewm5b\",\"type\":\"card\",\"data\":{\"card_name\":\"Leaves\",\"col\":4}},{\"id\":\"DpJ1QYkW6c\",\"type\":\"card\",\"data\":{\"card_name\":\"Shift\",\"col\":4}}]",
+ "content": "[{\"id\":\"wmfJHOwllS\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Hiring vs Attrition Count\",\"col\":12}},{\"id\":\"3qrl2p4MvG\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Shortcuts</b></span>\",\"col\":12}},{\"id\":\"trZZ2IJeyM\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee\",\"col\":5}},{\"id\":\"WsnP9kuajc\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Employee Checkin\",\"col\":4}},{\"id\":\"4EWjhSyN6S\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Interview Scheduling Tool\",\"col\":3}},{\"id\":\"PPEshpReVp\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"aIe1gOpRXA\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"LgZL_nRvRl\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Reports &amp; Masters</b><b></b></span>\",\"col\":12}},{\"id\":\"IK0MSDnotw\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"PuHLyBRJtq\",\"type\":\"card\",\"data\":{\"card_name\":\"Recruitment\",\"col\":4}},{\"id\":\"8POZrUC_ak\",\"type\":\"card\",\"data\":{\"card_name\":\"Key Reports\",\"col\":4}},{\"id\":\"bl4nY-l21y\",\"type\":\"card\",\"data\":{\"card_name\":\"Onboarding\",\"col\":4}},{\"id\":\"CE0CHVkhTf\",\"type\":\"card\",\"data\":{\"card_name\":\"Employee\",\"col\":4}},{\"id\":\"cWl8QObV9q\",\"type\":\"card\",\"data\":{\"card_name\":\"Company\",\"col\":4}},{\"id\":\"fqwEXqwfjG\",\"type\":\"card\",\"data\":{\"card_name\":\"Training\",\"col\":4}},{\"id\":\"9HzhksLiVI\",\"type\":\"card\",\"data\":{\"card_name\":\"Attendance\",\"col\":4}},{\"id\":\"JY4evewm5b\",\"type\":\"card\",\"data\":{\"card_name\":\"Leaves\",\"col\":4}},{\"id\":\"DpJ1QYkW6c\",\"type\":\"card\",\"data\":{\"card_name\":\"Shift\",\"col\":4}}]",
  "creation": "2024-11-21 14:03:52.753524",
  "custom_blocks": [],
  "docstatus": 0,
@@ -329,7 +329,7 @@
    "type": "Link"
   }
  ],
- "modified": "2024-11-22 14:33:25.252398",
+ "modified": "2025-07-22 12:08:28.378203",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "HR",
@@ -347,6 +347,13 @@
    "label": "Employee Checkin",
    "link_to": "Employee Checkin",
    "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Grey",
+   "doc_view": "List",
+   "label": "Interview Scheduling Tool",
+   "link_to": "Employee Interview Tool",
    "type": "DocType"
   },
   {
