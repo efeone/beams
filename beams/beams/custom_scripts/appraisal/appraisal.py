@@ -20,66 +20,162 @@ def validate_kra_marks(doc, method):
 					frappe.throw(_("Marks cannot be less than 0."))
 
 @frappe.whitelist()
-def create_employee_feedback(data, employee , appraisal_name , feedback_exists=False, method='save'):
-	'''
+def create_employee_feedback(data, employee, appraisal_name, feedback_exists=False, method='save'):
+	"""
 	Method to create or update Employee Performance Feedback.
-	If feedback_exists is provided, it will update the existing feedback document.
-	Otherwise, it creates a new one.
-	'''
-	# If the data is a string, convert it to a dictionary
+	- If feedback_exists is provided, it updates that doc.
+	- Based on method, either saves as draft or submits.
+	"""
+	import copy
+
 	if isinstance(data, string_types):
 		data = frappe._dict(json.loads(data))
 
 	# Fetch the feedback document if it exists, otherwise create a new one
 	if feedback_exists:
 		feedback_doc = frappe.get_doc('Employee Performance Feedback', feedback_exists)
+		feedback_doc.set('feedback_ratings', [])
+		feedback_doc.set('department_criteria', [])
+		feedback_doc.set('company_criteria', [])
 	else:
 		feedback_doc = frappe.new_doc('Employee Performance Feedback')
 		feedback_doc.employee = employee
 		feedback_doc.appraisal = appraisal_name
-		feedback_doc.reviewer = frappe.session.user  # Set reviewer as the current user
-	# Append data to the child tables (employee, department, company feedback)
+		feedback_doc.reviewer = frappe.session.user
+	# Child Tables
 	if "employee_criteria" in data:
 		for criterion in data["employee_criteria"]:
 			feedback_doc.append('feedback_ratings', {
 				'criteria': criterion.get("criteria"),
-				'marks': criterion.get("marks"),
-				'per_weightage':criterion.get("per_weightage")
+				'marks': criterion.get("marks") or 0,
+				'per_weightage': criterion.get("per_weightage")
 			})
 
 	if "department_criteria" in data:
 		for criterion in data["department_criteria"]:
 			feedback_doc.append('department_criteria', {
 				'criteria': criterion.get("criteria"),
-				'marks': criterion.get("marks"),
-				'per_weightage':criterion.get("per_weightage")
+				'marks': criterion.get("marks") or 0,
+				'per_weightage': criterion.get("per_weightage")
 			})
 
 	if "company_criteria" in data:
 		for criterion in data["company_criteria"]:
 			feedback_doc.append('company_criteria', {
 				'criteria': criterion.get("criteria"),
-				'marks': criterion.get("marks"),
-				'per_weightage':criterion.get("per_weightage")
+				'marks': criterion.get("marks") or 0,
+				'per_weightage': criterion.get("per_weightage")
 			})
 
 	# Add general feedback and result
 	feedback_doc.feedback = data.get("feedback")
-	feedback_doc.result = data.get("result")
+	feedback_doc.flags.ignore_mandatory = True
 
-	# Save the document
-	feedback_doc.flags.ignore_mandatory = True  # Allow ignoring mandatory fields
+	if method == 'save' and not feedback_exists and not has_any_values(data):
+		frappe.msgprint("No changes in document", indicator='blue')
+		return
+
 	feedback_doc.save()
 
-	# Submit the document
-	feedback_doc.submit()
+	if method == 'submit':
+		feedback_doc.submit()
 
-	# Send a message to confirm the action
-	frappe.msgprint(_('{1} Employee Performance Feedback {0} successfully!').format(
-		get_link_to_form('Employee Performance Feedback', feedback_doc.name), method.title()))
+		# Save the Appraisal to refresh status and clear unsaved state
+		appraisal_doc = frappe.get_doc("Appraisal", appraisal_name)
+		appraisal_doc.save()
 
-	return feedback_doc.name  # Return the name of the created/updated feedback document
+	frappe.msgprint(_('{1} Employee Performance Feedback {0} successfully!')
+		.format(get_link_to_form('Employee Performance Feedback', feedback_doc.name), method.title()))
 
+	return feedback_doc.name
+
+@frappe.whitelist()
+def has_any_values(data):
+	def has_marks(criteria_list):
+		return any(criterion.get("marks") not in (None, '') for criterion in data.get(criteria_list, []))
+
+	def is_feedback_empty(feedback):
+		if not feedback:
+			return True
+		feedback = feedback.strip().replace('\n', '').replace('\r', '')
+		empty_patterns = [
+			'<p><br></p>',
+			'<div class="ql-editor"><p><br></p></div>',
+			'<div class="ql-editor read-mode"><p><br></p></div>',
+			'<div class="ql-editor" data-gramm="false" contenteditable="true"><p><br></p></div>',
+			'<div class="ql-editor ql-blank" data-placeholder="Write something..." contenteditable="true"><p><br></p></div>'
+		]
+		return feedback in empty_patterns or feedback.strip() == ''
+
+	feedback_filled = not is_feedback_empty(data.get("feedback"))
+	has_data = (
+		has_marks("employee_criteria") or
+		has_marks("department_criteria") or
+		has_marks("company_criteria") or
+		feedback_filled
+	)
+	return has_data
+
+@frappe.whitelist()
+def get_existing_feedback_data(appraisal_name):
+	"""
+	Fetch existing Employee Performance Feedback for the current reviewer against the appraisal.
+	Returns key fields and all child tables.
+	"""
+	if not appraisal_name:
+		return None
+
+	feedback_name = frappe.db.get_value(
+		"Employee Performance Feedback",
+		{
+			"appraisal": appraisal_name,
+			"owner": frappe.session.user,
+			"docstatus": ["<", 2]
+		},
+		"name"
+	)
+
+	if not feedback_name:
+		frappe.log_error(
+			f"No feedback document found for Appraisal '{appraisal_name}' and User '{frappe.session.user}'",
+			"Appraisal Feedback Debug"
+		)
+		return None
+
+	doc = frappe.get_doc("Employee Performance Feedback", feedback_name)
+
+	frappe.log_error(f"Feedback Doc: {doc.name}, Feedback Ratings rows: {len(doc.get('feedback_ratings', []))}", "Appraisal Feedback Debug")
+	frappe.log_error(f"Feedback Doc: {doc.name}, Department Criteria rows: {len(doc.get('department_criteria', []))}", "Appraisal Feedback Debug")
+	frappe.log_error(f"Feedback Doc: {doc.name}, Company Criteria rows: {len(doc.get('company_criteria', []))}", "Appraisal Feedback Debug")
+
+	return {
+		"name": doc.name,
+		"feedback": doc.feedback,
+		"employee_criteria": [
+			{
+				"criteria": row.criteria,
+				"marks": row.marks,
+				"per_weightage": row.per_weightage
+			}
+			for row in doc.feedback_ratings
+		],
+		"department_criteria": [
+			{
+				"criteria": row.criteria,
+				"marks": row.marks,
+				"per_weightage": row.per_weightage
+			}
+			for row in doc.department_criteria
+		],
+		"company_criteria": [
+			{
+				"criteria": row.criteria,
+				"marks": row.marks,
+				"per_weightage": row.per_weightage
+			}
+			for row in doc.company_criteria
+		]
+	}
 
 @frappe.whitelist()
 def get_appraisal_summary(appraisal_template, employee_feedback=None):
@@ -496,13 +592,12 @@ def set_self_appraisal(doc, method=None):
 
 @frappe.whitelist()
 def check_feedback_exists(appraisal_name, assessment_officer_user_id, employee):
-    """Check if the assessment officer (by user ID) has submitted feedback for the appraisal."""
-    return bool(frappe.db.exists("Employee Performance Feedback", {
-        "appraisal": appraisal_name,
-        "employee": employee,
-        "reviewer": assessment_officer_user_id  
-    }))
-
+	"""Check if the assessment officer (by user ID) has submitted feedback for the appraisal."""
+	return bool(frappe.db.exists("Employee Performance Feedback", {
+		"appraisal": appraisal_name,
+		"employee": employee,
+		"reviewer": assessment_officer_user_id
+	}))
 
 @frappe.whitelist()
 def send_next_officer_notification(appraisal_name):
