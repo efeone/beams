@@ -593,21 +593,12 @@ def set_self_appraisal(doc, method=None):
 
 @frappe.whitelist()
 def check_feedback_exists(appraisal_name, assessment_officer_user_id, employee):
-<<<<<<< HEAD
 	"""Check if the assessment officer (by user ID) has submitted feedback for the appraisal."""
 	return bool(frappe.db.exists("Employee Performance Feedback", {
 		"appraisal": appraisal_name,
 		"employee": employee,
 		"reviewer": assessment_officer_user_id  
 	}))
-=======
-    """Check if the assessment officer (by user ID) has submitted feedback for the appraisal."""
-    return bool(frappe.db.exists("Employee Performance Feedback", {
-        "appraisal": appraisal_name,
-        "employee": employee,
-        "reviewer": assessment_officer_user_id  
-    }))
-
 
 @frappe.whitelist()
 def send_next_officer_notification(appraisal_name):
@@ -660,4 +651,3 @@ def send_next_officer_notification(appraisal_name):
             return f"Notification logged for {officer}"
     return "All officers already notified"
 
->>>>>>> upstream/develop
