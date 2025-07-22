@@ -110,23 +110,23 @@ def create_bulk_ler(applicants):
 
 @frappe.whitelist()
 def fetch_filtered_job_applicants(filters=None):
-    """
-    Fetch job applicants based on filters like job_title, department, designation, status.
-    """
-    if isinstance(filters, str):
-        filters = frappe.parse_json(filters)
+	"""
+	Fetch job applicants based on filters like job_title, department, designation, status.
+	"""
+	if isinstance(filters, str):
+		filters = frappe.parse_json(filters)
 
-    if not isinstance(filters, dict):
-        frappe.throw(_("Invalid filter format"))
+	if not isinstance(filters, dict):
+		frappe.throw(_("Invalid filter format"))
 
-    try:
-        applicants = frappe.get_all(
-            'Job Applicant',
-            filters=filters,
-            fields=['name', 'applicant_name', 'designation', 'status'],
-            limit_page_length=50
-        )
-        return applicants
+	try:
+		applicants = frappe.get_all(
+			'Job Applicant',
+			filters=filters,
+			fields=['name', 'applicant_name', 'designation', 'status'],
+			limit_page_length=50
+		)
+		return applicants
 
-    except Exception as e:
-        frappe.log_error(frappe.get_traceback(), _("Failed to fetch job applicants"))
+	except Exception as e:
+		frappe.log_error(frappe.get_traceback(), _("Failed to fetch job applicants"))
