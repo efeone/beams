@@ -40,7 +40,6 @@
    "label": "Employee Name"
   },
   {
-   "fetch_from": "employee.department",
    "fieldname": "department",
    "fieldtype": "Link",
    "label": "Department",
@@ -104,7 +103,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-09 15:48:59.820914",
+ "modified": "2025-07-21 14:33:11.429332",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Exit Clearance",
