@@ -12,20 +12,6 @@ import os
 def autoname(doc, method):
     doc.name = make_autoname("JOB-APP-" + ".YYYY.-.####")
 
-def get_permission_query_conditions(user):
-	if not user:
-		user = frappe.session.user
-
-	user_roles = frappe.get_roles(user)
-
-	if 'Administrator' in user_roles:
-		return None
-
-	if 'Interviewer' in user_roles:
-		conditions = """(`tabJob Applicant`._assign like '%{user}%')""".format(user=user)
-		return conditions
-	return None
-
 @frappe.whitelist()
 def validate(doc, method):
 	'''
