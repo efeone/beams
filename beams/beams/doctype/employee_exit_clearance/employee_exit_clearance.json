@@ -105,11 +105,11 @@
    "options": "Dues"
   },
   {
-   "description": "Department responsible for handling the employee's exit clearance.",
    "fieldname": "clearance_for_department",
    "fieldtype": "Link",
    "label": "Department ",
-   "options": "Department"
+   "options": "Department",
+   "description": "Department responsible for handling the employee's exit clearance."
   }
  ],
  "index_web_pages_for_search": 1,

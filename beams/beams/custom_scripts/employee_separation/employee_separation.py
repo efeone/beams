@@ -63,3 +63,4 @@ def create_exit_clearance(doc, method=None):
 		row.employee_exit_clearance = clearance.name
 		frappe.db.set_value("Employee Clearance", row.name, "employee_exit_clearance", clearance.name)
 		row.status = "Pending"
+
