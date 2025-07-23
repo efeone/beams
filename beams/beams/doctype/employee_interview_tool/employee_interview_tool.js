@@ -18,6 +18,11 @@ frappe.ui.form.on('Employee Interview Tool', {
 		frm.set_value('scheduled_on', '');
 		frm.set_value('from_time', '');
 		frm.set_value('to_time', '');
+		frm.set_value('department', '');
+		frm.set_value('designation', '');
+		frm.set_value('job_opening', '');
+		frm.set_value('branch', '');
+		frm.set_value('applicant_status', '');
 		frm.clear_table('job_applicants');
 		frm.refresh_field('job_applicants');
 		frm.toggle_display('job_applicants', false);
