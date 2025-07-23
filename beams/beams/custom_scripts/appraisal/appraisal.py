@@ -75,14 +75,25 @@ def create_employee_feedback(data, employee, appraisal_name, feedback_exists=Fal
 		frappe.msgprint("No changes in document", indicator='blue')
 		return
 
-	feedback_doc.save()
-
+	feedback_doc.save(ignore_permissions=True)
 	if method == 'submit':
 		feedback_doc.submit()
 
-		# Save the Appraisal to refresh status and clear unsaved state
+	# After saving feedback, update the parent Appraisal to reflect the new scores.
+	try:
 		appraisal_doc = frappe.get_doc("Appraisal", appraisal_name)
-		appraisal_doc.save()
+
+		# Recalculate and set the final average score
+		_html, final_score = get_appraisal_summary(appraisal_doc.appraisal_template, feedback_doc.name)
+		appraisal_doc.final_average_score = final_score
+
+		# Recalculate and set the category based on the new score
+		appraisal_doc.run_method("set_category_based_on_marks") 
+
+		# Save the appraisal document so the changes persist on the server
+		appraisal_doc.save(ignore_permissions=True)
+	except Exception as e:
+		frappe.log_error(f"Could not update parent appraisal {appraisal_name} after feedback submission. Error: {e}", "Appraisal Feedback Update Failed")
 
 	frappe.msgprint(_('{1} Employee Performance Feedback {0} successfully!')
 		.format(get_link_to_form('Employee Performance Feedback', feedback_doc.name), method.title()))
@@ -649,4 +660,3 @@ def send_next_officer_notification(appraisal_name):
             }).insert(ignore_permissions=True)
             return f"Notification logged for {officer}"
     return "All officers already notified"
-
