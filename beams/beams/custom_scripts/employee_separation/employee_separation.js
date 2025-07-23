@@ -11,12 +11,12 @@ frappe.ui.form.on('Employee Separation', {
 	designation: function(frm) {
 		apply_template_filter(frm);
 	},
-    onload: function(frm) {
-       set_employee_exit_clearance_filter(frm)
-    },
-    employee: function(frm) {
-        set_employee_exit_clearance_filter(frm);
-    }
+	onload: function(frm) {
+	   set_employee_exit_clearance_filter(frm)
+	},
+	employee: function(frm) {
+		set_employee_exit_clearance_filter(frm);
+	}
 });
 
 /**
@@ -42,13 +42,13 @@ function apply_template_filter(frm) {
  * the selected department (from the row) and employee (from the parent form).
  */
 function set_employee_exit_clearance_filter(frm) {
-    frm.fields_dict['employee_clearance'].grid.get_field('employee_exit_clearance').get_query = function (doc, cdt, cdn) {
-        const child = locals[cdt][cdn];
-        return {
-            filters: {
-                employee: frm.doc.employee,
-                clearance_for_department: child.department
-            }
-        };
-    };
+	frm.fields_dict['employee_clearance'].grid.get_field('employee_exit_clearance').get_query = function (doc, cdt, cdn) {
+		const child = locals[cdt][cdn];
+		return {
+			filters: {
+				employee: frm.doc.employee,
+				clearance_for_department: child.department
+			}
+		};
+	};
 }
