@@ -12,7 +12,7 @@ frappe.ui.form.on('Employee Separation', {
 		apply_template_filter(frm);
 	},
 	onload: function(frm) {
-	   set_employee_exit_clearance_filter(frm)
+		set_employee_exit_clearance_filter(frm)
 	},
 	employee: function(frm) {
 		set_employee_exit_clearance_filter(frm);
@@ -52,3 +52,4 @@ function set_employee_exit_clearance_filter(frm) {
 		};
 	};
 }
+
