@@ -6,26 +6,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "name_of_course_university",
-  "name_location_of_institution",
+  "course",
+  "name_of_school_college",
+  "name_of_universityboard_of_exam",
   "dates_attended_from",
   "dates_attended_to",
   "result",
   "attachments"
  ],
  "fields": [
-  {
-   "fieldname": "name_of_course_university",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Name of Course & University"
-  },
-  {
-   "fieldname": "name_location_of_institution",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Name & Location of Institution"
-  },
   {
    "fieldname": "dates_attended_from",
    "fieldtype": "Int",
@@ -49,17 +38,36 @@
    "fieldtype": "Attach",
    "in_list_view": 1,
    "label": "Attachments"
+  },
+  {
+   "fieldname": "course",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Course"
+  },
+  {
+   "fieldname": "name_of_school_college",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name of School/College"
+  },
+  {
+   "fieldname": "name_of_universityboard_of_exam",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Name of University/Board of Exam"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-08 18:03:08.014068",
+ "modified": "2025-07-17 16:16:49.295430",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Education Qualification",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

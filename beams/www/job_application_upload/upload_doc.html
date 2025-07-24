@@ -50,7 +50,7 @@
                         </div>
                         <div class="column">
                             <label for="date_of_birth">Date of Birth:</label>
-                            <input type="date" id="date_of_birth" name="date_of_birth">
+                            <input type="text" id="date_of_birth" name="date_of_birth">
                         </div>
                     </div>
                     <div class="row">
@@ -80,15 +80,14 @@
                             </div>
                         </div>
                         <!-- Aadhaar Field (Initially Hidden) -->
-                        <div class="column" id="aadhaar-field" style="display:none;">
-                            <label for="aadhaar_number">Aadhaar Number</label>
+                        <div class="column" id="aadhaar_field" style="display:none;">
+                            <label for="aadhaar_number_input">Aadhaar Number</label>
                             <div class="col-14">
-                                <input type="text" class="form-control" id="aadhaar_number" name="aadhaar_number"
-                                       style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;"
-                                       placeholder="Enter Aadhaar Number"  pattern="\d{12}" maxlength="12">
+                                <input type="text" class="form-control" id="aadhaar_number_input" name="aadhaar_number"
+                                       style="height:40px; width: 90%; font-size:13px; background-color: #004eff17;"
+                                       placeholder="Enter Aadhaar Number" pattern="\d{12}" maxlength="12">
                             </div>
                         </div>
-
                         <div class="column">
                             <label for="marital_status">Maritial Status</label>
                             <select id="marital_status" name="marital_status">
@@ -250,16 +249,13 @@
                                 {% if doc.phone_number %} disabled {% endif %}>
                         </div>
                         <div class="column">
-                            <label for="aadhar_number">Aadhar Number</label>
-                            <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Enter Aadhar Number"
-                                maxlength="12" style="width: 100%; max-width: 300px;" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
                         </div>
                     </div>
                     <h5><b>Educational Qualification</h5></b>
                     <div class="row tax-details">
-                        <table id="educational_qualification_table">
+                        <table id="education_qualification_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -276,12 +272,12 @@
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td><input type="text" name="course_university_1" class="name_of_course_university"
+                                    <td><input type="text" name="course" class="course"
                                             style="background-color: #fff;"></td>
-                                    <td><input type="text" name="institution_location_1"
-                                            class="name_location_of_institution" style="background-color: #fff;"></td>
-                                    <td><input type="text" name="university_1"
-                                            class="name_university_of_institution" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="name_of_school_college"
+                                            class="name_of_school_college" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="name_of_universityboard_of_exam"
+                                            class="name_of_universityboard_of_exam" style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
                                             placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
                                             style="background-color: #fff;"></td>
@@ -378,12 +374,12 @@
                         </div>
                         <div class="column">
                             <label for="manager_contact_no">Contact No</label>
-                            <input type="tel" id="manager_contact_no" name="manager_contact_no" pattern="[0-9]{10}"
+                            <input type="text" id="manager_contact_no" name="manager_contact_no"
                                 title="Please enter a valid 10-digit mobile number">
                         </div>
                         <div class="column">
                             <label for="manager_email">Email</label>
-                            <input type="email" id="manager_email" name="manager_email">
+                            <input type="text" id="manager_email" name="manager_email">
                         </div>
                     </div>
                     <div class="row">
@@ -399,22 +395,31 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="column">
-                            <label for="address_of_employer">Address of Employer</label>
-                            <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                    <!-- First row: Address + Duties -->
+                    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="address_of_employer">Address of Employer</label><br>
+                            <textarea id="address_of_employer" name="address_of_employer" rows="4" style="width: 100%;"></textarea>
                         </div>
-                        <div class="column">
-                            <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
-                            <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4"
-                                cols="50"></textarea>
-                        </div>
-
-                        <div class="column">
-                            <label for="reason_for_leaving">Reasons for leaving</label>
-                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="duties_and_responsibilities">Duties & Responsibilities</label><br>
+                            <textarea id="duties_and_responsibilities" name="duties_and_responsibilities" rows="4" style="width: 100%;"></textarea>
                         </div>
                     </div>
+
+                    <!-- Second row: Reason + Agency -->
+                    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="reason_for_leaving">Reasons for Leaving</label><br>
+                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" style="width: 100%;"></textarea>
+                        </div>
+
+                        <div class="column" id="agencies_details" style="flex: 1; min-width: 250px; display: none;">
+                            <label for="agency_details">Agency Details</label><br>
+                            <textarea id="agency_details" name="agency_details" rows="4" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="column" style="max-width: 250px;">
                             <label for="was_this_position">Current Employment Type</label>
@@ -429,17 +434,6 @@
                         </div>
                         <div class="column">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="column" id="agencies_details" style="display: none;">
-                            <label for="agency_details">Agency Details</label>
-                            <textarea id="agency_details" name="agency_details" rows="4" cols="40"
-                                style="width: 100%; max-width: 300px;"></textarea>
-                        </div>
-                        <div class="column"></div>
-
-                    </div>
-                    <div class="column">
                     </div>
                     <h5><b>Previous Employment History</h3></b>
                         <div class="row tax-details">
@@ -563,7 +557,7 @@
                         <div class="row">
                             <div class="column">
                                 <label for="interviewed_date">Date</label>
-                                <input type="date" id="interviewed_date" name="interviewed_date">
+                                <input type="text" id="interviewed_date" name="interviewed_date">
                             </div>
                             <div class="column">
                                 <label for="interviewed_outcome">Outcome</label>
@@ -743,11 +737,10 @@
 
         document.addEventListener('DOMContentLoaded', function () {
             const countrySelect = document.getElementById('country');
-            const aadhaarField = document.getElementById('aadhaar-field');
-            const aadhaarInput = document.getElementById('aadhaar_number');
-            const form = document.querySelector('form');
+            const aadhaarField = document.getElementById('aadhaar_field');
+            const aadhaarInput = document.getElementById('aadhaar_number_input');
 
-            // Show/hide Aadhaar field based on country
+            // Show/hide Aadhaar field
             countrySelect.addEventListener('change', function () {
                 if (this.value === "India") {
                     aadhaarField.style.display = "block";
@@ -757,24 +750,25 @@
                 }
             });
 
-            // Block all non-numeric input on Aadhaar field
+            // Allow only digits, max 12
             aadhaarInput.addEventListener('input', function () {
-                this.value = this.value.replace(/\D/g, '');  // Remove non-digits
-            });
-
-            // Validate Aadhaar on submit
-            form.addEventListener('submit', function (e) {
-                if (countrySelect.value === "India") {
-                    const aadhaar = aadhaarInput.value.trim();
-                    if (!/^\d{12}$/.test(aadhaar)) {
-                        e.preventDefault();
-                        alert("Please enter a valid 12-digit Aadhaar number (numbers only).");
-                        aadhaarInput.focus();
-                    }
-                }
+                this.value = this.value.replace(/\D/g, '').slice(0, 12);
             });
         });
+        document.addEventListener('DOMContentLoaded', function () {
+            const current_pin = document.getElementById('current_pin');
+            const permanent_pin = document.getElementById('permanent_pin');
 
+            // Function to restrict input to 6 digits only
+            function restrictToSixDigits(input) {
+                input.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 6); // remove non-digits and limit to 6 digits
+                });
+            }
+
+            restrictToSixDigits(current_pin);
+            restrictToSixDigits(permanent_pin);
+        });
         document.addEventListener("DOMContentLoaded", function () {
             const minExperience = parseInt(document.getElementById("min_experience").value, 10);
             const currentEmployerTab = document.getElementById("currentEmployerTab");
@@ -784,6 +778,7 @@
                 currentEmployerTab.style.display = "none";
             }
         });
+
 
         // Change button color based on checkbox state
         document.getElementById("confirm").addEventListener("change", function () {
@@ -796,16 +791,16 @@
             }
         });
         // Redirect on submit button click
-        document.getElementById("submitBtn").addEventListener("click", function () {
-            const checkbox = document.getElementById("confirm");
-            const errorMessage = document.getElementById("error-message");
-
-            if (checkbox.checked) {
-                window.location.href = "/application_success/success.html";
-            } else {
-                errorMessage.style.display = "block";
-            }
-        });
+        // document.getElementById("submitBtn").addEventListener("click", function () {
+        //     const checkbox = document.getElementById("confirm");
+        //     const errorMessage = document.getElementById("error-message");
+        //
+        //     if (checkbox.checked) {
+        //         window.location.href = "/application_success/success.html";
+        //     } else {
+        //         errorMessage.style.display = "block";
+        //     }
+        // });
         function toggleAgencyDetails() {
             const employmentType = document.getElementById("was_this_position").value;
             const agencyDetailsWrapper = document.getElementById("agencies_details");
@@ -897,6 +892,29 @@
             }
             submitBtn.addEventListener('click', validateSubmit);
         }
+
+        // function convertToYMD(dateStr) {
+        //     const [day, month, year] = dateStr.split("-");
+        //     return `${year}-${month}-${day}`; // YYYY-MM-DD
+        // }
+        //
+        // document.querySelector("form").addEventListener("submit", function (e) {
+        //     const input = document.getElementById("interviewed_date");
+        //     if (input.value) {
+        //         input.value = convertToYMD(input.value);  // convert before submitting
+        //     }
+        // });
+        // function convertToYMD(dateStr) {
+        //     const [day, month, year] = dateStr.split("-");
+        //     return `${year}-${month}-${day}`; // YYYY-MM-DD
+        // }
+        //
+        // document.querySelector("form").addEventListener("submit", function (e) {
+        //     const input = document.getElementById("date_of_birth");
+        //     if (input.value) {
+        //         input.value = convertToYMD(input.value);  // convert before submitting
+        //     }
+        // });
         document.addEventListener('DOMContentLoaded', handleSubmitValidation);
 
         // Function to show specific tab content based on index and set active class
@@ -933,12 +951,11 @@
             var cell8 = row.insertCell(7); // Attachment
             var cell9 = row.insertCell(8); // Delete Button
 
-            var index = rowCount + 1;
 
-            cell1.innerHTML = index;
-            cell2.innerHTML = `<input type="text" name="course_university_${index}[]" class="name_of_course_university" style="background-color: #fff;">`;
-            cell3.innerHTML = `<input type="text" name="institution_location_${index}[]" class="name_location_of_institution" style="background-color: #fff;">`;
-            cell4.innerHTML = `<input type="text" name="university_${index}[]" class="name_university_of_institution" style="background-color: #fff;">`;
+            cell1.innerHTML = rowCount + 1;
+            cell2.innerHTML = `<input type="text" name="course_university_${index}[]" class="course" style="background-color: #fff;">`;
+            cell3.innerHTML = `<input type="text" name="institution_location_${index}[]" class="name_of_school_college" style="background-color: #fff;">`;
+            cell4.innerHTML = `<input type="text" name="university_${index}[]" class="name_of_universityboard_of_exam" style="background-color: #fff;">`;
             cell5.innerHTML = `<input type="text" name="date_from_${index}[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
             cell6.innerHTML = `<input type="text" name="date_to_${index}[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
             cell7.innerHTML = `<input type="number" step="0.01" name="results_${index}[]" class="result" style="background-color: #fff;">`;
@@ -1060,7 +1077,7 @@
 
         // Attach event listeners for buttons on all tables
         document.getElementById('add-row').addEventListener('click', function () {
-            addRow_educ('educational_qualification_table');
+            addRow_educ('education_qualification_table');
         });
 
         document.getElementById('add-row-prof').addEventListener('click', function () {
@@ -1082,6 +1099,7 @@
         flatpickr('#interviewed_date', {
             dateFormat: "d-m-Y",
         })
+
 
 
     </script>

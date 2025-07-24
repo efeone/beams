@@ -29,7 +29,7 @@
   },
   {
    "fieldname": "last_salary_drawn",
-   "fieldtype": "Float",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Last Salary Drawn"
   },
@@ -41,7 +41,7 @@
   },
   {
    "fieldname": "period_of_employment",
-   "fieldtype": "Float",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Period of Employment"
   },
@@ -61,12 +61,13 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-04 11:50:46.639956",
+ "modified": "2025-07-22 14:25:11.581937",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Previous Employment History",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

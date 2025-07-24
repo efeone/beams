@@ -3,16 +3,6 @@ $(document).ready(function () {
     $('.web-footer').hide();
     const { get_query_params, get_query_string } = frappe.utils;
     const applicant_id = $("#docname").val();
-
-    const telPhoneInput = document.getElementById('telephone_number');
-    telPhoneInput.addEventListener('input', (e) => {
-        let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
-        if (value.length > 4) {
-            value = value.slice(0, 4) + ' ' + value.slice(4, 11);
-        }
-        e.target.value = value;
-    });
-
     // Handle file selection and reading for each file input
     var $form = $("form[id='submit_application']");
     $form.on("change", "[type='file']", function () {
@@ -43,22 +33,61 @@ $(document).ready(function () {
     const date_of_birth = safeValue($('#date_of_birth').val());
     const interviewed_date = safeValue($('#interviewed_date').val());
 
-    $('#submit_application').on('submit', function (event) {
+    $form.on("submit", function (event) {
+        event.preventDefault();
+
+        const managerEmail = safeValue($('#manager_email').val());
+        const managerPhone = safeValue($('#manager_contact_no').val());
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^\d{10}$/;
+
+        // Check: Both fields must be filled
+        if (!managerEmail){
+            alert(" Manager Email are required.");
+            return false;
+        }
+
+        // Validate Email
+        if (!emailRegex.test(managerEmail)) {
+            alert("Please enter a valid manager email address.");
+            return false;
+        }
+
+        // Check: Both fields must be filled
+        if (!managerPhone) {
+            alert("Contact No are required.");
+            return false;
+        }
+
+        // Validate Phone
+        if (!phoneRegex.test(managerPhone)) {
+            alert("Please enter a valid 10-digit mobile number for Manager Contact No.");
+            return false;
+        }
         event.preventDefault();
         const fields = [
             "father_name", "applicant_name", "date_of_birth", "gender", "country", "marital_status",
-            "current_address", "permanent_address", "email_id", "aadhar_number", "name_of_employer",
-            "address_of_employer", "telephone_no", "employee_code", "current_designation",
-            "current_department", "employment_period_from", "employment_period_to", "manager_name",
-            "manager_contact_no", "manager_email", "duties_and_reponsibilities", "reason_for_leaving",
-            "first_salary_drawn", "last_salary_drawn", "agency_details", "current_salary", "expected_salary",
-            "telephone_number", "other_achievments", "position", "interviewed_location", "interviewed_date",
+            "current_house_no","current_city","current_perm_post_office","current_street","current_district",
+            "current_pin","current_locality","current_state","period_years","current_period_months",
+            "permanent_house_no","permanent_city","permanent_perm_post_office","permanent_street",
+            "permanent_district","permanent_pin","permanent_locality","permanent_state", "email_id",
+            "aadhaar_number_input", "name_of_employer","current_department","current_designation","reports_to",
+            "manager_name","manager_contact_no","manager_email","reference_taken",
+            "address_of_employer", "duties_and_reponsibilities", "reason_for_leaving",
+            "agency_details", "current_salary", "expected_salary",
+            "other_achievments", "position", "interviewed_location", "interviewed_date",
             "interviewed_outcome", "related_employee", "related_employee_org", "related_employee_pos",
             "related_employee_rel", "professional_org", "political_org", "specialised_training",
             "reference_taken", "was_this_position", "state_restriction", "achievements_checkbox",
             "interviewed_before_checkbox", "related_to_employee_checkbox", "professional_org_checkbox",
-            "political_org_checkbox", "specialised_training_checkbox"
+            "political_org_checkbox", "specialised_training_checkbox","additional_comments"
         ];
+
+        const first_name = safeValue($('#first_name').val());
+        const last_name = safeValue($('#last_name').val());
+        const full_name = `${first_name} ${last_name}`.trim();
+        const email = safeValue($('#email').val());
 
         // Constructing the main data object
         const data = fields.reduce((obj, field) => {
@@ -76,18 +105,19 @@ $(document).ready(function () {
         data.is_form_submitted = $('#confirm').is(':checked') ? 1 : 0;
 
         // Handling educational qualifications
-        data.educational_qualification = [];
-        $('#educational_qualification_table tbody tr').each(function () {
+        data.education_qualification = [];
+        $('#education_qualification_table tbody tr').each(function () {
             const fileInput = $(this).find('input[type="file"]')[0];
             const row = {
-                name_of_course_university: safeValue($(this).find('.name_of_course_university').val()),
-                name_location_of_institution: safeValue($(this).find('.name_location_of_institution').val()),
-                dates_attended_from: safeValue($(this).find('.dates_attended_from').val()),
-                dates_attended_to: safeValue($(this).find('.dates_attended_to').val()),
-                result: safeValue($(this).find('.result').val()),
-                attachments: fileInput ? fileInput.filedata : null
+                course: safeValue($(this).find('.course').val()), // Course
+                name_of_school_college: safeValue($(this).find('.name_of_school_college').val()), // School/College
+                name_of_universityboard_of_exam: safeValue($(this).find('.name_of_universityboard_of_exam').val()), // University/Board
+                dates_attended_from: safeValue($(this).find('.dates_attended_from').val()), // From year
+                dates_attended_to: safeValue($(this).find('.dates_attended_to').val()),   // To year
+                result: safeValue($(this).find('.result').val()), // Result (%)
+                attachments: fileInput ? fileInput.filedata : null // Attachment file
             };
-            data.educational_qualification.push(row);
+            data.education_qualification.push(row);
         });
 
         // Handling professional certifications
@@ -151,16 +181,16 @@ $(document).ready(function () {
         frappe.call({
             method: "beams.www.job_application_upload.upload_doc.update_register_form",
             args: {
-                data: JSON.stringify(data),
+                form_data: JSON.stringify(data),  // ✅ Correct key expected by Python
                 docname: applicant_id
             },
             callback: function (r) {
                 alert(r.message === "success" ? 'Job Applicant updated successfully!' : 'Submission completed.');
             },
             error: function (err) {
-                console.error("Error:", err);
                 alert('An error occurred during submission.');
             }
         });
+
     });
 });
