@@ -790,17 +790,20 @@
                 submitBtn.style.backgroundColor = "gray";
             }
         });
-        // Redirect on submit button click
-        // document.getElementById("submitBtn").addEventListener("click", function () {
-        //     const checkbox = document.getElementById("confirm");
-        //     const errorMessage = document.getElementById("error-message");
-        //
-        //     if (checkbox.checked) {
-        //         window.location.href = "/application_success/success.html";
-        //     } else {
-        //         errorMessage.style.display = "block";
-        //     }
-        // });
+        document.getElementById('submitBtn').addEventListener('click', function () {
+        	const checkbox = document.getElementById('confirm');
+        	const errorMessage = document.getElementById('error-message');
+
+        	if (checkbox.checked) {
+        		// Proceed with redirection only if form was successfully submitted
+        		// This can be controlled inside frappe.call callback
+        		// window.location.href = '/application_success/success.html';
+        		errorMessage.style.display = 'none';
+        	} else {
+        		errorMessage.style.display = 'block';
+        	}
+        });
+
         function toggleAgencyDetails() {
             const employmentType = document.getElementById("was_this_position").value;
             const agencyDetailsWrapper = document.getElementById("agencies_details");
@@ -892,29 +895,6 @@
             }
             submitBtn.addEventListener('click', validateSubmit);
         }
-
-        // function convertToYMD(dateStr) {
-        //     const [day, month, year] = dateStr.split("-");
-        //     return `${year}-${month}-${day}`; // YYYY-MM-DD
-        // }
-        //
-        // document.querySelector("form").addEventListener("submit", function (e) {
-        //     const input = document.getElementById("interviewed_date");
-        //     if (input.value) {
-        //         input.value = convertToYMD(input.value);  // convert before submitting
-        //     }
-        // });
-        // function convertToYMD(dateStr) {
-        //     const [day, month, year] = dateStr.split("-");
-        //     return `${year}-${month}-${day}`; // YYYY-MM-DD
-        // }
-        //
-        // document.querySelector("form").addEventListener("submit", function (e) {
-        //     const input = document.getElementById("date_of_birth");
-        //     if (input.value) {
-        //         input.value = convertToYMD(input.value);  // convert before submitting
-        //     }
-        // });
         document.addEventListener('DOMContentLoaded', handleSubmitValidation);
 
         // Function to show specific tab content based on index and set active class
