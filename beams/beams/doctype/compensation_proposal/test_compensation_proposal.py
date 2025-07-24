@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestJobProposal(FrappeTestCase):
+class TestCompensationProposal(FrappeTestCase):
 	pass

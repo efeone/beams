@@ -6,7 +6,7 @@ frappe.ui.form.on('Job Applicant', {
         const statuses = [
             'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
             'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
-            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Job Proposal Accepted', 'Job Proposal Created'
+            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Compensation Proposal Accepted', 'Compensation Proposal Created'
         ];
 
         if (statuses.includes(frm.doc.status)) {
@@ -29,7 +29,7 @@ frappe.ui.form.on('Job Applicant', {
 
         const magic_link_statuses = [
             'Interview Completed', 'Local Enquiry Approved', 'Selected',
-            'Job Proposal Created', 'Job Proposal Accepted',
+            'Compensation Proposal Created', 'Compensation Proposal Accepted',
             'Interview Scheduled', 'Interview Ongoing'
         ];
 
@@ -37,7 +37,7 @@ frappe.ui.form.on('Job Applicant', {
             frm.remove_custom_button('Send Magic Link');
         }
 
-        if (frm.doc.status === 'Job Proposal Created' || frm.doc.status === 'Job Proposal Accepted') {
+        if (frm.doc.status === 'Compensation Proposal Created' || frm.doc.status === 'Compensation Proposal Accepted') {
             frm.page.remove_inner_button('Rejected', 'Set Status');
             frm.page.remove_inner_button('Hold', 'Set Status');
         }
@@ -67,17 +67,17 @@ function handle_custom_buttons(frm) {
                 });
             }
 
-            // Handle "Job Proposal" button for "Selected" status
+            // Handle "Compensation Proposal" button for "Selected" status
             if (frm.doc.status === 'Selected') {
-                frappe.db.get_value('Job Proposal', { 'job_applicant': frm.doc.name }, 'name', function (result) {
+                frappe.db.get_value('Compensation Proposal', { 'job_applicant': frm.doc.name }, 'name', function (result) {
                     if (!result || !result.name) {
-                        frm.add_custom_button(__('Job Proposal'), function () {
-                            frappe.new_doc('Job Proposal', {
+                        frm.add_custom_button(__('Compensation Proposal'), function () {
+                            frappe.new_doc('Compensation Proposal', {
                                 job_applicant: frm.doc.name
                             });
                         }, __('Create'));
                     } else {
-                        frm.remove_custom_button(__('Job Proposal'), __('Create'));
+                        frm.remove_custom_button(__('Compensation Proposal'), __('Create'));
                     }
                 });
             }
