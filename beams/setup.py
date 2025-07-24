@@ -2253,26 +2253,26 @@ def get_job_applicant_custom_fields():
 	return {
 		"Job Applicant": [
 			{
-			   "fieldname": "date_of_birth",
+				"fieldname": "date_of_birth",
 				"fieldtype": "Date",
 				"label": "Date of Birth",
 				"insert_after": "email_id"
 			},
 			{
-			   "fieldname": "gender",
+				"fieldname": "gender",
 				"fieldtype": "Link",
 				"label": "Gender",
 				"options": "Gender",
 				"insert_after": "date_of_birth"
 			},
 			{
-			   "fieldname": "father_name",
+				"fieldname": "father_name",
 				"fieldtype": "Data",
 				"label": "Father's Name",
 				"insert_after": "job_title"
 			},
 			{
-			   "fieldname": "marital_status",
+				"fieldname": "marital_status",
 				"fieldtype": "Select",
 				"label": "Marital Status",
 				"options": "\nSingle\nMarried\nDivorced\nWidowed",
@@ -2285,58 +2285,160 @@ def get_job_applicant_custom_fields():
 				"insert_after": "marital_status"
 			},
 			{
-			   "fieldname": "current_address",
-				"fieldtype": "Small Text",
-				"label": "Current Address",
+				"fieldname": "house_no_name",
+				"fieldtype": "Data",
+				"label": "House No./Name",
 				"insert_after": "current_address_session_break"
 			},
 			{
-			   "fieldname": "current_column_break",
+				"fieldname": "street_road",
+				"fieldtype": "Data",
+				"label": "Street/Road",
+				"insert_after": "house_no_name"
+			},
+			{
+				"fieldname": "locality_village",
+				"fieldtype": "Data",
+				"label": "Locality/Village",
+				"insert_after": "street_road"
+			},
+			{
+				"fieldname": "current_column_break",
 				"fieldtype": "Column Break",
 				"label": "",
-				"insert_after": "current_address"
+				"insert_after": "locality_village"
+			},
+			{
+				"fieldname": "city",
+				"fieldtype": "Data",
+				"label": "City",
+				"insert_after": "current_column_break"
+			},
+			{
+				"fieldname": "district",
+				"fieldtype": "Data",
+				"label": "District",
+				"insert_after": "city"
+			},
+			{
+				"fieldname": "state",
+				"fieldtype": "Data",
+				"label": "State",
+				"insert_after": "district"
+			},
+			{
+				"fieldname": "current_column_break_1",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "state"
+			},
+			{
+				"fieldname": "post_office",
+				"fieldtype": "Data",
+				"label": "Post Office",
+				"insert_after": "current_column_break_1"
+			},
+			{
+				"fieldname": "pin_code",
+				"fieldtype": "Int",
+				"label": "PIN Code",
+				"insert_after": "post_office"
+			},
+			{
+				"fieldname": "period_of_stay",
+				"fieldtype": "Data",
+				"label": "Period of Stay",
+				"insert_after": "pin_code"
 			},
 			{
 				"fieldname": "permanent_address_session_break",
 				"fieldtype": "Section Break",
 				"label": "Permanent Address",
-				"insert_after": "current_column_break"
+				"insert_after": "period_of_stay"
 			},
 			{
-			   "fieldname": "permanent_address",
-				"fieldtype": "Small Text",
-				"label": "Permanent Address",
+				"fieldname": "phouse_no_name",
+				"fieldtype": "Data",
+				"label": "House No./Name",
 				"insert_after": "permanent_address_session_break"
 			},
 			{
-			   "fieldname": "permanent_column_break",
+				"fieldname": "pstreet_road",
+				"fieldtype": "Data",
+				"label": "Street/Road",
+				"insert_after": "phouse_no_name"
+			},
+			{
+				"fieldname": "plocality_village",
+				"fieldtype": "Data",
+				"label": "Locality/Village",
+				"insert_after": "pstreet_road"
+			},
+			{
+				"fieldname": "pcurrent_column_break",
 				"fieldtype": "Column Break",
 				"label": "",
-				"insert_after": "permanent_address"
+				"insert_after": "plocality_village"
+			},
+			{
+				"fieldname": "pcity",
+				"fieldtype": "Data",
+				"label": "City",
+				"insert_after": "pcurrent_column_break"
+			},
+			{
+				"fieldname": "pdistrict",
+				"fieldtype": "Data",
+				"label": "District",
+				"insert_after": "pcity"
+			},
+			{
+				"fieldname": "pstate",
+				"fieldtype": "Data",
+				"label": "State",
+				"insert_after": "pdistrict"
+			},
+			{
+				"fieldname": "pcurrent_column_break_1",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "pstate"
+			},
+			{
+				"fieldname": "ppost_office",
+				"fieldtype": "Data",
+				"label": "Post Office",
+				"insert_after": "pcurrent_column_break_1"
+			},
+			{
+				"fieldname": "ppin_code",
+				"fieldtype": "Int",
+				"label": "PIN Code",
+				"insert_after": "ppost_office"
 			},
 			{
 				"fieldname": "email_address_session_break",
 				"fieldtype": "Section Break",
 				"label": "",
-				"insert_after": "permanent_column_break"
+				"insert_after": "ppin_code"
 			},
 			{
-			   "fieldname": "aadhar_column_break",
+				"fieldname": "aadhar_column_break",
 				"fieldtype": "Column Break",
 				"label": "",
 				"insert_after": "email_address_session_break"
 			},
 			{
-			   "fieldname": "aadhar_number",
+				"fieldname": "aadhar_number",
 				"fieldtype": "Data",
 				"label": "Aadhar Number",
 				"insert_after": "aadhar_column_break"
 			},
 			{
-			   "fieldname": "min_education_qual",
+				"fieldname": "min_education_qual",
 				"fieldtype": "Link",
 				"label": "Educational Qualification",
-				'options':"Educational Qualification",
+				'options': "Educational Qualification",
 				"insert_after": "details"
 			},
 			{
@@ -2437,116 +2539,169 @@ def get_job_applicant_custom_fields():
 				"insert_after": "current_employer"
 			},
 			{
-				"fieldname": "manager_name",
-				"fieldtype": "Data",
-				"label": "Manager's Name",
+				"fieldname": "column_break_1",
+				"fieldtype": "Column Break",
+				"label": "",
 				"insert_after": "name_of_employer"
 			},
 			{
-				"fieldname": "employment_period_from",
-				"fieldtype": "Int",
-				"label": "Employment Period From",
-				"insert_after": "manager_name"
-			},
-			{
-				"fieldname": "was_this_position",
-				"fieldtype": "Select",
-				"label": "Current Employment Type",
-				"options": "\nPermanent\nTemporary\nContractual",
-				"insert_after": "employment_period_from"
-			},
-			{
-				"fieldname": "current_employer_1_column_break",
-				"fieldtype": "Column Break",
-				"label": "",
-				"insert_after": "was_this_position"
-			},
-			{
-				"fieldname": "current_designation",
-				"fieldtype": "Data",
-				"options": "Phone",
-				"label": "Current Designation",
-				"insert_after": "current_employer_1_column_break"
-			},
-			{
-				"fieldname": "manager_contact_no",
-				"fieldtype": "Data",
-				"options": "Phone",
-				"label": "Manager's Contact No",
-				"insert_after": "current_designation"
-			},
-			{
-				"fieldname": "employment_period_to",
-				"fieldtype": "Int",
-				"label": "Employment Period To",
-				"insert_after": "manager_contact_no"
-			},
-			{
-				"fieldname": "current_employer_column_break",
-				"fieldtype": "Column Break",
-				"label": "",
-				"insert_after": "employment_period_to"
-			},
-			{
-				"fieldname": "current_department",
+				"fieldname": "department",
 				"fieldtype": "Data",
 				"label": "Department",
-				"insert_after": "current_employer_column_break"
+				"insert_after": "column_break_1"
 			},
 			{
-				"fieldname": "manager_email",
+				"fieldname": "column_break_2",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "department"
+			},
+			{
+				"fieldname": "cdesignation",
 				"fieldtype": "Data",
-				"options": "Email",
-				"label": "Manager's Email",
-				"insert_after": "current_department"
+				"label": "Designation",
+				"insert_after": "column_break_2"
 			},
 			{
-				"fieldname": "reference_taken",
-				"fieldtype": "Select",
-				"label": "Can I take Reference Now?",
-				"options": "\nYes\nNo",
-				"insert_after": "manager_email"
-			},
-			{
-				"fieldname": "previous_emp",
+				"fieldname": "section_break_1",
 				"fieldtype": "Section Break",
-				"insert_after": "reference_taken"
+				"label": "",
+				"insert_after": "cdesignation"
 			},
 			{
-				"fieldname": "address_of_employer",
+				"fieldname": "reports_to",
+				"fieldtype": "Data",
+				"label": "Reports To",
+				"insert_after": "section_break_1"
+			},
+			{
+				"fieldname": "section_break_2",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "reports_to"
+			},
+			{
+				"fieldname": "cname",
+				"fieldtype": "Data",
+				"label": "Name",
+				"insert_after": "section_break_2"
+			},
+			{
+				"fieldname": "column_break_33",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "cname"
+			},
+			{
+				"fieldname": "ccontact",
+				"fieldtype": "Data",
+				"label": "Contact No",
+				"insert_after": "column_break_33"
+			},
+			{
+				"fieldname": "column_break_4",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "ccontact"
+			},
+			{
+				"fieldname": "cemail",
+				"fieldtype": "Data",
+				"label": "Email",
+				"insert_after": "column_break_4"
+			},
+			{
+				"fieldname": "section_break_3",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "cemail"
+			},
+			{
+				"fieldname": "column_break_5",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "section_break_3"
+			},
+			{
+				"fieldname": "column_break_6",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "column_break_5"
+			},
+			{
+				"fieldname": "creference",
+				"fieldtype": "Select",
+				"label": "Can a Reference be Taken Now?",
+				"options": "Yes\nNo",
+				"insert_after": "column_break_6"
+			},
+			{
+				"fieldname": "section_break_4",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "creference"
+			},
+			{
+				"fieldname": "address_of_employeer",
 				"fieldtype": "Small Text",
 				"label": "Address of Employer",
-				"insert_after": "previous_emp"
+				"insert_after": "section_break_4"
+			},
+			{
+				"fieldname": "columnbeak0001",
+				"fieldtype": "Column Break",
+				"label": " ",
+				"insert_after": "address_of_employeer"
+			},
+			{
+				"fieldname": "duties_and_reponsibilitiess",
+				"fieldtype": "Small Text",
+				"label": "Duties & Responsibilities",
+				"insert_after": "columnbeak0001"
+			},
+			{
+				"fieldname": "sectionbreak00001",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "duties_and_reponsibilitiess"
+			},
+			{
+				"fieldname": "reason_for_leavingg",
+				"fieldtype": "Small Text",
+				"label": "Reason for Leaving",
+				"insert_after": "sectionbreak00001"
+			},
+			{
+				"fieldname": "columnbeak0002",
+				"fieldtype": "Column Break",
+				"label": " ",
+				"insert_after": "reason_for_leavingg"
 			},
 			{
 				"fieldname": "agency_details",
 				"fieldtype": "Small Text",
-				"label": "Agency Details  (if Temporary or Contractual)",
-				"insert_after": "address_of_employer"
+				"label": "Agency Details",
+				"insert_after": "columnbeak0002",
+				"depends_on": "eval:doc.current_employment_type == 'Temporary' || doc.current_employment_type == 'Contractual'"
 			},
 			{
-				"fieldname": "column_break_agency",
-				"fieldtype": "Column Break",
+				"fieldname": "sectionbreak0001",
+				"fieldtype": "Section Break",
 				"label": "",
 				"insert_after": "agency_details"
 			},
 			{
-				"fieldname": "duties_and_reponsibilities",
-				"fieldtype": "Small Text",
-				"label": "Duties and Responsibilities",
-				"insert_after": "column_break_agency"
-			},
-			{
-				"fieldname": "reason_for_leaving",
-				"fieldtype": "Small Text",
-				"label": "Reason For Leaving",
-				"insert_after": "duties_and_reponsibilities"
+				"fieldname": "current_employment_type",
+				"fieldtype": "Select",
+				"label": "Current Employment Type",
+				"options": "Permanent\nTemporary\nContractual",
+				"insert_after": "sectionbreak0001"
 			},
 			{
 				"fieldname": "previous_emplyoment",
 				"fieldtype": "Section Break",
 				"label": "Previous Employment History",
-				"insert_after": "reason_for_leaving"
+				"insert_after": "current_employment_type"
 			},
 			{
 				"fieldname": "prev_emp_his",
@@ -2732,11 +2887,17 @@ def get_job_applicant_custom_fields():
 				"insert_after": "political_org"
 			},
 			{
+				"fieldname": "share_your_thoughts",
+				"fieldtype": "Small Text",
+				"label": "Share Your thoughts",
+				"insert_after": "specialised_training"
+			},
+			{
 				"fieldname": "is_form_submitted",
 				"fieldtype": "Check",
 				"label": "Is Form Submitted",
-				"read_only":1,
-				"insert_after": "specialised_training"
+				"read_only": 1,
+				"insert_after": "share_your_thoughts"
 			},
 			{
 				"fieldname": "payslip_month_1",

@@ -50,7 +50,7 @@
                         </div>
                         <div class="column">
                             <label for="date_of_birth">Date of Birth:</label>
-                            <input type="date" id="date_of_birth" name="date_of_birth">
+                            <input type="text" id="date_of_birth" name="date_of_birth">
                         </div>
                     </div>
                     <div class="row">
@@ -79,6 +79,15 @@
                                 </select>
                             </div>
                         </div>
+                        <!-- Aadhaar Field (Initially Hidden) -->
+                        <div class="column" id="aadhaar_field" style="display:none;">
+                            <label for="aadhaar_number_input">Aadhaar Number</label>
+                            <div class="col-14">
+                                <input type="text" class="form-control" id="aadhaar_number_input" name="aadhaar_number"
+                                       style="height:40px; width: 90%; font-size:13px; background-color: #004eff17;"
+                                       placeholder="Enter Aadhaar Number" pattern="\d{12}" maxlength="12">
+                            </div>
+                        </div>
                         <div class="column">
                             <label for="marital_status">Maritial Status</label>
                             <select id="marital_status" name="marital_status">
@@ -88,30 +97,144 @@
                                 <option value="Widowed">Widowed</option>
                             </select>
                         </div>
+                        <div class="column"></div>
+                        <div class="column"></div>
+
                     </div>
                     <h5><b>Current Address</b></h5>
                     <div class="row tax-details">
-                        <div class="column">
-                            <label for="current_address">Current Address</label>
-                            <textarea id="current_address" name="current_address"
-                                style="width :500px; height:100px;"></textarea>
-                        </div>
+
+                          <!-- House No./Name and Period of Stay -->
+                          <div class="column">
+                              <label for="house_no">House No./Name</label>
+                              <input type="text" id="current_house_no" name="current_house_no" style="width: 90%;" />
+                          </div>
+
+                          <!-- City -->
+                          <div class="column" style="width: 100%;">
+                              <label for="city">City</label>
+                              <input type="text" id="current_city" name="current_city" style="width: 95%;" />
+                          </div>
+
+                          <!-- Post Office -->
+                          <div class="column" style="width: 100%;">
+                              <label for="perm_post_office">Post Office</label>
+                              <input type="text" id="current_perm_post_office" name="current_perm_post_office" style="width: 95%;" />
+                          </div>
+
+                          <!-- Street/Road -->
+                          <div class="column" style="width: 100%;">
+                              <label for="street">Street/Road</label>
+                              <input type="text" id="current_street" name="current_street" style="width: 95%;" />
+                          </div>
+
+                          <!-- District -->
+                          <div class="column" style="width: 100%;">
+                              <label for="district">District</label>
+                              <input type="text" id="current_district" name="current_district" style="width: 95%;" />
+                          </div>
+
+                          <!-- PIN Code -->
+                          <div class="column" style="width: 100%;">
+                              <label for="pin">PIN Code</label>
+                              <input type="text" id="current_pin" name="current_pin" maxlength="6" pattern="\d{6}"
+                                     style="width: 95%;" placeholder="Enter 6-digit PIN" />
+                          </div>
+                          <!-- Street/Road -->
+                          <div class="column" style="width: 100%;">
+                              <label for="locality">Locality/Village</label>
+                              <input type="text" id="current_locality" name="current_locality" style="width: 95%;" />
+                          </div>
+
+
+                          <!-- State -->
+                          <div class="column" style="width: 100%;">
+                              <label for="state">State</label>
+                              <input type="text" id="current_state" name="current_state" style="width: 95%;" />
+                          </div>
+
+                          <div class="column">
+                              <label for="period_years">Period of Stay</label>
+                              <div style="display: flex; gap: 5px;">
+                                  <select id="period_years" name="period_years" style="width: 30%;">
+                                      <option value="">Years</option>
+                                      {% for i in range(0, 61) %}
+                                      <option value="{{ i }}">{{ i }} Years</option>
+                                      {% endfor %}
+                                  </select>
+                                  <select id="current_period_months" name="current_period_months" style="width: 30%;">
+                                      <option value="">Months</option>
+                                      {% for i in range(0, 12) %}
+                                      <option value="{{ i }}">{{ i }} Months</option>
+                                      {% endfor %}
+                                  </select>
+                              </div>
+                          </div>
+
                     </div>
                     <h5><b>Permanent Address</b></h5>
                     <div class="row tax-details">
-                        <div>
-                            <label>
-                                <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as
-                                Current Address
-                            </label>
-                        </div>
-                        <div class="column"></div>
-                        <div class="column"></div>
-                        <div class="column">
-                            <label for="permanent_address">Permanent Address</label>
-                            <textarea id="permanent_address" name="permanent_address"
-                                style="width :500px; height:100px;"></textarea>
-                        </div>
+                      <!-- Same as Current Checkbox -->
+                      <div class="column" style="width: 100%; margin-bottom: 10px;">
+                          <label>
+                              <input type="checkbox" id="same_as_current" onclick="copyCurrentAddress()"> Same as Current Address
+                          </label>
+                      </div>
+                      <div class="column"></div>
+                      <div class="column"></div>
+
+                      <!-- House No./Name and Period of Stay -->
+                      <div class="column">
+                          <label for="house_no">House No./Name</label>
+                          <input type="text" id="permanent_house_no" name="permanent_house_no" style="width: 90%;" />
+                      </div>
+
+                      <!-- City -->
+                      <div class="column" style="width: 100%;">
+                          <label for="city">City</label>
+                          <input type="text" id="permanent_city" name="permanent_city" style="width: 95%;" />
+                      </div>
+
+                      <!-- Post Office -->
+                      <div class="column" style="width: 100%;">
+                          <label for="perm_post_office">Post Office</label>
+                          <input type="text" id="permanent_perm_post_office" name="permanent_perm_post_office" style="width: 95%;" />
+                      </div>
+
+                      <!-- Street/Road -->
+                      <div class="column" style="width: 100%;">
+                          <label for="street">Street/Road</label>
+                          <input type="text" id="permanent_street" name="permanent_street" style="width: 95%;" />
+                      </div>
+
+                      <!-- District -->
+                      <div class="column" style="width: 100%;">
+                          <label for="district">District</label>
+                          <input type="text" id="permanent_district" name="permanent_district" style="width: 95%;" />
+                      </div>
+
+                      <!-- PIN Code -->
+                      <div class="column" style="width: 100%;">
+                          <label for="pin">PIN Code</label>
+                          <input type="text" id="permanent_pin" name="permanent_pin" maxlength="6" pattern="\d{6}"
+                                 style="width: 95%;" placeholder="Enter 6-digit PIN" />
+                      </div>
+                      <!-- Street/Road -->
+                      <div class="column" style="width: 100%;">
+                          <label for="locality">Locality/Village</label>
+                          <input type="text" id="permanent_locality" name="permanent_locality" style="width: 95%;" />
+                      </div>
+
+
+                      <!-- State -->
+                      <div class="column" style="width: 100%;">
+                          <label for="state">State</label>
+                          <input type="text" id="permanent_state" name="permanent_state" style="width: 95%;" />
+                      </div>
+
+                      <div class="column">
+                      </div>
+
                     </div>
                     <h5><b>Contact Details</h5></b>
                     <div class="row tax-details">
@@ -126,21 +249,19 @@
                                 {% if doc.phone_number %} disabled {% endif %}>
                         </div>
                         <div class="column">
-                            <label for="aadhar_number">Aadhar Number</label>
-                            <input type="text" id="aadhar_number" name="aadhar_number" placeholder="Enter Aadhar Number"
-                                maxlength="12" style="width: 100%; max-width: 300px;" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
                         </div>
                     </div>
                     <h5><b>Educational Qualification</h5></b>
                     <div class="row tax-details">
-                        <table id="educational_qualification_table">
+                        <table id="education_qualification_table">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Name of Course & University</th>
-                                    <th>Name & Location of Institute</th>
+                                    <th>Course</th>
+                                    <th>Name of School/ College </th>
+                                    <th>Name of University/ Board of Exam </th>
                                     <th>Date Attended From</th>
                                     <th>Date Attended To</th>
                                     <th>Result(%)</th>
@@ -151,10 +272,12 @@
                             <tbody>
                                 <tr>
                                     <td>1</td>
-                                    <td><input type="text" name="course_university_1" class="name_of_course_university"
+                                    <td><input type="text" name="course" class="course"
                                             style="background-color: #fff;"></td>
-                                    <td><input type="text" name="institution_location_1"
-                                            class="name_location_of_institution" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="name_of_school_college"
+                                            class="name_of_school_college" style="background-color: #fff;"></td>
+                                    <td><input type="text" name="name_of_universityboard_of_exam"
+                                            class="name_of_universityboard_of_exam" style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
                                             placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
                                             style="background-color: #fff;"></td>
@@ -226,39 +349,43 @@
                             <input type="text" id="name_of_employer" name="name_of_employer">
                         </div>
                         <div class="column">
-                            <label for="current_designation">Designation</label>
-                            <input type="text" id="current_designation" name="current_designation">
-                        </div>
-                        <div class="column">
                             <label for="current_department">Department</label>
                             <input type="text" id="current_department" name="current_department">
                         </div>
+                        <div class="column">
+                            <label for="current_designation">Designation</label>
+                            <input type="text" id="current_designation" name="current_designation">
+                        </div>
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="manager_name">Manager's Name</label>
+                            <label for="reports_to">Reports To</label>
+                            <input type="text" id="reports_to" name="reports_to"placeholder="CEO,CFO,Accounts Manager,Chief Editor....">
+                        </div>
+                        <div class="column">
+                        </div>
+                        <div class="column">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="manager_name">Name</label>
                             <input type="text" id="manager_name" name="manager_name">
                         </div>
                         <div class="column">
-                            <label for="manager_contact_no">Manager's Contact No</label>
-                            <input type="tel" id="manager_contact_no" name="manager_contact_no" pattern="[0-9]{10}"
+                            <label for="manager_contact_no">Contact No</label>
+                            <input type="text" id="manager_contact_no" name="manager_contact_no"
                                 title="Please enter a valid 10-digit mobile number">
                         </div>
                         <div class="column">
-                            <label for="manager_email">Manager's Email</label>
-                            <input type="email" id="manager_email" name="manager_email">
+                            <label for="manager_email">Email</label>
+                            <input type="text" id="manager_email" name="manager_email">
                         </div>
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="employment_period_from">Employment Period From</label>
-                            <input type="text" id="employment_period_from" name="employment_period_from" maxlength="4"
-                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
-                            <label for="employment_period_to">Employment Period To</label>
-                            <input type="text" id="employment_period_to" name="employment_period_to" maxlength="4"
-                                placeholder="Enter Year (yyyy)" oninput="validateDigits(this)">
                         </div>
                         <div class="column">
                             <label for="reference_taken">Can a Reference be Taken Now?</label>
@@ -267,21 +394,32 @@
                                 <option value="No">No</option>
                             </select>
                         </div>
-                        <div class="column">
-                            <label for="address_of_employer">Address of Employer</label>
-                            <textarea id="address_of_employer" name="address_of_employer" rows="4" cols="50"></textarea>
+                    </div>
+                    <!-- First row: Address + Duties -->
+                    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="address_of_employer">Address of Employer</label><br>
+                            <textarea id="address_of_employer" name="address_of_employer" rows="4" style="width: 100%;"></textarea>
                         </div>
-                        <div class="column">
-                            <label for="duties_and_reponsibilities">Duties & Responsibilities</label>
-                            <textarea id="duties_and_reponsibilities" name="duties_and_reponsibilities" rows="4"
-                                cols="50"></textarea>
-                        </div>
-
-                        <div class="column">
-                            <label for="reason_for_leaving">Reasons for leaving</label>
-                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" cols="50"></textarea>
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="duties_and_responsibilities">Duties & Responsibilities</label><br>
+                            <textarea id="duties_and_responsibilities" name="duties_and_responsibilities" rows="4" style="width: 100%;"></textarea>
                         </div>
                     </div>
+
+                    <!-- Second row: Reason + Agency -->
+                    <div class="row" style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 20px;">
+                        <div class="column" style="flex: 1; min-width: 250px;">
+                            <label for="reason_for_leaving">Reasons for Leaving</label><br>
+                            <textarea id="reason_for_leaving" name="reason_for_leaving" rows="4" style="width: 100%;"></textarea>
+                        </div>
+
+                        <div class="column" id="agencies_details" style="flex: 1; min-width: 250px; display: none;">
+                            <label for="agency_details">Agency Details</label><br>
+                            <textarea id="agency_details" name="agency_details" rows="4" style="width: 100%;"></textarea>
+                        </div>
+                    </div>
+
                     <div class="row">
                         <div class="column" style="max-width: 250px;">
                             <label for="was_this_position">Current Employment Type</label>
@@ -292,17 +430,10 @@
                                 <option value="Contractual">Contractual</option>
                             </select>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="column" id="agencies_details" style="display: none;">
-                            <label for="agency_details">Agency Details</label>
-                            <textarea id="agency_details" name="agency_details" rows="4" cols="40"
-                                style="width: 100%; max-width: 300px;"></textarea>
+                        <div class="column">
                         </div>
-                        <div class="column"></div>
-
-                    </div>
-                    <div class="column">
+                        <div class="column">
+                        </div>
                     </div>
                     <h5><b>Previous Employment History</h3></b>
                         <div class="row tax-details">
@@ -381,9 +512,6 @@
                             <input type="number" id="expected_salary" name="expected_salary">
                         </div>
                         <div class="column">
-                            <label for="telephone-no">Telephone No</label>
-                            <input type="text" name="telphone" id="telephone_number" maxlength="12"
-                                placeholder="eg : 0496 2839568" />
                         </div>
                     </div>
                     <div class="row">
@@ -429,7 +557,7 @@
                         <div class="row">
                             <div class="column">
                                 <label for="interviewed_date">Date</label>
-                                <input type="date" id="interviewed_date" name="interviewed_date">
+                                <input type="text" id="interviewed_date" name="interviewed_date">
                             </div>
                             <div class="column">
                                 <label for="interviewed_outcome">Outcome</label>
@@ -568,6 +696,12 @@
                                 cols="90"></textarea>
                         </div>
                     </div>
+                    <!-- Section for Additional Comments -->
+                    <h5><b>Share Your Thoughts</b></h5>
+                    <hr>
+                    <div class="row">
+                        <textarea name="additional_comments" id="additional_comments" rows="4" style="width: 100%;" placeholder="You may include any remarks or suggestions here..."></textarea>
+                    </div>
                     <h5><b>Declaration and Authorization </h3></b>
                         <hr>
                         </hr>
@@ -600,6 +734,41 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const countrySelect = document.getElementById('country');
+            const aadhaarField = document.getElementById('aadhaar_field');
+            const aadhaarInput = document.getElementById('aadhaar_number_input');
+
+            // Show/hide Aadhaar field
+            countrySelect.addEventListener('change', function () {
+                if (this.value === "India") {
+                    aadhaarField.style.display = "block";
+                } else {
+                    aadhaarField.style.display = "none";
+                    aadhaarInput.value = "";
+                }
+            });
+
+            // Allow only digits, max 12
+            aadhaarInput.addEventListener('input', function () {
+                this.value = this.value.replace(/\D/g, '').slice(0, 12);
+            });
+        });
+        document.addEventListener('DOMContentLoaded', function () {
+            const current_pin = document.getElementById('current_pin');
+            const permanent_pin = document.getElementById('permanent_pin');
+
+            // Function to restrict input to 6 digits only
+            function restrictToSixDigits(input) {
+                input.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 6); // remove non-digits and limit to 6 digits
+                });
+            }
+
+            restrictToSixDigits(current_pin);
+            restrictToSixDigits(permanent_pin);
+        });
         document.addEventListener("DOMContentLoaded", function () {
             const minExperience = parseInt(document.getElementById("min_experience").value, 10);
             const currentEmployerTab = document.getElementById("currentEmployerTab");
@@ -609,6 +778,7 @@
                 currentEmployerTab.style.display = "none";
             }
         });
+
 
         // Change button color based on checkbox state
         document.getElementById("confirm").addEventListener("change", function () {
@@ -620,17 +790,18 @@
                 submitBtn.style.backgroundColor = "gray";
             }
         });
-        // Redirect on submit button click
-        document.getElementById("submitBtn").addEventListener("click", function () {
-            const checkbox = document.getElementById("confirm");
-            const errorMessage = document.getElementById("error-message");
+        document.getElementById('submitBtn').addEventListener('click', function () {
+        	const checkbox = document.getElementById('confirm');
+        	const errorMessage = document.getElementById('error-message');
 
-            if (checkbox.checked) {
-                window.location.href = "/application_success/success.html";
-            } else {
-                errorMessage.style.display = "block";
-            }
+        	if (checkbox.checked) {
+        		window.location.href = '/application_success/success.html';
+        		errorMessage.style.display = 'none';
+        	} else {
+        		errorMessage.style.display = 'block';
+        	}
         });
+
         function toggleAgencyDetails() {
             const employmentType = document.getElementById("was_this_position").value;
             const agencyDetailsWrapper = document.getElementById("agencies_details");
@@ -649,22 +820,27 @@
         function copyCurrentAddress() {
             const checkbox = document.getElementById("same_as_current");
 
-            // Get the current address section fields
-            const currentAddress = document.getElementById("current_address").value;
-            // Get the permanent address section fields
-            const permanentAddress = document.getElementById("permanent_address");
-            if (!currentAddress || !permanentAddress) {
-                return;
-            }
+            const fields = [
+                "house_no",
+                "city",
+                "perm_post_office",
+                "street",
+                "district",
+                "pin",
+                "locality",
+                "state",
+            ];
 
-            // If the checkbox is checked, copy values from current address fields
-            if (checkbox.checked) {
-                permanentAddress.value = currentAddress;
-            } else {
-                // Clear the permanent address fields if unchecked
-                permanentAddress.value = "";
-            }
+            fields.forEach(field => {
+                const currentField = document.getElementById("current_" + field);
+                const permanentField = document.getElementById("permanent_" + field);
+
+                if (currentField && permanentField) {
+                    permanentField.value = checkbox.checked ? currentField.value : "";
+                }
+            });
         }
+
 
         // Function to toggle visibility based on checkbox state
         function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
@@ -731,6 +907,11 @@
             tabButtons[index].classList.add('active');
         }
 
+        // Function to validate digits (year input)
+        function validateDigits(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 4);
+        }
+
         // Function to add a new row in the Education Qualifications table
         function addRow_educ(tableId) {
             var table = document.getElementById(tableId).getElementsByTagName('tbody')[0];
@@ -738,25 +919,28 @@
             var row = table.insertRow(rowCount);
 
             // Insert cells and their contents
-            var cell1 = row.insertCell(0);
-            var cell2 = row.insertCell(1);
-            var cell3 = row.insertCell(2);
-            var cell4 = row.insertCell(3);
-            var cell5 = row.insertCell(4);
-            var cell6 = row.insertCell(5);
-            var cell7 = row.insertCell(6);
-            var cell8 = row.insertCell(7);
+            var cell1 = row.insertCell(0); // No
+            var cell2 = row.insertCell(1); // Course
+            var cell3 = row.insertCell(2); // Name of School/College
+            var cell4 = row.insertCell(3); // Name of University/Board of Exam
+            var cell5 = row.insertCell(4); // Date Attended From
+            var cell6 = row.insertCell(5); // Date Attended To
+            var cell7 = row.insertCell(6); // Result
+            var cell8 = row.insertCell(7); // Attachment
+            var cell9 = row.insertCell(8); // Delete Button
 
-            // Add content to cells
+
             cell1.innerHTML = rowCount + 1;
-            cell2.innerHTML = '<input type="text" name="course_university_1[]" class="name_of_course_university" style="background-color: #fff;" >';
-            cell3.innerHTML = '<input type="text" name="institution_location_1[]" class="name_location_of_institution" style="background-color: #fff;">';
-            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
-            cell5.innerHTML = '<input type="text" name="date_to_1[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
-            cell6.innerHTML = '<input type="Float" name="results_1[]"  class="result"  style="background-color: #fff;">';
-            cell7.innerHTML = '<input type="file" name=qualification_file[] class="file"  style="background-color: #fff;">';
-            cell8.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
+            cell2.innerHTML = `<input type="text" name="course_university_${index}[]" class="course" style="background-color: #fff;">`;
+            cell3.innerHTML = `<input type="text" name="institution_location_${index}[]" class="name_of_school_college" style="background-color: #fff;">`;
+            cell4.innerHTML = `<input type="text" name="university_${index}[]" class="name_of_universityboard_of_exam" style="background-color: #fff;">`;
+            cell5.innerHTML = `<input type="text" name="date_from_${index}[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
+            cell6.innerHTML = `<input type="text" name="date_to_${index}[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
+            cell7.innerHTML = `<input type="number" step="0.01" name="results_${index}[]" class="result" style="background-color: #fff;">`;
+            cell8.innerHTML = `<input type="file" name="qualification_file_${index}[]" class="file" style="background-color: #fff;">`;
+            cell9.innerHTML = `<button type="button" onclick="removeRow(this)">Delete</button>`;
         }
+
         function removeRow(button) {
             const row = button.closest("tr");
             const tbody = row.parentNode;
@@ -871,7 +1055,7 @@
 
         // Attach event listeners for buttons on all tables
         document.getElementById('add-row').addEventListener('click', function () {
-            addRow_educ('educational_qualification_table');
+            addRow_educ('education_qualification_table');
         });
 
         document.getElementById('add-row-prof').addEventListener('click', function () {
@@ -893,6 +1077,7 @@
         flatpickr('#interviewed_date', {
             dateFormat: "d-m-Y",
         })
+
 
 
     </script>
