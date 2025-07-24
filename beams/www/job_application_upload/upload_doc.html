@@ -795,9 +795,7 @@
         	const errorMessage = document.getElementById('error-message');
 
         	if (checkbox.checked) {
-        		// Proceed with redirection only if form was successfully submitted
-        		// This can be controlled inside frappe.call callback
-        		// window.location.href = '/application_success/success.html';
+        		window.location.href = '/application_success/success.html';
         		errorMessage.style.display = 'none';
         	} else {
         		errorMessage.style.display = 'block';

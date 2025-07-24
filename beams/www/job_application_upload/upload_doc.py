@@ -50,6 +50,10 @@ def authorize_applicant_id(encrypted_applicant_id):
 
 @frappe.whitelist(allow_guest=True)
 def update_register_form(docname, form_data=None):
+	'''
+		Updates a Job Applicant document with form data, handling various sections and child tables.
+	'''
+	
 	try:
 		form_data_str = frappe.form_dict.form_data
 		form_data = json.loads(form_data_str)
