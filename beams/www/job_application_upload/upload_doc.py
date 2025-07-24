@@ -5,6 +5,7 @@ from frappe.utils import escape_html, getdate, get_datetime
 from frappe.utils.password import decrypt, encrypt
 from frappe.utils.file_manager import save_file
 import datetime
+import base64
 
 def get_context(context):
 	'''
@@ -49,109 +50,331 @@ def authorize_applicant_id(encrypted_applicant_id):
 				return decrypted_applicant_id
 
 @frappe.whitelist(allow_guest=True)
-def update_register_form(docname, data):
-	'''
-		Updates a Job Applicant document with form data, handling various sections and child tables.
-		args:
-			docname (str), data (str)
-	'''
-	try:
-		data = json.loads(data)
-		if not data.get("applicant_name"):
-			frappe.throw("Missing required fields: Applicant Name")
-		if frappe.db.exists('Job Applicant', docname):
-			doc = frappe.get_doc('Job Applicant', docname)
-			for field, value in data.items():
-				if field in ["date_of_birth", "interviewed_date"] and value:
-					converted_date = datetime.datetime.strptime(value, "%d-%m-%Y").strftime("%Y-%m-%d")
-					setattr(doc, field, converted_date)
-				else:
-					setattr(doc, field, escape_html(value))
-			doc.in_india = bool(data.get("in_india"))
-			doc.abroad = bool(data.get("abroad"))
-			doc.is_form_submitted = bool(data.get("is_form_submitted"))
-			doc.is_form_submitted = 0
+def update_register_form(docname, form_data=None):
+    try:
+        form_data_str = frappe.form_dict.form_data
+        form_data = json.loads(form_data_str)
 
-			# Upload payslip documents
-			for field in ["payslip_month_1", "payslip_month_2", "payslip_month_3"]:
-				if data.get(field):
-					filename = update_file(data[field], 'Job Applicant', docname) or ''
-					setattr(doc, field, filename)
-			
-			doc.education_qualification = []
-			doc.professional_certification = []
-			doc.prev_emp_his = []
-			doc.language_proficiency = []
-			for row in data.get("educational_qualification", []):
-				if row.get('name_of_course_university'):
-					filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-					doc.append("education_qualification", {
-						"name_of_course_university": row.get('name_of_course_university'),
-						"name_location_of_institution": row.get('name_location_of_institution'),
-						"dates_attended_from": int(row.get('dates_attended_from')),
-						"dates_attended_to": int(row.get('dates_attended_to')),
-						"result": float(row.get('result')),
-						"attachments": filename
-					})
-			for row in data.get("professional_certification", []):
-				if row.get("course"):
-					filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-					doc.append("professional_certification", {
-						"course": row.get("course"),
-						"institute_name": row.get("institute_name"),
-						"dates_attended_from": int(row.get("dates_attended_from")),
-						"dates_attended_to": int(row.get("dates_attended_to")),
-						"type_of_certification": row.get("type_of_certification"),
-						"subject_major": row.get("subject_major"),
-						"attachments": filename
-					})
-			for row in data.get("prev_emp_his", []):
-				if row.get("name_of_org"):
-					filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-					doc.append("prev_emp_his", {
-						"name_of_org": row.get("name_of_org"),
-						"prev_designation": row.get("prev_designation"),
-						"last_salary_drawn": float(row.get("last_salary_drawn")),
-						"name_of_manager": row.get("name_of_manager"),
-						"period_of_employment": float(row.get("period_of_employment")),
-						"reason_for_leaving": row.get("reason_for_leaving"),
-						"attachments": filename
-					})
-			for row in data.get("language_proficiency", []):
-				doc.append("language_proficiency", {
-					"language": row["language"],
-					"speak": row["speak"],
-					"read": row["read"],
-					"write": row["write"]
-				})
-			doc.save(ignore_permissions=True)
-			frappe.msgprint(f"{doc.name} updated successfully.", indicator="green", alert=True)
-			return {"message": "success", "docname": doc.name}
-		else:
-			frappe.throw(f"No document found for applicant: {docname}")
-	except Exception as e:
-		frappe.log_error(
-			 title="Job Application Update Failed",
-			 message=f"Error updating applicant '{docname}' with data: {data}\nException: {str(e)}")
-		return {"message": str(e)}
+        docname = form_data.get("docname")
+        if not docname:
+            return {"status": "error", "message": "No document name provided."}
+
+        # Validate required fields
+        if not form_data.get("applicant_name"):
+            frappe.throw("Missing required field: Applicant Name")
+
+        doc = frappe.get_doc("Job Applicant", docname)
+
+        # Convert and sanitize data
+        def sanitize(field):
+            return escape_html(form_data.get(field) or "")
+
+        def convert_date(date_str):
+            return datetime.datetime.strptime(date_str, "%d-%m-%Y").strftime("%Y-%m-%d") if date_str else None
+
+        doc.applicant_name        = sanitize("applicant_name")
+        doc.father_name           = sanitize("father_name")
+        doc.date_of_birth         = convert_date(form_data.get("date_of_birth"))
+        doc.gender                = sanitize("gender")
+        doc.country               = sanitize("country")
+        doc.marital_status        = sanitize("marital_status")
+        doc.aadhar_number         = sanitize("aadhaar_number_input")
+
+        doc.house_no_name         = sanitize("current_house_no")
+        doc.street_road           = sanitize("current_street")
+        doc.locality_village      = sanitize("current_locality")
+        doc.city                  = sanitize("current_city")
+        doc.district              = sanitize("current_district")
+        doc.state                 = sanitize("current_state")
+        doc.post_office           = sanitize("current_perm_post_office")
+        doc.pin_code              = sanitize("current_pin")
+
+        doc.phouse_no_name        = sanitize("permanent_house_no")
+        doc.pstreet_road          = sanitize("permanent_street")
+        doc.plocality_village     = sanitize("permanent_locality")
+        doc.pcity                 = sanitize("permanent_city")
+        doc.pdistrict             = sanitize("permanent_district")
+        doc.pstate                = sanitize("permanent_state")
+        doc.ppost_office          = sanitize("permanent_perm_post_office")
+        doc.ppin_code             = sanitize("permanent_pin")
+
+        doc.name_of_employer      = sanitize("name_of_employer")
+        doc.department            = sanitize("current_department")
+        doc.cdesignation          = sanitize("current_designation")
+        doc.reports_to            = sanitize("reports_to")
+        doc.cname                 = sanitize("manager_name")
+        doc.ccontact              = sanitize("manager_contact_no")
+        doc.cemail                = sanitize("manager_email")
+        doc.creference            = sanitize("reference_taken")
+        doc.address_of_employeer = sanitize("address_of_employer")
+        doc.duties_and_reponsibilitiess = sanitize("duties_and_responsibilities")
+        doc.reason_for_leavingg  = sanitize("reason_for_leaving")
+        doc.current_employment_type = sanitize("was_this_position")
+        doc.agency_details       = sanitize("agency_details")
+
+        doc.current_salary       = sanitize("current_salary")
+        doc.first_salary_drawn   = sanitize("first_salary_drawn")
+        doc.telephone_number     = sanitize("telephone_number")
+        doc.email_id             = sanitize("email_id")
+        doc.employee_code        = sanitize("employee_code")
+        doc.in_india             = bool(form_data.get("in_india"))
+        doc.abroad               = bool(form_data.get("abroad"))
+        doc.is_form_submitted    = form_data.get("is_form_submitted")
+
+        doc.expected_salary      = sanitize("expected_salary")
+        doc.other_achievments    = sanitize("other_achievments")
+        doc.position             = sanitize("position")
+        doc.interviewed_location = sanitize("interviewed_location")
+        doc.interviewed_date     = convert_date(form_data.get("interviewed_date"))
+        doc.interviewed_outcome  = sanitize("interviewed_outcome")
+        doc.related_employee     = sanitize("related_employee")
+        doc.related_employee_org = sanitize("related_employee_org")
+        doc.related_employee_pos = sanitize("related_employee_pos")
+        doc.related_employee_rel = sanitize("related_employee_rel")
+        doc.professional_org     = sanitize("professional_org")
+        doc.political_org        = sanitize("political_org")
+        doc.specialised_training = sanitize("specialised_training")
+        doc.share_your_thoughts  = sanitize("additional_comments")
+
+        years = form_data.get("period_years") or "0"
+        months = form_data.get("current_period_months") or "0"
+        doc.period_of_stay = f"{years} Years {months} Months"
+
+        # File upload handler (assumes update_file is defined elsewhere)
+        for field in ["payslip_month_1", "payslip_month_2", "payslip_month_3"]:
+            if form_data.get(field):
+                filename = update_file(form_data[field], 'Job Applicant', docname) or ''
+                setattr(doc, field, filename)
+
+        # Child Tables
+        doc.education_qualification = []
+        for row in form_data.get("education_qualification", []):
+            if row.get('course'):
+                filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+                doc.append("education_qualification", {
+                    "course": row.get('course'),
+                    "name_of_school_college": row.get('name_of_school_college'),
+                    "name_of_universityboard_of_exam": row.get('name_of_universityboard_of_exam'),
+                    "dates_attended_from": int(row.get('dates_attended_from')),
+                    "dates_attended_to": int(row.get('dates_attended_to')),
+                    "result": float(row.get('result')),
+                    "attachments": filename
+                })
+
+        doc.professional_certification = []
+        for row in form_data.get("professional_certification", []):
+            if row.get("course"):
+                filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+                doc.append("professional_certification", {
+                    "course": row.get("course"),
+                    "institute_name": row.get("institute_name"),
+                    "dates_attended_from": int(row.get("dates_attended_from")),
+                    "dates_attended_to": int(row.get("dates_attended_to")),
+                    "type_of_certification": row.get("type_of_certification"),
+                    "subject_major": row.get("subject_major"),
+                    "attachments": filename
+                })
+
+        doc.prev_emp_his = []
+        for row in form_data.get("prev_emp_his", []):
+            if row.get("name_of_org"):
+                filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+                doc.append("prev_emp_his", {
+                    "name_of_org": row.get("name_of_org"),
+                    "prev_designation": row.get("prev_designation"),
+                    "last_salary_drawn": row.get("last_salary_drawn"),
+                    "name_of_manager": row.get("name_of_manager"),
+                    "period_of_employment": row.get("period_of_employment"),
+                    "reason_for_leaving": row.get("reason_for_leaving"),
+                    "attachments": filename
+                })
+
+        doc.language_proficiency = []
+        for row in form_data.get("language_proficiency", []):
+            doc.append("language_proficiency", {
+                "language": row.get("language"),
+                "speak": row.get("speak"),
+                "read": row.get("read"),
+                "write": row.get("write")
+            })
+
+        doc.save(ignore_permissions=True)
+        frappe.db.commit()
+
+        return {"message": "success", "docname": doc.name}
+
+    except Exception as e:
+        frappe.log_error(
+            title="Job Application Update Failed",
+            message=f"Error updating applicant '{docname}'\nException: {str(e)}"
+        )
+        return {"message": str(e)}
+#
+# @frappe.whitelist(allow_guest=True)
+# def update_register_form(docname, form_data):
+# 	try:
+# 		form_data_str = frappe.form_dict.form_data
+# 		form_data = json.loads(form_data_str)
+#
+# 		docname = form_data.get("docname")
+# 		if not docname:
+# 			return {"status": "error", "message": "No document name provided."}
+#
+# 		doc = frappe.get_doc("Job Applicant", docname)
+#
+# 		# Update fields
+# 		doc.applicant_name       = form_data.get("applicant_name")
+# 		doc.father_name          = form_data.get("father_name")
+# 		doc.date_of_birth        = form_data.get("date_of_birth")
+# 		doc.gender               = form_data.get("gender")
+# 		doc.country              = form_data.get("country")
+# 		doc.marital_status       = form_data.get("marital_status")
+# 		doc.aadhar_number       = form_data.get("aadhaar_number_input")
+#
+# 		doc.house_no_name        = form_data.get("current_house_no")
+# 		doc.street_road          = form_data.get("current_street")
+# 		doc.locality_village     = form_data.get("current_locality")
+# 		doc.city                 = form_data.get("current_city")
+# 		doc.district             = form_data.get("current_district")
+# 		doc.state                = form_data.get("current_state")
+# 		doc.post_office          = form_data.get("current_perm_post_office")
+# 		doc.pin_code             = form_data.get("current_pin")
+#
+# 		doc.phouse_no_name       = form_data.get("permanent_house_no")
+# 		doc.pstreet_road         = form_data.get("permanent_street")
+# 		doc.plocality_village    = form_data.get("permanent_locality")
+# 		doc.pcity            	 = form_data.get("permanent_city")
+# 		doc.pdistrict         	 = form_data.get("permanent_district")
+# 		doc.pstate            	 = form_data.get("permanent_state")
+# 		doc.ppost_office 		 = form_data.get("permanent_perm_post_office")
+# 		doc.ppin_code            = form_data.get("permanent_pin")
+#
+# 		doc.name_of_employer    	    = form_data.get("name_of_employer")
+# 		doc.department           		= form_data.get("current_department")
+# 		doc.cdesignation         		= form_data.get("current_designation")
+# 		doc.reports_to           		= form_data.get("reports_to")
+# 		doc.cname                		= form_data.get("manager_name")
+# 		doc.ccontact             		= form_data.get("manager_contact_no")
+# 		doc.cemail               		= form_data.get("manager_email")
+# 		doc.creference           		= form_data.get("reference_taken")
+# 		doc.address_of_employeer        = form_data.get("address_of_employer")
+# 		doc.duties_and_reponsibilitiess = form_data.get("duties_and_responsibilities")
+# 		doc.reason_for_leavingg         = form_data.get("reason_for_leaving")
+# 		doc.current_employment_type     = form_data.get("was_this_position")
+# 		doc.agency_details              = form_data.get("agency_details")
+#
+# 		doc.current_salary             = form_data.get("current_salary")
+# 		doc.first_salary_drawn         = form_data.get("first_salary_drawn")
+# 		doc.telephone_number           = form_data.get("telephone_number")
+# 		doc.email_id                   = form_data.get("email_id")
+# 		doc.employee_code              = form_data.get("employee_code")
+# 		doc.in_india                   = form_data.get("in_india")
+# 		doc.abroad                     = form_data.get("abroad")
+# 		doc.is_form_submitted          = form_data.get("is_form_submitted")
+#
+# 		doc.expected_salary            = form_data.get("expected_salary")
+# 		doc.other_achievments          = form_data.get("other_achievments")
+# 		doc.position      			   = form_data.get("position")
+# 		doc.interviewed_location       = form_data.get("interviewed_location")
+# 		doc.interviewed_date           = form_data.get("interviewed_date")
+# 		doc.interviewed_outcome        = form_data.get("interviewed_outcome")
+# 		doc.related_employee           = form_data.get("related_employee")
+# 		doc.related_employee_org       = form_data.get("related_employee_org")
+# 		doc.related_employee_pos       = form_data.get("related_employee_pos")
+# 		doc.related_employee_rel       = form_data.get("related_employee_rel")
+# 		doc.professional_org           = form_data.get("professional_org")
+# 		doc.political_org              = form_data.get("political_org")
+# 		doc.specialised_training       = form_data.get("specialised_training")
+# 		doc.share_your_thoughts        = form_data.get("additional_comments")
+# 		years = form_data.get("period_years") or "0"
+# 		months = form_data.get("current_period_months") or "0"
+# 		doc.period_of_stay = f"{years} Years {months} Months"
+#
+#
+# 		# Upload payslip documents
+# 		for field in ["payslip_month_1", "payslip_month_2", "payslip_month_3"]:
+# 			if form_data.get(field):
+# 				filename = update_file(form_data[field], 'Job Applicant', docname) or ''
+# 				setattr(doc, field, filename)
+#
+# 		# Child Tables
+# 		doc.education_qualification = []
+# 		for row in form_data.get("education_qualification", []):
+# 			if row.get('course'):
+# 				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+# 				doc.append("education_qualification", {
+# 					"course": row.get('course'),
+# 					"name_of_school_college":row.get('name_of_school_college'),
+# 					"name_of_universityboard_of_exam": row.get('name_of_universityboard_of_exam'),
+# 					"dates_attended_from": int(row.get('dates_attended_from')),
+# 					"dates_attended_to": int(row.get('dates_attended_to')),
+# 					"result": float(row.get('result')),
+# 					"attachments": filename
+# 				})
+#
+# 		doc.professional_certification = []
+# 		for row in form_data.get("professional_certification", []):
+# 			if row.get("course"):
+# 				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+# 				doc.append("professional_certification", {
+# 					"course": row.get("course"),
+# 					"institute_name": row.get("institute_name"),
+# 					"dates_attended_from": int(row.get("dates_attended_from")),
+# 					"dates_attended_to": int(row.get("dates_attended_to")),
+# 					"type_of_certification": row.get("type_of_certification"),
+# 					"subject_major": row.get("subject_major"),
+# 					"attachments": filename
+# 				})
+#
+# 		doc.prev_emp_his = []
+# 		for row in form_data.get("prev_emp_his", []):
+# 			if row.get("name_of_org"):
+# 				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+# 				doc.append("prev_emp_his", {
+# 					"name_of_org": row.get("name_of_org"),
+# 					"prev_designation": row.get("prev_designation"),
+# 					"last_salary_drawn": row.get("last_salary_drawn"),
+# 					"name_of_manager": row.get("name_of_manager"),
+# 					"period_of_employment": row.get("period_of_employment"),
+# 					"reason_for_leaving": row.get("reason_for_leaving"),
+# 					"attachments": filename
+# 				})
+#
+# 		doc.language_proficiency = []
+# 		for row in form_data.get("language_proficiency", []):
+# 			doc.append("language_proficiency", {
+# 				"language": row.get("language"),
+# 				"speak": row.get("speak"),
+# 				"read": row.get("read"),
+# 				"write": row.get("write")
+# 			})
+#
+# 		doc.save(ignore_permissions=True)
+# 		frappe.db.commit()
+#
+# 		return {"message": "success", "docname": doc.name}
+#
+# 	except Exception as e:
+# 		frappe.log_error(
+# 			title="Job Application Update Failed",
+# 			message=f"Error updating applicant '{docname}'\nException: {str(e)}"
+# 		)
+# 		return {"message": str(e)}
 
 @frappe.whitelist(allow_guest=True)
 def update_file(filedata, doctype, docname):
-	'''
-		Uploads files to the specified Job Applicant document.
-		Args:
-			filedata (dict), doctype (str), docname (str)
-	'''
 	file_name = None
 	if filedata and doctype and docname:
 		filedata_list = filedata["files_data"]
-		if frappe.db.exists(doctype, docname):
-			for filedata_item in filedata_list:
-				filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], doctype, docname, decode=True, is_private=0)
-				file_name = filedoc.file_url
-		else:
-			for filedata_item in filedata_list:
-				filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], decode=True, is_private=0)
-				file_name = filedoc.file_url
+		for filedata_item in filedata_list:
+			filedoc = save_file(
+				filedata_item["filename"],
+				filedata_item["dataurl"],
+				doctype,
+				docname,
+				decode=True,
+				is_private=0
+			)
+			file_name = filedoc.file_url
 	frappe.db.commit()
 	return file_name
