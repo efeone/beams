@@ -4,7 +4,7 @@ def get_data(data=None):
     return {
         "fieldname": "job_applicant",  
         "non_standard_fieldnames": {
-            "Job Proposal": "job_applicant",  
+            "Compensation Proposal": "job_applicant",  
             "Job Offer": "job_applicant",
             "Appointment Letter": "job_applicant",
             "Interview": "job_applicant",
@@ -19,7 +19,7 @@ def get_data(data=None):
             },
             {
                 "label": _("Proposals"),
-                "items": ["Job Proposal"],
+                "items": ["Compensation Proposal "],
             },
             {
                 "label": _("Onboarding"),
