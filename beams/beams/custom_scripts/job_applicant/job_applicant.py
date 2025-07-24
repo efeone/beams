@@ -18,6 +18,8 @@ def validate(doc, method):
 		Method which trigger on validate of Job Applicant
 	'''
 	validate_job_applicant_details(doc)
+	update_shortlisted_status_if_all_interviews_cleared(doc)
+
 	if doc.status == 'Pending Document Upload' and doc.is_form_submitted:
 		doc.status = 'Document Uploaded'
 
@@ -32,6 +34,21 @@ def validate_job_applicant_details(doc):
 			# Fetching Minimum Experience
 			expected_experience = float(job_opening_doc.min_experience) if job_opening_doc.min_experience else 0
 			experience = float(doc.min_experience) if doc.min_experience else 0
+
+def update_shortlisted_status_if_all_interviews_cleared(doc):
+	'''
+		Update Job Applicant status to 'Shortlisted from Interview'
+		if all interview rounds are cleared and status is Interview Completed.
+	'''
+	if doc.status == 'Interview Completed':
+		all_cleared = True
+		for row in doc.applicant_interview_rounds:
+			if row.interview_status != 'Cleared':
+				all_cleared = False
+				break
+
+		if all_cleared:
+			doc.status = 'Shortlisted from Interview'
 
 @frappe.whitelist()
 def get_existing_local_enquiry_report(doc_name):

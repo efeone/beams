@@ -83,7 +83,7 @@ function handle_custom_buttons(frm) {
             }
 
             // Show a "Local Enquiry Report (LER)" button in the Job Applicant form only when the status is "Interview Completed"
-            if (frm.doc.status == 'Interview Completed') {
+            if (frm.doc.status == 'Shortlisted from Interview') {
 				frappe.call({
 					method: 'beams.beams.custom_scripts.job_applicant.job_applicant.get_existing_local_enquiry_report',
 					args: {
@@ -172,6 +172,13 @@ function handle_custom_buttons(frm) {
             if (frm.doc.status === 'Open') {
                 frm.add_custom_button(__('Shortlisted'), function () {
                     frm.set_value('status', 'Shortlisted');
+                    frm.save();
+                }, __('Set Status'));
+            }
+
+            if (frm.doc.status == 'Interview Completed') {
+                frm.add_custom_button(__('Shortlisted from Interview'), function() {
+                    frm.set_value('status', 'Shortlisted from Interview');
                     frm.save();
                 }, __('Set Status'));
             }
