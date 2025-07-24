@@ -1,11 +1,12 @@
-import frappe
-import json
-from frappe import _
-from frappe.utils import escape_html, getdate, get_datetime
-from frappe.utils.password import decrypt, encrypt
-from frappe.utils.file_manager import save_file
 import datetime
-import base64
+import json
+
+import frappe
+from frappe import _
+from frappe.utils import escape_html
+from frappe.utils.file_manager import save_file
+from frappe.utils.password import decrypt
+
 
 def get_context(context):
 	'''
@@ -32,7 +33,7 @@ def authorize_applicant_id(encrypted_applicant_id):
 	decrypted_applicant_id = False
 	try:
 		decrypted_applicant_id = decrypt(encrypted_applicant_id)
-	except Exception as e:
+	except Exception:
 		frappe.log_error(str(encrypted_applicant_id), 'Dirty Applicant Link')
 		frappe.throw(_('Sorry, we were not able to decrypt the applicant link'), frappe.PermissionError)
 
@@ -73,69 +74,69 @@ def update_register_form(docname, form_data=None):
 		def convert_date(date_str):
 			return datetime.datetime.strptime(date_str, '%d-%m-%Y').strftime('%Y-%m-%d') if date_str else None
 
-		doc.applicant_name        = sanitize('applicant_name')
-		doc.father_name           = sanitize('father_name')
-		doc.date_of_birth         = convert_date(form_data.get('date_of_birth'))
-		doc.gender                = sanitize('gender')
-		doc.country               = sanitize('country')
-		doc.marital_status        = sanitize('marital_status')
-		doc.aadhar_number         = sanitize('aadhaar_number_input')
+		doc.applicant_name = sanitize('applicant_name')
+		doc.father_name = sanitize('father_name')
+		doc.date_of_birth = convert_date(form_data.get('date_of_birth'))
+		doc.gender = sanitize('gender')
+		doc.country = sanitize('country')
+		doc.marital_status = sanitize('marital_status')
+		doc.aadhar_number = sanitize('aadhaar_number_input')
 
-		doc.house_no_name         = sanitize('current_house_no')
-		doc.street_road           = sanitize('current_street')
-		doc.locality_village      = sanitize('current_locality')
-		doc.city                  = sanitize('current_city')
-		doc.district              = sanitize('current_district')
-		doc.state                 = sanitize('current_state')
-		doc.post_office           = sanitize('current_perm_post_office')
-		doc.pin_code              = sanitize('current_pin')
+		doc.house_no_name = sanitize('current_house_no')
+		doc.street_road = sanitize('current_street')
+		doc.locality_village = sanitize('current_locality')
+		doc.city = sanitize('current_city')
+		doc.district = sanitize('current_district')
+		doc.state = sanitize('current_state')
+		doc.post_office = sanitize('current_perm_post_office')
+		doc.pin_code = sanitize('current_pin')
 
-		doc.phouse_no_name        = sanitize('permanent_house_no')
-		doc.pstreet_road          = sanitize('permanent_street')
-		doc.plocality_village     = sanitize('permanent_locality')
-		doc.pcity                 = sanitize('permanent_city')
-		doc.pdistrict             = sanitize('permanent_district')
-		doc.pstate                = sanitize('permanent_state')
-		doc.ppost_office          = sanitize('permanent_perm_post_office')
-		doc.ppin_code             = sanitize('permanent_pin')
+		doc.phouse_no_name = sanitize('permanent_house_no')
+		doc.pstreet_road = sanitize('permanent_street')
+		doc.plocality_village = sanitize('permanent_locality')
+		doc.pcity = sanitize('permanent_city')
+		doc.pdistrict = sanitize('permanent_district')
+		doc.pstate = sanitize('permanent_state')
+		doc.ppost_office = sanitize('permanent_perm_post_office')
+		doc.ppin_code = sanitize('permanent_pin')
 
-		doc.name_of_employer      = sanitize('name_of_employer')
-		doc.department            = sanitize('current_department')
-		doc.cdesignation          = sanitize('current_designation')
-		doc.reports_to            = sanitize('reports_to')
-		doc.cname                 = sanitize('manager_name')
-		doc.ccontact              = sanitize('manager_contact_no')
-		doc.cemail                = sanitize('manager_email')
-		doc.creference            = sanitize('reference_taken')
+		doc.name_of_employer = sanitize('name_of_employer')
+		doc.department = sanitize('current_department')
+		doc.cdesignation = sanitize('current_designation')
+		doc.reports_to = sanitize('reports_to')
+		doc.cname = sanitize('manager_name')
+		doc.ccontact = sanitize('manager_contact_no')
+		doc.cemail = sanitize('manager_email')
+		doc.creference = sanitize('reference_taken')
 		doc.address_of_employeer = sanitize('address_of_employer')
 		doc.duties_and_reponsibilitiess = sanitize('duties_and_responsibilities')
-		doc.reason_for_leavingg  = sanitize('reason_for_leaving')
+		doc.reason_for_leavingg = sanitize('reason_for_leaving')
 		doc.current_employment_type = sanitize('was_this_position')
-		doc.agency_details       = sanitize('agency_details')
+		doc.agency_details = sanitize('agency_details')
 
-		doc.current_salary       = sanitize('current_salary')
-		doc.first_salary_drawn   = sanitize('first_salary_drawn')
-		doc.telephone_number     = sanitize('telephone_number')
-		doc.email_id             = sanitize('email_id')
-		doc.employee_code        = sanitize('employee_code')
-		doc.in_india             = bool(form_data.get('in_india'))
-		doc.abroad               = bool(form_data.get('abroad'))
-		doc.is_form_submitted    = form_data.get('is_form_submitted')
+		doc.current_salary = sanitize('current_salary')
+		doc.first_salary_drawn = sanitize('first_salary_drawn')
+		doc.telephone_number = sanitize('telephone_number')
+		doc.email_id = sanitize('email_id')
+		doc.employee_code = sanitize('employee_code')
+		doc.in_india = bool(form_data.get('in_india'))
+		doc.abroad = bool(form_data.get('abroad'))
+		doc.is_form_submitted = form_data.get('is_form_submitted')
 
-		doc.expected_salary      = sanitize('expected_salary')
-		doc.other_achievments    = sanitize('other_achievments')
-		doc.position             = sanitize('position')
+		doc.expected_salary = sanitize('expected_salary')
+		doc.other_achievments = sanitize('other_achievments')
+		doc.position = sanitize('position')
 		doc.interviewed_location = sanitize('interviewed_location')
-		doc.interviewed_date     = convert_date(form_data.get('interviewed_date'))
-		doc.interviewed_outcome  = sanitize('interviewed_outcome')
-		doc.related_employee     = sanitize('related_employee')
+		doc.interviewed_date = convert_date(form_data.get('interviewed_date'))
+		doc.interviewed_outcome = sanitize('interviewed_outcome')
+		doc.related_employee = sanitize('related_employee')
 		doc.related_employee_org = sanitize('related_employee_org')
 		doc.related_employee_pos = sanitize('related_employee_pos')
 		doc.related_employee_rel = sanitize('related_employee_rel')
-		doc.professional_org     = sanitize('professional_org')
-		doc.political_org        = sanitize('political_org')
+		doc.professional_org = sanitize('professional_org')
+		doc.political_org = sanitize('political_org')
 		doc.specialised_training = sanitize('specialised_training')
-		doc.share_your_thoughts  = sanitize('additional_comments')
+		doc.share_your_thoughts = sanitize('additional_comments')
 
 		years = form_data.get('period_years') or '0'
 		months = form_data.get('current_period_months') or '0'
