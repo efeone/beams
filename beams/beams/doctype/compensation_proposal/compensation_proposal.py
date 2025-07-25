@@ -9,26 +9,6 @@ from frappe.desk.form.assign_to import add as add_assign, remove as remove_assig
 from frappe.utils.user import get_users_with_role
 from frappe.email.doctype.notification.notification import get_context
 
-@frappe.whitelist()
-def remove_assignment_by_role(doc, role):
-	"""
-	Removes ToDo assignments for users with a specific role for a given document.
-	"""
-	users = get_users_with_role(role)
-	if users:
-		for user in users:
-			if frappe.db.exists('ToDo', {
-				'reference_type': doc.doctype,
-				'reference_name': doc.name,
-				'allocated_to': user,
-				'status': 'Open'
-			}):
-				remove_assign(
-					doctype=doc.doctype,
-					name=doc.name,
-					assign_to=user
-				)
-
 class CompensationProposal(Document):
 	def on_update(self):
 		self.create_todo_on_pending_approval()
@@ -194,3 +174,23 @@ class CompensationProposal(Document):
 			self.payslip_month_1 = job_applicant.payslip_month_1
 			self.payslip_month_2 = job_applicant.payslip_month_2
 			self.payslip_month_3 = job_applicant.payslip_month_3
+
+@frappe.whitelist()
+def remove_assignment_by_role(doc, role):
+	"""
+	Removes ToDo assignments for users with a specific role for a given document.
+	"""
+	users = get_users_with_role(role)
+	if users:
+		for user in users:
+			if frappe.db.exists('ToDo', {
+				'reference_type': doc.doctype,
+				'reference_name': doc.name,
+				'allocated_to': user,
+				'status': 'Open'
+			}):
+				remove_assign(
+					doctype=doc.doctype,
+					name=doc.name,
+					assign_to=user
+				)
