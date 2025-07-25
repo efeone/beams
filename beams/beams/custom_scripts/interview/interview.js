@@ -201,7 +201,7 @@ frappe.ui.form.on('Interview', {
 			{ fieldtype: 'Data', fieldname: 'question', in_list_view: 1, label: __('Question') },
 			{ fieldtype: 'Data', fieldname: 'answer', label: __('Answer') },
 			{ fieldtype: 'Float', fieldname: 'weight', label: __('Weight') },
-			{ fieldtype: 'Data', fieldname: 'applicant_answer', label: __('Applicant Answer'), in_list_view: 1, reqd: 1 },
+			{ fieldtype: 'Data', fieldname: 'applicant_answer', label: __('Applicant Answer'), in_list_view: 1 },
 			{ fieldtype: 'Float', fieldname: 'score', label: __('Score (Out of 10)'), in_list_view: 1, reqd: 1 },
 			{ fieldtype: 'Data', fieldname: 'parent', hidden: 1, label: __('Parent') },
 			{ fieldtype: 'Data', fieldname: 'name', hidden: 1, label: __('Name') }
