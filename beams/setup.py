@@ -764,10 +764,10 @@ def get_job_offer_custom_fields():
 	return {
 		"Job Offer": [
 			{
-				"fieldname": "job_proposal",
+				"fieldname": "compensation_proposal",
 				"fieldtype": "Link",
-				"label": "Job Proposal",
-				"options":"Job Proposal",
+				"label": "Compensation Proposal",
+				"options":"Compensation Proposal",
 				"insert_after": "applicant_email",
 				"read_only":1
 			},
@@ -775,8 +775,8 @@ def get_job_offer_custom_fields():
 				"fieldname": "ctc",
 				"fieldtype": "Currency",
 				"label": "CTC",
-				"insert_after": "job_proposal",
-				"fetch_from" : "job_proposal.proposed_ctc"
+				"insert_after": "Compensation Proposal",
+				"fetch_from" : "Compensation Proposal.proposed_ctc"
 			}
 		]
 	}
@@ -3741,7 +3741,7 @@ def get_property_setters():
 			"doc_type": "Job Applicant",
 			"field_name": "status",
 			"property": "options",
-			"value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nJob Proposal Created\nJob Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
+			"value": "Open\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nCompensation Proposal Created\nCompensation Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
 		},
 		{
 			"doctype_or_field": "DocType",
