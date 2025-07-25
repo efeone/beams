@@ -7,6 +7,7 @@ from frappe.utils import get_url_to_form
 from frappe.utils.password import encrypt
 from frappe.model.naming import make_autoname
 import os
+from frappe.utils import today, getdate
 
 @frappe.whitelist()
 def autoname(doc, method):
@@ -186,3 +187,28 @@ def fetch_department(doc, method):
 		else:
 			frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
 
+@frappe.whitelist()
+def calculate_and_validate_age(doc, method=None):
+	"""
+		Calculate and validate age for a Job Applicant.
+	"""
+
+	if isinstance(doc, str):
+		doc = frappe.parse_json(doc)
+
+	date_of_birth = doc.get("date_of_birth")
+	if not date_of_birth:
+		return None
+
+	dob = getdate(date_of_birth)
+	today_date = getdate(today())
+
+	if dob > today_date:
+		frappe.throw(_("Date of Birth cannot be in the future."))
+
+	age = today_date.year - dob.year - ((today_date.month, today_date.day) < (dob.month, dob.day))
+
+	if age < 18:
+		frappe.throw(_("Applicants must be at least 18 years old to apply."))
+
+	return age

@@ -48,6 +48,21 @@ frappe.ui.form.on('Job Applicant', {
 	},
 	status: function (frm) {
 		frm.trigger('refresh');
+	},
+	date_of_birth: function(frm) {
+		if (frm.doc.date_of_birth) {
+			frappe.call({
+				method: "beams.beams.custom_scripts.job_applicant.job_applicant.calculate_and_validate_age",
+				args: {
+					doc: frm.doc
+				},
+				callback: function(r) {
+					if (r.message) {
+						frm.set_value("age", r.message);
+					}
+				}
+			});
+		}
 	}
 });
 
