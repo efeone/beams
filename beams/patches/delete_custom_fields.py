@@ -84,7 +84,92 @@ fields_to_remove = [
 	{
 		'dt':'Job Applicant',
 		'fieldname':'telephone_no'
-	}
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'permanent_address'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_address'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_residence_no'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'permanent_period_from'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'permanent_period_to'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'permanent_residence_no'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_period_from'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_period_to'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_designation'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'current_department'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'manager_name'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'manager_contact_no'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'manager_email'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'employment_period_from'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'employment_period_to'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'reference_taken'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'was_this_position'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'duties_and_reponsibilities'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'reason_for_leaving'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'address_of_employer'
+	},
+	{
+		'dt':'Job Applicant',
+		'fieldname':'telephone_number'
+	},
+
 ]
 
 def execute():
