@@ -7,7 +7,7 @@ from frappe.utils import get_url_to_form
 from frappe.utils.password import encrypt
 from frappe.model.naming import make_autoname
 import os
-from datetime import datetime
+from frappe.utils import today, getdate
 
 @frappe.whitelist()
 def autoname(doc, method):
@@ -200,17 +200,13 @@ def calculate_and_validate_age(doc, method=None):
 	if not date_of_birth:
 		return None
 
-	if isinstance(date_of_birth, str):
-		dob = datetime.strptime(date_of_birth, "%Y-%m-%d").date()
-	else:
-		dob = date_of_birth
+	dob = getdate(date_of_birth)
+	today_date = getdate(today())
 
-	today = datetime.today().date()
-
-	if dob > today:
+	if dob > today_date:
 		frappe.throw(_("Date of Birth cannot be in the future."))
 
-	age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+	age = today_date.year - dob.year - ((today_date.month, today_date.day) < (dob.month, dob.day))
 
 	if age < 18:
 		frappe.throw(_("Applicants must be at least 18 years old to apply."))
