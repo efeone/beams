@@ -35,5 +35,4 @@ def generate_qr_for_job(doc, method=None):
 	})
 	file_doc.insert(ignore_permissions=True)
 
-	doc.qr_scan_to_apply = f"/files/{file_name}"
-
+	doc.qr_scan_to_apply = file_doc.file_url
