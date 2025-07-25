@@ -1,13 +1,13 @@
 frappe.ui.form.on('Job Applicant', {
-    refresh: function (frm) {
-        frm.remove_custom_button(__('Interview'), __('Create'));
-        handle_custom_buttons(frm);
-        frm.toggle_display('applicant_interview_rounds', !frm.is_new());
-        const statuses = [
-            'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
-            'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
-            'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Compensation Proposal Accepted', 'Compensation Proposal Created'
-        ];
+	refresh: function (frm) {
+		frm.remove_custom_button(__('Interview'), __('Create'));
+		handle_custom_buttons(frm);
+		frm.toggle_display('applicant_interview_rounds', !frm.is_new());
+		const statuses = [
+			'Document Uploaded', 'Open', 'Pending Document Upload', 'Shortlisted',
+			'Local Enquiry Approved', 'Selected', 'Local Enquiry Started',
+			'Local Enquiry Rejected', 'Local Enquiry Completed', 'Accepted', 'Training Completed', 'Compensation Proposal Accepted', 'Compensation Proposal Created'
+		];
 
 		if (statuses.includes(frm.doc.status)) {
 			frm.remove_custom_button(__('Local Enquiry Report'), __('Create'));
@@ -27,20 +27,20 @@ frappe.ui.form.on('Job Applicant', {
 			frm.remove_custom_button(__('Job Offer'), __('Create'));
 		}
 
-        const magic_link_statuses = [
-            'Interview Completed', 'Local Enquiry Approved', 'Selected',
-            'Compensation Proposal Created', 'Compensation Proposal Accepted',
-            'Interview Scheduled', 'Interview Ongoing'
-        ];
+		const magic_link_statuses = [
+			'Interview Completed', 'Local Enquiry Approved', 'Selected',
+			'Compensation Proposal Created', 'Compensation Proposal Accepted',
+			'Interview Scheduled', 'Interview Ongoing'
+		];
 
 		if (magic_link_statuses.includes(frm.doc.status)) {
 			frm.remove_custom_button('Send Magic Link');
 		}
 
-        if (frm.doc.status === 'Compensation Proposal Created' || frm.doc.status === 'Compensation Proposal Accepted') {
-            frm.page.remove_inner_button('Rejected', 'Set Status');
-            frm.page.remove_inner_button('Hold', 'Set Status');
-        }
+		if (frm.doc.status === 'Compensation Proposal Created' || frm.doc.status === 'Compensation Proposal Accepted') {
+			frm.page.remove_inner_button('Rejected', 'Set Status');
+			frm.page.remove_inner_button('Hold', 'Set Status');
+		}
 
 		if (frm.doc.status === 'Interview Scheduled' || frm.doc.status === 'Interview Ongoing') {
 			frm.page.remove_inner_button('Local Enquiry Report', 'Create');
@@ -67,20 +67,20 @@ function handle_custom_buttons(frm) {
 				});
 			}
 
-            // Handle "Compensation Proposal" button for "Selected" status
-            if (frm.doc.status === 'Selected') {
-                frappe.db.get_value('Compensation Proposal', { 'job_applicant': frm.doc.name }, 'name', function (result) {
-                    if (!result || !result.name) {
-                        frm.add_custom_button(__('Compensation Proposal'), function () {
-                            frappe.new_doc('Compensation Proposal', {
-                                job_applicant: frm.doc.name
-                            });
-                        }, __('Create'));
-                    } else {
-                        frm.remove_custom_button(__('Compensation Proposal'), __('Create'));
-                    }
-                });
-            }
+			// Handle "Compensation Proposal" button for "Selected" status
+			if (frm.doc.status === 'Selected') {
+				frappe.db.get_value('Compensation Proposal', { 'job_applicant': frm.doc.name }, 'name', function (result) {
+					if (!result || !result.name) {
+						frm.add_custom_button(__('Compensation Proposal'), function () {
+							frappe.new_doc('Compensation Proposal', {
+								job_applicant: frm.doc.name
+							});
+						}, __('Create'));
+					} else {
+						frm.remove_custom_button(__('Compensation Proposal'), __('Create'));
+					}
+				});
+			}
 
 			// Show a "Local Enquiry Report (LER)" button in the Job Applicant form only when the status is "Shortlisted from Interview"
 			if (frm.doc.status == 'Shortlisted from Interview') {
