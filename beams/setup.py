@@ -2237,6 +2237,20 @@ def get_job_requisition_custom_fields():
 				"fieldtype": "Section Break",
 			},
 			{
+				"fieldname": "designation_activities_section",
+				"insert_after": "reason_for_requesting",
+				"fieldtype": "Section Break",
+				"permlevel": 2
+			},
+			{
+				"fieldname": "designation_wise_activities",
+				"fieldtype": "Table",
+				"label": "Designation-wise Activities",
+				"options": "Designation Activities",
+				"insert_after": "designation_activities_section",
+				"permlevel" : 2
+			},
+			{
 				"label": "Unwated Fields",
 				"fieldname": "custom_unwated_fields",
 				"insert_after": "status",
@@ -4030,6 +4044,13 @@ def get_property_setters():
 		{
 			"doctype_or_field": "DocField",
 			"doc_type": "Job Requisition",
+			"field_name": "expected_compensation",
+			"property": "label",
+			"value": "Expected Compensation (Yearly)"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
 			"field_name": "employee_left",
 			"property": "ignore_user_permissions",
 			"value": 1
@@ -4301,7 +4322,7 @@ def get_property_setters():
 			"doctype_or_field": "DocType",
 			"doc_type": "Job Requisition",
 			"property": "field_order",
-			"value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "company", "status", "custom_unwated_fields", "column_break_4", "reason_for_request_section", "reason_for_requesting", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "education_column_break", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
+			"value": '["workflow_state", "naming_series", "request_for", "employee_left", "relieving_date", "suggested_designation", "designation", "department", "location", "employment_type", "column_break_qkna", "no_of_positions", "expected_compensation", "company", "status", "custom_unwated_fields", "column_break_4", "reason_for_request_section", "reason_for_requesting", "designation_activities_section", "designation_wise_activities", "section_break_7", "requested_by", "requested_by_name", "column_break_10", "requested_by_dept", "requested_by_designation", "interview", "interview_rounds", "work_details", "no_of_days_off", "min_experience", "work_details_column_break", "is_work_shift_needed", "travel_required", "driving_license_needed", "license_type", "education", "min_education_qual", "reset_column", "language_proficiency", "skill_proficiency", "publish_on_job_section", "publish_on_job_opening", "timelines_tab", "posting_date", "completed_on", "column_break_15", "expected_by", "time_to_fill", "job_description_tab", "job_description_template", "job_title", "description", "suggestions", "connections_tab"]'
 		},
 		{
 			"doctype_or_field": "DocField",
