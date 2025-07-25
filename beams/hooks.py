@@ -383,6 +383,9 @@ doc_events = {
 	},
 	"Vehicle" :{
 		"on_update":"beams.beams.custom_scripts.vehicle.vehicle.create_vehicle_documents_log"
+	},
+	"Job Opening": {
+		"validate": "beams.beams.custom_scripts.job_opening.job_opening.generate_qr_for_job"
 	}
 }
 

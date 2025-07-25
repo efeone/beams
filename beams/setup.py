@@ -2930,7 +2930,22 @@ def get_job_opening_custom_fields():
 				"label": "Interview Rounds",
 				'options':"Interview Rounds",
 				"insert_after": "interview_details_sb"
+			},
+			{
+				"fieldname": "qr_scan_to_apply",
+				"fieldtype": "Attach Image",
+				"label": "Scan QR to Apply",
+				"insert_after": "publish_salary_range"
+			},
+			{
+				"fieldname": "job_url",
+				"fieldtype": "Data",
+				"label": "Job URL",
+				"read_only": 1,
+				"hidden": 1,
+				"insert_after": "qr_scan_to_apply"
 			}
+
 		]
 	}
 
