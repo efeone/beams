@@ -26,13 +26,14 @@ def generate_qr_for_job(doc, method=None):
 	with open(file_path, "wb") as f:
 		f.write(buffer.read())
 
-	frappe.get_doc({
+	file_doc = frappe.get_doc({
 		"doctype": "File",
 		"file_url": f"/files/{file_name}",
 		"attached_to_doctype": "Job Opening",
 		"attached_to_name": doc.name,
 		"is_private": 0
-	}).insert(ignore_permissions=True)
+	})
+	file_doc.insert(ignore_permissions=True)
 
 	doc.qr_scan_to_apply = f"/files/{file_name}"
 
