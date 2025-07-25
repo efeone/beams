@@ -48,7 +48,25 @@ frappe.ui.form.on('Job Applicant', {
     },
     status: function (frm) {
         frm.trigger('refresh');
-    }
+    },
+    date_of_birth: function(frm) {
+    /**
+    * Calculate age from date_of_birth and set it in the 'age' field as a string.
+    */
+    if (frm.doc.date_of_birth) {
+            const dob = frappe.datetime.str_to_obj(frm.doc.date_of_birth);
+            const today = frappe.datetime.str_to_obj(frappe.datetime.now_date());
+            let age = today.getFullYear() - dob.getFullYear();
+            const month_diff = today.getMonth() - dob.getMonth();
+            const day_diff = today.getDate() - dob.getDate();
+            if (month_diff < 0 || (month_diff === 0 && day_diff < 0)) {
+                age--;
+            }
+            frm.set_value('age', age);  
+        } else {
+            frm.set_value('age', null);  
+        }
+}
 });
 
 function handle_custom_buttons(frm) {
