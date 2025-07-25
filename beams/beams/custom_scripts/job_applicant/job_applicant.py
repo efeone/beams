@@ -188,10 +188,11 @@ def fetch_department(doc, method):
 			frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
 
 @frappe.whitelist()
-def calculate_and_validate_age(doc):
+def calculate_and_validate_age(doc, method=None):
 	"""
 		Calculate and validate age for a Job Applicant.
 	"""
+
 	if isinstance(doc, str):
 		doc = frappe.parse_json(doc)
 
