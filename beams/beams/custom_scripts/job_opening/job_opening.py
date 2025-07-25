@@ -1,5 +1,5 @@
 import frappe
-import qrcode
+import requests
 import os
 from frappe.utils import get_files_path, get_url
 from io import BytesIO
@@ -16,10 +16,13 @@ def generate_qr_for_job(doc, method=None):
 	job_url = f"{base_url}/job_portal?job_opening={doc.name}"
 	doc.job_url = job_url
 
-	qr = qrcode.make(job_url)
-	buffer = BytesIO()
-	qr.save(buffer)
-	buffer.seek(0)
+	qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={job_url}"
+	response = requests.get(qr_api_url)
+
+	if response.status_code != 200:
+		frappe.throw(f"Failed to generate QR code: {response.status_code}")
+
+	buffer = BytesIO(response.content)
 
 	file_name = f"qr_{doc.name}.png"
 	file_path = os.path.join(get_files_path(), file_name)
@@ -36,3 +39,4 @@ def generate_qr_for_job(doc, method=None):
 	file_doc.insert(ignore_permissions=True)
 
 	doc.qr_scan_to_apply = file_doc.file_url
+	doc.save()
