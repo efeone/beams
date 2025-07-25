@@ -10,7 +10,7 @@ import os
 
 @frappe.whitelist()
 def autoname(doc, method):
-    doc.name = make_autoname("JOB-APP-" + ".YYYY.-.####")
+	doc.name = make_autoname("JOB-APP-" + ".YYYY.-.####")
 
 @frappe.whitelist()
 def validate(doc, method):
@@ -64,7 +64,7 @@ def get_existing_local_enquiry_report(doc_name):
 @frappe.whitelist()
 def create_and_return_report(job_applicant):
 	'''
-        Create a Local Enquiry Report, show an alert message, and return its name
+		Create a Local Enquiry Report, show an alert message, and return its name
 	'''
 	if frappe.db.exists('Job Applicant', job_applicant):
 		ler_doc = frappe.new_doc('Local Enquiry Report')
@@ -80,11 +80,11 @@ def create_and_return_report(job_applicant):
 @frappe.whitelist()
 def send_magic_link(applicant_id):
 	'''
-        Sends a unique magic link to the specified job applicant's email for document upload.
-        Args:
-            applicant_name (str): The name of the job applicant.
-        Returns:
-            None
+		Sends a unique magic link to the specified job applicant's email for document upload.
+		Args:
+			applicant_name (str): The name of the job applicant.
+		Returns:
+			None
 	'''
 	if frappe.db.exists('Job Applicant', applicant_id):
 		email_id, applicant_name = frappe.db.get_value('Job Applicant', applicant_id, ['email_id', 'applicant_name'])
@@ -111,11 +111,11 @@ def send_magic_link(applicant_id):
 @frappe.whitelist()
 def generate_magic_link(applicant_id):
 	'''
-        Generates and returns a magic link URL for the specified job applicant
-        Args:
-            applicant_name (str): The name of the job applicant
-        Returns:
-            str: The generated magic link URL
+		Generates and returns a magic link URL for the specified job applicant
+		Args:
+			applicant_name (str): The name of the job applicant
+		Returns:
+			str: The generated magic link URL
 	'''
 	link = '{0}/job_application_upload/upload_doc?applicant_id='.format(get_url())
 	if frappe.db.exists('Job Applicant', applicant_id):
@@ -150,39 +150,39 @@ def get_job_opening_location(job_opening):
 
 @frappe.whitelist()
 def validate_unique_application(doc, method):
-    '''
-    Method to validate that an applicant can only apply for a job opening once using the same email ID.
+	'''
+	Method to validate that an applicant can only apply for a job opening once using the same email ID.
 
-    '''
-    if doc.email_id and doc.job_title:
-        existing_applicant = frappe.db.exists(
-            "Job Applicant",
-            {
-                "email_id": doc.email_id,
-                "job_title": doc.job_title,
-            }
-        )
-        if existing_applicant and existing_applicant != doc.name:
-            frappe.throw(
-                _("The applicant with email ID {0} has already applied for the job opening {1}.")
-                .format(doc.email_id, doc.job_title)
-            )
+	'''
+	if doc.email_id and doc.job_title:
+		existing_applicant = frappe.db.exists(
+			"Job Applicant",
+			{
+				"email_id": doc.email_id,
+				"job_title": doc.job_title,
+			}
+		)
+		if existing_applicant and existing_applicant != doc.name:
+			frappe.throw(
+				_("The applicant with email ID {0} has already applied for the job opening {1}.")
+				.format(doc.email_id, doc.job_title)
+			)
 
 def fetch_designation(doc, method):
-    if doc.job_title:
-        # Fetch the designation from the Job Opening
-        designation = frappe.db.get_value('Job Opening', doc.job_title, 'designation')
-        if designation:
-            doc.designation = designation
-        else:
-            frappe.throw(f"Designation not found for the selected Job Opening: {doc.job_title}")
+	if doc.job_title:
+		# Fetch the designation from the Job Opening
+		designation = frappe.db.get_value('Job Opening', doc.job_title, 'designation')
+		if designation:
+			doc.designation = designation
+		else:
+			frappe.throw(f"Designation not found for the selected Job Opening: {doc.job_title}")
 
 def fetch_department(doc, method):
-    if doc.job_title:
-        # Fetch the designation from the Job Opening
-        department = frappe.db.get_value('Job Opening', doc.job_title, 'department')
-        if department:
-            doc.department = department
-        else:
-            frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
+	if doc.job_title:
+		# Fetch the designation from the Job Opening
+		department = frappe.db.get_value('Job Opening', doc.job_title, 'department')
+		if department:
+			doc.department = department
+		else:
+			frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
 
