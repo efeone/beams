@@ -2273,11 +2273,18 @@ def get_job_applicant_custom_fields():
 				"insert_after": "email_id"
 			},
 			{
+				"fieldname": "age",
+				"fieldtype": "Int",
+				"label": "Age",
+				"insert_after": "date_of_birth",
+				"read_only": 1
+			},
+			{
 				"fieldname": "gender",
 				"fieldtype": "Link",
 				"label": "Gender",
 				"options": "Gender",
-				"insert_after": "date_of_birth"
+				"insert_after": "age"
 			},
 			{
 				"fieldname": "father_name",
