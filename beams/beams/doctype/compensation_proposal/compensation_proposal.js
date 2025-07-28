@@ -11,7 +11,12 @@ frappe.ui.form.on('Compensation Proposal', {
             };
         });
     },
-    proposed_ctc:function (frm){
-        frm.call("validate_proposed_ctc");
+    proposed_ctc: function(frm) {
+        frappe.call({
+            method: 'beams.beams.doctype.compensation_proposal.compensation_proposal.validate_proposed_ctc_value',
+            args: {
+                proposed_ctc: frm.doc.proposed_ctc
+            }
+        });
     }
 });
