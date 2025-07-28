@@ -2199,13 +2199,13 @@ def get_job_requisition_custom_fields():
 				"fieldtype": "Data",
 				"label": "Job Title",
 				"insert_after": "job_description_template",
-				"reqd": 1,
+				"depends_on": "eval: frappe.user_roles.includes('HR Manager')",
+				"mandatory_depends_on": "eval: frappe.user_roles.includes('HR Manager')"
 			},
 			{
 				"fieldname": "suggested_designation",
-				"fieldtype": "Link",
+				"fieldtype": "Data",
 				"label": "Suggested Designation",
-				"options": "Designation",
 				"insert_after": "request_for",
 				"permlevel": 2,
 				"depends_on": "eval:doc.request_for == 'New Vacancy'"
