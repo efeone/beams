@@ -37,30 +37,48 @@ $(document).ready(function () {
 	$form.on('submit', function (event) {
 		event.preventDefault();
 
-		const managerEmail = safeValue($('#manager_email').val());
-		const managerPhone = safeValue($('#manager_contact_no').val());
+		const currentEmployerTab = document.getElementById("currentEmployerTab");
 
-		const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-		const phoneRegex = /^\d{10}$/;
+		// Only validate if currentEmployerTab is visible
+		if (currentEmployerTab && currentEmployerTab.style.display !== "none") {
+			const managerEmail = safeValue($('#manager_email').val());
+			const managerPhone = safeValue($('#manager_contact_no').val());
 
-		if (!managerEmail) {
-			alert(' Manager Email are required.');
-			return false;
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			const phoneRegex = /^\d{10}$/;
+
+			if (!managerEmail) {
+				alert('Manager Email is required.');
+				return false;
+			}
+
+			if (!emailRegex.test(managerEmail)) {
+				alert('Please enter a valid manager email address.');
+				return false;
+			}
+
+			if (!managerPhone) {
+				alert('Contact No is required.');
+				return false;
+			}
+
+			if (!phoneRegex.test(managerPhone)) {
+				alert('Please enter a valid 10-digit mobile number for Manager Contact No.');
+				return false;
+			}
 		}
 
-		if (!emailRegex.test(managerEmail)) {
-			alert('Please enter a valid manager email address.');
-			return false;
-		}
+		const aadhaarField = document.getElementById('aadhaar_field');
+		const aadhaarInput = document.getElementById('aadhaar_number_input');
 
-		if (!managerPhone) {
-			alert('Contact No are required.');
-			return false;
-		}
+		const isAadhaarVisible = aadhaarField && aadhaarField.style.display !== "none";
+		const aadhaarNumber = aadhaarInput ? safeValue($(aadhaarInput).val()) : '';
 
-		if (!phoneRegex.test(managerPhone)) {
-			alert('Please enter a valid 10-digit mobile number for Manager Contact No.');
-			return false;
+		if (isAadhaarVisible) {
+			if (!aadhaarNumber || aadhaarNumber.length !== 12 || !/^\d{12}$/.test(aadhaarNumber)) {
+				alert('Please enter a valid 12-digit Aadhaar number.');
+				return false;
+			}
 		}
 
 		event.preventDefault();
@@ -176,6 +194,16 @@ $(document).ready(function () {
 			},
 			callback: function (r) {
 				alert(r.message === 'success' ? 'Job Applicant updated successfully!' : 'Submission completed.');
+
+				const confirmCheckbox = $('#confirm');
+				const errorMessage = $('#error-message');
+
+				if (confirmCheckbox.is(':checked')) {
+					errorMessage.hide();
+					window.location.href = '/application_success/success.html';
+				} else {
+					errorMessage.show(); // Show red message if checkbox not ticked
+				}
 			},
 			error: function (err) {
 				alert('An error occurred during submission.');

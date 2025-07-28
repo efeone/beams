@@ -85,7 +85,7 @@
                             <div class="col-14">
                                 <input type="text" class="form-control" id="aadhaar_number_input" name="aadhaar_number"
                                        style="height:40px; width: 90%; font-size:13px; background-color: #004eff17;"
-                                       placeholder="Enter Aadhaar Number" pattern="\d{12}" maxlength="12">
+                                       placeholder="Enter Aadhaar Number">
                             </div>
                         </div>
                         <div class="column">
@@ -789,17 +789,6 @@
             } else {
                 submitBtn.style.backgroundColor = "gray";
             }
-        });
-        document.getElementById('submitBtn').addEventListener('click', function () {
-        	const checkbox = document.getElementById('confirm');
-        	const errorMessage = document.getElementById('error-message');
-
-        	if (checkbox.checked) {
-        		window.location.href = '/application_success/success.html';
-        		errorMessage.style.display = 'none';
-        	} else {
-        		errorMessage.style.display = 'block';
-        	}
         });
 
         function toggleAgencyDetails() {
