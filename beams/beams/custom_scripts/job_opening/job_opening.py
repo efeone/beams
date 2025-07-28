@@ -20,7 +20,9 @@ def generate_qr_for_job(doc, method=None):
 	response = requests.get(qr_api_url)
 
 	if response.status_code != 200:
-		frappe.throw(f"Failed to generate QR code: {response.status_code}")
+		frappe.log_error(f"Failed to generate QR code for Job Opening {doc.name}. URL: {qr_api_url}",
+						 f"QR API returned status code {response.status_code}")
+		return {"success": False, "error": f"QR API returned status code {response.status_code}"}
 
 	buffer = BytesIO(response.content)
 
@@ -40,3 +42,4 @@ def generate_qr_for_job(doc, method=None):
 
 	doc.qr_scan_to_apply = file_doc.file_url
 	doc.save()
+	return {"success": True, "file_url": file_doc.file_url}
