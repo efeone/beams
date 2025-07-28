@@ -69,7 +69,8 @@ doctype_js = {
 	"Material Request":"beams/custom_scripts/material_request/material_request.js",
 	"Asset":"beams/custom_scripts/asset/asset.js",
 	"Payroll Entry":"beams/custom_scripts/payroll_entry/payroll_entry.js",
-	"Employee Separation": "beams/custom_scripts/employee_separation/employee_separation.js"
+	"Employee Separation": "beams/custom_scripts/employee_separation/employee_separation.js",
+	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js"
 }
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
