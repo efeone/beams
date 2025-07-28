@@ -165,7 +165,6 @@ class CompensationProposal(Document):
 		if self.proposed_ctc < 0:
 			frappe.throw("Proposed CTC cannot be a Negative value")
 
-
 	def set_payslips_from_job_applicant(self):
 		"""
 		Fetch payslip_month_1, payslip_month_2, and payslip_month_3 from Job Applicant
