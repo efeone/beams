@@ -12,6 +12,8 @@
   "absence_reminder_template",
   "column_break_dskf",
   "enable_absence_reminders",
+  "section_break_pdeh",
+  "resume_size",
   "section_break_mafr",
   "leave_application_template",
   "column_break_zilk",
@@ -276,13 +278,24 @@
    "fieldname": "attendance_request_submission_limit_days",
    "fieldtype": "Int",
    "label": "Attendance Request Submission Limit (Days)"
+  },
+  {
+   "description": "Job portal resume size in mb",
+   "fieldname": "resume_size",
+   "fieldtype": "Float",
+   "label": "Resume Size",
+   "precision": "3"
+  },
+  {
+   "fieldname": "section_break_pdeh",
+   "fieldtype": "Section Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-05 14:36:09.302029",
+ "modified": "2025-07-28 15:54:22.856153",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
