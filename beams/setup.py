@@ -2144,7 +2144,7 @@ def get_job_requisition_custom_fields():
 				"options": "Job Description Template",
 				"insert_after": "job_description_tab",
 				"permlevel": 1,
-				"mandatory_depends_on": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'"
+				"depends_on": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'"
 			},
 			{
 				"fieldname": "request_for",
@@ -4122,6 +4122,13 @@ def get_property_setters():
 		{
 			"doctype_or_field": "DocField",
 			"doc_type": "Job Requisition",
+			"field_name": "department",
+			"property": "depends_on",
+			"value": "eval:doc.request_for=='Employee Replacement'"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Requisition",
 			"field_name": "section_break_7",
 			"property": "collapsible",
 			"property_type": "Check",
@@ -4374,7 +4381,7 @@ def get_property_setters():
 			"doc_type": "Job Requisition",
 			"field_name": "description",
 			"property": "depends_on",
-			"value": "eval: doc.workflow_state != 'Draft'",
+			"value": "eval: !['Draft', 'Pending HOD Verification'].includes(doc.workflow_state)"
 		},
 		{
 			"doctype_or_field": "DocField",
@@ -4382,13 +4389,6 @@ def get_property_setters():
 			"field_name": "description",
 			"property": "mandatory_depends_on",
 			"value": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'",
-		},
-		{
-			"doctype_or_field": "DocField",
-			"doc_type": "Job Requisition",
-			"field_name": "designation",
-			"property": "mandatory_depends_on",
-			"value": "eval: !(doc.workflow_state == 'Draft' || doc.request_for == 'New Vacancy')"
 		},
 		{
 			"doctype_or_field": "DocField",

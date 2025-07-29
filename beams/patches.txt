@@ -9,3 +9,4 @@ beams.patches.set_account_in_cost_subhead  #14-02-20250
 beams.patches.set_company_in_budget_template  #20-02-2025
 beams.patches.update_budget_for_inr  #17-03-2025
 beams.patches.delete_property_setter #22-07-2025
+beams.patches.update_job_requisition_fields  #29-07-2025
