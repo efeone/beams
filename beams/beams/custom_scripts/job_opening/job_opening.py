@@ -13,7 +13,7 @@ def generate_qr_for_job(doc, method=None):
 		doc = frappe.get_doc("Job Opening", doc)
 
 	base_url = get_url()
-	job_url = f"{base_url}/job_portal?job_opening={doc.name}"
+	job_url = f"{base_url}/job_portal/job?job_opening={doc.name}"
 	doc.job_url = job_url
 
 	qr_api_url = f"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={job_url}"
