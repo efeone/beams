@@ -3,20 +3,6 @@ $(document).ready(function () {
     const placeholder = document.querySelector('.placeholder');
     let max_resume_size_kb = 10240; // Default to 10 MB
 
-    // 1. Fetch resume_size from Beams HR Settings (in KB)
-    frappe.call({
-        method: "frappe.client.get_value",
-        args: {
-            doctype: "Beams HR Settings",
-            fieldname: "resume_size"
-        },
-        callback: function (r) {
-            if (r.message && r.message.resume_size) {
-                max_resume_size_kb = parseFloat(r.message.resume_size);
-            }
-        }
-    });
-
     // Click to open file dialog
     placeholder.addEventListener('click', (e) => {
         e.preventDefault();
@@ -85,14 +71,27 @@ $(document).ready(function () {
             alert("Please upload a resume before submitting.");
             return;
         }
-        // Resume size validation
-        if (max_resume_size_kb > 0) {
-            const oversizedFile = Array.from(fileInput.files).find(file => (file.size / 1024) > max_resume_size_kb);
-            if (oversizedFile) {
-                alert(`The file "${oversizedFile.name}" exceeds the maximum allowed size of ${max_resume_size_kb} KB.`);
-                return;
+        // 1. Fetch resume_size from Beams HR Settings (in KB)
+        frappe.call({
+            method: "frappe.client.get_value",
+            args: {
+                doctype: "Beams HR Settings",
+                fieldname: "resume_size"
+            },
+            callback: function (r) {
+                if (r.message && r.message.resume_size) {
+                    max_resume_size_kb = parseFloat(r.message.resume_size);
+                }
+                // Resume size validation
+                if (max_resume_size_kb > 0) {
+                    const oversizedFile = Array.from(fileInput.files).find(file => (file.size / 1024) > max_resume_size_kb);
+                    if (oversizedFile) {
+                        alert(`The file "${oversizedFile.name}" exceeds the maximum allowed size of ${max_resume_size_kb} KB.`);
+                        return;
+                    }
+                }
             }
-        }
+        });
 
         // Collect skills data
         const skills = get_skills_data();

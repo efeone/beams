@@ -280,10 +280,10 @@
    "label": "Attendance Request Submission Limit (Days)"
   },
   {
-   "description": "Job portal resume size in mb",
+   "description": "Job portal resume size in kb",
    "fieldname": "resume_size",
    "fieldtype": "Float",
-   "label": "Resume Size",
+   "label": "Maximum Size of Resume File ",
    "precision": "3"
   },
   {
@@ -295,7 +295,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-28 15:54:22.856153",
+ "modified": "2025-07-30 10:17:58.577158",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
