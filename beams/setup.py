@@ -4062,7 +4062,7 @@ def get_property_setters():
 			"doc_type": "Job Requisition",
 			"field_name": "expected_compensation",
 			"property": "depends_on",
-			"value": "eval: frappe.user_roles.includes('HR Manager')"
+			"value": "eval: frappe.user_roles.includes('HR Manager') || frappe.user_roles.includes('CEO')"
 		},
 		{
 			"doctype_or_field": "DocField",
