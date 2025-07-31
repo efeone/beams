@@ -253,3 +253,17 @@ def update_applicant_interview_rounds(doc, method):
     })
 
     job_applicant.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def get_job_applicant_dashboard_html(job_applicant):
+    if not job_applicant:
+        return {"html": "<p>No Job Applicant selected.</p>"}
+
+    doc = frappe.get_doc("Job Applicant", job_applicant)
+
+    html = frappe.render_template(
+        "beams/beams/custom_scripts/interview/interview_dashboard.html",
+        {"job_applicant": doc}
+    )
+
+    return {"html": html}

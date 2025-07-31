@@ -64,6 +64,9 @@ frappe.ui.form.on('Interview', {
 			}, 'View');
 		}
 	},
+	job_applicant(frm) {
+		set_job_applicant_dashboard(frm);
+	},
 	validate: function(frm) {
 		if (frm.doc.from_time && frm.doc.to_time && frm.doc.scheduled_on) {
 
@@ -321,3 +324,20 @@ function handle_hrms_custom_buttons(frm) {
 		}
 	}, 100);
 }
+
+function set_job_applicant_dashboard(frm) {
+	if (!frm.doc.job_applicant) return;
+		frappe.call({
+			method: 'beams.beams.custom_scripts.interview.interview.get_job_applicant_dashboard_html',
+			args: {
+				job_applicant: frm.doc.job_applicant,
+			},
+			callback: function (r) {
+				if (r.message && r.message.html) {
+					$(frm.fields_dict['interview_html_field'].wrapper).html(r.message.html);
+					frm.refresh_field('interview_html_field');
+				}
+			}
+		});
+}
+

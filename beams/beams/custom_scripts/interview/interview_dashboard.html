@@ -1,0 +1,31 @@
+{% if job_applicant %}
+<table class="table table-bordered small">
+    <thead>
+        <tr>
+            <th class="text-left">Applicant Name</th>
+            <th class="text-left">Email</th>
+            <th class="text-left">Phone Number</th>
+            <th class="text-left">Date of Birth</th>
+            <th class="text-left">Location</th>
+            <th class="text-left">Job Title</th>
+            <th class="text-left">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="text-left">{{ job_applicant.applicant_name or "-" }}</td>
+            <td class="text-left">{{ job_applicant.email_id or "-" }}</td>
+            <td class="text-left">{{ job_applicant.phone_number or "-" }}</td>
+            <td class="text-left">
+                {{ frappe.utils.formatdate(job_applicant.date_of_birth) if job_applicant.date_of_birth else "-" }}
+            </td>
+            <td class="text-left">{{ job_applicant.location or "-" }}</td>
+            <td class="text-left">{{ job_applicant.job_title or "-" }}</td>
+            <td class="text-left">{{ job_applicant.status or "-" }}</td>
+        </tr>
+    </tbody>
+</table>
+{% else %}
+<p style="margin-top: 20px;">No Job Applicant selected.</p>
+{% endif %}
+

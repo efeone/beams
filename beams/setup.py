@@ -2046,9 +2046,21 @@ def get_interview_custom_fields():
 			    "insert_after": "feedback_html",
 			    "read_only": 1,
 			    "read_only_depends_on": "eval:!frappe.user.has_role('HR Manager')"
+			},
+			{
+				"fieldname": "interview_dashboard_section",
+				"fieldtype": "Section Break",
+				"label": "Job Applicant Details",
+				"insert_before": "interview_details_section",
+				"collapsible": 1,
+				"depends_on": "eval:doc.job_applicant",
+			},
+			{
+				"fieldname": "interview_html_field",
+				"fieldtype": "HTML",
+				"label": "Interview Html Field",
+				"insert_after": "interview_dashboard_section",
 			}
-
-
 		]
 	}
 
