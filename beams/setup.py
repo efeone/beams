@@ -2038,7 +2038,16 @@ def get_interview_custom_fields():
 				"insert_after": "job_applicant",
 				"fetch_from": "job_applicant.email_id",
 				"hidden": 1
+			},
+			{
+			    "fieldname": "average_final_score",
+			    "fieldtype": "Data",
+			    "label": "Final Score",
+			    "insert_after": "feedback_html",
+			    "read_only": 1,
+			    "read_only_depends_on": "eval:!frappe.user.has_role('HR Manager')"
 			}
+
 
 		]
 	}

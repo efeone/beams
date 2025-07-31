@@ -7,6 +7,7 @@ def after_insert(doc, method):
     '''
     on_interview_feedback_creation(doc)
 
+
 def validate(doc, method):
     '''
         Method which triggers on validate of Interview Feedback
@@ -92,3 +93,32 @@ def update_applicant_interview_round_from_feedback(doc, method):
     job_applicant.applicant_rating = sum(ratings) / len(ratings) if ratings else 0
 
     job_applicant.save(ignore_permissions=True)
+
+@frappe.whitelist()
+def update_final_score(doc, method):
+    '''
+       Set final score from rating to interview  
+    '''
+    interview_id = doc.interview
+    if not interview_id:
+        return
+
+    feedbacks = frappe.get_all(
+        "Interview Feedback",
+        filters={"interview": interview_id, "docstatus": 1},
+        fields=["average_rating"]
+    )
+
+
+    # Extract ratings, ignoring None values
+    ratings = [fb.average_rating for fb in feedbacks if fb.average_rating is not None]
+
+    if ratings:
+        # Calculate average and scale it to 10 (by multiplying by 2)
+        avg_rating = sum(ratings) / len(ratings)
+        average_final_score = round(avg_rating * 10, 2)  # Convert to 10 scale
+        # Update the Interview doc field
+        frappe.db.set_value("Interview", interview_id, "average_final_score", average_final_score)
+    else:
+        # No ratings found, set score to 0
+        frappe.db.set_value("Interview", interview_id, "average_final_score", 0)

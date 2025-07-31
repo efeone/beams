@@ -169,7 +169,10 @@ fields_to_remove = [
 		'dt':'Job Applicant',
 		'fieldname':'telephone_number'
 	},
-
+	{
+		'dt':'Interview',
+		'fieldname':'final_score'
+	},
 ]
 
 def execute():
