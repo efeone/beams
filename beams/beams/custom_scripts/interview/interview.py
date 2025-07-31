@@ -6,40 +6,40 @@ from frappe.utils import get_link_to_form
 from hrms.hr.doctype.interview.interview import Interview
 
 class InterviewOverride(Interview):
-    def on_submit(self):
-        if self.status not in ["Cleared", "Rejected"]:
-              frappe.throw(_("Only Interviews with Cleared or Rejected status can be submitted."),
-                           title=_("Not Allowed"),
-                           )
+	def on_submit(self):
+		if self.status not in ["Cleared", "Rejected"]:
+			  frappe.throw(_("Only Interviews with Cleared or Rejected status can be submitted."),
+						   title=_("Not Allowed"),
+						   )
 
-        # Fetch all interviewers from the Interview Details child table
-        interviewers = [d.interviewer for d in self.interview_details if d.interviewer]
+		# Fetch all interviewers from the Interview Details child table
+		interviewers = [d.interviewer for d in self.interview_details if d.interviewer]
 
-        # Fetch all submitted feedback records for this interview
-        submitted_feedback = frappe.get_all(
-            "Interview Feedback",
-            filters={"interview": self.name, "docstatus": 1},
-            fields=["interviewer"],
-        )
+		# Fetch all submitted feedback records for this interview
+		submitted_feedback = frappe.get_all(
+			"Interview Feedback",
+			filters={"interview": self.name, "docstatus": 1},
+			fields=["interviewer"],
+		)
 
-        # Extract interviewers who have submitted feedback
-        submitted_interviewers = {feedback["interviewer"] for feedback in submitted_feedback}
+		# Extract interviewers who have submitted feedback
+		submitted_interviewers = {feedback["interviewer"] for feedback in submitted_feedback}
 
-        # Identify interviewers who haven't submitted feedback
-        missing_feedback = [i for i in interviewers if i not in submitted_interviewers]
+		# Identify interviewers who haven't submitted feedback
+		missing_feedback = [i for i in interviewers if i not in submitted_interviewers]
 
-        if missing_feedback:
-            frappe.throw(
-                _("Interview cannot be submitted. The following interviewers have not submitted feedback: {0}")
-                .format(", ".join(missing_feedback)),
-                title=_("Pending Feedback"),
-            )
+		if missing_feedback:
+			frappe.throw(
+				_("Interview cannot be submitted. The following interviewers have not submitted feedback: {0}")
+				.format(", ".join(missing_feedback)),
+				title=_("Pending Feedback"),
+			)
 
 
 @frappe.whitelist()
 def get_interview_skill_and_question_set(interview_round, interviewer=False, interview_name=False):
 	'''
-        Method to get Interview Skills and Questions from Interview Round or existing Interview Feedback
+		Method to get Interview Skills and Questions from Interview Round or existing Interview Feedback
 	'''
 	feedback_exists = False
 	if interviewer and interview_name:
@@ -58,7 +58,7 @@ def get_interview_skill_and_question_set(interview_round, interviewer=False, int
 @frappe.whitelist()
 def create_interview_feedback(data, interview_name, interviewer, job_applicant, method='save', feedback_exists=False):
 	'''
-	    Method to create Interview Feedback
+		Method to create Interview Feedback
 	'''
 	if isinstance(data, string_types):
 		data = frappe._dict(json.loads(data))
@@ -111,159 +111,159 @@ def create_interview_feedback(data, interview_name, interviewer, job_applicant, 
 
 @frappe.whitelist()
 def on_interview_creation(doc, method):
-    '''
-    Set the Job Applicant's status to 'Interview Scheduled' when an Interview is created.
-    '''
-    if frappe.db.exists("Job Applicant", doc.job_applicant):
-        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
-        if job_applicant_doc.status != "Interview Scheduled":
-            job_applicant_doc.status = "Interview Scheduled"
-            job_applicant_doc.save()
+	'''
+	Set the Job Applicant's status to 'Interview Scheduled' when an Interview is created.
+	'''
+	if frappe.db.exists("Job Applicant", doc.job_applicant):
+		job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+		if job_applicant_doc.status != "Interview Scheduled":
+			job_applicant_doc.status = "Interview Scheduled"
+			job_applicant_doc.save()
 
 def update_applicant_interview_round(doc, method):
-    '''
-    Update the Applicant Interview Round child table in Job Applicant with interview reference and status on creation.
-    '''
-    if doc.job_applicant and doc.interview_round:
-        # Check if the Job Applicant exists
-        if not frappe.db.exists("Job Applicant", doc.job_applicant):
-            frappe.msgprint(f"Job Applicant {doc.job_applicant} does not exist.")
-            return
+	'''
+	Update the Applicant Interview Round child table in Job Applicant with interview reference and status on creation.
+	'''
+	if doc.job_applicant and doc.interview_round:
+		# Check if the Job Applicant exists
+		if not frappe.db.exists("Job Applicant", doc.job_applicant):
+			frappe.msgprint(f"Job Applicant {doc.job_applicant} does not exist.")
+			return
 
-        job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+		job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
-        # Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
-        for interview_round in job_applicant_doc.applicant_interview_rounds:
-            if interview_round.interview_round == doc.interview_round:
-                # Update the interview reference and status on creation or update
-                interview_round.interview_reference = doc.name
-                interview_round.interview_status = doc.status
+		# Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
+		for interview_round in job_applicant_doc.applicant_interview_rounds:
+			if interview_round.interview_round == doc.interview_round:
+				# Update the interview reference and status on creation or update
+				interview_round.interview_reference = doc.name
+				interview_round.interview_status = doc.status
 
-                job_applicant_doc.save(ignore_permissions=True)
-                break
+				job_applicant_doc.save(ignore_permissions=True)
+				break
 
 def mark_interview_completed(doc, method):
-    '''
-    Mark the interview as completed in the Applicant Interview Round child table in Job Applicant upon submission of Interview.
-    '''
-    if doc.job_applicant and doc.interview_round:
-        if frappe.db.exists("Job Applicant", doc.job_applicant):
-            job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
+	'''
+	Mark the interview as completed in the Applicant Interview Round child table in Job Applicant upon submission of Interview.
+	'''
+	if doc.job_applicant and doc.interview_round:
+		if frappe.db.exists("Job Applicant", doc.job_applicant):
+			job_applicant_doc = frappe.get_doc("Job Applicant", doc.job_applicant)
 
-            # Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
-            for interview_round in job_applicant_doc.applicant_interview_rounds:
-                if interview_round.interview_round == doc.interview_round:
-                    # Mark the interview as completed upon submission
-                    interview_round.interview_completed = 1
+			# Find the corresponding interview round in the Job Applicant's applicant_interview_rounds table
+			for interview_round in job_applicant_doc.applicant_interview_rounds:
+				if interview_round.interview_round == doc.interview_round:
+					# Mark the interview as completed upon submission
+					interview_round.interview_completed = 1
 
-                    job_applicant_doc.save(ignore_permissions=True)
-                    break
+					job_applicant_doc.save(ignore_permissions=True)
+					break
 
-            all_interviews_completed = True
-            for interview_round in job_applicant_doc.applicant_interview_rounds:
-                if not interview_round.interview_completed:
-                    all_interviews_completed = False
-                    break
+			all_interviews_completed = True
+			for interview_round in job_applicant_doc.applicant_interview_rounds:
+				if not interview_round.interview_completed:
+					all_interviews_completed = False
+					break
 
-            # If all interviews are completed, set the Job Applicant status to 'Interview Completed'
-            if all_interviews_completed:
-                job_applicant_doc.status = "Interview Completed"
+			# If all interviews are completed, set the Job Applicant status to 'Interview Completed'
+			if all_interviews_completed:
+				job_applicant_doc.status = "Interview Completed"
 
-            job_applicant_doc.save(ignore_permissions=True)
+			job_applicant_doc.save(ignore_permissions=True)
 
 @frappe.whitelist()
 def update_job_applicant_status(doc, method=None):
-    job_applicant = doc.job_applicant
+	job_applicant = doc.job_applicant
 
-    # Get the job opening linked to the interview
-    job_opening = doc.job_opening
-    if not job_opening:
-        return
+	# Get the job opening linked to the interview
+	job_opening = doc.job_opening
+	if not job_opening:
+		return
 
-    # Get the job requisition from job opening
-    job_requisition = frappe.db.get_value("Job Opening", job_opening, "job_requisition")
-    if not job_requisition:
-        return
+	# Get the job requisition from job opening
+	job_requisition = frappe.db.get_value("Job Opening", job_opening, "job_requisition")
+	if not job_requisition:
+		return
 
-    # Get required interview rounds from job requisition
-    required_rounds = frappe.get_all(
-        "Interview Rounds",
-        filters={"parent": job_requisition},
-        pluck="interview_round"
-    )
+	# Get required interview rounds from job requisition
+	required_rounds = frappe.get_all(
+		"Interview Rounds",
+		filters={"parent": job_requisition},
+		pluck="interview_round"
+	)
 
-    # Get completed interview rounds from applicant
-    completed_rounds = frappe.get_all(
-        "Interview",
-        filters={
-            "job_applicant": job_applicant,
-            "status": ["in", ["Cleared", "Rejected"]],
-            "interview_round": ["is", "set"]
-        },
-        pluck="interview_round"
-    )
+	# Get completed interview rounds from applicant
+	completed_rounds = frappe.get_all(
+		"Interview",
+		filters={
+			"job_applicant": job_applicant,
+			"status": ["in", ["Cleared", "Rejected"]],
+			"interview_round": ["is", "set"]
+		},
+		pluck="interview_round"
+	)
 
-    # Compare sets
-    if set(required_rounds).issubset(set(completed_rounds)):
-        frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Completed")
-    else:
-        frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
+	# Compare sets
+	if set(required_rounds).issubset(set(completed_rounds)):
+		frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Completed")
+	else:
+		frappe.db.set_value("Job Applicant", job_applicant, "status", "Interview Ongoing")
 
 @frappe.whitelist()
 def get_permission_query_conditions(user):
-    if not user:
-        user = frappe.session.user
+	if not user:
+		user = frappe.session.user
 
-    user_roles = frappe.get_roles(user)
+	user_roles = frappe.get_roles(user)
 
-    # Allow Administrator to see all interviews
-    if "System Manager" in user_roles:
-        return None
+	# Allow Administrator to see all interviews
+	if "System Manager" in user_roles:
+		return None
 
-    # Restrict Interviewers to see only scheduled interviews where they are assigned
-    if "Interviewer" in user_roles:
-        conditions = """
-            EXISTS (
-                SELECT 1 FROM `tabInterview Detail` id
-                WHERE id.parent = `tabInterview`.name
-                AND id.interviewer = '{user}'
-            )
-        """.format(user=user)
-        return conditions
+	# Restrict Interviewers to see only scheduled interviews where they are assigned
+	if "Interviewer" in user_roles:
+		conditions = """
+			EXISTS (
+				SELECT 1 FROM `tabInterview Detail` id
+				WHERE id.parent = `tabInterview`.name
+				AND id.interviewer = '{user}'
+			)
+		""".format(user=user)
+		return conditions
 
-    return None
+	return None
 
 
 def update_applicant_interview_rounds(doc, method):
-    """
-    Update the Job Applicant's applicant_interview_rounds table when a new Interview is created.
-    """
-    if not doc.job_applicant:
-        return
+	"""
+	Update the Job Applicant's applicant_interview_rounds table when a new Interview is created.
+	"""
+	if not doc.job_applicant:
+		return
 
-    job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
-    existing_rounds = {row.interview_round for row in job_applicant.applicant_interview_rounds}
+	job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
+	existing_rounds = {row.interview_round for row in job_applicant.applicant_interview_rounds}
 
-    if doc.interview_round in existing_rounds:
-        return
+	if doc.interview_round in existing_rounds:
+		return
 
-    job_applicant.append("applicant_interview_rounds", {
-        "interview_round": doc.interview_round,
-        "interview_status": doc.status
-    })
+	job_applicant.append("applicant_interview_rounds", {
+		"interview_round": doc.interview_round,
+		"interview_status": doc.status
+	})
 
-    job_applicant.save(ignore_permissions=True)
+	job_applicant.save(ignore_permissions=True)
 
 @frappe.whitelist()
 def get_job_applicant_dashboard_html(job_applicant):
-    if not job_applicant:
-        return {"html": "<p>No Job Applicant selected.</p>"}
+	if not job_applicant:
+		return {"html": "<p>No Job Applicant selected.</p>"}
 
-    doc = frappe.get_doc("Job Applicant", job_applicant)
+	doc = frappe.get_doc("Job Applicant", job_applicant)
 
-    html = frappe.render_template(
-        "beams/beams/custom_scripts/interview/interview_dashboard.html",
-        {"job_applicant": doc}
-    )
+	html = frappe.render_template(
+		"beams/beams/custom_scripts/interview/interview_dashboard.html",
+		{"job_applicant": doc}
+	)
 
-    return {"html": html}
+	return {"html": html}
