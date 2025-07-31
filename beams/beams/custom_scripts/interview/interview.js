@@ -251,10 +251,6 @@ function validate_feedback_dialog(dialog) {
 		}
 
 		for (let q of question_data) {
-			if (!q.applicant_answer || q.score == null) {
-				missing_fields.push(__('Answer (in Question Assessment)'));
-				break;
-			}
 			if (q.score < 0 || q.score > 10) {
 				frappe.msgprint(__('Question Score must be between 0 and 10.'));
 				return false;
