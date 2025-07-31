@@ -65,19 +65,19 @@ def create_job_opening_from_job_requisition(doc, method):
 def on_update(doc, method=None):
     '''
         Method triggered after the document is updated.
-        It checks if the workflow state has changed to "Cancelled".
+        It checks if the workflow state has changed to "Cancelled" or "On Hold".
     '''
     # Fetch the document state before saving
     old_doc = doc.get_doc_before_save()
 
-    # Check if the old workflow state is different from the new one and if the new state is "Cancelled"
-    if old_doc and old_doc.workflow_state != doc.workflow_state and doc.workflow_state == 'Cancelled':
+    # Check if the old workflow state is different from the new one and if the new state is "Cancelled" or "On Hold"
+    if old_doc and old_doc.workflow_state != doc.workflow_state and doc.workflow_state in ["Cancelled", "On Hold"]:
         close_job_openings(doc)
 
 @frappe.whitelist()
 def close_job_openings(doc):
     '''
-        Close the linked Job Opening when the Job Requisition is cancelled.
+        Close the linked Job Opening when the Job Requisition is cancelled or or "On Hold".
     '''
     job_openings = frappe.db.get_all('Job Opening', {'job_requisition': doc.name, 'status':['!=', 'Closed'] })
     for job_opening in job_openings:
@@ -117,3 +117,14 @@ def validate_expected_by(doc, method=None):
 
         if expected_date < today:
             frappe.throw("Expected By date must be a future date.")
+            
+@frappe.whitelist()			
+def validate_fields(doc, method):
+    '''Ensure that 'Job Title' and 'Expected Compensation' are provided if the user has the 'HR Manager' role.'''
+
+    if "HR Manager" in frappe.get_roles(frappe.session.user):
+        if not doc.job_title:
+            frappe.throw("Job Title is required for HR Managers.")
+
+        if not doc.expected_compensation or doc.expected_compensation <= 0:
+            frappe.throw("Expected Compensation (Yearly) must be greater than 0.")

@@ -239,7 +239,10 @@ doc_events = {
 			"beams.beams.custom_scripts.job_requisition.job_requisition.create_job_opening_from_job_requisition",
 			"beams.beams.custom_scripts.job_requisition.job_requisition.on_update"
 		],
-		"validate": "beams.beams.custom_scripts.job_requisition.job_requisition.validate_expected_by"
+		"validate": [
+			"beams.beams.custom_scripts.job_requisition.job_requisition.validate_expected_by",
+			"beams.beams.custom_scripts.job_requisition.job_requisition.validate_fields"
+		],
 	},
 
 	"Journal Entry": {

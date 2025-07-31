@@ -2236,7 +2236,7 @@ def get_job_requisition_custom_fields():
 				"fieldtype": "Data",
 				"label": "Job Title",
 				"insert_after": "job_description_template",
-				"depends_on": "eval: frappe.user_roles.includes('HR Manager')",
+				"depends_on": "eval: frappe.user_roles.includes('HR Manager') || frappe.user_roles.includes('CEO')",
 				"mandatory_depends_on": "eval: frappe.user_roles.includes('HR Manager')"
 			},
 			{
