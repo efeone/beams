@@ -5,6 +5,8 @@ frappe.ui.form.on('Employee Interview Tool', {
 	onload(frm) {
 		frm.set_value('date', frappe.datetime.get_today());
 		frm.toggle_display('job_applicants', false);
+		!frm.doc.company && frappe.db.get_single_value('Global Defaults','default_company')
+		.then(value => frm.set_value('company',value))
 	},
 	from_time: function (frm) {
 		validate_time_range(frm);
@@ -67,6 +69,7 @@ frappe.ui.form.on('Employee Interview Tool', {
 							row.applicant_name = app.applicant_name;
 							row.status = app.status;
 							row.designation = app.designation;
+							row.department = app.department;
 						});
 						frm.refresh_field('job_applicants');
 						frm.toggle_display('job_applicants', true);
@@ -150,6 +153,7 @@ function toggle_create_interview_button(frm) {
 						job_applicant: row.job_applicant,
 						applicant_name: row.applicant_name,
 						designation: row.designation,
+						department: row.department,
 						interview_round: frm.doc.interview_round,
 						scheduled_on: frm.doc.scheduled_on,
 						from_time: frm.doc.from_time,

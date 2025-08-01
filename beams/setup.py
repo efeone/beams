@@ -2037,6 +2037,7 @@ def get_interview_custom_fields():
 				"label": "Applicant Email ID",
 				"insert_after": "job_applicant",
 				"fetch_from": "job_applicant.email_id",
+				"options": "Email",
 				"hidden": 1
 			},
 			{
@@ -4473,8 +4474,15 @@ def get_property_setters():
 			"property": "set_only_once",
 			"property_type": "Check",
 			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "assessment_officer",
+			"property": "ignore_user_permissions",
+			"property_type": "Check",
+			"value": 1
 		}
-
 	]
 
 def get_material_request_custom_fields():

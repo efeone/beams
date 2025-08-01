@@ -9,7 +9,8 @@
   "job_applicant",
   "applicant_name",
   "designation",
-  "status"
+  "status",
+  "department"
  ],
  "fields": [
   {
@@ -39,13 +40,21 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Designation"
+  },
+  {
+   "fetch_from": "job_applicant.department",
+   "fieldname": "department",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Department",
+   "options": "Department"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-15 10:00:07.903323",
+ "modified": "2025-08-01 12:00:54.889396",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Job Applicant Interview Detail",
