@@ -71,7 +71,7 @@ frappe.ui.form.on('Employee Interview Tool', {
 						frm.refresh_field('job_applicants');
 						frm.toggle_display('job_applicants', true);
 						get_btn.removeClass('btn-primary').addClass('btn-default');
-                        toggle_create_interview_button(frm);
+						toggle_create_interview_button(frm);
 						toggle_local_enquiry_button(frm);
 					}
 				}
