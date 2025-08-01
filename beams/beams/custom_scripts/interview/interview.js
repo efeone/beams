@@ -254,12 +254,21 @@ function validate_feedback_dialog(dialog) {
 		}
 
 		for (let q of question_data) {
+	     if (q.score == null) {
+	             missing_fields.push(__('Score (in Question Assessment)'));
+	             break;
+	     }
+
 			if (q.score < 0 || q.score > 10) {
 				frappe.msgprint(__('Question Score must be between 0 and 10.'));
 				return false;
 			}
 		}
 	}
+   // Check result explicitly
+   if (!dialog.get_value('result')) {
+           return false;
+   }
 
 	// Show unified missing fields error
 	if (missing_fields.length > 0) {
@@ -347,4 +356,3 @@ function set_job_applicant_dashboard(frm) {
 			}
 		});
 }
-
