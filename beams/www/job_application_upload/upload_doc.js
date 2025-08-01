@@ -41,29 +41,48 @@ $(document).ready(function () {
 
 		// Only validate if currentEmployerTab is visible
 		if (currentEmployerTab && currentEmployerTab.style.display !== "none") {
-			const managerEmail = safeValue($('#manager_email').val());
+			const managerEmail = $('#manager_email').val();
+			const managerName = safeValue($('#manager_name').val());
 			const managerPhone = safeValue($('#manager_contact_no').val());
+			const payslip_month_1= safeValue($('#payslip_month_1').val());
+			const payslip_month_2= safeValue($('#payslip_month_2').val());
+			const payslip_month_3= safeValue($('#payslip_month_3').val());
 
-			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 			const phoneRegex = /^\d{10}$/;
-
 			if (!managerEmail) {
-				alert('Manager Email is required.');
+				showError('Manager Email is required.');
+				focusFieldInTab('#manager_email', 1);
 				return false;
 			}
 
 			if (!emailRegex.test(managerEmail)) {
-				alert('Please enter a valid manager email address.');
+				showError('Please enter a valid manager email address.');
+				focusFieldInTab('#manager_email', 1);
+				return false;
+			}
+
+			if (!managerName) {
+				showError('Manager Name is required.');
+				focusFieldInTab('#manager_name', 1);
 				return false;
 			}
 
 			if (!managerPhone) {
-				alert('Contact No is required.');
+				showError(' Manager Contact Number is required.');
+				focusFieldInTab('#manager_contact_no', 1);
 				return false;
 			}
 
 			if (!phoneRegex.test(managerPhone)) {
-				alert('Please enter a valid 10-digit mobile number for Manager Contact No.');
+				showError('Please enter a valid 10-digit mobile number for Manager Contact No.');
+				focusFieldInTab('#manager_contact_no', 1);
+				return false;
+			}
+
+			if (!payslip_month_1 || !payslip_month_2 || !payslip_month_3) {
+				showError('Please upload last 3 months payslips.');
+				$('#payslip_month_1').focus();
 				return false;
 			}
 		}
@@ -74,13 +93,129 @@ $(document).ready(function () {
 		const isAadhaarVisible = aadhaarField && aadhaarField.style.display !== "none";
 		const aadhaarNumber = aadhaarInput ? safeValue($(aadhaarInput).val()) : '';
 
+		function focusFieldInTab(fieldSelector, tabIndex) {
+		// Switch to the correct tab
+		showTab(tabIndex);
+
+		// Wait for tab content to render, then scroll and focus
+		setTimeout(() => {
+			const field = $(fieldSelector);
+			if (field.length) {
+				field.focus();
+				$('html, body').animate({
+					scrollTop: field.offset().top - 100
+				}, 300);
+			}
+		}, 200);
+	}
+
+	const fieldTabMap = {
+    // Personal Information tab (index 0)
+    '#aadhaar_number_input': 0,
+    '#current_city': 0,
+	'#current_pin': 0,
+	'#phone_number': 0,
+	'#date_of_birth': 0,
+	'#interviewed_date': 0,
+	'#current_perm_post_office': 0,
+	'#current_street': 0,
+	'#current_house_no': 0,
+	'#current_district': 0,
+	'#current_state': 0,
+	'#current_locality': 0,
+	'#date_of_birth': 0,
+    // Current Employer tab (index 1)
+    '#manager_email': 1,
+	'#manager_name': 1,
+    '#manager_contact_no': 1,
+    '#payslip_month_1': 1,
+
+	};
+
+		const date_of_birth = safeValue($('#date_of_birth').val());
+			if (!date_of_birth) {
+				showError('Please enter a valid date of birth.');
+				focusFieldInTab('#date_of_birth', fieldTabMap['#date_of_birth']);
+				return false;
+			}
+
 		if (isAadhaarVisible) {
 			if (!aadhaarNumber || aadhaarNumber.length !== 12 || !/^\d{12}$/.test(aadhaarNumber)) {
-				alert('Please enter a valid 12-digit Aadhaar number.');
-				return false;
+				showError('Please enter a valid 12-digit Aadhaar number.');
+				focusFieldInTab('#aadhaar_number_input', fieldTabMap['#aadhaar_number_input']);				return false;
 			}
 		}
 
+		window.showTab = showTab;
+
+		const phoneNumber = safeValue($('#phone_number').val());
+		const phoneNumberRegex = /^\d{10}$/;
+		if (!phoneNumber || !phoneNumberRegex.test(phoneNumber)) {
+			showError('Please enter a valid 10-digit mobile number.');
+			focusFieldInTab('#phone_number', fieldTabMap['#phone_number']);
+			return false;
+		}
+		const current_pin = safeValue($('#current_pin').val());
+		const pinRegex = /^\d{6}$/;
+		if (!current_pin) {
+			showError('Please enter a valid 6-digit PIN.');
+			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
+			return false;
+		}
+		if (!pinRegex.test(current_pin)) {
+			showError('Please enter a valid 6-digit PIN.');
+			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
+			return false;
+		}
+		const current_house_no = safeValue($('#current_house_no').val());
+		if (!current_house_no) {
+			showError('Please enter a valid house number.');
+			focusFieldInTab('#current_house_no', fieldTabMap['#current_house_no']);
+			return false;
+		}
+		const current_city = safeValue($('#current_city').val());
+		if (!current_city) {
+			showError('Please enter a valid city.');
+			focusFieldInTab('#current_city', fieldTabMap['#current_city']);
+			return false;
+		}
+		const current_perm_post_office = safeValue($('#current_perm_post_office').val());
+		if (!current_perm_post_office) {
+			showError('Please enter a valid post office.');
+			focusFieldInTab('#current_perm_post_office', fieldTabMap['#current_perm_post_office']);
+			return false;
+		}
+		const current_street = safeValue($('#current_street').val());
+		if (!current_street ) {
+			showError('Please enter a valid street.');
+			focusFieldInTab('#current_street', fieldTabMap['#current_street']);
+			return false;
+		}
+		const current_district = safeValue($('#current_district').val());
+		if (!current_district) {
+			showError('Please enter a valid district.');
+			focusFieldInTab('#current_district', fieldTabMap['#current_district']);
+			return false;
+		}
+		const current_state = safeValue($('#current_state').val());
+		if (!current_state) {
+			showError('Please enter a valid state.');
+			focusFieldInTab('#current_state', fieldTabMap['#current_state']);
+			return false;
+		}
+
+		const current_locality = safeValue($('#current_locality').val());
+		if (!current_locality) {
+			showError('Please enter a valid locality.');
+			focusFieldInTab('#current_locality', fieldTabMap['#current_locality']);
+			return false;
+		}
+		const cuurentstate = safeValue($('#current_state').val());
+		if (!cuurentstate) {
+			showError('Please enter a valid state.');
+			focusFieldInTab('#current_state', fieldTabMap['#current_state']);
+			return false;
+		}
 		event.preventDefault();
 		const fields = [
 			'father_name', 'applicant_name', 'date_of_birth', 'gender', 'country', 'marital_status',
@@ -90,14 +225,14 @@ $(document).ready(function () {
 			'permanent_district','permanent_pin','permanent_locality','permanent_state', 'email_id',
 			'aadhaar_number_input', 'name_of_employer','current_department','current_designation','reports_to',
 			'manager_name','manager_contact_no','manager_email','reference_taken',
-			'address_of_employer', 'duties_and_reponsibilities', 'reason_for_leaving',
+			'address_of_employer', 'duties_and_responsibilities', 'reason_for_leaving',
 			'agency_details', 'current_salary', 'expected_salary',
 			'other_achievments', 'position', 'interviewed_location', 'interviewed_date',
 			'interviewed_outcome', 'related_employee', 'related_employee_org', 'related_employee_pos',
 			'related_employee_rel', 'professional_org', 'political_org', 'specialised_training',
 			'reference_taken', 'was_this_position', 'state_restriction', 'achievements_checkbox',
 			'interviewed_before_checkbox', 'related_to_employee_checkbox', 'professional_org_checkbox',
-			'political_org_checkbox', 'specialised_training_checkbox','additional_comments'
+			'political_org_checkbox', 'specialised_training_checkbox','additional_comments','phone_number'
 		];
 
 		const first_name = safeValue($('#first_name').val());
@@ -186,6 +321,7 @@ $(document).ready(function () {
 			}
 		});
 
+		$('#form-error').hide();
 		frappe.call({
 			method: 'beams.www.job_application_upload.upload_doc.update_register_form',
 			args: {
@@ -206,7 +342,7 @@ $(document).ready(function () {
 				}
 			},
 			error: function (err) {
-				alert('An error occurred during submission.');
+				showError('An error occurred during submission.');
 			}
 		});
 	});

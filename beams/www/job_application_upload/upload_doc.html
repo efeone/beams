@@ -16,7 +16,7 @@
 
 <body>
     <div id="form_upload_doc">
-        <h1><b>APPLICATION FOR EMPLOYEMENT</b></h1>
+        <h1><b>APPLICATION FOR EMPLOYMENT</b></h1>
         <center>
             <h3>Madhyamam Broadcasting Limited</h3>
         </center>
@@ -28,14 +28,16 @@
                 <button class="tab-button" onclick="showTab(2)">More Details</button>
             </div>
             <form id="submit_application" method="post">
+                <div id="form-error" class="form-error" style="display:none;">
+                <span id="form-error-text"></span>
+                </div>
                 <input type="hidden" id="docname" value="{{ doc.name }}">
                 <div class="form-section active" id="tab-0">
                     <h5><b>General Details</b></h5>
                     <div class="row tax-details" style="width: 31%;">
                         <div class="column">
                             <label for="designation">Position Applied For</label>
-                            <input type="text" id="designation" name="designation" value="{{ doc.designation }}" {% if
-                                doc.designation %} disabled {% endif %}>
+                            <input type="text" id="designation" name="designation" value="{{ doc.designation or '' }}" disabled>
                         </div>
                     </div>
                     <div class="row">
@@ -49,8 +51,9 @@
                             <input type="text" id="father_name" name="father_name">
                         </div>
                         <div class="column">
-                            <label for="date_of_birth">Date of Birth:</label>
-                            <input type="text" id="date_of_birth" name="date_of_birth">
+                            <label for="date_of_birth">Date of Birth <span style="color: red;">*</span> </label>
+                            <input type="text" id="date_of_birth" style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;"
+                            name="date_of_birth">
                         </div>
                     </div>
                     <div class="row">
@@ -59,7 +62,7 @@
                             {% set genders = frappe.get_all('Gender', fields=['gender', 'name']) %}
                             <div class="col-14"></div>
                             <select class="form-control" id="gender" name="gender"
-                                style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
+                                style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;">
                                 <option value="">Select Gender</option>
                                 {% for gender in genders %}
                                 <option value="{{ gender.name }}">{{ gender.gender }}</option>
@@ -67,11 +70,11 @@
                             </select>
                         </div>
                         <div class="column">
-                            <label for="country">Country</label>
+                            <label for="country">Country <span style="color: red;">*</span></label>
                             {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
                             <div class="col-14">
                                 <select class="form-control" id="country" name="country"
-                                    style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
+                                    style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;"
                                     <option value="">Select Country</option>
                                     {% for country in countries %}
                                     <option value="{{ country.name }}">{{ country.country_name }}</option>
@@ -81,12 +84,13 @@
                         </div>
                         <!-- Aadhaar Field (Initially Hidden) -->
                         <div class="column" id="aadhaar_field" style="display:none;">
-                            <label for="aadhaar_number_input">Aadhaar Number</label>
+                            <label for="aadhaar_number_input">Aadhaar Number <span style="color: rgb(255, 0, 0);">*</span></label>
                             <div class="col-14">
                                 <input type="text" class="form-control" id="aadhaar_number_input" name="aadhaar_number"
-                                       style="height:40px; width: 90%; font-size:13px; background-color: #004eff17;"
-                                       placeholder="Enter Aadhaar Number">
+                                        style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;"
+                                        placeholder="Enter Aadhaar Number">
                             </div>
+                            <div id="aadhaar_error" style="color: rgb(135, 135, 135); font-size: 12px; height: 15px; margin-top: 5px;"></div>
                         </div>
                         <div class="column">
                             <label for="marital_status">Maritial Status</label>
@@ -106,50 +110,50 @@
 
                           <!-- House No./Name and Period of Stay -->
                           <div class="column">
-                              <label for="house_no">House No./Name</label>
+                              <label for="house_no">House No./Name <span style="color: red;">*</span></label>
                               <input type="text" id="current_house_no" name="current_house_no" style="width: 90%;" />
                           </div>
 
                           <!-- City -->
                           <div class="column" style="width: 100%;">
-                              <label for="city">City</label>
+                              <label for="city">City <span style="color: red;">*</span></label>
                               <input type="text" id="current_city" name="current_city" style="width: 95%;" />
                           </div>
 
                           <!-- Post Office -->
                           <div class="column" style="width: 100%;">
-                              <label for="perm_post_office">Post Office</label>
+                              <label for="perm_post_office">Post Office <span style="color: red;">*</span></label>
                               <input type="text" id="current_perm_post_office" name="current_perm_post_office" style="width: 95%;" />
                           </div>
 
                           <!-- Street/Road -->
                           <div class="column" style="width: 100%;">
-                              <label for="street">Street/Road</label>
+                              <label for="street">Street/Road <span style="color: red;">*</span></label>
                               <input type="text" id="current_street" name="current_street" style="width: 95%;" />
                           </div>
 
                           <!-- District -->
                           <div class="column" style="width: 100%;">
-                              <label for="district">District</label>
+                              <label for="district">District <span style="color: red;">*</span></label>
                               <input type="text" id="current_district" name="current_district" style="width: 95%;" />
                           </div>
 
                           <!-- PIN Code -->
                           <div class="column" style="width: 100%;">
-                              <label for="pin">PIN Code</label>
-                              <input type="text" id="current_pin" name="current_pin" maxlength="6" pattern="\d{6}"
+                              <label for="pin">PIN Code <span style="color: red;">*</span></label>
+                              <input type="text" id="current_pin" name="current_pin" maxlength="6"
                                      style="width: 95%;" placeholder="Enter 6-digit PIN" />
                           </div>
                           <!-- Street/Road -->
                           <div class="column" style="width: 100%;">
-                              <label for="locality">Locality/Village</label>
+                              <label for="locality">Locality/Village <span style="color: red;">*</span></label>
                               <input type="text" id="current_locality" name="current_locality" style="width: 95%;" />
                           </div>
 
 
                           <!-- State -->
                           <div class="column" style="width: 100%;">
-                              <label for="state">State</label>
+                              <label for="state">State <span style="color: red;">*</span></label>
                               <input type="text" id="current_state" name="current_state" style="width: 95%;" />
                           </div>
 
@@ -244,9 +248,12 @@
                                 doc.email_id %} disabled {% endif %}>
                         </div>
                         <div class="column">
-                            <label for="phone_number">Mobile Number</label>
-                            <input type="tel" id="phone_number" name="phone_number" value="{{ doc.phone_number or '' }}"
-                                {% if doc.phone_number %} disabled {% endif %}>
+                            <label for="phone_number">Mobile Number <span style="color: red;">*</span></label>
+                            <input type="tel" id="phone_number" name="phone_number"
+                                value="{{ doc.phone_number or '' }}"
+                                {% if doc.phone_number %} disabled {% endif %}
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '')
+                                .slice(0, 10);">
                         </div>
                         <div class="column">
                         </div>
@@ -284,7 +291,9 @@
                                     <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4"
                                             placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
                                             style="background-color: #fff;"></td>
-                                    <td><input type="Float" name="results_1" class="result"
+                                    <td><input type="text" name="results_1" class="result"
+                                            oninput="validatePercentage(this)"
+                                            placeholder="0-100"
                                             style="background-color: #fff;"></td>
                                     <td><input type="file" id="qualification_file" class="home-textinput"
                                             style="background-color: #fff;" /></td>
@@ -346,7 +355,7 @@
                     <div class="row">
                         <div class="column">
                             <label for="name_of_employer">Name of Employer</label>
-                            <input type="text" id="name_of_employer" name="name_of_employer">
+                            <input type="text" id="name_of_employer" name="name_of_employer" >
                         </div>
                         <div class="column">
                             <label for="current_department">Department</label>
@@ -369,17 +378,18 @@
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="manager_name">Name</label>
-                            <input type="text" id="manager_name" name="manager_name">
+                            <label for="manager_name">Name <span style="color: red;">*</span></label>
+                            <input type="text" id="manager_name" name="manager_name" >
                         </div>
                         <div class="column">
-                            <label for="manager_contact_no">Contact No</label>
-                            <input type="text" id="manager_contact_no" name="manager_contact_no"
-                                title="Please enter a valid 10-digit mobile number">
+                            <label for="manager_contact_no">Contact No  <span style="color: red;">*</span></label>
+                            <input type="tel" id="manager_contact_no" name="manager_contact_no"
+                                title="Please enter a valid 10-digit mobile number"
+                                oninput="validateDigits(this)" maxlength="10" >
                         </div>
                         <div class="column">
-                            <label for="manager_email">Email</label>
-                            <input type="text" id="manager_email" name="manager_email">
+                            <label for="manager_email">Email <span style="color: red;">*</span></label>
+                            <input type="text" id="manager_email" name="manager_email" >
                         </div>
                     </div>
                     <div class="row">
@@ -459,6 +469,8 @@
                                         <td><input type="text" name="designation" class="prev_designation"
                                                 style="background-color: #fff;"></td>
                                         <td><input type="text" name="last_sal" class="last_salary_drawn"
+                                                inputmode="numeric" maxlength="10"
+                                                oninput="validateDigits(this)"
                                                 style="background-color: #fff;"></td>
                                         <td><input type="text" name="name_of_manager" class="name_of_manager"
                                                 style="background-color: #fff;"></td>
@@ -487,19 +499,19 @@
                             </div>
 
                             <div class="column">
-                                <label for="payslip_month_1">Payslip - Month 1</label>
+                                <label for="payslip_month_1">Payslip - Month 1 <span style="color: red;">*</span></label>
                                 <input type="file" id="payslip_month_1" name="payslip_month_1"
                                     accept=".pdf,.jpg,.png,.jpeg" />
                             </div>
 
                             <div class="column">
-                                <label for="payslip_month_2">Payslip - Month 2</label>
+                                <label for="payslip_month_2">Payslip - Month 2 <span style="color: red;">*</span></label>
                                 <input type="file" id="payslip_month_2" name="payslip_month_2"
                                     accept=".pdf,.jpg,.png,.jpeg" />
                             </div>
 
                             <div class="column">
-                                <label for="payslip_month_3">Payslip - Month 3</label>
+                                <label for="payslip_month_3">Payslip - Month 3 <span style="color: red;">*</span></label>
                                 <input type="file" id="payslip_month_3" name="payslip_month_3"
                                     accept=".pdf,.jpg,.png,.jpeg" />
                             </div>
@@ -509,7 +521,7 @@
                     <div class="row">
                         <div class="column">
                             <label for="expected_salary">Expected Salary</label>
-                            <input type="number" id="expected_salary" name="expected_salary">
+                            <input type="text" id="expected_salary" name="expected_salary" oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="column">
                         </div>
@@ -740,17 +752,23 @@
             const aadhaarField = document.getElementById('aadhaar_field');
             const aadhaarInput = document.getElementById('aadhaar_number_input');
 
-            // Show/hide Aadhaar field
-            countrySelect.addEventListener('change', function () {
-                if (this.value === "India") {
+            // 1. Create a reusable function with the show/hide logic
+            function toggleAadhaarField() {
+                if (countrySelect.value === "India") {
                     aadhaarField.style.display = "block";
                 } else {
                     aadhaarField.style.display = "none";
                     aadhaarInput.value = "";
                 }
-            });
+            }
 
-            // Allow only digits, max 12
+            // 2. Set the event listener to call the function on change
+            countrySelect.addEventListener('change', toggleAadhaarField);
+
+            // 3. Call the function once on page load to check the initial value
+            toggleAadhaarField();
+
+            // This part remains the same
             aadhaarInput.addEventListener('input', function () {
                 this.value = this.value.replace(/\D/g, '').slice(0, 12);
             });
@@ -808,6 +826,7 @@
 
         function copyCurrentAddress() {
             const checkbox = document.getElementById("same_as_current");
+            const isChecked = checkbox.checked; // Get the state of the checkbox
 
             const fields = [
                 "house_no",
@@ -825,7 +844,11 @@
                 const permanentField = document.getElementById("permanent_" + field);
 
                 if (currentField && permanentField) {
-                    permanentField.value = checkbox.checked ? currentField.value : "";
+                    // Copy value if checked, otherwise clear it
+                    permanentField.value = isChecked ? currentField.value : "";
+
+                    // Make the field read-only if checked, otherwise make it editable
+                    permanentField.readOnly = isChecked;
                 }
             });
         }
@@ -898,7 +921,7 @@
 
         // Function to validate digits (year input)
         function validateDigits(input) {
-            input.value = input.value.replace(/\D/g, '').slice(0, 4);
+            input.value = input.value.replace(/\D/g, '');
         }
 
         // Function to add a new row in the Education Qualifications table
@@ -1067,7 +1090,55 @@
             dateFormat: "d-m-Y",
         })
 
+        // This logic belongs in your <script> tag
+        const maxBirthDate = new Date();
+        maxBirthDate.setFullYear(maxBirthDate.getFullYear() - 18);
 
+        flatpickr("#date_of_birth", {
+            dateFormat: "d-m-Y",
+            maxDate: maxBirthDate
+        });
+
+        // Get the Aadhaar input and the error message div
+        const aadhaarInput = document.getElementById('aadhaar_number_input');
+        const aadhaarError = document.getElementById('aadhaar_error');
+
+        // HIDE the error when the user clicks back into the field
+        aadhaarInput.addEventListener('focus', function() {
+            aadhaarError.textContent = '';
+        });
+
+        // SHOW the error when the user clicks away (if input is invalid)
+        aadhaarInput.addEventListener('blur', function() {
+            if (this.value.length > 0 && this.value.length !== 12) {
+                aadhaarError.textContent = 'Aadhaar number must be 12 digits.';
+            } else {
+                aadhaarError.textContent = '';
+            }
+        });
+
+        function validatePercentage(input) {
+        input.value = input.value
+            .replace(/[^0-9.]/g, '')
+            .replace(/(\..*?)\..*/g, '$1');
+        if (input.value.startsWith('.')) input.value = '0' + input.value;
+        let value = parseFloat(input.value);
+        if (!isNaN(value) && value > 100) input.value = '100';
+        }
+        // place this after you hide navbar/footer
+		function showError(message) {
+            document.getElementById("form-error-text").textContent = message;
+            document.getElementById("form-error").style.display = "block";
+
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                hideError();
+            }, 5000);
+        }
+
+        function hideError() {
+            document.getElementById("form-error").style.display = "none";
+        }
 
     </script>
 </body>

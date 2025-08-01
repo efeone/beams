@@ -113,7 +113,7 @@ def update_register_form(docname, form_data=None):
 		doc.reason_for_leavingg = sanitize('reason_for_leaving')
 		doc.current_employment_type = sanitize('was_this_position')
 		doc.agency_details = sanitize('agency_details')
-
+		doc.phone_number = sanitize('phone_number')
 		doc.current_salary = sanitize('current_salary')
 		doc.first_salary_drawn = sanitize('first_salary_drawn')
 		doc.telephone_number = sanitize('telephone_number')
