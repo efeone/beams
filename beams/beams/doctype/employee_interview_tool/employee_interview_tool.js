@@ -12,10 +12,10 @@ frappe.ui.form.on('Employee Interview Tool', {
 	to_time: function (frm) {
 		validate_time_range(frm);
 	},
-    applicant_status: function(frm) {
-        toggle_create_interview_button(frm);
-        toggle_local_enquiry_button(frm);
-    },
+	applicant_status: function(frm) {
+		toggle_create_interview_button(frm);
+		toggle_local_enquiry_button(frm);
+	},
 	refresh: function (frm) {
 		frm.disable_save()
 		frm.set_value('interview_round', '');
@@ -86,11 +86,11 @@ frappe.ui.form.on('Employee Interview Tool', {
 					frm.fields_dict.get_btn.click();
 				}
 				toggle_local_enquiry_button(frm);
-                toggle_create_interview_button(frm);
+				toggle_create_interview_button(frm);
 			});
 		}
 		toggle_local_enquiry_button(frm);
-        toggle_create_interview_button(frm);
+		toggle_create_interview_button(frm);
 	}
 });
 
@@ -108,6 +108,10 @@ function validate_time_range(frm) {
 	}
 }
 
+/**
+ * Toggles the 'Create Interview' button based on applicant status - 'Document Uploaded', 'Interview Scheduled', 'Interview Ongoing'.
+ * On click, creates interviews or prompts for rescheduling if already exists.
+ */
 let create_interview_btn = null;
 function toggle_create_interview_button(frm) {
 	if (create_interview_btn) {
@@ -115,7 +119,7 @@ function toggle_create_interview_button(frm) {
 		create_interview_btn = null;
 	}
 
-	if (["Document Uploaded", "Interview Scheduled", "Interview Ongoing"].includes(frm.doc.applicant_status)) {
+	if (['Document Uploaded', 'Interview Scheduled', 'Interview Ongoing'].includes(frm.doc.applicant_status)) {
 		create_interview_btn = frm.add_custom_button('Create Interview', function () {
 			let selected_rows = frm.fields_dict.job_applicants.grid.get_selected_children();
 			if (!selected_rows.length) {
@@ -189,23 +193,22 @@ function toggle_create_interview_button(frm) {
 											reqd: 1
 										}
 									], (values) => {
-                                        frappe.call({
-                                            method: "beams.beams.doctype.employee_interview_tool.employee_interview_tool.reschedule_interviews",
-                                            args: {
-                                                applicants: data.skipped_applicants,
-                                                interview_round: frm.doc.interview_round,
-                                                scheduled_on: values.scheduled_on,
-                                                from_time: values.from_time,
-                                                to_time: values.to_time,
-                                            },
-                                            callback: function(r) {
-                                                if (!r.exc) {
-                                                    frappe.msgprint(__('Interview(s) rescheduled successfully.'));
-                                                    frm.refresh();
-                                                }
-                                            }
-
-                                        });
+										frappe.call({
+											method: 'beams.beams.doctype.employee_interview_tool.employee_interview_tool.reschedule_interviews',
+											args: {
+												applicants: data.skipped_applicants,
+												interview_round: frm.doc.interview_round,
+												scheduled_on: values.scheduled_on,
+												from_time: values.from_time,
+												to_time: values.to_time,
+											},
+											callback: function(r) {
+												if (!r.exc) {
+													frappe.msgprint(__('Interview(s) rescheduled successfully.'));
+													frm.refresh();
+												}
+											}
+										});
 									}, __('Reschedule Interviews'));
 								},
 								() => {
@@ -221,9 +224,11 @@ function toggle_create_interview_button(frm) {
 	}
 }
 
-
+/**
+ * Adds 'Create Local Enquiry Report' button when applicant status matches - 'Shortlisted from Interview', 'Local Enquiry Started'
+ * Button triggers bulk LER creation for selected job applicants.
+ */
 function toggle_local_enquiry_button(frm) {
-	// Remove existing button first to avoid duplication
 	frm.remove_custom_button('Create Local Enquiry Report');
 
 	const valid_statuses = ['Shortlisted from Interview', 'Local Enquiry Started'];
