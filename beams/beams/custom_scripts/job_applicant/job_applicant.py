@@ -210,5 +210,5 @@ def calculate_and_validate_age(doc, method=None):
 
 	if age < 18:
 		frappe.throw(_("Applicants must be at least 18 years old to apply."))
-
+	doc.age = age
 	return age
