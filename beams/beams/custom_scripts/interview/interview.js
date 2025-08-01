@@ -265,10 +265,10 @@ function validate_feedback_dialog(dialog) {
 			}
 		}
 	}
-   // Check result explicitly
-   if (!dialog.get_value('result')) {
-           return false;
-   }
+	// Check result explicitly
+	if (!dialog.get_value('result')) {
+	       return false;
+	}
 
 	// Show unified missing fields error
 	if (missing_fields.length > 0) {
