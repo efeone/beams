@@ -136,12 +136,17 @@ def reschedule_interviews(applicants, interview_round, scheduled_on, from_time, 
 	"""
 		Reschedules existing Interview documents for given job applicants and interview round.
 	"""
+	if isinstance(applicants, str):
+		applicants = json.loads(applicants)
+
 	rescheduled = []
+
 	for app_id in applicants:
 		interviews = frappe.get_all("Interview", filters={
 			"job_applicant": app_id,
 			"interview_round": interview_round
 		})
+
 		for i in interviews:
 			doc = frappe.get_doc("Interview", i.name)
 			doc.scheduled_on = scheduled_on
