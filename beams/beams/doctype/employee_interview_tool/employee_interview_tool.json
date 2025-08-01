@@ -35,7 +35,8 @@
    "fieldname": "company",
    "fieldtype": "Link",
    "label": "Company",
-   "options": "Company"
+   "options": "Company",
+   "remember_last_selected_value": 1
   },
   {
    "fieldname": "branch",
@@ -128,7 +129,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-24 17:33:51.986164",
+ "modified": "2025-08-01 10:34:28.563948",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Interview Tool",
