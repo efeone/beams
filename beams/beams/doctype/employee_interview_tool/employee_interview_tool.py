@@ -37,7 +37,7 @@ def create_bulk_interviews(applicants):
 			'job_applicant': app.get('job_applicant'),
 			'interview_round': interview_round
 		}):
-			existing_interviews.append(app.get('applicant_name') or app.get('job_applicant'))
+			existing_interviews.append(app.get('job_applicant'))
 			continue
 
 		interview = frappe.get_doc({
@@ -130,3 +130,22 @@ def fetch_filtered_job_applicants(filters=None):
 
 	except Exception as e:
 		frappe.log_error(frappe.get_traceback(), _("Failed to fetch job applicants"))
+
+@frappe.whitelist()
+def reschedule_interviews(applicants, interview_round, scheduled_on, from_time, to_time):
+	"""
+		Reschedules existing Interview documents for given job applicants and interview round.
+	"""
+	rescheduled = []
+	for app_id in applicants:
+		interviews = frappe.get_all("Interview", filters={
+			"job_applicant": app_id,
+			"interview_round": interview_round
+		})
+		for i in interviews:
+			doc = frappe.get_doc("Interview", i.name)
+			doc.scheduled_on = scheduled_on
+			doc.from_time = from_time
+			doc.to_time = to_time
+			doc.save()
+			rescheduled.append(i.name)

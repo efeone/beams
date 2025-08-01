@@ -4450,6 +4450,31 @@ def get_property_setters():
 			"property_type": "Select",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Interview",
+			"field_name": "scheduled_on",
+			"property": "set_only_once",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Interview",
+			"field_name": "from_time",
+			"property": "set_only_once",
+			"property_type": "Check",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Interview",
+			"field_name": "to_time",
+			"property": "set_only_once",
+			"property_type": "Check",
+			"value": 0
+		}
+
 	]
 
 def get_material_request_custom_fields():
