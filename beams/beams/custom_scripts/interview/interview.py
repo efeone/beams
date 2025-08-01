@@ -256,6 +256,15 @@ def update_applicant_interview_rounds(doc, method):
 
 @frappe.whitelist()
 def get_job_applicant_dashboard_html(job_applicant):
+	"""
+	Returns rendered HTML for Job Applicant details in the Interview form.
+
+	Args:
+		job_applicant (str): Job Applicant document name.
+
+	Returns:
+		dict: Dictionary with 'html' key containing the rendered content.
+	"""
 	if not job_applicant:
 		return {"html": "<p>No Job Applicant selected.</p>"}
 

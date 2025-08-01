@@ -325,6 +325,13 @@ function handle_hrms_custom_buttons(frm) {
 	}, 100);
 }
 
+/**
+ * Fetches and renders the Job Applicant dashboard in the Interview form.
+ *
+ * Calls the server-side method to get an HTML snippet showing basic applicant details
+ * and injects it into the 'interview_html_field' section of the form.
+ *
+ */
 function set_job_applicant_dashboard(frm) {
 	if (!frm.doc.job_applicant) return;
 		frappe.call({
