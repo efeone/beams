@@ -304,9 +304,26 @@ var create_interview_feedback = function (frm, values, feedback_exists, save_sub
 	}
 	frappe.call({
 		method: 'beams.beams.custom_scripts.interview.interview.create_interview_feedback',
-		args: args
-	}).then(() => {
-		frm.refresh();
+		args: args,
+		callback: function (r) {
+			if (!r.exc) {
+				// Refresh the Interview form from DB to avoid "unsaved" state
+				frappe.call({
+					method: "frappe.client.get",
+					args: {
+						doctype: "Interview",
+						name: frm.doc.name
+					},
+					callback: function (res) {
+						if (res.message) {
+							frappe.model.sync(res.message);
+							frm.refresh();
+							frm.dirty = false;  // clear unsaved flag
+						}
+					}
+				});
+			}
+		}
 	});
 }
 
