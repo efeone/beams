@@ -74,10 +74,13 @@
                             {% set countries = frappe.get_all('Country', fields=['country_name', 'name']) %}
                             <div class="col-14">
                                 <select class="form-control" id="country" name="country"
-                                    style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;"
+                                    style="background-color: #FFFFFF; border: 1px solid #DEE2E6; border-radius: 8px; padding: 2px 12px; font-size: 14px; width: 100%; height: 40px;">
                                     <option value="">Select Country</option>
                                     {% for country in countries %}
-                                    <option value="{{ country.name }}">{{ country.country_name }}</option>
+                                        <option value="{{ country.name }}"
+                                            {% if country.country_name == "India" %}selected{% endif %}>
+                                            {{ country.country_name }}
+                                        </option>
                                     {% endfor %}
                                 </select>
                             </div>
@@ -286,14 +289,14 @@
                                     <td><input type="text" name="name_of_universityboard_of_exam"
                                             class="name_of_universityboard_of_exam" style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
-                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDates(this)"
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4"
-                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDates(this)"
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="results_1" class="result"
                                             oninput="validatePercentage(this)"
-                                            placeholder="0-100"
+                                            placeholder="0-100" maxlength="3"
                                             style="background-color: #fff;"></td>
                                     <td><input type="file" id="qualification_file" class="home-textinput"
                                             style="background-color: #fff;" /></td>
@@ -331,10 +334,10 @@
                                     <td><input type="text" name="institute_name_1" class="institute_name"
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_from_1" class="dates_attended_from" maxlength="4"
-                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDates(this)" 
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="date_to_1" class="dates_attended_to" maxlength="4"
-                                            placeholder="Enter Year (yyyy)" oninput="validateDigits(this)"
+                                            placeholder="Enter Year (yyyy)" oninput="validateDates(this)"
                                             style="background-color: #fff;"></td>
                                     <td><input type="text" name="type_of_certification_1" class="type_of_certification"
                                             style="background-color: #fff;"></td>
@@ -368,7 +371,23 @@
                     </div>
                     <div class="row">
                         <div class="column">
-                            <label for="reports_to">Reports To</label>
+                            <label for="manager_name">Manager Name <span style="color: red;">*</span></label>
+                            <input type="text" id="manager_name" name="manager_name" >
+                        </div>
+                        <div class="column">
+                            <label for="manager_contact_no">Manager Contact No  <span style="color: red;">*</span></label>
+                            <input type="tel" id="manager_contact_no" name="manager_contact_no"
+                                title="Please enter a valid 10-digit mobile number"
+                                oninput="validateDigits(this)" maxlength="10" >
+                        </div>
+                        <div class="column">
+                            <label for="manager_email">Manager Email <span style="color: red;">*</span></label>
+                            <input type="text" id="manager_email" name="manager_email" >
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="column">
+                            <label for="reports_to">Reports To / Manager</label>
                             <input type="text" id="reports_to" name="reports_to"placeholder="CEO,CFO,Accounts Manager,Chief Editor....">
                         </div>
                         <div class="column">
@@ -377,32 +396,16 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="column">
-                            <label for="manager_name">Name <span style="color: red;">*</span></label>
-                            <input type="text" id="manager_name" name="manager_name" >
-                        </div>
-                        <div class="column">
-                            <label for="manager_contact_no">Contact No  <span style="color: red;">*</span></label>
-                            <input type="tel" id="manager_contact_no" name="manager_contact_no"
-                                title="Please enter a valid 10-digit mobile number"
-                                oninput="validateDigits(this)" maxlength="10" >
-                        </div>
-                        <div class="column">
-                            <label for="manager_email">Email <span style="color: red;">*</span></label>
-                            <input type="text" id="manager_email" name="manager_email" >
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="column">
-                        </div>
-                        <div class="column">
-                        </div>
-                        <div class="column">
+                        <div class="column" >
                             <label for="reference_taken">Can a Reference be Taken Now?</label>
                             <select id="reference_taken" name="reference_taken">
                                 <option value="Yes">Yes</option>
                                 <option value="No">No</option>
                             </select>
+                        </div>
+                        <div class="column">
+                        </div>
+                        <div class="column">
                         </div>
                     </div>
                     <!-- First row: Address + Duties -->
@@ -453,7 +456,7 @@
                                         <th>No</th>
                                         <th>Organization Name</th>
                                         <th>Designation</th>
-                                        <th> Last Salary CTC</th>
+                                        <th> Last Salary CTC</th>
                                         <th>Name of Manager/Reporting Head</th>
                                         <th>Period of Employment</th>
                                         <th>Reason for Leaving</th>
@@ -520,8 +523,9 @@
                 <div class="form-section" id="tab-2">
                     <div class="row">
                         <div class="column">
-                            <label for="expected_salary">Expected Salary</label>
-                            <input type="text" id="expected_salary" name="expected_salary" oninput="this.value = this.value.replace(/\D/g, '')">
+                            <label for="expected_salary">Expected Salary (Monthly)</label>
+                            <input type="text" id="expected_salary" name="expected_salary" placeholder="Enter your expected salary in monthly"
+                            oninput="this.value = this.value.replace(/\D/g, '')">
                         </div>
                         <div class="column">
                         </div>
@@ -530,7 +534,7 @@
                         <div class="column">
                             <label>
                                 <input type="checkbox" id="achievements_checkbox">
-                                Do you have any Professional or other Achievements, Awards, or Accomplishments? </label>
+                                Do you have any Professional or other Achievements, Awards, or Accomplishments?, if yes fill the details</label>
                         </div>
                     </div>
                     <div class="row" id="achievements_row" style="display: none;">
@@ -543,20 +547,20 @@
                     <div class="row">
                         <label>
                             <input type="checkbox" id="interviewed_before_checkbox">
-                            Have you been interviewed before by Madhyamam Group?
+                            Have you been interviewed before by Madhyamam Group?, if yes fill the details
                         </label>
                     </div>
                     <div id="interview_details_section" style="display: none;">
                         <div class="row">
                             <div class="column">
-                                <label for="position">Position</label>
+                                <label for="position">Position <span style="color: red;">*</span></label>
                                 <input type="text" id="position" name="position">
                             </div>
                             <div class="column">
-                                <label for="interviewed_location">Location </label>
+                                <label for="interviewed_location">Location <span style="color: red;">*</span></label>
                                 {% set locations = frappe.get_all('Location', fields=['name', 'location_name']) %}
                                 <div class="col-14">
-                                    <select class="form-control" id="interviewed_location" name="location"
+                                    <select class="form-control" id="interviewed_location" name="interviewed_location"
                                         style="height:40px; width: 90%; font-size:13px;background-color: #004eff17;">
                                         <option value="">Select Location</option>
                                         {% for location in locations %}
@@ -568,11 +572,11 @@
                         </div>
                         <div class="row">
                             <div class="column">
-                                <label for="interviewed_date">Date</label>
+                                <label for="interviewed_date">Date <span style="color: red;">*</span></label>
                                 <input type="text" id="interviewed_date" name="interviewed_date">
                             </div>
                             <div class="column">
-                                <label for="interviewed_outcome">Outcome</label>
+                                <label for="interviewed_outcome">Outcome <span style="color: red;">*</span></label>
                                 <input type="text" id="interviewed_outcome" name="interviewed_outcome">
                             </div>
                         </div>
@@ -655,23 +659,23 @@
                     <div class="row">
                         <label>
                             <input type="checkbox" id="related_to_employee_checkbox">
-                            Are you related to any of the Madhyamam Group?
+                            Are you related to any of the Madhyamam Group?, if yes fill the details
                         </label>
                     </div>
                     <div id="relationship_details_section" style="display: none;">
                         <div class="row">
                             <div class="column">
-                                <label for="related_employee">Name</label>
+                                <label for="related_employee">Name <span style="color: red;">*</span></label>
                                 <input type="text" id="related_employee" name="related_employee">
                             </div>
                             <div class="column">
-                                <label for="related_employee_org">Organization</label>
+                                <label for="related_employee_org">Organization <span style="color: red;">*</span></label>
                                 <input type="text" id="related_employee_org" name="related_employee_org">
                             </div>
                         </div>
                         <div class="row">
                             <div class="column">
-                                <label for="related_employee_pos">Position</label>
+                                <label for="related_employee_pos">Position <span style="color: red;">*</span></label>
                                 <input type="text" id="related_employee_pos" name="related_employee_pos">
                             </div>
                             <div class="column">
@@ -683,7 +687,7 @@
                     <div class="row">
                         <label>
                             <input type="checkbox" id="professional_org_checkbox">
-                            Are you a member of any Professional Organization?
+                            Are you a member of any Professional Organization?, if yes fill the details
                         </label>
                         <div id="professional_org_section" style="display: none;">
                             <textarea id="professional_org" name="professional_org" rows="4" cols="90"></textarea>
@@ -692,7 +696,7 @@
                     <div class="row">
                         <label>
                             <input type="checkbox" id="political_org_checkbox">
-                            Are you a member of any Political Organization?
+                            Are you a member of any Political Organization?, if yes fill the details
                         </label>
                         <div id="political_org_section" style="display: none;">
                             <textarea id="political_org" name="political_org" rows="4" cols="90"></textarea>
@@ -852,7 +856,6 @@
                 }
             });
         }
-
 
         // Function to toggle visibility based on checkbox state
         function toggleSection(checkboxId, sectionId, textareaOrInputIds = []) {
@@ -1099,6 +1102,14 @@
             maxDate: maxBirthDate
         });
 
+        const today = new Date();
+
+        flatpickr("#interviewed_date", {
+            dateFormat: "d-m-Y",
+            maxDate: today,
+            defaultDate: today // optional: auto-fill with today's date
+        });
+
         // Get the Aadhaar input and the error message div
         const aadhaarInput = document.getElementById('aadhaar_number_input');
         const aadhaarError = document.getElementById('aadhaar_error');
@@ -1117,15 +1128,90 @@
             }
         });
 
-        function validatePercentage(input) {
-        input.value = input.value
-            .replace(/[^0-9.]/g, '')
-            .replace(/(\..*?)\..*/g, '$1');
-        if (input.value.startsWith('.')) input.value = '0' + input.value;
-        let value = parseFloat(input.value);
-        if (!isNaN(value) && value > 100) input.value = '100';
+        function validateDates(inputElement) {
+            // Find the table row ('tr') that contains the input field being edited
+            const row = inputElement.closest('tr');
+            if (!row) return; // Exit if the row isn't found
+
+            // Get the necessary input fields
+            const dateFromInput = row.querySelector('.dates_attended_from');
+            const dateToInput = row.querySelector('.dates_attended_to');
+            const dobInput = document.getElementById('date_of_birth');
+
+            // Get the required values for validation
+            const currentYear = new Date().getFullYear(); // This is 2025
+            const dobString = dobInput.value;
+
+            // --- Validation ---
+            // 1. Ensure Date of Birth is entered first
+            if (!dobString) {
+                showError("Please enter your Date of Birth first.");
+                inputElement.value = ''; // Clear the input to force the user to go back
+                return;
+            }
+
+            const birthYear = parseInt(dobString.split('-')[2], 10);
+            const inputYear = parseInt(inputElement.value, 10);
+
+            // 2. Check if the entered year is a 4-digit number before validating
+            if (inputElement.value.length !== 4) {
+                return;
+            }
+
+            // 3. Check if the entered year is in the future
+            if (inputYear > currentYear) {
+                showError("Year cannot be in the future.");
+                inputElement.value = ''; // Clear the invalid future year
+                return;
+            }
+
+            // 4. If editing the 'From' date, check it's after their birth year
+            if (inputElement.classList.contains('dates_attended_from')) {
+                if (inputYear <= birthYear) {
+                    showError("Start year must be after your birth year.");
+                    inputElement.value = ''; // Clear the invalid year
+                    return;
+                }
+            }
+
+            // 5. Check if 'To' year is greater than 'From' year (if both are filled)
+            const fromYear = parseInt(dateFromInput.value, 10);
+            const toYear = parseInt(dateToInput.value, 10);
+
+            if (dateFromInput.value.length === 4 && dateToInput.value.length === 4) {
+                if (toYear <= fromYear) {
+                    showError('The "To" year must be after the "From" year.');
+                    // Clear the invalid 'To' year if it's the one being edited
+                    if (inputElement.classList.contains('dates_attended_to')) {
+                        inputElement.value = '';
+                    }
+                }
+            }
         }
-        // place this after you hide navbar/footer
+        function validatePercentage(input) {
+            input.value = input.value
+                .replace(/[^0-9.]/g, '')  // Removes any characters that are not numbers or a period
+                .replace(/(\..*?)\..*/g, '$1');  // Keeps only the first decimal point
+            if (input.value.startsWith('.')) {
+                input.value = '0' + input.value;  // Adds leading zero if the value starts with a decimal point
+            }
+            let value = parseFloat(input.value);
+            if (!isNaN(value)) {
+                if (value > 100) {
+                    // Show error if value is greater than 100
+                    showError('Please enter a percentage less than 100.');
+                    focusFieldInTab(input, fieldTabMap[input]);  // You might want to adjust how you're focusing on the field
+                    return false;
+                }
+            } else {
+                // Optional: Handle the case where the input is not a valid number
+                showError('Please enter a valid percentage.');
+                focusFieldInTab(input, fieldTabMap[input]);  // Adjust focus if necessary
+                return false;
+            }
+            // If the value is valid and less than or equal to 100, allow it
+            return true;
+        }
 		function showError(message) {
             document.getElementById("form-error-text").textContent = message;
             document.getElementById("form-error").style.display = "block";

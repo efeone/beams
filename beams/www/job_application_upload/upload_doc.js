@@ -38,55 +38,6 @@ $(document).ready(function () {
 		event.preventDefault();
 
 		const currentEmployerTab = document.getElementById("currentEmployerTab");
-
-		// Only validate if currentEmployerTab is visible
-		if (currentEmployerTab && currentEmployerTab.style.display !== "none") {
-			const managerEmail = $('#manager_email').val();
-			const managerName = safeValue($('#manager_name').val());
-			const managerPhone = safeValue($('#manager_contact_no').val());
-			const payslip_month_1= safeValue($('#payslip_month_1').val());
-			const payslip_month_2= safeValue($('#payslip_month_2').val());
-			const payslip_month_3= safeValue($('#payslip_month_3').val());
-
-			const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-			const phoneRegex = /^\d{10}$/;
-			if (!managerEmail) {
-				showError('Manager Email is required.');
-				focusFieldInTab('#manager_email', 1);
-				return false;
-			}
-
-			if (!emailRegex.test(managerEmail)) {
-				showError('Please enter a valid manager email address.');
-				focusFieldInTab('#manager_email', 1);
-				return false;
-			}
-
-			if (!managerName) {
-				showError('Manager Name is required.');
-				focusFieldInTab('#manager_name', 1);
-				return false;
-			}
-
-			if (!managerPhone) {
-				showError(' Manager Contact Number is required.');
-				focusFieldInTab('#manager_contact_no', 1);
-				return false;
-			}
-
-			if (!phoneRegex.test(managerPhone)) {
-				showError('Please enter a valid 10-digit mobile number for Manager Contact No.');
-				focusFieldInTab('#manager_contact_no', 1);
-				return false;
-			}
-
-			if (!payslip_month_1 || !payslip_month_2 || !payslip_month_3) {
-				showError('Please upload last 3 months payslips.');
-				$('#payslip_month_1').focus();
-				return false;
-			}
-		}
-
 		const aadhaarField = document.getElementById('aadhaar_field');
 		const aadhaarInput = document.getElementById('aadhaar_number_input');
 
@@ -123,7 +74,6 @@ $(document).ready(function () {
 	'#current_district': 0,
 	'#current_state': 0,
 	'#current_locality': 0,
-	'#date_of_birth': 0,
     // Current Employer tab (index 1)
     '#manager_email': 1,
 	'#manager_name': 1,
@@ -150,23 +100,8 @@ $(document).ready(function () {
 
 		const phoneNumber = safeValue($('#phone_number').val());
 		const phoneNumberRegex = /^\d{10}$/;
-		if (!phoneNumber || !phoneNumberRegex.test(phoneNumber)) {
-			showError('Please enter a valid 10-digit mobile number.');
-			focusFieldInTab('#phone_number', fieldTabMap['#phone_number']);
-			return false;
-		}
 		const current_pin = safeValue($('#current_pin').val());
 		const pinRegex = /^\d{6}$/;
-		if (!current_pin) {
-			showError('Please enter a valid 6-digit PIN.');
-			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
-			return false;
-		}
-		if (!pinRegex.test(current_pin)) {
-			showError('Please enter a valid 6-digit PIN.');
-			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
-			return false;
-		}
 		const current_house_no = safeValue($('#current_house_no').val());
 		if (!current_house_no) {
 			showError('Please enter a valid house number.');
@@ -197,10 +132,16 @@ $(document).ready(function () {
 			focusFieldInTab('#current_district', fieldTabMap['#current_district']);
 			return false;
 		}
-		const current_state = safeValue($('#current_state').val());
-		if (!current_state) {
-			showError('Please enter a valid state.');
-			focusFieldInTab('#current_state', fieldTabMap['#current_state']);
+
+		if (!current_pin) {
+			showError('Please enter a valid 6-digit PIN.');
+			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
+			return false;
+		}
+
+		if (!pinRegex.test(current_pin)) {
+			showError('Please enter a valid 6-digit PIN.');
+			focusFieldInTab('#current_pin', fieldTabMap['#current_pin']);
 			return false;
 		}
 
@@ -210,11 +151,148 @@ $(document).ready(function () {
 			focusFieldInTab('#current_locality', fieldTabMap['#current_locality']);
 			return false;
 		}
-		const cuurentstate = safeValue($('#current_state').val());
-		if (!cuurentstate) {
+
+		const current_state = safeValue($('#current_state').val());
+		if (!current_state) {
 			showError('Please enter a valid state.');
 			focusFieldInTab('#current_state', fieldTabMap['#current_state']);
 			return false;
+		}
+
+		if (!phoneNumber || !phoneNumberRegex.test(phoneNumber)) {
+			showError('Please enter a valid 10-digit mobile number.');
+			focusFieldInTab('#phone_number', fieldTabMap['#phone_number']);
+			return false;
+		}
+
+        const resultpercentage = safeValue($('#results_1').val());  // Sanitize input value
+        // Check if the value is greater than 100
+        if (resultpercentage && parseFloat(resultpercentage) > 100) {
+            showError('Please enter a percentage less than or equal to 100.');  // Error message if value > 100
+            focusFieldInTab('#results_1', fieldTabMap['#results_1']);  // Focus on the input field
+            event.preventDefault();  // Prevent form submission
+            return false;  // Stop further actions
+        }
+
+		// Only validate if currentEmployerTab is visible
+		if (currentEmployerTab && currentEmployerTab.style.display !== "none") {
+			const managerEmail = $('#manager_email').val();
+			const managerName = safeValue($('#manager_name').val());
+			const managerPhone = safeValue($('#manager_contact_no').val());
+			const payslip_month_1= safeValue($('#payslip_month_1').val());
+			const payslip_month_2= safeValue($('#payslip_month_2').val());
+			const payslip_month_3= safeValue($('#payslip_month_3').val());
+
+			const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+			const phoneRegex = /^\d{10}$/;
+
+			if (!managerName) {
+				showError('Manager Name is required.');
+				focusFieldInTab('#manager_name', 1);
+				return false;
+			}
+
+			if (!managerPhone) {
+				showError(' Manager Contact Number is required.');
+				focusFieldInTab('#manager_contact_no', 1);
+				return false;
+			}
+
+			if (!phoneRegex.test(managerPhone)) {
+				showError('Please enter a valid 10-digit mobile number for Manager Contact No.');
+				focusFieldInTab('#manager_contact_no', 1);
+				return false;
+			}
+
+			if (!managerEmail) {
+				showError('Manager Email is required.');
+				focusFieldInTab('#manager_email', 1);
+				return false;
+			}
+
+			if (!emailRegex.test(managerEmail)) {
+				showError('Please enter a valid manager email address.');
+				focusFieldInTab('#manager_email', 1);
+				return false;
+			}
+
+			if (!payslip_month_1 || !payslip_month_2 || !payslip_month_3) {
+				showError('Please upload last 3 months payslips.');
+				focusFieldInTab('#payslip_month_1', 1);
+				return false;
+			}
+			const language = safeValue($('select[name="language"]').val()).trim();
+			const speak = $('input[name="speak"]:checked').val() || '';
+			const read = $('input[name="read"]:checked').val() || '';
+			const write = $('input[name="write"]:checked').val() || '';
+
+			//  Achievements (Professional / Awards)
+			if ($('#achievements_checkbox').is(':checked')) {
+				if (!safeValue($('#other_achievments').val().trim())) {
+					showError('Please provide details of your achievements or awards.');
+					focusFieldInTab('#other_achievments', 2);
+					return false;
+				}
+			}
+
+			//  Interviewed Before
+			if ($('#interviewed_before_checkbox').is(':checked')) {
+				const interviewFields = ['#position', '#interviewed_location', '#interviewed_date', '#interviewed_outcome'];
+				for (let field of interviewFields) {
+					if (!safeValue($(field).val().trim())) {
+						showError('Please fill all interview details.');
+						focusFieldInTab(field, 2);
+						return false;
+					}
+				}
+			}
+			if (!language && (speak !== '' || read !== '' || write !== '')) {
+				showError('Please select a language.');
+				focusFieldInTab('select[name="language"]', 2);
+				return false;
+			}
+
+			// --- Checkbox-driven mandatory validation ---
+
+			//  Related to employee
+			if ($('#related_to_employee_checkbox').is(':checked')) {
+				const relatedFields = ['#related_employee', '#related_employee_org', '#related_employee_pos'];
+				for (let field of relatedFields) {
+					if (!safeValue($(field).val().trim())) {
+						showError('Please fill all related employee details.');
+						focusFieldInTab(field, 2); // Personal Info tab (adjust if needed)
+						return false;
+					}
+				}
+			}
+
+			//  Professional Organization
+			if ($('#professional_org_checkbox').is(':checked')) {
+				if (!safeValue($('#professional_org').val().trim())) {
+					showError('Please provide details of the Professional Organization.');
+					focusFieldInTab('#professional_org', 2);
+					return false;
+				}
+			}
+
+			//  Political Organization
+			if ($('#political_org_checkbox').is(':checked')) {
+				if (!safeValue($('#political_org').val().trim())) {
+					showError('Please provide details of the Political Organization.');
+					focusFieldInTab('#political_org', 2);
+					return false;
+				}
+			}
+
+			//  Specialized Training
+			if ($('#specialised_training_checkbox').is(':checked')) {
+				if (!safeValue($('#specialised_training').val().trim())) {
+					showError('Please provide details of the Specialized Training.');
+					focusFieldInTab('#specialised_training', 2);
+					return false;
+				}
+			}
+
 		}
 		event.preventDefault();
 		const fields = [
