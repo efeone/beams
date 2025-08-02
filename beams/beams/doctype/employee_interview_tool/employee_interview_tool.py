@@ -124,7 +124,7 @@ def fetch_filtered_job_applicants(filters=None):
 		applicants = frappe.get_all(
 			'Job Applicant',
 			filters=filters,
-			fields=['name', 'applicant_name', 'designation', 'status','department'],
+			fields=['name', 'applicant_name', 'designation', 'status','department', 'location'],
 			limit_page_length=50
 		)
 		return applicants

@@ -27,7 +27,7 @@ frappe.ui.form.on('Employee Interview Tool', {
 		frm.set_value('department', '');
 		frm.set_value('designation', '');
 		frm.set_value('job_opening', '');
-		frm.set_value('branch', '');
+		frm.set_value('location', '');
 		frm.set_value('applicant_status', '');
 		frm.clear_table('job_applicants');
 		frm.refresh_field('job_applicants');
@@ -56,6 +56,9 @@ frappe.ui.form.on('Employee Interview Tool', {
 			if (frm.doc.applicant_status) {
 				filters.status = frm.doc.applicant_status;
 			}
+			if (frm.doc.location) {
+				filters.location = frm.doc.location;
+			}
 
 			frappe.call({
 				method: 'beams.beams.doctype.employee_interview_tool.employee_interview_tool.fetch_filtered_job_applicants',
@@ -70,6 +73,7 @@ frappe.ui.form.on('Employee Interview Tool', {
 							row.status = app.status;
 							row.designation = app.designation;
 							row.department = app.department;
+							row.location = app.location
 						});
 						frm.refresh_field('job_applicants');
 						frm.toggle_display('job_applicants', true);

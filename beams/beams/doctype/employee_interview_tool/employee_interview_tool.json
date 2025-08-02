@@ -6,7 +6,6 @@
  "engine": "InnoDB",
  "field_order": [
   "date",
-  "branch",
   "column_break_zrwf",
   "company",
   "section_break_ndqh",
@@ -18,6 +17,7 @@
   "section_break_lgjw",
   "job_opening",
   "applicant_status",
+  "location",
   "column_break_kxyk",
   "department",
   "designation",
@@ -37,12 +37,6 @@
    "label": "Company",
    "options": "Company",
    "remember_last_selected_value": 1
-  },
-  {
-   "fieldname": "branch",
-   "fieldtype": "Link",
-   "label": "Branch",
-   "options": "Branch"
   },
   {
    "fieldname": "job_opening",
@@ -98,6 +92,7 @@
    "fieldtype": "Section Break"
   },
   {
+   "default": "Document Uploaded",
    "fieldname": "applicant_status",
    "fieldtype": "Select",
    "label": "Status",
@@ -123,13 +118,19 @@
   {
    "fieldname": "column_break_kxyk",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "location",
+   "fieldtype": "Link",
+   "label": "Location",
+   "options": "Location"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-01 10:34:28.563948",
+ "modified": "2025-08-02 12:31:43.951250",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Interview Tool",
