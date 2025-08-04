@@ -43,9 +43,17 @@ def on_submit(doc, method):
 		append the feedback details to the corresponding Interview record
 	'''
 	interview_doc = frappe.get_doc('Interview', doc.interview)
-	existing_interviewers = [d.interviewer for d in interview_doc.interview_feedback_details]
+	exists = frappe.db.exists(
+		'interview Feedback Details',
+		{
+			'parent': doc.interview,
+			'parenttype': 'Interview',
+			'parentfield': 'interview_feedback_details',
+			'interviewer': doc.interviewer
+		}
+	)
 
-	if doc.interviewer not in existing_interviewers:
+	if not exists:
 		interview_doc.append('interview_feedback_details', {
 			'interviewer': doc.interviewer,
 			'result': doc.result,
