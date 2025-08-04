@@ -4491,8 +4491,15 @@ def get_property_setters():
 			"property": "ignore_user_permissions",
 			"property_type": "Check",
 			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Interview",
+			"field_name": "status",
+			"property":"read_only_depends_on",
+			"value": "eval:!frappe.user.has_role('HR Manager')"
 		}
-	]
+]
 
 def get_material_request_custom_fields():
 	'''
