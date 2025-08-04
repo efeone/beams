@@ -62,8 +62,7 @@
   {
    "fieldname": "purpose_of_visit",
    "fieldtype": "Small Text",
-   "label": "Purpose of Visit",
-   "reqd": 1
+   "label": "Purpose of Visit"
   },
   {
    "fieldname": "section_break_eufq",
@@ -73,8 +72,7 @@
    "fieldname": "received_by",
    "fieldtype": "Link",
    "label": "Received By",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Employee"
   },
   {
    "depends_on": "eval:doc.vehicle_key;",
@@ -119,7 +117,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-14 12:08:44.095780",
+ "modified": "2025-08-03 22:21:05.877509",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",
@@ -140,6 +138,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "visitor_type,visitor_name,posting_date",
  "sort_field": "modified",
  "sort_order": "DESC",

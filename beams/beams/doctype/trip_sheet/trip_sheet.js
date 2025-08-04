@@ -165,16 +165,17 @@ frappe.ui.form.on('Trip Sheet', {
         frappe.db.get_doc('Vehicle Safety Inspection', template)
             .then(doc => {
                 frm.clear_table('vehicle_safety_inspection_details');
+
                 doc.vehicle_safety_inspection.forEach(d => {
                     frm.add_child('vehicle_safety_inspection_details', {
                         item: d.item,
-                        fit_for_use: d.fit_for_use,
-                        remarks: d.remarks
+                        fit_for_use: null, // Leave for manual input
+                        remarks: ""        // Leave for manual input
                     });
                 });
+
                 frm.refresh_field('vehicle_safety_inspection_details');
-                let all_fit_for_use = frm.doc.vehicle_safety_inspection_details.every(row => row.fit_for_use === 1);
-                frm.set_value('safety_inspection_completed', all_fit_for_use ? 1 : 0);
+                frm.set_value('safety_inspection_completed', 0); // Default to incomplete
             });
     },
     // Trigger when vehicle_safety_inspection_details table is modified
