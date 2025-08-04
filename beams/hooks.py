@@ -274,8 +274,9 @@ doc_events = {
 		"after_insert": "beams.beams.custom_scripts.interview_feedback.interview_feedback.after_insert",
 		"validate": "beams.beams.custom_scripts.interview_feedback.interview_feedback.validate",
 		"on_submit": [
-		    "beams.beams.custom_scripts.interview_feedback.interview_feedback.update_applicant_interview_round_from_feedback",
-		    "beams.beams.custom_scripts.interview_feedback.interview_feedback.update_final_score"
+			"beams.beams.custom_scripts.interview_feedback.interview_feedback.update_applicant_interview_round_from_feedback",
+			"beams.beams.custom_scripts.interview_feedback.interview_feedback.update_final_score",
+			"beams.beams.custom_scripts.interview_feedback.interview_feedback.on_submit"
 			]
 	},
 	"Employee Checkin":{

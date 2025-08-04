@@ -2061,6 +2061,15 @@ def get_interview_custom_fields():
 				"fieldtype": "HTML",
 				"label": "Interview Html Field",
 				"insert_after": "interview_dashboard_section",
+			},
+			{
+				"fieldname": "interview_feedback_details",
+				"fieldtype": "Table",
+				"options": "interview Feedback Details",
+				"label": "Interview Feedback Details",
+				"insert_after": "average_final_score",
+				"allow_on_submit": 1,
+				"read_only": 1
 			}
 		]
 	}
