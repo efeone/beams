@@ -8,6 +8,11 @@ frappe.ui.form.on('Employee Interview Tool', {
 		!frm.doc.company && frappe.db.get_single_value('Global Defaults','default_company')
 		.then(value => frm.set_value('company',value))
 	},
+	onload_post_render(frm) {
+		if(!frm.doc.applicant_status){
+			frm.set_value('applicant_status', 'Document Uploaded');
+		}
+	},
 	from_time: function (frm) {
 		validate_time_range(frm);
 	},
