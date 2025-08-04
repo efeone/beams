@@ -63,6 +63,10 @@ frappe.ui.form.on('Interview', {
 					});
 			}, 'View');
 		}
+
+		if (!frm.is_new() && frm.doc.job_applicant) {
+			set_job_applicant_dashboard(frm);
+		}
 	},
 	job_applicant(frm) {
 		set_job_applicant_dashboard(frm);
