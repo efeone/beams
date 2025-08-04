@@ -85,6 +85,10 @@ frappe.ui.form.on('Job Requisition', {
 			frm.set_value('license_type', '');
 		}
 	},
+	designation: function (frm) {
+		frm.set_value('job_description_template', null);
+		frm.refresh_field('job_description_template');
+	}
 });
 
 function set_filters(frm) {

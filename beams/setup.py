@@ -2191,7 +2191,7 @@ def get_job_requisition_custom_fields():
 				"options": "Job Description Template",
 				"insert_after": "job_description_tab",
 				"permlevel": 1,
-				"depends_on": "eval: frappe.user_roles.includes('HR Manager') && doc.workflow_state == 'Pending HR Approval'"
+				"depends_on": "eval: frappe.user_roles.includes('HR Manager')  || frappe.user_roles.includes('CEO')"
 			},
 			{
 				"fieldname": "request_for",
