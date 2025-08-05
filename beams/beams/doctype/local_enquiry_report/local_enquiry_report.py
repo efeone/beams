@@ -14,6 +14,7 @@ class LocalEnquiryReport(Document):
         self.validate_informations_provided()
         self.validate_enquiry_officer()
         self.set_expected_completion_date()
+        self.set_status_complted()
 
     def on_submit(self):
        update_job_applicant_status(self.job_applicant, 'Local Enquiry Approved')
@@ -43,6 +44,13 @@ class LocalEnquiryReport(Document):
 
             if not self.enquiry_report:
                 frappe.throw('`Enquiry Report` is required before Sending for Approval')
+
+    def set_status_complted(self):
+        '''
+            Automatically set the status to 'Completed' when enquiry_completion_date is set.
+        '''
+        if self.enquiry_completion_date and self.status != 'Completed':
+            self.status = 'Completed'
 
     def on_update(self):
         '''
@@ -132,7 +140,7 @@ def set_status_to_overdue():
             completion_date = getdate(enquiry.enquiry_completion_date) if enquiry.enquiry_completion_date else None
             if not expected_date:
                 continue
-            if completion_date and completion_date > expected_date:
+            if expected_date and expected_date < today_date and not completion_date  :
                 frappe.db.set_value('Local Enquiry Report', enquiry.name, 'status', 'Overdue')
 
 

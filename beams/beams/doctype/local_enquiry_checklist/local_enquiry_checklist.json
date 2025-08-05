@@ -20,9 +20,10 @@
   },
   {
    "fieldname": "value",
-   "fieldtype": "Small Text",
+   "fieldtype": "Select",
    "in_list_view": 1,
-   "label": "Value"
+   "label": "Value",
+   "options": "\nPassed\nFailed"
   },
   {
    "fieldname": "remarks",
@@ -33,12 +34,13 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2024-11-06 10:26:01.870601",
+ "modified": "2025-08-05 15:28:46.504784",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Local Enquiry Checklist",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
