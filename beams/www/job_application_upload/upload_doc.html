@@ -434,7 +434,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="column" style="max-width: 250px;">
+                        <div class="column">
                             <label for="was_this_position">Current Employment Type</label>
                             <select id="was_this_position" name="was_this_position" onchange="toggleAgencyDetails()"
                                 style="width: 90%;">
@@ -444,6 +444,8 @@
                             </select>
                         </div>
                         <div class="column">
+                            <label for="current_salary">Current Salary</label>
+                            <input type="number" id="current_salary" name="current_salary" onchange="validateDigits(this)">
                         </div>
                         <div class="column">
                         </div>
@@ -598,7 +600,7 @@
                                 <tr>
                                     <td>1</td>
                                     <td>
-                                        <select name="language" class="form-control" style="background-color: #fff;">
+                                        <select name="language" class="form-control" style="background-color: #fff" onchange="validateLang(this)">
                                             <option value="">Select language</option>
                                             {% for language in languages %}
                                             <option value="{{ language.name }}">{{ language.language_name }}</option>
@@ -949,8 +951,8 @@
             cell2.innerHTML = `<input type="text" name="course_university_${index}[]" class="course" style="background-color: #fff;">`;
             cell3.innerHTML = `<input type="text" name="institution_location_${index}[]" class="name_of_school_college" style="background-color: #fff;">`;
             cell4.innerHTML = `<input type="text" name="university_${index}[]" class="name_of_universityboard_of_exam" style="background-color: #fff;">`;
-            cell5.innerHTML = `<input type="text" name="date_from_${index}[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
-            cell6.innerHTML = `<input type="text" name="date_to_${index}[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">`;
+            cell5.innerHTML = `<input type="text" name="date_from_${index}[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDates(this)" style="background-color: #fff;">`;
+            cell6.innerHTML = `<input type="text" name="date_to_${index}[]" class="dates_attended_to" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDates(this)" style="background-color: #fff;">`;
             cell7.innerHTML = `<input type="number" step="0.01" name="results_${index}[]" class="result" style="background-color: #fff;">`;
             cell8.innerHTML = `<input type="file" name="qualification_file_${index}[]" class="file" style="background-color: #fff;">`;
             cell9.innerHTML = `<button type="button" onclick="removeRow(this)">Delete</button>`;
@@ -989,8 +991,8 @@
             cell1.innerHTML = rowCount + 1;
             cell2.innerHTML = '<input type="text" name="course_1[]" class="course" style="background-color: #fff;">';
             cell3.innerHTML = '<input type="text" name="institute_name_1[]" class="institute_name" style="background-color: #fff;">';
-            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
-            cell5.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDigits(this)" style="background-color: #fff;">';
+            cell4.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_from" maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDates(this)" style="background-color: #fff;">';
+            cell5.innerHTML = '<input type="text" name="date_from_1[]" class="dates_attended_to"  maxlength="4" placeholder="Enter Year (yyyy)" oninput="validateDates(this)" style="background-color: #fff;">';
             cell6.innerHTML = '<input type="text" name="type_of_certification_1" class="type_of_certification" style="background-color: #fff;">';
             cell7.innerHTML = '<input type="text" name="sub_major_1" class="subject_major" style="background-color: #fff;">';
             cell8.innerHTML = '<input type="file" name=certification_file[] class="file" style="background-color: #fff;">';
@@ -1019,7 +1021,7 @@
             cell1.innerHTML = rowCount + 1;
             cell2.innerHTML = '<input type="text" name="name_of_org" class="name_of_org" style="background-color: #fff;">';
             cell3.innerHTML = '<input type="text" name="designation" class="prev_designation" style="background-color: #fff;">';
-            cell4.innerHTML = '<input type="text" name="last_sal" class="last_salary_drawn" style="background-color: #fff;">';
+            cell4.innerHTML = '<input type="text" name="last_sal" class="last_salary_drawn" oninput="validateDigits(this)" style="background-color: #fff;">';
             cell5.innerHTML = '<input type="text" name="name_of_manager" class="name_of_manager" style="background-color: #fff;">';
             cell6.innerHTML = '<input type="text" name="prd_of_emp" class="period_of_employment" style="background-color: #fff;">';
             cell7.innerHTML = '<input type="text" name="reason_for_leaving" class="reason_for_leaving" style="background-color: #fff;">';
@@ -1049,6 +1051,7 @@
             cell4.innerHTML = getStarRatingHTML('read' + (rowCount + 1));
             cell5.innerHTML = getStarRatingHTML('write' + (rowCount + 1));
             cell6.innerHTML = '<button type="button" onclick="removeRow(this)">Delete</button>';
+
         }
 
         function validateDigits(input) {
@@ -1179,7 +1182,7 @@
             const toYear = parseInt(dateToInput.value, 10);
 
             if (dateFromInput.value.length === 4 && dateToInput.value.length === 4) {
-                if (toYear <= fromYear) {
+                if (toYear < fromYear) {
                     showError('The "To" year must be after the "From" year.');
                     // Clear the invalid 'To' year if it's the one being edited
                     if (inputElement.classList.contains('dates_attended_to')) {
