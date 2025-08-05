@@ -178,14 +178,7 @@ def fetch_designation(doc, method):
 		else:
 			frappe.throw(f"Designation not found for the selected Job Opening: {doc.job_title}")
 
-def fetch_department(doc, method):
-	if doc.job_title:
-		# Fetch the designation from the Job Opening
-		department = frappe.db.get_value('Job Opening', doc.job_title, 'department')
-		if department:
-			doc.department = department
-		else:
-			frappe.throw(f"Department not found for the selected Job Opening: {doc.job_title}")
+
 
 @frappe.whitelist()
 def calculate_and_validate_age(doc, method=None):
