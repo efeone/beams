@@ -100,7 +100,7 @@ def create_transportation_request(source_name, target_doc=None):
     all_rvds = frappe.get_all(
         "Required Vehicle Details",
         filters={"parent": source_name, "parenttype": "Project"},
-        fields=["name", "from", "to", "no_of_travellers", "allocated", "hired", "required_vehicle_details"],
+        fields=["name", "from", "to", "no_of_travellers", "required_vehicle_details"],
         order_by="idx asc"
     )
 
