@@ -5,6 +5,7 @@ import frappe
 from frappe.model.document import Document
 import json
 from frappe import _ 
+from frappe.utils import get_datetime, now_datetime
 
 class EmployeeInterviewTool(Document):
 	pass
@@ -24,6 +25,12 @@ def create_bulk_interviews(applicants):
 		scheduled_on = app.get('scheduled_on')
 		from_time = app.get('from_time')
 		to_time = app.get('to_time')
+
+		scheduled_datetime = get_datetime(f"{scheduled_on} {from_time}")
+		now = now_datetime()
+
+		if scheduled_datetime < now:
+			frappe.throw(_("Interview date and time cannot be in the past for applicant: {0}").format(app.get('applicant_name')))
 
 		if not (interview_round and scheduled_on and from_time and to_time):
 			frappe.throw(
