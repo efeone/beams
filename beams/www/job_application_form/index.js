@@ -64,6 +64,12 @@ $(document).ready(function () {
         const job_title = frappe.utils.xss_sanitise($("#job_title").val().trim());
         const location = frappe.utils.xss_sanitise($("#location").val().trim());
 
+		const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+		if (!emailPattern.test(email_id)) {
+			alert("Please enter a valid email address.");
+			return;
+		}
+
         // Ensure file data is properly assigned
         const resume_attachment = fileInput.filedata ? fileInput.filedata.files_data : [];
 
