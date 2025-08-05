@@ -1,10 +1,12 @@
 frappe.ui.form.on('Interview', {
 	refresh: function (frm) {
 		if (frm.doc.average_final_score) {
-				frm.set_value('average_final_score',
-						parseFloat(frm.doc.average_final_score).toFixed(2)
-				);
+		    let formatted = parseFloat(frm.doc.average_final_score).toFixed(2);
+		    if (frm.doc.average_final_score != formatted) {
+		        frm.set_value('average_final_score', formatted);
+		    }
 		}
+
 		handle_hrms_custom_buttons(frm);
 
 		let allowed_interviewers = [];
