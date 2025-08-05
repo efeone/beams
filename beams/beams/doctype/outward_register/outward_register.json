@@ -71,16 +71,14 @@
    "fieldname": "purpose_of_visit",
    "fieldtype": "Small Text",
    "label": "Purpose of Visit",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fetch_from": "inward_register.received_by",
    "fieldname": "received_by",
    "fieldtype": "Link",
    "label": " Received By ",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Employee"
   },
   {
    "default": "0",
@@ -116,10 +114,11 @@
    "reqd": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-27 11:21:00.644844",
+ "modified": "2025-08-05 08:12:29.404864",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",
@@ -140,6 +139,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
