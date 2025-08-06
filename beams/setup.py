@@ -37,8 +37,7 @@ def after_install():
 	create_custom_fields(get_leave_type_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_leave_application_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_employee_performance_feedback(),ignore_validate=True)
-	create_custom_fields(get_employment_type(),ignore_validate=True)
-	create_custom_fields(get_appointment_letter(),ignore_validate=True)
+	create_custom_fields(get_appointment_letter_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_employment_type_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_employee_separation_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_appraisal_template_custom_fields(),ignore_validate=True)
@@ -109,8 +108,7 @@ def before_uninstall():
 	delete_custom_fields(get_leave_type_custom_fields())
 	delete_custom_fields(get_leave_application_custom_fields())
 	delete_custom_fields(get_employee_performance_feedback())
-	delete_custom_fields(get_employment_type())
-	delete_custom_fields(get_appointment_letter())
+	delete_custom_fields(get_appointment_letter_custom_fields())
 	delete_custom_fields(get_employment_type_custom_fields())
 	delete_custom_fields(get_employee_separation_custom_fields())
 	delete_custom_fields(get_appraisal_template_custom_fields())
@@ -421,6 +419,12 @@ def get_employment_type_custom_fields():
 				"label": "Penalty Leave Type",
 				"options": "Leave Type",
 				"insert_after": "employee_type_name"
+			},
+			{
+				"fieldname": "notice_period",
+				"fieldtype": "Int",
+				"label": "Notice Period",
+				"insert_after": "employment_type"
 			}
 		]
 	}
@@ -4848,22 +4852,7 @@ def get_email_templates():
 		}
 ]
 
-def get_employment_type():
-	'''
-	Custom fields to be added to the Employment Type Doctype
-	'''
-	return {
-		"Employment Type": [
-			{
-				"fieldname": "notice_period",
-				"fieldtype": "Int",
-				"label": "Notice Period",
-				"insert_after": "employment_type"
-			}
-		]
-	}
-
-def get_appointment_letter():
+def get_appointment_letter_custom_fields():
 	'''
 	Custom fields that need to be added to the Appointment Letter DocType
 	'''
