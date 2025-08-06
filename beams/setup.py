@@ -4872,7 +4872,7 @@ def get_appointment_letter():
 			{
 				"fieldname": "notice_period",
 				"fieldtype": "Int",
-				"label": "Notice Period",
+				"label": "Notice Period (In Days)",
 				"insert_after": "applicant_name"
 			}
 		]
