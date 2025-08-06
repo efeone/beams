@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"E4vYr1JOkg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Security</span>\",\"col\":12}},{\"id\":\"3XNPUYGSzT\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"eeuvHsPTDU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inward Register\",\"col\":3}},{\"id\":\"JknCrrfN_a\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Register\",\"col\":3}},{\"id\":\"0e5CvyGqUJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Pass\",\"col\":3}},{\"id\":\"rj8vL3QMCa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Security Patrol Log\",\"col\":3}},{\"id\":\"XWkXhBzA9s\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"esXgPlBIrO\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick List</b></span>\",\"col\":12}},{\"id\":\"mOrfY8IP7w\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Security Patrol Log\",\"col\":4}},{\"id\":\"aEmYA8j66M\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Outward Register\",\"col\":4}},{\"id\":\"lGGYGuuufV\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inward Register\",\"col\":4}}]",
+ "content": "[{\"id\":\"E4vYr1JOkg\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Security</span>\",\"col\":12}},{\"id\":\"3XNPUYGSzT\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"eeuvHsPTDU\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inward Register\",\"col\":3}},{\"id\":\"JknCrrfN_a\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Register\",\"col\":3}},{\"id\":\"0e5CvyGqUJ\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Pass\",\"col\":3}},{\"id\":\"rj8vL3QMCa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Security Patrol Log\",\"col\":3}},{\"id\":\"QooZfZyAU-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Key Log\",\"col\":3}},{\"id\":\"XWkXhBzA9s\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"esXgPlBIrO\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\"><b>Quick List</b></span>\",\"col\":12}},{\"id\":\"mOrfY8IP7w\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Security Patrol Log\",\"col\":4}},{\"id\":\"aEmYA8j66M\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Outward Register\",\"col\":4}},{\"id\":\"lGGYGuuufV\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inward Register\",\"col\":4}}]",
  "creation": "2025-05-14 10:51:11.362892",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Security",
  "links": [],
- "modified": "2025-05-14 11:40:51.364088",
+ "modified": "2025-08-06 17:07:13.527232",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Security",
@@ -46,6 +46,14 @@
    "doc_view": "List",
    "label": "Inward Register",
    "link_to": "Inward Register",
+   "stats_filter": "[]",
+   "type": "DocType"
+  },
+  {
+   "color": "Yellow",
+   "doc_view": "List",
+   "label": "Key Log",
+   "link_to": "Key Log",
    "stats_filter": "[]",
    "type": "DocType"
   },

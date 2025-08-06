@@ -1,6 +1,6 @@
 {
  "charts": [],
- "content": "[{\"id\":\"ocu1vThYY8\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Front Office</span>\",\"col\":12}},{\"id\":\"CB70ZQ1GaM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"aWrt1Hj7as\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"HWiZevrw8P\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inward Register\",\"col\":3}},{\"id\":\"jq0X7agFP-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Register\",\"col\":3}},{\"id\":\"RZh447rnSA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visitor Pass\",\"col\":3}},{\"id\":\"s7OfgszFoL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Guest Appointment\",\"col\":3}},{\"id\":\"AHr5Tgd9ax\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Key Log\",\"col\":3}},{\"id\":\"RQdsVRqxNH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Request\",\"col\":3}},{\"id\":\"HOouBBycLa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Courier Log\",\"col\":3}},{\"id\":\"-ynj7QSjER\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Unit\",\"col\":3}},{\"id\":\"7klUbg0J-q\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"rAvoQwu_YV\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Quick List</span>\",\"col\":12}},{\"id\":\"gxMXXi_iJ3\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inward Register\",\"col\":4}},{\"id\":\"8LCudFhvWl\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Visitor Pass\",\"col\":4}},{\"id\":\"81I_Nq6fB5\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Outward Register\",\"col\":4}}]",
+ "content": "[{\"id\":\"ocu1vThYY8\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h2\\\">Front Office</span>\",\"col\":12}},{\"id\":\"CB70ZQ1GaM\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"aWrt1Hj7as\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Shortcuts</span>\",\"col\":12}},{\"id\":\"HWiZevrw8P\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Inward Register\",\"col\":3}},{\"id\":\"jq0X7agFP-\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Outward Register\",\"col\":3}},{\"id\":\"RZh447rnSA\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visitor Pass\",\"col\":3}},{\"id\":\"s7OfgszFoL\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Guest Appointment\",\"col\":3}},{\"id\":\"RQdsVRqxNH\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Visit Request\",\"col\":3}},{\"id\":\"HOouBBycLa\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Courier Log\",\"col\":3}},{\"id\":\"-ynj7QSjER\",\"type\":\"shortcut\",\"data\":{\"shortcut_name\":\"Service Unit\",\"col\":3}},{\"id\":\"7klUbg0J-q\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"rAvoQwu_YV\",\"type\":\"paragraph\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Quick List</span>\",\"col\":12}},{\"id\":\"gxMXXi_iJ3\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Inward Register\",\"col\":4}},{\"id\":\"8LCudFhvWl\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Visitor Pass\",\"col\":4}},{\"id\":\"81I_Nq6fB5\",\"type\":\"quick_list\",\"data\":{\"quick_list_name\":\"Outward Register\",\"col\":4}}]",
  "creation": "2025-05-14 10:54:36.053067",
  "custom_blocks": [],
  "docstatus": 0,
@@ -13,7 +13,7 @@
  "is_hidden": 0,
  "label": "Front Office",
  "links": [],
- "modified": "2025-08-06 17:03:06.120297",
+ "modified": "2025-08-06 17:07:27.985945",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Front Office",
@@ -46,14 +46,6 @@
    "doc_view": "List",
    "label": "Service Unit",
    "link_to": "Service Unit",
-   "stats_filter": "[]",
-   "type": "DocType"
-  },
-  {
-   "color": "Yellow",
-   "doc_view": "List",
-   "label": "Key Log",
-   "link_to": "Key Log",
    "stats_filter": "[]",
    "type": "DocType"
   },
