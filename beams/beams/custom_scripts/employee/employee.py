@@ -176,7 +176,7 @@ def validate_offer_dates(doc, method):
 
     # Ensure Final Confirmation Date is after Scheduled Confirmation Date
     if doc.scheduled_confirmation_date and doc.final_confirmation_date:
-        if getdate(doc.final_confirmation_date) <= getdate(doc.scheduled_confirmation_date):
+        if getdate(doc.final_confirmation_date) < getdate(doc.scheduled_confirmation_date):
             frappe.throw(_("Confirmation Date must be after Offer Date."))
 
 def manage_user_status(doc, method=None):
