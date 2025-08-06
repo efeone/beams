@@ -42,6 +42,16 @@ def make_employee(source_name, target_doc=None):
 			set_missing_values,
 		)
 		job_offer = frappe.get_doc("Job Offer", source_name)
+
+		if job_offer.job_applicant:
+			appointment_date = frappe.db.get_value(
+				'Appointment Letter',
+				{'job_applicant':job_offer.job_applicant},
+				'appointment_date'
+			)
+			if appointment_date:
+				doc.date_of_appointment = appointment_date
+
 		# Only proceed if Job Applicant exists
 		if job_offer.job_applicant:
 			applicant_data = frappe.get_doc("Job Applicant", job_offer.job_applicant)
