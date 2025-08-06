@@ -97,31 +97,31 @@ $(document).ready(function () {
 						return;
 					}
 				}
-			}
-		});
 
-		// Collect skills data
-		const skills = get_skills_data();
+				// Collect skills data
+				const skills = get_skills_data();
 
-		frappe.call({
-			method: "beams.www.job_application_form.index.create_job_applicant",
-			args: {
-				"applicant_name": applicant_name,
-				"email_id": email_id,
-				"phone_number": phone_number,
-				"min_experience": min_experience,
-				"min_education_qual": min_education_qual,
-				"job_title": job_title,
-				"location": location,
-				"resume_attachment": JSON.stringify(resume_attachment), // Convert to JSON string
-				"skill_proficiency": JSON.stringify(skills) // Ensure skill_proficiency is also a JSON string
-			},
-			callback: function (response) {
-				alert("Your Application has been submitted!");
-				window.location.href = '/job_portal';
-			},
-			error: function (error) {
-				alert('Something went wrong, Please try again');
+				frappe.call({
+					method: "beams.www.job_application_form.index.create_job_applicant",
+					args: {
+						"applicant_name": applicant_name,
+						"email_id": email_id,
+						"phone_number": phone_number,
+						"min_experience": min_experience,
+						"min_education_qual": min_education_qual,
+						"job_title": job_title,
+						"location": location,
+						"resume_attachment": JSON.stringify(resume_attachment), // Convert to JSON string
+						"skill_proficiency": JSON.stringify(skills) // Ensure skill_proficiency is also a JSON string
+					},
+					callback: function (response) {
+						alert("Your Application has been submitted!");
+						window.location.href = '/job_portal';
+					},
+					error: function (error) {
+						alert('Something went wrong, Please try again');
+					}
+				});
 			}
 		});
 
