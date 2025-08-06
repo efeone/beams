@@ -7,9 +7,10 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_d0ps",
-  "is_external_vehicle",
+  "is_vehicle",
+  "is_service_unit",
+  "service_unit",
   "vehicle",
-  "external_vehicle",
   "key_identifier",
   "key_holder",
   "column_break_bb13",
@@ -65,33 +66,40 @@
    "options": "Employee"
   },
   {
-   "default": "0",
-   "fieldname": "is_external_vehicle",
-   "fieldtype": "Check",
-   "label": "Is External Vehicle"
-  },
-  {
-   "depends_on": "eval:doc.is_external_vehicle",
-   "fieldname": "external_vehicle",
-   "fieldtype": "Link",
-   "label": "External Vehicle ",
-   "options": "External Vehicle Details"
-  },
-  {
-   "depends_on": "eval:doc.is_external_vehicle == 0",
+   "depends_on": "eval:doc.is_vehicle",
    "fieldname": "vehicle",
    "fieldtype": "Link",
-   "label": "Vehicle",
+   "label": "Vehicle ",
    "options": "Vehicle"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_vehicle",
+   "fieldtype": "Check",
+   "label": "Is Vehicle"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_service_unit",
+   "fieldtype": "Check",
+   "label": "Is Service Unit"
+  },
+  {
+   "depends_on": "eval: doc.is_service_unit",
+   "fieldname": "service_unit",
+   "fieldtype": "Link",
+   "label": "Service Unit",
+   "options": "Service Unit"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-28 13:28:00.872257",
+ "modified": "2025-08-06 16:59:44.583442",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Vehicle Key Log",
+ "name": "Key Log",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
@@ -109,6 +117,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

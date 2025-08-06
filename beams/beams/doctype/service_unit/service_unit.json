@@ -8,8 +8,10 @@
  "field_order": [
   "service_unit_name",
   "type",
+  "column_break_uxcx",
   "allow_appointment",
-  "allow_multiple_appointments"
+  "allow_multiple_appointments",
+  "key_identifier"
  ],
  "fields": [
   {
@@ -40,11 +42,21 @@
    "fieldname": "allow_multiple_appointments",
    "fieldtype": "Check",
    "label": "Allow Multiple Appointments"
+  },
+  {
+   "fieldname": "column_break_uxcx",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "key_identifier",
+   "fieldtype": "Data",
+   "label": "Key Identifier"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-24 11:18:49.330174",
+ "modified": "2025-08-06 14:34:30.999223",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Service Unit",
@@ -64,6 +76,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

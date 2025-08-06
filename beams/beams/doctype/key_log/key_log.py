@@ -5,5 +5,5 @@
 from frappe.model.document import Document
 
 
-class VehicleKeyLog(Document):
+class KeyLog(Document):
 	pass
