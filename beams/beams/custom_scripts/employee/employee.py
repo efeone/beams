@@ -133,19 +133,7 @@ def autoname(doc, method):
         Method to set Employee ID
     '''
     employee_naming_by_department = frappe.db.get_single_value('HR Settings', 'employee_naming_by_department')
-    if not employee_naming_by_department:
-        naming_method = frappe.db.get_single_value('HR Settings', 'emp_created_by')
-        if not naming_method:
-            frappe.throw(_('Please setup Employee Naming System in Human Resource > HR Settings'))
-        else:
-            if naming_method == 'Naming Series':
-                set_name_by_naming_series(doc)
-            elif naming_method == 'Employee Number':
-                doc.name = doc.employee_number
-            elif naming_method == 'Full Name':
-                doc.set_employee_name()
-                doc.name = doc.employee_name
-    else:
+    if employee_naming_by_department:
         if not doc.department:
             frappe.throw(_('Department is required to create Employee'))
         department_abbr = frappe.db.get_value('Department', doc.department, 'abbreviation')
