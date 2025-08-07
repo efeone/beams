@@ -2277,10 +2277,9 @@ def get_job_requisition_custom_fields():
 			{
 				"fieldname": "publish_on_job_opening",
 				"fieldtype": "Check",
-				"default": "1",
 				"label": "Publish on Job Opening",
 				"insert_after": "publish_on_job_section",
-				"permlevel":4
+				"depends_on": "eval: frappe.user_roles.includes('HR Manager') || frappe.user_roles.includes('CEO')",
 			},
 			{
 				"fieldname": "reason_for_request_section",
@@ -4502,7 +4501,15 @@ def get_property_setters():
 			"field_name": "status",
 			"property":"read_only_depends_on",
 			"value": "eval:!frappe.user.has_role('HR Manager')"
-		}
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Job Opening",
+			"field_name": "publish_applications_received",
+			"property": "default",
+			"property_type": "Check",
+			"value": 0
+		},
 ]
 
 def get_material_request_custom_fields():
