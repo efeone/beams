@@ -173,6 +173,10 @@ fields_to_remove = [
 		'dt':'Interview',
 		'fieldname':'final_score'
 	},
+	{
+		'dt':'Job Applicant',
+		'fieldname': 'department'
+	}
 ]
 
 def execute():

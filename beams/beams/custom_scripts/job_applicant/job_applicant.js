@@ -46,6 +46,15 @@ frappe.ui.form.on('Job Applicant', {
 			frm.page.remove_inner_button('Local Enquiry Report', 'Create');
 		}
 	},
+	job_title: function(frm) {
+		if (frm.doc.job_title) {
+			frappe.db.get_value('Job Opening', frm.doc.job_title, 'department', function (r) {
+				if (r && r.department) {
+					frm.set_value('department', r.department);
+				}
+			});
+		}
+	},
 	status: function (frm) {
 		frm.trigger('refresh');
 	},

@@ -101,7 +101,7 @@ def update_register_form(docname, form_data=None):
 		doc.ppin_code = sanitize('permanent_pin')
 
 		doc.name_of_employer = sanitize('name_of_employer')
-		doc.department = sanitize('current_department')
+		doc.cdepartment = sanitize('current_department')
 		doc.cdesignation = sanitize('current_designation')
 		doc.reports_to = sanitize('reports_to')
 		doc.cname = sanitize('manager_name')

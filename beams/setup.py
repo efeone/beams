@@ -2617,7 +2617,7 @@ def get_job_applicant_custom_fields():
 				"insert_after": "name_of_employer"
 			},
 			{
-				"fieldname": "department",
+				"fieldname": "cdepartment",
 				"fieldtype": "Data",
 				"label": "Department",
 				"insert_after": "column_break_1"
@@ -2626,7 +2626,7 @@ def get_job_applicant_custom_fields():
 				"fieldname": "column_break_2",
 				"fieldtype": "Column Break",
 				"label": "",
-				"insert_after": "department"
+				"insert_after": "cdepartment"
 			},
 			{
 				"fieldname": "cdesignation",
