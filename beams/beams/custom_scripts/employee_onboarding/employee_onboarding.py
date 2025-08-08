@@ -18,6 +18,8 @@ def create_cpal(source_name):
 
     # Fetch the company_policy from the Company doctype
     company_policy = frappe.db.get_value('Company', onboarding_doc.company, 'company_policy')
+    if not frappe._strip_html_tags(company_policy):
+        frappe.throw(f"Please set the <b>Company Policy</b> in the Company <b>{onboarding_doc.company}</b> to create the  <b>Company Policy Acceptance Log</b>")
 
     # Create a mapped document using get_mapped_doc
     cpal_doc = get_mapped_doc(
