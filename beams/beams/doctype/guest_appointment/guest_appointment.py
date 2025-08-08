@@ -22,8 +22,6 @@ class GuestAppointment(Document):
         Validates if the employee associated with the document is available
         on the specified appointment date.
         '''
-        if not self.received_by or not self.appointment_date:
-            frappe.throw("Received By and Appointment Date are mandatory.")
 
         leave_applications = frappe.db.exists(
             "Leave Application",

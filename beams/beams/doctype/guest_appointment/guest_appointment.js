@@ -8,7 +8,8 @@ frappe.ui.form.on('Guest Appointment', {
       frm.add_custom_button(__('Event'), function () {
         // Create a new Event DocType (empty Event)
         frappe.new_doc('Event', {
-          guest_appointment: frm.doc.name  // Optionally link the Event to this Guest Appointment
+          guest_appointment: frm.doc.name,
+          subject : frm.doc.purpose_of_visit,
         });
       }, 'Create');  // Add the button under the 'Create' group
 

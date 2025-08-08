@@ -12,7 +12,6 @@
   "column_break_tpeg",
   "posting_date",
   "appointment_date",
-  "appointment_time",
   "section_break_yjog",
   "purpose_of_visit",
   "remarks",
@@ -58,8 +57,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": " Received By",
-   "options": "Employee",
-   "reqd": 1
+   "options": "Employee"
   },
   {
    "fieldname": "remarks",
@@ -76,21 +74,16 @@
   },
   {
    "fieldname": "appointment_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Appointment Date",
+   "label": "Appointment Date and Time",
    "reqd": 1
-  },
-  {
-   "fieldname": "appointment_time",
-   "fieldtype": "Time",
-   "label": "Appointment Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-26 11:11:10.182784",
+ "modified": "2025-08-07 17:19:52.507070",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Guest Appointment",
@@ -111,6 +104,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
