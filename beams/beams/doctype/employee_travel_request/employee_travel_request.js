@@ -115,7 +115,7 @@ frappe.ui.form.on('Employee Travel Request', {
             }, __('Create'));
         }
 
-        if (frm.doc.is_unplanned === 1 ) {
+
             frm.add_custom_button(__('Expense Claim'), function () {
                 const dialog = new frappe.ui.Dialog({
                     title: 'Travel Claim Expenses',
@@ -180,11 +180,11 @@ frappe.ui.form.on('Employee Travel Request', {
                                 validation_failed = true;
                                 break;
                             }
-                         }
+                        }
 
-                         if (validation_failed) {
-                             return;
-                         }
+                        if (validation_failed) {
+                            return;
+                        }
 
                         frappe.call({
                             method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.create_expense_claim',
@@ -196,6 +196,7 @@ frappe.ui.form.on('Employee Travel Request', {
                             callback: function (r) {
                                 if (!r.exc) {
                                     dialog.hide();
+                                    frm.reload_doc();
                                 }
                             }
                         });
@@ -203,7 +204,6 @@ frappe.ui.form.on('Employee Travel Request', {
                 });
                 dialog.show();
             }, __('Create'));
-        }
 
         if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
             frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
