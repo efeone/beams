@@ -1,6 +1,19 @@
 frappe.ui.form.on('Project', {
     refresh(frm) {
 
+		//HIde Allocated Manpower Detail, Allocated Item Details, Allocated Vehicle Details
+		let tables = [
+			"allocated_manpower_details",
+			"allocated_item_details",
+			"allocated_vehicle_details"
+		];
+
+		tables.forEach(fieldname => {
+			let grid = frm.fields_dict[fieldname].grid;
+			grid.cannot_add_rows = true;
+			grid.refresh();
+		});
+
         // Hide Available Quantity , Return Date , Returned Count & Returned Reason in Allocated Item Details
         frm.fields_dict['allocated_item_details'].grid.toggle_display('available_quantity', false);
         frm.fields_dict['allocated_item_details'].grid.toggle_display('return_date', false);
