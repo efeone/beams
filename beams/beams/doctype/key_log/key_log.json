@@ -16,23 +16,12 @@
   "column_break_bb13",
   "assigned_date",
   "returned_date",
-  "status",
-  "amended_from"
+  "status"
  ],
  "fields": [
   {
    "fieldname": "section_break_d0ps",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Vehicle Key Log",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "key_identifier",
@@ -96,7 +85,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 16:59:44.583442",
+ "modified": "2025-08-11 09:35:43.183752",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Key Log",
