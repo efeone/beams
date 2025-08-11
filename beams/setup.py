@@ -4510,6 +4510,23 @@ def get_property_setters():
 			"property_type": "Check",
 			"value": 0
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal KRA",
+			"field_name": "kra",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal KRA",
+			"field_name": "per_weightage",
+			"property": "read_only",
+			"property_type": "Check",
+			"value": 1
+		}
+
 ]
 
 def get_material_request_custom_fields():

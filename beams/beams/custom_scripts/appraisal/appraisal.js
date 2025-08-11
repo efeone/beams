@@ -51,33 +51,39 @@ frappe.ui.form.on('Appraisal', {
 			});
 		}
 
+	if (!frm.is_new() && frm.doc.category_details.length <= 0) {
+		frappe.db.get_value("Employee", frm.doc.employee, "user_id", (r) => {
+			if (r && r.user_id === frappe.session.user) {
 
-		if (!frm.is_new() && frm.doc.category_details.length <= 0) {
-			frm.add_custom_button(__('Notify Assessment Officers'), function () {
-				if (frm.doc.__unsaved) {
-					frappe.msgprint(__('Please save the form before sending notification.'));
-					return;
-				}
-
-				frappe.confirm(
-					'Do you want to send the notification to your Assessment Officer?',
-					() => {
-						frappe.call({
-							method: "beams.beams.custom_scripts.appraisal.appraisal.notify_assestment_officer",
-							args: {
-								doc: frm.doc.name,
-								employee_id: frm.doc.employee
-							},
-							callback: (response) => {
-								if (!response.exc) {
-									frappe.msgprint('Notification sent and tasks assigned.');
-								}
-							}
-						});
+				frm.add_custom_button(__('Notify Assessment Officers'), function () {
+					if (frm.doc.__unsaved) {
+						frappe.msgprint(__('Please save the form before sending notification.'));
+						return;
 					}
-				);
-			}).addClass("btn-primary");
-		}
+
+					frappe.confirm(
+						'Do you want to send the notification to your Assessment Officer?',
+						() => {
+							frappe.call({
+								method: "beams.beams.custom_scripts.appraisal.appraisal.notify_assestment_officer",
+								args: {
+									doc: frm.doc.name,
+									employee_id: frm.doc.employee
+								},
+								callback: (response) => {
+									if (!response.exc) {
+										frappe.msgprint('Notification sent and tasks assigned.');
+									}
+								}
+							});
+						}
+					);
+				}).addClass("btn-primary");
+
+			}
+		});
+	}
+
 
 		if (frm.doc.name) {
 			// Check if appraisal_template is set before calling get_appraisal_summary
