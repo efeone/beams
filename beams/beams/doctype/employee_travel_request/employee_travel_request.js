@@ -218,6 +218,15 @@ frappe.ui.form.on('Employee Travel Request', {
         } else {
             frm.set_df_property("attachments", "read_only", 1);
         }
+
+        // Hide Add Row button of child table Journal Entry Expenses Table
+        const cab_field = frm.get_field('journal_entry_expenses_table');
+
+            const field = frm.get_field(table);
+            if (field?.grid) {
+                field.grid.cannot_add_rows = true;
+                field.grid.wrapper.find('.grid-add-row, .grid-remove-rows').hide();
+            }
     },
 
     requested_by: function (frm) {
@@ -239,7 +248,7 @@ frappe.ui.form.on('Employee Travel Request', {
             }
         });
     },
-
+    
     accommodation_required: function (frm) {
         set_room_criteria_filter(frm);
     },

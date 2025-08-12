@@ -265,7 +265,8 @@
    "fieldname": "journal_entry_expenses_table",
    "fieldtype": "Table",
    "label": "Journal Entry Expenses Table",
-   "options": "Journal Entry Expenses"
+   "options": "Journal Entry Expenses",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -284,7 +285,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-05-29 17:01:51.710862",
+ "modified": "2025-08-11 15:13:43.844859",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
@@ -305,6 +306,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "requested_by",
  "sort_field": "modified",
  "sort_order": "DESC",
