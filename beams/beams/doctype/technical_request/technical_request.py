@@ -33,16 +33,19 @@ class TechnicalRequest(Document):
 		self.validate_required_from_and_required_to()
 
 	def validate_employee_before_approvel(self):
-	# validate employee field in Required Employees before approving Technical Request
-
+		"""Validate employee field in Required Employees before approving Technical Request"""
 		if not self.required_employees:
-			frappe.throw(_("Please add at least one employee in 'Required Employees' before approving."))
+			frappe.throw(
+				_("Please add at least one employee in 'Required Employees' before approving."),
+				title=_("Missing Employees")
+			)
 
 		for row in self.required_employees:
 			if not row.employee:
 				frappe.throw(
 					_("Employee is missing in row {0} of 'Required Employees'. Please fill it before approving.")
-					.format(row.idx)
+					.format(row.idx),
+					title=_("Missing Employees")
 				)
 
 	def update_project_allocated_resources(self):
