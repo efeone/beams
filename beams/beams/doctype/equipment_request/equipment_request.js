@@ -68,13 +68,15 @@ frappe.ui.form.on('Equipment Request', {
                                 label: "Available Quantity",
                                 fieldname: "available_qty",
                                 fieldtype: "Int",
-                                in_list_view: 1
+                                in_list_view: 1,
+                                read_only: 1
                             },
                             {
                                 label: "Required Quantity",
                                 fieldname: "required_qty",
                                 fieldtype: "Int",
-                                in_list_view: 1
+                                in_list_view: 1,
+                                read_only: 1
                             }
                         ],
                         data: default_items
