@@ -2,6 +2,8 @@ import frappe
 import json
 from frappe.utils import flt
 from frappe.model.mapper import get_mapped_doc
+from frappe.desk.form.assign_to import add as add_assign
+
 
 @frappe.whitelist()
 def notify_stock_managers(doc=None, method=None):
@@ -137,3 +139,49 @@ def map_asset_movement_from_mr(source_name, assigned_to=None, items=None, purpos
 	asset_movement.submit()
 
 	return asset_movement.name
+
+def create_todo_for_hod(doc, method):
+	"""
+	Creates a ToDo for the Head of Department
+	only when transitioning from 'Draft' → 'Informed HOD'
+	"""
+	old_doc = doc.get_doc_before_save()
+
+	# Run only if workflow_state changed from Draft to Informed HOD
+	if not old_doc or not (
+		old_doc.workflow_state == "Draft" and doc.workflow_state == "Informed HOD"
+	):
+		return
+
+	# Ensure employee exists for the doc.owner
+	if not frappe.db.exists("Employee", {"user_id": doc.owner}):
+		return
+
+	employee_id, department = frappe.db.get_value(
+		"Employee",
+		{"user_id": doc.owner},
+		["name", "department"]
+	)
+
+	if not department or not frappe.db.exists("Department", department):
+		return
+
+	# Get HOD of that department
+	hod_emp_id = frappe.db.get_value("Department", department, "head_of_department")
+	if not hod_emp_id or not frappe.db.exists("Employee", hod_emp_id):
+		return
+
+	hod_user = frappe.db.get_value("Employee", hod_emp_id, "user_id")
+	if not hod_user:
+		return
+
+	# Assign ToDo to HOD
+	add_assign({
+		"doctype": doc.doctype,
+		"name": doc.name,
+		"assign_to": [hod_user],
+		"assigned_by": frappe.session.user,
+		"priority": "Medium",
+		"description": f"Please review Material Request {doc.name}"
+	})
+

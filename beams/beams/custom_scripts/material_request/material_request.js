@@ -1,21 +1,58 @@
 
 frappe.ui.form.on('Material Request', {
-    onload(frm) {
-        if (!frm.doc.requested_by) {
-            frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
-                .then(r => {
-                    if (r.message) {
-                        frm.set_value('requested_by', r.message.name);
-                    }
-                });
-        }
-    },
+	onload(frm) {
+		if (!frm.doc.requested_by) {
+			frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+				.then(r => {
+					if (r.message) {
+						frm.set_value('requested_by', r.message.name);
+					}
+				});
+		}
+	},
 	refresh(frm) {
 		// Show buttons only if workflow_state is Approved by HOD or Approved by Admin
 		if (["Approved by HOD", "Approved by Admin"].includes(frm.doc.workflow_state)) {
 			add_asset_movement_button(frm);
 			add_stock_entry_button(frm);
 		}
+		if (!frm.doc.items || frm.doc.items.length === 0) return;
+
+			let has_technical = false;
+			let has_non_technical = false;
+
+			frm.doc.items.forEach(row => {
+				if (row.item_group === "Technical") {
+					has_technical = true;
+				}
+				if (row.item_group === "Non Technical") {
+					has_non_technical = true;
+				}
+		});
+
+		// Only hide/show if the doc is in Draft
+		if (frm.doc.workflow_state === "Draft") {
+			frm.page.clear_actions_menu();
+
+			if (has_technical) {
+				frm.page.add_action_item(__('Inform HOD'), function() {
+					frappe.xcall("frappe.model.workflow.apply_workflow", {
+						doc: frm.doc,
+						action: "Inform HOD"
+					}).then(() => frm.reload_doc());
+				});
+			}
+
+			if (has_non_technical) {
+				frm.page.add_action_item(__('Inform Admin'), function() {
+					frappe.xcall("frappe.model.workflow.apply_workflow", {
+						doc: frm.doc,
+						action: "Inform Admin"
+					}).then(() => frm.reload_doc());
+				});
+			}
+		}
+
 	}
 });
 
