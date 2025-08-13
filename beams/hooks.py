@@ -407,8 +407,8 @@ doc_events = {
 scheduler_events = {
 	"daily": [
 		"beams.beams.doctype.local_enquiry_report.local_enquiry_report.set_status_to_overdue",
-		"beams.beams.custom_scripts.attendance.attendance.send_absence_reminder",
-		"beams.beams.custom_scripts.attendance.attendance.send_absent_reminder",
+		"beams.beams.custom_scripts.attendance.attendance.notify_manager_unplanned_absence",
+		"beams.beams.custom_scripts.attendance.attendance.remind_employee_unplanned_absence",
 		"beams.beams.doctype.compensatory_leave_log.compensatory_leave_log.expire_leave_allocation",
 		"beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_shift_publication_notifications",
 		"beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",

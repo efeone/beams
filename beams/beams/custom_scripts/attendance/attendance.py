@@ -2,7 +2,7 @@ import frappe
 from frappe.utils import nowdate, add_days, format_date
 
 
-def send_absence_reminder():
+def notify_manager_unplanned_absence():
     '''
     Send a reminder to the reports_to if an employee was absent but did not apply for leave.
     The reminder is based on the value in Absence Reminder Duration and only if Enable Absence Reminders is checked.
@@ -62,13 +62,13 @@ def send_absence_reminder():
                 # Notify the supervisor
                 reports_to = frappe.db.get_value("Employee", employee["employee"], "reports_to")
                 if reports_to:
-                    reports_to_email = frappe.db.get_value("Employee", reports_to, "user_id")
+                    reports_to_email, reports_to_name = frappe.db.get_value("Employee", reports_to, ['user_id', 'employee_name'])
                     if reports_to_email:
                         context_data = {
                             "employee_name": employee["employee_name"],
                             "employee_id": employee["employee"],
                             "attendance_date": employee["attendance_date"],
-                            "reports_to": reports_to
+                            "reports_to_name": reports_to_name
                         }
                         subject = frappe.render_template(email_template.subject, context_data)
                         message = frappe.render_template(email_template.response, context_data)
@@ -79,7 +79,7 @@ def send_absence_reminder():
                         )
 
 
-def send_absent_reminder():
+def remind_employee_unplanned_absence():
     """Send a reminder to employees who were absent but did not apply for leave."""
 
     hr_settings = frappe.get_single("Beams HR Settings")
@@ -107,9 +107,9 @@ def send_absent_reminder():
             )
 
             if  not leave_exists:
-                send_reminder_email(employee)
+                send_employee_absence_email(employee)
 
-def send_reminder_email(employee):
+def send_employee_absence_email(employee):
     """Send an email reminder to the absent employee to submit a leave application."""
     hr_settings = frappe.get_single("Beams HR Settings")
     email_template_name = hr_settings.leave_application_template
