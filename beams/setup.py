@@ -4916,10 +4916,16 @@ def get_vehicle_custom_fields():
 			"label": "Vehicle Safety Inspection",
 			"options": "Vehicle Safety Inspection",
 			"insert_after": "carbon_check_date"
+		},
+		{
+			"fieldname": "average_mileage",
+			"fieldtype": "Float",
+			"label": "Average Mileage(kmpl)",
+			"insert_after": "doors",
+			"default": 14.0
 		}
-
-		]
-	}
+	]
+}
 
 def get_hr_settings_custom_fields():
 	'''

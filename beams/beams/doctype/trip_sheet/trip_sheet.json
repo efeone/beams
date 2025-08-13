@@ -146,22 +146,24 @@
   {
    "fieldname": "distance_traveledkm",
    "fieldtype": "Float",
-   "label": "Distance Traveled(Km)",
+   "label": "Distance Traveled (Km)",
    "read_only": 1
   },
   {
    "fieldname": "fuel_consumed",
    "fieldtype": "Float",
-   "label": "Fuel Consumed(Ltr)"
+   "label": "Estimated Fuel Consumption (L)",
+   "read_only": 1
   },
   {
    "fieldname": "column_break_anpp",
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "vehicle.average_mileage",
    "fieldname": "mileage",
    "fieldtype": "Float",
-   "label": "Mileage(kmpl)",
+   "label": "Estimated Mileage (km/L)",
    "read_only": 1
   },
   {
@@ -217,7 +219,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-05-30 10:42:22.958496",
+ "modified": "2025-08-13 11:14:54.882492",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
@@ -238,6 +240,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "search_fields": "driver,vehicle,starting_date_and_time",
  "sort_field": "modified",
  "sort_order": "DESC",

@@ -120,10 +120,10 @@ class TripSheet(Document):
         else:
             self.distance_traveledkm = 0
 
-        if self.fuel_consumed and self.fuel_consumed != 0 and self.distance_traveledkm:
-            self.mileage = self.distance_traveledkm / self.fuel_consumed
+        if self.mileage and self.mileage != 0 and self.distance_traveledkm:
+            self.fuel_consumed = self.distance_traveledkm / self.mileage
         else:
-            self.mileage = 0
+            self.fuel_consumed = 0
 
     @frappe.whitelist()
     def validate_posting_date(self):
