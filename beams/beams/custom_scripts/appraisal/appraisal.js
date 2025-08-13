@@ -166,19 +166,24 @@ frappe.ui.form.on('Appraisal', {
 			}
 		});
 
+		frappe.db.get_value("Employee",{user_id:frappe.session.user},["name"]).then(res => {
 		// Dynamically add the "Add Category" button only once
-		if (!frm.category_button_added) {
-			const button_html = `
-				<button class="btn btn-primary" id="add_category_button" style="margin-top: 10px;">Add Category</button><br><br>
-			`;
-			$(frm.fields_dict['category_html'].wrapper).after(button_html);
-			frm.category_button_added = true;
+			const current_emp_id = res.message?.name;
+			if (current_emp_id && current_emp_id !== frm.doc.employee){
+				if (!frm.category_button_added) {
+					const button_html = `
+						<button class="btn btn-primary" id="add_category_button" style="margin-top: 10px;">Add Category</button><br><br>
+					`;
+					$(frm.fields_dict['category_html'].wrapper).after(button_html);
+					frm.category_button_added = true;
 
-			// Button click event for adding a category
-			$('#add_category_button').on('click', function () {
-				frm.events.show_add_category_dialog(frm);
-			});
-		}
+					// Button click event for adding a category
+					$('#add_category_button').on('click', function () {
+						frm.events.show_add_category_dialog(frm);
+					});
+				}
+			}
+		})
 		// Hide the chart by targeting its container
 		if (frm.dashboard.wrapper) {
 			frm.dashboard.wrapper.find('.chart-container').hide(); // Adjust selector as needed
@@ -362,7 +367,7 @@ frappe.ui.form.on('Appraisal', {
 					},
 					callback: function () {
 						frappe.msgprint(__('Feedback has been submitted successfully.'));
-						frm.refresh();
+						frm.reload_doc();
 						dialog.hide();
 					}
 				});
@@ -385,7 +390,7 @@ frappe.ui.form.on('Appraisal', {
 			},
 			callback: function () {
 				frappe.msgprint(__('Feedback has been saved successfully.'));
-				frm.refresh();
+				frm.reload_doc();  
 				dialog.hide();
 			}
 		});

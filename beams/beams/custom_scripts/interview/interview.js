@@ -337,10 +337,11 @@ function handle_hrms_custom_buttons(frm) {
 	setTimeout(function () {
 		frm.remove_custom_button('Submit Feedback');
 		remove_custom_button_from_mobile_view(frm, "Submit Feedback");
-	}, 100);
+	}, 50);
 
 	// Manage primary action buttons
 	setTimeout(function () {
+		frm.page.clear_primary_action();
 		if (!frm.is_dirty() && frm.doc.docstatus == 0) {
 			frm.page.clear_primary_action();
 			frm.page.set_primary_action(__('Submit'), function () {
@@ -354,7 +355,7 @@ function handle_hrms_custom_buttons(frm) {
 		} else if (frm.doc.docstatus == 1) {
 			frm.page.clear_primary_action();
 		}
-	}, 100);
+	}, 50);
 }
 
 /**

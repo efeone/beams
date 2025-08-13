@@ -72,7 +72,6 @@ def create_employee_feedback(data, employee, appraisal_name, feedback_exists=Fal
 	feedback_doc.flags.ignore_mandatory = True
 
 	if method == 'save' and not feedback_exists and not has_any_values(data):
-		frappe.msgprint("No changes in document", indicator='blue')
 		return
 
 	feedback_doc.save(ignore_permissions=True)
@@ -612,51 +611,52 @@ def check_feedback_exists(appraisal_name, assessment_officer_user_id, employee):
 
 @frappe.whitelist()
 def send_next_officer_notification(appraisal_name):
-    """
-    Sends a notification to the next assessment officer (based on sequence)
-    who has not yet provided feedback in the given Appraisal.
-    Args:
-        appraisal_name (str): The name (ID) of the Appraisal document.
-    """
-    appraisal = frappe.get_doc("Appraisal", appraisal_name)
-    if not appraisal.appraisal_template:
-        return "No Appraisal Template"
-    officer_list = frappe.db.get_all(
-        "Assessment Officer",
-        filters={"parent": appraisal.appraisal_template},
+	"""
+	Sends a notification to the next assessment officer (based on sequence)
+	who has not yet provided feedback in the given Appraisal.
+	Args:
+		appraisal_name (str): The name (ID) of the Appraisal document.
+	"""
+	appraisal = frappe.get_doc("Appraisal", appraisal_name)
+	if not appraisal.appraisal_template:
+		return "No Appraisal Template"
+	officer_list = frappe.db.get_all(
+		"Assessment Officer",
+		filters={"parent": appraisal.appraisal_template},
 		pluck="assessment_officer",
-        order_by="idx asc"
-    )
-    added_officers = []
-    for row in appraisal.category_details or []:
-        if not row.employee:
-            continue
-        user_id = frappe.db.get_value("Employee", row.employee, "user_id")
-        if user_id in officer_list and user_id not in added_officers:
-            added_officers.append(user_id)
-    for officer in officer_list:
-        if officer not in added_officers:
-            fullname = get_fullname(officer)
-            template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
-            if not template_name:
-                frappe.throw(_("Please set 'Assessment Reminder Template' in Beams HR Settings."))
-            template = frappe.get_doc("Email Template", template_name)
-            context = {
-                "doc": appraisal,
-                "employee_name": appraisal.employee_name,
-                "officer_name": fullname
-            }
-            subject = frappe.render_template(template.subject or "", context)
-            email_content = frappe.render_template(template.response or template.message or "", context)
-            log = frappe.get_doc({
-                "doctype": "Notification Log",
-                "subject": subject,
-                "for_user": officer,
-                "type": "Alert",
-                "document_type": "Appraisal",
-                "document_name": appraisal.name,
-                "from_user": frappe.session.user,
-                "email_content": email_content
-            }).insert(ignore_permissions=True)
-            return f"Notification logged for {officer}"
-    return "All officers already notified"
+		order_by="idx asc"
+	)
+	added_officers = []
+	for row in appraisal.category_details or []:
+		if not row.employee:
+			continue
+		user_id = frappe.db.get_value("Employee", row.employee, "user_id")
+		if user_id in officer_list and user_id not in added_officers:
+			added_officers.append(user_id)
+	for officer in officer_list:
+		if officer not in added_officers:
+			fullname = get_fullname(officer)
+			template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
+			if not template_name:
+				frappe.throw(_("Please set 'Assessment Reminder Template' in Beams HR Settings."))
+			template = frappe.get_doc("Email Template", template_name)
+			context = {
+				"doc": appraisal,
+				"employee_name": appraisal.employee_name,
+				"officer_name": fullname
+			}
+			subject = frappe.render_template(template.subject or "", context)
+			email_content = frappe.render_template(template.response or template.message or "", context)
+			frappe.sendmail(recipients = frappe.db.get_value("User",officer,"email"),subject=subject,message=email_content)             
+			log = frappe.get_doc({
+				"doctype": "Notification Log",
+				"subject": subject,
+				"for_user": officer,
+				"type": "Alert",
+				"document_type": "Appraisal",
+				"document_name": appraisal.name,
+				"from_user": frappe.session.user,
+				"email_content": email_content
+			}).insert(ignore_permissions=True)
+			return f"Notification logged for {officer}"
+	return "All officers already notified"
