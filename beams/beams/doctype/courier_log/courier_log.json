@@ -16,7 +16,7 @@
   "date",
   "status",
   "section_break_cwuh",
-  "description"
+  "receipt"
  ],
  "fields": [
   {
@@ -49,11 +49,6 @@
    "label": "Date"
   },
   {
-   "fieldname": "description",
-   "fieldtype": "Small Text",
-   "label": "Description"
-  },
-  {
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -74,11 +69,17 @@
    "label": "Inward Register",
    "options": "Inward Register",
    "reqd": 1
+  },
+  {
+   "fieldname": "receipt",
+   "fieldtype": "Table",
+   "label": "Receipt",
+   "options": "Receipt"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-28 13:31:55.101144",
+ "modified": "2025-08-06 06:36:03.640972",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",
@@ -98,6 +99,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

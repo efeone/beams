@@ -18,7 +18,7 @@ class VisitorPass(Document):
         Ensure Returned Date and Time selection based on workflow state
         '''
         if self.workflow_state == 'Issued':
-            if not self.returned_date or not self.returned_time:
+            if not self.returned_date:
                 frappe.throw(_('Please select a Returned Date and Time.'))
 
     @frappe.whitelist()

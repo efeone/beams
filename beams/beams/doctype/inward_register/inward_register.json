@@ -12,7 +12,6 @@
   "courier_service",
   "column_break_weuy",
   "posting_date",
-  "posting_time",
   "visit_date",
   "section_break_zgfs",
   "received_by",
@@ -40,20 +39,13 @@
   {
    "default": "Today",
    "fieldname": "posting_date",
-   "fieldtype": "Date",
-   "label": "Posting Date",
+   "fieldtype": "Datetime",
+   "label": "Posting Date And Time",
    "reqd": 1
   },
   {
    "fieldname": "column_break_weuy",
    "fieldtype": "Column Break"
-  },
-  {
-   "default": "Now",
-   "fieldname": "posting_time",
-   "fieldtype": "Time",
-   "label": "Posting Time",
-   "reqd": 1
   },
   {
    "fieldname": "section_break_zgfs",
@@ -117,7 +109,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-03 22:21:05.877509",
+ "modified": "2025-08-06 06:16:13.490420",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",

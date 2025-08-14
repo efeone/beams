@@ -12,7 +12,6 @@
   "visitor_name",
   "column_break_pghe",
   "posting_date",
-  "posting_time",
   "section_break_szqc",
   "received_by",
   "purpose_of_visit",
@@ -46,16 +45,9 @@
   {
    "default": "Today",
    "fieldname": "posting_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Posting Date ",
-   "reqd": 1
-  },
-  {
-   "default": "Now",
-   "fieldname": "posting_time",
-   "fieldtype": "Time",
-   "label": "Posting Time ",
+   "label": "Posting Date and Time",
    "reqd": 1
   },
   {
@@ -118,7 +110,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-05 08:12:29.404864",
+ "modified": "2025-08-06 06:17:29.642004",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",

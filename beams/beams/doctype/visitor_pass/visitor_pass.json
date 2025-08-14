@@ -14,8 +14,9 @@
   "column_break_eucm",
   "expire_on",
   "returned_date",
-  "returned_time",
-  "amended_from"
+  "amended_from",
+  "section_break_cofy",
+  "purpose_of_visit"
  ],
  "fields": [
   {
@@ -60,7 +61,9 @@
    "fetch_from": "inward_register.visitor_name",
    "fieldname": "issued_to",
    "fieldtype": "Data",
-   "label": "Issued To"
+   "in_list_view": 1,
+   "label": "Issued To",
+   "reqd": 1
   },
   {
    "fieldname": "expire_on",
@@ -70,24 +73,28 @@
   {
    "allow_on_submit": 1,
    "fieldname": "returned_date",
-   "fieldtype": "Date",
-   "label": "Returned Date "
-  },
-  {
-   "allow_on_submit": 1,
-   "fieldname": "returned_time",
-   "fieldtype": "Time",
-   "label": "Returned Time "
+   "fieldtype": "Datetime",
+   "label": "Returned Date and Time"
   },
   {
    "fieldname": "column_break_eucm",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "section_break_cofy",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "purpose_of_visit",
+   "fieldtype": "Small Text",
+   "label": "Purpose of visit"
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-01-29 11:23:46.427372",
+ "modified": "2025-08-06 06:27:13.317655",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Visitor Pass",
@@ -108,6 +115,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
