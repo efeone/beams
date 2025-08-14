@@ -5,10 +5,10 @@ frappe.ui.form.on('Appraisal', {
 		set_table_properties(frm, 'employee_self_kra_rating');
 		set_table_properties(frm, 'dept_self_kra_rating');
 		set_table_properties(frm, 'company_self_kra_rating');
-		set_marks_read_only(frm, 'dept_self_kra_rating');
-		set_marks_read_only(frm, 'company_self_kra_rating');
-		set_marks_read_only(frm, 'employee_self_kra_rating');
-		set_goals_read_only(frm,'appraisal_kra');
+		set_marks_read_only(frm, 'dept_self_kra_rating','marks');
+		set_marks_read_only(frm, 'company_self_kra_rating','marks');
+		set_marks_read_only(frm, 'employee_self_kra_rating','marks');
+		set_marks_read_only(frm,'appraisal_kra','kra_goals');
 		// Remove the button by targeting its full class list
 		setTimeout(() => {
 			$('.new-feedback-btn.btn.btn-sm.d-inline-flex.align-items-center.justify-content-center.px-3.py-2.border').remove();
@@ -641,37 +641,21 @@ frappe.ui.form.on('Employee Feedback Rating', {
 	}
 });
 
-function set_marks_read_only(frm, table_name) {
-	/**
-	* Sets the "marks" field in a given child table to read-only or editable
-	* depending on whether the logged-in user is the Administrator or the employee
-	*/
+/**
+* Sets the "marks" field in a given child table to read-only or editable
+* depending on whether the logged-in user is the Administrator or the employee
+*/
+function set_marks_read_only(frm, table_name,field_name) {
 	frappe.db.get_value("Employee", { user_id: frappe.session.user }, ["name"]).then(res => {
 		const emp_id = res.message?.name || null;
 		const is_admin = frappe.session.user === "Administrator";
 		if (!is_admin && emp_id !== frm.doc.employee ){
-			frm.fields_dict[table_name].grid.update_docfield_property('marks', 'read_only', 1);
+			frm.fields_dict[table_name].grid.update_docfield_property(field_name, 'read_only', 1);
 		} else {
-			frm.fields_dict[table_name].grid.update_docfield_property('marks', 'read_only', 0);
+			frm.fields_dict[table_name].grid.update_docfield_property(field_name, 'read_only', 0);
 		}
 	});
 }
 
 
 
-function set_goals_read_only(frm, table_name) {
-	/**
-	* Sets the "kra_goals" field in a given child table to read-only or editable
-	* depending on whether the logged-in user is the Administrator or the employee
-	*/
-	frappe.db.get_value("Employee",{user_id:frappe.session.user},["name"]).then(res =>{
-		const emp_id = res.message?.name;
-		const is_admin = frappe.session.user === "Administrator";
-		if(!is_admin && emp_id !== frm.doc.employee){
-			frm.fields_dict[table_name].grid.update_docfield_property('kra_goals', 'read_only', 1);
-		} else {
-			frm.fields_dict[table_name].grid.update_docfield_property('kra_goals', 'read_only', 0);
-		}
-
-	});
-}
