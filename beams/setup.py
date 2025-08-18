@@ -59,6 +59,9 @@ def after_install():
 	create_custom_fields(get_expense_claim_type_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_training_event_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_hd_ticket_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
+
 
 
 	#Creating BEAMS specific Property Setters
@@ -130,6 +133,9 @@ def before_uninstall():
 	delete_custom_fields(get_expense_claim_type_custom_fields())
 	delete_custom_fields(get_supplier_quotation_custom_fields())
 	delete_custom_fields(get_training_event_custom_fields())
+	delete_custom_fields(get_hd_ticket_custom_fields())
+	delete_custom_fields(get_hd_ticket_type_custom_fields())
+
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -147,6 +153,48 @@ def delete_custom_fields(custom_fields: dict):
 			},
 		)
 		frappe.clear_cache(doctype=doctype)
+
+
+def get_hd_ticket_type_custom_fields():
+    '''
+    Custom fields that need to be added to the HD Ticket Type DocType
+    '''
+    return {
+        "HD Ticket Type": [
+            {
+                "fieldname": "team_name",
+                "fieldtype": "Link",
+                "label": "Team Name",
+                "options":"HD Team",
+                "insert_after": "is_system"
+            }
+        ]
+    }
+
+
+def get_hd_ticket_custom_fields():
+	'''
+	Custom fields that need to be added to the HD Ticket DocType
+	'''
+	return {
+		"HD Ticket": [
+			{
+				"fieldname": "raised_for",
+				"fieldtype": "Link",
+				"label": "Raised For(Email)",
+				"options":"User",
+				"insert_after": "raised_by"
+			},
+			{
+				"fieldname": "attach",
+				"label": "Attachments",
+				"fieldtype": "Attach",
+				"insert_after": "agent_group",
+
+			}
+
+		]
+	}
 
 def get_shift_assignment_custom_fields():
 	'''

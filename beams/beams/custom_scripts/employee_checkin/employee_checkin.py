@@ -74,3 +74,42 @@ def handle_employee_checkin_out(doc, method):
             url=get_url_to_form("Leave Allocation", allocation_name),
             name=allocation_name
         ),alert=True,indicator='green')
+
+def set_hd_agent_active_status(doc, method=None):
+
+    '''Update HD Agent's active status based on today's latest employee check-in'''
+
+    employee = doc.employee
+
+    # Get user linked to the employee
+    user = frappe.db.get_value("Employee", {"name": employee}, "user_id")
+
+    if not user:
+        return
+
+    start = get_datetime(nowdate() + " 00:00:00")
+    end = get_datetime(nowdate() + " 23:59:59")
+
+    # Get the latest check-in today
+    latest_checkin = frappe.db.get_all(
+        "Employee Checkin",
+        filters={
+            "employee": employee,
+            "time": ["between", [start, end]]
+        },
+        fields=["name", "log_type", "time"],
+        order_by="time desc",
+        limit=1
+    )
+
+    if latest_checkin:
+        latest_log_type = latest_checkin[0].log_type
+        new_status = 1 if latest_log_type == "IN" else 0
+    else:
+        # No check-ins today
+        new_status = 0
+
+    # Update HD Agent status
+    if frappe.db.exists("HD Agent", {"user": user}):
+        frappe.db.set_value("HD Agent", {"user": user}, "is_active", new_status)
+

@@ -70,7 +70,8 @@ doctype_js = {
 	"Asset":"beams/custom_scripts/asset/asset.js",
 	"Payroll Entry":"beams/custom_scripts/payroll_entry/payroll_entry.js",
 	"Employee Separation": "beams/custom_scripts/employee_separation/employee_separation.js",
-	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js"
+	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js",
+	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js" 
 }
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -166,6 +167,7 @@ override_doctype_class = {
 	"Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
 	"Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
 	"Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
+	"HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride"
 }
 
 standard_queries = {
@@ -280,8 +282,10 @@ doc_events = {
 	},
 	"Employee Checkin":{
 		"after_insert": [
-			"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out"
-		]
+			"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out",
+			"beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
+		],
+		"on_update" : "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
 	},
 	"Leave Allocation":{
 		"on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",
