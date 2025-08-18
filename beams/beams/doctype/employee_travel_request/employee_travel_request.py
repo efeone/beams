@@ -302,12 +302,13 @@ class EmployeeTravelRequest(Document):
 			if self.posting_date > today():
 				frappe.throw(_("Posting Date cannot be set after today's date."))
 
-	@frappe.whitelist()
+
 	def validate_expected_time(self):
 		"""Ensure Expected Check-out Time is not earlier than Expected Check-in Time."""
 		if self.expected_check_in_time and self.expected_check_out_time:
 			if self.expected_check_out_time < self.expected_check_in_time:
 				frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
+
 	@frappe.whitelist()
 	def total_days_calculate(self):
 		"""Calculate the total number of travel days, ensuring at least one day."""
@@ -324,10 +325,10 @@ def get_batta_policy(requested_by):
 	'''
 	if not requested_by:
 		return
-
+	if frappe.db.exists("Employee", requested_by):
 	# Fetch the employee's designation
-	employee = frappe.get_doc("Employee", requested_by)
-	designation = employee.designation
+		employee = frappe.get_doc("Employee", requested_by)
+		designation = employee.designation
 
 	# Fetch the Batta Policy for the designation
 	batta_policy = frappe.get_all('Batta Policy', filters={'designation': designation}, fields=['name'])
@@ -376,18 +377,13 @@ def create_expense_claim(employee, travel_request, expenses):
 	if not expenses:
 		frappe.throw(_("Please provide at least one expense item."))
 
-	travel_doc = frappe.get_doc("Employee Travel Request", travel_request)
-
 	expense_claim = frappe.new_doc("Expense Claim")
 	expense_claim.travel_request = travel_request
 	expense_claim.employee = employee
 	expense_claim.approval_status = "Draft"
 	expense_claim.posting_date = today()
-
-	employee_doc = frappe.get_doc("Employee", employee)
+	employee_doc = frappe.db.get_value("Employee", employee,["company","expense_approver"])
 	company = employee_doc.company
-
-	employee_doc = frappe.get_doc("Employee", employee)
 	expense_approver = employee_doc.expense_approver
 	expense_claim.expense_approver = expense_approver
 
@@ -519,15 +515,16 @@ def get_permission_query_conditions(user):
 	conditions = []
 
 	if "HOD" in user_roles:
-		department = frappe.db.get_value("Employee", {"user_id": user}, "department")
-		if department:
-			conditions.append(f"""
-				EXISTS (
-					SELECT 1 FROM `tabEmployee` e
-					WHERE e.name = `tabEmployee Travel Request`.requested_by
-					AND e.department = '{department}'
-				)
-			""")
+		if frappe.db.exists("Employee",{"user_id":user}):
+			department = frappe.db.get_value("Employee", {"user_id": user}, "department")
+			if department:
+				conditions.append(f"""
+					EXISTS (
+						SELECT 1 FROM `tabEmployee` e
+						WHERE e.name = `tabEmployee Travel Request`.requested_by
+						AND e.department = '{department}'
+					)
+				""")
 
 	employee_id = frappe.db.get_value("Employee", {"user_id": user}, "name")
 	if employee_id:
