@@ -125,7 +125,7 @@
   },
   {
    "fieldname": "source",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Source",
    "options": "Location",
@@ -133,7 +133,7 @@
   },
   {
    "fieldname": "destination",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Destination",
    "options": "Location",
@@ -285,7 +285,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-08-11 15:13:43.844859",
+ "modified": "2025-08-18 16:06:20.137005",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
