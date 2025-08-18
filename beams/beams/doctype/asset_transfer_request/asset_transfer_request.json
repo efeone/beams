@@ -20,6 +20,9 @@
   "posting_date",
   "posting_time",
   "stock_entry",
+  "purpose",
+  "section_break_wrtr",
+  "reason_for_rejection",
   "section_break_sesi",
   "items",
   "asset_return_checklist",
@@ -156,12 +159,26 @@
    "fieldtype": "Data",
    "label": "Scan Bundle",
    "options": "Barcode"
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "section_break_wrtr",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-06-10 10:15:13.555858",
+ "modified": "2025-08-18 15:07:34.153548",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Transfer Request",
@@ -181,6 +198,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
