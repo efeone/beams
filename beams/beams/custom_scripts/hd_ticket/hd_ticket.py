@@ -12,6 +12,8 @@ class HDTicketOverride(HDTicket):
 
     def validate(self):
         super().validate()
+        self.set_agent_group()
+
 
     def handle_assignment_by_team(self):
         """Auto-assign the ticket to all active agents in the agent group team."""
@@ -67,3 +69,12 @@ class HDTicketOverride(HDTicket):
         except Exception:
             frappe.log_error(frappe.get_traceback(), "get_active_users_from_team")
             return []
+
+    def set_agent_group(self):
+        """Set agent_group based on selected ticket_type"""
+        if not self.ticket_type:
+            self.agent_group = ""
+            return
+
+        team_name = frappe.db.get_value("HD Ticket Type", self.ticket_type, "team_name")
+        self.agent_group = team_name or ""
