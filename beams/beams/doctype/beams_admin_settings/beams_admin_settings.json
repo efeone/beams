@@ -21,7 +21,8 @@
   "notification_template_for_asset_reservation",
   "notification_for_asset_reservation_before",
   "default_employee_payable_account",
-  "item_group"
+  "item_group",
+  "employee_travel_request_approved_template"
  ],
  "fields": [
   {
@@ -137,12 +138,18 @@
    "fieldtype": "Link",
    "label": "Makeup Item Group",
    "options": "Item Group"
+  },
+  {
+   "fieldname": "employee_travel_request_approved_template",
+   "fieldtype": "Link",
+   "label": "Employee Travell Request Approved Template",
+   "options": "Email Template"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-06-04 11:43:38.073135",
+ "modified": "2025-08-18 12:21:50.971007",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
