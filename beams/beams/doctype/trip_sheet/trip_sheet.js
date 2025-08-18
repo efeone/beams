@@ -53,7 +53,6 @@ frappe.ui.form.on('Trip Sheet', {
 	},
 
 	onload: function (frm) {
-		if (frappe.session.user !== 'Administrator' && frappe.user.has_role('Driver')) {
 			// Get Employee linked to current user
 			frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
 				.then(r => {
@@ -70,7 +69,7 @@ frappe.ui.form.on('Trip Sheet', {
 						});
 					}
 				});
-		}
+
 		frm.set_query('transportation_requests', function () {
 			return {
 				filters: {
