@@ -3,11 +3,10 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import today
+from frappe.utils import today,getdate
 from frappe import _
 from frappe.utils import now_datetime, get_url_to_form
 from datetime import datetime
-
 
 class AssetTransferRequest(Document):
     def before_save(self):
@@ -31,7 +30,7 @@ class AssetTransferRequest(Document):
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
-            if self.posting_date > today():
+            if getdate(self.posting_date) > getdate(today()):
                 frappe.throw(_("Posting Date cannot be set after today's date."))
 
     def on_update_after_submit(self):
