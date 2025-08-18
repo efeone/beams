@@ -37,10 +37,11 @@
    "search_index": 1
   },
   {
-   "default": "Today",
+   "default": "Now",
    "fieldname": "posting_date",
    "fieldtype": "Datetime",
    "label": "Posting Date And Time",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -109,7 +110,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 06:16:13.490420",
+ "modified": "2025-08-18 18:47:46.624355",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",

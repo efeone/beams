@@ -9,14 +9,12 @@
   "section_break_fuje",
   "inward_register",
   "tracking_number",
-  "sender",
-  "recipient",
   "column_break_qyhg",
   "courier_service",
   "date",
   "status",
   "section_break_cwuh",
-  "receipt"
+  "recipients"
  ],
  "fields": [
   {
@@ -27,16 +25,6 @@
    "fieldname": "tracking_number",
    "fieldtype": "Data",
    "label": "Tracking Number"
-  },
-  {
-   "fieldname": "sender",
-   "fieldtype": "Data",
-   "label": "Sender"
-  },
-  {
-   "fieldname": "recipient",
-   "fieldtype": "Data",
-   "label": "Recipient"
   },
   {
    "fieldname": "courier_service",
@@ -64,22 +52,21 @@
   },
   {
    "fieldname": "inward_register",
-   "fieldtype": "Link",
-   "in_list_view": 1,
+   "fieldtype": "Table MultiSelect",
    "label": "Inward Register",
-   "options": "Inward Register",
+   "options": "Inward Register Courier",
    "reqd": 1
   },
   {
-   "fieldname": "receipt",
+   "fieldname": "recipients",
    "fieldtype": "Table",
-   "label": "Receipt",
-   "options": "Receipt"
+   "label": "Recipients",
+   "options": "Recipients"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-06 06:36:03.640972",
+ "modified": "2025-08-18 19:07:56.372469",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",

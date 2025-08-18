@@ -43,11 +43,12 @@
    "reqd": 1
   },
   {
-   "default": "Today",
+   "default": "Now",
    "fieldname": "posting_date",
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Posting Date and Time",
+   "read_only": 1,
    "reqd": 1
   },
   {
@@ -110,7 +111,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 06:17:29.642004",
+ "modified": "2025-08-18 18:48:59.683415",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",

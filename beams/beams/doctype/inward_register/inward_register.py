@@ -10,8 +10,6 @@ from frappe.utils.user import get_users_with_role
 
 
 class InwardRegister(Document):
-    def before_save(self):
-        self.validate_posting_date()
 
     def on_submit(self, method=None):
         """
@@ -50,9 +48,3 @@ class InwardRegister(Document):
 
             if not visit_request:
                 frappe.throw(f"No Visit Request found for {self.visitor_name} on {self.visit_date}.")
-
-    @frappe.whitelist()
-    def validate_posting_date(self):
-        if self.posting_date:
-            if self.posting_date > today():
-                frappe.throw(_("Posting Date cannot be set after today's date."))
