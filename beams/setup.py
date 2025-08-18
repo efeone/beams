@@ -4985,7 +4985,7 @@ def get_vehicle_custom_fields():
 			"fieldtype": "Float",
 			"label": "Average Mileage(kmpl)",
 			"insert_after": "doors",
-			"default": 14.0
+			"default": '14.0'
 		}
 	]
 }
