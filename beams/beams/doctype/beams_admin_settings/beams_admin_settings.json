@@ -140,6 +140,7 @@
    "options": "Item Group"
   },
   {
+   "description": "Template for approved travel request notifications.",
    "fieldname": "employee_travel_request_approved_template",
    "fieldtype": "Link",
    "label": "Employee Travel Request Approved Template",
@@ -149,7 +150,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-18 14:33:27.346681",
+ "modified": "2025-08-19 08:55:47.213874",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",

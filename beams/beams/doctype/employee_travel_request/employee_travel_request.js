@@ -446,7 +446,7 @@ function set_expense_claim_html(frm) {
     frappe.call({
         method: 'beams.beams.doctype.employee_travel_request.employee_travel_request.get_expense_claim_html',
         args: {
-            'doc': frm.doc.name,
+            'travel_id': frm.doc.name,
         },
         freeze: true,
         freeze_message: __('Loading Expense Claim...'),

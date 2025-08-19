@@ -382,7 +382,7 @@ def create_expense_claim(employee, travel_request, expenses):
 	expense_claim.employee = employee
 	expense_claim.approval_status = "Draft"
 	expense_claim.posting_date = today()
-	employee_doc = frappe.db.get_value("Employee", employee,["company","expense_approver"])
+	employee_doc = frappe.db.get_value("Employee", employee,["company","expense_approver"],as_dict=True)
 	company = employee_doc.company
 	expense_approver = employee_doc.expense_approver
 	expense_claim.expense_approver = expense_approver
@@ -424,22 +424,22 @@ def create_expense_claim(employee, travel_request, expenses):
 	return expense_claim.name
 
 @frappe.whitelist()
-def get_expense_claim_html(doc):
+def get_expense_claim_html(travel_id):
 	"""
 	Render HTML showing Expense Claims and their 'expenses'  for a given Travel Request.
 
 	Args:
-		doc (str): The name/ID of the Travel Request document.
+		travel_request_id (str): The name/ID of the Travel Request document.
 
 	Returns:
 		dict: A dictionary containing the rendered HTML.
 	"""
-	if not doc:
+	if not travel_id:
 		frappe.throw(_("Travel Request ID is required."))
 
 	expense_claims = frappe.get_all(
 		"Expense Claim",
-		filters={"travel_request": doc},
+		filters={"travel_request": travel_id},
 		fields=["name", "employee", "total_claimed_amount", "posting_date", "status"]
 	)
 
