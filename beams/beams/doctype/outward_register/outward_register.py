@@ -4,7 +4,6 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import getdate, now_datetime
 from frappe import _
 
 
@@ -15,5 +14,5 @@ class OutwardRegister(Document):
     @frappe.whitelist()
     def validate_posting_date(self):
         if self.posting_date:
-            if getdate(self.posting_date) > now_datetime().date():
-                frappe.throw(_("Posting Date cannot be set after today's date."))
+            if frappe.utils.get_datetime(self.posting_date) > frappe.utils.get_datetime():
+                frappe.throw(_("Posting Date cannot be set after Now date."))
