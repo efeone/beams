@@ -218,7 +218,7 @@ class EmployeeTravelRequest(Document):
 		if self.workflow_state == "Approved":
 			template_name = frappe.db.get_single_value("BEAMS Admin Settings", "employee_travel_request_approved_template")
 			if not template_name:
-				frappe.throw(_("Please set 'employee_travel_request_approved_template' in BEAMS Admin Settings."))
+				frappe.throw(_("Please set 'employee_travel_request_approved_template' in BEAMS Admin Settings."),title=_("Missing Template"))
 			template = frappe.get_doc("Email Template", template_name)
 			context = {
 				"doc": self,
