@@ -2045,12 +2045,12 @@ def get_interview_custom_fields():
 				"hidden": 1
 			},
 			{
-			    "fieldname": "average_final_score",
-			    "fieldtype": "Data",
-			    "label": "Final Score",
-			    "insert_after": "feedback_html",
-			    "read_only": 1,
-			    "read_only_depends_on": "eval:!frappe.user.has_role('HR Manager')"
+				"fieldname": "average_final_score",
+				"fieldtype": "Data",
+				"label": "Final Score",
+				"insert_after": "feedback_html",
+				"read_only": 1,
+				"read_only_depends_on": "eval:!frappe.user.has_role('HR Manager')"
 			},
 			{
 				"fieldname": "interview_dashboard_section",
@@ -4525,7 +4525,15 @@ def get_property_setters():
 			"property": "read_only",
 			"property_type": "Check",
 			"value": 1
-		}
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Stock Entry",
+			"field_name": "bom_info_section",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value": 1
+		},
 
 ]
 
