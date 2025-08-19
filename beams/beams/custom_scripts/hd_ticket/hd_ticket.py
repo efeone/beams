@@ -66,8 +66,6 @@ class HDTicketOverride(HDTicket):
             filters={'is_active': 1, 'user': ['in', team_users]},
             pluck='user'
         )
-        print("aZSXDCFVGNHJKL;",active_agents)
-
         return active_agents
 
     def set_agent_group(self):
