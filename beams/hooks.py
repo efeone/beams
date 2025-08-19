@@ -449,7 +449,7 @@ scheduler_events = {
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 override_doctype_dashboards = {
-'Item': 'beams.beams.custom_scripts.item_dashboard.item_dashboard.get_data',
+	'Item': 'beams.beams.custom_scripts.item_dashboard.item_dashboard.get_data',
 	'Customer': 'beams.beams.custom_scripts.customer_dashboard.customer_dashboard.get_data',
 	'Sales Invoice': 'beams.beams.custom_scripts.sales_invoice_dashboard.sales_invoice_dashboard.get_data',
 	'Sales Order': 'beams.beams.custom_scripts.sales_order_dashboard.sales_order_dashboard.get_data',
@@ -459,6 +459,7 @@ override_doctype_dashboards = {
 	'Department': 'beams.beams.custom_scripts.department.department_dashboard.get_data',
 	'Vehicle': 'beams.beams.custom_scripts.vehicle_dashboard.vehicle_dashboard.get_data',
 	'Driver': 'beams.beams.custom_scripts.driver_dashboard.driver_dashboard.get_data',
+	'Material Request': 'beams.beams.custom_scripts.material_request.material_request_dashboard.get_data',
 }
 
 # exempt linked doctypes from being automatically cancelled

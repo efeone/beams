@@ -4977,6 +4977,14 @@ def get_asset_movement_custom_fields():
 				"insert_after": "new_custodian",
 				"options": "Email",
 				"read_only": 1
+			},
+			{
+				"fieldname": "material_request",
+				"fieldtype": "Link",
+				"label": "Material Request",
+				"options": "Material Request",
+				"insert_after": "user_id",
+				"hidden": 1
 			}
 		],
 		"Asset Movement Item": [
