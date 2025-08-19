@@ -114,9 +114,9 @@ function add_asset_movement_button(frm) {
 
 								return {
 									filters: {
-										 location: frm.doc.location,
-										 name:  ["not in",selected_assets]
-										}
+										location: frm.doc.location,
+										name: ["not in", selected_assets]
+									}
 								};
 							}
 						}
