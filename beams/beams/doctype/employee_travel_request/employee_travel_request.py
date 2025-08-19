@@ -7,7 +7,7 @@ from datetime import datetime
 import frappe
 from frappe import _
 from frappe.model.document import Document
-from frappe.utils import get_url_to_form, today
+from frappe.utils import get_url_to_form, today, getdate
 from frappe.utils import nowdate
 from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 from frappe.utils.user import get_users_with_role
@@ -299,9 +299,8 @@ class EmployeeTravelRequest(Document):
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
-			if self.posting_date > today():
+			if getdate(self.posting_date) > getdate(today()):
 				frappe.throw(_("Posting Date cannot be set after today's date."))
-
 
 	def validate_expected_time(self):
 		"""Ensure Expected Check-out Time is not earlier than Expected Check-in Time."""
