@@ -4559,6 +4559,13 @@ def get_material_request_custom_fields():
 				"label": "Requested By",
 				"insert_after": "material_request_type",
 				"options": "Employee"
+			},
+			{
+				"fieldname": "location",
+				"fieldtype": "Link",
+				"label": "Location",
+				"insert_after": "schedule_date",
+				"options": "Location"
 			}
 		]
 	}

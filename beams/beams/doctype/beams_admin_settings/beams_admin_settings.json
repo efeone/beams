@@ -22,7 +22,8 @@
   "notification_for_asset_reservation_before",
   "default_employee_payable_account",
   "item_group",
-  "employee_travel_request_approved_template"
+  "employee_travel_request_approved_template",
+  "default_source_warehouse"
  ],
  "fields": [
   {
@@ -145,6 +146,12 @@
    "fieldtype": "Link",
    "label": "Employee Travel Request Approved Template",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "default_source_warehouse",
+   "fieldtype": "Link",
+   "label": "Default Source Warehouse",
+   "options": "Warehouse"
   }
  ],
  "index_web_pages_for_search": 1,
