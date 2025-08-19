@@ -1,14 +1,4 @@
 frappe.ui.form.on('HD Ticket', {
-       /**
-    onload(frm) {
-     * Adds the 'Material Request' button under the 'Create' group
-        if (frm.is_new() && !frm.doc.raised_by) {
-     * if 'spare_part_needed' is checked.
-            frm.set_value('raised_by', frappe.session.user);
-     *Runs when the form loads to show or hide fields based on user role
-        }
-     */
-
     // Called when form is loaded
     onload(frm) {
         if (frm.is_new() && !frm.doc.raised_by) {
@@ -18,7 +8,6 @@ frappe.ui.form.on('HD Ticket', {
     },
 
     refresh(frm) {
-        // Called every time the form is refreshed
         handle_agent_visibility(frm);
         frm.clear_custom_buttons();
 

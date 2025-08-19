@@ -76,40 +76,20 @@ def handle_employee_checkin_out(doc, method):
         ),alert=True,indicator='green')
 
 def set_hd_agent_active_status(doc, method=None):
+    """Set HD Agent active/inactive based on latest check-in/out today."""
 
-    '''Update HD Agent's active status based on today's latest employee check-in'''
-
-    employee = doc.employee
-
-    # Get user linked to the employee
-    user = frappe.db.get_value("Employee", {"name": employee}, "user_id")
-
+    user = frappe.db.get_value("Employee", doc.employee, "user_id")
     if not user:
         return
 
-    start = get_datetime(nowdate() + " 00:00:00")
-    end = get_datetime(nowdate() + " 23:59:59")
-
-    # Get the latest check-in today
-    latest_checkin = frappe.db.get_all(
+    latest_log = frappe.db.get_value(
         "Employee Checkin",
-        filters={
-            "employee": employee,
-            "time": ["between", [start, end]]
-        },
-        fields=["name", "log_type", "time"],
-        order_by="time desc",
-        limit=1
+        {"employee": doc.employee, "time": [">=", nowdate()]},
+        "log_type",
+        order_by="time desc"
     )
 
-    if latest_checkin:
-        latest_log_type = latest_checkin[0].log_type
-        new_status = 1 if latest_log_type == "IN" else 0
-    else:
-        # No check-ins today
-        new_status = 0
+    status = 1 if latest_log == "IN" else 0
 
-    # Update HD Agent status
-    if frappe.db.exists("HD Agent", {"user": user}):
-        frappe.db.set_value("HD Agent", {"user": user}, "is_active", new_status)
+    frappe.db.set_value("HD Agent", {"user": user}, "is_active", status)
 
