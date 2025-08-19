@@ -82,6 +82,7 @@ function add_asset_movement_button(frm) {
 					label: __("Asset Movement Details"),
 					fieldtype: "Table",
 					reqd: 1,
+					cannot_add_rows: true,
 					data: default_items,
 					fields: [
 						{
@@ -106,9 +107,18 @@ function add_asset_movement_button(frm) {
 							options: "Asset",
 							reqd: 1,
 							in_list_view: 1,
-							get_query: () => ({
-								filters: { location: frm.doc.location }
-							})
+							get_query: () => {
+								let selected_assets = (dialog.get_value("asset_movement_details") || [])
+									.map(row => row.asset)
+									.filter(a => a);
+
+								return {
+									filters: {
+										 location: frm.doc.location,
+										 name:  ["not in",selected_assets]
+										}
+								};
+							}
 						}
 					]
 				}
@@ -218,6 +228,7 @@ function add_stock_entry_button(frm) {
 								fieldname: 'items',
 								label: __('Items'),
 								in_place_edit: true,
+								cannot_add_rows: true,
 								data: stock_items,
 								fields: [
 									{fieldtype: 'Data', fieldname: 'item_code', label: __('Item'), read_only: 1, in_list_view: 1},
