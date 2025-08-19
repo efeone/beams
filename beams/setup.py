@@ -4582,7 +4582,13 @@ def get_property_setters():
 			"property_type": "Section Break",
 			"value": 1
 		},
+		{
 
+			"doc_type": "Material Request",
+			"field_name": "schedule_date",
+			"property":"default",
+			"value": "Today"
+		}
 ]
 
 def get_material_request_custom_fields():
@@ -4893,7 +4899,7 @@ def get_beams_roles():
 	'''
 		Method to get BEAMS specific roles
 	'''
-	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security']
+	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter']
 
 def get_custom_translations():
 	'''
