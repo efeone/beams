@@ -285,7 +285,6 @@ doc_events = {
 			"beams.beams.custom_scripts.employee_checkin.employee_checkin.handle_employee_checkin_out",
 			"beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
 		],
-		"on_update" : "beams.beams.custom_scripts.employee_checkin.employee_checkin.set_hd_agent_active_status"
 	},
 	"Leave Allocation":{
 		"on_submit":"beams.beams.custom_scripts.leave_allocation.leave_allocation.create_new_compensatory_leave_log",

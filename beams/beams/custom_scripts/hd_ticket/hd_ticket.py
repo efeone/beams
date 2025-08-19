@@ -20,40 +20,33 @@ class HDTicketOverride(HDTicket):
     def handle_assignment_by_team(self):
         '''Assign ticket to all active agents in the selected agent group.'''
 
-        try:
-            if not self.agent_group:
-                return
+        if not self.agent_group:
+            return
 
-            if not frappe.db.exists('HD Team', self.agent_group):
-                return
+        if not frappe.db.exists('HD Team', self.agent_group):
+            return
 
-            # Fetch all active users from the team
-            active_users = self.get_active_users_from_team(self.agent_group)
-            if not active_users:
-                return
+        # Fetch all active users from the team
+        active_users = self.get_active_users_from_team(self.agent_group)
+        if not active_users:
+            return
 
-            # Assign to ALL active agents
-            for user in active_users:
-                existing_todo = frappe.db.exists('ToDo', {
-                    'reference_type': self.doctype,
-                    'reference_name': self.name,
-                    'owner': user,
-                    'status': ['!=', 'Cancelled'],
+        # Assign to ALL active agents
+        for user in active_users:
+            existing_todo = frappe.db.exists('ToDo', {
+                'reference_type': self.doctype,
+                'reference_name': self.name,
+                'owner': user,
+                'status': ['!=', 'Cancelled'],
+            })
+
+            if not existing_todo:
+                assign_to_user({
+                    'doctype': self.doctype,
+                    'name': self.name,
+                    'assign_to': [user],
+                    'description': f'You have been assigned a ticket by  team {self.agent_group}',
                 })
-
-                if not existing_todo:
-                    assign_to_user({
-                        'doctype': self.doctype,
-                        'name': self.name,
-                        'assign_to': [user],
-                        'description': f'You have been assigned a ticket by  team {self.agent_group}',
-                    })
-
-            # Save the list of all assigned agents on the ticket
-            self.db_set('agent', ', '.join(active_users))
-
-        except Exception:
-            frappe.log_error(frappe.get_traceback(), 'handle_assignment_by_team')
 
     def get_active_users_from_team(self, team_name):
         '''Return active users (User IDs) from HD Team based on active HD Agent mapping.'''
@@ -73,6 +66,7 @@ class HDTicketOverride(HDTicket):
             filters={'is_active': 1, 'user': ['in', team_users]},
             pluck='user'
         )
+        print("aZSXDCFVGNHJKL;",active_agents)
 
         return active_agents
 
