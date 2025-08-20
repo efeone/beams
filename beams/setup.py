@@ -4583,7 +4583,6 @@ def get_property_setters():
 			"value": 1
 		},
 		{
-
 			"doc_type": "Material Request",
 			"field_name": "schedule_date",
 			"property":"default",
