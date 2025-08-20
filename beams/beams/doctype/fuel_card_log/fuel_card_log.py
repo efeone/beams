@@ -1,5 +1,5 @@
 # Copyright (c) 2025, efeone and contributors
-# For license information, please see license.tx
+# For license information, please see license.txt
 
 import frappe
 from frappe.model.document import Document
@@ -13,7 +13,9 @@ class FuelCardLog(Document):
 		for row in self.get("recharge_history"):
 			if row.recharge_amount:
 				if row.recharge_amount > self.fuel_card_limit:
-					continue
+					frappe.throw(
+						f"Refilling amount {row.refilling_amount} is more than available limit {self.fuel_card_limit}"
+					)
 				else:
 					total_used += row.recharge_amount
 

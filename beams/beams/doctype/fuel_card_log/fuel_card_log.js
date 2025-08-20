@@ -81,7 +81,7 @@ frappe.ui.form.on("Fuel Card Log", {
 		  {
 			label: 'Refilling Amount',
 			fieldname: 'recharge_amount',
-			fieldtype: 'Float',
+			fieldtype: 'Currency',
 			reqd: 1
 		  },
 		  {
