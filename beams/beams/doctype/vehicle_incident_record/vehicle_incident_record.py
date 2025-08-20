@@ -8,6 +8,7 @@ from frappe.model.document import Document
 from frappe.utils import today
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils import nowdate
 
 class VehicleIncidentRecord(Document):
 	def on_update(self):
@@ -49,9 +50,7 @@ class VehicleIncidentRecord(Document):
 		Automatically creates and submits a Journal Entry for each payable vehicle incident
 		where the 'is_employee_payable' field is checked
 		'''
-		settings = frappe.get_single("BEAMS Admin Settings")
-		debit_account = settings.default_employee_payable_account
-
+		debit_account = frappe.db.get_single_value("BEAMS Admin Settings", "default_employee_payable_account")
 		if not debit_account:
 			frappe.throw("Default Employee Payable Account is not set in BEAMS Admin Settings.")
 
