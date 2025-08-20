@@ -446,30 +446,30 @@ function set_expense_claim_html(frm) {
 }
 
 function validate_expense_date(field, frm) {
-    let exp_date = field.value || field.get_value && field.get_value();
-    let start = frappe.datetime.str_to_obj(frm.doc.start_date);
-    let end = frappe.datetime.str_to_obj(frm.doc.end_date);
+	let exp_date = field.value || field.get_value && field.get_value();
+	let start = frappe.datetime.str_to_obj(frm.doc.start_date);
+	let end = frappe.datetime.str_to_obj(frm.doc.end_date);
 
-    if (exp_date) {
-        let exp = frappe.datetime.str_to_obj(exp_date);
-        start = frappe.datetime.obj_to_str(start).split(" ")[0];
-        end = frappe.datetime.obj_to_str(end).split(" ")[0];
-        exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
+	if (exp_date) {
+		let exp = frappe.datetime.str_to_obj(exp_date);
+		start = frappe.datetime.obj_to_str(start).split(" ")[0];
+		end = frappe.datetime.obj_to_str(end).split(" ")[0];
+		exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
 
-        if (exp < start || exp > end) {
-            frappe.msgprint({
-                title: __('Invalid Expense Date'),
-                message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
-                    .replace('{0}', start)
-                    .replace('{1}', end),
-                indicator: 'red'
-            });
-            if (field.set_value) {
-                field.set_value("");
-            } else {
-                field.value = "";
-            }
-        }
-    }
+		if (exp < start || exp > end) {
+			frappe.msgprint({
+				title: __('Invalid Expense Date'),
+				message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
+					.replace('{0}', start)
+					.replace('{1}', end),
+				indicator: 'red'
+			});
+			if (field.set_value) {
+				field.set_value("");
+			} else {
+				field.value = "";
+			}
+		}
+	}
 }
 
