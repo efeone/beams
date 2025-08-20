@@ -4775,8 +4775,15 @@ def get_journal_entry_custom_fields():
 				"options": "Employee Travel Request",
 				"insert_after":"posting_date",
 				"read_only": 1
+			},
+			{
+				"fieldname": "vehicle_incident_record",
+				"fieldtype": "Link",
+				"label": "Vehicle Incident Record",
+				"options": "Vehicle Incident Record",
+				"insert_after": "reference_voucher_entry",
+				"read_only": 1
 			}
-
 		]
 	}
 
