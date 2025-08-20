@@ -66,12 +66,12 @@ class ShiftSwapRequest(Document):
         if self.workflow_state == "Approved":
             self.swap_shifts()
 
-
     def swap_shifts(self):
         """
         Swaps shifts between two employees while modifying existing shifts to adjust the swap period.
         Ensures shifts are properly split into new assignments without overlapping.
         Shift Type & Roster Type are also swapped.
+
         """
 
         employee_shift = frappe.get_all(
@@ -98,7 +98,26 @@ class ShiftSwapRequest(Document):
 
         shifts_to_submit = []
 
+        # Case 1: Direct swap if both have the exact same date range
+        if employee_shift and swap_with_shift:
+            e_shift = employee_shift[0]
+            s_shift = swap_with_shift[0]
 
+            if e_shift["start_date"] == self.shift_start_date and e_shift["end_date"] == self.shift_end_date \
+               and s_shift["start_date"] == self.shift_start_date and s_shift["end_date"] == self.shift_end_date:
+
+                frappe.db.set_value("Shift Assignment", e_shift["name"], {
+                    "shift_type": s_shift["shift_type"],
+                    "roster_type": s_shift["roster_type"]
+                })
+                frappe.db.set_value("Shift Assignment", s_shift["name"], {
+                    "shift_type": e_shift["shift_type"],
+                    "roster_type": e_shift["roster_type"]
+                })
+                frappe.msgprint(f"Shifts swapped  for the same date range between {self.employee} and {self.swap_with_employee}")
+                return
+
+        # Case 2: Partial overlaps → split and reassign
         def adjust_existing_shifts(shift_list, employee, swap_employee):
             """
             Adjusts the existing shift assignments based on the swap period.
@@ -120,6 +139,7 @@ class ShiftSwapRequest(Document):
                         ["shift_type", "roster_type"],
                     ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
                     swap_shift_type, swap_roster_type = swap_shift_data
+
                     if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
@@ -132,6 +152,7 @@ class ShiftSwapRequest(Document):
                     elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
+
                         shifts_to_submit.append(create_shift(swap_employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
                 elif shift_doc.employee == swap_employee:
                     # Get the shift type & roster type for the swap employee
@@ -145,6 +166,7 @@ class ShiftSwapRequest(Document):
                         ["shift_type", "roster_type"],
                     ) or (shift["shift_type"], shift["roster_type"])  # Default to current values if none exist
                     swap_shift_type, swap_roster_type = swap_shift_data
+
                     if shift["start_date"] < self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
                         shift_doc.save()
@@ -153,7 +175,6 @@ class ShiftSwapRequest(Document):
                     elif shift["start_date"] == self.shift_start_date and shift["end_date"] > self.shift_end_date:
                         shift_doc.start_date = add_days(self.shift_end_date, 1)
                         shift_doc.save()
-
                         shifts_to_submit.append(create_shift(employee, shift["shift_type"], shift["roster_type"], self.shift_start_date, self.shift_end_date))
                     elif shift["start_date"] < self.shift_start_date and shift["end_date"] == self.shift_end_date:
                         shift_doc.end_date = add_days(self.shift_start_date, -1)
