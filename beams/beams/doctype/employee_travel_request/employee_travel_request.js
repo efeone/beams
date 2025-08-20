@@ -445,6 +445,10 @@ function set_expense_claim_html(frm) {
 	});
 }
 
+/*
+* Validate that the expense date is within the travel request's start and end dates.
+* Shows an error and clears the field if the date is out of range.
+*/
 function validate_expense_date(field, frm) {
 	let exp_date = field.value || field.get_value && field.get_value();
 	let start = frappe.datetime.str_to_obj(frm.doc.start_date);
