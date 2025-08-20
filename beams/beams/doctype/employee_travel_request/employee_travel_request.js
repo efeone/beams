@@ -29,7 +29,30 @@ frappe.ui.form.on('Employee Travel Request', {
 									fieldtype: 'Date',
 									fieldname: 'expense_date',
 									in_list_view: 1,
-									reqd: 1
+									reqd: 1,
+									onchange: function () {
+										let exp_date = this.value;
+										let start = frappe.datetime.str_to_obj(frm.doc.start_date);
+										let end = frappe.datetime.str_to_obj(frm.doc.end_date);
+
+										if (exp_date) {
+											let exp = frappe.datetime.str_to_obj(exp_date);
+											start = frappe.datetime.obj_to_str(start).split(" ")[0];
+											end = frappe.datetime.obj_to_str(end).split(" ")[0];
+											exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
+
+											if (exp < start || exp > end) {
+												frappe.msgprint({
+													title: __('Invalid Expense Date'),
+													message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
+														.replace('{0}', start)
+														.replace('{1}', end),
+													indicator: 'red'
+												});
+												this.set_value("");
+											}
+										}
+									}
 								},
 								{
 									label: 'Expense Type',
