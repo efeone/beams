@@ -61,6 +61,7 @@ def after_install():
 	create_custom_fields(get_training_event_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_ticket_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
 
 
 
@@ -135,7 +136,7 @@ def before_uninstall():
 	delete_custom_fields(get_training_event_custom_fields())
 	delete_custom_fields(get_hd_ticket_custom_fields())
 	delete_custom_fields(get_hd_ticket_type_custom_fields())
-
+	delete_custom_fields(get_asset_maintenance_task_custom_fields())
 
 
 def delete_custom_fields(custom_fields: dict):
@@ -4583,6 +4584,7 @@ def get_property_setters():
 			"value": 1
 		},
 		{
+			"doctype_or_field": "DocField",
 			"doc_type": "Material Request",
 			"field_name": "schedule_date",
 			"property":"default",
@@ -5149,6 +5151,21 @@ def get_supplier_quotation_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Attachments",
 				"insert_after": "base_net_total"
+			}
+		]
+	}
+
+def get_asset_maintenance_task_custom_fields():
+	'''
+		Custom fields that need to be added to the Asset Maintenance Task DocType
+	'''
+	return {
+		"Asset Maintenance Task": [
+			{
+				"fieldname": "maintenance_cost",
+				"fieldtype": "Float",
+				"label": "Maintenance Cost",
+				"insert_after": "maintenance_status"
 			}
 		]
 	}
