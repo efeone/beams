@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "fuel_card",
+  "fuel_card_limit",
   "column_break_yjyq",
   "current_holder",
   "section_break_6qhb",
@@ -48,11 +49,17 @@
    "label": "Ownership History",
    "options": "Ownered By",
    "read_only": 1
+  },
+  {
+   "fetch_from": "fuel_card.fuel_card_limit",
+   "fieldname": "fuel_card_limit",
+   "fieldtype": "Float",
+   "label": "Fuel Card Limit"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-06 12:57:16.601870",
+ "modified": "2025-08-19 15:21:55.494807",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card Log",
@@ -72,6 +79,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
