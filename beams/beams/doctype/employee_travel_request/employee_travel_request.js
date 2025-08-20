@@ -31,27 +31,7 @@ frappe.ui.form.on('Employee Travel Request', {
 									in_list_view: 1,
 									reqd: 1,
 									onchange: function () {
-										let exp_date = this.value;
-										let start = frappe.datetime.str_to_obj(frm.doc.start_date);
-										let end = frappe.datetime.str_to_obj(frm.doc.end_date);
-
-										if (exp_date) {
-											let exp = frappe.datetime.str_to_obj(exp_date);
-											start = frappe.datetime.obj_to_str(start).split(" ")[0];
-											end = frappe.datetime.obj_to_str(end).split(" ")[0];
-											exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
-
-											if (exp < start || exp > end) {
-												frappe.msgprint({
-													title: __('Invalid Expense Date'),
-													message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
-														.replace('{0}', start)
-														.replace('{1}', end),
-													indicator: 'red'
-												});
-												this.set_value("");
-											}
-										}
+										validate_expense_date(this, frm);
 									}
 								},
 								{
@@ -156,27 +136,7 @@ frappe.ui.form.on('Employee Travel Request', {
 									in_list_view: 1,
 									reqd: 1,
 									onchange: function () {
-										let exp_date = this.value;
-										let start = frappe.datetime.str_to_obj(frm.doc.start_date);
-										let end = frappe.datetime.str_to_obj(frm.doc.end_date);
-
-										if (exp_date) {
-											let exp = frappe.datetime.str_to_obj(exp_date);
-											start = frappe.datetime.obj_to_str(start).split(" ")[0];
-											end = frappe.datetime.obj_to_str(end).split(" ")[0];
-											exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
-
-											if (exp < start || exp > end) {
-												frappe.msgprint({
-													title: __('Invalid Expense Date'),
-													message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
-														.replace('{0}', start)
-														.replace('{1}', end),
-													indicator: 'red'
-												});
-												this.set_value("");
-											}
-										}
+										validate_expense_date(this, frm);
 									}
 								},
 								{
@@ -483,5 +443,33 @@ function set_expense_claim_html(frm) {
 			frappe.msgprint(__('Error: Server request failed.'));
 		}
 	});
+}
+
+function validate_expense_date(field, frm) {
+    let exp_date = field.value || field.get_value && field.get_value();
+    let start = frappe.datetime.str_to_obj(frm.doc.start_date);
+    let end = frappe.datetime.str_to_obj(frm.doc.end_date);
+
+    if (exp_date) {
+        let exp = frappe.datetime.str_to_obj(exp_date);
+        start = frappe.datetime.obj_to_str(start).split(" ")[0];
+        end = frappe.datetime.obj_to_str(end).split(" ")[0];
+        exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
+
+        if (exp < start || exp > end) {
+            frappe.msgprint({
+                title: __('Invalid Expense Date'),
+                message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
+                    .replace('{0}', start)
+                    .replace('{1}', end),
+                indicator: 'red'
+            });
+            if (field.set_value) {
+                field.set_value("");
+            } else {
+                field.value = "";
+            }
+        }
+    }
 }
 
