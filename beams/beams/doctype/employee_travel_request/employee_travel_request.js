@@ -132,9 +132,29 @@ frappe.ui.form.on('Employee Travel Request', {
                                     fieldname: 'expense_date',
                                     in_list_view: 1,
                                     reqd: 1,
-                                    change: function() {
-                                        validate_expense_date(this, frm);
-                                    }
+                                    onchange: function () {
+										let exp_date = this.value;
+										let start = frappe.datetime.str_to_obj(frm.doc.start_date);
+										let end = frappe.datetime.str_to_obj(frm.doc.end_date);
+
+										if (exp_date) {
+											let exp = frappe.datetime.str_to_obj(exp_date);
+											start = frappe.datetime.obj_to_str(start).split(" ")[0];
+											end = frappe.datetime.obj_to_str(end).split(" ")[0];
+											exp = frappe.datetime.obj_to_str(exp).split(" ")[0];
+
+											if (exp < start || exp > end) {
+												frappe.msgprint({
+													title: __('Invalid Expense Date'),
+													message: __('Expense date must be between Travel Start Date {0} and End Date {1}')
+														.replace('{0}', start)
+														.replace('{1}', end),
+													indicator: 'red'
+												});
+												this.set_value("");
+											}
+										}
+									}
                                 },
                                 {
                                     label: 'Expense Claim Type',
@@ -367,28 +387,6 @@ function apply_travellers_filter(frm) {
             filters: [["name", "!=", frm.doc.requested_by || ""]]
         };
     });
-}
-
-function validate_expense_date(field, frm) {
-    const expense_date = field.value;
-
-    if (!expense_date || !frm.doc.start_date || !frm.doc.end_date) {
-        return;
-    }
-
-    const start_date_only = frm.doc.start_date.split(' ')[0];
-    const end_date_only = frm.doc.end_date.split(' ')[0];
-
-    if (expense_date < start_date_only || expense_date > end_date_only) {
-        frappe.msgprint({
-            title: __('Invalid Expense Date'),
-            message: __('Expense date must be between travel start date {0} and end date {1}.',
-                [frappe.datetime.str_to_user(start_date_only),
-                 frappe.datetime.str_to_user(end_date_only)]),
-            indicator: 'red'
-        });
-        field.set_value('');
-    }
 }
 
 frappe.ui.form.on('Vehicle Allocation', {
