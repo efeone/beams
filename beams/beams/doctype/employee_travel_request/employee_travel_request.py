@@ -26,6 +26,7 @@ class EmployeeTravelRequest(Document):
 		self.validate_dates()
 		self.validate_expected_time()
 		self.total_days_calculate()
+		self.validate_hod_vehicle_allocation()
 
 	def before_save(self):
 		self.validate_posting_date()
@@ -286,22 +287,6 @@ class EmployeeTravelRequest(Document):
 
 				attendance.insert(ignore_permissions=True)
 				frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
-
-	def validate_hod_vehicle_allocation(self):
-		"""Validate vehicle & driver allocation at HOD approval stage"""
-		if self.is_vehicle_required and self.workflow_state == "Approved by HOD" and self.mode_of_travel not in ["Train", "Plain"]:
-					if not self.travel_vehicle_allocation:
-						frappe.throw(title="Approval Error", msg="Vehicle allocation is required before final approval.")
-
-					has_complete_allocation = False
-					for allocation in self.travel_vehicle_allocation:
-						if allocation.vehicle and allocation.driver:
-							has_complete_allocation = True
-							break
-
-					if not has_complete_allocation:
-						frappe.throw(title="Approval Error",
-									msg="You must allocate driver and vehicle before final approval.")
 
 	@frappe.whitelist()
 	def validate_posting_date(self):
