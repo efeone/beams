@@ -39,6 +39,9 @@ class EmployeeTravelRequest(Document):
 
 	def on_submit(self):
 		self.create_notification_from_approval()
+		self.create_attendance_requests()
+		if self.workflow_state == "Approved":
+			self.create_missing_trip_sheets_for_etr()
 
 	def on_update(self):
 		self.create_todo_for_hod()
@@ -51,9 +54,6 @@ class EmployeeTravelRequest(Document):
 				
 
 	def on_update_after_submit(self):
-		if self.workflow_state == "Approved":
-			self.create_missing_trip_sheets_for_etr()
-
 		# Trigger only when state becomes Approved
 		if self.workflow_state != "Approved":
 			return
@@ -62,65 +62,6 @@ class EmployeeTravelRequest(Document):
 		if self.reason_for_rejection:
 			frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
-		if self.is_vehicle_required:
-			if not self.travel_vehicle_allocation:
-				frappe.throw(title="Approval Error", msg="Vehicle allocation is required before final approval.")
-
-			has_complete_allocation = False
-			for allocation in self.travel_vehicle_allocation:
-				if allocation.vehicle and allocation.driver:
-					has_complete_allocation = True
-					break
-
-			if not has_complete_allocation:
-				frappe.throw(title="Approval Error",
-							msg="You must allocate driver and vehicle before final approval.")
-
-
-		if not self.mark_attendance:
-			return
-
-		employees = []
-
-		# Add main employee
-		if self.requested_by:
-			employees.append(self.requested_by)
-
-		# Add employees from child table
-		for row in self.travellers:
-			if row.employee:
-				employees.append(row.employee)
-
-		# Remove duplicates and empty entries
-		employees = list(set(filter(None, employees)))
-
-		for emp in employees:
-			overlapping = frappe.db.exists(
-				"Attendance Request",
-				{
-					"employee": emp,
-					"from_date": ["<=", self.end_date],
-					"to_date": [">=", self.start_date],
-					"docstatus": ["!=", 2]
-				}
-			)
-
-			if overlapping:
-				continue
-
-			attendance = frappe.get_doc({
-				"doctype": "Attendance Request",
-				"employee": emp,
-				"from_date": self.start_date,
-				"to_date": self.end_date,
-				"request_type": "On Duty",
-				"company": frappe.db.get_value("Employee", emp, "company"),
-				"description": f"From Travel Request {self.name}",
-				"reason": "On Duty"
-			})
-
-			attendance.insert(ignore_permissions=True)
-			frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
 
 	def create_missing_trip_sheets_for_etr(doc):
 		'''
@@ -295,6 +236,74 @@ class EmployeeTravelRequest(Document):
 							}
 						)
 
+	def create_attendance_requests(self):
+	"""
+		Create attendance requests for all travellers when mark_attendance is enabled
+	"""
+
+		old_doc = self.get_doc_before_save()
+		if old_doc and old_doc.workflow_state != self.workflow_state and  self.workflow_state == "Approved":
+			if not self.mark_attendance:
+				return
+
+			employees = []
+
+			# Add main employee
+			if self.requested_by:
+				employees.append(self.requested_by)
+
+			# Add employees from child table
+			for row in self.travellers:
+				if row.employee:
+					employees.append(row.employee)
+
+			# Remove duplicates and empty entries
+			employees = list(set(filter(None, employees)))
+
+			for emp in employees:
+				overlapping = frappe.db.exists(
+					"Attendance Request",
+					{
+						"employee": emp,
+						"from_date": ["<=", self.end_date],
+						"to_date": [">=", self.start_date],
+						"docstatus": ["!=", 2]
+					}
+				)
+
+				if overlapping:
+					continue
+
+				attendance = frappe.get_doc({
+					"doctype": "Attendance Request",
+					"employee": emp,
+					"from_date": self.start_date,
+					"to_date": self.end_date,
+					"request_type": "On Duty",
+					"company": frappe.db.get_value("Employee", emp, "company"),
+					"description": f"From Travel Request {self.name}",
+					"reason": "On Duty"
+				})
+
+				attendance.insert(ignore_permissions=True)
+				frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
+
+	def validate_hod_vehicle_allocation(self):
+		"""Validate vehicle & driver allocation at HOD approval stage"""
+		if self.is_vehicle_required and self.workflow_state == "Approved by HOD" and self.mode_of_travel not in ["Train", "Plain"]:
+					if not self.travel_vehicle_allocation:
+						frappe.throw(title="Approval Error", msg="Vehicle allocation is required before final approval.")
+
+					has_complete_allocation = False
+					for allocation in self.travel_vehicle_allocation:
+						if allocation.vehicle and allocation.driver:
+							has_complete_allocation = True
+							break
+
+					if not has_complete_allocation:
+						frappe.throw(title="Approval Error",
+									msg="You must allocate driver and vehicle before final approval.")
+
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
@@ -306,6 +315,31 @@ class EmployeeTravelRequest(Document):
 		if self.expected_check_in_time and self.expected_check_out_time:
 			if self.expected_check_out_time < self.expected_check_in_time:
 				frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
+
+	def validate_hod_vehicle_allocation(self):
+		"""Validate vehicle & driver allocation at HOD approval stage"""
+		if (
+			self.is_vehicle_required
+			and self.workflow_state == "Approved"
+			and self.mode_of_travel not in ["Train", "Plain"]
+		):
+			if not self.travel_vehicle_allocation:
+				frappe.throw(
+					title="Approval Error",
+					msg="Vehicle allocation is required before HOD approval."
+				)
+
+			has_complete_allocation = any(
+				allocation.vehicle and allocation.driver
+				for allocation in self.travel_vehicle_allocation
+			)
+
+			if not has_complete_allocation:
+				frappe.throw(
+					title="Approval Error",
+					msg="You must allocate driver and vehicle before HOD approval."
+				)
+
 
 	@frappe.whitelist()
 	def total_days_calculate(self):
