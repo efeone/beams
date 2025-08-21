@@ -35,8 +35,10 @@ class EmployeeTravelRequest(Document):
 			self.batta_policy = batta_policy.get("name")
 
 	def on_submit(self):
-		self.create_todo_for_hod()
+		self.create_notification_from_approval()
 
+	def on_update(self):
+		self.create_todo_for_hod()
 
 	@frappe.whitelist()
 	def validate_dates(self):
@@ -47,8 +49,6 @@ class EmployeeTravelRequest(Document):
 					frappe.throw("Start Date cannot be in the past.")
 
 	def on_update_after_submit(self):
-		self.create_todo_for_hod()
-		self.create_notification_from_approval()
 		if self.workflow_state == "Approved":
 			self.create_missing_trip_sheets_for_etr()
 
@@ -228,54 +228,43 @@ class EmployeeTravelRequest(Document):
 			}
 			subject = frappe.render_template(template.subject, context)
 			email_content = frappe.render_template(template.response, context)
-			hod_users = get_users_with_role("HOD")
-			if hod_users:
-				for user in hod_users:
-					frappe.get_doc({
-						"doctype": "Notification Log",
-						"subject": subject,
-						"email_content": email_content,
-						"for_user": user,
-						"document_type": "Employee Travel Request",
-						"document_name": self.name,
-						"type": "Alert"
-					}).insert(ignore_permissions=True)
+			department= frappe.db.get_value("Employee",self.requested_by,"department")
+			hod_emp= frappe.db.get_value("Department",department,"head_of_department")
+			if hod_emp:
+				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
+				if hod_user:
+					frappe.sendmail(recipients=frappe.db.get_value("User",hod_user,"email"),subject=subject,message=email_content)
 			if self.requested_by:
 				emp_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
 				if emp_user:
-					frappe.get_doc({
-						"doctype": "Notification Log",
-						"subject": subject,
-						"email_content": email_content,
-						"for_user": emp_user,
-						"type": "Alert",
-						"document_type": "Employee Travel Request",
-						"document_name": self.name
-					}).insert(ignore_permissions=True)
+					frappe.sendmail(recipients=frappe.db.get_value("User",emp_user,"email"),subject=subject,message=email_content)
 
 
 	def create_todo_for_hod(self):
-		if self.workflow_state == "Pending":
-			users = get_users_with_role("HOD")
-			if users:
-				for user in users:
+		old_doc = self.get_doc_before_save()
+		if old_doc and old_doc.workflow_state != self.workflow_state and  self.workflow_state == "Pending":
+			department = frappe.db.get_value("Employee",self.requested_by,"department")
+			hod_emp = frappe.db.get_value("Department",department,"head_of_department")
+			if hod_emp:
+				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
+				if hod_user:
 					exists = frappe.db.exists(
-						"ToDo",{"reference_type": "Employee Travel Request","reference_name": self.name,"allocated_to": user,"status": "Open",},
+						"ToDo",{"reference_type": "Employee Travel Request","reference_name": self.name,"allocated_to": hod_user,"status": "Open",},
 					)
 					if not exists:
 						description = (
-							"An employee has submitted a travel request for your approval. "
+							"An employee has created a travel request for your Approval. "
 							"Please review it."
 						)
 						add_assign(
 							{
-								"assign_to": [user],
+								"assign_to": [hod_user],
 								"doctype": "Employee Travel Request",
 								"name": self.name,
 								"description": description,
 							}
 						)
-		elif self.workflow_state == "Approved by HOD":
+		elif  old_doc and old_doc.workflow_state != self.workflow_state and self.workflow_state == "Approved by HOD":
 			users = get_users_with_role("Admin")
 			if users:
 				for user in users:
@@ -284,7 +273,7 @@ class EmployeeTravelRequest(Document):
 					)
 					if not exists:
 						description = (
-							"HOD has approved the employee travel request. "
+							"Employee Travel Request is Approved "
 							"Please review and give your approval."
 						)
 						add_assign(
@@ -295,7 +284,7 @@ class EmployeeTravelRequest(Document):
 								"description": description,
 							}
 						)
-				
+
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
@@ -415,12 +404,41 @@ def create_expense_claim(employee, travel_request, expenses):
 
 	expense_claim.total_claimed_amount = sum((item.amount or 0) for item in expense_claim.expenses)
 	expense_claim.save()
+	assign_todo_for_expense_approver(expense_claim.name,travel_request)
 
 	frappe.msgprint(
 		_('Expense Claim Created: <a href="{0}">{1}</a>').format(get_url_to_form("Expense Claim", expense_claim.name), expense_claim.name),
 		alert=True,indicator='green')
 
 	return expense_claim.name
+
+
+def assign_todo_for_expense_approver(expense_claim_name, travel_request):
+	'''
+	Create a ToDo for Accounts User(s) when a Expense claim
+	is created and linked to the Employee Travel Request.
+	'''
+	claim_doc = frappe.get_doc("Expense Claim", expense_claim_name)
+	expense_approver = claim_doc.expense_approver
+	if not expense_approver:
+		return
+	user_id = expense_approver  
+	exists = frappe.db.exists(
+		"ToDo",{ "reference_type": "Expense Claim","reference_name": expense_claim_name,"allocated_to": user_id,"status": "Open",},
+	)
+	if not exists:
+		description = (
+			f"Expense Claim <b>{expense_claim_name}</b> has been created "
+			f"for Employee Travel Request <b>{travel_request}</b>.<br>"
+			"Please review and take necessary action."
+		)
+		add_assign({
+			"assign_to": [user_id],
+			"doctype": "Expense Claim",
+			"name": expense_claim_name,
+			"description": description,
+		})
+
 
 @frappe.whitelist()
 def get_expense_claim_html(travel_id):
@@ -605,4 +623,29 @@ def create_journal_entry_from_travel(employee, employee_travel_request, expenses
 	})
 
 	jv.insert()
+	assign_todo_for_accounts(employee_travel_request,jv.name)
 	return jv.name
+
+def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
+	'''
+	Create a ToDo for Accounts User(s) when a Journal Entry
+	is created and linked to the Employee Travel Request.
+	'''
+	users = get_users_with_role("Accounts User")
+
+	if users:
+		for user in users:
+			exists = frappe.db.exists("ToDo", {"reference_type": "Journal Entry","reference_name": journal_entry_name,"allocated_to": user,"status": "Open",
+			})
+			if not exists:
+				description = (
+					f"Journal Entry <b>{journal_entry_name}</b> has been created "
+					f"for Employee Travel Request <b>{employee_travel_request}</b>.<br>"
+					"Please review and take necessary action."
+				)
+				add_assign({
+					"assign_to": [user],  
+					"doctype": "Journal Entry",
+					"name": journal_entry_name,
+					"description": description
+				})	

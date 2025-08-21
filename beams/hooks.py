@@ -393,9 +393,6 @@ doc_events = {
 	"Voucher Entry Type": {
 		"validate" :"beams.beams.custom_scripts.voucher_entry_type.voucher_entry_type.validate_repeating_companies"
 	},
-	"Expense Claim": {
-		"after_insert": "beams.beams.custom_scripts.expense_claim.expense_claim.notify_expense_approver_on_creation"
-	},
 	"Vehicle" :{
 		"on_update":"beams.beams.custom_scripts.vehicle.vehicle.create_vehicle_documents_log"
 	},
