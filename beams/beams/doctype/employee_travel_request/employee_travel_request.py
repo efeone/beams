@@ -237,10 +237,9 @@ class EmployeeTravelRequest(Document):
 						)
 
 	def create_attendance_requests(self):
-	"""
-		Create attendance requests for all travellers when mark_attendance is enabled
-	"""
-
+		"""
+			Create attendance requests for all travellers when mark_attendance is enabled
+		"""
 		old_doc = self.get_doc_before_save()
 		if old_doc and old_doc.workflow_state != self.workflow_state and  self.workflow_state == "Approved":
 			if not self.mark_attendance:
