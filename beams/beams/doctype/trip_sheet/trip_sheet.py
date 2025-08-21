@@ -9,9 +9,6 @@ from frappe.utils import getdate
 
 class TripSheet(Document):
 	def validate(self):
-		if not self.travel_requests and not self.transportation_requests:
-			frappe.throw("Please provide at least one of Travel Requests or Transportation Requests.")
-
 		self.validate_start_datetime_and_end_datetime()
 		self.calculate_and_validate_fuel_data()
 		self.calculate_hours()
