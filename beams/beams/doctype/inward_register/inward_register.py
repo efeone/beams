@@ -13,27 +13,6 @@ class InwardRegister(Document):
     def before_save(self):
         self.validate_posting_date()
 
-    def on_submit(self, method=None):
-        """
-        Creates a ToDo task for the driver when the 'vehicle_key' checkbox is checked.
-        The notification message will be "Vehicle key handed over in Inward."
-        """
-        if self.vehicle_key:
-            driver_users = get_users_with_role("Driver")
-            if driver_users:
-                description = f"Vehicle key handed over in Inward for {self.visitor_name}."
-                if not frappe.db.exists('ToDo', {
-                    'reference_name': self.name,
-                    'reference_type': 'Inward Register',
-                    'description': description
-                }):
-                    add_assign({
-                        "assign_to": driver_users,
-                        "doctype": "Inward Register",
-                        "name": self.name,
-                        "description": description
-                    })
-
     def validate(self):
         if self.visitor_type == "Ex Employee":
             if not self.visitor_name or not self.visit_date:
@@ -50,7 +29,6 @@ class InwardRegister(Document):
 
             if not visit_request:
                 frappe.throw(f"No Visit Request found for {self.visitor_name} on {self.visit_date}.")
-
 
     @frappe.whitelist()
     def validate_posting_date(self):
