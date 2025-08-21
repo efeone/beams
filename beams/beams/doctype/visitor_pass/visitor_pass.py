@@ -11,13 +11,15 @@ class VisitorPass(Document):
     def validate(self):
         self.validate_issued_date_and_expire_on()
         self.validate_issued_date_and_returned_date()
+
+    def on_update_after_submit(self):
         self.validate_returned_date_and_returned_time()
 
     def validate_returned_date_and_returned_time(self):
         '''
         Ensure Returned Date and Time selection based on workflow state
         '''
-        if self.workflow_state == 'Issued':
+        if self.workflow_state == 'Returned':
             if not self.returned_date:
                 frappe.throw(_('Please select a Returned Date and Time.'))
 
@@ -54,14 +56,14 @@ class VisitorPass(Document):
 
         if issued_date > returned_date:
             frappe.throw(
-                msg=_("Issued Date cannot be after Returned Date."),
+                msg=_("Returned Date cannot be before Issued Date."),
                 title=_("Validation Error")
             )
 
         if issued_date == returned_date:
-            if self.issued_time and self.returned_time:
+            if self.issued_time and self.returned_date:
                 issued_time = get_time(self.issued_time)
-                returned_time = get_time(self.returned_time)
+                returned_time = get_time(self.returned_date)
 
                 if issued_time >= returned_time:
                     frappe.throw(
