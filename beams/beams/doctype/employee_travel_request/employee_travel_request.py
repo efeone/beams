@@ -14,12 +14,15 @@ from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
 
 class EmployeeTravelRequest(Document):
-	def on_cancel(self):
-		# Validate that "Reason for Rejection" is provided if the status is "Rejected"
-		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
-			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+	def validate_reason_reject(self):
+		old_doc = self.get_doc_before_save()
+		if old_doc and old_doc.workflow_state != self.workflow_state:
+			# Validate that "Reason for Rejection" is provided if the status is "Rejected"
+			if self.workflow_state == "Rejected" and not self.reason_for_rejection:
+				frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
 	def validate(self):
+		self.validate_reason_reject()
 		self.validate_dates()
 		self.validate_expected_time()
 		self.total_days_calculate()
@@ -45,8 +48,7 @@ class EmployeeTravelRequest(Document):
 		if self.start_date and self.end_date:
 			if self.start_date > self.end_date:
 				frappe.throw("End Date cannot be earlier than Start Date.")
-				if self.start_date < today():
-					frappe.throw("Start Date cannot be in the past.")
+				
 
 	def on_update_after_submit(self):
 		if self.workflow_state == "Approved":
