@@ -249,7 +249,11 @@ class EmployeeTravelRequest(Document):
 				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
 				if hod_user:
 					exists = frappe.db.exists(
-						"ToDo",{"reference_type": "Employee Travel Request" , "reference_name": self.name , "allocated_to": hod_user , "status": "Open",},
+						"ToDo",{
+							"reference_type": "Employee Travel Request" , 
+							"reference_name": self.name , 
+							"allocated_to": hod_user 
+						},
 					)
 					if not exists:
 						description = (
@@ -269,7 +273,11 @@ class EmployeeTravelRequest(Document):
 			if users:
 				for user in users:
 					exists = frappe.db.exists(
-						"ToDo",{"reference_type": "Employee Travel Request", "reference_name": self.name , "allocated_to": user ," status": "Open",},
+						"ToDo",{
+							"reference_type": "Employee Travel Request", 
+							"reference_name": self.name , 
+							"allocated_to": user,
+						},
 					)
 					if not exists:
 						description = (
@@ -422,7 +430,11 @@ def assign_todo_for_expense_approver(expense_claim_name ,travel_request , expens
 		return
 	user_id = expense_approver  
 	exists = frappe.db.exists(
-		"ToDo",{ "reference_type": "Expense Claim" , "reference_name": expense_claim_name , "allocated_to": user_id , "status": "Open",},
+		"ToDo",{ 
+			"reference_type": "Expense Claim" , 
+			"reference_name": expense_claim_name , 
+			"allocated_to": user_id 
+		},
 	)
 	if not exists:
 		description = (
@@ -633,8 +645,13 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 
 	if users:
 		for user in users:
-			exists = frappe.db.exists("ToDo", {"reference_type": "Journal Entry" , "reference_name": journal_entry_name , "allocated_to": user , "status": "Open",
-			})
+			exists = frappe.db.exists(
+				"ToDo", {
+					"reference_type": "Journal Entry" , 
+					"reference_name": journal_entry_name , 
+					"allocated_to": user 
+			}
+		)
 			if not exists:
 				description = (
 					f"Journal Entry <b>{journal_entry_name}</b> has been created "
