@@ -228,30 +228,30 @@ class EmployeeTravelRequest(Document):
 			}
 			subject = frappe.render_template(template.subject, context)
 			email_content = frappe.render_template(template.response, context)
-			department= frappe.db.get_value("Employee",self.requested_by,"department")
-			hod_emp= frappe.db.get_value("Department",department,"head_of_department")
+			department= frappe.db.get_value("Employee", self.requested_by, "department")
+			hod_emp= frappe.db.get_value("Department", department, "head_of_department")
 			if hod_emp:
-				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
+				hod_user = frappe.db.get_value("Employee", hod_emp, "user_id")
 				if hod_user:
-					frappe.sendmail(recipients=frappe.db.get_value("User",hod_user,"email"),subject=subject,message=email_content)
+					frappe.sendmail(recipients=frappe.db.get_value("User", hod_user, "email"), subject=subject, message=email_content)
 			if self.requested_by:
 				emp_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
 				if emp_user:
-					frappe.sendmail(recipients=frappe.db.get_value("User",emp_user,"email"),subject=subject,message=email_content)
+					frappe.sendmail(recipients=frappe.db.get_value("User", emp_user, "email"), subject=subject, message=email_content)
 
 
 	def create_todo_for_hod(self):
 		old_doc = self.get_doc_before_save()
 		if old_doc and old_doc.workflow_state != self.workflow_state and  self.workflow_state == "Pending":
-			department = frappe.db.get_value("Employee",self.requested_by,"department")
-			hod_emp = frappe.db.get_value("Department",department,"head_of_department")
+			department = frappe.db.get_value("Employee", self.requested_by, "department")
+			hod_emp = frappe.db.get_value("Department", department, "head_of_department")
 			if hod_emp:
-				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
+				hod_user = frappe.db.get_value("Employee", hod_emp, "user_id")
 				if hod_user:
 					exists = frappe.db.exists(
 						"ToDo",{
-							"reference_type": "Employee Travel Request" , 
-							"reference_name": self.name , 
+							"reference_type": "Employee Travel Request", 
+							"reference_name": self.name, 
 							"allocated_to": hod_user 
 						},
 					)
@@ -275,7 +275,7 @@ class EmployeeTravelRequest(Document):
 					exists = frappe.db.exists(
 						"ToDo",{
 							"reference_type": "Employee Travel Request", 
-							"reference_name": self.name , 
+							"reference_name": self.name, 
 							"allocated_to": user,
 						},
 					)
@@ -412,7 +412,7 @@ def create_expense_claim(employee, travel_request, expenses):
 
 	expense_claim.total_claimed_amount = sum((item.amount or 0) for item in expense_claim.expenses)
 	expense_claim.save()
-	assign_todo_for_expense_approver(expense_claim.name , travel_request , expense_approver)
+	assign_todo_for_expense_approver(expense_claim.name, travel_request, expense_approver)
 
 	frappe.msgprint(
 		_('Expense Claim Created: <a href="{0}">{1}</a>').format(get_url_to_form("Expense Claim", expense_claim.name), expense_claim.name),
@@ -421,7 +421,7 @@ def create_expense_claim(employee, travel_request, expenses):
 	return expense_claim.name
 
 
-def assign_todo_for_expense_approver(expense_claim_name ,travel_request , expense_approver):
+def assign_todo_for_expense_approver(expense_claim_name, travel_request, expense_approver):
 	'''
 	Create a ToDo for Accounts User(s) when a Expense claim
 	is created and linked to the Employee Travel Request.
@@ -431,8 +431,8 @@ def assign_todo_for_expense_approver(expense_claim_name ,travel_request , expens
 	user_id = expense_approver  
 	exists = frappe.db.exists(
 		"ToDo",{ 
-			"reference_type": "Expense Claim" , 
-			"reference_name": expense_claim_name , 
+			"reference_type": "Expense Claim", 
+			"reference_name": expense_claim_name, 
 			"allocated_to": user_id 
 		},
 	)
@@ -633,7 +633,7 @@ def create_journal_entry_from_travel(employee, employee_travel_request, expenses
 	})
 
 	jv.insert()
-	assign_todo_for_accounts(employee_travel_request,jv.name)
+	assign_todo_for_accounts(employee_travel_request, jv.name)
 	return jv.name
 
 def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
@@ -647,8 +647,8 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 		for user in users:
 			exists = frappe.db.exists(
 				"ToDo", {
-					"reference_type": "Journal Entry" , 
-					"reference_name": journal_entry_name , 
+					"reference_type": "Journal Entry", 
+					"reference_name": journal_entry_name, 
 					"allocated_to": user 
 			}
 		)
