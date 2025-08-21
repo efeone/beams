@@ -249,7 +249,7 @@ class EmployeeTravelRequest(Document):
 				hod_user = frappe.db.get_value("Employee",hod_emp,"user_id")
 				if hod_user:
 					exists = frappe.db.exists(
-						"ToDo",{"reference_type": "Employee Travel Request","reference_name": self.name,"allocated_to": hod_user,"status": "Open",},
+						"ToDo",{"reference_type": "Employee Travel Request" , "reference_name": self.name , "allocated_to": hod_user , "status": "Open",},
 					)
 					if not exists:
 						description = (
@@ -269,7 +269,7 @@ class EmployeeTravelRequest(Document):
 			if users:
 				for user in users:
 					exists = frappe.db.exists(
-						"ToDo",{"reference_type": "Employee Travel Request","reference_name": self.name,"allocated_to": user,"status": "Open",},
+						"ToDo",{"reference_type": "Employee Travel Request", "reference_name": self.name , "allocated_to": user ," status": "Open",},
 					)
 					if not exists:
 						description = (
@@ -404,7 +404,7 @@ def create_expense_claim(employee, travel_request, expenses):
 
 	expense_claim.total_claimed_amount = sum((item.amount or 0) for item in expense_claim.expenses)
 	expense_claim.save()
-	assign_todo_for_expense_approver(expense_claim.name,travel_request)
+	assign_todo_for_expense_approver(expense_claim.name , travel_request , expense_approver)
 
 	frappe.msgprint(
 		_('Expense Claim Created: <a href="{0}">{1}</a>').format(get_url_to_form("Expense Claim", expense_claim.name), expense_claim.name),
@@ -413,18 +413,16 @@ def create_expense_claim(employee, travel_request, expenses):
 	return expense_claim.name
 
 
-def assign_todo_for_expense_approver(expense_claim_name, travel_request):
+def assign_todo_for_expense_approver(expense_claim_name ,travel_request , expense_approver):
 	'''
 	Create a ToDo for Accounts User(s) when a Expense claim
 	is created and linked to the Employee Travel Request.
 	'''
-	claim_doc = frappe.get_doc("Expense Claim", expense_claim_name)
-	expense_approver = claim_doc.expense_approver
 	if not expense_approver:
 		return
 	user_id = expense_approver  
 	exists = frappe.db.exists(
-		"ToDo",{ "reference_type": "Expense Claim","reference_name": expense_claim_name,"allocated_to": user_id,"status": "Open",},
+		"ToDo",{ "reference_type": "Expense Claim" , "reference_name": expense_claim_name , "allocated_to": user_id , "status": "Open",},
 	)
 	if not exists:
 		description = (
@@ -635,7 +633,7 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 
 	if users:
 		for user in users:
-			exists = frappe.db.exists("ToDo", {"reference_type": "Journal Entry","reference_name": journal_entry_name,"allocated_to": user,"status": "Open",
+			exists = frappe.db.exists("ToDo", {"reference_type": "Journal Entry" , "reference_name": journal_entry_name , "allocated_to": user , "status": "Open",
 			})
 			if not exists:
 				description = (
