@@ -30,8 +30,8 @@
   "final_odometer_reading",
   "distance_traveledkm",
   "column_break_anpp",
-  "fuel_consumed",
   "mileage",
+  "fuel_consumed",
   "amended_from",
   "section_break_kwfq",
   "remarks"
@@ -219,7 +219,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-08-13 11:14:54.882492",
+ "modified": "2025-08-22 16:45:19.217935",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",

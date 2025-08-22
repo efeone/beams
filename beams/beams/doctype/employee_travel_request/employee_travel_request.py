@@ -13,6 +13,7 @@ from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
 
+
 class EmployeeTravelRequest(Document):
 	def validate_reason_reject(self):
 		old_doc = self.get_doc_before_save()
@@ -26,7 +27,7 @@ class EmployeeTravelRequest(Document):
 		self.validate_dates()
 		self.validate_expected_time()
 		self.total_days_calculate()
-		self.validate_hod_vehicle_allocation()
+		self.validate_vehicle_allocation()
 
 	def before_save(self):
 		self.validate_posting_date()
@@ -239,10 +240,11 @@ class EmployeeTravelRequest(Document):
 
 	def create_attendance_requests(self):
 		"""
-			Create attendance requests for all travellers when mark_attendance is enabled
+		Create attendance requests for all travellers when mark_attendance is enabled.
+		Handles overlaps by creating requests only for the remaining free days.
 		"""
 		old_doc = self.get_doc_before_save()
-		if old_doc and old_doc.workflow_state != self.workflow_state and  self.workflow_state == "Approved":
+		if old_doc and old_doc.workflow_state != self.workflow_state and self.workflow_state == "Approved":
 			if not self.mark_attendance:
 				return
 
@@ -261,33 +263,57 @@ class EmployeeTravelRequest(Document):
 			employees = list(set(filter(None, employees)))
 
 			for emp in employees:
-				overlapping = frappe.db.exists(
-					"Attendance Request",
-					{
-						"employee": emp,
-						"from_date": ["<=", self.end_date],
-						"to_date": [">=", self.start_date],
-						"docstatus": ["!=", 2]
-					}
+				travel_from = frappe.utils.getdate(self.start_date)
+				travel_to = frappe.utils.getdate(self.end_date)
+
+				# Get existing attendance ranges for this employee
+				existing = frappe.db.sql(
+					"""
+					SELECT from_date, to_date
+					FROM `tabAttendance Request`
+					WHERE employee = %s
+					AND docstatus != 2
+					AND to_date >= %s
+					AND from_date <= %s
+					ORDER BY from_date
+					""",
+					(emp, travel_from, travel_to),
+					as_dict=True,
 				)
 
-				if overlapping:
-					continue
+				free_ranges = []
+				current_start = travel_from
 
-				attendance = frappe.get_doc({
-					"doctype": "Attendance Request",
-					"employee": emp,
-					"from_date": self.start_date,
-					"to_date": self.end_date,
-					"request_type": "On Duty",
-					"company": frappe.db.get_value("Employee", emp, "company"),
-					"description": f"From Travel Request {self.name}",
-					"reason": "On Duty"
-				})
+				for e in existing:
+					# If there is a gap before this existing request
+					if current_start < e["from_date"]:
+						free_ranges.append((current_start, frappe.utils.add_days(e["from_date"], -1)))
+					# Move start beyond this overlap
+					if current_start <= e["to_date"]:
+						current_start = frappe.utils.add_days(e["to_date"], 1)
 
-				attendance.insert(ignore_permissions=True)
-				frappe.msgprint(f"Attendance Request created for {emp}", alert=True, indicator='green')
+				# After processing all overlaps, if days remain
+				if current_start <= travel_to:
+					free_ranges.append((current_start, travel_to))
 
+				# Create attendance requests for free ranges
+				for f_start, f_end in free_ranges:
+					if f_start <= f_end:
+						attendance = frappe.get_doc({
+							"doctype": "Attendance Request",
+							"employee": emp,
+							"from_date": f_start,
+							"to_date": f_end,
+							"request_type": "On Duty",
+							"company": frappe.db.get_value("Employee", emp, "company"),
+							"description": f"From Travel Request {self.name}",
+							"reason": "On Duty"
+						})
+						attendance.insert(ignore_permissions=True)
+						frappe.msgprint(
+							f"Attendance Request created for {emp} ({f_start} → {f_end})",
+							alert=True, indicator='green'
+						)
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
@@ -300,17 +326,17 @@ class EmployeeTravelRequest(Document):
 			if self.expected_check_out_time < self.expected_check_in_time:
 				frappe.throw("Expected Check-out Time cannot be earlier than Expected Check-in Time.")
 
-	def validate_hod_vehicle_allocation(self):
-		"""Validate vehicle & driver allocation at HOD approval stage"""
+	def validate_vehicle_allocation(self):
+		"""Validate vehicle & driver allocation at Admin approval stage"""
 		if (
 			self.is_vehicle_required
 			and self.workflow_state == "Approved"
-			and self.mode_of_travel not in ["Train", "Plain"]
+			and self.mode_of_travel not in ["Train", "Plane"]
 		):
 			if not self.travel_vehicle_allocation:
 				frappe.throw(
 					title="Approval Error",
-					msg="Vehicle allocation is required before HOD approval."
+					msg="Vehicle allocation is required before Admin approval."
 				)
 
 			has_complete_allocation = any(
@@ -321,7 +347,7 @@ class EmployeeTravelRequest(Document):
 			if not has_complete_allocation:
 				frappe.throw(
 					title="Approval Error",
-					msg="You must allocate driver and vehicle before HOD approval."
+					msg="You must allocate driver and vehicle before Admin approval."
 				)
 
 

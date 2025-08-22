@@ -25,7 +25,7 @@ frappe.ui.form.on('Trip Sheet', {
 	},
 
 	refresh: function (frm) {
-		if (!frm.is_new() && frm.doc.workflow_state !== "Closed"){
+		if (!frm.is_new()){
 			frm.add_custom_button(__('Vehicle Incident Record'), function () {
 				frappe.call({
 					method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
