@@ -10,7 +10,8 @@
   "designation",
   "employee",
   "required_from",
-  "required_to"
+  "required_to",
+  "hired_personnel"
  ],
  "fields": [
   {
@@ -46,17 +47,25 @@
    "fieldtype": "Datetime",
    "in_list_view": 1,
    "label": "Required To"
+  },
+  {
+   "fieldname": "hired_personnel",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Hired Personnel",
+   "options": "Supplier"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-03 16:36:22.668835",
+ "modified": "2025-08-22 17:27:46.695849",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request Details",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

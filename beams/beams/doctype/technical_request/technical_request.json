@@ -74,8 +74,7 @@
    "allow_on_submit": 1,
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
-   "label": "Reason for Rejection",
-   "read_only_depends_on": "eval: [\"Rejected\", \"Draft\", \"Approved\"].includes(doc.workflow_state)"
+   "label": "Reason for Rejection"
   },
   {
    "fieldname": "amended_from",
@@ -111,7 +110,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-03 13:05:47.576627",
+ "modified": "2025-08-22 14:41:16.538224",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",
@@ -131,6 +130,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

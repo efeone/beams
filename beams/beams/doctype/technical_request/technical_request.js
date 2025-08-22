@@ -12,7 +12,7 @@ frappe.ui.form.on('Technical Request', {
             frm.set_df_property(field, 'read_only', should_be_read_only);
         });
 
-        if (!frm.is_new() && frm.doc.workflow_state === "Approved") {
+        if (!frm.is_new() && frm.doc.workflow_state !== "Draft") {
             frm.add_custom_button("External Resource Request", function() {
                 frappe.call({
                     method: "beams.beams.doctype.technical_request.technical_request.create_external_resource_request",

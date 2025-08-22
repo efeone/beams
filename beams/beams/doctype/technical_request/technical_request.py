@@ -18,7 +18,8 @@ class TechnicalRequest(Document):
 		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
 			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
-	def on_update_after_submit(self):
+	def validate(self):
+		self.validate_required_from_and_required_to()
 		if self.workflow_state == "Approved":
 			self.validate_employee_before_approvel()
 
@@ -29,9 +30,6 @@ class TechnicalRequest(Document):
 			self.update_project_allocated_resources()
 			update_allocated_field(self)
 
-	def validate(self):
-		self.validate_required_from_and_required_to()
-
 	def validate_employee_before_approvel(self):
 		"""Validate employee field in Required Employees before approving Technical Request"""
 		if not self.required_employees:
@@ -41,7 +39,7 @@ class TechnicalRequest(Document):
 			)
 
 		for row in self.required_employees:
-			if not row.employee:
+			if not row.employee and not row.hired_personnel:
 				frappe.throw(
 					_("Employee is missing in row {0} of 'Required Employees'. Please fill it before approving.")
 					.format(row.idx),
@@ -93,7 +91,7 @@ class TechnicalRequest(Document):
 	@frappe.whitelist()
 	def validate_posting_date(self):
 		if self.posting_date:
-			if self.posting_date > today():
+			if getdate(self.posting_date) > getdate(today()):
 				frappe.throw(_("Posting Date cannot be set after today's date."))
 
 @frappe.whitelist()
@@ -109,7 +107,8 @@ def create_external_resource_request(technical_request):
 		"posting_date": tech_req.posting_date,
 		"required_from": tech_req.required_from,
 		"required_to": tech_req.required_to,
-		"required_resources": []
+		"required_resources": [],
+		"technical_request": tech_req.name
 	})
 
 	for emp in tech_req.required_employees:
