@@ -172,30 +172,48 @@ def get_hd_ticket_type_custom_fields():
         ]
     }
 
-
 def get_hd_ticket_custom_fields():
-	'''
-	Custom fields that need to be added to the HD Ticket DocType
-	'''
-	return {
-		"HD Ticket": [
-			{
-				"fieldname": "raised_for",
-				"fieldtype": "Link",
-				"label": "Raised For(Email)",
-				"options":"User",
-				"insert_after": "raised_by"
-			},
-			{
-				"fieldname": "attach",
-				"label": "Attachments",
-				"fieldtype": "Attach",
-				"insert_after": "agent_group",
+    '''
+    Custom fields to be added to the HD Ticket Doctype
+    '''
+    return {
+        "HD Ticket": [
 
-			}
-
-		]
-	}
+            {
+                "fieldname": "raised_for",
+                "fieldtype": "Link",
+                "options": "User",
+                "label": "Raised For (Email)",
+                "insert_after": "raised_by"
+            },
+            {
+                "fieldname": "attach",
+                "fieldtype": "Attach",
+                "label": "Attachments",
+                "insert_after": "agent_group"
+            },
+			{
+                "fieldname": "ticket_section_break",
+                "fieldtype": "Section Break",
+                "label": "",
+                "insert_after": "attach"
+            },
+            {
+                "fieldname": "spare_part_needed",
+                "fieldtype": "Check",
+                "label": "Spare Part Needed",
+                "insert_after": "ticket_section_break"
+            },
+            {
+                "fieldname": "spare_part_item_table",
+                "fieldtype": "Table",
+                "label": "Spare Part Items",
+                "insert_after": "spare_part_needed",
+                "options": "Spare Part Item",
+                "depends_on": "eval:doc.spare_part_needed == 1"
+            }
+        ]
+    }
 
 def get_shift_assignment_custom_fields():
 	'''

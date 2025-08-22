@@ -8,11 +8,11 @@ frappe.ui.form.on('HD Ticket', {
     },
 
     refresh(frm) {
-        handle_agent_visibility(frm);
         frm.clear_custom_buttons();
+        handle_agent_visibility(frm);
 
         if (frm.doc.spare_part_needed) {
-            frm.page.set_inner_btn_group_as_primary(__('Create'));
+            add_material_request_button(frm);
         }
     },
 
@@ -22,6 +22,13 @@ frappe.ui.form.on('HD Ticket', {
         frappe.db.get_value('HD Ticket Type', frm.doc.ticket_type, 'team_name')
             .then(r => frm.set_value('agent_group', r.message?.team_name || ''))
             .catch(() => frm.set_value('agent_group', ''));
+    },
+    
+    spare_part_needed(frm) {
+        frm.clear_custom_buttons();
+        if (frm.doc.spare_part_needed) {
+            add_material_request_button(frm);
+        }
     }
 });
 
@@ -39,3 +46,15 @@ function handle_agent_visibility(frm) {
     }
 }
 
+// Add button to create material request.
+function add_material_request_button(frm) {
+    frm.add_custom_button(__('Material Request'), () => {
+        frappe.new_doc('Material Request', {
+            items: (frm.doc.spare_part_item_table || []).map(row => ({
+                item_code: row.item,
+                qty: row.quantity,
+                schedule_date: row.required_by
+            }))
+        });
+    }, __('Create'));
+}
