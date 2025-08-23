@@ -8,9 +8,10 @@
  "field_order": [
   "section_break_wyyd",
   "driver",
+  "driver_name",
   "vehicle",
-  "posting_date",
   "column_break_abgb",
+  "posting_date",
   "starting_date_and_time",
   "ending_date_and_time",
   "section_break_ziua",
@@ -209,6 +210,12 @@
   {
    "fieldname": "section_break_kwfq",
    "fieldtype": "Section Break"
+  },
+  {
+   "fetch_from": "driver.full_name",
+   "fieldname": "driver_name",
+   "fieldtype": "Data",
+   "label": "Driver Name"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -219,7 +226,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-08-22 16:45:19.217935",
+ "modified": "2025-08-23 10:13:36.284763",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
