@@ -4,14 +4,13 @@ frappe.ui.form.on('HD Ticket', {
         if (frm.is_new() && !frm.doc.raised_by) {
             frm.set_value('raised_by', frappe.session.user);
         }
-        handle_agent_visibility(frm);
     },
 
     refresh(frm) {
         frm.clear_custom_buttons();
         handle_agent_visibility(frm);
 
-        if (frm.doc.spare_part_needed) {
+        if (frm.doc.material_request_needed) {
             add_material_request_button(frm);
         }
     },
@@ -24,15 +23,18 @@ frappe.ui.form.on('HD Ticket', {
             .catch(() => frm.set_value('agent_group', ''));
     },
     
-    spare_part_needed(frm) {
+    material_request_needed(frm) {
         frm.clear_custom_buttons();
-        if (frm.doc.spare_part_needed) {
+        if (frm.doc.material_request_needed) {
             add_material_request_button(frm);
         }
     }
 });
 
-// Function to show/hide fields based on user's role
+/*
+   Restricts field visibility for users who do not have the "Agent" role.
+   Only the defined fields remain visible to non-Agents.
+*/
 function handle_agent_visibility(frm) {
     if (!frappe.user.has_role('Agent')) {
         const visible_fields = ['subject', 'raised_by','raised_for', 'description','ticket_type'];
@@ -46,7 +48,11 @@ function handle_agent_visibility(frm) {
     }
 }
 
-// Add button to create material request.
+/*
+  Adds a "Material Request" button under the "Create" group in the form.
+  On click, it creates a new "Material Request" document.
+  Populates items from the 'spare_part_item_table' child table of HD Ticket.
+*/
 function add_material_request_button(frm) {
     frm.add_custom_button(__('Material Request'), () => {
         frappe.new_doc('Material Request', {

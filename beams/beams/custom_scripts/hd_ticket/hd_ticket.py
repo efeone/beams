@@ -31,7 +31,7 @@ class HDTicketOverride(HDTicket):
         if not active_users:
             return
 
-        # Assign to ALL active agents
+        # Assign to all active agents
         for user in active_users:
             existing_todo = frappe.db.exists('ToDo', {
                 'reference_type': self.doctype,
@@ -51,8 +51,8 @@ class HDTicketOverride(HDTicket):
     def get_active_users_from_team(self, team_name):
         '''Return active users (User IDs) from HD Team based on active HD Agent mapping.'''
 
-        if not frappe.db.exists('HD Team', self.agent_group):
-            return
+        if not frappe.db.exists('HD Team', team_name):
+            return []
 
         team = frappe.get_doc('HD Team', team_name)
         team_users = [row.user for row in team.users if row.user]
@@ -60,23 +60,27 @@ class HDTicketOverride(HDTicket):
         if not team_users:
             return []
 
-        # Fetch active agents among these team users
-        active_agents = frappe.get_all(
+        # Fetch user + is_active for each agent
+        agents = frappe.get_all(
             'HD Agent',
-            filters={'is_active': 1, 'user': ['in', team_users]},
-            pluck='user'
+            filters={'user': ['in', team_users]},
+            fields=['user', 'is_active']
         )
-        return active_agents
+        # Return only the active ones
+        active_users = [agent.user for agent in agents if agent.is_active == 1]
+        return active_users
+
 
     def set_agent_group(self):
-        '''Set agent_group based on selected ticket_type.'''
+        '''Set agent_group directly from HD Team or fallback to default team.'''
 
-        if not self.ticket_type:
-            self.agent_group = ''
+        if self.agent_group:
             return
 
-        team_name = frappe.db.get_value('HD Ticket Type', self.ticket_type, 'team_name')
-        if team_name:
-            self.agent_group = team_name
+        # get default team from Beams HR Settings
+        default_team = frappe.db.get_single_value('Beams Admin Settings', 'default_hd_ticket_team')
+
+        if default_team:
+            self.agent_group = default_team
         else:
             self.agent_group = ''

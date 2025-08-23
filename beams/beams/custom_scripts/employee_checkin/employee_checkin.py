@@ -1,10 +1,9 @@
 import frappe
 from frappe.utils import add_days, today
 from datetime import datetime
-from frappe.utils import nowdate, get_datetime
+from frappe.utils import nowdate, get_datetime,getdate
 from frappe import _ 
 from frappe.utils import get_url_to_form 
-
 
 def handle_employee_checkin_out(doc, method):
     """
@@ -76,20 +75,28 @@ def handle_employee_checkin_out(doc, method):
         ),alert=True,indicator='green')
 
 def set_hd_agent_active_status(doc, method=None):
-    """Set HD Agent active/inactive based on latest check-in/out today."""
+    '''Set HD Agent active/inactive based on latest check-in/out today.'''
 
     user = frappe.db.get_value("Employee", doc.employee, "user_id")
     if not user:
         return
 
+    # Get today's date range
+    today = getdate()
+    start_of_day = f"{today} 00:00:00"
+    end_of_day = f"{today} 23:59:59"
+
+    # Get latest check-in for today
     latest_log = frappe.db.get_value(
         "Employee Checkin",
-        {"employee": doc.employee, "time": [">=", nowdate()]},
-        "log_type",
-        order_by="time desc"
+        filters={"employee": doc.employee, "time": ["between", [start_of_day, end_of_day]]},
+        fieldname="log_type",
+        order_by="time desc",
     )
-
+    # Determine active status
     status = 1 if latest_log == "IN" else 0
 
-    frappe.db.set_value("HD Agent", {"user": user}, "is_active", status)
-
+    # Find HD Agent linked to this user
+    agent_name = frappe.db.get_value("HD Agent", {"user": user}, "name")
+    if agent_name:
+        frappe.db.set_value("HD Agent", agent_name, "is_active", status)

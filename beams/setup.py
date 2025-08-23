@@ -199,18 +199,18 @@ def get_hd_ticket_custom_fields():
                 "insert_after": "attach"
             },
             {
-                "fieldname": "spare_part_needed",
+                "fieldname": "material_request_needed",
                 "fieldtype": "Check",
-                "label": "Spare Part Needed",
+                "label": "Material Request Needed",
                 "insert_after": "ticket_section_break"
             },
             {
                 "fieldname": "spare_part_item_table",
                 "fieldtype": "Table",
                 "label": "Spare Part Items",
-                "insert_after": "spare_part_needed",
+                "insert_after": "material_request_needed",
                 "options": "Spare Part Item",
-                "depends_on": "eval:doc.spare_part_needed == 1"
+                "depends_on": "eval:doc.material_request_needed == 1"
             }
         ]
     }

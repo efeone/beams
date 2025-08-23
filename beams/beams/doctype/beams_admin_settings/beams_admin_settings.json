@@ -13,6 +13,7 @@
   "start_notification_from",
   "notifcation_frequency",
   "notification_template",
+  "default_hd_ticket_team",
   "column_break_qndy",
   "default_asset_location",
   "asset_transfer_warehouse",
@@ -152,12 +153,18 @@
    "fieldtype": "Link",
    "label": "Default Source Warehouse",
    "options": "Warehouse"
+  },
+  {
+   "fieldname": "default_hd_ticket_team",
+   "fieldtype": "Link",
+   "label": "Default HD Ticket Team ",
+   "options": "HD Team"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-19 08:55:47.213874",
+ "modified": "2025-08-22 16:51:54.269389",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
