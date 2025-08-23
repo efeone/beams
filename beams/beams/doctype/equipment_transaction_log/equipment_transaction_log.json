@@ -8,13 +8,11 @@
  "field_order": [
   "section_break_yb2x",
   "project",
-  "equipment_request",
-  "equipment_acquiral_request",
+  "bureau",
   "location",
   "column_break_1n8u",
   "expected_start_date",
   "expected_end_date",
-  "bureau",
   "section_break_svdu",
   "item_log_details"
  ],
@@ -28,18 +26,6 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
-  },
-  {
-   "fieldname": "equipment_request",
-   "fieldtype": "Link",
-   "label": "Equipment Request",
-   "options": "Equipment Request"
-  },
-  {
-   "fieldname": "equipment_acquiral_request",
-   "fieldtype": "Link",
-   "label": "Equipment Acquiral Request",
-   "options": "Equipment Acquiral Request"
   },
   {
    "fetch_from": "project.location",
@@ -84,7 +70,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-05-02 16:37:17.492795",
+ "modified": "2025-08-23 09:47:10.244578",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Equipment Transaction Log",
@@ -104,6 +90,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

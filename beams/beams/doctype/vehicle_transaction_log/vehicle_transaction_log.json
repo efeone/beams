@@ -7,11 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "project",
-  "transportation_request",
-  "vehicle_hire_request",
+  "bureau",
   "section_break_iztv",
   "location",
-  "bureau",
   "section_break_xcxm",
   "vehicle_log_details"
  ],
@@ -21,18 +19,6 @@
    "fieldtype": "Link",
    "label": "Project",
    "options": "Project"
-  },
-  {
-   "fieldname": "transportation_request",
-   "fieldtype": "Link",
-   "label": "Transportation Request",
-   "options": "Transportation Request"
-  },
-  {
-   "fieldname": "vehicle_hire_request",
-   "fieldtype": "Link",
-   "label": "Vehicle Hire Request",
-   "options": "Vehicle Hire Request"
   },
   {
    "fieldname": "vehicle_log_details",
@@ -65,7 +51,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-04-22 11:10:05.592968",
+ "modified": "2025-08-23 09:48:59.666023",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Transaction Log",
@@ -85,6 +71,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
