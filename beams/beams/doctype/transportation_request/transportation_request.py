@@ -13,6 +13,7 @@ class TransportationRequest(Document):
 	def validate(self):
 		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
 			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+		self.update_no_of_own_vehicles()
 
 	def before_update_after_submit(self):
 		self.update_no_of_own_vehicles()

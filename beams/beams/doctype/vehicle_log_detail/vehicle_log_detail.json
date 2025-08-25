@@ -27,7 +27,6 @@
   {
    "fieldname": "vehicle_type",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Vehicle Type"
   },
   {
@@ -79,13 +78,14 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-23 16:29:53.868218",
+ "modified": "2025-08-25 11:26:26.824290",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Vehicle Log Detail",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
