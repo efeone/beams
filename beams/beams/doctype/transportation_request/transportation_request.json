@@ -68,8 +68,7 @@
    "fieldname": "vehicles",
    "fieldtype": "Table",
    "label": "Vehicles",
-   "options": "Vehicle Detail",
-   "permlevel": 1
+   "options": "Vehicle Detail"
   },
   {
    "allow_on_submit": 1,
@@ -152,7 +151,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-25 10:15:05.262951",
+ "modified": "2025-08-25 15:00:58.490201",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Transportation Request",
@@ -168,6 +167,31 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
    "share": 1,
    "write": 1
   }
