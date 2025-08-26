@@ -17,13 +17,15 @@ frappe.ui.form.on('Equipment Request', {
                 });
             }, __("Create"));
             frm.add_custom_button(__("Asset Movement"), function () {
-                const default_items = (frm.doc.required_equipments || []).map(row => ({
-                    name: row.name,
-                    item: row.required_item,
-                    count: null,
-                    available_qty: row.available_quantity,
-                    required_qty: row.required_quantity
-                }));
+			const default_items = (frm.doc.required_equipments || [])
+				.filter(row => row.available_quantity > 0)
+				.map(row => ({
+					name: row.name,
+					item: row.required_item,
+					count: null,
+					available_qty: row.available_quantity,
+					required_qty: row.required_quantity
+				}));
 
                 const fields = [
                     {
