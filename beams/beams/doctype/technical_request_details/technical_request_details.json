@@ -53,13 +53,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Hired Personnel",
-   "options": "Supplier"
+   "options": "Supplier",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-22 17:27:46.695849",
+ "modified": "2025-08-26 11:24:06.330505",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request Details",

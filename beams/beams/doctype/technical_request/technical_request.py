@@ -200,7 +200,8 @@ def create_external_resource_request(technical_request):
 				"department": emp.department,
 				"designation": emp.designation,
 				"required_from": emp.required_from,
-				"required_to": emp.required_to
+				"required_to": emp.required_to,
+				"technical_request_employee": emp.name
 			})
 
 	external_req.insert(ignore_permissions=True)

@@ -20,7 +20,8 @@
    "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Department",
-   "options": "Department"
+   "options": "Department",
+   "reqd": 1
   },
   {
    "fieldname": "designation",
@@ -28,19 +29,22 @@
    "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Designation",
-   "options": "Designation"
+   "options": "Designation",
+   "reqd": 1
   },
   {
    "fieldname": "required_from",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Required From"
+   "label": "Required From",
+   "reqd": 1
   },
   {
    "fieldname": "required_to",
    "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Required To"
+   "label": "Required To",
+   "reqd": 1
   },
   {
    "fieldname": "column_break_cott",
@@ -51,18 +55,20 @@
    "fieldname": "no_of_employees",
    "fieldtype": "Int",
    "in_list_view": 1,
-   "label": "No. of Employees"
+   "label": "No. of Employees",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-05 14:40:19.146465",
+ "modified": "2025-08-26 12:27:12.742223",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Required Manpower Details",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
