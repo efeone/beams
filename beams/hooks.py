@@ -359,8 +359,6 @@ doc_events = {
 			"beams.beams.custom_scripts.project.project.auto_return_equipment_on_project_completion"
 		],
 		"validate": [
-		   "beams.beams.custom_scripts.project.project.validate_employee_assignment",
-		   "beams.beams.custom_scripts.project.project.validate_employee_assignment_in_same_project",
 		   "beams.beams.custom_scripts.project.project.validate_vehicle_assignment_in_same_project"
 		],
 	},

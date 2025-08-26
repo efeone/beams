@@ -72,9 +72,11 @@
   },
   {
    "allow_on_submit": 1,
+   "depends_on": "eval: doc.workflow_state == 'Allocated by HOD' || doc.workflow_state == 'Rejected';",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
-   "label": "Reason for Rejection"
+   "label": "Reason for Rejection",
+   "read_only_depends_on": "eval: doc.workflow_state == 'Rejected';"
   },
   {
    "fieldname": "amended_from",
@@ -110,7 +112,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-22 14:41:16.538224",
+ "modified": "2025-08-27 04:23:20.799096",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Technical Request",

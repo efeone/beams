@@ -312,55 +312,6 @@ def update_program_request_status_on_project_completion(doc, method):
 				program_request.save()  # Save the document
 
 @frappe.whitelist()
-def validate_employee_assignment(doc, method):
-	"""
-	Validate that an employee is not assigned to multiple projects during the same time period.
-	"""
-	for row in doc.allocated_manpower_details:
-		if not row.employee:
-			continue
-		overlapping_projects = frappe.get_all(
-			"Allocated Manpower Detail",
-			filters={
-				"employee": row.employee,
-				"parent": ["!=", doc.name],
-				"assigned_from": ["<=", row.assigned_to],
-				"assigned_to": [">=", row.assigned_from],
-				"parenttype": "Technical Request",
-				"parentfield": "allocated_manpower_details",
-			},
-			pluck="parent"
-		)
-		if overlapping_projects:
-			employee_name = frappe.get_value("Employee", row.employee, "employee_name")
-			frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another project ({', '.join(overlapping_projects)}) within the same time period.")
-
-@frappe.whitelist()
-def validate_employee_assignment_in_same_project(doc, method):
-	'''
-	Validate that an employee is not assigned to multiple roles/tasks within the same project during the same time period.
-	'''
-	employee_assignments = {}
-
-	for row in doc.allocated_manpower_details:
-		if not row.employee:
-			continue
-
-		if row.employee not in employee_assignments:
-			employee_assignments[row.employee] = []
-
-		for existing_row in employee_assignments[row.employee]:
-			if (
-				(existing_row.assigned_from <= row.assigned_to) and
-				(existing_row.assigned_to >= row.assigned_from)
-			):
-				employee_name = frappe.get_value("Employee", row.employee, "employee_name")
-				frappe.throw(f"Employee {employee_name} ({row.employee}) is already assigned to another task or role within the same project ({doc.name}) during the same time period.")
-
-		employee_assignments[row.employee].append(row)
-
-
-@frappe.whitelist()
 def create_equipment_request(source_name, equipment_data, required_from, required_to):
 	"""Creates an Equipment Request for a project with multiple items."""
 

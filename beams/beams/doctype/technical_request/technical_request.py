@@ -8,20 +8,18 @@ from frappe import _
 from frappe.model.mapper import get_mapped_doc
 from frappe.utils import today
 from frappe.utils import get_datetime
+from datetime import datetime
 
 class TechnicalRequest(Document):
 	def before_save(self):
 		self.validate_posting_date()
 
-	def on_cancel(self):
-		# Validate that "Reason for Rejection" is filled if the status is "Rejected"
-		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
-			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
-
 	def validate(self):
 		self.validate_required_from_and_required_to()
-		if self.workflow_state == "Approved":
+		if self.workflow_state == "Allocated by HOD":
 			self.validate_employee_before_approvel()
+			self.validate_employee_assignment()
+			self.validate_employee_assignment_in_projects()
 
 		# Validate that 'Reason for Rejection' is not filled if the status is 'Approved'
 		if self.workflow_state == "Approved" and self.reason_for_rejection:
@@ -29,6 +27,9 @@ class TechnicalRequest(Document):
 		if self.workflow_state == "Approved" and self.project:
 			self.update_project_allocated_resources()
 			update_allocated_field(self)
+		# Validate that "Reason for Rejection" is filled if the status is "Rejected"
+		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
+			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
 	def validate_employee_before_approvel(self):
 		"""Validate employee field in Required Employees before approving Technical Request"""
@@ -93,6 +94,79 @@ class TechnicalRequest(Document):
 		if self.posting_date:
 			if getdate(self.posting_date) > getdate(today()):
 				frappe.throw(_("Posting Date cannot be set after today's date."))
+
+	@frappe.whitelist()
+	def validate_employee_assignment(self):
+		"""
+		Check if employees required in Technical Request are already
+		allocated in the same project (in Project -> Allocated Manpower Details).
+		"""
+		if not self.project:
+			return
+
+		# Get existing allocations from Project's child table
+		allocated_rows = frappe.get_all(
+			"Allocated Manpower Detail",
+			filters={"parent": self.project},
+			fields=["employee", "assigned_from", "assigned_to"]
+		)
+
+		for row in self.required_employees:
+			if not row.employee:
+				continue
+
+			for alloc in allocated_rows:
+				if alloc.employee != row.employee:
+					continue
+
+				# Check overlapping date ranges
+				if (
+					(alloc.assigned_from <= row.required_to)
+					and (alloc.assigned_to >= row.required_from)
+				):
+					employee_name = frappe.get_value(
+						"Employee", row.employee, "employee_name"
+					)
+					frappe.throw(
+						f"Employee {employee_name} ({row.employee}) is already allocated "
+						f"in Project {self.project} during the same time period "
+						f"({alloc.assigned_from} to {alloc.assigned_to})."
+					)
+	@frappe.whitelist()
+	def validate_employee_assignment_in_projects(self):
+		"""
+		Validate that an employee is not assigned to multiple projects
+		during the same time period.
+		"""
+		if not self.project:
+			return
+
+		# Get allocated manpower for all projects
+		allocated_rows = frappe.get_all(
+			"Allocated Manpower Detail",
+			fields=["parent", "employee", "assigned_from", "assigned_to"]
+		)
+
+		for row in self.required_employees:
+			if not row.employee:
+				continue
+
+			for alloc in allocated_rows:
+				# Skip if same project
+				if alloc.parent == self.project:
+					continue
+
+				if alloc.employee != row.employee:
+					continue
+
+				# Check overlapping dates
+				if (alloc.assigned_from <= row.required_to) and (alloc.assigned_to >= row.required_from):
+					employee_name = frappe.get_value("Employee", row.employee, "employee_name")
+					frappe.throw(
+						f"Employee {employee_name} ({row.employee}) is already allocated "
+						f"in Project {alloc.parent} during the same time period "
+						f"({alloc.assigned_from} to {alloc.assigned_to})."
+					)
 
 @frappe.whitelist()
 def create_external_resource_request(technical_request):
