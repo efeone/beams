@@ -112,5 +112,4 @@ class ExternalResourceRequest(Document):
 				emp_row.hired_personnel = resource.hired_personnel
 				emp_row.save(ignore_permissions=True)
 
-		tech_req.reload()
 		frappe.msgprint(f"Hired Personnel synced to Technical Request {tech_req.name}")
