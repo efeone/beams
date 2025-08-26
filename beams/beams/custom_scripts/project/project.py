@@ -527,7 +527,9 @@ def update_return_details_in_log(project, assigned_from, returned_date, returned
 
 
 def on_update_project(doc, method):
-    if doc.status not in ["Completed", "Cancelled"]:
+    """Mark manpower records as returned when a project is Completed."""
+
+    if doc.workflow_state != "Completed":
         return
 
     log_name = frappe.db.get_value("Manpower Transaction Log", {"project": doc.name})
@@ -541,12 +543,12 @@ def on_update_project(doc, method):
         if not row.returned:
             row.returned = 1
             row.returned_date = now()
-            row.returned_reason = "Project Completed" if doc.status == "Completed" else "Project Cancelled"
+            row.returned_reason = "Project Completed"
             updated = True
 
     if updated:
         log_doc.save(ignore_permissions=True)
-        frappe.msgprint(f"Unreturned manpower records marked as returned due to project {doc.status.lower()}.")
+        frappe.msgprint(f"Manpower records marked as returned for Project {doc.name}")
 
 def sync_vehicle_logs(doc, method):
     """
