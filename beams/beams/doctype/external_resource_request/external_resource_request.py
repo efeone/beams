@@ -108,8 +108,11 @@ class ExternalResourceRequest(Document):
 
 		for resource in self.required_resources:
 			if resource.hired_personnel and resource.technical_request_employee:
-				emp_row = frappe.get_doc("Technical Request Details", resource.technical_request_employee)
-				emp_row.hired_personnel = resource.hired_personnel
-				emp_row.save(ignore_permissions=True)
+				frappe.db.set_value(
+					"Technical Request Details",
+					resource.technical_request_employee,
+					"hired_personnel",
+					resource.hired_personnel
+				)
 
 		frappe.msgprint(f"Hired Personnel synced to Technical Request {tech_req.name}")
