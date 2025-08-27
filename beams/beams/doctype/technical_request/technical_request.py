@@ -128,10 +128,14 @@ class TechnicalRequest(Document):
 						"Employee", row.employee, "employee_name"
 					)
 					frappe.throw(
-						f"Employee {employee_name} ({row.employee}) is already allocated "
-						f"in Project {self.project} during the same time period "
-						f"({alloc.assigned_from} to {alloc.assigned_to})."
+						title="Allocation Error",
+						msg=(
+							f"Employee {employee_name} ({row.employee}) is already allocated "
+							f"in Project {self.project} during the same time period "
+							f"({alloc.assigned_from} to {alloc.assigned_to})."
+						)
 					)
+
 
 	@frappe.whitelist()
 	def validate_employee_assignment_in_projects(self):
@@ -164,10 +168,14 @@ class TechnicalRequest(Document):
 				if (alloc.assigned_from <= row.required_to) and (alloc.assigned_to >= row.required_from):
 					employee_name = frappe.get_value("Employee", row.employee, "employee_name")
 					frappe.throw(
-						f"Employee {employee_name} ({row.employee}) is already allocated "
-						f"in Project {alloc.parent} during the same time period "
-						f"({alloc.assigned_from} to {alloc.assigned_to})."
+						title="Allocation Error",
+						msg=(
+							f"Employee {employee_name} ({row.employee}) is already allocated "
+							f"in Project {alloc.parent} during the same time period "
+							f"({alloc.assigned_from} to {alloc.assigned_to})."
+						)
 					)
+
 
 @frappe.whitelist()
 def create_external_resource_request(technical_request):
