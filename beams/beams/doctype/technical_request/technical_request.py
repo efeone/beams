@@ -132,6 +132,7 @@ class TechnicalRequest(Document):
 						f"in Project {self.project} during the same time period "
 						f"({alloc.assigned_from} to {alloc.assigned_to})."
 					)
+
 	@frappe.whitelist()
 	def validate_employee_assignment_in_projects(self):
 		"""
