@@ -191,26 +191,34 @@ def send_leave_application_hod_notification(doc, method=None):
 	if doc.workflow_state != "Pending HOD Approval":
 		return
 
+	missing_fields = []
 	department = frappe.db.get_value("Employee", doc.employee, "department")
 	if not department:
-		return
+		missing_fields.append("Department")
 
 	hod_employee = frappe.db.get_value("Department", department, "head_of_department")
 	if not hod_employee:
-		return
+		missing_fields.append("Head of Department in Department")
 
-	hod_user, hod_name = frappe.db.get_value("Employee", hod_employee, ["user_id", "employee_name"])
-	if not hod_user:
-		return
+	hod_user, hod_name = (None, None)
+	if hod_employee:
+		hod_user, hod_name = frappe.db.get_value(
+			"Employee", hod_employee, ["user_id", "employee_name"]
+		) or (None, None)
+
+		if not hod_user or not hod_name:
+			missing_fields.append(f"User ID/Name missing for HOD Employee {hod_employee}")
 
 	employee_name = frappe.db.get_value("Employee", doc.employee, "employee_name")
 
 	# Get email template from Beams HR Settings
 	template = frappe.db.get_single_value("Beams HR Settings", "leave_application_hod_approval_template")
 	if not template:
-		frappe.log_error(
-			"No email template configured in Beams HR Settings for Leave Application HOD notification."
-		)
+		missing_fields.append("Leave Application HOD Approval Template in Beams HR Settings")
+
+	if missing_fields:
+		error_message = "Missing configurations detected in Leave Application HOD Notification:\n" + "\n".join(f"- {field}" for field in missing_fields)
+		frappe.log_error(error_message, "Leave Application HOD Notification: Missing Configurations")
 		return
 	email_template = frappe.get_doc("Email Template", template)
 	context = {
@@ -225,7 +233,6 @@ def send_leave_application_hod_notification(doc, method=None):
 		message=message,
 		subject=email_template.subject
 	)
-
 
 @frappe.whitelist()
 def validate_holiday_overlap(doc):
