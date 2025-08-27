@@ -1,7 +1,18 @@
 import frappe
 from frappe import _
 from frappe.custom.doctype.custom_field.custom_field import create_custom_fields
+from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
+
+hod_leave_approval_response = '''<div class="ql-editor read-mode">
+    <p>Dear {{ hod_name }},</p>
+    <p>A leave application from <strong>{{ employee_name }}</strong> requires your approval.</p>
+    <p><strong>Leave Type</strong>: {{ doc.leave_type }}</p>
+    <p><strong>From</strong>: {{ doc.from_date }}</p>
+    <p><strong>To</strong>: {{ doc.to_date }}</p>
+    <p><strong>Total Days</strong>: {{ doc.total_leave_days }}</p>
+    <p>Please review the application and take the necessary action in the system.</p>
+</div>'''
 
 def after_install():
 	#Creating BEAMS specific custom fields
@@ -62,6 +73,8 @@ def after_install():
 	create_custom_fields(get_hd_ticket_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
+	setup_notifications()
+
 
 
 
@@ -139,6 +152,7 @@ def before_uninstall():
 	delete_custom_fields(get_asset_maintenance_task_custom_fields())
 
 
+
 def delete_custom_fields(custom_fields: dict):
 	'''
 	Method to Delete custom fields
@@ -155,6 +169,26 @@ def delete_custom_fields(custom_fields: dict):
 		)
 		frappe.clear_cache(doctype=doctype)
 
+def setup_notifications():
+	'''
+		Method to setup notifications for BEAMS
+	'''
+	make_records(get_email_template_records())
+
+def get_email_template_records():
+    """
+    Returns a list of email templates to be created.
+    """
+    records = [
+        {
+            "doctype": "Email Template",
+            "name": _("Leave Application HOD Approval Notification"),
+            "response": hod_leave_approval_response,
+            "subject": _("Leave Application from {{ employee_name }} Pending Your Approval"),
+            "owner": frappe.session.user,
+        }
+    ]
+    return records
 
 def get_hd_ticket_type_custom_fields():
     '''
