@@ -296,11 +296,20 @@ frappe.ui.form.on('Project', {
       }
   });
 
-  frappe.ui.form.on('Required Manpower Details', {
-      required_to: function(frm, cdt, cdn) {
-          validate_dates(cdt, cdn);
-      }
-  });
+frappe.ui.form.on('Required Manpower Details', {
+	required_to: function(frm, cdt, cdn) {
+		validate_dates(cdt, cdn);
+	},
+	// Auto-set Required From & Required To in manpower details child table based on Project's Expected Start & End Dates
+	required_manpower_details_add: function(frm, cdt, cdn){
+		if (frm.doc.expected_start_date){
+			frappe.model.set_value(cdt, cdn, 'required_from', frm.doc.expected_start_date)
+		}
+		if (frm.doc.expected_end_date){
+			frappe.model.set_value(cdt, cdn, 'required_to', frm.doc.expected_end_date)
+		}
+	}
+});
 
   function validate_dates(cdt, cdn) {
       let row = locals[cdt][cdn];
