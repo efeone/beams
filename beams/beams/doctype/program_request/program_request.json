@@ -25,6 +25,8 @@
   "description",
   "requirements",
   "section_break_tzpl",
+  "reason_for_revision",
+  "reason_for_rejection",
   "amended_from"
  ],
  "fields": [
@@ -147,12 +149,27 @@
    "fieldtype": "Float",
    "label": "Expected Revenue",
    "mandatory_depends_on": "eval:doc.generates_revenue == 1\n"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.workflow_state == 'Request for Approval' || doc.workflow_state == 'Rejected';",
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection",
+   "read_only_depends_on": "eval: doc.workflow_state == 'Rejected';"
+  },
+  {
+   "depends_on": "eval:doc.workflow_state == 'Request for Approval' || \"doc.workflow_state == 'Draft'\"\n",
+   "fieldname": "reason_for_revision",
+   "fieldtype": "Small Text",
+   "label": "Reason for Revision",
+   "read_only_depends_on": "eval: doc.workflow_state !='Request for Approval';"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-05 15:48:07.334627",
+ "modified": "2025-08-27 12:55:29.768393",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",
@@ -173,6 +190,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
