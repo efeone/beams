@@ -5,13 +5,13 @@ from frappe.desk.page.setup_wizard.setup_wizard import make_records
 
 
 hod_leave_approval_response = '''<div class="ql-editor read-mode">
-    <p>Dear {{ hod_name }},</p>
-    <p>A leave application from <strong>{{ employee_name }}</strong> requires your approval.</p>
-    <p><strong>Leave Type</strong>: {{ doc.leave_type }}</p>
-    <p><strong>From</strong>: {{ doc.from_date }}</p>
-    <p><strong>To</strong>: {{ doc.to_date }}</p>
-    <p><strong>Total Days</strong>: {{ doc.total_leave_days }}</p>
-    <p>Please review the application and take the necessary action in the system.</p>
+	<p>Dear {{ hod_name }},</p>
+	<p>A leave application from <strong>{{ employee_name }}</strong> requires your approval.</p>
+	<p><strong>Leave Type</strong>: {{ doc.leave_type }}</p>
+	<p><strong>From</strong>: {{ doc.from_date }}</p>
+	<p><strong>To</strong>: {{ doc.to_date }}</p>
+	<p><strong>Total Days</strong>: {{ doc.total_leave_days }}</p>
+	<p>Please review the application and take the necessary action in the system.</p>
 </div>'''
 
 def after_install():
@@ -176,56 +176,43 @@ def setup_notifications():
 	make_records(get_email_template_records())
 
 def get_email_template_records():
-    """
-    Returns a list of email templates to be created.
-    """
-    records = [
-        {
-            "doctype": "Email Template",
-            "name": _("Leave Application HOD Approval Notification"),
-            "response": hod_leave_approval_response,
-            "subject": _("Leave Application from {{ employee_name }} Pending Your Approval"),
-            "owner": frappe.session.user,
-        }
-    ]
-    return records
+	"""
+	Returns a list of email templates to be created.
+	"""
+	records = [
+		{
+			"doctype": "Email Template",
+			"name": _("Leave Application HOD Approval Notification"),
+			"response": hod_leave_approval_response,
+			"subject": _("Leave Application from {{ employee_name }} Pending Your Approval"),
+			"owner": frappe.session.user,
+		}
+	]
+	return records
 
 def get_hd_ticket_type_custom_fields():
-    '''
-    Custom fields that need to be added to the HD Ticket Type DocType
-    '''
-    return {
-        "HD Ticket Type": [
-            {
-                "fieldname": "team_name",
-                "fieldtype": "Link",
-                "label": "Team Name",
-                "options":"HD Team",
-                "insert_after": "is_system"
-            }
-        ]
-    }
+	'''
+	Custom fields that need to be added to the HD Ticket Type DocType
+	'''
+	return {
+		"HD Ticket Type": [
+			{
+				"fieldname": "team_name",
+				"fieldtype": "Link",
+				"label": "Team Name",
+				"options":"HD Team",
+				"insert_after": "is_system"
+			}
+		]
+	}
 
 def get_hd_ticket_custom_fields():
-    '''
-    Custom fields to be added to the HD Ticket Doctype
-    '''
-    return {
-        "HD Ticket": [
+	'''
+	Custom fields to be added to the HD Ticket Doctype
+	'''
+	return {
+		"HD Ticket": [
 
-            {
-                "fieldname": "raised_for",
-                "fieldtype": "Link",
-                "options": "User",
-                "label": "Raised For (Email)",
-                "insert_after": "raised_by"
-            },
-            {
-                "fieldname": "attach",
-                "fieldtype": "Attach",
-                "label": "Attachments",
-                "insert_after": "agent_group"
-            },
 			{
                 "fieldname": "ticket_section_break",
                 "fieldtype": "Section Break",
