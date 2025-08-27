@@ -205,11 +205,11 @@ def get_hd_ticket_custom_fields():
                 "insert_after": "ticket_section_break"
             },
             {
-                "fieldname": "spare_part_item_table",
+                "fieldname": "material_request_items",
                 "fieldtype": "Table",
-                "label": "Spare Part Items",
+                "label": "Material Request Items",
                 "insert_after": "material_request_needed",
-                "options": "Spare Part Item",
+                "options": "Material Request Items",
                 "depends_on": "eval:doc.material_request_needed == 1"
             }
         ]
@@ -4607,6 +4607,30 @@ def get_property_setters():
 			"field_name": "schedule_date",
 			"property":"default",
 			"value": "Today"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Project",
+			"field_name": "users_section",
+			"property": "hidden",
+			"property_type": "Section Break",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Project",
+			"field_name": "percent_complete_method",
+			"property": "hidden",
+			"property_type": "Select",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Project",
+			"field_name": "percent_complete",
+			"property": "hidden",
+			"property_type": "Percent",
+			"value": 1
 		}
 ]
 

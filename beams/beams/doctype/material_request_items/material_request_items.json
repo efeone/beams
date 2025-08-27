@@ -39,7 +39,7 @@
  "modified": "2025-08-22 11:56:12.556651",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Spare Part Item",
+ "name": "Material Request Items",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",

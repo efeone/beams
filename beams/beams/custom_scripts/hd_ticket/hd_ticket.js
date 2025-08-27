@@ -8,8 +8,6 @@ frappe.ui.form.on('HD Ticket', {
 
     refresh(frm) {
         frm.clear_custom_buttons();
-        handle_agent_visibility(frm);
-
         if (frm.doc.material_request_needed) {
             add_material_request_button(frm);
         }
@@ -32,31 +30,14 @@ frappe.ui.form.on('HD Ticket', {
 });
 
 /*
-   Restricts field visibility for users who do not have the "Agent" role.
-   Only the defined fields remain visible to non-Agents.
-*/
-function handle_agent_visibility(frm) {
-    if (!frappe.user.has_role('Agent')) {
-        const visible_fields = ['subject', 'raised_by','raised_for', 'description','ticket_type'];
-        frm.fields.forEach(field => {
-            const name = field.df.fieldname;
-            if (name && !['Section Break', 'Column Break'].includes(field.df.fieldtype)) {
-                frm.set_df_property(name, 'hidden', !visible_fields.includes(name));
-            }
-        });
-        frm.refresh_fields();
-    }
-}
-
-/*
   Adds a "Material Request" button under the "Create" group in the form.
   On click, it creates a new "Material Request" document.
-  Populates items from the 'spare_part_item_table' child table of HD Ticket.
+  Populates items from the 'material_request_items' child table of HD Ticket.
 */
 function add_material_request_button(frm) {
     frm.add_custom_button(__('Material Request'), () => {
         frappe.new_doc('Material Request', {
-            items: (frm.doc.spare_part_item_table || []).map(row => ({
+            items: (frm.doc.material_request_items || []).map(row => ({
                 item_code: row.item,
                 qty: row.quantity,
                 schedule_date: row.required_by
