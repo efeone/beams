@@ -293,7 +293,8 @@ doc_events = {
 
 	},
 	"Leave Application" : {
-		"validate": "beams.beams.custom_scripts.leave_application.leave_application.validate"
+		"validate": "beams.beams.custom_scripts.leave_application.leave_application.validate",
+		"on_update": "beams.beams.custom_scripts.leave_application.leave_application.send_leave_application_hod_notification",
 	},
 	"Employee" : {
 		"autoname": "beams.beams.custom_scripts.employee.employee.autoname",

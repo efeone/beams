@@ -180,6 +180,51 @@ def validate_min_days(doc):
 
 		frappe.throw(msg, title=_("Minimum Consecutive Leaves Not Met"))
 
+def send_leave_application_hod_notification(doc, method=None):
+	"""
+	Notify the Head of Department when a Leave Application requires their approval.
+
+	This is triggered when the workflow state changes to "Pending HOD Approval".
+	The notification uses the Email Template defined in Beams HR Settings.
+	"""
+	# Trigger only when workflow state = "Pending HOD Approval"
+	if doc.workflow_state != "Pending HOD Approval":
+		return
+
+	department = frappe.db.get_value("Employee", doc.employee, "department")
+	if not department:
+		return
+
+	hod_employee = frappe.db.get_value("Department", department, "head_of_department")
+	if not hod_employee:
+		return
+
+	hod_user, hod_name = frappe.db.get_value("Employee", hod_employee, ["user_id", "employee_name"])
+	if not hod_user:
+		return
+
+	employee_name = frappe.db.get_value("Employee", doc.employee, "employee_name")
+
+	# Get email template from Beams HR Settings
+	template = frappe.db.get_single_value("Beams HR Settings", "leave_application_hod_approval_template")
+	if not template:
+		frappe.log_error(
+			"No email template configured in Beams HR Settings for Leave Application HOD notification."
+		)
+		return
+	email_template = frappe.get_doc("Email Template", template)
+	context = {
+			'doc': doc,
+			'hod_name': hod_name,
+			'hod_user': hod_user,
+			'employee_name': employee_name,
+		}
+	message = frappe.render_template(email_template.response_html or email_template.response, context)
+	frappe.sendmail(
+		recipients=[hod_user],
+		message=message,
+		subject=email_template.subject
+	)
 
 
 @frappe.whitelist()

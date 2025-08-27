@@ -33,6 +33,8 @@
   "default_leave_policy",
   "column_break_laz7",
   "leave_period",
+  "section_break_kuat",
+  "leave_application_hod_approval_template",
   "shift_settings_tab",
   "shift_publisher_role",
   "shift_publication_day",
@@ -289,13 +291,24 @@
   {
    "fieldname": "section_break_pdeh",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_break_kuat",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "leave_application_hod_approval_template",
+   "fieldtype": "Link",
+   "label": "Leave Application HOD Approval Template",
+   "options": "Email Template",
+   "description": "template for notifying the Head of Department when a Leave Application requires their approval."
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-07-30 10:17:58.577158",
+ "modified": "2025-08-27 10:17:04.746517",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
