@@ -220,7 +220,8 @@ doc_events = {
 	"Material Request":{
 		"before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
-		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod"
+		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
+		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"
 	},
 	"Sales Order": {
 		"autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",

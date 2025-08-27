@@ -5,6 +5,11 @@ from frappe.model.mapper import get_mapped_doc
 from frappe.desk.form.assign_to import add as add_assign
 
 
+def validate(doc,method):
+		# Validate that "Reason for Rejection" is filled if the status is "Rejected"
+		if doc.workflow_state == "Rejected" and not doc.reason_for_rejection:
+			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
 @frappe.whitelist()
 def notify_stock_managers(doc=None, method=None):
 	"""
