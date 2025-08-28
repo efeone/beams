@@ -208,6 +208,12 @@ class ShiftSwapRequest(Document):
 			s_shift.submit()
 
 def get_permission_query_conditions(user):
+	'''
+	Permission query conditions for Shift Swap Request based on user roles.
+	- System Manager and HR Manager have unrestricted access.
+	- HOD can access requests within their department.
+	- Employees can access their own requests and those where they are the swap_with_employee.
+	'''
 	if not user: 
 		user = frappe.session.user
 	
