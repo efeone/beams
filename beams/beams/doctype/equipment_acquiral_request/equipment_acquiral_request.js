@@ -3,7 +3,7 @@
 
 frappe.ui.form.on("Equipment Acquiral Request", {
     refresh(frm) {
-        if (frm.doc.docstatus === 1 && frm.doc.workflow_state === 'Approved') {
+        if (frm.doc.docstatus === 1 && frm.doc.workflow_state === 'Initiate a Purchase Order') {
             // Check if all required_items are fully acquired
             let all_acquired = frm.doc.required_items.every(row => row.quantity == row.acquired_qty);
 
