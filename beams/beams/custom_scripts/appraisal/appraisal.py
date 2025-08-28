@@ -457,7 +457,7 @@ def notify_assestment_officer(doc):
 		"for_user": user_id,
 		"type": "Alert",
 		"document_type": "Appraisal",
-		"document_name": appraisal,
+		"document_name": appraisal.name,
 		"from_user": frappe.session.user,
 		"email_content": message
 	}).insert(ignore_permissions=True)
