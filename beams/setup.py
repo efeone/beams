@@ -74,6 +74,8 @@ def after_install():
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_item_custom_fields(), ignore_validate=True)
+	
+	setup_notifications()
 
 
 
@@ -5361,11 +5363,11 @@ def get_supplier_quotation_custom_fields():
 				"insert_after": "base_net_total"
 			},
    			{
-                "fieldname": "suggested_items_by_supplier",
-                "fieldtype": "Table",
-                "label": "Suggested Items by Supplier",	
-                "options": "Suggested Items By Supplier",
-                "insert_after": "items"
+				"fieldname": "suggested_items_by_supplier",
+				"fieldtype": "Table",
+				"label": "Suggested Items by Supplier",	
+				"options": "Suggested Items By Supplier",
+				"insert_after": "items"
    			}
 		]
 	}
