@@ -228,73 +228,70 @@ frappe.ui.form.on('Project', {
     });
 
 
-    // Apply filter dynamically when Designation field changes in child table
-  frappe.ui.form.on('Allocated Manpower Detail', {
-      designation: function(frm, cdt, cdn) {
-          let row = locals[cdt][cdn];
-          frappe.model.set_value(cdt, cdn, 'employee', '');
-          if (row.designation) {
-              frm.fields_dict.allocated_manpower_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
-                  let child_row = locals[cdt][cdn];
-                  return {
-                      filters: {
-                          designation: child_row.designation
-                      }
-                  };
-              };
-          }
-          frm.refresh_field("allocated_manpower_details");
-      },
+// Apply filter dynamically when Designation field changes in child table
+frappe.ui.form.on('Allocated Manpower Detail', {
+	designation: function(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		frappe.model.set_value(cdt, cdn, 'employee', '');
+		if (row.designation) {
+			frm.fields_dict.allocated_manpower_details.grid.get_field("employee").get_query = function(doc, cdt, cdn) {
+				let child_row = locals[cdt][cdn];
+				return {
+					filters: {
+						designation: child_row.designation
+					}
+				};
+			};
+		}
+		frm.refresh_field("allocated_manpower_details");
+	},
 
-      return: function(frm, cdt, cdn) {
-          let child = locals[cdt][cdn];
+	return: function(frm, cdt, cdn) {
+		let child = locals[cdt][cdn];
 
-          frappe.prompt([
-              {
-                  label: 'Returned Date',
-                  fieldname: 'returned_date',
-                  fieldtype: 'Datetime',
-                  reqd: 1
-              },
-              {
-                  label: 'Returned Reason',
-                  fieldname: 'returned_reason',
-                  fieldtype: 'Small Text',
-                  reqd: 1
-              }
-          ],
-          function(values) {
-              frappe.model.set_value(cdt, cdn, 'returned_date', values.returned_date);
-              frappe.model.set_value(cdt, cdn, 'returned_reason', values.returned_reason);
-              frappe.model.set_value(cdt, cdn, 'returned', 1);
+		frappe.prompt([
+			{
+				label: 'Returned Date',
+				fieldname: 'returned_date',
+				fieldtype: 'Datetime',
+				reqd: 1,
+				default: frappe.datetime.now_datetime()
+			},
+			{
+				label: 'Returned Reason',
+				fieldname: 'returned_reason',
+				fieldtype: 'Small Text',
+				reqd: 1
+			}
+		],
+		function(values) {
+			let args = {
+				project: frm.doc.name,
+				assigned_from: child.assigned_from,
+				returned_date: values.returned_date,
+				returned_reason: values.returned_reason
+			};
 
-              let args = {
-                  project: frm.doc.name,
-                  assigned_from: child.assigned_from,
-                  returned_date: values.returned_date,
-                  returned_reason: values.returned_reason
-              };
+			if (child.employee) {
+				args.employee = child.employee;
+			} else if (child.hired_personnel) {
+				args.hired_personnel = child.hired_personnel;
+			}
 
-              if (child.employee) {
-                  args.employee = child.employee;
-              } else if (child.hired_personnel) {
-                  args.hired_personnel = child.hired_personnel;
-              }
-
-              frappe.call({
-                  method: "beams.beams.custom_scripts.project.project.update_return_details_in_log",
-                  args: args,
-                  callback: function(r) {
-                      if (!r.exc) {
-                          frappe.msgprint("Manpower Transaction Log updated.");
-                      }
-                  }
-              });
-          },
-          'Return Manpower',
-          'Submit');
-      }
-  });
+			frappe.call({
+				method: "beams.beams.custom_scripts.project.project.update_return_details_in_log",
+				args: args,
+				callback: function(r) {
+					if (!r.exc) {
+						frappe.msgprint("Manpower Transaction Log updated.");
+					}
+				}
+			});
+		},
+		'Return Manpower',
+		'Submit');
+	}
+});
 
 frappe.ui.form.on('Required Manpower Details', {
 	required_to: function(frm, cdt, cdn) {
@@ -311,129 +308,126 @@ frappe.ui.form.on('Required Manpower Details', {
 	}
 });
 
-  function validate_dates(cdt, cdn) {
-      let row = locals[cdt][cdn];
-      if (row.required_from && row.required_to && row.required_from > row.required_to) {
-          frappe.msgprint(`Row ${row.idx || ''}: "Required From" must be before "Required To"`);
-      }
-  }
+function validate_dates(cdt, cdn) {
+	let row = locals[cdt][cdn];
+	if (row.required_from && row.required_to && row.required_from > row.required_to) {
+		frappe.msgprint(`Row ${row.idx || ''}: "Required From" must be before "Required To"`);
+	}
+}
 
+frappe.ui.form.on('Required Items Table', {
+required_item: function(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+	if (row.required_item) {
+	frappe.call({
+		method: "beams.beams.custom_scripts.project.project.get_available_quantities",
+		args: {
+		items: JSON.stringify([row.required_item]),
+		source_name: frm.doc.name
+		},
+		callback: function(r) {
+		if (r.message) {
+			if (r.message._error) {
+			frappe.model.set_value(cdt, cdn, 'available_quantity', 0);
+			} else {
+			frappe.model.set_value(cdt, cdn, 'available_quantity', r.message[row.required_item] || 0);
+			}
+		}
+		}
+	});
+	}
+}
+});
 
-  frappe.ui.form.on('Required Items Table', {
-    required_item: function(frm, cdt, cdn) {
-      let row = locals[cdt][cdn];
-      if (row.required_item) {
-        frappe.call({
-          method: "beams.beams.custom_scripts.project.project.get_available_quantities",
-          args: {
-            items: JSON.stringify([row.required_item]),
-            source_name: frm.doc.name
-          },
-          callback: function(r) {
-            if (r.message) {
-              if (r.message._error) {
-                frappe.model.set_value(cdt, cdn, 'available_quantity', 0);
-              } else {
-                frappe.model.set_value(cdt, cdn, 'available_quantity', r.message[row.required_item] || 0);
-              }
-            }
-          }
-        });
-      }
-    }
-  });
+frappe.ui.form.on('Allocated Vehicle Details', {
+	return: function(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+		frappe.prompt([
+			{
+				label: 'Return Date',
+				fieldname: 'return_date',
+				fieldtype: 'Datetime',
+				reqd: 1,
+				default: frappe.datetime.now_datetime()
+			},
+			{
+				label: 'Return Reason',
+				fieldname: 'return_reason',
+				fieldtype: 'Small Text',
+				reqd: 1
+			}
+		],
+		function(values) {
+			row.return_date = values.return_date;
+			row.return_reason = values.return_reason;
+			row.returned = 1;
+			frm.refresh_field('allocated_vehicle_details');
+			frappe.call({
+				method: "beams.beams.custom_scripts.project.project.update_vehicle_return_details_in_log",
+				args: {
+					project: frm.doc.name,
+					vehicle: row.vehicle,
+					return_date: values.return_date,
+					return_reason: values.return_reason
+				},
+				callback: function(r) {
+					if (!r.exc) {
+						frappe.msgprint("Vehicle Transaction Log updated.");
+						frm.save();
+					}
+				}
+			});
+		},
+		'Return Vehicle',
+		'Submit');
+	}
+});
 
-  frappe.ui.form.on('Allocated Vehicle Details', {
-      return: function(frm, cdt, cdn) {
-          let row = locals[cdt][cdn];
-          frappe.prompt([
-              {
-                  label: 'Return Date',
-                  fieldname: 'return_date',
-                  fieldtype: 'Datetime',
-                  reqd: 1
-              },
-              {
-                  label: 'Return Reason',
-                  fieldname: 'return_reason',
-                  fieldtype: 'Small Text',
-                  reqd: 1
-              }
-          ],
-          function(values) {
-              row.return_date = values.return_date;
-              row.return_reason = values.return_reason;
-              row.returned = 1;
-              frm.refresh_field('allocated_vehicle_details');
-              frappe.call({
-                  method: "beams.beams.custom_scripts.project.project.update_vehicle_return_details_in_log",
-                  args: {
-                      project: frm.doc.name,
-                      vehicle: row.vehicle,
-                      return_date: values.return_date,
-                      return_reason: values.return_reason
-                  },
-                  callback: function(r) {
-                      if (!r.exc) {
-                          frappe.msgprint("Vehicle Transaction Log updated.");
-                          frm.save();
-                      }
-                  }
-              });
-          },
-          'Return Vehicle',
-          'Submit');
-      }
-  });
+frappe.ui.form.on('Required Items Detail', {
+	return: function(frm, cdt, cdn) {
+		let child = locals[cdt][cdn];
 
-  frappe.ui.form.on('Required Items Detail', {
-      return: function(frm, cdt, cdn) {
-          let child = locals[cdt][cdn];
+		frappe.prompt([
+			{
+				label: 'Return Date',
+				fieldname: 'return_date',
+				fieldtype: 'Datetime',
+				reqd: 1,
+				default: frappe.datetime.now_datetime()
+			},
+			{
+				label: 'Returned Reason',
+				fieldname: 'returned_reason',
+				fieldtype: 'Small Text',
+				reqd: 1
+			},
+			{
+			label: 'Returned Count',
+			fieldname: 'returned_count',
+			fieldtype: 'Int',
+			reqd: 1
+		}
+		],
+		function(values) {
+			let args = {
+				project: frm.doc.name,
+				required_item: child.required_item,
+				return_date: values.return_date,
+				returned_reason: values.returned_reason,
+				returned_count: values.returned_count
+			};
 
-          frappe.prompt([
-              {
-                  label: 'Return Date',
-                  fieldname: 'return_date',
-                  fieldtype: 'Datetime',
-                  reqd: 1
-              },
-              {
-                  label: 'Returned Reason',
-                  fieldname: 'returned_reason',
-                  fieldtype: 'Small Text',
-                  reqd: 1
-              },
-              {
-                label: 'Returned Count',
-                fieldname: 'returned_count',
-                fieldtype: 'Int',
-                reqd: 1
-            }
-          ],
-          function(values) {
-              frappe.model.set_value(cdt, cdn, 'return_date', values.return_date);
-              frappe.model.set_value(cdt, cdn, 'returned_reason', values.returned_reason);
-              frappe.model.set_value(cdt, cdn, 'returned_count', values.returned_count);
-
-              let args = {
-                  project: frm.doc.name,
-                  required_item: child.required_item,
-                  return_date: values.return_date,
-                  returned_reason: values.returned_reason,
-                  returned_count: values.returned_count
-              };
-
-              frappe.call({
-                  method: "beams.beams.custom_scripts.project.project.update_return_details_in_equipment_log",
-                  args: args,
-                  callback: function(r) {
-                      if (!r.exc) {
-                          frappe.msgprint("Equipment Transaction Log updated successfully.");
-                      }
-                  }
-              });
-          },
-          'Return Equipment',
-          'Submit');
-      }
-  });
+			frappe.call({
+				method: "beams.beams.custom_scripts.project.project.update_return_details_in_equipment_log",
+				args: args,
+				callback: function(r) {
+					if (!r.exc) {
+						frappe.msgprint("Equipment Transaction Log updated successfully.");
+					}
+				}
+			});
+		},
+		'Return Equipment',
+		'Submit');
+	}
+});
