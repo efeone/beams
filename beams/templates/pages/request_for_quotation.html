@@ -1,0 +1,373 @@
+{% extends "templates/web.html" %}
+
+{% block header %}
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Custom styles */
+  .remove-btn { display: none; }
+  .suggested-item:hover .remove-btn { display: block; }
+  .specs-section { display: none; }
+  .specs-section.show { display: block; }
+</style>
+
+<div class="w-full bg-white rounded-lg shadow-sm p-10 pe-19 mb-6">
+  <h1 class="text-5xl font-semibold text-gray-900 mb-2">{{ doc.name }}</h1>
+  <p class="text-gray-600 mb-0">
+    Supplier: {{ doc.supplier }} | Date: {{ doc.get_formatted("transaction_date") }}
+  </p>
+</div>
+{% endblock %}
+
+{% block page_content %}
+<div class="max-w-7xl mx-auto px-4">
+
+  <div class="bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 mb-6">
+    <strong class="font-semibold">Instructions:</strong> Enter your rates and quantities. Only items with rates will be included in the quotation. Click "Add Specifications" for detailed specs. Use "Add New Product" to suggest alternatives.
+  </div>
+
+  <!-- Items Section -->
+  <div id="items-container" class="space-y-4">
+    {% if doc.items %}
+      {% for d in doc.items %}
+      <div class="item-card bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200" data-idx="{{ d.idx }}" data-item-code="{{ d.item_code }}" data-is-original="true">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-7 items-start">
+          <div class="md:col-span-4">
+            <h5 class="text-lg font-medium text-gray-900 mb-2">{{ d.item_name }}</h5>
+            <p class="text-sm text-gray-600 mb-3">
+              {{ d.description or "" }}
+              {% if d.item_code %}
+              <span class="ml-2 text-gray-500 text-xs">[Code: {{ d.item_code }}]</span>
+              {% endif %}
+            </p>
+            <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-black rounded">Original Item</span>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
+            <input type="number" class="qty-input w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" value="{{ d.qty }}" min="1" onchange="calculateAmount(this)" />
+            <small class="text-xs text-gray-500 mt-1 block">{{ d.uom }}</small>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Rate <span class="text-red-500">*</span></label>
+            <div class="flex">
+              <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 rounded-l-md">{{ doc.currency_symbol or "₹" }}</span>
+              <input type="number" class="rate-input flex-1 px-3 py-2 border rounded-r-md focus:ring-2 focus:ring-blue-500" placeholder="0.00" step="0.01" onchange="calculateAmount(this)" />
+            </div>
+            <small class="text-xs text-gray-500 mt-1 block">Required to include item</small>
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
+            <input type="text" class="amount-display w-full px-3 py-2 border rounded-md bg-gray-50" value="{{ doc.currency_symbol or '₹' }}0.00" readonly />
+          </div>
+
+          <div class="md:col-span-2">
+            <label class="block text-sm font-medium text-gray-700 mb-1">&nbsp;</label>
+            <button type="button" class="w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50" onclick="toggleSpecs(this)">Add Specifications</button>
+          </div>
+        </div>
+
+        <!-- Specifications -->
+        <div class="specs-section bg-gray-50 rounded-lg p-4 mt-4">
+          <h6 class="text-base font-semibold text-gray-900 mb-4">Product Specifications</h6>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="space-y-3">
+              <div><label class="block text-sm">Brand</label><input type="text" name="brand" placeholder="Enter brand" class="w-full px-3 py-2 border rounded-md" /></div>
+              <div><label class="block text-sm">Model</label><input type="text" name="model" placeholder="Enter model" class="w-full px-3 py-2 border rounded-md" /></div>
+              <div><label class="block text-sm">Warranty</label><input type="text" name="warranty" placeholder="e.g., 1 year" class="w-full px-3 py-2 border rounded-md" /></div>
+            </div>
+            <div class="space-y-3">
+              <div><label class="block text-sm">Lead Time</label><input type="text" name="lead_time" placeholder="e.g., 10 days" class="w-full px-3 py-2 border rounded-md" /></div>
+              <div><label class="block text-sm">Item Description</label><textarea name="item_description" placeholder="Brief item description" rows="3" class="w-full px-3 py-2 border rounded-md"></textarea></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+
+  <!-- Add New Product -->
+  <div class="text-center mb-6 mt-4">
+    <button class="px-6 py-2 text-black border border-black rounded-md hover:bg-gray-100" onclick="addNewProduct()">+ Add New Product</button>
+  </div>
+
+  <!-- Grand Total -->
+  <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
+    <div class="text-right text-lg font-medium text-gray-900">
+      Grand Total: {{ doc.currency_symbol or "₹" }}<span id="grandTotal">0.00</span>
+    </div>
+    <div class="text-right text-sm text-gray-500 mt-1">
+      Only items with rates are included
+    </div>
+  </div>
+
+  <!-- Notes -->
+  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
+    <div class="bg-gray-50 px-4 py-3 border-b"><h3 class="text-sm font-semibold text-gray-900">Additional Notes</h3></div>
+    <div class="p-4">
+      <textarea placeholder="Add any notes or terms here..." rows="4" class="w-full px-3 py-2 border rounded-md"></textarea>
+    </div>
+  </div>
+
+  <!-- Action Buttons -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <button class="w-full px-4 py-3 border border-black rounded-md hover:bg-gray-100" onclick="saveDraft()">Save Draft</button>
+    {% if doc.items %}
+    <button class="w-full px-4 py-3 border border-black rounded-md hover:bg-gray-100" onclick="submitQuotation()">Submit Quotation</button>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  
+  function calculateAmount(element) {
+    const card = element.closest(".item-card");
+    const qty = parseFloat(card.querySelector(".qty-input").value) || 0;
+    const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
+    const amount = qty * rate;
+    const currencySymbol = "{{ doc.currency_symbol or '₹' }}";
+    card.querySelector(".amount-display").value = currencySymbol + amount.toFixed(2);
+    calculateGrandTotal();
+    updateItemStatus(card, rate);
+  }
+
+  function updateItemStatus(card, rate) {
+    // Visual feedback for items with/without rates
+    const rateInput = card.querySelector(".rate-input");
+    if (rate > 0) {
+      rateInput.classList.remove("border-red-300");
+      rateInput.classList.add("border-green-300");
+    } else {
+      rateInput.classList.remove("border-green-300");
+      rateInput.classList.add("border-red-300");
+    }
+  }
+
+  function calculateGrandTotal() {
+    let total = 0;
+    document.querySelectorAll(".item-card").forEach((card) => {
+      const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
+      if (rate > 0) { // Only include items with rates in grand total
+        const value = card.querySelector(".amount-display").value.replace(/[^0-9.-]/g, "");
+        total += parseFloat(value) || 0;
+      }
+    });
+    document.getElementById("grandTotal").textContent = total.toFixed(2);
+  }
+
+  function toggleSpecs(button) {
+    const specs = button.closest(".item-card").querySelector(".specs-section");
+    specs.classList.toggle("show");
+    button.textContent = specs.classList.contains("show") ? "Hide Specifications" : "Add Specifications";
+  }
+
+  function removeItem(button) {
+    button.closest(".item-card").remove();
+    calculateGrandTotal();
+  }
+
+  function addNewProduct() {
+    const container = document.getElementById("items-container");
+    const newItem = document.createElement("div");
+    newItem.className = "item-card suggested-item bg-white border rounded-lg p-6 relative";
+    newItem.setAttribute("data-is-suggested", "true");
+    newItem.innerHTML = `
+      <button class="remove-btn absolute top-3 right-3 w-6 h-6 bg-red-600 text-white rounded-full" onclick="removeItem(this)">×</button>
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
+        <div class="md:col-span-4">
+          <input type="text" placeholder="Product Name" class="product-name-input w-full px-3 py-2 border rounded-md mb-2" required>
+          <textarea placeholder="Product Description" rows="2" class="product-description-input w-full px-3 py-2 border rounded-md mb-3"></textarea>
+          <span class="inline-block px-2 py-1 text-xs font-semibold bg-yellow-400 rounded">Suggested Product</span>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">Quantity</label>
+          <input type="number" value="1" min="1" class="qty-input w-full px-3 py-2 border rounded-md" onchange="calculateAmount(this)">
+          <input type="text" value="Nos" placeholder="UOM" class="uom-input w-full px-3 py-2 border rounded-md mt-1">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">Rate <span class="text-red-500">*</span></label>
+          <div class="flex">
+            <span class="inline-flex items-center px-3 bg-gray-50 border border-r-0 rounded-l-md">{{ doc.currency_symbol or "₹" }}</span>
+            <input type="number" placeholder="0.00" step="0.01" class="rate-input flex-1 px-3 py-2 border rounded-r-md border-red-300" onchange="calculateAmount(this)">
+          </div>
+          <small class="text-xs text-gray-500 mt-1 block">Required to include item</small>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">Amount</label>
+          <input type="text" value="{{ doc.currency_symbol or '₹' }}0.00" readonly class="amount-display w-full px-3 py-2 border rounded-md bg-gray-50">
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-sm mb-1">&nbsp;</label>
+          <button type="button" class="w-full px-3 py-2 border rounded-md" onclick="toggleSpecs(this)">Add Specifications</button>
+        </div>
+      </div>
+      <div class="specs-section bg-gray-50 rounded-lg p-4 mt-4">
+        <h6 class="text-base font-semibold mb-4">Product Specifications</h6>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-3">
+            <div><label class="block text-sm">Brand</label><input type="text" name="brand" placeholder="Enter brand" class="w-full px-3 py-2 border rounded-md"></div>
+            <div><label class="block text-sm">Model</label><input type="text" name="model" placeholder="Enter model" class="w-full px-3 py-2 border rounded-md"></div>
+            <div><label class="block text-sm">Warranty</label><input type="text" name="warranty" placeholder="e.g., 1 year" class="w-full px-3 py-2 border rounded-md"></div>
+          </div>
+          <div class="space-y-3">
+            <div><label class="block text-sm">Lead Time</label><input type="text" name="lead_time" placeholder="e.g., 10 days" class="w-full px-3 py-2 border rounded-md"></div>
+            <div><label class="block text-sm">Item Description</label><textarea name="item_description" placeholder="Brief item description" rows="3" class="w-full px-3 py-2 border rounded-md"></textarea></div>
+          </div>
+        </div>
+      </div>`;
+    container.appendChild(newItem);
+  }
+
+  // --- Data Collection - Separate original and suggested items ---
+  function getOriginalItemData(card) {
+    const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
+    
+    // Only return data if rate is present
+    if (rate <= 0) {
+      return null;
+    }
+
+    return {
+      item_code: card.dataset.itemCode || null,
+      item_name: card.querySelector("h5")?.textContent || "",
+      description: card.querySelector("p")?.textContent || "",
+      item_description: card.querySelector("textarea[name='item_description']")?.value || "",
+      qty: parseFloat(card.querySelector(".qty-input")?.value) || 1,
+      uom: card.querySelector("small")?.textContent || "",
+      rate: rate,
+      brand: card.querySelector("input[name='brand']")?.value || "",
+      model: card.querySelector("input[name='model']")?.value || "",
+      warranty: card.querySelector("input[name='warranty']")?.value || "",
+      lead_time: card.querySelector("input[name='lead_time']")?.value || ""
+    };
+  }
+
+  function getSuggestedItemData(card) {
+    const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
+    
+    // Only return data if rate is present
+    if (rate <= 0) {
+      return null;
+    }
+
+    const qty = parseFloat(card.querySelector(".qty-input")?.value) || 1;
+    const amount = qty * rate;
+
+    return {
+      product_name: card.querySelector(".product-name-input")?.value || "",
+      product_description: card.querySelector(".product-description-input")?.value || "",
+      item_description: card.querySelector("textarea[name='item_description']")?.value || "",
+      quantity: qty,
+      uom: card.querySelector(".uom-input")?.value || "",
+      rate: rate,
+      amount: amount
+    };
+  }
+
+  function collectFormData() {
+    const originalItems = [];
+    const suggestedItems = [];
+    
+    document.querySelectorAll(".item-card").forEach(card => {
+      if (card.hasAttribute("data-is-original")) {
+        // Original RFQ item
+        const itemData = getOriginalItemData(card);
+        if (itemData) {
+          originalItems.push(itemData);
+        }
+      } else if (card.hasAttribute("data-is-suggested") || card.classList.contains("suggested-item")) {
+        // Suggested item by supplier
+        const itemData = getSuggestedItemData(card);
+        if (itemData) {
+          suggestedItems.push(itemData);
+        }
+      }
+    });
+    
+    const notes = document.querySelector("textarea[placeholder='Add any notes or terms here...']")?.value || "";
+    
+    return { 
+      supplier: "{{ doc.supplier }}", 
+      rfq: "{{ doc.name }}", 
+      items: originalItems, 
+      suggested_items: suggestedItems,
+      notes: notes 
+    };
+  }
+
+  // --- Actions ---
+  function saveDraft() {
+    const data = collectFormData();
+    console.log("Draft data:", data);
+    const totalOriginal = data.items.length;
+    const totalSuggested = data.suggested_items.length;
+    frappe.show_alert({ 
+      message: `Draft saved - ${totalOriginal} RFQ items, ${totalSuggested} suggested items`, 
+      indicator: "green" 
+    });
+  }
+
+  function submitQuotation() {
+    console.log("Submit button clicked");
+    
+    if (!validateForm()) {
+      console.log("Form validation failed");
+      return;
+    }
+    
+    if (!confirm("Submit quotation? Only items with rates will be included. You cannot edit after submission.")) {
+      console.log("User cancelled submission");
+      return;
+    }
+
+    const formData = collectFormData();
+    console.log("Form data collected:", formData);
+    console.log("Items count:", formData.items.length);
+    console.log("Suggested items count:", formData.suggested_items.length);
+
+    frappe.call({
+      method: "beams.templates.pages.request_for_quotation.submit_supplier_quotation",
+      args: { data: JSON.stringify(formData) },
+      freeze: true,
+      freeze_message: "Submitting Quotation...",
+      callback: function (r) {
+        console.log("Response received:", r);
+        if (!r.exc) {
+          frappe.show_alert({ message: r.message.message, indicator: "green" });
+          setTimeout(() => location.reload(), 1000);
+        } else {
+          console.error("Error in submission:", r.exc);
+          frappe.show_alert({ message: "Error submitting quotation", indicator: "red" });
+        }
+      },
+      error: function(r) {
+        console.error("AJAX error:", r);
+        frappe.show_alert({ message: "Network error during submission", indicator: "red" });
+      }
+    });
+  }
+
+  function validateForm() {
+    const data = collectFormData();
+    console.log("Validation data:", data);
+    const totalItems = data.items.length + data.suggested_items.length;
+    console.log("Total items for validation:", totalItems);
+    
+    if (totalItems === 0) {
+      alert("Please enter a rate for at least one item to submit the quotation.");
+      return false;
+    }
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", function() {
+    calculateGrandTotal();
+    // Add visual indicators for required fields
+    document.querySelectorAll(".rate-input").forEach(input => {
+      input.classList.add("border-red-300");
+    });
+  });
+</script>
+{% endblock %}
