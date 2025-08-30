@@ -452,6 +452,9 @@ def sync_manpower_logs(doc, method):
 
 @frappe.whitelist()
 def update_return_details_in_log(project, assigned_from, returned_date, returned_reason, employee=None, hired_personnel=None):
+	"""
+		Update return details for a manpower record in the Manpower Transaction Log.
+	"""
 	log_name = frappe.db.get_value("Manpower Transaction Log", {"project": project})
 	if not log_name:
 		frappe.throw(_("No Manpower Transaction Log found for this project."))
@@ -465,6 +468,8 @@ def update_return_details_in_log(project, assigned_from, returned_date, returned
 		match_assigned = str(row.assigned_from) == str(assigned_from)
 
 		if match_assigned and (match_employee or match_hired):
+			if row.returned:
+				frappe.throw(_("This manpower has already been returned."))
 			row.returned = 1
 			row.returned_date = returned_date
 			row.returned_reason = returned_reason
@@ -475,7 +480,6 @@ def update_return_details_in_log(project, assigned_from, returned_date, returned
 		log_doc.save(ignore_permissions=True)
 	else:
 		frappe.throw(_("No matching manpower record found in the transaction log."))
-
 
 def on_update_project(doc, method):
 	"""Mark manpower records as returned when a project is Completed."""
@@ -673,11 +677,23 @@ def update_return_details_in_equipment_log(project, required_item, return_date, 
 
 	for row in log_doc.item_log_details:
 		if row.required_item == required_item:
+			total_available_for_return = (row.issued_quantity or 0) + (row.acquired_quantity or 0)
+			already_returned = row.returned_count or 0
+			new_total_returned = already_returned + int(returned_count)
+
+			if new_total_returned > total_available_for_return:
+				remaining = total_available_for_return - already_returned
+				frappe.throw(_(f"Cannot return more than allocated.\n"
+				               f"Total allocated: {total_available_for_return}, "
+				               f"Already returned: {already_returned}, "
+				               f"Remaining: {remaining}, "
+				               f"Tried to return: {new_total_returned}"))
+
 			row.return_date = return_date
 			existing_reason = row.returned_reason or ""
 			new_reason_entry = f"{returned_reason} | Returned On: {return_date} | Returned Count: {returned_count}"
 			row.returned_reason = existing_reason + ("\n" if existing_reason else "") + new_reason_entry
-			row.returned_count = (row.returned_count or 0) + int(returned_count)
+			row.returned_count = new_total_returned
 			updated = True
 			break
 
