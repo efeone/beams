@@ -386,6 +386,7 @@ frappe.ui.form.on('Allocated Vehicle Details', {
 frappe.ui.form.on('Required Items Detail', {
 	return: function(frm, cdt, cdn) {
 		let child = locals[cdt][cdn];
+		let default_returned_count = (child.issued_quantity || 0) + (child.acquired_quantity || 0)
 
 		frappe.prompt([
 			{
@@ -405,7 +406,8 @@ frappe.ui.form.on('Required Items Detail', {
 			label: 'Returned Count',
 			fieldname: 'returned_count',
 			fieldtype: 'Int',
-			reqd: 1
+			reqd: 1,
+			default: default_returned_count
 		}
 		],
 		function(values) {
