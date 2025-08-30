@@ -523,21 +523,26 @@ def sync_vehicle_logs(doc, method):
 		frappe.throw(f"Child table field '{target_child_table}' not found in Vehicle Transaction Log")
 
 	existing_logs = {
-		row.vehicle: row
+		(row.vehicle or row.hired_vehicle): row
 		for row in transaction_log.get(target_child_table)
+		if (row.vehicle or row.hired_vehicle)
 	}
 
 	updated_rows = []
 
 	for row in doc.get(source_child_table) or []:
-		vehicle = row.vehicle
-		existing = existing_logs.get(vehicle)
+		vehicle_key = row.vehicle or row.hired_vehicle
+		if not vehicle_key:
+			continue
+
+		existing = existing_logs.get(vehicle_key)
 
 		from_location = frappe.db.get_value("Location", row.get("from"), "location_name") or row.get("from")
 		to_location = frappe.db.get_value("Location", row.get("to"), "location_name") or row.get("to")
 
 		log_data = {
-			"vehicle": vehicle,
+			"vehicle": row.vehicle or "",
+			"hired_vehicle": row.hired_vehicle or "",
 			"from": from_location,
 			"to": to_location,
 			"no_of_travellers": row.no_of_travellers,
@@ -547,6 +552,7 @@ def sync_vehicle_logs(doc, method):
 		if existing:
 			log_data["return_date"] = existing.return_date
 			log_data["return_reason"] = existing.return_reason
+			log_data["returned"] = existing.returned
 
 		updated_rows.append(log_data)
 
@@ -556,10 +562,12 @@ def sync_vehicle_logs(doc, method):
 
 	transaction_log.save(ignore_permissions=True)
 
+
 @frappe.whitelist()
-def update_vehicle_return_details_in_log(project, vehicle, return_date, return_reason):
+def update_vehicle_return_details_in_log(project, vehicle=None, hired_vehicle=None, return_date=None, return_reason=None):
 	"""
 	Updates the return details of a vehicle in the 'Vehicle Transaction Log' for the given project.
+	Ensures that a vehicle cannot be returned twice.
 	"""
 	log_name = frappe.db.get_value("Vehicle Transaction Log", {"project": project})
 	if not log_name:
@@ -569,11 +577,28 @@ def update_vehicle_return_details_in_log(project, vehicle, return_date, return_r
 	updated = False
 
 	for row in log_doc.vehicle_log_details:
-		if row.vehicle == vehicle and not row.returned:
+		if vehicle and row.vehicle == vehicle:
+			if row.returned:
+				frappe.throw(_("Vehicle {0} has already been returned on {1}.").format(
+					vehicle, row.return_date or "an earlier date"
+				))
 			row.returned = True
 			row.return_date = return_date
 			row.return_reason = return_reason
 			updated = True
+			break
+
+		if hired_vehicle and row.hired_vehicle == hired_vehicle:
+			if row.returned:
+				frappe.throw(_("Hired Vehicle {0} has already been returned on {1}.").format(
+					hired_vehicle, row.return_date or "an earlier date"
+				))
+			row.returned = True
+			row.return_date = return_date
+			row.return_reason = return_reason
+			updated = True
+			break
+
 	if updated:
 		log_doc.save(ignore_permissions=True)
 	else:
