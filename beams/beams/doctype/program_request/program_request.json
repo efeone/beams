@@ -152,14 +152,14 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "eval: doc.workflow_state == 'Request for Approval' || doc.workflow_state == 'Rejected';",
+   "depends_on": "eval:(doc.workflow_state == 'Request for Approval' || doc.workflow_state == 'Rejected') && frappe.user_roles.includes('Operations Head')\n",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
    "label": "Reason for Rejection",
    "read_only_depends_on": "eval: doc.workflow_state == 'Rejected';"
   },
   {
-   "depends_on": "eval:doc.workflow_state == 'Request for Approval' || \"doc.workflow_state == 'Draft'\"\n",
+   "depends_on": "eval:(doc.workflow_state == 'Request for Approval' || doc.workflow_state == 'Draft') && frappe.user_roles.includes('Operations Head')\n",
    "fieldname": "reason_for_revision",
    "fieldtype": "Small Text",
    "label": "Reason for Revision",
@@ -169,7 +169,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-27 12:55:29.768393",
+ "modified": "2025-09-01 16:55:32.459981",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Program Request",
