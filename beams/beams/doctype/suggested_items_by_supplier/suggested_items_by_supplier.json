@@ -21,11 +21,12 @@
    "fieldname": "product_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Product Name"
+   "label": "Product Name",
+   "reqd": 1
   },
   {
    "fieldname": "quantity",
-   "fieldtype": "Int",
+   "fieldtype": "Float",
    "in_list_view": 1,
    "label": "Quantity"
   },
@@ -70,7 +71,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-29 11:20:06.422632",
+ "modified": "2025-09-01 09:41:31.945187",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Suggested Items By Supplier",
