@@ -2,12 +2,10 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
-from frappe.utils import getdate,format_date
 from frappe import _
+from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import today
-from frappe.utils import get_datetime
+from frappe.utils import get_datetime, getdate, today
 from datetime import datetime
 
 class TechnicalRequest(Document):
@@ -104,7 +102,6 @@ class TechnicalRequest(Document):
 		if not self.project:
 			return
 
-		# Get existing allocations from Project's child table
 		allocated_rows = frappe.get_all(
 			"Allocated Manpower Detail",
 			filters={"parent": self.project},
@@ -115,18 +112,15 @@ class TechnicalRequest(Document):
 			if not row.employee:
 				continue
 
+			row_from = get_datetime(row.required_from)
+			row_to = get_datetime(row.required_to)
+
 			for alloc in allocated_rows:
 				if alloc.employee != row.employee:
 					continue
 
-				# Check overlapping date ranges
-				if (
-					(alloc.assigned_from <= row.required_to)
-					and (alloc.assigned_to >= row.required_from)
-				):
-					employee_name = frappe.get_value(
-						"Employee", row.employee, "employee_name"
-					)
+				if (alloc.assigned_from <= row_to) and (alloc.assigned_to >= row_from):
+					employee_name = frappe.get_value("Employee", row.employee, "employee_name")
 					frappe.throw(
 						title="Allocation Error",
 						msg=(
@@ -146,7 +140,6 @@ class TechnicalRequest(Document):
 		if not self.project:
 			return
 
-		# Get allocated manpower for all projects
 		allocated_rows = frappe.get_all(
 			"Allocated Manpower Detail",
 			fields=["parent", "employee", "assigned_from", "assigned_to"]
@@ -156,16 +149,16 @@ class TechnicalRequest(Document):
 			if not row.employee:
 				continue
 
+			row_from = get_datetime(row.required_from)
+			row_to = get_datetime(row.required_to)
+
 			for alloc in allocated_rows:
-				# Skip if same project
 				if alloc.parent == self.project:
 					continue
-
 				if alloc.employee != row.employee:
 					continue
 
-				# Check overlapping dates
-				if (alloc.assigned_from <= row.required_to) and (alloc.assigned_to >= row.required_from):
+				if (alloc.assigned_from <= row_to) and (alloc.assigned_to >= row_from):
 					employee_name = frappe.get_value("Employee", row.employee, "employee_name")
 					frappe.throw(
 						title="Allocation Error",
@@ -175,7 +168,6 @@ class TechnicalRequest(Document):
 							f"({alloc.assigned_from} to {alloc.assigned_to})."
 						)
 					)
-
 
 @frappe.whitelist()
 def create_external_resource_request(technical_request):

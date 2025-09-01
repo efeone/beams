@@ -366,7 +366,8 @@ frappe.ui.form.on('Allocated Vehicle Details', {
 				method: "beams.beams.custom_scripts.project.project.update_vehicle_return_details_in_log",
 				args: {
 					project: frm.doc.name,
-					vehicle: row.vehicle,
+					vehicle: row.vehicle || null,
+		            hired_vehicle: row.hired_vehicle || null,
 					return_date: values.return_date,
 					return_reason: values.return_reason
 				},
