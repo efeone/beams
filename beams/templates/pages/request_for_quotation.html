@@ -112,13 +112,17 @@
   </div>
 
   <!-- Action Buttons -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <button class="w-full px-4 py-3 border border-black rounded-md hover:bg-gray-100" onclick="saveDraft()">Save Draft</button>
+  <div class="flex justify-end mb-6 space-x-4">
     {% if doc.items %}
-    <button class="w-full px-4 py-3 border border-black rounded-md hover:bg-gray-100" onclick="submitQuotation()">Submit Quotation</button>
+    <button 
+        class="w-full px-6 py-3 border border-black rounded-md hover:bg-gray-100" 
+        onclick="submitQuotation()">
+        Submit Quotation
+    </button>
     {% endif %}
   </div>
-</div>
+
+</div> 
 
 <script>
   
@@ -298,36 +302,6 @@
   }
 
   // --- Actions ---
-  function saveDraft() {
-    const formData = collectFormData();
-    
-    if ((formData.items.length + formData.suggested_items.length) === 0) {
-        alert("Please enter a rate for at least one item before saving.");
-        return;
-    }
-
-    frappe.call({
-        method: "beams.templates.pages.request_for_quotation.save_supplier_quotation",
-        args: { data: JSON.stringify(formData) },
-        freeze: true,
-        freeze_message: "Saving Draft...",
-        callback: function (r) {
-        if (!r.exc) {
-            frappe.show_alert({ message: r.message.message, indicator: "green" });
-            console.log("Draft saved:", r.message);
-        } else {
-            frappe.show_alert({ message: "Error saving draft", indicator: "red" });
-            console.error("Save error:", r.exc);
-        }
-        },
-        error: function(r) {
-        frappe.show_alert({ message: "Network error while saving draft", indicator: "red" });
-        console.error("AJAX error:", r);
-        }
-    });
-    }
-
-
   function submitQuotation() {
     console.log("Submit button clicked");
     
