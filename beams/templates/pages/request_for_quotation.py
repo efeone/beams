@@ -181,3 +181,76 @@ def submit_supplier_quotation(data):
 		"message": _("Quotation submitted successfully with {0} original items and {1} suggested items").format(total_original, total_suggested), 
 		"name": quotation.name
 	}
+ 
+ 
+ 
+ 
+@frappe.whitelist()
+def save_supplier_quotation(data):
+	"""Save Supplier Quotation from supplier portal"""
+	import json
+	data = json.loads(data)
+
+	frappe.log_error(frappe.as_json(data), "submit_supplier_quotation")
+
+	supplier = data.get("supplier")
+	rfq = data.get("rfq")
+	items = data.get("items", [])
+	suggested_items = data.get("suggested_items", [])
+	notes = data.get("notes")
+
+	if not supplier or not rfq:
+		frappe.throw(_("Missing required data (supplier or rfq)"))
+
+	quotation = frappe.new_doc("Supplier Quotation")
+	quotation.supplier = supplier
+	quotation.transaction_date = frappe.utils.nowdate()
+	quotation.request_for_quotation = rfq
+	quotation.notes = notes
+
+	# Process original RFQ items
+	for item in items:
+		full_description = ""
+
+		if item.get("brand"):
+			full_description += f"Brand: {item['brand']}\n"
+		if item.get("model"):
+			full_description += f"Model: {item['model']}\n"
+		if item.get("warranty"):
+			full_description += f"Warranty: {item['warranty']}\n"
+		if item.get("lead_time"):
+			full_description += f"Lead Time: {item['lead_time']}\n"
+		if item.get("item_description"):
+			full_description += f"Details: {item['item_description']}\n"
+
+		quotation.append("items", {
+			"item_code": item.get("item_code"),
+			"item_name": item.get("item_name"),
+			"item_description": full_description.strip(),
+			"qty": item.get("qty"),
+			"uom": item.get("uom"),
+			"rate": item.get("rate"),
+			"request_for_quotation": rfq,
+		})
+
+	# Process suggested items by supplier
+	for suggested_item in suggested_items:
+		quotation.append("suggested_items_by_supplier", {
+			"product_name": suggested_item.get("product_name"),
+			"quantity": suggested_item.get("quantity"),
+			"rate": suggested_item.get("rate"),
+			"uom": suggested_item.get("uom"),
+			"amount": suggested_item.get("amount"),
+			"product_description": suggested_item.get("product_description"),
+			"item_description": suggested_item.get("item_description")
+		})
+
+	quotation.insert(ignore_permissions=True)
+
+	total_original = len(items)
+	total_suggested = len(suggested_items)
+
+	return {
+		"message": _("Quotation save successfully with {0} original items and {1} suggested items").format(total_original, total_suggested), 
+		"name": quotation.name
+	}
