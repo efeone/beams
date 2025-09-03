@@ -1,5 +1,6 @@
 frappe.ui.form.on('Appraisal', {
 	refresh: function (frm) {
+		salary_amount_read_only(frm);
 		frm.trigger('update_self_kra_rating_list_view');
 		frm.remove_custom_button(__('View Goals'));
 		set_table_properties(frm, 'employee_self_kra_rating');
@@ -611,6 +612,12 @@ frappe.ui.form.on('Appraisal', {
 				frm.refresh_field(child_table);
 			}
 		});
+	},
+	salary_increment_amount: function(frm) {
+		if (frm.doc.employee_ctc && frm.doc.salary_increment_amount) {
+			let percentage = (frm.doc.salary_increment_amount / frm.doc.employee_ctc) * 100;
+			frm.set_value("salary_increment_percentage", percentage.toFixed(2));
+		}
 	}
 });
 
@@ -657,5 +664,15 @@ function set_marks_read_only(frm, table_name,field_name) {
 	});
 }
 
-
+/**
+* Sets the "salary_increment_amount" field as read-only
+* if the logged-in user does not have the "Salary Increment Approver" role.
+*/
+function salary_amount_read_only(frm) {
+	if (!frappe.user_roles.includes("Salary Increment Approver")) {
+		frm.set_df_property("salary_increment_amount", "read_only", 1);
+	} else {
+		frm.set_df_property("salary_increment_amount", "read_only", 0);
+	}
+}
 
