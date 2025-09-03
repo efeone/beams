@@ -3550,21 +3550,84 @@ def get_appraisal_custom_fields():
 				"insert_after": "final_assesment_tab_break"
 			},
 			{
+				"fieldname": "appraisal_section_break",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "category_html"
+			},
+			{
 				"fieldname": "category_based_on_marks",
 				"fieldtype": "Link",
 				"options": "Appraisal Category",
 				"label": "Category based on marks",
-				"insert_after": "category_html",
+				"insert_after": "appraisal_section_break",
 				"read_only": 1
+			},
+			{
+				"fieldname": "appraisal_ctc_break",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "category_based_on_marks"
+			},
+			{
+				"fieldname": "employee_ctc",
+				"fieldtype": "Currency",
+				"label": "Employee CTC",
+				"fetch_from": "employee.ctc",
+				"insert_after": "appraisal_ctc_break",
+				"read_only": 1
+			},
+			{
+				"fieldname": "ctc_section_break",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "employee_ctc"
 			},
 			{
 				"fieldname": "category_details",
 				"fieldtype": "Table",
 				"label": "Category Details",
 				"options": "Category Details",
-				"insert_after": "category_based_on_marks",
+				"insert_after": "ctc_section_break",
 				"allow_on_submit": 1,
 				"read_only": 1
+			},
+			{
+				"fieldname": "final_section_break",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "category_details"
+			},
+			{
+				"fieldname": "final_performance_category",
+				"fieldtype": "Link",
+				"label": "Final Performance Category",
+				"options": "Appraisal Category",
+				"insert_after": "final_section_break"
+			},
+			{
+				"fieldname": "final_column_break",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "final_performance_category"
+			},
+			{
+				"fieldname": "salary_increment_percentage",
+				"fieldtype": "Percent",
+				"label": "Salary Increment  Percentage",
+				"insert_after": "final_column_break"
+			},
+			{
+				"fieldname": "salary_increment_break",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "salary_increment_percentage"
+			},
+			{
+				"fieldname": "salary_increment_amount",
+				"fieldtype": "Currency",
+				"label": "Salary Increment Amount",
+				"insert_after": "salary_increment_break"
 			},
 			{
 				"fieldname": "employee_self_kra_rating",

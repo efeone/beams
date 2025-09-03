@@ -319,7 +319,6 @@ def add_to_category_details(parent_docname, category, remarks):
 	try:
 		# Get current user
 		current_user = frappe.session.user
-
 		# Get Employee document linked to current user
 		employee_doc = frappe.get_all(
 			"Employee",
@@ -327,13 +326,11 @@ def add_to_category_details(parent_docname, category, remarks):
 			fields=["name", "designation"],
 			limit=1
 		)
-
 		if not employee_doc:
 			frappe.throw(f"No Employee linked to user {current_user}")
 
 		employee_name = employee_doc[0].name
 		designation = employee_doc[0].designation
-
 		# Get Appraisal document
 		parent_doc = frappe.get_doc("Appraisal", parent_docname)
 		for row in parent_doc.category_details:
@@ -347,13 +344,26 @@ def add_to_category_details(parent_docname, category, remarks):
 			"employee": employee_name,
 			"designation": designation
 		})
-
+		parent_doc.final_performance_category = category
+		if frappe.db.exists("Appraisal Category", category):
+			category_doc = frappe.get_doc("Appraisal Category", category)
+			employee_ctc = parent_doc.employee_ctc or 0
+			increment_percentage = 0
+			for ps in category_doc.payscale_details:
+				if (ps.minimum_ctc <= employee_ctc <= ps.maximum_ctc):
+					increment_percentage = ps.percentage
+					break
+			if increment_percentage:
+				parent_doc.salary_increment_percentage = increment_percentage
+				parent_doc.salary_increment_amount = (employee_ctc * increment_percentage) / 100
+			else:
+				parent_doc.salary_increment_percentage = 0
+				parent_doc.salary_increment_amount = 0
 		parent_doc.save(ignore_permissions=True)
 		return "Success"
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Add to Category Details Error")
 		return "Failed"
-
 
 
 @frappe.whitelist()
