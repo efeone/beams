@@ -8,7 +8,9 @@
  "field_order": [
   "category",
   "appraisal_threshold",
-  "category_description"
+  "category_description",
+  "payscale_details_section",
+  "payscale_details"
  ],
  "fields": [
   {
@@ -26,11 +28,22 @@
    "fieldname": "appraisal_threshold",
    "fieldtype": "Float",
    "label": "Appraisal Threshold"
+  },
+  {
+   "fieldname": "payscale_details_section",
+   "fieldtype": "Section Break",
+   "label": "Payscale Details"
+  },
+  {
+   "fieldname": "payscale_details",
+   "fieldtype": "Table",
+   "label": "Payscale Details",
+   "options": "Payscale Details"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-08 13:30:50.693446",
+ "modified": "2025-09-02 13:07:44.132881",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Appraisal Category",
@@ -50,6 +63,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
