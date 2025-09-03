@@ -3619,7 +3619,8 @@ def get_appraisal_custom_fields():
 				"fieldtype": "Link",
 				"label": "Final Performance Category",
 				"options": "Appraisal Category",
-				"insert_after": "final_section_break"
+				"insert_after": "final_section_break",
+				"read_only": 1
 			},
 			{
 				"fieldname": "final_column_break",
@@ -3631,7 +3632,8 @@ def get_appraisal_custom_fields():
 				"fieldname": "salary_increment_percentage",
 				"fieldtype": "Percent",
 				"label": "Salary Increment  Percentage",
-				"insert_after": "final_column_break"
+				"insert_after": "final_column_break",
+				"read_only": 1
 			},
 			{
 				"fieldname": "salary_increment_break",
@@ -3643,7 +3645,8 @@ def get_appraisal_custom_fields():
 				"fieldname": "salary_increment_amount",
 				"fieldtype": "Currency",
 				"label": "Salary Increment Amount",
-				"insert_after": "salary_increment_break"
+				"insert_after": "salary_increment_break",
+				"read_only": 1
 			},
 			{
 				"fieldname": "employee_self_kra_rating",
@@ -5042,7 +5045,7 @@ def get_beams_roles():
 	'''
 		Method to get BEAMS specific roles
 	'''
-	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter']
+	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter','Salary Increment Approver']
 
 def get_custom_translations():
 	'''
