@@ -1996,6 +1996,43 @@ def get_employee_custom_fields():
 				"options": "Employee",
 				"label": "Assessment Officer",
 				"insert_after": "reports_to"
+			},
+			{
+				"fieldname": "appraisal_details",
+				"fieldtype": "Section Break",
+				"label": "Appraisal Details",
+				"insert_after": "date_of_retirement"
+			},
+			{
+				"fieldname": "appraisal_template",
+				"fieldtype": "Link",
+				"options": "Appraisal Template",
+				"label": "Appraisal Template",
+				"insert_after": "appraisal_details"
+			},
+			{
+				"fieldname": "next_appraisal_col",
+				"fieldtype": "Column Break",
+				"insert_after": "appraisal_template"
+			},
+			{
+				"fieldname": "next_appraisal_date",
+				"fieldtype": "Date",
+				"label": "Next Appraisal Date",
+				"insert_after": "next_appraisal_col"
+			},
+			{
+				"fieldname": "assessment_officers_sec",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "next_appraisal_date"
+			},
+			{
+				"fieldname": "assessment_officers",
+				"fieldtype": "Table",
+				"options": "Assessment Officer",
+				"label": "Assessment Officers",
+				"insert_after": "assessment_officers_sec"
 			}
 
 		],
@@ -3509,13 +3546,6 @@ def get_appraisal_template_custom_fields():
 				"fieldtype": "Data",
 				"label": "Label for Company KRA",
 				"insert_after": "company_rating_criteria"
-			},
-			{
-				"fieldname": "assessment_officers",
-				"fieldtype": "Table",
-				"label": "Assessment Officers",
-				"options": "Assessment Officer",
-				"insert_after": "label_for_company_kra"
 			}
 		]
 	}
@@ -4718,6 +4748,13 @@ def get_property_setters():
 			"property": "hidden",
 			"property_type": "Percent",
 			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "employment_details",
+			"property": "label",
+			"value":"Joining & Appraisal"
 		}
 ]
 
