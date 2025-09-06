@@ -670,3 +670,46 @@ def send_next_officer_notification(appraisal_name):
 			}).insert(ignore_permissions=True)
 			return f"Notification logged for {officer}"
 	return "All officers already notified"
+
+def notify_employee_on_appraisal_creation(doc, method):
+	"""
+	Send notification to employee when Appraisal is created.
+	"""
+
+	employee = frappe.get_doc("Employee", doc.employee)
+	template_name = frappe.db.get_single_value("Beams HR Settings","appraisal_start_employee_notification_template")
+
+	if not employee.user_id:
+		return
+
+	if not template_name or not frappe.db.exists("Email Template", template_name):
+		return
+
+	template = frappe.get_doc("Email Template", template_name)
+
+	context = {
+		"employee_id": employee.name,
+		"employee_name": employee.employee_name,
+		"department": employee.department,
+		"appraisal_period": doc.appraisal_cycle,
+		"date_of_joining": employee.date_of_joining
+	}
+
+	subject = frappe.render_template(template.subject or "", context)
+	email_content = frappe.render_template(template.response or "", context)
+
+	frappe.sendmail(
+		recipients=[employee.user_id],
+		subject=subject,
+		message=email_content
+	)
+	frappe.get_doc({
+		"doctype": "Notification Log",
+		"subject": subject,
+		"for_user": employee.user_id,
+		"type": "Alert",
+		"document_type": "Appraisal",
+		"document_name": doc.name,
+		"from_user": frappe.session.user,
+		"email_content": email_content
+	}).insert(ignore_permissions=True)

@@ -187,3 +187,281 @@ def manage_user_status(doc, method=None):
 	elif doc.status in ["Inactive", "Suspended", "Left"]:
 		if user_enabled_status == 1:
 			frappe.db.set_value("User", doc.user_id, "enabled", 0)
+
+def create_notification_log(subject, for_users, doc_type, doc_name, email_content, from_user="Administrator"):
+	"""
+	Function to create Notification Logs for given users.
+	"""
+	for user in for_users:
+		user_id = frappe.db.get_value("User", {"email": user}, "name") or user
+		frappe.get_doc({
+			"doctype": "Notification Log",
+			"subject": subject,
+			"for_user": user_id,
+			"type": "Alert",
+			"document_type": doc_type,
+			"document_name": doc_name,
+			"from_user": from_user,
+			"email_content": email_content
+		}).insert(ignore_permissions=True)
+
+def get_context(emp, initiative_days, deadline_date, notify_days_before=None):
+	"""
+	Generate common context for rendering templates.
+	"""
+	return {
+		"employee_name": emp.employee_name,
+		"employee_id": emp.name,
+		"department": emp.department,
+		"date_of_joining": emp.date_of_joining,
+		"appraisal_initiation_days": initiative_days,
+		"deadline_date": deadline_date,
+		"notify_days_before": notify_days_before,
+	}
+
+
+def send_joining_based_appraisal_notification(doc, method=None):
+	"""
+	Triggered when an Employee is created.
+	Sends a notification to HR reminding them to set up appraisal.
+	"""
+	if doc.appraisal_template or not doc.date_of_joining:
+		return
+
+	settings = frappe.get_single("Beams HR Settings")
+	template_name = settings.joining_based_appraisal_notification_template
+	initiative_days = settings.appraisal_initiative_days
+
+	if not template_name or not initiative_days:
+		return
+
+	joining_date = getdate(doc.date_of_joining)
+	deadline_date = add_days(joining_date, initiative_days)
+	hr_emails = []
+
+	hr_users = frappe.db.get_all("Has Role", filters={"role": "HR Manager"}, pluck="parent")
+	for u in hr_users:
+		email = frappe.db.get_value("User", u, "email")
+		if email:
+			hr_emails.append(email)
+
+	if not hr_emails:
+		return
+
+	template = frappe.db.get_value(
+		"Email Template",
+		template_name,
+		["subject", "response"],
+		as_dict=True,
+	)
+	context = get_context(doc, initiative_days, deadline_date)
+	subject = frappe.render_template(template.subject or "", context)
+	email_content = frappe.render_template(template.response or template.message or "", context)
+	frappe.sendmail(
+		recipients=hr_emails,
+		subject=subject,
+		message=email_content
+	)
+	create_notification_log(subject, hr_emails, "Employee", doc.name, email_content, from_user=frappe.session.user)
+
+def send_pre_deadline_appraisal_reminder():
+	"""
+	Daily scheduler job to check employees whose appraisal_template
+	is not set and send HR a pre-deadline notification.
+	"""
+
+	settings = frappe.get_single("Beams HR Settings")
+	template_name = settings.re_deadline_hr_notification_template
+	initiative_days = settings.appraisal_initiative_days
+	notify_days_before = settings.hr_notification_days_before_deadline
+
+	if not template_name or not initiative_days or not notify_days_before:
+		return
+
+	today = getdate(nowdate())
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "appraisal_template": ["is", "not set"]},
+		fields=["name", "employee_name", "date_of_joining", "department"]
+	)
+
+	for emp in employees:
+		if not emp.date_of_joining:
+			continue
+
+		doj = getdate(emp.date_of_joining)
+		deadline_date = add_days(doj, initiative_days)
+		notify_date = add_days(deadline_date, -notify_days_before)
+
+		if today == notify_date:
+			already_sent = frappe.db.exists(
+				"Notification Log",
+				{
+					"document_type": "Employee",
+					"document_name": emp.name,
+					"subject": ["like", f"[Pre-Deadline][{emp.name}][{notify_date}]%"]
+				}
+			)
+			if already_sent:
+				continue
+
+			hr_emails = []
+			hr_users = frappe.db.get_all("Has Role", filters={"role": "HR Manager"}, pluck="parent")
+			for u in hr_users:
+				email = frappe.db.get_value("User", u, "email")
+				if email:
+					hr_emails.append(email)
+
+			if not hr_emails:
+				continue
+
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date, notify_days_before)
+			subject = frappe.render_template(template.subject or "", context)
+			email_content = frappe.render_template(template.response or template.message or "", context)
+			frappe.sendmail(
+				recipients=hr_emails,
+				subject=subject,
+				message=email_content
+			)
+			unique_subject = f"[Pre-Deadline][{emp.name}][{notify_date}] {subject}"
+			create_notification_log(unique_subject, hr_emails, "Employee", emp.name, email_content)
+
+def send_appraisal_escalation():
+	"""
+	Daily scheduler job to check employees whose appraisal_template
+	is not set and send HR an escalation notification.
+	"""
+
+	settings = frappe.get_single("Beams HR Settings")
+	template_name = settings.appraisal_creation_escalation_template
+	initiative_days = settings.appraisal_initiative_days
+
+	if not template_name or not initiative_days:
+		return
+
+	today = getdate(nowdate())
+
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "appraisal_template": ["is", "not set"]},
+		fields=["name", "employee_name", "date_of_joining", "department"]
+	)
+
+	for emp in employees:
+		if not emp.date_of_joining:
+			continue
+
+		doj = getdate(emp.date_of_joining)
+		deadline_date = add_days(doj, initiative_days)
+
+		if today == deadline_date:
+			already_sent = frappe.db.exists(
+				"Notification Log",
+				{
+					"document_type": "Employee",
+					"document_name": emp.name,
+					"subject": ["like", f"[Escalation][{emp.name}]%"]
+				}
+			)
+			if already_sent:
+				continue
+
+			hr_emails = []
+			hr_users = frappe.db.get_all("Has Role", filters={"role": "HR Manager"}, pluck="parent")
+			for u in hr_users:
+				email = frappe.db.get_value("User", u, "email")
+				if email:
+					hr_emails.append(email)
+
+			if not hr_emails:
+				continue
+
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date)
+			subject = frappe.render_template(template.subject or "", context)
+			email_content = frappe.render_template(template.response or template.message or "", context)
+			frappe.sendmail(
+				recipients=hr_emails,
+				subject=subject,
+				message=email_content
+			)
+			unique_subject = "[Escalation][{emp_name}] {subject}".format(emp_name=emp.name, subject=subject)
+			create_notification_log(unique_subject, hr_emails, "Employee", emp.name, email_content)
+
+def create_ceo_appraisal_alert_template():
+	"""
+	Daily scheduler job to check employees whose appraisal_template
+	is not set and send CEO an escalation notification.
+	"""
+
+	settings = frappe.get_single("Beams HR Settings")
+	template_name = settings.ceo_appraisal_alert_template
+	initiative_days = settings.appraisal_initiative_days
+
+	if not template_name or not initiative_days:
+		return
+
+	today = getdate(nowdate())
+
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active", "appraisal_template": ["is", "not set"]},
+		fields=["name", "employee_name", "date_of_joining", "department"]
+	)
+
+	for emp in employees:
+		if not emp.date_of_joining:
+			continue
+
+		doj = getdate(emp.date_of_joining)
+		deadline_date = add_days(doj, initiative_days)
+
+		if today >= deadline_date:
+			already_sent = frappe.db.exists(
+				"Notification Log",
+				{
+					"document_type": "Employee",
+					"document_name": emp.name,
+					"subject": ["like", f"[Escalation][{emp.name}]%"]
+				}
+			)
+			if already_sent:
+				continue
+
+			ceo_emails = []
+			ceo_users = frappe.db.get_all("Has Role", filters={"role": "CEO"}, pluck="parent")
+			for u in ceo_users:
+				email = frappe.db.get_value("User", u, "email")
+				if email:
+					ceo_emails.append(email)
+
+			if not ceo_emails:
+				continue
+
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date)
+			subject = frappe.render_template(template.subject or "", context)
+			email_content = frappe.render_template(template.response or template.message or "", context)
+			frappe.sendmail(
+				recipients=ceo_emails,
+				subject=subject,
+				message=email_content
+			)
+			unique_subject = f"[Escalation][{emp.name}] {subject}"
+			create_notification_log(unique_subject, ceo_emails, "Employee", emp.name, email_content)

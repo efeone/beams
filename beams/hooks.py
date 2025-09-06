@@ -296,7 +296,10 @@ doc_events = {
 	},
 	"Employee" : {
 		"autoname": "beams.beams.custom_scripts.employee.employee.autoname",
-		"after_insert": "beams.beams.custom_scripts.employee.employee.after_insert",
+		"after_insert": [
+			"beams.beams.custom_scripts.employee.employee.after_insert",
+			"beams.beams.custom_scripts.employee.employee.send_joining_based_appraisal_notification"
+		],	
 		"before_validate": "beams.beams.custom_scripts.employee.employee.manage_user_status",
 		"validate":  [
 			"beams.beams.custom_scripts.employee.employee.validate",
@@ -330,6 +333,7 @@ doc_events = {
 		"before_insert": [
 			"beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal",
 		],
+		"after_insert": "beams.beams.custom_scripts.appraisal.appraisal.notify_employee_on_appraisal_creation"
 	},
 	"Event" :{
 		"on_update":[
@@ -411,7 +415,10 @@ scheduler_events = {
 		"beams.beams.doctype.beams_hr_settings.beams_hr_settings.send_appraisal_reminders",
 		"beams.beams.custom_scripts.vehicle.vehicle.send_vehicle_document_reminders",
 		"beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_audit_reminder",
-		"beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications"
+		"beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications",
+		"beams.beams.custom_scripts.employee.employee.send_pre_deadline_appraisal_reminder",
+		"beams.beams.custom_scripts.employee.employee.send_appraisal_escalation",
+		"beams.beams.custom_scripts.employee.employee.create_ceo_appraisal_alert_template"
 	],
 # "all": [
 # "beams.tasks.all"
