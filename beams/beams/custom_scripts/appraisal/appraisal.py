@@ -693,3 +693,13 @@ def notify_employee_on_appraisal_creation(doc, method):
 		subject=subject,
 		message=email_content
 	)
+	frappe.get_doc({
+		"doctype": "Notification Log",
+		"subject": subject,
+		"for_user": employee.user_id,
+		"type": "Alert",
+		"document_type": "Appraisal",
+		"document_name": doc.name,
+		"from_user": frappe.session.user,
+		"email_content": email_content
+	}).insert(ignore_permissions=True)

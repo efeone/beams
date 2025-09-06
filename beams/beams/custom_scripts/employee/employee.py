@@ -188,6 +188,38 @@ def manage_user_status(doc, method=None):
 		if user_enabled_status == 1:
 			frappe.db.set_value("User", doc.user_id, "enabled", 0)
 
+def create_notification_log(subject, for_users, doc_type, doc_name, email_content, from_user="Administrator"):
+	"""
+	Function to create Notification Logs for given users.
+	"""
+	for user in for_users:
+		user_id = frappe.db.get_value("User", {"email": user}, "name") or user
+		frappe.get_doc({
+			"doctype": "Notification Log",
+			"subject": subject,
+			"for_user": user_id,
+			"type": "Alert",
+			"document_type": doc_type,
+			"document_name": doc_name,
+			"from_user": from_user,
+			"email_content": email_content
+		}).insert(ignore_permissions=True)
+
+def get_context(emp, initiative_days, deadline_date, notify_days_before=None):
+	"""
+	Generate common context for rendering templates.
+	"""
+	return {
+		"employee_name": emp.employee_name,
+		"employee_id": emp.name,
+		"department": emp.department,
+		"date_of_joining": emp.date_of_joining,
+		"appraisal_initiation_days": initiative_days,
+		"deadline_date": deadline_date,
+		"notify_days_before": notify_days_before,
+	}
+
+
 def send_joining_based_appraisal_notification(doc, method=None):
 	"""
 	Triggered when an Employee is created.
@@ -216,15 +248,13 @@ def send_joining_based_appraisal_notification(doc, method=None):
 	if not hr_emails:
 		return
 
-	template = frappe.get_doc("Email Template", template_name)
-	context = {
-		"employee_name": doc.employee_name,
-		"employee_id": doc.name,
-		"department": doc.department,
-		"date_of_joining": doc.date_of_joining,
-		"appraisal_initiation_days": initiative_days,
-		"deadline_date": deadline_date
-	}
+	template = frappe.db.get_value(
+		"Email Template",
+		template_name,
+		["subject", "response"],
+		as_dict=True,
+	)
+	context = get_context(doc, initiative_days, deadline_date)
 	subject = frappe.render_template(template.subject or "", context)
 	email_content = frappe.render_template(template.response or template.message or "", context)
 	frappe.sendmail(
@@ -232,20 +262,7 @@ def send_joining_based_appraisal_notification(doc, method=None):
 		subject=subject,
 		message=email_content
 	)
-	for hr_email in hr_emails:
-		hr_user = frappe.db.get_value("User", {"email": hr_email}, "name") or hr_email
-		frappe.get_doc({
-			"doctype": "Notification Log",
-			"subject": subject,
-			"for_user": hr_user,
-			"type": "Alert",
-			"document_type": "Employee",
-			"document_name": doc.name,
-			"from_user": frappe.session.user,
-			"email_content": email_content
-		}).insert(ignore_permissions=True)
-
-	return 
+	create_notification_log(subject, hr_emails, "Employee", doc.name, email_content, from_user=frappe.session.user)
 
 def send_pre_deadline_appraisal_reminder():
 	"""
@@ -298,16 +315,13 @@ def send_pre_deadline_appraisal_reminder():
 			if not hr_emails:
 				continue
 
-			template = frappe.get_doc("Email Template", template_name)
-			context = {
-				"employee_name": emp.employee_name,
-				"employee_id": emp.name,
-				"date_of_joining": emp.date_of_joining,
-				"deadline_date": deadline_date,
-				"initiative_days": initiative_days,
-				"notify_days_before": notify_days_before,
-				"department": emp.department
-			}
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date, notify_days_before)
 			subject = frappe.render_template(template.subject or "", context)
 			email_content = frappe.render_template(template.response or template.message or "", context)
 			frappe.sendmail(
@@ -315,20 +329,8 @@ def send_pre_deadline_appraisal_reminder():
 				subject=subject,
 				message=email_content
 			)
-
-			unique_subject = "[Pre-Deadline][{emp_name}][{notify_date}] {subject}".format(emp_name=emp.name,notify_date=notify_date,subject=subject)
-			for hr_email in hr_emails:
-				hr_user = frappe.db.get_value("User", {"email": hr_email}, "name") or hr_email
-				frappe.get_doc({
-					"doctype": "Notification Log",
-					"subject": unique_subject,
-					"for_user": hr_user,
-					"type": "Alert",
-					"document_type": "Employee",
-					"document_name": emp.name,
-					"from_user": "Administrator",
-					"email_content": email_content
-				}).insert(ignore_permissions=True)
+			unique_subject = f"[Pre-Deadline][{emp.name}][{notify_date}] {subject}"
+			create_notification_log(unique_subject, hr_emails, "Employee", emp.name, email_content)
 
 def send_appraisal_escalation():
 	"""
@@ -380,15 +382,13 @@ def send_appraisal_escalation():
 			if not hr_emails:
 				continue
 
-			template = frappe.get_doc("Email Template", template_name)
-			context = {
-				"employee_name": emp.employee_name,
-				"employee_id": emp.name,
-				"date_of_joining": emp.date_of_joining,
-				"deadline_date": deadline_date,
-				"initiative_days": initiative_days,
-				"department": emp.department
-			}
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date)
 			subject = frappe.render_template(template.subject or "", context)
 			email_content = frappe.render_template(template.response or template.message or "", context)
 			frappe.sendmail(
@@ -397,18 +397,7 @@ def send_appraisal_escalation():
 				message=email_content
 			)
 			unique_subject = "[Escalation][{emp_name}] {subject}".format(emp_name=emp.name, subject=subject)
-			for hr_email in hr_emails:
-				hr_user = frappe.db.get_value("User", {"email": hr_email}, "name") or hr_email
-				frappe.get_doc({
-					"doctype": "Notification Log",
-					"subject": unique_subject,
-					"for_user": hr_user,
-					"type": "Alert",
-					"document_type": "Employee",
-					"document_name": emp.name,
-					"from_user": "Administrator",
-					"email_content": email_content
-				}).insert(ignore_permissions=True)
+			create_notification_log(unique_subject, hr_emails, "Employee", emp.name, email_content)
 
 def create_ceo_appraisal_alert_template():
 	"""
@@ -460,15 +449,13 @@ def create_ceo_appraisal_alert_template():
 			if not ceo_emails:
 				continue
 
-			template = frappe.get_doc("Email Template", template_name)
-			context = {
-				"employee_name": emp.employee_name,
-				"employee_id": emp.name,
-				"date_of_joining": emp.date_of_joining,
-				"deadline_date": deadline_date,
-				"initiative_days": initiative_days,
-				"department": emp.department
-			}
+			template = frappe.db.get_value(
+				"Email Template",
+				template_name,
+				["subject", "response"],
+				as_dict=True,
+			)
+			context = get_context(emp, initiative_days, deadline_date)
 			subject = frappe.render_template(template.subject or "", context)
 			email_content = frappe.render_template(template.response or template.message or "", context)
 			frappe.sendmail(
@@ -477,15 +464,4 @@ def create_ceo_appraisal_alert_template():
 				message=email_content
 			)
 			unique_subject = f"[Escalation][{emp.name}] {subject}"
-			for ceo_email in ceo_emails:
-				ceo_user = frappe.db.get_value("User", {"email": ceo_email}, "name") or ceo_email
-				frappe.get_doc({
-					"doctype": "Notification Log",
-					"subject": unique_subject,
-					"for_user": ceo_user,
-					"type": "Alert",
-					"document_type": "Employee",
-					"document_name": emp.name,
-					"from_user": "Administrator",
-					"email_content": email_content
-				}).insert(ignore_permissions=True)
+			create_notification_log(unique_subject, ceo_emails, "Employee", emp.name, email_content)
