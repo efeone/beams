@@ -894,6 +894,20 @@ def get_purchase_order_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Attachments",
 				"insert_after": "base_net_total"
+			},
+			{
+				"fieldname": "rejection_section",
+				"fieldtype": "Section Break",
+				"label": "Rejection Details",
+				"insert_after": "section_gst_breakup"
+			},
+			{
+				"fieldname": "reason_for_rejection",
+				"fieldtype": "Small Text",
+				"label": "Reason for Rejection",
+				"insert_after": "rejection_section",
+				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending Accounts Approval'  || doc.workflow_state == 'Pending CEO Approval'",
+				"read_only_depends_on": "eval:!(doc.workflow_state == 'Pending Accounts Approval' || doc.workflow_state == 'Pending CEO Approval')"
 			}
 		],
 		"Purchase Order Item": [

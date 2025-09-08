@@ -4,6 +4,14 @@ from frappe import _
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils.user import get_users_with_role
 
+
+def validate_reason_for_rejection(doc,method):
+		'''
+			Validate that "Reason for Rejection" is filled if the status is "Rejected"
+		'''
+		if doc.workflow_state == "Rejected" and not doc.reason_for_rejection:
+			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
 @frappe.whitelist()
 def create_todo_on_finance_verification(doc, method):
 	"""
@@ -33,20 +41,6 @@ def create_todo_on_finance_verification(doc, method):
 			"description": description
 		})
 
-def create_todo_on_purchase_order_creation(doc, method):
-	"""
-		Create a ToDo for  Accounts User when a new Purchase Order is created.
-	"""
-	users = get_users_with_role("Accounts User")
-
-	if users:
-		description = f"New Purchase Order Created: {doc.supplier}.<br>Please review and update details or take necessary actions."
-		add_assign({
-			"assign_to": users,
-			"doctype": "Purchase Order",
-			"name": doc.name,
-			"description": description
-		})
 
 def validate(self):
 	'''
