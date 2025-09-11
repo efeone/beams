@@ -23,13 +23,17 @@ frappe.ui.form.on('Appraisal', {
 		frm.set_df_property('final_score', 'hidden', 1);
 
 		// Show "New Feedback" button only if the user is an assessment officer and not the appraised employee, before submission
+
 		if (!frm.is_new() && frm.doc.docstatus !== 1) {
 			let user = frappe.session.user;
-			frappe.db.get_value('Employee', { 'user_id': user }, ['name']).then(res => {
-				let logged_in_employee = res.message?.name;
-				frappe.db.get_value('Employee', frm.doc.employee, 'assessment_officer').then(emp_res => {
-					let appraisal_assessment_officer = emp_res.message?.assessment_officer;
-					if (appraisal_assessment_officer === logged_in_employee) {
+
+			frappe.call({
+				method: "beams.beams.custom_scripts.appraisal.appraisal.get_primary_assessment_officer",
+				args: { employee_id: frm.doc.employee },
+				callback: function(r) {
+					let primary_officer_user = r.message;
+
+					if (primary_officer_user === user) {
 						frappe.call({
 							method: 'beams.beams.custom_scripts.appraisal.appraisal.get_feedback_for_appraisal',
 							args: { appraisal_name: frm.doc.name },
@@ -40,19 +44,20 @@ frappe.ui.form.on('Appraisal', {
 										frm.events.show_feedback_dialog(frm);
 									});
 								} else {
-									frappe.db.get_value('Employee Performance Feedback', feedback_name, 'docstatus').then(val => {
-										const docstatus = val.message?.docstatus;
-										if (docstatus === 0) {
-											frm.add_custom_button(__('Edit Feedback'), () => {
-												frm.events.show_feedback_dialog(frm);
-											});
-										}
-									});
+									frappe.db.get_value('Employee Performance Feedback', feedback_name, 'docstatus')
+										.then(val => {
+											const docstatus = val.message?.docstatus;
+											if (docstatus === 0) {
+												frm.add_custom_button(__('Edit Feedback'), () => {
+													frm.events.show_feedback_dialog(frm);
+												});
+											}
+										});
 								}
 							}
 						});
 					}
-				});
+				}
 			});
 		}
 
@@ -521,31 +526,36 @@ frappe.ui.form.on('Appraisal', {
 
 		frappe.db.get_value("Employee", { user_id: current_user }, ["name"]).then(emp_res => {
 			const current_emp_id = emp_res.message?.name;
+			frappe.call({
+				method: "beams.beams.custom_scripts.appraisal.appraisal.get_primary_assessment_officer",
+				args: { employee_id: frm.doc.employee },
+				callback: function(r) {
+					const assigned_officer = r.message;
 
-			frappe.db.get_value("Employee", frm.doc.employee, ["assessment_officer"]).then(res => {
-				const assigned_officer = res.message?.assessment_officer;
-				if (current_emp_id === assigned_officer) {
-					frappe.call({
-						method: "beams.beams.custom_scripts.appraisal.appraisal.check_feedback_exists",
-						args: {
-							appraisal_name: frm.doc.name,
-							assessment_officer_user_id: current_user,
-							employee: frm.doc.employee
-						},
-						callback: function (res) {
-							console.log("Feedback Exists Response:", res.message);
-							if (res.message) {
-								frm.events.open_add_category_dialog(frm);
-							} else {
-								frappe.msgprint(__('You must add performance feedback before adding a category.'));
+					if (current_user === assigned_officer) {
+						// Only primary officer must add feedback before adding category
+						frappe.call({
+							method: "beams.beams.custom_scripts.appraisal.appraisal.check_feedback_exists",
+							args: {
+								appraisal_name: frm.doc.name,
+								assessment_officer_user_id: current_user,
+								employee: frm.doc.employee
+							},
+							callback: function(res) {
+								if (res.message) {
+									frm.events.open_add_category_dialog(frm);
+								} else {
+									frappe.msgprint(__('You must add performance feedback before adding a category.'));
+								}
 							}
-						}
-					});
-				} else {
-					frm.events.open_add_category_dialog(frm);
+						});
+					} else {
+						frm.events.open_add_category_dialog(frm);
+					}
 				}
 			});
 		});
+
 	},
 
 

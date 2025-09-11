@@ -465,3 +465,10 @@ def create_ceo_appraisal_alert_template():
 			)
 			unique_subject = f"[Escalation][{emp.name}] {subject}"
 			create_notification_log(unique_subject, ceo_emails, "Employee", emp.name, email_content)
+
+
+
+def validate(doc, method=None):
+    officers = doc.assessment_officers or []
+    if sum(1 for row in officers if row.is_primary) > 1:
+        frappe.throw("Only one Primary Assessment Officer can be selected.")

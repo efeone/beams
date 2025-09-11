@@ -7,7 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "assessment_officer",
-  "assessment_days"
+  "assessment_days",
+  "is_primary"
  ],
  "fields": [
   {
@@ -22,12 +23,18 @@
    "fieldtype": "Int",
    "in_list_view": 1,
    "label": "Assessment Days"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_primary",
+   "fieldtype": "Check",
+   "label": "Primary Assessment Officer"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-08-30 15:55:34.947856",
+ "modified": "2025-09-06 14:49:18.299645",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Assessment Officer",
