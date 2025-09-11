@@ -208,6 +208,23 @@ frappe.ui.form.on('Appraisal', {
 				}
 			});
 		});
+		const current_user = frappe.session.user;
+		frappe.db.get_value("Employee", { user_id: current_user }, "name").then(emp_res => {
+			const emp = emp_res.message?.name;
+
+			if (emp && emp === frm.doc.employee && frm.doc.appraisal_cycle) {
+				frappe.db.get_value("Appraisal Cycle", frm.doc.appraisal_cycle, "end_date").then(cycle_res => {
+					const end_date = cycle_res.message?.end_date;
+					if (end_date && frappe.datetime.get_today() > end_date) {
+						frm.disable_form();
+						frappe.show_alert({
+							message: __("This appraisal is read-only since the appraisal cycle has ended."),
+							indicator: "red"
+						});
+					}
+				});
+			}
+		});
 	},
 
 	validate: function (frm) {
@@ -685,4 +702,3 @@ function salary_amount_read_only(frm) {
 		frm.set_df_property("salary_increment_amount", "read_only", 0);
 	}
 }
-
