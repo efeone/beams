@@ -9,13 +9,14 @@ frappe.ui.form.on('Inward Register', {
 				});
 			}, __("Create"));
 
-			if (!frappe.user.has_role('Security') || frappe.user.has_role('Administrator')) {
+			if (!frappe.user.has_role('Security')) {
 				frm.add_custom_button(__(' Visitor Pass'), function () {
 					frappe.new_doc("Visitor Pass", {
 						inward_register: frm.doc.name,
 						issued_date: frappe.datetime.now_date(),
 						issued_time: frappe.datetime.now_time(),
-						issued_to: frm.doc.visitor_name
+						issued_to: frm.doc.visitor_name,
+						purpose_of_visit: frm.doc.purpose_of_visit
 					});
 				}, __("Create"));
 				if (frm.doc.visitor_type === 'Courier') {

@@ -16,7 +16,8 @@
   "column_break_bb13",
   "assigned_date",
   "returned_date",
-  "status"
+  "status",
+  "amended_from"
  ],
  "fields": [
   {
@@ -41,6 +42,7 @@
   {
    "fieldname": "status",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Status",
    "options": "In Custody\nReturned"
   },
@@ -51,6 +53,7 @@
   {
    "fieldname": "key_holder",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Key Holder",
    "options": "Employee"
   },
@@ -58,6 +61,7 @@
    "depends_on": "eval:doc.is_vehicle",
    "fieldname": "vehicle",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vehicle ",
    "options": "Vehicle"
   },
@@ -77,15 +81,26 @@
    "depends_on": "eval: doc.is_service_unit",
    "fieldname": "service_unit",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Service Unit",
    "options": "Service Unit"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Key Log",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-11 09:35:43.183752",
+ "modified": "2025-09-15 11:01:30.482008",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Key Log",
