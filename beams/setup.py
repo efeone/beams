@@ -73,8 +73,9 @@ def after_install():
 	create_custom_fields(get_hd_ticket_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_supplier_quotation_item_custom_fields(), ignore_validate=True)
+	
 	setup_notifications()
-
 
 
 
@@ -214,27 +215,40 @@ def get_hd_ticket_custom_fields():
 		"HD Ticket": [
 
 			{
-                "fieldname": "ticket_section_break",
-                "fieldtype": "Section Break",
-                "label": "",
-                "insert_after": "attach"
-            },
-            {
-                "fieldname": "material_request_needed",
-                "fieldtype": "Check",
-                "label": "Material Request Needed",
-                "insert_after": "ticket_section_break"
-            },
-            {
-                "fieldname": "material_request_items",
-                "fieldtype": "Table",
-                "label": "Material Request Items",
-                "insert_after": "material_request_needed",
-                "options": "Material Request Items",
-                "depends_on": "eval:doc.material_request_needed == 1"
-            }
-        ]
-    }
+				"fieldname": "raised_for",
+				"fieldtype": "Link",
+				"options": "User",
+				"label": "Raised For (Email)",
+				"insert_after": "raised_by"
+			},
+			{
+				"fieldname": "attach",
+				"fieldtype": "Attach",
+				"label": "Attachments",
+				"insert_after": "agent_group"
+			},
+			{
+				"fieldname": "ticket_section_break",
+				"fieldtype": "Section Break",
+				"label": "",
+				"insert_after": "attach"
+			},
+			{
+				"fieldname": "material_request_needed",
+				"fieldtype": "Check",
+				"label": "Material Request Needed",
+				"insert_after": "ticket_section_break"
+			},
+			{
+				"fieldname": "spare_part_item_table",
+				"fieldtype": "Table",
+				"label": "Spare Part Items",
+				"insert_after": "material_request_needed",
+				"options": "Spare Part Item",
+				"depends_on": "eval:doc.material_request_needed == 1"
+			}
+		]
+	}
 
 def get_shift_assignment_custom_fields():
 	'''
@@ -5331,7 +5345,14 @@ def get_supplier_quotation_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Attachments",
 				"insert_after": "base_net_total"
-			}
+			},
+   			{
+				"fieldname": "suggested_items_by_supplier",
+				"fieldtype": "Table",
+				"label": "Suggested Items by Supplier",	
+				"options": "Suggested Items By Supplier",
+				"insert_after": "items"
+   			}
 		]
 	}
 
@@ -5346,6 +5367,22 @@ def get_asset_maintenance_task_custom_fields():
 				"fieldtype": "Currency",
 				"label": "Maintenance Cost",
 				"insert_after": "maintenance_status"
+			}
+		]
+	}
+
+
+def get_supplier_quotation_item_custom_fields():
+	'''
+		Custom fields that need to be added to the Supplier Quotation Item DocType
+	'''
+	return {
+		"Supplier Quotation Item": [
+			{
+				"fieldname": "item_description",
+				"fieldtype": "Small Text",
+				"label": "Item Description",
+				"insert_after": "item_code"
 			}
 		]
 	}
