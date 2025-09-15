@@ -5210,7 +5210,8 @@ def get_asset_movement_custom_fields():
 				"label": "New Custodian",
 				"options": "Employee",
 				"insert_after": "assets",
-				"read_only": 1
+				"read_only": 1,
+				"ignore_user_permissions":1
 			},
 			{
 				"fieldname": "user_id",
