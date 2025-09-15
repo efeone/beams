@@ -302,7 +302,8 @@ doc_events = {
 		"before_validate": "beams.beams.custom_scripts.employee.employee.manage_user_status",
 		"validate":  [
 			"beams.beams.custom_scripts.employee.employee.validate",
-			"beams.beams.custom_scripts.employee.employee.validate_offer_dates"
+			"beams.beams.custom_scripts.employee.employee.validate_offer_dates",
+			"beams.beams.custom_scripts.employee.employee.validate"
 		]
 	},
 	"Job Offer" : {

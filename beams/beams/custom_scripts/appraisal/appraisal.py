@@ -434,17 +434,28 @@ def notify_assestment_officer(doc):
 	Sends an email notification to the assessment officer to review the appraisal.
 	"""
 	appraisal = frappe.get_doc("Appraisal", doc)
-	assessment_officer_id = frappe.db.get_value("Employee", appraisal.employee, "assessment_officer")
+	assessment_officer_user = frappe.db.get_value(
+		"Assessment Officer", 
+		{"parent": appraisal.employee, "is_primary": 1},
+		"assessment_officer"
+	)
 
-	if not assessment_officer_id:
-		frappe.throw(f"Assessment Officer not set for employee {appraisal.employee}")
+	if not assessment_officer_user:
+		frappe.throw(f"Primary Assessment Officer not set for employee {appraisal.employee}")
 
-	user_id, officer_name = frappe.db.get_value("Employee", assessment_officer_id, ["user_id", "employee_name"])
+	officer = frappe.db.get_value(
+		"User",
+		assessment_officer_user,
+		["name as user_id", "full_name as officer_name", "email"],
+		as_dict=1
+	)
 
-	if not user_id:
-		frappe.throw(f"No User ID found for assessment officer {assessment_officer_id}")
+	if not officer:
+		frappe.throw(f"User record not found for Assessment Officer {assessment_officer_user}")
 
-	# Get email template
+	if not officer.email:
+		frappe.throw(f"No email found for Assessment Officer {officer.officer_name}")
+
 	template_name = frappe.db.get_single_value("Beams HR Settings", "assessment_reminder_template")
 	if not template_name:
 		frappe.throw("Please set 'Assessment Reminder Template' in Beams HR Settings.")
@@ -454,17 +465,17 @@ def notify_assestment_officer(doc):
 	context = {
 		"doc": appraisal,
 		"employee_name": appraisal.employee_name,
-		"officer_name": officer_name,
+		"officer_name": officer.officer_name,
 	}
 	subject = frappe.render_template(template.subject or '', context)
 	message = frappe.render_template(template.response or template.message or '', context)
 
-	frappe.sendmail(recipients=frappe.db.get_value("User", user_id, "email"), subject=subject, message=message)
+	frappe.sendmail(recipients=[officer.email], subject=subject, message=message)
 
 	frappe.get_doc({
 		"doctype": "Notification Log",
 		"subject": subject,
-		"for_user": user_id,
+		"for_user": officer.user_id,
 		"type": "Alert",
 		"document_type": "Appraisal",
 		"document_name": appraisal.name,
@@ -472,7 +483,7 @@ def notify_assestment_officer(doc):
 		"email_content": message
 	}).insert(ignore_permissions=True)
 
-	frappe.msgprint(f"Notification sent to {officer_name} for appraisal review.")
+	frappe.msgprint(f"Notification sent to {officer.officer_name} for appraisal review.")
 	return {"status": "ok"}
 
 @frappe.whitelist()
@@ -632,7 +643,7 @@ def send_next_officer_notification(appraisal_name):
 		return "No Appraisal Template"
 	officer_list = frappe.db.get_all(
 		"Assessment Officer",
-		filters={"parent": appraisal.appraisal_template},
+		filters={"parent": appraisal.employee, "is_primary": 0},
 		pluck="assessment_officer",
 		order_by="idx asc"
 	)
@@ -713,3 +724,16 @@ def notify_employee_on_appraisal_creation(doc, method):
 		"from_user": frappe.session.user,
 		"email_content": email_content
 	}).insert(ignore_permissions=True)
+
+@frappe.whitelist()
+def get_primary_assessment_officer(employee_id):
+	"""
+	Return primary assessment officer user for an employee
+	(ignores permissions so Assessment Officer can fetch it).
+	"""
+	officer_user = frappe.db.get_value(
+		"Assessment Officer",
+		{"parent": employee_id, "is_primary": 1},
+		"assessment_officer"
+	)
+	return officer_user

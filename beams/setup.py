@@ -2010,13 +2010,6 @@ def get_employee_custom_fields():
 				"insert_after":"relation"
 			},
 			{
-				"fieldname": "assessment_officer",
-				"fieldtype": "Link",
-				"options": "Employee",
-				"label": "Assessment Officer",
-				"insert_after": "reports_to"
-			},
-			{
 				"fieldname": "appraisal_details",
 				"fieldtype": "Section Break",
 				"label": "Appraisal Details",
