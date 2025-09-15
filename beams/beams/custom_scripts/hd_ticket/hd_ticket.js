@@ -34,14 +34,22 @@ frappe.ui.form.on('HD Ticket', {
   On click, it creates a new "Material Request" document.
   Populates items from the 'material_request_items' child table of HD Ticket.
 */
+
 function add_material_request_button(frm) {
     frm.add_custom_button(__('Material Request'), () => {
-        frappe.new_doc('Material Request', {
-            items: (frm.doc.material_request_items || []).map(row => ({
-                item_code: row.item,
-                qty: row.quantity,
-                schedule_date: row.required_by
-            }))
+        frappe.call({
+            method: "beams.beams.custom_scripts.hd_ticket.hd_ticket.create_material_request_from_ticket",
+            args: {
+                ticket_name: frm.doc.name
+            },
+            callback: function (r) {
+                if (!r.exc && r.message) {
+                    frappe.new_doc('Material Request', r.message);
+                }
+            }
         });
     }, __('Create'));
 }
+
+
+

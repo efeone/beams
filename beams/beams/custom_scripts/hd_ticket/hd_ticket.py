@@ -84,3 +84,26 @@ class HDTicketOverride(HDTicket):
             self.agent_group = default_team
         else:
             self.agent_group = ''
+            
+            
+            
+
+@frappe.whitelist()
+def create_material_request_from_ticket(ticket_name):
+    ticket = frappe.get_doc("HD Ticket", ticket_name)
+    mr = frappe.new_doc("Material Request")
+    mr.material_request_type = "Purchase"
+    mr.transaction_date = frappe.utils.today()
+
+    for row in ticket.material_request_items:
+        mr.append("items", {
+            "item_code": row.item,
+            "qty": row.quantity,
+            "uom": frappe.db.get_value("Item", row.item, "stock_uom"),
+            "schedule_date": row.required_by or frappe.utils.today()
+        })
+
+    return mr.as_dict()
+
+
+
