@@ -1,5 +1,6 @@
 frappe.ui.form.on('Appraisal', {
 	refresh: function (frm) {
+		if (!frm.doc) return;
 		salary_amount_read_only(frm);
 		frm.trigger('update_self_kra_rating_list_view');
 		frm.remove_custom_button(__('View Goals'));
@@ -225,6 +226,14 @@ frappe.ui.form.on('Appraisal', {
 				});
 			}
 		});
+		frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name")
+			.then(r => {
+				const emp = r.message?.name;
+				if (emp && emp === frm.doc.employee && frm.doc.salary_increment_amount <= 0) {
+					hide_employee_fields(frm);
+					show_final_assessment_progress(frm, emp);
+				}
+			});
 	},
 
 	validate: function (frm) {
@@ -701,4 +710,67 @@ function salary_amount_read_only(frm) {
 	} else {
 		frm.set_df_property("salary_increment_amount", "read_only", 0);
 	}
+}
+/**
+ * Hides a set of fields from the Appraisal form for the logged-in employee.
+ */
+function hide_employee_fields(frm) {
+	const fields_to_hide = [
+		"final_performance_category",
+		"salary_increment_percentage",
+		"salary_increment_amount",
+		"category_based_on_marks",
+		"employee_ctc",
+		"appraisal_summary",
+		"feedback_html",
+		"final_average_score"
+	];
+
+	fields_to_hide.forEach(fieldname => {
+		frm.set_df_property(fieldname, "hidden", 1);
+	});
+}
+/**
+ * Fetches the assessment officers for the employee and displays a progress bar
+ * showing how many officers have submitted their final assessment categories.
+ */
+function show_final_assessment_progress(frm, emp) {
+	frappe.db.get_doc("Employee", emp).then(employee_doc => {
+		const officer_users = (employee_doc.assessment_officers || []).map(row => row.assessment_officer);
+		const total_officers = officer_users.length;
+
+		if (total_officers === 0) return;
+
+		frappe.db.get_list("Employee", {
+			filters: { user_id: ["in", officer_users] },
+			fields: ["name", "user_id"]
+		}).then(officer_employees => {
+			const officer_employee_ids = officer_employees.map(e => e.name);
+			const category_details = frm.doc.category_details || [];
+			const completed_count = category_details.length;
+			const progress = Math.round((completed_count / total_officers) * 100);
+
+			if (frm.fields_dict.category_details && frm.fields_dict.category_details.wrapper) {
+				const wrapper = $(frm.fields_dict.category_details.wrapper);
+				wrapper.html(get_progress_html(progress, completed_count, total_officers));
+			}
+		});
+	});
+}
+/**
+ * Generates an HTML snippet for the Final Assessment Progress bar.
+ */
+function get_progress_html(progress, completed, total) {
+	const color = (progress === 100) ? "#4caf50" :
+				  (progress > 50) ? "#00bcd4" :
+				  "#ff6b6b";
+
+	return `
+		<div style="padding:20px;text-align:center;">
+			<h4>Final Assessment Progress</h4>
+			<p>${completed} of ${total} assessment officers have added their categories.</p>
+			<div style="background:#eee;border-radius:6px;height:16px;overflow:hidden;margin-top:10px;">
+				<div style="width:${progress}%;background:${color};height:100%;transition:width .4s;"></div>
+			</div>
+		</div>`;
 }
