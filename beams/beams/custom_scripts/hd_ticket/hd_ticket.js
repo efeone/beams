@@ -35,6 +35,7 @@ frappe.ui.form.on('HD Ticket', {
   Populates items from the 'material_request_items' child table of HD Ticket.
 */
 
+
 function add_material_request_button(frm) {
     frm.add_custom_button(__('Material Request'), () => {
         frappe.call({
@@ -44,12 +45,9 @@ function add_material_request_button(frm) {
             },
             callback: function (r) {
                 if (!r.exc && r.message) {
-                    frappe.new_doc('Material Request', r.message);
+                    frappe.set_route("Form", "Material Request", r.message);
                 }
             }
         });
     }, __('Create'));
 }
-
-
-
