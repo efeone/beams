@@ -613,6 +613,13 @@ def get_event_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Reason for Rejection",
 				"insert_after": "repeat_this_event"
+			},
+			{
+				"fieldname": "event_category_type",
+				"fieldtype": "Link",
+				"label": "Event Category Type",
+				"options": "Event Category",
+				"insert_after": "subject"
 			}
 		]
 	}
@@ -4760,7 +4767,19 @@ def get_property_setters():
 			"field_name": "employment_details",
 			"property": "label",
 			"value":"Joining & Appraisal"
+		},
+  		{
+			"doctype": "Property Setter",
+			"doctype_or_field": "DocField",
+			"doc_type": "Event",
+			"field_name": "event_category",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": "1"
 		}
+
+
+
 ]
 
 def get_material_request_custom_fields():
