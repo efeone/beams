@@ -23,6 +23,7 @@
   {
    "fieldname": "employee_in_charge",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "in_list_view": 1,
    "label": "Employee in Charge",
    "options": "Employee",
@@ -102,7 +103,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-17 13:22:34.087810",
+ "modified": "2025-09-18 11:46:36.609567",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Pass",
