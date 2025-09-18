@@ -13,7 +13,18 @@ class TripSheet(Document):
 		self.calculate_and_validate_fuel_data()
 		self.calculate_hours()
 		self.validate_trip_times()
+		self.validate_reason_for_rejection()
 
+	def validate_reason_for_rejection(self):
+		"""
+		Ensure that a Reason for Rejection is provided
+		whenever the workflow state is set to 'Rejected'.
+		"""
+		if self.workflow_state == "Rejected" and not self.reason_for_rejection:
+			frappe.throw(
+				msg="Please provide a Reason for Rejection before rejecting this request.",
+				title="Missing Reason for Rejection"
+			)
 
 	def before_save(self):
 		self.validate_posting_date()

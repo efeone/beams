@@ -1,7 +1,6 @@
 frappe.ui.form.on('Purchase Order', {
 	refresh(frm) {
 		workflow_actions(frm);
-		
 	}
 });
 
