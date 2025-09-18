@@ -10,50 +10,58 @@ frappe.ui.form.on('Material Request', {
 				});
 		}
 	},
-	refresh(frm) {
-		// Show buttons only if workflow_state is Approved by HOD or Approved by Admin
-		if (["Approved by HOD", "Approved by Admin"].includes(frm.doc.workflow_state)) {
-			add_asset_movement_button(frm);
-			add_stock_entry_button(frm);
+    refresh(frm) {
+
+        setTimeout(() => {
+            handle_workflow_actions(frm);
+
+            if (['Approved by HOD', 'Approved by Admin'].includes(frm.doc.workflow_state)) {
+                add_asset_movement_button(frm);
+                add_stock_entry_button(frm);
+            } else {
+                customize_material_request_buttons(frm);
+            }
+        }, 50);
+    }
+});
+
+/**
+ *Adds workflow action buttons based on item groups in the document.
+ */
+function handle_workflow_actions(frm) {
+	if (!frm.doc.items || frm.doc.items.length === 0) return;
+
+	let has_technical = false;
+	let has_non_technical = false;
+
+	frm.doc.items.forEach(row => {
+		if (row.item_group === "Technical") has_technical = true;
+		if (row.item_group === "Non Technical") has_non_technical = true;
+	});
+
+	// Only hide/show if the doc is in Draft
+	if (frm.doc.workflow_state === "Draft") {
+		frm.page.clear_actions_menu();
+
+		if (has_technical) {
+			frm.page.add_action_item(__('Inform HOD'), function() {
+				frappe.xcall("frappe.model.workflow.apply_workflow", {
+					doc: frm.doc,
+					action: "Inform HOD"
+				}).then(() => frm.reload_doc());
+			});
 		}
-		if (!frm.doc.items || frm.doc.items.length === 0) return;
 
-			let has_technical = false;
-			let has_non_technical = false;
-
-			frm.doc.items.forEach(row => {
-				if (row.item_group === "Technical") {
-					has_technical = true;
-				}
-				if (row.item_group === "Non Technical") {
-					has_non_technical = true;
-				}
-		});
-
-		// Only hide/show if the doc is in Draft
-		if (frm.doc.workflow_state === "Draft") {
-			frm.page.clear_actions_menu();
-
-			if (has_technical) {
-				frm.page.add_action_item(__('Inform HOD'), function() {
-					frappe.xcall("frappe.model.workflow.apply_workflow", {
-						doc: frm.doc,
-						action: "Inform HOD"
-					}).then(() => frm.reload_doc());
-				});
-			}
-
-			if (has_non_technical) {
-				frm.page.add_action_item(__('Inform Admin'), function() {
-					frappe.xcall("frappe.model.workflow.apply_workflow", {
-						doc: frm.doc,
-						action: "Inform Admin"
-					}).then(() => frm.reload_doc());
-				});
-			}
+		if (has_non_technical) {
+			frm.page.add_action_item(__('Inform Admin'), function() {
+				frappe.xcall("frappe.model.workflow.apply_workflow", {
+					doc: frm.doc,
+					action: "Inform Admin"
+				}).then(() => frm.reload_doc());
+			});
 		}
 	}
-});
+}
 
 /**
  * Add "Asset Movement" button to Material Request
@@ -300,4 +308,11 @@ function add_stock_entry_button(frm) {
 	}, __("Create"));
 }
 
-
+/**
+ * Function to remove custom buttons on Material Request form
+ */
+function customize_material_request_buttons(frm) {
+	frm.remove_custom_button('Purchase Order', 'Create');
+	frm.remove_custom_button('Request for Quotation', 'Create');
+	frm.remove_custom_button('Supplier Quotation', 'Create');
+}
