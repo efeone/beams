@@ -466,9 +466,103 @@ def create_ceo_appraisal_alert_template():
 			unique_subject = f"[Escalation][{emp.name}] {subject}"
 			create_notification_log(unique_subject, ceo_emails, "Employee", emp.name, email_content)
 
+def validate_assessment_officer(doc, method=None):
+	officers = doc.assessment_officers or []
+	if sum(1 for row in officers if row.is_primary) > 1:
+		frappe.throw("Only one Primary Assessment Officer can be selected.")
 
+@frappe.whitelist()
+def update_next_appraisal_dates_and_create_appraisal():
+	"""
+	Daily Scheduler:
+	- For each active employee, check if next_appraisal_date + days <= today.
+	- If overdue, update next_appraisal_date and create appraisal in Draft.
+	"""
+	days = frappe.db.get_single_value("Beams HR Settings", "days_for_next_appraisal_creation")
+	today_date = getdate(today())
 
-def validate(doc, method=None):
-    officers = doc.assessment_officers or []
-    if sum(1 for row in officers if row.is_primary) > 1:
-        frappe.throw("Only one Primary Assessment Officer can be selected.")
+	employees = frappe.get_all(
+		"Employee",
+		filters={"status": "Active"},
+		fields=["name", "next_appraisal_date", "employee_name", "appraisal_template"]
+	)
+
+	for emp in employees:
+		if not emp.next_appraisal_date:
+			continue
+
+		next_appraisal_date = getdate(emp.next_appraisal_date)
+		next_cycle_date = add_days(next_appraisal_date, days)
+
+		if next_cycle_date <= today_date:
+			frappe.db.set_value("Employee", emp.name, "next_appraisal_date", next_cycle_date)
+			frappe.db.commit()
+
+			create_appraisal_if_not_exists(
+				emp=frappe._dict(emp),
+				start_date=next_cycle_date,
+				end_date=add_days(next_cycle_date, days - 1)
+			)
+
+def create_appraisal_if_not_exists(emp, start_date, end_date):
+	"""
+	Create a Draft appraisal if template exists and no overlapping appraisal exists.
+	Maps goals from Appraisal Template into appraisal_kra table.
+	Returns True if appraisal was created, False otherwise.
+	"""
+	if not emp.appraisal_template:
+		return False
+
+	existing = frappe.get_all(
+		"Appraisal",
+		filters={
+			"employee": emp.name,
+			"status": ["!=", "Cancelled"],
+			"start_date": ["<=", end_date],
+			"end_date": [">=", start_date],
+		},
+		limit=1
+	)
+
+	if existing:
+		return False
+
+	template_goals = frappe.get_all(
+		"Appraisal Template Goal",
+		filters={"parent": emp.appraisal_template},
+		fields=["key_result_area", "per_weightage"]
+	)
+
+	appraisal_doc = frappe.get_doc({
+		"doctype": "Appraisal",
+		"employee": emp.name,
+		"appraisal_template": emp.appraisal_template,
+		"start_date": start_date,
+		"end_date": end_date,
+		"status": "Draft"
+	})
+
+	for goal in template_goals:
+		appraisal_doc.append("appraisal_kra", {
+			"kra": goal.key_result_area,
+			"per_weightage": goal.per_weightage
+		})
+
+	appraisal_doc.insert(ignore_permissions=True)
+	return True
+
+def employee_on_update(doc, method):
+	"""
+	Triggered when Employee is saved.
+	- If next_appraisal_date and appraisal_template are set,
+	  create appraisal instantly if it doesn't exist already.
+	"""
+	if doc.next_appraisal_date and doc.appraisal_template:
+		days = frappe.db.get_single_value("Beams HR Settings", "days_for_next_appraisal_creation") or 365
+		start_date = getdate(doc.next_appraisal_date)
+		end_date = add_days(start_date, days - 1)
+		create_appraisal_if_not_exists(
+			emp=doc,
+			start_date=start_date,
+			end_date=end_date
+		)

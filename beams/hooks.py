@@ -169,7 +169,8 @@ override_doctype_class = {
 	"Attendance Request": "beams.beams.custom_scripts.attendance_request.attendance_request.AttendanceRequestOverride",
 	"Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
 	"Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
-	"HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride"
+	"HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride",
+	"Appraisal": "beams.beams.custom_scripts.appraisal.appraisal.CustomAppraisal"
 }
 
 # Document Events
@@ -304,8 +305,9 @@ doc_events = {
 		"validate":  [
 			"beams.beams.custom_scripts.employee.employee.validate",
 			"beams.beams.custom_scripts.employee.employee.validate_offer_dates",
-			"beams.beams.custom_scripts.employee.employee.validate"
-		]
+			"beams.beams.custom_scripts.employee.employee.validate_assessment_officer"
+		],
+		"on_update": "beams.beams.custom_scripts.employee.employee.employee_on_update"
 	},
 	"Job Offer" : {
 		"on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
@@ -329,7 +331,7 @@ doc_events = {
 		"validate": [
 			"beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
 			"beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
-			"beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks",
+			"beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks"
 		],
 		"before_insert": [
 			"beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal",
@@ -419,7 +421,8 @@ scheduler_events = {
 		"beams.beams.doctype.beams_admin_settings.beams_admin_settings.send_asset_reservation_notifications",
 		"beams.beams.custom_scripts.employee.employee.send_pre_deadline_appraisal_reminder",
 		"beams.beams.custom_scripts.employee.employee.send_appraisal_escalation",
-		"beams.beams.custom_scripts.employee.employee.create_ceo_appraisal_alert_template"
+		"beams.beams.custom_scripts.employee.employee.create_ceo_appraisal_alert_template",
+		"beams.beams.custom_scripts.employee.employee.update_next_appraisal_dates_and_create_appraisal"
 	],
 # "all": [
 # "beams.tasks.all"
