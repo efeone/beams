@@ -7,7 +7,7 @@ from frappe.model.document import Document
 
 class CourierLog(Document):
 
-    def validate(self):
+    def on_update(self):
         self.notify_recipient()
 
     def notify_recipient(self):
