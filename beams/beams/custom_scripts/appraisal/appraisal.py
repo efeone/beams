@@ -7,6 +7,78 @@ from frappe.utils import get_link_to_form
 from six import string_types
 from frappe.utils import get_fullname
 
+from hrms.hr.doctype.appraisal.appraisal import Appraisal as HRMSAppraisal
+from hrms.hr.utils import validate_active_employee
+from frappe.utils import flt
+
+class CustomAppraisal(HRMSAppraisal):
+	def validate(self):
+		if not self.status:
+			self.status = "Draft"
+
+		self.set_kra_evaluation_method()
+
+		validate_active_employee(self.employee)
+		# Skip cycle validation if not set
+		if self.appraisal_cycle:
+			from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
+			validate_active_appraisal_cycle(self.appraisal_cycle)
+
+		self.validate_duplicate()
+		self.validate_total_weightage("appraisal_kra", "KRAs")
+		self.validate_total_weightage("self_ratings", "Self Ratings")
+
+		self.set_goal_score()
+		self.calculate_self_appraisal_score()
+		self.calculate_avg_feedback_score()
+		self.calculate_final_score()
+
+	def validate_duplicate(self):
+		"""Skip duplicate check if no appraisal cycle and no dates."""
+		if not (self.appraisal_cycle or (self.start_date and self.end_date)):
+			return
+
+		super().validate_duplicate()
+
+	def set_kra_evaluation_method(self):
+		"""Only check KRA evaluation method if cycle is set."""
+		if self.is_new() and self.appraisal_cycle:
+			kra_method = frappe.db.get_value("Appraisal Cycle", self.appraisal_cycle, "kra_evaluation_method")
+			if kra_method == "Manual Rating":
+				self.rate_goals_manually = 1
+
+	def calculate_final_score(self):
+		"""Skip fetching appraisal cycle if not set."""
+		final_score = 0
+
+		if self.appraisal_cycle:
+			appraisal_cycle_doc = frappe.get_cached_doc("Appraisal Cycle", self.appraisal_cycle)
+			formula = appraisal_cycle_doc.final_score_formula
+			based_on_formula = appraisal_cycle_doc.calculate_final_score_based_on_formula
+		else:
+			formula = None
+			based_on_formula = False
+
+		if based_on_formula and formula:
+			employee_doc = frappe.get_cached_doc("Employee", self.employee)
+			data = {
+				"goal_score": flt(self.total_score),
+				"average_feedback_score": flt(self.avg_feedback_score),
+				"self_appraisal_score": flt(self.self_score),
+			}
+			data.update(appraisal_cycle_doc.as_dict())
+			data.update(employee_doc.as_dict())
+			data.update(self.as_dict())
+
+			from hrms.payroll.utils import sanitize_expression
+			sanitized_formula = sanitize_expression(formula)
+			final_score = frappe.safe_eval(sanitized_formula, data)
+		else:
+			# Fallback simple average calculation
+			final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
+
+		self.final_score = flt(final_score, self.precision("final_score"))
+
 
 def validate_kra_marks(doc, method):
 	fields = ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']

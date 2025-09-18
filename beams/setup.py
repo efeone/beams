@@ -2056,6 +2056,12 @@ def get_employee_custom_fields():
 				"insert_after": "next_appraisal_date"
 			},
 			{
+				"fieldname": "joining_details",
+				"fieldtype": "Section Break",
+				"label": "Joining Details",
+				"insert_after": "employment_details"
+			},
+			{
 				"fieldname": "assessment_officers",
 				"fieldtype": "Table",
 				"options": "Assessment Officer",
@@ -4792,6 +4798,20 @@ def get_property_setters():
 			"property": "hidden",
 			"property_type": "Check",
 			"value": "1"
+		},	
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "appraisal_cycle",
+			"property": "reqd",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Appraisal",
+			"field_name": "appraisal_cycle",
+			"property": "hidden",
+			"value": 1
 		}
 ]
 

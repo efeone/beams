@@ -210,20 +210,19 @@ frappe.ui.form.on('Appraisal', {
 			});
 		});
 		const current_user = frappe.session.user;
-		frappe.db.get_value("Employee", { user_id: current_user }, "name").then(emp_res => {
+		frappe.db.get_value("Employee", { user_id: current_user }, ["name"]).then(emp_res => {
 			const emp = emp_res.message?.name;
 
-			if (emp && emp === frm.doc.employee && frm.doc.appraisal_cycle) {
-				frappe.db.get_value("Appraisal Cycle", frm.doc.appraisal_cycle, "end_date").then(cycle_res => {
-					const end_date = cycle_res.message?.end_date;
-					if (end_date && frappe.datetime.get_today() > end_date) {
-						frm.disable_form();
-						frappe.show_alert({
-							message: __("This appraisal is read-only since the appraisal cycle has ended."),
-							indicator: "red"
-						});
-					}
-				});
+			if (emp && emp === frm.doc.employee && frm.doc.end_date) {
+				const today = frappe.datetime.str_to_obj(frappe.datetime.get_today());
+				const end_date = frappe.datetime.str_to_obj(frm.doc.end_date);
+				if (today > end_date) {
+					frm.disable_form();
+					frappe.show_alert({
+						message: __("This appraisal is read-only since the appraisal period has ended."),
+						indicator: "red"
+					});
+				}
 			}
 		});
 		frappe.db.get_value("Employee", { user_id: frappe.session.user }, "name")
