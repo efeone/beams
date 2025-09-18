@@ -4777,9 +4777,6 @@ def get_property_setters():
 			"property_type": "Check",
 			"value": "1"
 		}
-
-
-
 ]
 
 def get_material_request_custom_fields():

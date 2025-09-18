@@ -16,7 +16,7 @@ frappe.ui.form.on("Courier Log", {
             callback: function(r) {
                 if (!r.message) return;
 
-                let emp_id = r.message.name;
+                const emp_id = r.message.name;
 
                 let recipient_row = frm.doc.recipients?.find(row => row.recepient === emp_id);
 
@@ -25,7 +25,7 @@ frappe.ui.form.on("Courier Log", {
                 }
 
                 if (recipient_row) {
-                    if (recipient_row.delivered) {
+                    if (recipient_row.delivered && !recipient_row.received) {
                         let btn = frm.add_custom_button(__('Received'), function() {
                             recipient_row.received = 1;
 
