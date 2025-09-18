@@ -35,7 +35,8 @@
   "fuel_consumed",
   "amended_from",
   "section_break_kwfq",
-  "remarks"
+  "remarks",
+  "reason_for_rejection"
  ],
  "fields": [
   {
@@ -216,6 +217,14 @@
    "fieldname": "driver_name",
    "fieldtype": "Data",
    "label": "Driver Name"
+  },
+  {
+   "allow_on_submit": 1,
+   "depends_on": "eval: doc.workflow_state == \"Pending Verification\" || doc.workflow_state == \"Rejected\";\n",
+   "fieldname": "reason_for_rejection",
+   "fieldtype": "Small Text",
+   "label": "Reason for Rejection",
+   "read_only_depends_on": "eval: doc.workflow_state != \"Pending Verification\";"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -226,7 +235,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-08-23 10:13:36.284763",
+ "modified": "2025-09-18 10:26:47.613941",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
