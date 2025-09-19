@@ -76,7 +76,7 @@ frappe.ui.form.on("Fuel Card Log", {
 	  }, 'Add');
 
 	  // Button: Set Recharge History
-	  frm.add_custom_button('Recharge', () => {
+	  frm.add_custom_button('Refill', () => {
 		frappe.prompt([
 		  {
 			label: 'Refilling Amount',
@@ -85,7 +85,7 @@ frappe.ui.form.on("Fuel Card Log", {
 			reqd: 1
 		  },
 		  {
-			label: 'Recharged Date',
+			label: 'Refilling Date',
 			fieldname: 'recharged_date',
 			fieldtype: 'Date',
 			default: frappe.datetime.get_today(),
