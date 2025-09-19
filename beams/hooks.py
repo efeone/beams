@@ -335,12 +335,13 @@ doc_events = {
 		"validate": [
 			"beams.beams.custom_scripts.appraisal.appraisal.validate_appraisal",
 			"beams.beams.custom_scripts.appraisal.appraisal.set_category_based_on_marks",
-			"beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks"
+			"beams.beams.custom_scripts.appraisal.appraisal.validate_kra_marks",
+			"beams.beams.custom_scripts.appraisal.appraisal.set_salary_assignment_from_date"
 		],
 		"before_insert": [
 			"beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal",
 		],
-		"after_insert": "beams.beams.custom_scripts.appraisal.appraisal.notify_employee_on_appraisal_creation"
+		"on_submit": "beams.beams.custom_scripts.appraisal.appraisal.create_salary_structure_assignment"
 	},
 	"Event" :{
 		"on_update":[

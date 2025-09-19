@@ -234,7 +234,18 @@ frappe.ui.form.on('Appraisal', {
 				}
 			});
 	},
-
+	employee: function (frm) {
+		if (frm.doc.employee) {
+			frappe.db.get_value("Employee", frm.doc.employee, "salary_structure", (r) => {
+				if (r && r.salary_structure) {
+					frm.set_value("salary_structure", r.salary_structure);
+				}
+				else {
+					frm.set_value("salary_strcuture", '')
+				}
+			});
+		}
+	},
 	validate: function (frm) {
 		for (let field of ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']) {
 			if (frm.doc[field] && frm.doc[field].some(row => row.marks > 5)) {
@@ -706,8 +717,14 @@ function set_marks_read_only(frm, table_name,field_name) {
 function salary_amount_read_only(frm) {
 	if (!frappe.user_roles.includes("Salary Increment Approver")) {
 		frm.set_df_property("salary_increment_amount", "read_only", 1);
+		frm.set_df_property("salary_structure", "read_only", 1);
+		frm.set_df_property("salary_assignment_from_date", "read_only", 1);
+		frm.set_df_property("create_salary_assignment", "read_only", 1);
 	} else {
 		frm.set_df_property("salary_increment_amount", "read_only", 0);
+		frm.set_df_property("salary_structure", "read_only", 0);
+		frm.set_df_property("salary_assignment_from_date", "read_only", 0);
+		frm.set_df_property("create_salary_assignment", "read_only", 0);
 	}
 }
 /**

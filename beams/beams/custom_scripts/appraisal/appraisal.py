@@ -6,10 +6,10 @@ from frappe import _
 from frappe.utils import get_link_to_form
 from six import string_types
 from frappe.utils import get_fullname
-
 from hrms.hr.doctype.appraisal.appraisal import Appraisal as HRMSAppraisal
 from hrms.hr.utils import validate_active_employee
 from frappe.utils import flt
+from frappe.utils import getdate, add_months
 
 class CustomAppraisal(HRMSAppraisal):
 	def validate(self):
@@ -78,7 +78,6 @@ class CustomAppraisal(HRMSAppraisal):
 			final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
 
 		self.final_score = flt(final_score, self.precision("final_score"))
-
 
 def validate_kra_marks(doc, method):
 	fields = ['employee_self_kra_rating', 'dept_self_kra_rating', 'company_self_kra_rating']
@@ -809,3 +808,33 @@ def get_primary_assessment_officer(employee_id):
 		"assessment_officer"
 	)
 	return officer_user
+
+def create_salary_structure_assignment(doc, method):
+	'''
+	Create a Salary Structure Assignment upon appraisal submission.
+
+	This function is triggered on the `on_submit` event of an Appraisal.
+	If the appraisal has both a salary structure and a salary increment amount,
+	it creates a new Salary Structure Assignment for the employee.
+	'''
+	if doc.salary_structure and doc.salary_increment_amount and doc.create_salary_assignment:
+		assignment = frappe.new_doc("Salary Structure Assignment")
+		assignment.employee = doc.employee
+		assignment.salary_structure = doc.salary_structure
+		assignment.from_date = doc.salary_assignment_from_date
+		assignment.base = doc.salary_increment_amount
+		assignment.insert(ignore_permissions=True)
+		frappe.msgprint(f"Salary Structure Assignment created for {doc.employee}")
+
+def set_salary_assignment_from_date(doc, method):
+	'''
+	Set the salary assignment start date.
+
+	If a salary structure is defined and no assignment date is provided,
+	this sets the date to the first day of the next month.
+	'''
+	if doc.salary_structure and not doc.salary_assignment_from_date:
+		today = getdate()
+		first_next_month = add_months(today.replace(day=1), 1)
+		doc.salary_assignment_from_date = first_next_month
+
