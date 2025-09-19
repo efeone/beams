@@ -241,7 +241,7 @@ frappe.ui.form.on('Appraisal', {
 					frm.set_value("salary_structure", r.salary_structure);
 				}
 				else {
-					frm.set_value("salary_strcuture", '')
+					frm.set_value("salary_structure", '')
 				}
 			});
 		}
