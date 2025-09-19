@@ -2058,6 +2058,13 @@ def get_employee_custom_fields():
 				"options": "Assessment Officer",
 				"label": "Assessment Officers",
 				"insert_after": "assessment_officers_sec"
+			},
+			{
+				"fieldname": "salary_structure",
+				"fieldtype": "Link",
+				"options": "Salary Structure",
+				"label": "Salary Structure",
+				"insert_after": "salary_mode"
 			}
 
 		],
@@ -3695,6 +3702,26 @@ def get_appraisal_custom_fields():
 				"label": "Salary Increment Amount",
 				"insert_after": "salary_increment_break",
 				"read_only": 1
+			},
+			{
+				"fieldname": "salary_structure",
+				"fieldtype": "Link",
+				"label": "Salary Structure",
+				"options": "Salary Structure",
+				"insert_after": "salary_increment_amount"
+			},
+			{
+				"fieldname": "salary_assignment_from_date",
+				"fieldtype": "Date",
+				"label": "Salary Assignment From Date",
+				"insert_after": "salary_structure",
+				"description": "The date from which the salary structure assignment will be effective"
+			},
+			{
+				"fieldname": "create_salary_assignment",
+				"fieldtype": "Check",
+				"label": "Create Salary Structure Assignment",
+				"insert_after": "salary_assignment_from_date"
 			},
 			{
 				"fieldname": "employee_self_kra_rating",
