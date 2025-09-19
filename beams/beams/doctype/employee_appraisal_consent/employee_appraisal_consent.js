@@ -4,16 +4,17 @@
 frappe.ui.form.on("Employee Appraisal Consent", {
 	refresh(frm) {
 		if (frm.is_new()) {
-	  fetch_terms_from_settings(frm);
-	}
-	render_appraisal_terms(frm);
+	        fetch_terms_from_settings(frm);
+	    }
+	    render_appraisal_terms(frm);
+        if (!frm.is_new() && frm.doc.docstatus === 1) {
+                add_view_appraisal_button(frm);
+        }
   },
   terms_and_conditions(frm) {
 	render_appraisal_terms(frm);
   }
 });
-
-
 /**
  * Fetch default Appraisal Terms from Beams HR Settings
  */
@@ -31,8 +32,6 @@ function fetch_terms_from_settings(frm) {
 	  }
 	});
 }
-
-
 /**
  * Show appraisal terms in a scrollable box
  * and enable consent checkbox after reading.
@@ -75,4 +74,14 @@ function render_appraisal_terms(frm) {
   } else {
 	frm.set_df_property("consent_given", "read_only", 1);
   }
+}
+/**
+ * Adds a "View Appraisal" button to the Employee Appraisal Consent form. 
+ */
+function add_view_appraisal_button(frm) {
+	if (frm.doc.appraisal) {
+		frm.add_custom_button(__('View Appraisal'), () => {
+			frappe.set_route("Form", "Appraisal", frm.doc.appraisal);
+		});
+	}
 }
