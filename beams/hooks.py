@@ -348,8 +348,7 @@ doc_events = {
 					"beams.beams.custom_scripts.event.event.validate_reason_for_rejection"
 		],
 		"validate":[
-					"beams.beams.custom_scripts.event.event.validate_event_conflict",
-					"beams.beams.custom_scripts.event.event.validate_event_before_approval"
+					"beams.beams.custom_scripts.event.event.validate_event_conflict"
 		],
 	},
 	"Salary Slip": {
