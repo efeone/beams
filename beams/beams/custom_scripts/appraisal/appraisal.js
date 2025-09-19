@@ -1,5 +1,6 @@
 frappe.ui.form.on('Appraisal', {
 	refresh: function (frm) {
+        frm.toggle_reqd('appraisal_cycle', 0);
 		if (!frm.doc) return;
 		salary_amount_read_only(frm);
 		frm.trigger('update_self_kra_rating_list_view');
@@ -233,6 +234,16 @@ frappe.ui.form.on('Appraisal', {
 					show_final_assessment_progress(frm, emp);
 				}
 			});
+        if (!frm.is_new()) {
+            if (!frm.doc.consent_received) {
+                frm.disable_form();
+                frm.dashboard.set_headline_alert(
+                    __("Waiting for Employee Appraisal Consent Submission"), "orange"
+                );
+            } else {
+                frm.enable_form();
+            }
+        }    
 	},
 
 	validate: function (frm) {

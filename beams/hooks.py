@@ -336,7 +336,10 @@ doc_events = {
 		"before_insert": [
 			"beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal",
 		],
-		"after_insert": "beams.beams.custom_scripts.appraisal.appraisal.notify_employee_on_appraisal_creation"
+		"after_insert":  [
+			"beams.beams.custom_scripts.appraisal.appraisal.notify_employee_on_appraisal_creation",
+			"beams.beams.custom_scripts.appraisal.appraisal.after_insert_create_consent"
+		]
 	},
 	"Event" :{
 		"on_update":[

@@ -1,16 +1,11 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 
-# import frappe
 import frappe
 from frappe import _
 from frappe.model.document import Document
 
-
 class EmployeeAppraisalConsent(Document):
-	
-
-
 	def before_submit(self):
 		"""
 		Validate conditions before submitting the document:
@@ -23,3 +18,12 @@ class EmployeeAppraisalConsent(Document):
 		employee_user_id = frappe.db.get_value("Employee", self.employee, "user_id")
 		if frappe.session.user != employee_user_id:
 			frappe.throw(_("Only the selected employee can submit this document."))
+
+	def on_submit(self):
+		"""
+		When employee submits the consent form,
+		mark consent_received = 1 in the linked Appraisal.
+		"""
+		if self.appraisal:
+			frappe.db.set_value("Appraisal", self.appraisal, "consent_received", 1)
+			frappe.db.commit()		
