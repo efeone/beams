@@ -3799,7 +3799,14 @@ def get_appraisal_custom_fields():
 				"insert_after": "employee_image",
 				"precision": 3,
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "consent_received",
+				"fieldtype": "Check",
+				"label": "Consent Received",
+				"insert_after": "final_average_score",
+				"read_only": 1
+			},
 		]
 	}
 

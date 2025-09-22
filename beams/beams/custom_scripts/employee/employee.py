@@ -539,7 +539,7 @@ def create_appraisal_if_not_exists(emp, start_date, end_date):
 		"appraisal_template": emp.appraisal_template,
 		"start_date": start_date,
 		"end_date": end_date,
-		"status": "Draft"
+		"consent_received": 0 
 	})
 
 	for goal in template_goals:
@@ -565,4 +565,4 @@ def employee_on_update(doc, method):
 			emp=doc,
 			start_date=start_date,
 			end_date=end_date
-		)
+		)	

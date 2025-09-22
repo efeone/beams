@@ -48,6 +48,7 @@
   "appraisal_reminder_template",
   "column_break_dwmr",
   "assessment_reminder_template",
+  "appraisal_consent_terms",
   "section_break_egls",
   "appraisal_initiative_days",
   "hr_notification_days_before_deadline",
@@ -371,13 +372,19 @@
    "fieldtype": "Link",
    "label": "CEO Appraisal Alert Template",
    "options": "Email Template"
+  },
+  {
+   "fieldname": "appraisal_consent_terms",
+   "fieldtype": "Link",
+   "label": "Appraisal Consent Terms",
+   "options": "Terms and Conditions"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-01 12:03:18.874306",
+ "modified": "2025-09-15 15:51:29.758758",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",

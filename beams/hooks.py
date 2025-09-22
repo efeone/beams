@@ -337,7 +337,11 @@ doc_events = {
 		"before_insert": [
 			"beams.beams.custom_scripts.appraisal.appraisal.set_self_appraisal",
 		],
-		"on_submit": "beams.beams.custom_scripts.appraisal.appraisal.create_salary_structure_assignment"
+		"on_submit": "beams.beams.custom_scripts.appraisal.appraisal.create_salary_structure_assignment",
+		"after_insert":  [
+			"beams.beams.custom_scripts.appraisal.appraisal.notify_employee_on_appraisal_creation",
+			"beams.beams.custom_scripts.appraisal.appraisal.after_insert_create_consent"
+		]
 	},
 	"Event" :{
 		"on_update":[

@@ -13,13 +13,10 @@ from frappe.utils import getdate, add_months
 
 class CustomAppraisal(HRMSAppraisal):
 	def validate(self):
-		if not self.status:
-			self.status = "Draft"
-
+		super().validate()
 		self.set_kra_evaluation_method()
-
 		validate_active_employee(self.employee)
-		# Skip cycle validation if not set
+
 		if self.appraisal_cycle:
 			from hrms.hr.doctype.appraisal_cycle.appraisal_cycle import validate_active_appraisal_cycle
 			validate_active_appraisal_cycle(self.appraisal_cycle)
@@ -27,7 +24,6 @@ class CustomAppraisal(HRMSAppraisal):
 		self.validate_duplicate()
 		self.validate_total_weightage("appraisal_kra", "KRAs")
 		self.validate_total_weightage("self_ratings", "Self Ratings")
-
 		self.set_goal_score()
 		self.calculate_self_appraisal_score()
 		self.calculate_avg_feedback_score()
@@ -37,7 +33,6 @@ class CustomAppraisal(HRMSAppraisal):
 		"""Skip duplicate check if no appraisal cycle and no dates."""
 		if not (self.appraisal_cycle or (self.start_date and self.end_date)):
 			return
-
 		super().validate_duplicate()
 
 	def set_kra_evaluation_method(self):
@@ -48,16 +43,16 @@ class CustomAppraisal(HRMSAppraisal):
 				self.rate_goals_manually = 1
 
 	def calculate_final_score(self):
-		"""Skip fetching appraisal cycle if not set."""
+		"""Calculate final score using formula if available, else fallback to average."""
 		final_score = 0
+		formula = None
+		based_on_formula = False
+		appraisal_cycle_doc = None
 
 		if self.appraisal_cycle:
 			appraisal_cycle_doc = frappe.get_cached_doc("Appraisal Cycle", self.appraisal_cycle)
 			formula = appraisal_cycle_doc.final_score_formula
 			based_on_formula = appraisal_cycle_doc.calculate_final_score_based_on_formula
-		else:
-			formula = None
-			based_on_formula = False
 
 		if based_on_formula and formula:
 			employee_doc = frappe.get_cached_doc("Employee", self.employee)
@@ -66,7 +61,10 @@ class CustomAppraisal(HRMSAppraisal):
 				"average_feedback_score": flt(self.avg_feedback_score),
 				"self_appraisal_score": flt(self.self_score),
 			}
-			data.update(appraisal_cycle_doc.as_dict())
+
+			# Update with appraisal cycle & employee data
+			if appraisal_cycle_doc:
+				data.update(appraisal_cycle_doc.as_dict())
 			data.update(employee_doc.as_dict())
 			data.update(self.as_dict())
 
@@ -74,8 +72,11 @@ class CustomAppraisal(HRMSAppraisal):
 			sanitized_formula = sanitize_expression(formula)
 			final_score = frappe.safe_eval(sanitized_formula, data)
 		else:
-			# Fallback simple average calculation
-			final_score = (flt(self.total_score) + flt(self.avg_feedback_score) + flt(self.self_score)) / 3
+			# Fallback average - only include scores that exist
+			scores = [flt(self.total_score), flt(self.avg_feedback_score), flt(self.self_score)]
+			valid_scores = [s for s in scores if s > 0]
+			if valid_scores:
+				final_score = sum(valid_scores) / len(valid_scores)
 
 		self.final_score = flt(final_score, self.precision("final_score"))
 
@@ -847,3 +848,31 @@ def set_salary_assignment_from_date(doc, method):
 		first_next_month = add_months(today.replace(day=1), 1)
 		doc.salary_assignment_from_date = first_next_month
 
+def after_insert_create_consent(doc, method):
+    """
+    Create Employee Appraisal Consent automatically
+    whenever an Appraisal is created.
+    Fetches consent terms from Beams HR Settings.
+    """
+    existing_consent = frappe.get_all(
+        "Employee Appraisal Consent",
+        filters={"appraisal": doc.name},
+        limit=1
+    )
+
+    if existing_consent:
+        return 
+    terms_name = frappe.db.get_single_value("Beams HR Settings", "appraisal_consent_terms")
+    terms_text = ""
+    if terms_name:
+        terms_text = frappe.db.get_value("Terms and Conditions", terms_name, "terms") or ""
+
+    consent_doc = frappe.get_doc({
+        "doctype": "Employee Appraisal Consent",
+        "employee": doc.employee,
+        "appraisal": doc.name,
+        "terms_and_conditions": terms_text,
+        "consent_given": 0
+    })
+
+    consent_doc.insert(ignore_permissions=True)
