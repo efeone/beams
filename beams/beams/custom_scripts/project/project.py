@@ -353,35 +353,24 @@ def create_equipment_request(source_name, equipment_data, required_from, require
 	return request_doc.name
 
 
-@frappe.whitelist()
-def get_available_quantities(items, source_name=None):
-	"""Returns available quantities for specified items based on location from Project or Beams Admin Settings."""
 
+@frappe.whitelist()
+def get_available_quantities(items, custodian=None):
+	"""Returns available quantities for specified items filtered by custodian."""
+
+	# Ensure items is a list
 	if isinstance(items, str):
 		items = json.loads(items)
 
 	if not isinstance(items, list):
 		frappe.throw("Items should be a list.")
 
-	location = None
-
-	if source_name:
-		location = frappe.db.get_value("Project", source_name, "asset_location")
-
-	if not location:
-		location = frappe.db.get_single_value("Beams Admin Settings", "default_asset_location")
-
-	if not location:
-		frappe.msgprint("Asset location not configured in Project or Beams Admin Settings.")
-		return {"_error": "Asset location not configured in Project or Beams Admin Settings."}
-
-
 	result = {}
 	for item in items:
 		if item:
 			quantity = frappe.db.count("Asset", {
 				"item_code": item,
-				"location": location,
+				"custodian": None,
 				"docstatus": 1
 			})
 			result[item] = quantity or 0
