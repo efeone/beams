@@ -418,15 +418,25 @@ def add_to_category_details(parent_docname, category, remarks):
 		parent_doc.final_performance_category = category
 		if frappe.db.exists("Appraisal Category", category):
 			category_doc = frappe.get_doc("Appraisal Category", category)
+			parent_doc.allow_double_increment = category_doc.allow_double_increment
 			employee_ctc = parent_doc.employee_ctc or 0
 			increment_percentage = 0
 			for ps in category_doc.payscale_details:
-				if (ps.minimum_ctc <= employee_ctc <= ps.maximum_ctc):
-					increment_percentage = ps.percentage
-					break
+				if not ps.maximum_ctc or ps.maximum_ctc == 0:
+					if employee_ctc >= ps.minimum_ctc:
+							increment_percentage = ps.percentage
+							break
+				else:
+					if ps.minimum_ctc <= employee_ctc <= ps.maximum_ctc:
+						increment_percentage = ps.percentage
+						break
 			if increment_percentage:
 				parent_doc.salary_increment_percentage = increment_percentage
-				parent_doc.salary_increment_amount = (employee_ctc * increment_percentage) / 100
+				base_increment = (employee_ctc * increment_percentage) / 100
+				if category_doc.allow_double_increment:
+					parent_doc.salary_increment_amount = base_increment + increment_percentage
+				else:
+					parent_doc.salary_increment_amount = base_increment
 			else:
 				parent_doc.salary_increment_percentage = 0
 				parent_doc.salary_increment_amount = 0
@@ -435,7 +445,6 @@ def add_to_category_details(parent_docname, category, remarks):
 	except Exception:
 		frappe.log_error(frappe.get_traceback(), "Add to Category Details Error")
 		return "Failed"
-
 
 @frappe.whitelist()
 def map_appraisal_to_event(source_name):
