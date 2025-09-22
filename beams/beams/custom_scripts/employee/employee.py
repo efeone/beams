@@ -517,7 +517,7 @@ def create_appraisal_if_not_exists(emp, start_date, end_date):
 		"Appraisal",
 		filters={
 			"employee": emp.name,
-			"status": ["!=", "Cancelled"],
+			"docstatus": ["!=", 2],
 			"start_date": ["<=", end_date],
 			"end_date": [">=", start_date],
 		},
