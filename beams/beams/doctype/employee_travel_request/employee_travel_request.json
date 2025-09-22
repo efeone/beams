@@ -60,6 +60,7 @@
   {
    "fieldname": "requested_by",
    "fieldtype": "Link",
+   "ignore_user_permissions": 1,
    "label": "Requested By",
    "options": "Employee",
    "reqd": 1
@@ -283,7 +284,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-08-19 10:14:47.244103",
+ "modified": "2025-09-22 11:21:22.931184",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
