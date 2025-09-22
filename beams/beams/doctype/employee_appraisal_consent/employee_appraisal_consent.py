@@ -7,6 +7,12 @@ from frappe.model.document import Document
 
 class EmployeeAppraisalConsent(Document):
 	def before_submit(self):
+		self.validate_consent_conditions()
+
+	def on_submit(self):
+		self.update_appraisal_consent_status()	
+		
+	def validate_consent_conditions(self):
 		"""
 		Validate conditions before submitting the document:
 		1. Ensure 'Consent Given' checkbox is checked.
@@ -19,7 +25,7 @@ class EmployeeAppraisalConsent(Document):
 		if frappe.session.user != employee_user_id:
 			frappe.throw(_("Only the selected employee can submit this document."))
 
-	def on_submit(self):
+	def update_appraisal_consent_status(self):
 		"""
 		When employee submits the consent form,
 		mark consent_received = 1 in the linked Appraisal.
