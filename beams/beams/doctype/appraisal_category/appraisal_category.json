@@ -8,6 +8,9 @@
  "field_order": [
   "category",
   "appraisal_threshold",
+  "column_break_auin",
+  "allow_double_increment",
+  "section_break_dnxg",
   "category_description",
   "payscale_details_section",
   "payscale_details"
@@ -39,11 +42,25 @@
    "fieldtype": "Table",
    "label": "Payscale Details",
    "options": "Payscale Details"
+  },
+  {
+   "fieldname": "column_break_auin",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "allow_double_increment",
+   "fieldtype": "Check",
+   "label": "Allow Double Increment"
+  },
+  {
+   "fieldname": "section_break_dnxg",
+   "fieldtype": "Section Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-02 13:07:44.132881",
+ "modified": "2025-09-20 12:54:43.406230",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Appraisal Category",

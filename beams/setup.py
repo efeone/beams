@@ -3718,6 +3718,12 @@ def get_appraisal_custom_fields():
 				"description": "The date from which the salary structure assignment will be effective"
 			},
 			{
+				"fieldname": "allow_double_increment",
+				"fieldtype": "Check",
+				"label": "Allow Double Increment",
+				"insert_after": "create_salary_assignment"
+			},
+			{
 				"fieldname": "create_salary_assignment",
 				"fieldtype": "Check",
 				"label": "Create Salary Structure Assignment",

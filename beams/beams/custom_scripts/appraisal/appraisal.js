@@ -720,11 +720,13 @@ function salary_amount_read_only(frm) {
 		frm.set_df_property("salary_structure", "read_only", 1);
 		frm.set_df_property("salary_assignment_from_date", "read_only", 1);
 		frm.set_df_property("create_salary_assignment", "read_only", 1);
+		frm.set_df_property("allow_double_increment", "read_only", 1)
 	} else {
 		frm.set_df_property("salary_increment_amount", "read_only", 0);
 		frm.set_df_property("salary_structure", "read_only", 0);
 		frm.set_df_property("salary_assignment_from_date", "read_only", 0);
 		frm.set_df_property("create_salary_assignment", "read_only", 0);
+		frm.set_df_property("allow_double_increment", "read_only", 0)
 	}
 }
 /**
