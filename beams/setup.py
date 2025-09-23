@@ -879,6 +879,24 @@ def get_asset_custom_fields():
 				"allow_on_submit": 1,
 				"read_only":1,
 				"insert_after": "row"
+			},
+			{
+				"fieldname": "make",
+				"fieldtype": "Data",
+				"label": "Make",
+				"insert_after": "is_composite_asset",
+			},
+			{
+				"fieldname": "model",
+				"fieldtype": "Data",
+				"label": "Model",
+				"insert_after": "make",
+			},
+			{
+				"fieldname": "serial_number",
+				"fieldtype": "Data",
+				"label": "Serial Number",
+				"insert_after": "model",
 			}
 		]
 	}
@@ -1780,7 +1798,13 @@ def get_item_custom_fields():
 			   "fieldtype": "Check",
 			   "label": "Is Makeup Item",
 			   "insert_after": "is_exempt"
-		   }
+		   },
+			{
+				"fieldname": "is_searchable_item",
+				"fieldtype": "Check",
+				"label": "Is Searchable Item",
+				"insert_after": "is_fixed_asset"
+			}
 		]
 	}
 
@@ -4890,6 +4914,13 @@ def get_property_setters():
 			"property": "label",
 			"value": "Relation 1"
 		},
+ 	 	{
+  
+			"doc_type": "Asset",
+			"field_name": "department",
+			"property": "allow_on_submit",
+			"value": 1
+		}
 ]
 
 def get_material_request_custom_fields():
@@ -5369,6 +5400,14 @@ def get_asset_movement_custom_fields():
 				"insert_after": "from_employee"
 			},
 			{
+				"fieldname": "department",
+				"fieldtype": "Link",
+				"label": "Department",
+				"options":"Department",
+				"allow_on_submit": 1,
+				"insert_after": "to_employee"
+			},
+			{
 				"fieldname": "shelf",
 				"fieldtype": "Link",
 				"label": "Shelf",
@@ -5382,7 +5421,7 @@ def get_asset_movement_custom_fields():
 				"label": "Row",
 				"options":"Row",
 				"allow_on_submit": 1,
-				"insert_after": "to_employee"
+				"insert_after": "department"
 			},
 			{
 				"fieldname": "bin",
