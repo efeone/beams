@@ -2364,6 +2364,15 @@ def get_job_requisition_custom_fields():
 				"mandatory_depends_on": "eval:doc.request_for == 'Employee Replacement'"
 			},
 			{
+				"fieldname": "employee_name",
+				"label": "Employee Name",
+				"fieldtype": "Data",
+				"insert_after": "employee_left",
+				"fetch_from": "employee_left.employee_name",
+				"depends_on": "eval:doc.request_for == 'Employee Replacement'",
+				"read_only": 1
+			},
+			{
 				"fieldname": "relieving_date",
 				"fieldtype": "Date",
 				"label": "Relieving Date",
