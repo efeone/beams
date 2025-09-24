@@ -1,6 +1,6 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
-frappe.ui.form.on("Outward Pass", {
+frappe.ui.form.on("Gate Pass", {
     bundles: function (frm) {
         if (frm.doc.bundles.length > 0) {
             let bundle_names = frm.doc.bundles.map((bundle) => bundle.asset_bundle);

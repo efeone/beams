@@ -9,6 +9,7 @@
   "employee_in_charge",
   "assets",
   "scan_asset",
+  "transaction_type",
   "column_break_cgmc",
   "posting_date_and_time",
   "bundles",
@@ -42,7 +43,7 @@
    "fieldtype": "Link",
    "label": "Amended From",
    "no_copy": 1,
-   "options": "Outward Pass",
+   "options": "Gate Pass",
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
@@ -98,15 +99,22 @@
    "fieldtype": "Small Text",
    "label": "Reason for Rejection",
    "read_only_depends_on": "eval: doc.workflow_state != \"Pending Verification\";"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "label": "Transaction Type",
+   "options": "\nInward\nOutward"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-18 11:46:36.609567",
+ "modified": "2025-09-24 13:14:54.311238",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Outward Pass",
+ "name": "Gate Pass",
  "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [

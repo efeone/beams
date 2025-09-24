@@ -884,6 +884,13 @@ def get_asset_custom_fields():
 				"fieldtype": "Data",
 				"label": "Serial Number",
 				"insert_after": "model",
+			},
+			{
+				"fieldname": "item_type",
+				"fieldtype": "Data",
+				"label": "Item Type",
+                "fetch_from": "item_code.item_type",
+				"insert_after": "item_code"
 			}
 		]
 	}
@@ -1791,10 +1798,11 @@ def get_item_custom_fields():
 			   "insert_after": "is_exempt"
 		   },
 			{
-				"fieldname": "is_searchable_item",
-				"fieldtype": "Check",
-				"label": "Is Searchable Item",
-				"insert_after": "is_fixed_asset"
+				"fieldname": "item_type",
+				"fieldtype": "Select",
+				"label": "Item Type",
+				"options": "\nTechnical Item\nNon-Technical Item",
+				"insert_after": "item_name"
 			}
 		]
 	}
@@ -4902,6 +4910,13 @@ def get_property_setters():
   
 			"doc_type": "Asset",
 			"field_name": "department",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+        {
+			"doctype_or_field": "DocField",
+			"doc_type": "Asset",
+			"field_name": "custodian",
 			"property": "allow_on_submit",
 			"value": 1
 		}
