@@ -5,7 +5,7 @@ import frappe
 import json
 from frappe.model.document import Document
 
-class OutwardPass(Document):
+class GatePass(Document):
 	
 	def validate(self):
 		"""Run validations before saving the document."""
