@@ -15,8 +15,6 @@ frappe.ui.form.on("Employee Appraisal Consent", {
  * - Reads linked Terms & Conditions from HR Settings (singleton).
  * - Fetches its `terms` content and displays it in a styled box.
  * - Toggles the "consent_given" checkbox based on availability.
- *
- * @param {frappe.ui.Form} frm - Current Employee Appraisal Consent form.
  */
 function render_appraisal_consent_terms(frm) {
 	// Always clear before re-render
@@ -56,9 +54,6 @@ function render_appraisal_consent_terms(frm) {
 
 /**
  * Enable or disable the "consent_given" checkbox dynamically.
- *
- * @param {frappe.ui.Form} frm - Current form.
- * @param {boolean} readonly - If true, disable the checkbox.
  */
 function toggle_consent_checkbox_readonly(frm, readonly) {
 	const fieldname = "consent_given";
@@ -73,8 +68,6 @@ function toggle_consent_checkbox_readonly(frm, readonly) {
 
 /**
  * Add a "View Appraisal" button to navigate to the linked Appraisal document.
- *
- * @param {frappe.ui.Form} frm - The current form.
  */
 function add_view_appraisal_button(frm) {
 	if (frm.doc.appraisal) {
