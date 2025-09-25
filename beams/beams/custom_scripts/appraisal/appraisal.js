@@ -243,7 +243,16 @@ frappe.ui.form.on('Appraisal', {
             } else {
                 frm.enable_form();
             }
-        }    
+        }
+        if (frm.doc.employee) {
+            frappe.db.get_value("Employee", frm.doc.employee, "employment_type")
+                .then(r => {
+                    if (r && r.message && r.message.employment_type === "Contract") {
+                        // Set indicator on page header
+                        frm.page.set_indicator(__('Contract Employee'), 'red');
+                    }
+                });
+        }
 	},
 	employee: function (frm) {
 		if (frm.doc.employee) {
