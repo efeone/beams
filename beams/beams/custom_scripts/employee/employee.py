@@ -561,8 +561,17 @@ def employee_on_update(doc, method):
 		days = frappe.db.get_single_value("Beams HR Settings", "days_for_next_appraisal_creation") or 365
 		start_date = getdate(doc.next_appraisal_date)
 		end_date = add_days(start_date, days - 1)
-		create_appraisal_if_not_exists(
-			emp=doc,
-			start_date=start_date,
-			end_date=end_date
-		)	
+		existing_appraisal = frappe.get_all(
+			"Appraisal",
+			filters={
+				"employee": doc.name,
+				"start_date": ["<=", end_date],
+				"end_date": [">=", start_date],
+			},
+		)
+		if not existing_appraisal:
+			create_appraisal_if_not_exists(
+				emp=doc,
+				start_date=start_date,
+				end_date=end_date
+			)
