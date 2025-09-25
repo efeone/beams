@@ -1,6 +1,6 @@
 frappe.ui.form.on('Appraisal', {
 	refresh: function (frm) {
-        frm.toggle_reqd('appraisal_cycle', 0);
+		frm.toggle_reqd('appraisal_cycle', 0);
 		if (!frm.doc) return;
 		salary_amount_read_only(frm);
 		frm.trigger('update_self_kra_rating_list_view');
@@ -234,25 +234,25 @@ frappe.ui.form.on('Appraisal', {
 					show_final_assessment_progress(frm, emp);
 				}
 			});
-        if (!frm.is_new()) {
-            if (!frm.doc.consent_received) {
-                frm.disable_form();
-                frm.dashboard.set_headline_alert(
-                    __("Waiting for Employee Appraisal Consent Submission"), "orange"
-                );
-            } else {
-                frm.enable_form();
-            }
-        }
-        if (frm.doc.employee) {
-            frappe.db.get_value("Employee", frm.doc.employee, "employment_type")
-                .then(r => {
-                    if (r && r.message && r.message.employment_type === "Contract") {
-                        // Set indicator on page header
-                        frm.page.set_indicator(__('Contract Employee'), 'red');
-                    }
-                });
-        }
+		if (!frm.is_new()) {
+			if (!frm.doc.consent_received) {
+				frm.disable_form();
+				frm.dashboard.set_headline_alert(
+					__("Waiting for Employee Appraisal Consent Submission"), "orange"
+				);
+			} else {
+				frm.enable_form();
+			}
+		}
+		if (frm.doc.employee) {
+			frappe.db.get_value("Employee", frm.doc.employee, "employment_type")
+				.then(r => {
+					if (r && r.message && r.message.employment_type === "Contract") {
+						// Set indicator on page header
+						frm.page.set_indicator(__('Contract Employee'), 'red');
+					}
+				});
+		}
 	},
 	employee: function (frm) {
 		if (frm.doc.employee) {
