@@ -1,5 +1,5 @@
-// // // Copyright (c) 2025, efeone and contributors
-// // // For license information, please see license.txt
+// Copyright (c) 2025, efeone and contributors
+// For license information, please see license.txt
 
 
 frappe.ui.form.on('Asset Request', {
@@ -9,6 +9,9 @@ frappe.ui.form.on('Asset Request', {
         }, __("Actions")); 
     }
 });
+/**
+ * Opens a dialog to assign assets based on the Asset Request form.
+ */
 
 function open_assign_assets_popup(frm) {
     let rows = [];
