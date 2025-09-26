@@ -1805,6 +1805,12 @@ def get_item_custom_fields():
 				"label": "Item Type",
 				"options": "\nTechnical Item\nNon-Technical Item",
 				"insert_after": "item_name"
+			},
+			{
+				"fieldname": "is_bundle_item",
+				"fieldtype": "Check",
+				"label": "Is Bundle Item",
+				"insert_after": "has_variants"
 			}
 		]
 	}

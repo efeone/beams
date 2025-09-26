@@ -9,6 +9,7 @@ frappe.ui.form.on('Asset Request', {
         }, __("Actions")); 
     }
 });
+
 /**
  * Opens a dialog to assign assets based on the Asset Request form.
  */
