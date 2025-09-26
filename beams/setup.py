@@ -1872,7 +1872,7 @@ def get_employee_custom_fields():
 			{
 				"fieldname": "physical_disabilities",
 				"fieldtype": "Select",
-				"label": "Do you have a physical disability",
+				"label": "Do you have a Physical Disability",
 				"options":"Yes\nNo",
 				"default": "No",
 				"insert_after": "additional_information_section"
@@ -1880,7 +1880,7 @@ def get_employee_custom_fields():
 			{
 				"fieldname": "disabilities",
 				"fieldtype": "Data",
-				"label": "Please specify the disability",
+				"label": "Please specify the Disability",
 				"insert_after": "physical_disabilities",
 				"depends_on": "eval:doc.physical_disabilities == 'Yes'"
 			},
@@ -1889,7 +1889,7 @@ def get_employee_custom_fields():
 				"fieldtype": "Select",
 				"options":"Yes\nNo",
 				"default": "No",
-				"label": "Do you have marital indebtedness",
+				"label": "Do you have Marital Indebtedness",
 				"insert_after": "disabilities"
 			},
 			{
@@ -1904,7 +1904,7 @@ def get_employee_custom_fields():
 				"fieldtype": "Select",
 				"options":"Yes\nNo",
 				"default": "No",
-				"label": "Are there any ongoing court proceedings",
+				"label": "Are there any Ongoing Court Proceedings",
 				"insert_after": "marital_indebtness",
 			},
 			{
@@ -1921,7 +1921,7 @@ def get_employee_custom_fields():
 			},
 			{
 				"fieldname": "are_you_willing_to_travel",
-				"label": "Are you willing to travel",
+				"label": "Are you Willing to Travel",
 				"fieldtype": "Check",
 				"insert_after": "column_break_travel",
 			},
@@ -1952,13 +1952,13 @@ def get_employee_custom_fields():
 			},
 			{
 				"fieldname": "places_to_travel",
-				"label": "Places/Countries of your choice where you'd like to travel on job",
+				"label": "Places/Countries of your choice where you'd like to Travel on Job",
 				"fieldtype": "Data",
 				"insert_after": "state_restrictions_problems",
 			},
 			{
 				"fieldname": "are_you_related_to_employee",
-				"label": "Are you related to any of our employees",
+				"label": "Are you related to any of our Employees",
 				"fieldtype": "Check",
 				"insert_after": "places_to_travel"
 			},
@@ -2010,19 +2010,19 @@ def get_employee_custom_fields():
 			{
 				"fieldname": "emergency_contact_name",
 				"fieldtype": "Data",
-				"label": "Emergency Contact Name",
+				"label": "Emergency Contact Name 2",
 				"insert_after":"person_to_be_contacted"
 			},
 			{
 				"fieldname": "emergency_phone",
 				"fieldtype": "Data",
-				"label": "Emergency Phone",
+				"label": "Emergency Phone 2",
 				"insert_after":"emergency_phone_number"
 			},
 			{
 				"fieldname": "relation_emergency",
 				"fieldtype": "Data",
-				"label": "Relation",
+				"label": "Relation 2",
 				"insert_after":"relation"
 			},
 			{
@@ -4852,7 +4852,35 @@ def get_property_setters():
 			"field_name": "appraisal_cycle",
 			"property": "hidden",
 			"value": 1
-		}
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "person_to_be_contacted",
+			"property": "label",
+			"value": "Emergency Contact Name 1"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "person_to_be_contacted",
+			"property": "label",
+			"value": "Emergency Contact Name 1"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "emergency_phone_number",
+			"property": "label",
+			"value": "Emergency Phone 1"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "relation",
+			"property": "label",
+			"value": "Relation 1"
+		},
 ]
 
 def get_material_request_custom_fields():

@@ -176,6 +176,46 @@ fields_to_remove = [
 	{
 		'dt':'Job Applicant',
 		'fieldname': 'department'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'emergency_contact_name'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'emergency_phone'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'relation_emergency'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'physical_disabilities'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'disabilities'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'marital_indebtness'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'court_proceedings'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'are_you_willing_to_travel'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'places_to_travel'
+	},
+	{
+		'dt':'Employee',
+		'fieldname': 'are_you_related_to_employee'
 	}
 ]
 
