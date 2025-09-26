@@ -3,6 +3,13 @@
 
 frappe.ui.form.on("Asset Bundle", {
     refresh:function(frm) {
+        frm.set_query("parent_item", function() {
+            return {
+                filters: {
+                    is_bundle_item: 1
+                }
+            };
+        });
       // Initialize QR Scanner only once
       if (!frm._qr_scanner_initialized) {
           frm._qr_scanner_initialized = true;
