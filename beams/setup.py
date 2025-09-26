@@ -74,6 +74,7 @@ def after_install():
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_item_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_purchase_receipt_item_custom_fields(), ignore_validate=True)
 	
 	setup_notifications()
 
@@ -900,10 +901,11 @@ def get_asset_custom_fields():
 			},
 			{
 				"fieldname": "item_type",
-				"fieldtype": "Data",
+				"fieldtype": "Select",
 				"label": "Item Type",
-                "fetch_from": "item_code.item_type",
-				"insert_after": "item_code"
+				"options": "\nTechnical Item\nNon-Technical Item",
+				"fetch_from": "item_code.item_type",
+				"insert_after": "item_code",
 			}
 		]
 	}
@@ -4929,7 +4931,7 @@ def get_property_setters():
 			"property": "allow_on_submit",
 			"value": 1
 		},
-        {
+		{
 			"doctype_or_field": "DocField",
 			"doc_type": "Asset",
 			"field_name": "custodian",
@@ -5560,6 +5562,28 @@ def get_supplier_quotation_item_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Item Description",
 				"insert_after": "item_code"
+			}
+		]
+	}
+ 
+ 
+def get_purchase_receipt_item_custom_fields():
+	'''
+		Custom fields that need to be added to the Purchase Receipt Item DocType
+	'''
+	return {
+		"Purchase Receipt Item": [
+			{
+				"fieldname": "make",
+				"fieldtype": "Data",
+				"label": "Make",
+				"insert_after": "item_name"
+			},
+			{
+				"fieldname": "model",
+				"fieldtype": "Data",
+				"label": "Model",
+				"insert_after": "make"
 			}
 		]
 	}
