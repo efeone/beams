@@ -35,7 +35,8 @@ function open_assign_assets_popup(frm) {
                 fieldname: 'assigned_to',
                 fieldtype: 'Link',
                 options: 'Employee',
-                reqd: 1
+                reqd: 1,
+                default: frm.doc.requested_by
             },
             {
                 label: __("Purpose"),
@@ -72,7 +73,7 @@ function open_assign_assets_popup(frm) {
                 },
                 callback: function(r) {
                     if (!r.exc) {
-                        frappe.set_route("Form", "Asset Movement", r.message.name);
+                        frappe.msgprint(__('Asset Movement {0} created and submitted', [r.message.name]));
                         d.hide();
                     }
                 }
@@ -82,16 +83,44 @@ function open_assign_assets_popup(frm) {
 
     d.show();
 
-    // filter Asset field by selected Item
-    d.fields_dict.items_table.grid.get_field('asset').get_query = function(doc, cdt, cdn) {
-        let row = locals[cdt] && locals[cdt][cdn];
-        if (row && row.item) {
-            return {
-                filters: { item_code: row.item }
-            };
-        }
-        return {};
+    const table = d.fields_dict.items_table.grid;
+
+    // Filter Assets per row dynamically
+    table.get_field('asset').get_query = function(doc, cdt, cdn) {
+        let row = table.grid_rows_by_docname[cdn].doc;
+
+        // Already selected assets for the same item
+        let selected_assets = table.get_data()
+            .filter(r => r.item === row.item && r.asset && r.name !== row.name)
+            .map(r => r.asset);
+
+        return {
+            filters: [
+                ['item_code', '=', row.item || ''],
+                ['name', 'not in', selected_assets]
+            ]
+        };
     };
+
+    // Filter Bundles per row dynamically
+    table.get_field('bundle').get_query = function(doc, cdt, cdn) {
+        let row = table.grid_rows_by_docname[cdn].doc;
+
+        // Already selected bundles for the same item
+        let selected_bundles = table.get_data()
+            .filter(r => r.item === row.item && r.bundle && r.name !== row.name)
+            .map(r => r.bundle);
+
+        return {
+            filters: [
+                ['parent_item', '=', row.item || ''],
+                ['name', 'not in', selected_bundles]
+            ]
+        };
+    };
+
+    // Refresh table when asset or bundle is changed to update dropdowns live
+    table.wrapper.on('change', 'input[data-fieldname="asset"], input[data-fieldname="bundle"], input[data-fieldname="item"]', function() {
+        table.refresh();
+    });
 }
-
-
