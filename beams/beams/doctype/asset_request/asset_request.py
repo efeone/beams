@@ -8,43 +8,75 @@ from frappe.model.document import Document
 
 class AssetRequest(Document):
 	pass
-	
-	
+
+
 
 @frappe.whitelist()
 def create_asset_movement(assigned_to, purpose, items, reference_name=None):
-	"""
-	Create a Asset Movement document with child rows
-	for all selected assets
-	"""
-	if isinstance(items, str):
-		items = json.loads(items)
+    """
+    Create an Asset Movement document with child rows for assets.
+    If a bundle contains stock_items, create a Stock Entry for them.
+    """
+    if isinstance(items, str):
+        items = json.loads(items)
 
-	if not items:
-		frappe.throw("No items provided for asset assignment")
+    if not items:
+        frappe.throw("No items provided for asset assignment")
 
-	movement = frappe.new_doc("Asset Movement")
-	movement.purpose = purpose
-	movement.to_employee = assigned_to
-	movement.transaction_date = frappe.utils.nowdate()
-	movement.reference_doctype = "Asset Request"
-	movement.reference_name = reference_name
+    # Create Asset Movement
+    movement = frappe.new_doc("Asset Movement")
+    movement.purpose = purpose
+    movement.to_employee = assigned_to
+    movement.transaction_date = frappe.utils.nowdate()
+    movement.reference_doctype = "Asset Request"
+    movement.reference_name = reference_name
+
+    for row in items:
+        # Single Asset
+        if row.get("asset"):
+            movement.append("assets", {"asset": row["asset"], "to_employee": assigned_to})
+
+        # Bundle
+        elif row.get("bundle"):
+            bundle_doc = frappe.get_doc("Asset Bundle", row["bundle"])
+
+            # Add assets from bundle
+            for asset in getattr(bundle_doc, "assets", []):
+                movement.append("assets", {"asset": asset.asset, "to_employee": assigned_to})
+
+            # Create Stock Entry if stock_items exist
+            stock_items = getattr(bundle_doc, "stock_items", [])
+            if stock_items:
+                stock_entry = frappe.new_doc("Stock Entry")
+                stock_entry.update({
+                    "purpose": "Material Issue",
+                    "from_warehouse": frappe.db.get_value("Beams Admin Settings", None, "asset_transfer_warehouse"),
+                    "to_warehouse": None,
+                    "reference_doctype": "Asset Request",
+                    "reference_name": reference_name,
+                    "stock_entry_type": "Material Issue"
+                })
+
+                for item in stock_items:
+                    stock_entry.append("items", {
+                        "item_code": item.item,
+                        "qty": item.qty,
+                        "uom": item.uom,
+                        "conversion_factor": 1,
+                    })
+
+                stock_entry.insert(ignore_permissions=True)
+                stock_entry.submit()
+
+    if not movement.assets:
+        frappe.throw("No valid assets selected for assignment")
+
+    movement.insert(ignore_permissions=True)
+    movement.submit()
+
+    return {"name": movement.name}
 
 
-	for row in items:
-		if not row.get("asset"):
-			continue
-		movement.append("assets", {
-			"asset": row["asset"],
-			"to_employee": assigned_to
-		})
-
-	if not movement.assets:
-		frappe.throw("No valid assets selected for assignment")
-
-	movement.insert(ignore_permissions=True)
-
-	return {"name": movement.name}
 
 
 @frappe.whitelist()
@@ -72,10 +104,10 @@ def update_issued_quantity(doc, method=None):
             if asset_row.asset:
                 item_code = frappe.db.get_value("Asset", asset_row.asset, "item_code")
                 if item_code:
-                    issued_count[item_code] += 1
+                    issued_count[item_code] = issued_count.get(item_code, 0) + 1
 
-    # Update the child table
     for row in request.items:
         row.issued_quantity = issued_count.get(row.item_code, 0)
 
     request.save(ignore_permissions=True)
+
