@@ -7,9 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "employee_in_charge",
+  "transaction_type",
   "assets",
   "scan_asset",
-  "transaction_type",
   "column_break_cgmc",
   "posting_date_and_time",
   "bundles",
@@ -105,13 +105,14 @@
    "fieldname": "transaction_type",
    "fieldtype": "Select",
    "label": "Transaction Type",
-   "options": "\nInward\nOutward"
+   "options": "\nInward\nOutward",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-24 13:14:54.311238",
+ "modified": "2025-09-30 17:05:18.581139",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Gate Pass",
