@@ -14,6 +14,8 @@
   "notifcation_frequency",
   "notification_template",
   "default_hd_ticket_team",
+  "technical_asset_manager",
+  "non_technical_asset_manager",
   "column_break_qndy",
   "default_asset_location",
   "asset_transfer_warehouse",
@@ -159,12 +161,24 @@
    "fieldtype": "Link",
    "label": "Default HD Ticket Team ",
    "options": "HD Team"
+  },
+  {
+   "fieldname": "technical_asset_manager",
+   "fieldtype": "Link",
+   "label": "Technical Asset Manager",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "non_technical_asset_manager",
+   "fieldtype": "Link",
+   "label": "Non Technical Asset Manager",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-22 16:51:54.269389",
+ "modified": "2025-09-29 14:46:31.576409",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
