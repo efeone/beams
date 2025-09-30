@@ -13,7 +13,8 @@
   "required_by",
   "section_break_lwff",
   "items",
-  "purpose"
+  "purpose",
+  "amended_from"
  ],
  "fields": [
   {
@@ -31,6 +32,7 @@
   {
    "fieldname": "item_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
    "label": "Item Type",
    "options": "\nTechnical Item\nNon-Technical Item",
    "reqd": 1
@@ -42,6 +44,7 @@
   {
    "fieldname": "required_by",
    "fieldtype": "Date",
+   "in_list_view": 1,
    "label": "Required By",
    "reqd": 1
   },
@@ -59,13 +62,23 @@
    "fieldname": "purpose",
    "fieldtype": "Small Text",
    "label": "Purpose"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Request",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-25 13:24:40.318218",
+ "modified": "2025-09-30 12:28:07.097038",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Request",
@@ -87,6 +100,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "search_fields": "requested_by, item_type, required_by",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -13,6 +13,9 @@ class AssetRequest(Document):
 		self.assign_asset_manager()
 
 	def assign_asset_manager(self):
+		"""
+        Assigns the document to the appropriate Asset Manager based on the item type.
+        """
 		if self.workflow_state == "Sent to Asset Manager":
 			if self.item_type == "Technical Item":
 				asset_manager = frappe.db.get_value("Beams Admin Settings", None, "technical_asset_manager")
