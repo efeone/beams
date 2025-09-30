@@ -8,7 +8,7 @@ frappe.ui.form.on('Asset Request', {
             frm.add_custom_button(__('Assign Assets'), function() {
                 open_assign_assets_popup(frm);
             }, __("Create"));
-            }
+        }
 
         if (frm.doc.workflow_state === "Draft" || frm.is_new()) {
             // Make child table fields read-only
