@@ -119,6 +119,8 @@ function open_assign_assets_popup(frm) {
         return {
             filters: [
                 ['item_code', '=', row.item || ''],
+                ['custodian', 'is', 'not set'],
+                ['docstatus', '=', 1],
                 ['name', 'not in', selected_assets]
             ]
         };
