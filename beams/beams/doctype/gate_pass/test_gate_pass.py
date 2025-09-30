@@ -5,5 +5,5 @@
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestOutwardPass(FrappeTestCase):
+class TestGatePass(FrappeTestCase):
 	pass

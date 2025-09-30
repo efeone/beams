@@ -1,0 +1,85 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:ARI-{YY}-{#####}",
+ "creation": "2025-09-25 13:09:32.804100",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item_name",
+  "description",
+  "required_quantity",
+  "column_break_arwm",
+  "asset_type",
+  "item_code",
+  "issued_quantity",
+  "acquired_quantity"
+ ],
+ "fields": [
+  {
+   "fieldname": "item_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Description"
+  },
+  {
+   "fieldname": "column_break_arwm",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "issued_quantity",
+   "fieldtype": "Int",
+   "label": "Issued Quantity"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "acquired_quantity",
+   "fieldtype": "Int",
+   "label": "Acquired Quantity"
+  },
+  {
+   "fieldname": "required_quantity",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Required Quantity"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "label": "Item Code",
+   "options": "Item"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "asset_type",
+   "fieldtype": "Select",
+   "label": "Asset Type",
+   "options": "\nSingle Asset\nBundle"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-09-29 16:20:47.350649",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Asset Request Item",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

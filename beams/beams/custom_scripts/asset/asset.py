@@ -12,168 +12,192 @@ from frappe.utils import getdate, add_months, nowdate
 
 @frappe.whitelist()
 def generate_asset_qr(doc,method = None):
-    qr_code = doc.get("qr_code")
-    if qr_code and frappe.db.exists({"doctype": "File", "file_url": qr_code}):
-        return
-    doc_url = get_si_json(doc)
-    qr_image = io.BytesIO()
-    url = create(doc_url, error="L")
-    url.png(qr_image, scale=4, quiet_zone=1)
-    name = frappe.generate_hash(doc.name, 5)
-    filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
-    _file = frappe.get_doc(
-        {
-            "doctype": "File",
-            "file_name": filename,
-            "is_private": 0,
-            "content": qr_image.getvalue(),
-            "attached_to_doctype": doc.get("doctype"),
-            "attached_to_name": doc.get("name"),
-            "attached_to_field": "qr_code",
-        }
-    )
-    _file.save()
-    doc.db_set("qr_code", _file.file_url)
+	qr_code = doc.get("qr_code")
+	if qr_code and frappe.db.exists({"doctype": "File", "file_url": qr_code}):
+		return
+	doc_url = get_si_json(doc)
+	qr_image = io.BytesIO()
+	url = create(doc_url, error="L")
+	url.png(qr_image, scale=4, quiet_zone=1)
+	name = frappe.generate_hash(doc.name, 5)
+	filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+	_file = frappe.get_doc(
+		{
+			"doctype": "File",
+			"file_name": filename,
+			"is_private": 0,
+			"content": qr_image.getvalue(),
+			"attached_to_doctype": doc.get("doctype"),
+			"attached_to_name": doc.get("name"),
+			"attached_to_field": "qr_code",
+		}
+	)
+	_file.save()
+	doc.db_set("qr_code", _file.file_url)
 
 def get_si_json(doc):
-    """Return a simple unique asset identifier instead of JSON"""
-    return doc.name  # Store just the asset name (e.g., "Asset-0001") in the QR
+	"""Return a simple unique asset identifier instead of JSON"""
+	return doc.name  # Store just the asset name (e.g., "Asset-0001") in the QR
 
 
 @frappe.whitelist()
 def generate_asset_details_qr(doc,method = None):
-    asset_details = doc.get("asset_details")
-    if asset_details and frappe.db.exists({"doctype": "File", "file_url": asset_details}):
-        return
-    doc_url = get_si_json_data(doc)
-    qr_image = io.BytesIO()
-    url = create(doc_url, error="L")
-    url.png(qr_image, scale=4, quiet_zone=1)
-    name = frappe.generate_hash(doc.name, 5)
-    filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
-    _file = frappe.get_doc(
-        {
-            "doctype": "File",
-            "file_name": filename,
-            "is_private": 0,
-            "content": qr_image.getvalue(),
-            "attached_to_doctype": doc.get("doctype"),
-            "attached_to_name": doc.get("name"),
-            "attached_to_field": "asset_details",
-        }
-    )
-    _file.save()
-    doc.db_set("asset_details", _file.file_url)
+	asset_details = doc.get("asset_details")
+	if asset_details and frappe.db.exists({"doctype": "File", "file_url": asset_details}):
+		return
+	doc_url = get_si_json_data(doc)
+	qr_image = io.BytesIO()
+	url = create(doc_url, error="L")
+	url.png(qr_image, scale=4, quiet_zone=1)
+	name = frappe.generate_hash(doc.name, 5)
+	filename = f"QRCode-{name}.png".replace(os.path.sep, "__")
+	_file = frappe.get_doc(
+		{
+			"doctype": "File",
+			"file_name": filename,
+			"is_private": 0,
+			"content": qr_image.getvalue(),
+			"attached_to_doctype": doc.get("doctype"),
+			"attached_to_name": doc.get("name"),
+			"attached_to_field": "asset_details",
+		}
+	)
+	_file.save()
+	doc.db_set("asset_details", _file.file_url)
 
 def get_si_json_data(doc):
-    essential_fields = [
-        "item_code",
-        "asset_name",
-        "location",
-        "asset_owner",
-    ]
-    item_data = {}
-    for field in essential_fields:
-        value = doc.get(field)
-        item_data[field] = value
-    json_data = json.dumps(item_data, indent=4)
-    return json_data
+	essential_fields = [
+		"item_code",
+		"asset_name",
+		"location",
+		"asset_owner",
+	]
+	item_data = {}
+	for field in essential_fields:
+		value = doc.get(field)
+		item_data[field] = value
+	json_data = json.dumps(item_data, indent=4)
+	return json_data
 
 @frappe.whitelist()
 def asset_notifications():
-    """Send asset notifications based on the selected frequency and start month."""
-    today = getdate(nowdate())
-    current_month = today.month
-    current_year = today.year
-    beams_settings = frappe.get_single("BEAMS Admin Settings")
-    default_notification_enabled = beams_settings.asset_audit_notification
-    default_frequency = beams_settings.notifcation_frequency
-    default_email_template = beams_settings.notification_template
-    default_start_month = beams_settings.start_notification_from
-    month_map = {
-        "January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
-        "July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12
-    }
-    global_start_month_num = month_map.get(default_start_month, None)
-    assets = frappe.get_all("Asset", fields=["name", "item_code", "custodian"])
-    for asset in assets:
-        item = frappe.db.get_value(
-            "Item", asset.item_code,
-            ["item_audit_notification", "item_notification_frequency", "item_notification_template", "start_notification_from"],
-            as_dict=True
-        ) if asset.item_code else {}
-        notify_enabled = item.get("item_audit_notification") or default_notification_enabled
-        frequency = item.get("item_notification_frequency") or default_frequency
-        email_template = item.get("item_notification_template") or default_email_template
-        item_start_month = item.get("start_notification_from")
-        item_start_month_num = month_map.get(item_start_month, None)
-        if not notify_enabled or not email_template:
-            continue
-        start_month_num = item_start_month_num if item_start_month_num else global_start_month_num
-        if not start_month_num:
-            continue
-        send_notification = False
-        if frequency == "Monthly":
-            send_notification = True
-        elif frequency == "Trimonthly":
-            send_notification = (current_month - start_month_num) % 3 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 3 == 0
-        elif frequency == "Quarterly":
-            send_notification = (current_month - start_month_num) % 4 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 4 == 0
-        elif frequency == "Half Yearly":
-            send_notification = (current_month - start_month_num) % 6 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 6 == 0
-        elif frequency == "Yearly":
-            send_notification = current_month == start_month_num
-        if not send_notification:
-            continue
-        recipient = frappe.db.get_value("Employee", asset.custodian, "user_id")
-        if not recipient:
-            continue
-        email_template_doc = frappe.get_doc("Email Template", email_template)
-        message = frappe.render_template(email_template_doc.response, {"asset": asset})
-        frappe.sendmail(
-            recipients=[recipient],
-            subject=email_template_doc.subject,
-            message=message
-        )
+	"""Send asset notifications based on the selected frequency and start month."""
+	today = getdate(nowdate())
+	current_month = today.month
+	current_year = today.year
+	beams_settings = frappe.get_single("BEAMS Admin Settings")
+	default_notification_enabled = beams_settings.asset_audit_notification
+	default_frequency = beams_settings.notifcation_frequency
+	default_email_template = beams_settings.notification_template
+	default_start_month = beams_settings.start_notification_from
+	month_map = {
+		"January": 1, "February": 2, "March": 3, "April": 4, "May": 5, "June": 6,
+		"July": 7, "August": 8, "September": 9, "October": 10, "November": 11, "December": 12
+	}
+	global_start_month_num = month_map.get(default_start_month, None)
+	assets = frappe.get_all("Asset", fields=["name", "item_code", "custodian"])
+	for asset in assets:
+		item = frappe.db.get_value(
+			"Item", asset.item_code,
+			["item_audit_notification", "item_notification_frequency", "item_notification_template", "start_notification_from"],
+			as_dict=True
+		) if asset.item_code else {}
+		notify_enabled = item.get("item_audit_notification") or default_notification_enabled
+		frequency = item.get("item_notification_frequency") or default_frequency
+		email_template = item.get("item_notification_template") or default_email_template
+		item_start_month = item.get("start_notification_from")
+		item_start_month_num = month_map.get(item_start_month, None)
+		if not notify_enabled or not email_template:
+			continue
+		start_month_num = item_start_month_num if item_start_month_num else global_start_month_num
+		if not start_month_num:
+			continue
+		send_notification = False
+		if frequency == "Monthly":
+			send_notification = True
+		elif frequency == "Trimonthly":
+			send_notification = (current_month - start_month_num) % 3 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 3 == 0
+		elif frequency == "Quarterly":
+			send_notification = (current_month - start_month_num) % 4 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 4 == 0
+		elif frequency == "Half Yearly":
+			send_notification = (current_month - start_month_num) % 6 == 0 if current_month >= start_month_num else (start_month_num - current_month) % 6 == 0
+		elif frequency == "Yearly":
+			send_notification = current_month == start_month_num
+		if not send_notification:
+			continue
+		recipient = frappe.db.get_value("Employee", asset.custodian, "user_id")
+		if not recipient:
+			continue
+		email_template_doc = frappe.get_doc("Email Template", email_template)
+		message = frappe.render_template(email_template_doc.response, {"asset": asset})
+		frappe.sendmail(
+			recipients=[recipient],
+			subject=email_template_doc.subject,
+			message=message
+		)
 
 @frappe.whitelist()
 def create_asset_location_log(doc, method=None):
-    """
-        Automatically creates or updates an Asset Location Log entry
-        whenever a change in the asset's physical location occurs
-    """
-    if not (doc.room or doc.shelf or doc.row or doc.bin or doc.location):
-        return
+	"""
+		Automatically creates or updates an Asset Location Log entry
+		whenever a change in the asset's physical location occurs
+	"""
+	if not (doc.room or doc.shelf or doc.row or doc.bin or doc.location):
+		return
 
-    new_log_data = {
-        "asset": doc.name,
-        "location": doc.location,
-        "room": doc.room,
-        "shelf": doc.shelf,
-        "row": doc.row,
-        "bin": doc.bin,
-        "timestamp": frappe.utils.now()
-    }
+	new_log_data = {
+		"asset": doc.name,
+		"location": doc.location,
+		"room": doc.room,
+		"shelf": doc.shelf,
+		"row": doc.row,
+		"bin": doc.bin,
+		"timestamp": frappe.utils.now()
+	}
 
-    try:
-        log_doc = frappe.get_last_doc("Asset Location Log", filters={"asset": doc.name})
-        if log_doc.asset_location_log:
-            last_entry = log_doc.asset_location_log[-1]
-            if (
-                (last_entry.room or "") == (doc.room or "") and
-                (last_entry.shelf or "") == (doc.shelf or "") and
-                (last_entry.row or "") == (doc.row or "") and
-                (last_entry.bin or "") == (doc.bin or "") and
-                (last_entry.location or "") == (doc.location or "")
-            ):
-                return
+	try:
+		log_doc = frappe.get_last_doc("Asset Location Log", filters={"asset": doc.name})
+		if log_doc.asset_location_log:
+			last_entry = log_doc.asset_location_log[-1]
+			if (
+				(last_entry.room or "") == (doc.room or "") and
+				(last_entry.shelf or "") == (doc.shelf or "") and
+				(last_entry.row or "") == (doc.row or "") and
+				(last_entry.bin or "") == (doc.bin or "") and
+				(last_entry.location or "") == (doc.location or "")
+			):
+				return
 
-        log_doc.append("asset_location_log", new_log_data)
-        log_doc.save(ignore_permissions=True)
+		log_doc.append("asset_location_log", new_log_data)
+		log_doc.save(ignore_permissions=True)
 
-    except frappe.DoesNotExistError:
-        frappe.get_doc({
-            "doctype": "Asset Location Log",
-            "asset": doc.name,
-            "asset_location_log": [new_log_data]
-        }).insert(ignore_permissions=True)
+	except frappe.DoesNotExistError:
+		frappe.get_doc({
+			"doctype": "Asset Location Log",
+			"asset": doc.name,
+			"asset_location_log": [new_log_data]
+		}).insert(ignore_permissions=True)
+
+
+def populate_asset_details_from_purchase_receipt(doc, method=None):
+	"""
+	Populate fields in Asset from the related Purchase Receipt Item 
+	"""
+	
+	if not doc.purchase_receipt:
+		return
+
+	purchase_receipt_item_doc = frappe.db.get_value(
+		"Purchase Receipt Item",
+		{"parent": doc.purchase_receipt, "item_code": doc.item_code},
+		["make", "model"],
+		as_dict=True,
+	)
+
+	if purchase_receipt_item_doc:
+		if purchase_receipt_item_doc.make:
+			doc.db_set("make", purchase_receipt_item_doc.make, update_modified=False)
+		if purchase_receipt_item_doc.model:
+			doc.db_set("model", purchase_receipt_item_doc.model, update_modified=False)
+
+  

@@ -74,6 +74,7 @@ def after_install():
 	create_custom_fields(get_hd_ticket_type_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_item_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_purchase_receipt_item_custom_fields(), ignore_validate=True)
 	
 	setup_notifications()
 
@@ -866,6 +867,32 @@ def get_asset_custom_fields():
 				"allow_on_submit": 1,
 				"read_only":1,
 				"insert_after": "row"
+			},
+			{
+				"fieldname": "make",
+				"fieldtype": "Data",
+				"label": "Make",
+				"insert_after": "is_composite_asset",
+			},
+			{
+				"fieldname": "model",
+				"fieldtype": "Data",
+				"label": "Model",
+				"insert_after": "make",
+			},
+			{
+				"fieldname": "serial_number",
+				"fieldtype": "Data",
+				"label": "Serial Number",
+				"insert_after": "model",
+			},
+			{
+				"fieldname": "item_type",
+				"fieldtype": "Select",
+				"label": "Item Type",
+				"options": "\nTechnical Item\nNon-Technical Item",
+				"fetch_from": "item_code.item_type",
+				"insert_after": "item_code",
 			}
 		]
 	}
@@ -1771,7 +1798,20 @@ def get_item_custom_fields():
 			   "fieldtype": "Check",
 			   "label": "Is Makeup Item",
 			   "insert_after": "is_exempt"
-		   }
+		   },
+			{
+				"fieldname": "item_type",
+				"fieldtype": "Select",
+				"label": "Item Type",
+				"options": "\nTechnical Item\nNon-Technical Item",
+				"insert_after": "item_name"
+			},
+			{
+				"fieldname": "is_bundle_item",
+				"fieldtype": "Check",
+				"label": "Is Bundle Item",
+				"insert_after": "has_variants"
+			}
 		]
 	}
 
@@ -4874,6 +4914,20 @@ def get_property_setters():
 			"property": "label",
 			"value": "Relation 1"
 		},
+ 	 	{
+  
+			"doc_type": "Asset",
+			"field_name": "department",
+			"property": "allow_on_submit",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Asset",
+			"field_name": "custodian",
+			"property": "allow_on_submit",
+			"value": 1
+		}
 ]
 
 def get_material_request_custom_fields():
@@ -5200,7 +5254,7 @@ def get_beams_roles():
 	'''
 		Method to get BEAMS specific roles
 	'''
-	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter','Salary Increment Approver','Front Desk User']
+	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter','Salary Increment Approver','Front Desk User', 'Asset Manager', 'Asset User']
 
 def get_custom_translations():
 	'''
@@ -5353,6 +5407,14 @@ def get_asset_movement_custom_fields():
 				"insert_after": "from_employee"
 			},
 			{
+				"fieldname": "department",
+				"fieldtype": "Link",
+				"label": "Department",
+				"options":"Department",
+				"allow_on_submit": 1,
+				"insert_after": "to_employee"
+			},
+			{
 				"fieldname": "shelf",
 				"fieldtype": "Link",
 				"label": "Shelf",
@@ -5366,7 +5428,7 @@ def get_asset_movement_custom_fields():
 				"label": "Row",
 				"options":"Row",
 				"allow_on_submit": 1,
-				"insert_after": "to_employee"
+				"insert_after": "department"
 			},
 			{
 				"fieldname": "bin",
@@ -5490,6 +5552,28 @@ def get_supplier_quotation_item_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Item Description",
 				"insert_after": "item_code"
+			}
+		]
+	}
+ 
+ 
+def get_purchase_receipt_item_custom_fields():
+	'''
+		Custom fields that need to be added to the Purchase Receipt Item DocType
+	'''
+	return {
+		"Purchase Receipt Item": [
+			{
+				"fieldname": "make",
+				"fieldtype": "Data",
+				"label": "Make",
+				"insert_after": "item_name"
+			},
+			{
+				"fieldname": "model",
+				"fieldtype": "Data",
+				"label": "Model",
+				"insert_after": "make"
 			}
 		]
 	}
