@@ -4,11 +4,30 @@
 
 frappe.ui.form.on('Asset Request', {
     refresh: function(frm) {
-        frm.add_custom_button(__('Assign Assets'), function() {
-            open_assign_assets_popup(frm);
-        }, __("Actions")); 
+        if (frm.doc.workflow_state === "Approved by Asset Manager") {
+            frm.add_custom_button(__('Assign Assets'), function() {
+                open_assign_assets_popup(frm);
+            }, __("Create"));
+            }
+
+        if (frm.doc.workflow_state === "Draft" || frm.is_new()) {
+            // Make child table fields read-only
+            frm.doc.items.forEach((row) => {
+                ['asset_type', 'item_code', 'issued_quantity', 'acquired_quantity'].forEach(field => {
+                    frm.set_df_property(
+                        "items",
+                        "read_only",
+                        1,
+                        frm.doc.name,
+                        field,
+                        row.name
+                    );
+                });
+            });
+        }
     }
 });
+
 
 /**
  * Opens a dialog to assign assets based on the Asset Request form.
