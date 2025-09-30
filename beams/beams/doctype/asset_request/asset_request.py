@@ -33,7 +33,6 @@ class AssetRequest(Document):
 				})
 
 
-
 @frappe.whitelist()
 def create_asset_movement(assigned_to, purpose, items, reference_name=None):
 	"""
@@ -98,8 +97,6 @@ def create_asset_movement(assigned_to, purpose, items, reference_name=None):
 	movement.submit()
 
 	return {"name": movement.name}
-
-
 
 
 @frappe.whitelist()

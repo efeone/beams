@@ -1,7 +1,6 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 
-
 frappe.ui.form.on('Asset Request', {
     refresh: function(frm) {
         if (frm.doc.workflow_state === "Approved by Asset Manager") {
@@ -10,29 +9,33 @@ frappe.ui.form.on('Asset Request', {
             }, __("Create"));
         }
 
-        if (frm.doc.workflow_state === "Draft" || frm.is_new()) {
-            // Make child table fields read-only
-            frm.doc.items.forEach((row) => {
-                ['asset_type', 'item_code', 'issued_quantity', 'acquired_quantity'].forEach(field => {
-                    frm.set_df_property(
-                        "items",
-                        "read_only",
-                        1,
-                        frm.doc.name,
-                        field,
-                        row.name
-                    );
-                });
-            });
+        if (frm.doc.workflow_state === "Draft") {
+            make_child_table_read_only(frm);
         }
     }
 });
+
+function make_child_table_read_only(frm) {
+    frm.doc.items.forEach((row) => {
+        ['asset_type', 'item_code', 'issued_quantity', 'acquired_quantity'].forEach(field => {
+            frm.set_df_property(
+                "items",
+                "read_only",
+                1,
+                frm.doc.name,
+                field,
+                row.name
+            );
+        });
+    });
+
+    frm.fields_dict['items'].grid.refresh();
+}
 
 
 /**
  * Opens a dialog to assign assets based on the Asset Request form.
  */
-
 function open_assign_assets_popup(frm) {
     let rows = [];
     (frm.doc.items || []).forEach(item => {
