@@ -23,7 +23,6 @@
   "destination",
   "accommodation_required",
   "inside_kerala",
-  "room_criteria",
   "column_break_xmae",
   "start_date",
   "end_date",
@@ -38,9 +37,7 @@
   "attachments",
   "expense_claim_html",
   "journal_entry_expenses_table",
-  "reason_for_rejection",
-  "section_break_fdom",
-  "dynamic_link"
+  "reason_for_rejection"
  ],
  "fields": [
   {
@@ -167,13 +164,6 @@
    "label": "Accommodation Required "
   },
   {
-   "depends_on": "eval:doc.accommodation_required;",
-   "fieldname": "room_criteria",
-   "fieldtype": "Link",
-   "label": " Room Criteria",
-   "options": "Room Criteria"
-  },
-  {
    "default": "0",
    "description": "To mark Attendance for Travel Days",
    "fieldname": "mark_attendance",
@@ -216,18 +206,6 @@
    "label": "Attendance Request",
    "options": "Attendance Request",
    "read_only": 1
-  },
-  {
-   "fieldname": "dynamic_link",
-   "fieldtype": "Table",
-   "label": "Dynamic Link",
-   "options": "Dynamic Link"
-  },
-  {
-   "collapsible": 1,
-   "fieldname": "section_break_fdom",
-   "fieldtype": "Section Break",
-   "label": "Links"
   },
   {
    "fieldname": "number_of_travellers",
@@ -284,7 +262,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-09-22 11:21:22.931184",
+ "modified": "2025-10-02 11:38:14.876613",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
