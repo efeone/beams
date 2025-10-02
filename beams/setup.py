@@ -1704,6 +1704,14 @@ def get_supplier_custom_fields():
 				"options": "Designation",
 				"insert_after": "country"
 
+			},
+			{
+				"fieldname": "ot_batta",
+				"fieldtype": "Currency",
+				"label": "Ot Batta",
+				"insert_after": "is_transporter",
+				"depends_on": "eval:doc.is_transporter == 1"
+
 			}
 		]
 	}
@@ -4915,7 +4923,7 @@ def get_property_setters():
 			"value": "Relation 1"
 		},
  	 	{
-  
+			"doctype_or_field": "DocField",
 			"doc_type": "Asset",
 			"field_name": "department",
 			"property": "allow_on_submit",
