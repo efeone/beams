@@ -26,7 +26,8 @@
   "default_employee_payable_account",
   "item_group",
   "employee_travel_request_approved_template",
-  "default_source_warehouse"
+  "default_source_warehouse",
+  "default_fuel_uom"
  ],
  "fields": [
   {
@@ -173,12 +174,18 @@
    "fieldtype": "Link",
    "label": "Non Technical Asset Manager",
    "options": "Employee"
+  },
+  {
+   "fieldname": "default_fuel_uom",
+   "fieldtype": "Link",
+   "label": "Default Fuel UOM",
+   "options": "UOM"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-29 14:46:31.576409",
+ "modified": "2025-10-02 15:27:13.963359",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
