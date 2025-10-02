@@ -12,5 +12,9 @@ frappe.ui.form.on("Visitor Pass", {
     },
     "returned_date": function (frm) {
         frm.call("validate_issued_date_and_returned_date");
+    },
+
+    refresh: (frm) => {
+        frm.toggle_display("returned_date", frm.doc.workflow_state !== "Draft");
     }
 });

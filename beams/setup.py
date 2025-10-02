@@ -4935,7 +4935,14 @@ def get_property_setters():
 			"field_name": "custodian",
 			"property": "allow_on_submit",
 			"value": 1
-		}
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Vehicle",
+			"field_name": "vehicle_safety_inspection",
+			"property": "depends_on",
+			"value": "eval: !doc.__islocal"
+		},
 ]
 
 def get_material_request_custom_fields():

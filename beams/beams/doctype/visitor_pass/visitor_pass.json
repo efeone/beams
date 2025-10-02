@@ -9,12 +9,11 @@
   "section_break_nrae",
   "inward_register",
   "issued_date",
-  "issued_time",
-  "issued_to",
+  "card_no",
   "column_break_eucm",
+  "issued_to",
   "expire_on",
   "returned_date",
-  "amended_from",
   "section_break_cofy",
   "purpose_of_visit"
  ],
@@ -22,16 +21,6 @@
   {
    "fieldname": "section_break_nrae",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Visitor Pass",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "inward_register",
@@ -44,17 +33,9 @@
   {
    "default": "Today",
    "fieldname": "issued_date",
-   "fieldtype": "Date",
+   "fieldtype": "Datetime",
    "in_list_view": 1,
-   "label": "Issued Date",
-   "reqd": 1
-  },
-  {
-   "default": "Now",
-   "fieldname": "issued_time",
-   "fieldtype": "Time",
-   "in_list_view": 1,
-   "label": "Issued Time",
+   "label": "Issued Date and Time",
    "reqd": 1
   },
   {
@@ -88,13 +69,18 @@
    "fieldname": "purpose_of_visit",
    "fieldtype": "Small Text",
    "label": "Purpose of visit"
+  },
+  {
+   "fieldname": "card_no",
+   "fieldtype": "Data",
+   "label": "Card No"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-08-06 06:27:13.317655",
+ "modified": "2025-10-02 13:59:51.892839",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Visitor Pass",
