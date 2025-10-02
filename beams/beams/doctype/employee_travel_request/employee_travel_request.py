@@ -27,7 +27,6 @@ class EmployeeTravelRequest(Document):
 		self.validate_dates()
 		self.validate_expected_time()
 		self.total_days_calculate()
-		self.validate_vehicle_allocation()
 
 	def before_save(self):
 		self.validate_posting_date()
