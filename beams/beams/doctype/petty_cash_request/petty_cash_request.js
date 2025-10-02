@@ -36,6 +36,15 @@ frappe.ui.form.on("Petty Cash Request", {
                 }
             }
         });
+    },
+    validate: function (frm) {
+        if (frm.doc.requested_amount <= 0) {
+            frappe.throw({
+                title: __("Invalid Amount"),
+                message: __("Requested Amount should be greater than 0. Please enter a valid amount."),
+                indicator: "red"
+            });
+        }
     }
 });
 
