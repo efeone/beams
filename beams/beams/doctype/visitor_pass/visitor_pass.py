@@ -61,8 +61,8 @@ class VisitorPass(Document):
 			)
 
 		if issued_date == returned_date:
-			if self.issued_time and self.returned_date:
-				issued_time = get_time(self.issued_time)
+			if self.issued_date and self.returned_date:
+				issued_time = get_time(self.issued_date)
 				returned_time = get_time(self.returned_date)
 
 				if issued_time >= returned_time:
