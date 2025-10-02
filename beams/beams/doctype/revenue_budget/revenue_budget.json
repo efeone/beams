@@ -1,18 +1,20 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:{revenue_group}-{revenue_region}/{fiscal_year}/{###}",
+ "autoname": "format:{revenue_category} {fiscal_year}-{abbreviation}",
  "creation": "2025-01-29 09:40:07.549966",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
   "section_break_epzm",
   "company",
-  "revenue_group",
+  "abbreviation",
   "revenue_category",
+  "default_currency",
+  "company_currency",
   "column_break_wemo",
   "fiscal_year",
-  "revenue_region",
+  "revenue_template",
   "naming_series",
   "total_amount",
   "section_break",
@@ -75,12 +77,38 @@
    "read_only": 1
   },
   {
-   "fieldname": "revenue_group",
+   "fieldname": "amended_from",
    "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Revenue Group",
-   "options": "Revenue Group",
-   "reqd": 1
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Revenue Budget",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "revenue_template",
+   "fieldtype": "Link",
+   "label": "Revenue Template",
+   "options": "Revenue Template"
+  },
+  {
+   "default": "INR",
+   "fieldname": "default_currency",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Default Currency",
+   "options": "Currency",
+   "read_only": 1
+  },
+  {
+   "fetch_from": "company.default_currency",
+   "fieldname": "company_currency",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Company Currency",
+   "options": "Currency",
+   "read_only": 1
   },
   {
    "fieldname": "revenue_category",
@@ -90,27 +118,19 @@
    "reqd": 1
   },
   {
-   "fieldname": "revenue_region",
-   "fieldtype": "Select",
-   "label": "Revenue Region",
-   "options": "National\nGCC",
-   "reqd": 1
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Revenue Budget",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
+   "fetch_from": "company.abbr",
+   "fieldname": "abbreviation",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Abbreviation",
+   "read_only": 1
   }
  ],
+ "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-18 12:09:29.003630",
+ "modified": "2025-04-07 15:00:03.238147",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Budget",
