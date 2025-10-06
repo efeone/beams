@@ -316,19 +316,7 @@ $(document).ready(function () {
 	const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 	const phoneRegex = /^\d{10}$/;
 
-	if (!managerName) {
-		showError("Manager Name is required.");
-		focusFieldInTab("#manager_name", 1);
-		return false;
-	}
-
-	if (!managerPhone) {
-		showError(" Manager Contact Number is required.");
-		focusFieldInTab("#manager_contact_no", 1);
-		return false;
-	}
-
-	if (!phoneRegex.test(managerPhone)) {
+	if (managerPhone && !phoneRegex.test(managerPhone)) {
 		showError(
 		  "Please enter a valid 10-digit mobile number for Manager Contact No."
 		);
@@ -336,13 +324,7 @@ $(document).ready(function () {
 		return false;
 	}
 
-	if (!managerEmail) {
-		showError("Manager Email is required.");
-		focusFieldInTab("#manager_email", 1);
-		return false;
-	}
-
-	if (!emailRegex.test(managerEmail)) {
+	if (managerEmail &&!emailRegex.test(managerEmail)) {
 		showError("Please enter a valid manager email address.");
 		focusFieldInTab("#manager_email", 1);
 		return false;
