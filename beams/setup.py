@@ -2910,7 +2910,7 @@ def get_job_applicant_custom_fields():
 				"fieldname": "creference",
 				"fieldtype": "Select",
 				"label": "Can a Reference be Taken Now?",
-				"options": "Yes\nNo",
+				"options": "\nYes\nNo",
 				"insert_after": "column_break_6"
 			},
 			{

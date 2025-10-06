@@ -399,6 +399,7 @@
 						<div class="column" >
 							<label for="reference_taken">Can a Reference be Taken Now?</label>
 							<select id="reference_taken" name="reference_taken">
+								<option value=""></option>
 								<option value="Yes">Yes</option>
 								<option value="No">No</option>
 							</select>
@@ -1110,7 +1111,6 @@
 		flatpickr("#interviewed_date", {
 			dateFormat: "d-m-Y",
 			maxDate: today,
-			defaultDate: today // optional: auto-fill with today's date
 		});
 
 		// Get the Aadhaar input and the error message div
