@@ -149,45 +149,42 @@ def update_register_form(docname, form_data=None):
 
 		doc.education_qualification = []
 		for row in form_data.get('education_qualification', []):
-			if row.get('course'):
-				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-				doc.append('education_qualification', {
-					'course': row.get('course'),
-					'name_of_school_college': row.get('name_of_school_college'),
-					'name_of_universityboard_of_exam': row.get('name_of_universityboard_of_exam'),
-					'dates_attended_from': int(row.get('dates_attended_from')),
-					'dates_attended_to': int(row.get('dates_attended_to')),
-					'result': float(row.get('result')),
-					'attachments': filename
-				})
+			filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+			doc.append('education_qualification', {
+				'course': row.get('course'),
+				'name_of_school_college': row.get('name_of_school_college'),
+				'name_of_universityboard_of_exam': row.get('name_of_universityboard_of_exam'),
+				'dates_attended_from': int(row.get('dates_attended_from')) if row.get('dates_attended_from') else None,
+				'dates_attended_to': int(row.get('dates_attended_to')) if row.get('dates_attended_to') else None,
+				'result': float(row.get('result')) if row.get('result') else None,
+				'attachments': filename
+			})
 
 		doc.professional_certification = []
 		for row in form_data.get('professional_certification', []):
-			if row.get('course'):
-				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-				doc.append('professional_certification', {
-					'course': row.get('course'),
-					'institute_name': row.get('institute_name'),
-					'dates_attended_from': int(row.get('dates_attended_from')),
-					'dates_attended_to': int(row.get('dates_attended_to')),
-					'type_of_certification': row.get('type_of_certification'),
-					'subject_major': row.get('subject_major'),
-					'attachments': filename
-				})
+			filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+			doc.append('professional_certification', {
+				'course': row.get('course'),
+				'institute_name': row.get('institute_name'),
+				'dates_attended_from': int(row.get('dates_attended_from')) if row.get('dates_attended_from') else None,
+				'dates_attended_to': int(row.get('dates_attended_to')) if row.get('dates_attended_to') else None,
+				'type_of_certification': row.get('type_of_certification'),
+				'subject_major': row.get('subject_major'),
+				'attachments': filename
+			})
 
 		doc.prev_emp_his = []
 		for row in form_data.get('prev_emp_his', []):
-			if row.get('name_of_org'):
-				filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
-				doc.append('prev_emp_his', {
-					'name_of_org': row.get('name_of_org'),
-					'prev_designation': row.get('prev_designation'),
-					'last_salary_drawn': row.get('last_salary_drawn'),
-					'name_of_manager': row.get('name_of_manager'),
-					'period_of_employment': row.get('period_of_employment'),
-					'reason_for_leaving': row.get('reason_for_leaving'),
-					'attachments': filename
-				})
+			filename = update_file(row.get('attachments'), 'Job Applicant', docname) or ''
+			doc.append('prev_emp_his', {
+				'name_of_org': row.get('name_of_org'),
+				'prev_designation': row.get('prev_designation'),
+				'last_salary_drawn': row.get('last_salary_drawn'),
+				'name_of_manager': row.get('name_of_manager'),
+				'period_of_employment': row.get('period_of_employment'),
+				'reason_for_leaving': row.get('reason_for_leaving'),
+				'attachments': filename
+			})
 
 		doc.language_proficiency = []
 		for row in form_data.get('language_proficiency', []):
