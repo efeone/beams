@@ -28,6 +28,10 @@ def create_job_applicant(applicant_name, email_id, phone_number, min_experience=
 	job_applicant_doc.min_education_qual = min_education_qual
 	job_applicant_doc.job_title = job_title
 	job_applicant_doc.location = location
+	if job_title and frappe.db.exists("Job Opening", job_title):
+		department = frappe.db.get_value("Job Opening", job_title, "department")
+		if department:
+			job_applicant_doc.department = department
 
 	# Process skills if provided
 	if skill_proficiency:
