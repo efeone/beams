@@ -28,6 +28,10 @@ def create_job_applicant(applicant_name, email_id, phone_number, min_experience=
 	job_applicant_doc.min_education_qual = min_education_qual
 	job_applicant_doc.job_title = job_title
 	job_applicant_doc.location = location
+	if job_title and frappe.db.exists("Job Opening", job_title):
+		department = frappe.db.get_value("Job Opening", job_title, "department")
+		if department:
+			job_applicant_doc.department = department
 
 	# Process skills if provided
 	if skill_proficiency:
@@ -49,38 +53,38 @@ def create_job_applicant(applicant_name, email_id, phone_number, min_experience=
 
 @frappe.whitelist(allow_guest=True)
 def upload_file(filedata, doctype, docname, docfield):
-    '''
-        Uploads files to the specified Job Applicant document.
-    '''
-    file_name = None
-    if filedata and doctype and docname:
-        if isinstance(filedata, str):  # Ensure filedata is a string before parsing
-            filedata = json.loads(filedata)
+	'''
+		Uploads files to the specified Job Applicant document.
+	'''
+	file_name = None
+	if filedata and doctype and docname:
+		if isinstance(filedata, str):  # Ensure filedata is a string before parsing
+			filedata = json.loads(filedata)
 
-        if isinstance(filedata, list):  # Handle case where it's already a list
-            filedata_list = filedata
-        elif isinstance(filedata, dict) and "files_data" in filedata:
-            filedata_list = filedata["files_data"]
-        else:
-            frappe.throw(_("Invalid file data format"))
+		if isinstance(filedata, list):  # Handle case where it's already a list
+			filedata_list = filedata
+		elif isinstance(filedata, dict) and "files_data" in filedata:
+			filedata_list = filedata["files_data"]
+		else:
+			frappe.throw(_("Invalid file data format"))
 
-        if frappe.db.exists(doctype, docname):
-            for filedata_item in filedata_list:
-                filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], doctype, docname, decode=True, is_private=0, df=docfield)
-                file_name = filedoc.file_url
-        else:
-            for filedata_item in filedata_list:
-                filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], decode=True, is_private=0)
-                file_name = filedoc.file_url
+		if frappe.db.exists(doctype, docname):
+			for filedata_item in filedata_list:
+				filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], doctype, docname, decode=True, is_private=0, df=docfield)
+				file_name = filedoc.file_url
+		else:
+			for filedata_item in filedata_list:
+				filedoc = save_file(filedata_item["filename"], filedata_item["dataurl"], decode=True, is_private=0)
+				file_name = filedoc.file_url
 
-    frappe.db.commit()
-    return file_name
+	frappe.db.commit()
+	return file_name
 
 
 @frappe.whitelist()
 def get_skills_from_opening(job_opening):
 	'''
-        Method to get Skills from Job Opening
+		Method to get Skills from Job Opening
 	'''
 	skills = []
 	if frappe.db.exists('Job Opening', job_opening):
