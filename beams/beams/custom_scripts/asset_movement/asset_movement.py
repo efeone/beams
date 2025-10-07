@@ -1,5 +1,6 @@
 import frappe
 from frappe.utils import flt
+from frappe import _
 
 def update_issued_quantity(doc, method):
 	"""
@@ -101,3 +102,50 @@ def update_asset_location_from_movement(doc, method=None):
 
 		if updated:
 			asset.save(ignore_permissions=True)
+
+
+@frappe.whitelist()
+def acknowledge_assets(asset_movement_name):
+	"""Mark all unacknowledged assets in an Asset Movement as acknowledged and notify if technical item."""
+	
+	doc = frappe.get_doc("Asset Movement", asset_movement_name)
+	updated = False
+
+	for row in doc.assets:
+		if not row.acknowledged:
+			row.acknowledged = 1
+			updated = True
+
+	if updated:
+		doc.save()
+
+		item_type = frappe.db.get_value(doc.reference_doctype, doc.reference_name, "item_type")
+		
+		if item_type:
+			send_mail_to_asset_manager(item_type, asset_movement_name)
+
+		return _("Assets acknowledged successfully!")
+	else:
+		return _("All assets were already acknowledged.")
+
+
+def send_mail_to_asset_manager(item_type, asset_movement_name):
+	"""Send email notification to Asset Manager."""
+	
+	asset_settings = frappe.get_single('BEAMS Admin Settings')
+
+	if item_type == 'Technical Item':
+		technical_asset_manager = asset_settings.get('technical_asset_manager') or ''
+		frappe.sendmail(
+            recipients=[technical_asset_manager],
+            subject=f"Assets Acknowledged: {asset_movement_name}",
+            message=f"The assets in Asset Movement {asset_movement_name} have been acknowledged."
+        )
+	elif item_type == 'Non-Technical Item':
+		non_technical_asset_manager = asset_settings.get('non_technical_asset_manager') or ''
+		frappe.sendmail(
+			recipients=[non_technical_asset_manager],
+			subject=f"Assets Acknowledged: {asset_movement_name}",
+			message=f"The assets in Asset Movement {asset_movement_name} have been acknowledged."
+		)
+	
