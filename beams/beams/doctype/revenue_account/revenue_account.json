@@ -8,8 +8,11 @@
  "field_order": [
   "revenue_centre",
   "account",
+  "revenue_group",
   "column_break_quzd",
+  "revenue_region",
   "revenue_amount",
+  "description",
   "monthly_amount_distribution_section",
   "april",
   "may",
@@ -24,7 +27,23 @@
   "december",
   "january",
   "february",
-  "march"
+  "march",
+  "monthly_amount_distributioninr_section",
+  "april_inr",
+  "may_inr",
+  "june_inr",
+  "july_inr",
+  "column_break_ulxk",
+  "august_inr",
+  "september_inr",
+  "october_inr",
+  "november_inr",
+  "column_break_poio",
+  "december_inr",
+  "january_inr",
+  "february_inr",
+  "march_inr",
+  "revenue_amount_inr"
  ],
  "fields": [
   {
@@ -41,6 +60,7 @@
    "fieldtype": "Currency",
    "in_list_view": 1,
    "label": "Revenue Amount",
+   "options": "company_currency",
    "precision": "2",
    "reqd": 1
   },
@@ -123,17 +143,158 @@
    "label": "December"
   },
   {
+   "fetch_from": "revenue_centre.account",
    "fieldname": "account",
    "fieldtype": "Link",
    "label": "Account",
    "options": "Account",
+   "read_only": 1,
    "reqd": 1
+  },
+  {
+   "fieldname": "revenue_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Revenue Group",
+   "options": "Revenue Group",
+   "reqd": 1
+  },
+  {
+   "fieldname": "revenue_region",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Finance Region",
+   "options": "National\nGCC",
+   "reqd": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "monthly_amount_distributioninr_section",
+   "fieldtype": "Section Break",
+   "label": "Monthly Amount Distribution (INR)"
+  },
+  {
+   "fieldname": "may_inr",
+   "fieldtype": "Currency",
+   "label": "May (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "june_inr",
+   "fieldtype": "Currency",
+   "label": "June (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "july_inr",
+   "fieldtype": "Currency",
+   "label": "July (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ulxk",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "august_inr",
+   "fieldtype": "Currency",
+   "label": "August (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "september_inr",
+   "fieldtype": "Currency",
+   "label": "September (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "october_inr",
+   "fieldtype": "Currency",
+   "label": "October (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "november_inr",
+   "fieldtype": "Currency",
+   "label": "November (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_poio",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "december_inr",
+   "fieldtype": "Currency",
+   "label": "December (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "january_inr",
+   "fieldtype": "Currency",
+   "label": "January (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "february_inr",
+   "fieldtype": "Currency",
+   "label": "February (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "march_inr",
+   "fieldtype": "Currency",
+   "label": "March (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "revenue_amount_inr",
+   "fieldtype": "Currency",
+   "label": "Revenue Amount (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
+  },
+  {
+   "fieldname": "april_inr",
+   "fieldtype": "Currency",
+   "label": "April (INR)",
+   "options": "default_currency",
+   "precision": "2",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-18 11:44:42.181253",
+ "modified": "2025-04-07 17:24:47.191935",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Revenue Account",

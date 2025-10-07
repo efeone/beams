@@ -111,7 +111,13 @@ frappe.query_reports["Detailed Budget Allocation Report"] = {
             fieldtype: "Select",
             options: "ASC\nDESC",
             default: "DESC"
-        }
+        },
+        {
+            fieldname: "budget_amount_only",
+            label: "Budget Amount Only",
+            fieldtype: "Check",
+            default: 1
+        },
     ],
     tree: true,
     treeView: true,

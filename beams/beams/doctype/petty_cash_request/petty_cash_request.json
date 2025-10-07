@@ -14,7 +14,8 @@
   "column_break_pflc",
   "petty_cash_account",
   "account",
-  "requested_amount"
+  "requested_amount",
+  "reason"
  ],
  "fields": [
   {
@@ -71,12 +72,17 @@
    "fieldtype": "Link",
    "label": "Petty Cash Account",
    "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Small Text",
+   "label": "Reason"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-21 15:48:04.534573",
+ "modified": "2025-03-24 16:15:48.424785",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Petty Cash Request",
