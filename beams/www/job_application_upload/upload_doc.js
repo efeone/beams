@@ -29,8 +29,7 @@ $(document).ready(function () {
 	}
 
   // Safely sanitize values
-	const safeValue = (value) =>
-	value ? frappe.utils.xss_sanitise(String(value)) : "";
+	const safeValue = (value) => (value ? String(value).trim() : "");
 	const date_of_birth = safeValue($("#date_of_birth").val());
 	const interviewed_date = safeValue($("#interviewed_date").val());
 
