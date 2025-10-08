@@ -6,13 +6,15 @@ frappe.ui.form.on('Asset Request', {
         make_child_table_read_only(frm);
     },
     refresh: function(frm) {
-        if (frm.doc.workflow_state === "Approved by Asset Manager") {
+        if (frm.doc.workflow_state === "Approved by Asset Manager" &&
+            (frappe.user_roles.includes("Asset Manager") || frappe.user_roles.includes("Asset User"))) {
             frm.add_custom_button(__('Assign Assets'), function() {
                 open_assign_assets_popup(frm);
             }, __("Create"));
         }
 
         make_child_table_read_only(frm);
+        asset_recevied_acknowledgement(frm);
     }
 });
 
@@ -143,3 +145,45 @@ function open_assign_assets_popup(frm) {
         table.refresh();
     });
 }
+
+
+function asset_recevied_acknowledgement(frm) {
+
+    const has_unacknowledged = (frm.doc.allocated_assets || []).some(row => !row.acknowledged);
+    if (frm.doc.docstatus !== 1 || !has_unacknowledged) return;
+
+    frappe.db.get_value('Employee', frm.doc.requested_by, 'user_id')
+        .then(r => {
+            const requested_user = r.message.user_id;
+
+            if (frappe.session.user !== requested_user) return;
+
+            const btn = frm.add_custom_button(__('Acknowledge Receipt'), () => {
+                frappe.confirm(
+                    __('Are you sure you want to acknowledge receipt of these assets?'),
+                    () => {
+                        frappe.call({
+                            method: "beams.beams.doctype.asset_request.asset_request.acknowledge_assets",
+                            args: {
+                                asset_request_name: frm.doc.name
+                            },
+                            callback: function(r) {
+                                if (r.message) {
+                                    frappe.msgprint(r.message);
+                                    frm.reload_doc();
+                                }
+                            }
+                        });
+                    }
+                );
+            });
+
+            btn.css({
+                backgroundColor: '#079b8aff',
+                color: 'white',
+                border: 'none',
+                fontWeight: '500'
+            });
+        });
+}
+

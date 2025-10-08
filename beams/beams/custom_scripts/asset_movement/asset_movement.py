@@ -1,6 +1,5 @@
 import frappe
 from frappe.utils import flt
-from frappe import _
 
 def update_issued_quantity(doc, method):
 	"""
@@ -104,48 +103,31 @@ def update_asset_location_from_movement(doc, method=None):
 			asset.save(ignore_permissions=True)
 
 
-@frappe.whitelist()
-def acknowledge_assets(asset_movement_name):
-	"""Mark all unacknowledged assets in an Asset Movement as acknowledged and notify if technical item."""
-	
-	doc = frappe.get_doc("Asset Movement", asset_movement_name)
-	updated = False
+def update_allocated_asset_details(doc, method=None):
+    """Update Asset Request with Asset Movement Item details when Asset Movement is submitted."""
 
-	for row in doc.assets:
-		if not row.acknowledged:
-			row.acknowledged = 1
-			updated = True
+    if doc.reference_doctype != "Asset Request" or not doc.reference_name:
+        return
 
-	if updated:
-		doc.save()
+    asset_request = frappe.get_doc("Asset Request", doc.reference_name)
 
-		item_type = frappe.db.get_value(doc.reference_doctype, doc.reference_name, "item_type")
-		
-		if item_type:
-			send_mail_to_asset_manager(item_type, asset_movement_name)
+    asset_request.asset_movement_items = []
 
-		return _("Assets acknowledged successfully!")
-	else:
-		return _("All assets were already acknowledged.")
+    for asset_row in doc.assets:
+        new_row = asset_request.append("allocated_assets", {})
 
+        new_row.company = asset_row.company
+        new_row.asset = asset_row.asset
+        new_row.asset_name = asset_row.asset_name
+        new_row.source_location = asset_row.source_location
+        new_row.target_location = asset_row.target_location
+        new_row.from_employee = asset_row.from_employee
+        new_row.to_employee = asset_row.to_employee
+        new_row.department = asset_row.department
+        new_row.room = asset_row.room
+        new_row.row = asset_row.row
+        new_row.shelf = asset_row.shelf
+        new_row.bin = asset_row.bin
 
-def send_mail_to_asset_manager(item_type, asset_movement_name):
-	"""Send email notification to Asset Manager."""
-	
-	asset_settings = frappe.get_single('BEAMS Admin Settings')
+    asset_request.save(ignore_permissions=True)
 
-	if item_type == 'Technical Item':
-		technical_asset_manager = asset_settings.get('technical_asset_manager') or ''
-		frappe.sendmail(
-            recipients=[technical_asset_manager],
-            subject=f"Assets Acknowledged: {asset_movement_name}",
-            message=f"The assets in Asset Movement {asset_movement_name} have been acknowledged."
-        )
-	elif item_type == 'Non-Technical Item':
-		non_technical_asset_manager = asset_settings.get('non_technical_asset_manager') or ''
-		frappe.sendmail(
-			recipients=[non_technical_asset_manager],
-			subject=f"Assets Acknowledged: {asset_movement_name}",
-			message=f"The assets in Asset Movement {asset_movement_name} have been acknowledged."
-		)
-	

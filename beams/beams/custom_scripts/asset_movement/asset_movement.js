@@ -35,8 +35,6 @@ frappe.ui.form.on('Asset Movement', {
                 }
             };
         };
-
-        asset_recevied_acknowledgement(frm);
         
     },
     purpose: function(frm) {
@@ -55,43 +53,6 @@ frappe.ui.form.on('Asset Movement', {
     }
 });
 
-
-
-function asset_recevied_acknowledgement(frm) {
-    frm.clear_custom_buttons();
-
-    const has_unacknowledged = (frm.doc.assets || []).some(row => !row.acknowledged);
-    if (frm.doc.docstatus !== 1 || !has_unacknowledged) return;
-    if (frappe.session.user !== frm.doc.user_id) return;
-
-
-    const btn = frm.add_custom_button(__('Acknowledge Receipt'), () => {
-        frappe.confirm(
-            __('Are you sure you want to acknowledge receipt of these assets?'),
-            () => {
-                frappe.call({
-                    method: "beams.beams.custom_scripts.asset_movement.asset_movement.acknowledge_assets",
-                    args: {
-                        asset_movement_name: frm.doc.name
-                    },
-                    callback: function(r) {
-                        if (r.message) {
-                            frappe.msgprint(r.message);
-                            frm.reload_doc();
-                        }
-                    }
-                });
-            }
-        );
-    });
-
-    btn.css({
-        backgroundColor: '#2175b1ff',
-        color: 'white',
-        border: 'none',
-        fontWeight: '500'
-    });
-}
 
 
 
