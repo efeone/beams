@@ -35,6 +35,7 @@ frappe.ui.form.on('Asset Movement', {
                 }
             };
         };
+        
     },
     purpose: function(frm) {
         // Call toggle_fields when purpose changes
@@ -51,3 +52,7 @@ frappe.ui.form.on('Asset Movement', {
         frm.fields_dict.assets.grid.update_docfield_property('bin', 'hidden', hide_fields);
     }
 });
+
+
+
+

@@ -101,3 +101,33 @@ def update_asset_location_from_movement(doc, method=None):
 
 		if updated:
 			asset.save(ignore_permissions=True)
+
+
+def update_allocated_asset_details(doc, method=None):
+    """Update Asset Request with Asset Movement Item details when Asset Movement is submitted."""
+
+    if doc.reference_doctype != "Asset Request" or not doc.reference_name:
+        return
+
+    asset_request = frappe.get_doc("Asset Request", doc.reference_name)
+
+    asset_request.asset_movement_items = []
+
+    for asset_row in doc.assets:
+        new_row = asset_request.append("allocated_assets", {})
+
+        new_row.company = asset_row.company
+        new_row.asset = asset_row.asset
+        new_row.asset_name = asset_row.asset_name
+        new_row.source_location = asset_row.source_location
+        new_row.target_location = asset_row.target_location
+        new_row.from_employee = asset_row.from_employee
+        new_row.to_employee = asset_row.to_employee
+        new_row.department = asset_row.department
+        new_row.room = asset_row.room
+        new_row.row = asset_row.row
+        new_row.shelf = asset_row.shelf
+        new_row.bin = asset_row.bin
+
+    asset_request.save(ignore_permissions=True)
+

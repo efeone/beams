@@ -5452,6 +5452,14 @@ def get_asset_movement_custom_fields():
 				"options":"Container",
 				"allow_on_submit": 1,
 				"insert_after": "row"
+			},
+			{
+				"fieldname": "acknowledged",
+				"fieldtype": "Check",		
+				"label": "Acknowledged",
+				"insert_after": "bin",
+				"hidden": 1,
+				"allow_on_submit": 1
 			}
 		]
 	}

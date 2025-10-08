@@ -6,6 +6,7 @@ import json
 
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.model.document import Document
+from frappe import _
 
 
 class AssetRequest(Document):
@@ -132,5 +133,47 @@ def update_issued_quantity(doc, method=None):
 	request.save(ignore_permissions=True)
 
 
+def acknowledge_assets(asset_request_name):
+    """Mark all unacknowledged assets in an Asset Request as acknowledged and notify if technical item."""
+    
+    asset_request = frappe.get_doc("Asset Request", asset_request_name)
+
+    updated = False
+
+    for asset in asset_request.allocated_assets:
+        if not asset.acknowledged:
+            asset.acknowledged = 1
+            updated = True
+
+    if updated:
+        asset_request.save(ignore_permissions=True)
+
+        if asset_request.item_type:
+             send_mail_to_asset_manager(asset_request, asset_request.item_type)
+
+        return _("Assets acknowledged successfully!")
+    else:
+        return _("All assets were already acknowledged.")
 
 
+def send_mail_to_asset_manager(asset_request, item_type):
+    """Send email notification to Asset Manager."""
+    
+    asset_settings = frappe.get_single('BEAMS Admin Settings')
+
+    if item_type == 'Technical Item':
+        manager_emp = asset_settings.get('technical_asset_manager') or ''
+    elif item_type == 'Non-Technical Item':
+        manager_emp = asset_settings.get('non_technical_asset_manager') or ''
+    else:
+        return
+
+    manager_email = frappe.get_value("Employee", manager_emp, "user_id")
+    if not manager_email:
+        return
+
+    frappe.sendmail(
+        recipients=[manager_email],
+        subject=f"Assets Acknowledged: {asset_request.name}",
+        message=f"The assets in Asset Request {asset_request.name} have been acknowledged."
+    )

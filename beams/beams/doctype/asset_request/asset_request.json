@@ -8,12 +8,14 @@
  "field_order": [
   "section_break_acln",
   "requested_by",
-  "item_type",
+  "employee_name",
   "column_break_amir",
+  "item_type",
   "required_by",
   "section_break_lwff",
   "items",
   "purpose",
+  "allocated_assets",
   "amended_from"
  ],
  "fields": [
@@ -64,6 +66,14 @@
    "label": "Purpose"
   },
   {
+   "allow_on_submit": 1,
+   "fieldname": "allocated_assets",
+   "fieldtype": "Table",
+   "label": "Allocated Assets",
+   "options": "Asset Movement Item",
+   "read_only": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -72,13 +82,25 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fetch_from": "requested_by.employee_name",
+   "fieldname": "employee_name",
+   "fieldtype": "Data",
+   "label": "Employee Name",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-09-30 12:28:07.097038",
+ "links": [
+  {
+   "link_doctype": "Asset Movement",
+   "link_fieldname": "reference_name"
+  }
+ ],
+ "modified": "2025-10-08 10:47:30.632688",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Request",
