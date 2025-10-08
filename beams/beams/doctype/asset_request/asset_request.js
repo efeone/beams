@@ -3,6 +3,7 @@
 
 frappe.ui.form.on('Asset Request', {
     onload_post_render: function(frm) {
+        set_requested_by_if_empty(frm);
         make_child_table_read_only(frm);
     },
     refresh: function(frm) {
@@ -187,3 +188,11 @@ function asset_recevied_acknowledgement(frm) {
         });
 }
 
+function set_requested_by_if_empty(frm) {
+    if (!frm.doc.requested_by) {
+        frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
+            .then(r => {
+                if (r.message) frm.set_value('requested_by', r.message.name);
+            });
+    }
+}
