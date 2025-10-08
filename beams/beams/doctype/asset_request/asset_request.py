@@ -147,7 +147,6 @@ def acknowledge_assets(asset_request_name):
 
     if updated:
         asset_request.save(ignore_permissions=True)
-        frappe.db.commit()
 
         if asset_request.item_type:
              send_mail_to_asset_manager(asset_request, asset_request.item_type)

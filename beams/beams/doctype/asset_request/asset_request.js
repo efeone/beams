@@ -150,6 +150,10 @@ function open_assign_assets_popup(frm) {
 
 function asset_recevied_acknowledgement(frm) {
 
+/**
+ * Adds an "Acknowledge Receipt" button for the requester to confirm receipt of allocated assets.
+ */
+
     const has_unacknowledged = (frm.doc.allocated_assets || []).some(row => !row.acknowledged);
     if (frm.doc.docstatus !== 1 || !has_unacknowledged) return;
 
