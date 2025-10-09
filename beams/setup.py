@@ -5458,9 +5458,17 @@ def get_asset_movement_custom_fields():
 				"fieldtype": "Check",		
 				"label": "Acknowledged",
 				"insert_after": "bin",
-				"hidden": 1,
+				"read_only": 1,
 				"allow_on_submit": 1
-			}
+			},
+			{
+				"fieldname": "returned",
+				"fieldtype": "Check",		
+				"label": "Returned",
+				"insert_after": "acknowledged",
+				"read_only": 1,
+				"allow_on_submit": 1
+			},
 		]
 	}
 def get_asset_category_custom_fields():

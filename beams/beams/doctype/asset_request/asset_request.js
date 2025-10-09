@@ -16,6 +16,7 @@ frappe.ui.form.on('Asset Request', {
 
         make_child_table_read_only(frm);
         asset_recevied_acknowledgement(frm);
+        return_allocated_assets(frm);
     }
 });
 
@@ -77,10 +78,11 @@ function open_assign_assets_popup(frm) {
                     { label: 'Item', fieldname: 'item', fieldtype: 'Link', options: 'Item', in_list_view: 1 },
                     { label: 'Asset Type', fieldname: 'asset_type', fieldtype: 'Select', options: '\nSingle Asset\nBundle', in_list_view: 1 },
                     { label: 'Asset', fieldname: 'asset', fieldtype: 'Link', options: 'Asset', in_list_view: 1 },
-                    { label: 'Bundle', fieldname: 'bundle', fieldtype: 'Link', options: 'Asset Bundle', in_list_view: 1 }
+                    { label: 'Bundle', fieldname: 'bundle', fieldtype: 'Link', options: 'Asset Bundle', in_list_view: 1 },
                 ]
             }
         ],
+        size: 'large',
         primary_action_label: __('Assign'),
         primary_action(values) {
             frappe.call({
@@ -200,3 +202,154 @@ function set_requested_by_if_empty(frm) {
             });
     }
 }
+
+/**
+ * Adds a custom button to return allocated assets if any are unreturned
+ */
+function return_allocated_assets(frm) {
+    if (frm.doc.allocated_assets && !frm.doc.allocated_assets.some(row => !row.returned)) return;
+    const btn = frm.add_custom_button(__('Return Allocated Assets'), () => {
+        open_return_assets_popup(frm);
+    });
+    btn.css({
+                backgroundColor: '#1878d2ff',
+                color: 'white',
+                border: 'none',
+                fontWeight: '500'
+            });
+}
+
+
+/**
+ * Opens a dialog to process the return of selected allocated assets and create an Asset Movement
+ */
+
+function open_return_assets_popup(frm) {
+
+    const asset_ids = (frm.doc.allocated_assets || [])
+    .filter(row => !row.returned && row.asset)
+    .map(row => row.asset);
+
+
+    console.log(asset_ids, "asset_ids");
+    
+    // Fetch asset details
+    frappe.call({
+        method: "frappe.client.get_list",
+        args: {
+            doctype: "Asset",
+            filters: [["name", "in", asset_ids]],
+            fields: ["name", "location", "custodian", "company"]
+        },
+        callback: function (res) {
+            const assets = res.message || [];
+
+            const rows = assets.map(asset => ({
+                asset: asset.name,
+                source_location: asset.location || "",
+                from_employee: asset.custodian || "",
+                target_location: "",
+                to_employee: "",
+                company: asset.company || ""
+            }));
+
+            let d = new frappe.ui.Dialog({
+                title: __('Return Allocated Assets'),
+                fields: [
+                    {
+                        label: 'Returning From',
+                        fieldname: 'from_employee',
+                        fieldtype: 'Link',
+                        options: 'Employee',
+                        reqd: 1,
+                        default: frm.doc.requested_by
+                    },
+                    {
+                        label: __("Purpose"),
+                        fieldname: "purpose",
+                        fieldtype: "Data",
+                        default: "Receipt",
+                        reqd: 1,
+                        read_only: 1
+                    },
+                    { 
+                        label: 'Target Location', 
+                        fieldname: 'target_location', 
+                        fieldtype: 'Link', 
+                        options: 'Location', 
+                        reqd: 1 
+                    },
+                    {
+                        label: 'Items',
+                        fieldname: 'items_table',
+                        fieldtype: 'Table',
+                        cannot_add_rows: 0,
+                        in_place_edit: true,
+                        data: rows,
+                        fields: [
+                            { label: 'Asset', fieldname: 'asset', fieldtype: 'Link', options: 'Asset', in_list_view: 1, reqd: 1 },
+                            { label: 'Source Location', fieldname: 'source_location', fieldtype: 'Data', in_list_view: 1, read_only: 1 },
+                            { label: 'From Employee', fieldname: 'from_employee', fieldtype: 'Link', options: 'Employee', in_list_view: 1, read_only: 1 },
+                        ]
+                    }
+                ],
+                size: 'large',
+                primary_action_label: __('Return'),
+                primary_action: function (values) {
+                    const items = values.items_table || [];
+
+
+                    frappe.confirm(
+                        __('Are you sure you want to return assets?'),
+                        function () {
+                            const movement_doc = {
+                                doctype: "Asset Movement",
+                                purpose: values.purpose,
+                                transaction_date: frappe.datetime.now_date(),
+                                company: frm.doc.company || (items[0].company || ""),
+                                to_employee: values.assigned_to,
+                                reference_doctype: "Asset Request",
+                                reference_name: frm.doc.name,
+                                assets: items.map(row => ({
+                                    asset: row.asset,
+                                    source_location: row.source_location,
+                                    target_location: values.target_location,
+                                    from_employee: values.from_employee,
+                                }))
+                            };
+
+                            frappe.call({
+                                method: "frappe.client.insert",
+                                args: { doc: movement_doc },
+                                callback: function (r) {
+                                    if (r.message) {
+                                        frappe.msgprint(__('Asset Movement created in Draft.'));
+
+                                        frappe.call({
+                                            method: "beams.beams.doctype.asset_request.asset_request.mark_assets_returned",
+                                            args: {
+                                                docname: frm.doc.name,
+                                                assets: items.map(item => item.asset)
+                                            },
+                                            callback: function (res) {
+                                                if (!res.exc) {
+                                                    frappe.msgprint(__('Marked assets as returned.'));
+                                                    frm.reload_doc();
+                                                    d.hide();
+                                                }
+                                            }
+                                        });
+
+                                    }
+                                }
+                            });
+                        }
+                    );
+                }
+            });
+
+            d.show();
+        }
+    });
+}
+

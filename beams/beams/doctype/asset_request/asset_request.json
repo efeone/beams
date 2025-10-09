@@ -9,6 +9,7 @@
   "section_break_acln",
   "requested_by",
   "employee_name",
+  "bureau",
   "column_break_amir",
   "item_type",
   "required_by",
@@ -89,6 +90,12 @@
    "fieldtype": "Data",
    "label": "Employee Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "label": "Bureau",
+   "options": "Bureau"
   }
  ],
  "grid_page_length": 50,
@@ -100,7 +107,7 @@
    "link_fieldname": "reference_name"
   }
  ],
- "modified": "2025-10-08 10:47:30.632688",
+ "modified": "2025-10-09 11:21:58.030833",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Request",
