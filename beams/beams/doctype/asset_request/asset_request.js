@@ -296,7 +296,6 @@ function open_return_assets_popup(frm) {
                                 purpose: values.purpose,
                                 transaction_date: frappe.datetime.now_datetime(),
                                 company: frm.doc.company || (items[0].company || ""),
-                                // to_employee: values.assigned_to,
                                 reference_doctype: "Asset Request",
                                 reference_name: frm.doc.name,
                                 assets: items.map(row => ({
