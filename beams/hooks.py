@@ -382,7 +382,8 @@ doc_events = {
 			"beams.beams.custom_scripts.asset_movement.asset_movement.update_issued_quantity",
 			"beams.beams.custom_scripts.asset_movement.asset_movement.update_asset_location_from_movement",
 			"beams.beams.doctype.asset_request.asset_request.update_issued_quantity",
-			"beams.beams.custom_scripts.asset_movement.asset_movement.update_allocated_asset_details"
+			"beams.beams.custom_scripts.asset_movement.asset_movement.update_allocated_asset_details",
+			"beams.beams.custom_scripts.asset_movement.asset_movement.update_asset_custodian_on_receipt"
 			],
 		"before_save": "beams.beams.custom_scripts.asset_movement.asset_movement.before_save",
 	},

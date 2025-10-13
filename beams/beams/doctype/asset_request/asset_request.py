@@ -57,7 +57,8 @@ def create_asset_movement(assigned_to, purpose, items, reference_name=None):
 	for row in items:
 		# Single Asset
 		if row.get("asset"):
-			movement.append("assets", {"asset": row["asset"], "to_employee": assigned_to})
+			source_location = frappe.db.get_value("Asset", row["asset"], "location")
+			movement.append("assets", {"asset": row["asset"], "to_employee": assigned_to, "source_location": source_location})
 
 		# Bundle
 		elif row.get("bundle"):
@@ -65,7 +66,8 @@ def create_asset_movement(assigned_to, purpose, items, reference_name=None):
 
 			# Add assets from bundle
 			for asset in getattr(bundle_doc, "assets", []):
-				movement.append("assets", {"asset": asset.asset, "to_employee": assigned_to})
+				source_location = frappe.db.get_value("Asset", asset.asset, "location")
+				movement.append("assets", {"asset": asset.asset, "to_employee": assigned_to, "source_location": source_location})
 
 			# Create Stock Entry if stock_items exist
 			stock_items = getattr(bundle_doc, "stock_items", [])
@@ -132,7 +134,7 @@ def update_issued_quantity(doc, method=None):
 
 	request.save(ignore_permissions=True)
 
-
+@frappe.whitelist()
 def acknowledge_assets(asset_request_name):
     """Mark all unacknowledged assets in an Asset Request as acknowledged and notify if technical item."""
     
@@ -177,3 +179,25 @@ def send_mail_to_asset_manager(asset_request, item_type):
         subject=f"Assets Acknowledged: {asset_request.name}",
         message=f"The assets in Asset Request {asset_request.name} have been acknowledged."
     )
+
+
+
+@frappe.whitelist()
+def mark_assets_returned(docname, assets):
+    """Mark selected allocated assets as returned in Asset Request."""
+
+    if isinstance(assets, str):
+        assets = json.loads(assets)
+
+    doc = frappe.get_doc("Asset Request", docname)
+
+    updated = 0
+    for row in doc.allocated_assets:
+        if row.asset in assets:
+            row.returned = 1
+            updated += 1
+
+    if updated:
+        doc.save(ignore_permissions=True)
+
+    return {"updated": updated}
