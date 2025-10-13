@@ -230,8 +230,6 @@ function open_return_assets_popup(frm) {
     .filter(row => !row.returned && row.asset)
     .map(row => row.asset);
 
-
-    console.log(asset_ids, "asset_ids");
     
     // Fetch asset details
     frappe.call({
@@ -257,14 +255,6 @@ function open_return_assets_popup(frm) {
                 title: __('Return Allocated Assets'),
                 fields: [
                     {
-                        label: 'Returning From',
-                        fieldname: 'from_employee',
-                        fieldtype: 'Link',
-                        options: 'Employee',
-                        reqd: 1,
-                        default: frm.doc.requested_by
-                    },
-                    {
                         label: __("Purpose"),
                         fieldname: "purpose",
                         fieldtype: "Data",
@@ -289,7 +279,6 @@ function open_return_assets_popup(frm) {
                         fields: [
                             { label: 'Asset', fieldname: 'asset', fieldtype: 'Link', options: 'Asset', in_list_view: 1, reqd: 1 },
                             { label: 'Source Location', fieldname: 'source_location', fieldtype: 'Data', in_list_view: 1, read_only: 1 },
-                            { label: 'From Employee', fieldname: 'from_employee', fieldtype: 'Link', options: 'Employee', in_list_view: 1, read_only: 1 },
                         ]
                     }
                 ],
@@ -305,16 +294,16 @@ function open_return_assets_popup(frm) {
                             const movement_doc = {
                                 doctype: "Asset Movement",
                                 purpose: values.purpose,
-                                transaction_date: frappe.datetime.now_date(),
+                                transaction_date: frappe.datetime.now_datetime(),
                                 company: frm.doc.company || (items[0].company || ""),
-                                to_employee: values.assigned_to,
+                                // to_employee: values.assigned_to,
                                 reference_doctype: "Asset Request",
                                 reference_name: frm.doc.name,
                                 assets: items.map(row => ({
                                     asset: row.asset,
                                     source_location: row.source_location,
                                     target_location: values.target_location,
-                                    from_employee: values.from_employee,
+                                    from_employee: frm.doc.requested_by
                                 }))
                             };
 
@@ -352,4 +341,3 @@ function open_return_assets_popup(frm) {
         }
     });
 }
-
