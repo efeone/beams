@@ -34,6 +34,7 @@
   {
    "fieldname": "date",
    "fieldtype": "Datetime",
+   "in_list_view": 1,
    "label": "Date"
   },
   {
@@ -66,7 +67,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-18 19:07:56.372469",
+ "modified": "2025-10-14 15:23:34.006274",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",
