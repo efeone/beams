@@ -3,6 +3,9 @@
 
 
 frappe.ui.form.on("Courier Log", {
+    onload(frm) {
+        set_employee_name(frm);
+    },
     refresh(frm) {
         if (frm.is_new()) return;
 
@@ -25,9 +28,9 @@ frappe.ui.form.on("Courier Log", {
                 }
 
                 if (recipient_row) {
-                    if (recipient_row.delivered && !recipient_row.received) {
+                    if (recipient_row.received && !recipient_row.delivered) {
                         let btn = frm.add_custom_button(__('Received'), function() {
-                            recipient_row.received = 1;
+                            recipient_row.delivered = 1;
 
                             frm.dirty();
                             frm.refresh_field("recipients");
@@ -55,3 +58,17 @@ frappe.ui.form.on("Courier Log", {
         });
     }
 });
+
+
+/**
+ * Set the 'handled_by' field to the employee name of the current user.
+ */
+
+function set_employee_name(frm) {
+    if (!frm.doc.handled_by) {
+        frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'employee_name')
+            .then(r => {
+                if (r.message) frm.set_value('handled_by', r.message.employee_name);
+            });
+    }
+}
