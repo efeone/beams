@@ -9,8 +9,9 @@
   "name_of_org",
   "prev_designation",
   "last_salary_drawn",
-  "name_of_manager",
   "period_of_employment",
+  "column_break_xpit",
+  "name_of_manager",
   "reason_for_leaving",
   "attachments"
  ],
@@ -56,12 +57,16 @@
    "fieldtype": "Attach",
    "in_list_view": 1,
    "label": "Attachments"
+  },
+  {
+   "fieldname": "column_break_xpit",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-07-22 14:25:11.581937",
+ "modified": "2025-10-13 11:08:17.838103",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Previous Employment History",
