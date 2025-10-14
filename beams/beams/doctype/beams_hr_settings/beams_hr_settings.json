@@ -29,10 +29,6 @@
   "maternity_leave_type",
   "column_break_pjdi",
   "compensatory_leave_type",
-  "column_break_ecqw",
-  "default_leave_policy",
-  "column_break_laz7",
-  "leave_period",
   "section_break_kuat",
   "leave_application_hod_approval_template",
   "shift_settings_tab",
@@ -122,22 +118,6 @@
   {
    "fieldname": "column_break_pjdi",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "default_leave_policy",
-   "fieldtype": "Link",
-   "label": " Default Leave Policy",
-   "options": "Leave Policy"
-  },
-  {
-   "fieldname": "column_break_laz7",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "leave_period",
-   "fieldtype": "Link",
-   "label": "Leave Period",
-   "options": "Leave Period"
   },
   {
    "fieldname": "maternity_leave_type",
@@ -374,17 +354,13 @@
    "fieldtype": "Link",
    "label": "Appraisal Consent Terms",
    "options": "Terms and Conditions"
-  },
-  {
-   "fieldname": "column_break_ecqw",
-   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-14 10:15:46.625515",
+ "modified": "2025-10-14 15:55:39.570989",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams HR Settings",
