@@ -7,12 +7,12 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_fuje",
-  "inward_register",
+  "select_owri",
   "tracking_number",
+  "handled_by",
   "column_break_qyhg",
   "courier_service",
   "date",
-  "status",
   "section_break_cwuh",
   "recipients"
  ],
@@ -38,12 +38,6 @@
    "label": "Date"
   },
   {
-   "fieldname": "status",
-   "fieldtype": "Select",
-   "label": "Status",
-   "options": "\nReceived\nDispatched\nDelivered"
-  },
-  {
    "fieldname": "column_break_qyhg",
    "fieldtype": "Column Break"
   },
@@ -52,22 +46,27 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "inward_register",
-   "fieldtype": "Table MultiSelect",
-   "label": "Inward Register",
-   "options": "Inward Register Courier",
-   "reqd": 1
-  },
-  {
    "fieldname": "recipients",
    "fieldtype": "Table",
    "label": "Recipients",
    "options": "Recipients"
+  },
+  {
+   "fieldname": "select_owri",
+   "fieldtype": "Select",
+   "label": "Courier Type",
+   "options": "\nIncoming\nOutgoing"
+  },
+  {
+   "fieldname": "handled_by",
+   "fieldtype": "Data",
+   "label": "Handled By",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 15:23:34.006274",
+ "modified": "2025-10-14 17:11:40.201968",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",

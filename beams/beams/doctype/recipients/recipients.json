@@ -6,6 +6,7 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
+  "item",
   "recepient",
   "employee_name",
   "received",
@@ -25,7 +26,7 @@
    "fieldname": "received",
    "fieldtype": "Check",
    "in_list_view": 1,
-   "label": "Received"
+   "label": "Dispatched"
   },
   {
    "fieldname": "remarks",
@@ -47,13 +48,19 @@
    "in_list_view": 1,
    "label": "Employee Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "item",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 15:22:45.881321",
+ "modified": "2025-10-14 17:12:09.393627",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Recipients",
