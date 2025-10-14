@@ -13,12 +13,6 @@ frappe.ui.form.on('Employee Interview Tool', {
 			frm.set_value('applicant_status', 'Document Uploaded');
 		}
 	},
-	from_time: function (frm) {
-		validate_time_range(frm);
-	},
-	to_time: function (frm) {
-		validate_time_range(frm);
-	},
 	applicant_status: function(frm) {
 		toggle_create_interview_button(frm);
 		toggle_local_enquiry_button(frm);
@@ -138,7 +132,7 @@ function toggle_create_interview_button(frm) {
 				frappe.msgprint(__('Please select one or more rows in the Job Applicants table.'));
 				return;
 			}
-
+			validate_time_range(frm);
 			let missing_fields = [];
 			if (!frm.doc.interview_round) missing_fields.push(__('Interview Round'));
 			if (!frm.doc.scheduled_on) missing_fields.push(__('Scheduled On'));
