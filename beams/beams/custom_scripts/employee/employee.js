@@ -72,6 +72,7 @@ frappe.ui.form.on('Employee', {
 				}
 			});
 		}
+		set_default_leave_policy(frm);
 	},
 	employment_type: function(frm) {
 		frappe.call({
@@ -111,4 +112,18 @@ function get_appointment_date(frm, job_applicant) {
 	} else {
 		frm.set_value('date_of_appointment', '');
 	}
+}
+
+/**
+ * Filter `default_leave_policy` to only show submitted Leave Policies
+ * in Employee.
+ */
+function set_default_leave_policy(frm) {
+	frm.fields_dict.leave_policy.get_query = function() {
+		return {
+			filters: {
+				"docstatus": 1
+			}
+		};
+	};
 }
