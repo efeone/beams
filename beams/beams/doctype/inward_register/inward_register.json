@@ -7,8 +7,8 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_65yf",
-  "visitor_type",
   "visitor_name",
+  "visitor_type",
   "courier_service",
   "column_break_weuy",
   "posting_date",
@@ -85,8 +85,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Visitor Type ",
-   "options": "Visitor Type",
-   "reqd": 1
+   "options": "Visitor Type"
   },
   {
    "fieldname": "visitor_name",
@@ -110,7 +109,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-17 09:50:42.512654",
+ "modified": "2025-10-14 17:35:32.712765",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",

@@ -7,9 +7,9 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_amaj",
-  "inward_register",
   "visitor_type",
   "visitor_name",
+  "inward_register",
   "column_break_pghe",
   "posting_date",
   "out_date_and_time",
@@ -40,8 +40,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Inward Register",
-   "options": "Inward Register",
-   "reqd": 1
+   "options": "Inward Register"
   },
   {
    "default": "Now",
@@ -96,8 +95,7 @@
    "fieldtype": "Link",
    "label": "Visitor Type",
    "options": "Visitor Type",
-   "read_only": 1,
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fetch_from": "inward_register.visitor_name",
@@ -117,7 +115,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-17 10:09:35.880300",
+ "modified": "2025-10-14 17:36:28.429397",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",
