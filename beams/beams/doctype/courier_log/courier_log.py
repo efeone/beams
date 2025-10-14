@@ -12,7 +12,7 @@ class CourierLog(Document):
 
     def notify_recipient(self):
         for record in self.recipients:
-            if record.recepient and record.delivered and not record.received:
+            if record.recepient and record.received and not record.delivered:
                 user = frappe.db.get_value("Employee", record.recepient, "user_id")
                 if user:
                     self.create_system_notification(user)
@@ -22,7 +22,7 @@ class CourierLog(Document):
         frappe.get_doc({
             "doctype": "Notification Log",
             "subject": f"Courier Delivered: {self.name}",
-            "email_content": f"A courier has been marked delivered under log <b>{self.name}</b>. Please confirm receipt.",
+            "email_content": f"A courier has been marked received under log <b>{self.name}</b>. Please confirm receipt.",
             "for_user": user,
             "type": "Alert",
             "document_type": "Courier Log",

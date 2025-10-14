@@ -25,9 +25,9 @@ frappe.ui.form.on("Courier Log", {
                 }
 
                 if (recipient_row) {
-                    if (recipient_row.delivered && !recipient_row.received) {
+                    if (recipient_row.received && !recipient_row.delivered) {
                         let btn = frm.add_custom_button(__('Received'), function() {
-                            recipient_row.received = 1;
+                            recipient_row.delivered = 1;
 
                             frm.dirty();
                             frm.refresh_field("recipients");
