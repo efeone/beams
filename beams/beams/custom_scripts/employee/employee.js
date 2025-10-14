@@ -4,27 +4,6 @@ frappe.ui.form.on('Employee', {
 	* This button creates a new 'Training Request' document.
 	*/
 	job_applicant: function (frm) {
-		if (frm.doc.job_applicant) {
-			// Fetch Job Applicant data using frappe.db.get_doc
-			frappe.db.get_doc('Job Applicant', frm.doc.job_applicant)
-			.then(job_applicant => {
-				// Map fields from Job Applicant to Employee
-				frm.set_value('first_name', job_applicant.applicant_name);
-				frm.set_value('date_of_birth', job_applicant.date_of_birth);
-				frm.set_value('gender', job_applicant.gender);
-				frm.set_value('cell_number', job_applicant.phone_number);
-				frm.set_value('name_of_father', job_applicant.father_name);
-				frm.set_value('designation', job_applicant.designation);
-				frm.set_value('department', job_applicant.department);
-				frm.set_value('current_address', job_applicant.current_address);
-				frm.set_value('permanent_address', job_applicant.permanent_address);
-				frm.set_value('marital_status', job_applicant.marital_status);
-				frm.set_value('aadhar_id', job_applicant.aadhar_number);
-
-
-				frm.refresh_fields();
-			});
-		}
 		get_appointment_date(frm, frm.doc.job_applicant)
 	},
 	reports_to: function(frm) {
