@@ -1861,6 +1861,8 @@ def get_employee_custom_fields():
 				"fieldtype": "Link",
 				"options": "Leave Policy",
 				"label": "Leave Policy",
+				"fetch_from": "employment_type.default_leave_policy",
+				"fetch_if_empty": 1,
 				"insert_after": "attendance_device_id"
 			},
 			{
@@ -2859,7 +2861,7 @@ def get_job_applicant_custom_fields():
 			{
 				"fieldname": "cdepartment",
 				"fieldtype": "Data",
-				"label": "Department",
+				"label": "Former Department",
 				"insert_after": "column_break_1"
 			},
 			{
