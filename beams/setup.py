@@ -5035,7 +5035,6 @@ def get_material_request_custom_fields():
 				"allow_on_submit": 1,
 				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected'"
 			},
-
 		]
 	}
 

@@ -559,7 +559,6 @@ def populate_employee_details_from_applicant(doc, method):
 	if not doc.job_applicant:
 		return
 	job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
-	print("Job Applicant:", job_applicant)
 	current_address_parts = [
 		job_applicant.house_no_name,
 		job_applicant.street_road,
