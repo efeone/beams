@@ -41,32 +41,21 @@ def get_employee_name_for_user(user_id):
 
 def assign_leave_policy_on_joining(doc, method):
 	"""
-	Assign a Leave Policy to a newly created Employee based on their
-	Employment Type and Joining Date.
-
-	This function is triggered after an Employee record is created
-	and creates a Leave Policy Assignment in Draft state for manual review.
+	Create a Leave Policy Assignment for the Employee using the leave_policy
+	set in the Employee record, based on the Joining Date.
 	"""
-	# Skip if Employment Type or Joining Date is missing
-	if not doc.employment_type or not doc.date_of_joining:
+	if not doc.leave_policy:
+		frappe.log_error(
+			f"Leave Policy not set for Employee {doc.name}",
+			"Assign Leave Policy Error"
+		)
 		return
 
-	# Fetch Leave Policy from Employment Type
-	leave_policy = frappe.db.get_value(
-		"Employment Type",
-		doc.employment_type,
-		"default_leave_policy"
-	)
-
-	# Skip if no leave policy defined
-	if not leave_policy:
-		return
-
-	# Create Leave Policy Assignmen
+	# Create Leave Policy Assignment
 	leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
 	leave_policy_assignment.employee = doc.name
 	leave_policy_assignment.company = doc.company
-	leave_policy_assignment.leave_policy = leave_policy
+	leave_policy_assignment.leave_policy = doc.leave_policy
 	leave_policy_assignment.assignment_based_on = "Joining Date"
 	leave_policy_assignment.effective_from = doc.date_of_joining
 	leave_policy_assignment.insert(ignore_mandatory=True)
