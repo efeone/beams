@@ -7,6 +7,9 @@ from frappe.utils import date_diff, today
 
 
 class AttendanceRequestOverride(AttendanceRequest):
+	def before_insert(self):
+		self.validate_attendance_request_submission()
+
 	def create_or_update_attendance(self, date: str):
 		'''
 			Method to Create or Update Attendance from Attendance Request
@@ -55,12 +58,12 @@ class AttendanceRequestOverride(AttendanceRequest):
 			doc.insert(ignore_permissions=True)
 			doc.submit()
 
-	def before_insert(self):
+	def validate_attendance_request_submission(self):
 		'''
 			Prevents the attendance request if the from date exceeds the limit configured in Beams HR Settings
 		'''
 		limit_days = frappe.db.get_single_value("Beams HR Settings", "attendance_request_submission_limit_days")
-		if self.from_date and date_diff(today(), self.from_date) > limit_days:
+		if limit_days and self.from_date and date_diff(today(), self.from_date) > limit_days:
 			frappe.throw(
 				_("You can only submit an Attendance Request within {0} days from the From Date.").format(limit_days)
 			)

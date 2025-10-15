@@ -96,7 +96,7 @@
    "fieldname": "applicant_status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nOpen\nReplied\nRejected\nShortlisted from Interview\nLocal Enquiry Started\nLocal Enquiry Completed\nLocal Enquiry Rejected\nLocal Enquiry Approved\nSelected\nHold\nAccepted\nTraining Completed\nCompensation Proposal Created\nCompensation Proposal Accepted\nInterview Scheduled\nInterview Ongoing\nInterview Completed\nShortlisted\nPending Document Upload\nDocument Uploaded"
+   "options": "\nShortlisted from Interview\nLocal Enquiry Started\nInterview Scheduled\nInterview Ongoing\nDocument Uploaded"
   },
   {
    "fieldname": "section_break_ndqh",
@@ -130,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-08-02 12:31:43.951250",
+ "modified": "2025-10-15 12:23:35.776429",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Interview Tool",
