@@ -527,8 +527,21 @@ def get_employment_type_custom_fields():
 				"fieldname": "notice_period",
 				"fieldtype": "Int",
 				"label": "Notice Period",
-				"insert_after": "employment_type"
-			}
+				"insert_after": "penalty_leave_type"
+			},
+			{
+				"fieldname": "column_break_employment_type",
+				"fieldtype": "Column Break",
+				"label": "",
+				"insert_after": "notice_period"
+			},
+			{
+				"fieldname": "default_leave_policy",
+				"fieldtype": "Link",
+				"options": "Leave Policy",
+				"label": "Default Leave Policy",
+				"insert_after": "column_break_employment_type"
+			},
 		]
 	}
 
@@ -1848,6 +1861,8 @@ def get_employee_custom_fields():
 				"fieldtype": "Link",
 				"options": "Leave Policy",
 				"label": "Leave Policy",
+				"fetch_from": "employment_type.default_leave_policy",
+				"fetch_if_empty": 1,
 				"insert_after": "attendance_device_id"
 			},
 			{
@@ -2044,7 +2059,7 @@ def get_employee_custom_fields():
 				"fieldname": "landmark_per",
 				"fieldtype": "Data",
 				"label": "Landmark",
-				"insert_after":"permanent_address"
+				"insert_after":"permanent_pin_code"
 			},
 			{
 				"fieldname": "emergency_contact_name",
@@ -2113,6 +2128,27 @@ def get_employee_custom_fields():
 				"options": "Salary Structure",
 				"label": "Salary Structure",
 				"insert_after": "salary_mode"
+			},
+			{
+				"fieldname": "permanent_pin_code",
+				"fieldtype": "Data",
+				"options": "Pin",
+				"label": "Pin Code",
+				"insert_after": "permanent_address"
+			},
+			{
+				"fieldname": "education_qualification",
+				"fieldtype": "Table",
+				"options": "Education Qualification",
+				"label": "Education",
+				"insert_after": "educational_qualification"
+			},
+			{
+				"fieldname": "previous_employment_history",
+				"fieldtype": "Table",
+				"options": "Previous Employment History",
+				"label": "External Work History",
+				"insert_after": "previous_work_experience"
 			}
 
 		],
@@ -2825,7 +2861,7 @@ def get_job_applicant_custom_fields():
 			{
 				"fieldname": "cdepartment",
 				"fieldtype": "Data",
-				"label": "Department",
+				"label": "Former Department",
 				"insert_after": "column_break_1"
 			},
 			{
@@ -4943,6 +4979,21 @@ def get_property_setters():
 			"property": "depends_on",
 			"value": "eval: !doc.__islocal"
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "education",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "external_work_history",
+			"property": "hidden",
+			"value": 1
+		}
+
 ]
 
 def get_material_request_custom_fields():
@@ -4983,7 +5034,7 @@ def get_material_request_custom_fields():
 				"depends_on":"eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Informed Admin' || doc.workflow_state == 'Informed HR' || doc.workflow_state == 'Informed HOD'",
 				"allow_on_submit": 1,
 				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected'"
-			}
+			},
 		]
 	}
 

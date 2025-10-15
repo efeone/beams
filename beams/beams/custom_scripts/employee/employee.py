@@ -39,50 +39,26 @@ def get_employee_name_for_user(user_id):
 	employee_name = frappe.db.get_value("Employee", {"user_id": user_id}, "name")
 	return employee_name
 
-@frappe.whitelist()
-def after_insert(doc, method):
+def assign_leave_policy_on_joining(doc, method):
 	"""
-		Triggered after an Employee record is created.
-		Fetches the default leave policy and leave period from Beams HR Settings,
-		validates the configurations, and creates & submits a Leave Policy Assignment.
+	Create a Leave Policy Assignment for the Employee using the leave_policy
+	set in the Employee record, based on the Joining Date.
 	"""
-	# Fetch default leave policy and leave period from Beams HR Settings
-	leave_policy = frappe.db.get_single_value('Beams HR Settings', 'default_leave_policy')
-	leave_period = frappe.db.get_single_value('Beams HR Settings', 'leave_period')
-
-	if not leave_policy or not leave_period:
-		return
-
-	# Fetch leave period details
-	leave_period_details = frappe.db.get_value(
-		'Leave Period',
-		leave_period,
-		['from_date', 'to_date'],
-		as_dict=True
-	)
-
-	# Skip if leave period details are missing
-	if not leave_period_details:
-		return
-
-	if not doc.name:
+	if not doc.leave_policy:
+		frappe.log_error(
+			f"Leave Policy not set for Employee {doc.name}",
+			"Assign Leave Policy Error"
+		)
 		return
 
 	# Create Leave Policy Assignment
-	leave_policy_assignment = frappe.get_doc({
-		'doctype': 'Leave Policy Assignment',
-		'employee': doc.name,
-		'leave_policy': leave_policy,
-		'leave_period': leave_period,
-		'assignment_based_on': 'Leave Period',
-		'effective_from': leave_period_details['from_date'],
-		'effective_to': leave_period_details['to_date'],
-	})
-
-	# Save and submit the leave policy assignment
-	leave_policy_assignment.insert()
-	leave_policy_assignment.submit()
-
+	leave_policy_assignment = frappe.new_doc("Leave Policy Assignment")
+	leave_policy_assignment.employee = doc.name
+	leave_policy_assignment.company = doc.company
+	leave_policy_assignment.leave_policy = doc.leave_policy
+	leave_policy_assignment.assignment_based_on = "Joining Date"
+	leave_policy_assignment.effective_from = doc.date_of_joining
+	leave_policy_assignment.insert(ignore_mandatory=True)
 
 def validate(doc, method):
 	"""
@@ -575,3 +551,57 @@ def employee_on_update(doc, method):
 				start_date=start_date,
 				end_date=end_date
 			)
+
+def populate_employee_details_from_applicant(doc, method):
+	"""
+		Populate Employee addresses, education, and employment history from the linked Job Applicant
+	"""
+	if not doc.job_applicant:
+		return
+	job_applicant = frappe.get_doc("Job Applicant", doc.job_applicant)
+	current_address_parts = [
+		job_applicant.house_no_name,
+		job_applicant.street_road,
+		job_applicant.locality_village,
+		job_applicant.city,
+		job_applicant.district,
+		job_applicant.state,
+		job_applicant.post_office
+	]
+	doc.current_address = "\n ".join([part for part in current_address_parts if part])
+	doc.pincode = job_applicant.pin_code
+	permanent_address_parts = [
+		job_applicant.phouse_no_name,
+		job_applicant.pstreet_road,
+		job_applicant.plocality_village,
+		job_applicant.pcity,
+		job_applicant.pdistrict,
+		job_applicant.pstate,
+		job_applicant.ppost_office
+	]
+	doc.permanent_address = "\n ".join([part for part in permanent_address_parts if part])
+	doc.permanent_pin_code = job_applicant.ppin_code
+	doc.aadhar_id = job_applicant.aadhar_number
+	doc.education_qualification = []
+	for row in job_applicant.education_qualification:
+		doc.append("education_qualification", {
+			"course": row.course,
+			"name_of_school_college": row.name_of_school_college,
+			"name_of_universityboard_of_exam": row.name_of_universityboard_of_exam,
+			"dates_attended_from": row.dates_attended_from,
+			"dates_attended_to": row.dates_attended_to,
+			"result": row.result,
+			"attachments": row.attachments
+		})
+	doc.previous_employment_history = []
+	for row in job_applicant.prev_emp_his:
+		doc.append("previous_employment_history", {
+			"name_of_org": row.name_of_org,
+			"prev_designation": row.prev_designation,
+			"last_salary_drawn": row.last_salary_drawn,
+			"period_of_employment": row.period_of_employment,
+			"name_of_manager": row.name_of_manager,
+			"reason_for_leaving": row.reason_for_leaving,
+			"attachments": row.attachments
+		})
+	doc.save()

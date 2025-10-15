@@ -72,7 +72,8 @@ doctype_js = {
 	"Employee Separation": "beams/custom_scripts/employee_separation/employee_separation.js",
 	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js",
 	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js",
-	"Purchase Order":"beams/custom_scripts/purchase_order/purchase_order.js"
+	"Purchase Order":"beams/custom_scripts/purchase_order/purchase_order.js",
+	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js"
 }
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
@@ -298,8 +299,9 @@ doc_events = {
 	"Employee" : {
 		"autoname": "beams.beams.custom_scripts.employee.employee.autoname",
 		"after_insert": [
-			"beams.beams.custom_scripts.employee.employee.after_insert",
-			"beams.beams.custom_scripts.employee.employee.send_joining_based_appraisal_notification"
+			"beams.beams.custom_scripts.employee.employee.assign_leave_policy_on_joining",
+			"beams.beams.custom_scripts.employee.employee.send_joining_based_appraisal_notification",
+			"beams.beams.custom_scripts.employee.employee.populate_employee_details_from_applicant"
 		],	
 		"before_validate": "beams.beams.custom_scripts.employee.employee.manage_user_status",
 		"validate":  [
