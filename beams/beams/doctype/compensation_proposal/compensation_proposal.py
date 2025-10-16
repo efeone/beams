@@ -48,7 +48,7 @@ class CompensationProposal(Document):
 			job_offer.flags.ignore_validate = True
 			job_offer.insert()
 			job_offer.submit()
-
+			frappe.db.set_value("Compensation Proposal", self.name, "job_offer", job_offer.name)
 			frappe.msgprint(
 				'Job Offer Created: <a href="{0}">{1}</a>'.format(
 					get_url_to_form(job_offer.doctype, job_offer.name),
