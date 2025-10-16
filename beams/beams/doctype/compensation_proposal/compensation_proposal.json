@@ -16,6 +16,7 @@
   "amended_from",
   "section_break_jt",
   "job_offer_term_template",
+  "job_offer",
   "column_break_ogbe",
   "terms_and_conditions",
   "section_break_vcik",
@@ -140,13 +141,20 @@
    "fieldtype": "Attach",
    "label": "Payslip - Month 3",
    "read_only": 1
+  },
+  {
+   "fieldname": "job_offer",
+   "fieldtype": "Link",
+   "label": "Job Offer",
+   "options": "Job Offer",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-07-24 17:24:49.165221",
+ "modified": "2025-10-16 09:52:47.742311",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Compensation Proposal",
