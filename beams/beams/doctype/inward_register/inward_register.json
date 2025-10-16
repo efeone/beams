@@ -13,6 +13,7 @@
   "column_break_weuy",
   "posting_date",
   "visit_date",
+  "service_unit",
   "section_break_zgfs",
   "received_by",
   "purpose_of_visit",
@@ -104,12 +105,18 @@
    "fieldname": "visit_date",
    "fieldtype": "Datetime",
    "label": "Visit Date and Time"
+  },
+  {
+   "fieldname": "service_unit",
+   "fieldtype": "Link",
+   "label": "Service Unit",
+   "options": "Service Unit"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-14 17:35:32.712765",
+ "modified": "2025-10-15 17:20:11.181594",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Inward Register",

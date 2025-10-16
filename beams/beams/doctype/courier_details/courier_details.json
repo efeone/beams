@@ -1,0 +1,47 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-10-15 17:36:16.593735",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "item",
+  "send_from",
+  "send_to"
+ ],
+ "fields": [
+  {
+   "fieldname": "item",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Item"
+  },
+  {
+   "fieldname": "send_from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Send From"
+  },
+  {
+   "fieldname": "send_to",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Send To"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-10-15 17:38:38.507929",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Courier Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

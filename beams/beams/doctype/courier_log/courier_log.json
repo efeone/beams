@@ -7,14 +7,15 @@
  "engine": "InnoDB",
  "field_order": [
   "section_break_fuje",
-  "select_owri",
+  "courier_type",
   "tracking_number",
   "handled_by",
   "column_break_qyhg",
   "courier_service",
   "date",
   "section_break_cwuh",
-  "recipients"
+  "recipients",
+  "courier_details_out_going"
  ],
  "fields": [
   {
@@ -46,27 +47,35 @@
    "fieldtype": "Section Break"
   },
   {
+   "depends_on": "eval:doc.courier_type == \"Incoming\"",
    "fieldname": "recipients",
    "fieldtype": "Table",
    "label": "Recipients",
    "options": "Recipients"
   },
   {
-   "fieldname": "select_owri",
-   "fieldtype": "Select",
-   "label": "Courier Type",
-   "options": "\nIncoming\nOutgoing"
-  },
-  {
    "fieldname": "handled_by",
    "fieldtype": "Data",
    "label": "Handled By",
    "read_only": 1
+  },
+  {
+   "depends_on": "eval:doc.courier_type == \"Outgoing\"",
+   "fieldname": "courier_details_out_going",
+   "fieldtype": "Table",
+   "label": "Courier Details (OUTGOING)",
+   "options": "Courier Details"
+  },
+  {
+   "fieldname": "courier_type",
+   "fieldtype": "Select",
+   "label": "Courier Type",
+   "options": "\nIncoming\nOutgoing"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-14 17:11:40.201968",
+ "modified": "2025-10-16 11:53:09.260733",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Courier Log",

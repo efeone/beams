@@ -14,7 +14,6 @@
   "posting_date",
   "out_date_and_time",
   "section_break_szqc",
-  "received_by",
   "purpose_of_visit",
   "vehicles_keys_handover",
   "vehicle_key_remarks",
@@ -67,13 +66,6 @@
    "read_only": 1
   },
   {
-   "fetch_from": "inward_register.received_by",
-   "fieldname": "received_by",
-   "fieldtype": "Link",
-   "label": " Received By ",
-   "options": "Employee"
-  },
-  {
    "default": "0",
    "fetch_from": "inward_register.vehicle_key",
    "fieldname": "vehicles_keys_handover",
@@ -115,7 +107,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-14 17:36:28.429397",
+ "modified": "2025-10-15 17:20:49.416604",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Outward Register",

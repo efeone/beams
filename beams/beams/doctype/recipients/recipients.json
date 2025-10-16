@@ -7,6 +7,7 @@
  "engine": "InnoDB",
  "field_order": [
   "item",
+  "from",
   "recepient",
   "employee_name",
   "received",
@@ -54,13 +55,19 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Item"
+  },
+  {
+   "fieldname": "from",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "From"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-14 17:12:09.393627",
+ "modified": "2025-10-15 17:22:41.166081",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Recipients",
