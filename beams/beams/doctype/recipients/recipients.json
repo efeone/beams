@@ -32,7 +32,6 @@
   {
    "fieldname": "remarks",
    "fieldtype": "Small Text",
-   "in_list_view": 1,
    "label": "Remarks"
   },
   {
@@ -67,7 +66,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-15 17:22:41.166081",
+ "modified": "2025-10-17 17:06:46.696652",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Recipients",

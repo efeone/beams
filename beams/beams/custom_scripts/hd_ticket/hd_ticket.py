@@ -1,5 +1,5 @@
 import frappe
-from frappe.desk.form.assign_to import add as assign_to_user
+from frappe.desk.form.assign_to import add as assign_to_user, clear as clear_all_assignments
 from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket
 
 class HDTicketOverride(HDTicket):
@@ -86,24 +86,54 @@ class HDTicketOverride(HDTicket):
 			self.agent_group = ''
 
 
+
 @frappe.whitelist()
-def create_material_request_from_ticket(ticket_name):
-	"""
-		Create Material Request from HD Ticket
-	"""
-	ticket = frappe.get_doc("HD Ticket", ticket_name)
-	mr = frappe.new_doc("Material Request")
-	mr.material_request_type = "Purchase"
-	mr.transaction_date = frappe.utils.today()
+def assign_ticket_to_agent(ticket_name, agent):
+    """
+    Assign ticket to a specific agent
+    """
 
-	for row in ticket.material_request_items:
-		mr.append("items", {
-			"item_code": row.item,
-			"qty": row.quantity,
-			"uom": frappe.db.get_value("Item", row.item, "stock_uom"),
-			"schedule_date": row.required_by or frappe.utils.today()
-		})
-		mr.insert(ignore_permissions=True)
+    if not frappe.db.exists('HD Agent', {'user': agent, 'is_active': 1}):
+        frappe.throw(f'User {agent} is not an active HD Agent.')
 
-	return mr.name
+    if not frappe.db.exists('HD Ticket', ticket_name):
+        frappe.throw(f'Ticket {ticket_name} does not exist.')
 
+    todo_exists = frappe.db.exists('ToDo', {
+        'reference_type': 'HD Ticket',
+        'reference_name': ticket_name,
+        'owner': agent,
+        'status': ['!=', 'Cancelled'],
+    })
+
+    if todo_exists:
+        frappe.msgprint(f'Ticket {ticket_name} is already assigned to {agent}.')
+        return
+
+    assign_to_user({
+        'doctype': 'HD Ticket',
+        'name': ticket_name,
+        'assign_to': [agent],
+        'description': 'Ticket assigned to you.',
+    })
+
+    frappe.msgprint(f'Ticket {ticket_name} has been assigned to {agent}.')
+
+
+
+@frappe.whitelist()
+def assign_to_current_user(docname, doctype):
+    current_user = frappe.session.user
+
+    status = frappe.db.get_value(doctype, docname, ["status", "status_category"], as_dict=True)
+
+    if status.status == 'Open' and status.status_category == 'Open':
+        clear_all_assignments(doctype, docname, ignore_permissions=True)
+        frappe.db.set_value(doctype, docname, "status", "Replied")
+
+    assign_to_user({
+        "assign_to": frappe.as_json([current_user]),
+        "doctype": doctype,
+        "name": docname,
+        "notify": 0
+    })
