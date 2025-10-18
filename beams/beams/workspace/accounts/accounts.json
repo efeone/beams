@@ -1,11 +1,6 @@
 {
- "charts": [
-  {
-   "chart_name": "Release Order Is Barter",
-   "label": "Release Order Is Barter"
-  }
- ],
- "content": "[{\"id\":\"fqE2BFY4i5\",\"type\":\"chart\",\"data\":{\"chart_name\":\"Release Order Is Barter\",\"col\":12}},{\"id\":\"Oao7SqONXm\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"mK7BbAAeQl\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"3tz9tJJnnV\",\"type\":\"card\",\"data\":{\"card_name\":\"Stringer Billing & Substitutes \",\"col\":4}},{\"id\":\"xl1V5fmEvQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying \",\"col\":4}},{\"id\":\"Os5cCcKIgY\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting & Budgets \",\"col\":4}},{\"id\":\"CE8yEdt82-\",\"type\":\"card\",\"data\":{\"card_name\":\"Batta Claims & Policies \",\"col\":4}},{\"id\":\"yht5FU0QiA\",\"type\":\"card\",\"data\":{\"card_name\":\"People & Resources \",\"col\":4}},{\"id\":\"Uf4mLt9vjh\",\"type\":\"card\",\"data\":{\"card_name\":\"Payments\",\"col\":4}}]",
+ "charts": [],
+ "content": "[{\"id\":\"Oao7SqONXm\",\"type\":\"spacer\",\"data\":{\"col\":12}},{\"id\":\"3tz9tJJnnV\",\"type\":\"card\",\"data\":{\"card_name\":\"Stringer Billing & Substitutes \",\"col\":4}},{\"id\":\"CE8yEdt82-\",\"type\":\"card\",\"data\":{\"card_name\":\"Batta Claims & Policies \",\"col\":4}},{\"id\":\"mK7BbAAeQl\",\"type\":\"card\",\"data\":{\"card_name\":\"Settings\",\"col\":4}},{\"id\":\"yht5FU0QiA\",\"type\":\"card\",\"data\":{\"card_name\":\"People & Resources \",\"col\":4}},{\"id\":\"Os5cCcKIgY\",\"type\":\"card\",\"data\":{\"card_name\":\"Accounting & Budgets \",\"col\":4}},{\"id\":\"Uf4mLt9vjh\",\"type\":\"card\",\"data\":{\"card_name\":\"Payments\",\"col\":4}},{\"id\":\"sxHCp915BW\",\"type\":\"card\",\"data\":{\"card_name\":\"Reports\",\"col\":4}},{\"id\":\"xl1V5fmEvQ\",\"type\":\"card\",\"data\":{\"card_name\":\"Selling & Buying \",\"col\":4}}]",
  "creation": "2024-11-21 10:59:21.232255",
  "custom_blocks": [],
  "docstatus": 0,
@@ -21,7 +16,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Settings",
+   "label": "Payments",
    "link_count": 2,
    "link_type": "DocType",
    "onboard": 0,
@@ -30,9 +25,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Beams Accounts Settings",
+   "label": "Voucher Entry",
    "link_count": 0,
-   "link_to": "Beams Accounts Settings",
+   "link_to": "Voucher Entry",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -40,9 +35,19 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Albatross Settings",
+   "label": "Journal Entry",
    "link_count": 0,
-   "link_to": "Albatross Settings",
+   "link_to": "Journal Entry",
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Petty Cash Request",
+   "link_count": 0,
+   "link_to": "Petty Cash Request",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -245,7 +250,7 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Payments",
+   "label": "Settings",
    "link_count": 2,
    "link_type": "DocType",
    "onboard": 0,
@@ -254,9 +259,9 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Gernal Entry",
+   "label": "Beams Account Settings",
    "link_count": 0,
-   "link_to": "GL Entry",
+   "link_to": "Beams Accounts Settings",
    "link_type": "DocType",
    "onboard": 0,
    "type": "Link"
@@ -264,15 +269,84 @@
   {
    "hidden": 0,
    "is_query_report": 0,
-   "label": "Voucher Entry",
+   "label": "Albatross Settings",
    "link_count": 0,
-   "link_to": "Voucher Entry",
+   "link_to": "Albatross Settings",
    "link_type": "DocType",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 0,
+   "label": "Reports",
+   "link_count": 6,
+   "link_type": "DocType",
+   "onboard": 0,
+   "type": "Card Break"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Accounts Receivable",
+   "link_count": 0,
+   "link_to": "Accounts Receivable",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Accounts Payable",
+   "link_count": 0,
+   "link_to": "Accounts Payable",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "General Ledger",
+   "link_count": 0,
+   "link_to": "General Ledger",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Balance Sheet",
+   "link_count": 0,
+   "link_to": "Balance Sheet",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Trial Balance",
+   "link_count": 0,
+   "link_to": "Trial Balance",
+   "link_type": "Report",
+   "onboard": 0,
+   "type": "Link"
+  },
+  {
+   "hidden": 0,
+   "is_query_report": 1,
+   "label": "Profit and Loss Statement",
+   "link_count": 0,
+   "link_to": "Profit and Loss Statement",
+   "link_type": "Report",
    "onboard": 0,
    "type": "Link"
   }
  ],
- "modified": "2024-11-21 12:24:06.380864",
+ "modified": "2025-10-18 16:15:08.514964",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Accounts",
