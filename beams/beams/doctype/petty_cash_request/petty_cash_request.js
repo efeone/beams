@@ -52,6 +52,7 @@ function open_payment_entry(frm) {
     frappe.new_doc("Payment Entry", {
         payment_type: "Internal Transfer",
         paid_amount: frm.doc.requested_amount,
+        received_amount : frm.doc.requested_amount,
         reference_date: frappe.datetime.nowdate(),
         paid_to: frm.doc.account
     });
