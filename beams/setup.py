@@ -5006,6 +5006,13 @@ def get_property_setters():
 			"field_name": "description",
 			"property": "reqd",
 			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "first_response_time",
+			"property": "in_list_view",
+			"value": 1
 		}
 
 ]

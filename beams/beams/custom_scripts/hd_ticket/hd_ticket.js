@@ -7,12 +7,27 @@ frappe.ui.form.on('HD Ticket', {
     },
 
     refresh(frm) {
-        working_button(frm);
-        transfer_ticket(frm);
-        resolved_button(frm);
-        hide_assignment_btn(frm);
-        add_request_buttons(frm)
-        
+        frappe.call({
+            method: 'frappe.client.get_value',
+            args: {
+                doctype: 'HD Agent',
+                fieldname: 'name',
+                filters: {
+                    user: frappe.session.user,
+                    is_active: 1
+                }
+            },
+            callback: function(r) {
+                if (r.message && r.message.name) {
+                    // User is an active HD Agent, show all buttons
+                    working_button(frm);
+                    transfer_ticket(frm);
+                    resolved_button(frm);
+                    add_request_buttons(frm);
+                }
+                hide_assignment_btn(frm);
+            }
+        });
     },
 
     ticket_type(frm) {
@@ -40,9 +55,12 @@ function working_button(frm) {
                 },
                 callback: function(r) {
                     if (!r.exc) {
-                        frappe.show_alert({ message: __('Ticket assigned to you'), indicator: 'green' });
-                        frm.set_value('status', 'Working');
-                        frm.save().then(() => frm.reload_doc());
+                        frappe.show_alert({
+                            message: __('Ticket assigned to you'),
+                            indicator: 'green'
+                        });
+
+                        frm.reload_doc();
                     }
                 }
             });
@@ -56,6 +74,7 @@ function working_button(frm) {
         });
     }
 }
+
 
 
 /**
@@ -115,7 +134,7 @@ function transfer_ticket(frm) {
  * Set ticket status to Closed
  */
 function resolved_button(frm) {
-    if (!['Closed', 'Open', 'Transferred'].includes(frm.doc.status)) {
+    if (!['Closed', 'Open'].includes(frm.doc.status)) {
         const btn = frm.add_custom_button(__('Resolved'), () => {
 
             if (!frm.doc.resolution_details || frm.doc.resolution_details.trim() === "") {
@@ -166,13 +185,24 @@ function add_request_buttons(frm) {
             if (r.message && r.message.name) {
                 // Add Asset Request button
                 frm.add_custom_button(__('Asset Request'), () => {
-                    frappe.new_doc('Asset Request', { 'employee': frm.doc.raised_by });
+                    frappe.db.get_value("Employee", { "user_id": frm.doc.raised_by }, "name")
+                        .then(r => {
+                            frappe.new_doc('Asset Request', {
+                                'requested_by': r.message?.name
+                            });
+                        });
                 }, __('Create'));
 
-                // Add Material Request button
+               // Add Material Request button
                 frm.add_custom_button(__('Material Request'), () => {
-                    frappe.new_doc('Material Request', { 'requested_by': frm.doc.raised_by });
+                    frappe.db.get_value("Employee", { "user_id": frm.doc.raised_by }, "name")
+                        .then(r => {
+                            frappe.new_doc('Material Request', {
+                                'requested_by': r.message?.name
+                            });
+                        });
                 }, __('Create'));
+
             }
         }
     });

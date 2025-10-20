@@ -123,17 +123,22 @@ def assign_ticket_to_agent(ticket_name, agent):
 
 @frappe.whitelist()
 def assign_to_current_user(docname, doctype):
+    """Assign ticket to current user if it's Open or Transferred using Document API"""
     current_user = frappe.session.user
 
-    status = frappe.db.get_value(doctype, docname, ["status", "status_category"], as_dict=True)
+    doc = frappe.get_doc(doctype, docname)
 
-    if status.status == 'Open' and status.status_category == 'Open':
+    if doc.status in ['Open', 'Transferred'] and doc.status_category == 'Open':
         clear_all_assignments(doctype, docname, ignore_permissions=True)
-        frappe.db.set_value(doctype, docname, "status", "Replied")
+
+        doc.status = 'Replied'
+        doc.save(ignore_permissions=True)
 
     assign_to_user({
-        "assign_to": frappe.as_json([current_user]),
+        "assign_to": [current_user],
         "doctype": doctype,
         "name": docname,
         "notify": 0
     })
+
+    return {"message": f"Ticket {docname} assigned to {current_user}"}

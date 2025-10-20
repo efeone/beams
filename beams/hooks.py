@@ -413,6 +413,9 @@ doc_events = {
 	},
 	"Job Opening": {
 		"after_insert": "beams.beams.custom_scripts.job_opening.job_opening.generate_qr_for_job"
+	},
+	"HD Settings": {
+		"validate": "beams.beams.custom_scripts.hd_settings.hd_settings.update_ticket_type"
 	}
 }
 
