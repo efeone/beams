@@ -232,13 +232,13 @@ function toggle_create_interview_button(frm) {
 }
 
 /**
- * Adds 'Create Local Enquiry Report' button when applicant status matches - 'Shortlisted from Interview', 'Local Enquiry Started'
+ * Adds 'Create Local Enquiry Report' button when applicant status matches - 'Shortlisted from Interview'
  * Button triggers bulk LER creation for selected job applicants.
  */
 function toggle_local_enquiry_button(frm) {
 	frm.remove_custom_button('Create Local Enquiry Report');
 
-	const valid_statuses = ['Shortlisted from Interview', 'Local Enquiry Started'];
+	const valid_statuses = ['Shortlisted from Interview'];
 	const current_status = frm.doc.applicant_status;
 
 	if (valid_statuses.includes(current_status)) {

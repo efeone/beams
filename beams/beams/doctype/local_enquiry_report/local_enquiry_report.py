@@ -32,10 +32,6 @@ class LocalEnquiryReport(Document):
             Method to validate required fields before Pending Approval
         '''
         if self.workflow_state == 'Pending Approval':
-            if frappe.session.user:
-                # Setting Logged In user as information_collected_by
-                self.information_collected_by = frappe.session.user
-
             if not self.information_given_by:
                 frappe.throw('`Information Given By : Person Name` is required before Sending for Approval')
 

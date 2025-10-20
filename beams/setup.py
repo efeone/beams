@@ -3197,7 +3197,7 @@ def get_job_applicant_custom_fields():
 			{
 				"fieldname": "specialised_training",
 				"fieldtype": "Small Text",
-				"label": "Have you attended any specialised training program?If yes, Please give detais :",
+				"label": "Have you attended any specialised training program?If yes, Please give details :",
 				"insert_after": "political_org"
 			},
 			{

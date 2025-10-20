@@ -96,7 +96,7 @@
    "fieldname": "applicant_status",
    "fieldtype": "Select",
    "label": "Status",
-   "options": "\nShortlisted from Interview\nLocal Enquiry Started\nInterview Scheduled\nInterview Ongoing\nDocument Uploaded"
+   "options": "\nShortlisted from Interview\nInterview Scheduled\nInterview Ongoing\nDocument Uploaded"
   },
   {
    "fieldname": "section_break_ndqh",
@@ -130,7 +130,7 @@
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-15 12:23:35.776429",
+ "modified": "2025-10-16 16:29:40.898307",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Interview Tool",
