@@ -11,6 +11,7 @@
   "employee_name",
   "amended_from",
   "appraisal",
+  "user",
   "column_break_voru",
   "posting_date",
   "company",
@@ -93,13 +94,21 @@
    "label": "Appraisal",
    "options": "Appraisal",
    "read_only": 1
+  },
+  {
+   "fetch_from": "employee.user_id",
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "User",
+   "options": "User"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-09-15 11:32:59.220357",
+ "modified": "2025-10-21 09:39:35.784377",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Appraisal Consent",
