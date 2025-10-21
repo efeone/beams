@@ -80,14 +80,10 @@ $(document).ready(function () {
 		}
 		// Fetch resume_size from Beams HR Settings (in KB)
 		frappe.call({
-			method: "frappe.client.get_value",
-			args: {
-				doctype: "Beams HR Settings",
-				fieldname: "resume_size"
-			},
+			method: "beams.www.job_application_form.index.get_resume_size",
 			callback: function (response) {
-				if (response.message && response.message.resume_size) {
-					max_resume_size_kb = parseFloat(response.message.resume_size);
+				if (response.message) {
+					max_resume_size_kb = parseFloat(response.message);
 				}
 				// Resume size validation
 				if (max_resume_size_kb > 0) {
