@@ -75,6 +75,7 @@ def after_install():
 	create_custom_fields(get_asset_maintenance_task_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_supplier_quotation_item_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_purchase_receipt_item_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_hd_team_custom_fields(), ignore_validate=True)
 	
 	setup_notifications()
 
@@ -214,14 +215,6 @@ def get_hd_ticket_custom_fields():
 	'''
 	return {
 		"HD Ticket": [
-
-			{
-				"fieldname": "raised_for",
-				"fieldtype": "Link",
-				"options": "User",
-				"label": "Raised For (Email)",
-				"insert_after": "raised_by"
-			},
 			{
 				"fieldname": "attach",
 				"fieldtype": "Attach",
@@ -235,19 +228,13 @@ def get_hd_ticket_custom_fields():
 				"insert_after": "attach"
 			},
 			{
-				"fieldname": "material_request_needed",
-				"fieldtype": "Check",
-				"label": "Material Request Needed",
-				"insert_after": "ticket_section_break"
-			},
-			{
-				"fieldname": "material_request_items",
-				"fieldtype": "Table",
-				"label": "Material Request Items",
-				"insert_after": "material_request_needed",
-				"options": "Material Request Items",
-				"depends_on": "eval:doc.material_request_needed == 1"
+				"fieldname": "employee_name",
+				"fieldtype": "Data",
+				"label": "Employee Name",
+				"insert_after": "raised_by",
+				"read_only": 1,
 			}
+
 		]
 	}
 
@@ -4993,6 +4980,40 @@ def get_property_setters():
 			"property": "hidden",
 			"value": 1
 		}
+		,{
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "allow_in_quick_entry",
+			"value": 1
+		},
+		{   
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "agent_group",
+			"property": "fetch_from",
+			"value": "ticket_type.team_name"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "summary",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "description",
+			"property": "reqd",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "first_response_time",
+			"property": "in_list_view",
+			"value": 1
+		}
 
 ]
 
@@ -5035,6 +5056,14 @@ def get_material_request_custom_fields():
 				"allow_on_submit": 1,
 				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected'"
 			},
+			{
+				"fieldname": "employee_name",
+				"fieldtype": "Data",	
+				"label": "Employee Name",
+				"insert_after": "requested_by",
+				"read_only": 1,
+				"fetch_from": "requested_by.employee_name"
+			}
 		]
 	}
 
@@ -5656,6 +5685,23 @@ def get_purchase_receipt_item_custom_fields():
 				"fieldtype": "Data",
 				"label": "Model",
 				"insert_after": "make"
+			}
+		]
+	}
+
+
+def get_hd_team_custom_fields():
+	'''
+		Custom fields that need to be added to the HD Team DocType
+	'''
+	return {
+		"HD Team": [
+			{
+				"fieldname": "agents",
+				"fieldtype": "Table MultiSelect",
+				"label": "Agents",
+				"options": "Ticket Agents",
+				"insert_after": "team_name"
 			}
 		]
 	}

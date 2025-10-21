@@ -171,7 +171,8 @@ override_doctype_class = {
 	"Shift Type": "beams.beams.custom_scripts.shift_type.shift_type.ShiftTypeOverride",
 	"Interview": "beams.beams.custom_scripts.interview.interview.InterviewOverride",
 	"HD Ticket" :"beams.beams.custom_scripts.hd_ticket.hd_ticket.HDTicketOverride",
-	"Appraisal": "beams.beams.custom_scripts.appraisal.appraisal.CustomAppraisal"
+	"Appraisal": "beams.beams.custom_scripts.appraisal.appraisal.CustomAppraisal",
+	"HD Team": "beams.beams.custom_scripts.hd_team.hd_team.HDTeamOverride"
 }
 
 # Document Events
@@ -412,6 +413,9 @@ doc_events = {
 	},
 	"Job Opening": {
 		"after_insert": "beams.beams.custom_scripts.job_opening.job_opening.generate_qr_for_job"
+	},
+	"HD Settings": {
+		"validate": "beams.beams.custom_scripts.hd_settings.hd_settings.update_ticket_type"
 	}
 }
 
