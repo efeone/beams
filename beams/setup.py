@@ -2759,7 +2759,7 @@ def get_job_applicant_custom_fields():
 				"label": "Department",
 				"options": "Department",
 				"insert_after": "designation",
-				"fetch_from": "job_title.department"
+				"fetch_from": "job_title.department",
 			},
 			{
 				"fieldname": "min_experience",
@@ -4984,14 +4984,14 @@ def get_property_setters():
 			"doc_type": "Employee",
 			"field_name": "external_work_history",
 			"property": "hidden",
-			"value": 1
+			"value": 1,
 		},
 		{
 			"doctype_or_field": "DocField",
 			"doc_type": "HD Ticket",
 			"field_name": "ticket_type",
 			"property": "allow_in_quick_entry",
-			"value": 1
+			"value": 1,
 		},
 		{   
 			"doctype_or_field": "DocField",
