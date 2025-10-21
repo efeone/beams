@@ -235,12 +235,24 @@ frappe.ui.form.on('Appraisal', {
 				}
 			});
 		if (!frm.is_new()) {
+			const today = frappe.datetime.get_today();
+			const start_date = frm.doc.start_date;
+			const appraisal_period_started = start_date && today >= start_date;
 			if (!frm.doc.consent_received) {
 				frm.disable_form();
 				frm.dashboard.set_headline_alert(
 					__("Waiting for Employee Appraisal Consent Submission"), "orange"
 				);
-			} else {
+			} else if (!appraisal_period_started) {
+				frm.disable_form();
+				frm.dashboard.set_headline_alert(
+				__("Appraisal period will begin on {0}. Form will be editable after this date.",
+					[frappe.datetime.str_to_user(start_date)]
+				),
+				"green"
+			);
+			}
+			else {
 				frm.enable_form();
 			}
 		}

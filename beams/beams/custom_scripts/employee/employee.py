@@ -604,4 +604,9 @@ def populate_employee_details_from_applicant(doc, method):
 			"reason_for_leaving": row.reason_for_leaving,
 			"attachments": row.attachments
 		})
+
+	if job_applicant.job_title:
+		employment_type = frappe.db.get_value("Job Opening", job_applicant.job_title, "employment_type")
+		if employment_type:
+			doc.employment_type = employment_type
 	doc.save()
