@@ -2758,7 +2758,8 @@ def get_job_applicant_custom_fields():
 				"fieldtype": "Link",
 				"label": "Department",
 				"options": "Department",
-				"insert_after": "designation"
+				"insert_after": "designation",
+				"fetch_from": "job_title.department"
 			},
 			{
 				"fieldname": "min_experience",
