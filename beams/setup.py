@@ -2136,8 +2136,13 @@ def get_employee_custom_fields():
 				"options": "Previous Employment History",
 				"label": "External Work History",
 				"insert_after": "previous_work_experience"
-			}
-
+			},
+			{
+				"fieldname": "custom_current_address",
+				"fieldtype": "Column Break",
+				"label": "Current Address",
+				"insert_after": "address_section"
+			},
 		],
 
 		"Employee External Work History":[
@@ -4979,8 +4984,9 @@ def get_property_setters():
 			"field_name": "external_work_history",
 			"property": "hidden",
 			"value": 1
-		}
-		,{
+		},
+		{
+			"doctype_or_field": "DocField",
 			"doc_type": "HD Ticket",
 			"field_name": "ticket_type",
 			"property": "allow_in_quick_entry",
@@ -5013,9 +5019,21 @@ def get_property_setters():
 			"field_name": "first_response_time",
 			"property": "in_list_view",
 			"value": 1
-		}
-
-]
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Employee",
+			"field_name": "column_break_46",
+			"property": "label",
+			"value": "Permanent Address"
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Employee",
+			"property": "field_order",
+			"value": '["basic_details_tab", "basic_information", "employee", "naming_series", "first_name", "middle_name", "last_name", "bureau", "employee_name", "column_break_9", "gender", "date_of_birth", "name_of_father", "name_of_spouse", "salutation", "column_break1", "date_of_joining", "date_of_appointment", "image", "status", "training_status", "erpnext_user", "user_id", "create_user", "create_user_permission", "company_details_section", "company", "department", "employment_type", "employee_number", "column_break_25", "designation", "reports_to", "assessment_officer", "column_break_18", "branch", "grade", "employment_details", "job_applicant", "joining_details", "scheduled_confirmation_date", "column_break_32", "final_confirmation_date", "contract_end_date", "col_break_22", "notice_number_of_days", "date_of_retirement", "appraisal_details", "appraisal_template", "next_appraisal_col", "next_appraisal_date", "assessment_officers_sec", "assessment_officers", "contact_details", "cell_number", "company_number", "column_break_40", "personal_email", "company_email", "column_break4", "prefered_contact_email", "prefered_email", "unsubscribed", "address_section", "current_address_column", "pincode", "current_address", "landmark", "current_accommodation_type", "column_break_46", "permanent_pin_code", "permanent_address", "landmark_per", "permanent_accommodation_type", "emergency_contact_details", "person_to_be_contacted", "emergency_contact_name", "column_break_55", "emergency_phone_number", "emergency_phone", "column_break_19", "relation", "relation_emergency", "attendance_and_leave_details", "attendance_device_id", "leave_policy", "leave_policy_name", "column_break_44", "holiday_list", "default_shift", "approvers_section", "expense_approver", "leave_approver", "column_break_45", "shift_request_approver", "salary_information", "ctc", "salary_currency", "salary_mode", "salary_cb", "payroll_cost_center", "pan_number", "provident_fund_account", "salary_structure", "bank_details_section", "bank_name", "column_break_heye", "bank_ac_no", "bank_cb", "ifsc_code", "micr_code", "iban", "nominee_details_section", "nominee_details", "personal_details", "marital_status", "aadhar_id", "no_of_children", "family_background", "column_break6", "blood_group", "health_details", "health_insurance_section", "health_insurance_provider", "health_insurance_no", "passport_details_section", "passport_number", "valid_upto", "column_break_73", "date_of_issue", "place_of_issue", "additional_information_section", "physical_disabilities", "disabilities", "marital_indebtness", "court_proceedings", "court_proceedings_details", "column_break_travel", "are_you_willing_to_travel", "in_india", "abroad", "state_restrictions_problems", "places_to_travel", "are_you_related_to_employee", "related_employee_name", "profile_tab", "bio", "educational_qualification", "education_qualification", "education", "previous_work_experience", "previous_employment_history", "external_work_history", "history_in_company", "internal_work_history", "documents_tab", "employee_documents", "exit", "resignation_letter_date", "relieving_date", "exit_interview_details", "held_on", "new_workplace", "column_break_99", "leave_encashed", "encashment_date", "feedback_section", "reason_for_leaving", "column_break_104", "feedback", "lft", "rgt", "old_parent", "connections_tab", "stringer_type"]',
+		},
+	]
 
 def get_material_request_custom_fields():
 	'''
