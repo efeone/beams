@@ -300,10 +300,9 @@ doc_events = {
 	"Employee" : {
 		"autoname": "beams.beams.custom_scripts.employee.employee.autoname",
 		"after_insert": [
-			"beams.beams.custom_scripts.employee.employee.assign_leave_policy_on_joining",
 			"beams.beams.custom_scripts.employee.employee.send_joining_based_appraisal_notification",
-			"beams.beams.custom_scripts.employee.employee.populate_employee_details_from_applicant"
-		],	
+			"beams.beams.custom_scripts.employee.employee.populate_employee_details_from_applicant",
+		],
 		"before_validate": "beams.beams.custom_scripts.employee.employee.manage_user_status",
 		"validate":  [
 			"beams.beams.custom_scripts.employee.employee.validate",
