@@ -610,3 +610,5 @@ def populate_employee_details_from_applicant(doc, method):
 		if employment_type:
 			doc.employment_type = employment_type
 	doc.save()
+
+	assign_leave_policy_on_joining(doc, method)
