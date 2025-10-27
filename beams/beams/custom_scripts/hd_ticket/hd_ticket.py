@@ -148,23 +148,24 @@ def assign_to_current_user(docname, doctype):
     return {"message": f"Ticket {docname} assigned to {current_user}"}
 
 
-
-
 def process_escalation_notifications():
     """
-    	Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
+    Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
     """
-    hd_settings = frappe.get_single("HD Settings")
-    if not hd_settings.enable_escalation_notifications:
+    enable_escalation = frappe.db.get_single_value("HD Settings", "enable_escalation_notifications")
+    if not enable_escalation:
         return
+
+    response_template = frappe.db.get_single_value("HD Settings", "response_due_template")
+    resolution_template = frappe.db.get_single_value("HD Settings", "resolution_due_template")
 
     now = now_datetime()
     escalation_data = [
-        ("response_due_escalation_send", "first_responded_on", "response_by", hd_settings.response_due_template, "Response"),
-        ("resolution_due_escalation_send", "resolution_date", "resolution_by", hd_settings.resolution_due_template, "Resolution")
+        ("response_due_escalation_send", "first_responded_on", "response_by", response_template),
+        ("resolution_due_escalation_send", "resolution_date", "resolution_by", resolution_template)
     ]
 
-    for flag, date_field, due_field, template, notif_type in escalation_data:
+    for flag, date_field, due_field, template in escalation_data:
         if not template:
             continue
         tickets = frappe.get_all(
@@ -186,11 +187,11 @@ def send_escalation_notification(ticket_doc, template_name):
     if not hd_team:
         return
 
-    hd_team_doc = frappe.get_doc("HD Team", hd_team)
-    if not hd_team_doc.escalation_to:
+    escalation_to = frappe.get_value("HD Team", hd_team, "escalation_to")
+    if not escalation_to:
         return
 
-    user_email = frappe.db.get_value("Employee", hd_team_doc.escalation_to, "user_id")
+    user_email = frappe.db.get_value("Employee", escalation_to, "user_id")
     if not user_email:
         return
 
