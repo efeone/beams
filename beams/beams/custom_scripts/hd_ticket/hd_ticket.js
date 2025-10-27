@@ -1,6 +1,15 @@
 frappe.ui.form.on('HD Ticket', {
     // Called when form is loaded
     onload(frm) {
+        if (frm.is_new() && !frm.doc.requested_employee) {
+            frappe.db.get_value("Employee", { "user_id": frappe.session.user }, "name")
+                .then(r => {
+                    if (r.message && r.message.name) {
+                        frm.set_value('requested_employee', r.message.name);
+                    }
+                });
+        }
+
         if (frm.is_new() && !frm.doc.raised_by) {
             frm.set_value('raised_by', frappe.session.user);
         }
@@ -137,18 +146,6 @@ function resolved_button(frm) {
     if (!['Closed', 'Open'].includes(frm.doc.status)) {
         const btn = frm.add_custom_button(__('Resolved'), () => {
 
-            if (!frm.doc.resolution_details || frm.doc.resolution_details.trim() === "") {
-                frappe.msgprint({
-                    title: __('Missing Resolution Details'),
-                    message: __('Please fill in the <b>Resolution Details</b> before closing the ticket.'),
-                    indicator: 'red'
-                });
-
-                frm.scroll_to_field('resolution_details');
-                frm.fields_dict.resolution_details.set_focus();
-                return;
-            }
-
             frm.set_value('status', 'Closed');
             frm.save().then(() => {
                 frappe.show_alert({ message: __('Ticket marked as closed'), indicator: 'green' });
@@ -183,26 +180,19 @@ function add_request_buttons(frm) {
         },
         callback: function(r) {
             if (r.message && r.message.name) {
-                // Add Asset Request button
+                // Asset Request button
                 frm.add_custom_button(__('Asset Request'), () => {
-                    frappe.db.get_value("Employee", { "user_id": frm.doc.raised_by }, "name")
-                        .then(r => {
-                            frappe.new_doc('Asset Request', {
-                                'requested_by': r.message?.name
-                            });
-                        });
+                    frappe.new_doc('Asset Request', {
+                        'requested_by': frm.doc.requested_employee
+                    });
                 }, __('Create'));
 
-               // Add Material Request button
+                // Material Request button
                 frm.add_custom_button(__('Material Request'), () => {
-                    frappe.db.get_value("Employee", { "user_id": frm.doc.raised_by }, "name")
-                        .then(r => {
-                            frappe.new_doc('Material Request', {
-                                'requested_by': r.message?.name
-                            });
-                        });
+                    frappe.new_doc('Material Request', {
+                        'requested_by': frm.doc.requested_employee
+                    });
                 }, __('Create'));
-
             }
         }
     });
