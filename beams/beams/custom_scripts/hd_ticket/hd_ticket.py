@@ -174,7 +174,7 @@ def process_escalation_notifications():
         )
         for ticket in tickets:
             ticket_doc = frappe.get_doc("HD Ticket", ticket.name)
-            send_escalation_notification(ticket_doc, template, notif_type)
+            send_escalation_notification(ticket_doc, template)
             frappe.db.set_value("HD Ticket", ticket.name, flag, 1)
 
 
