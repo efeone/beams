@@ -1,6 +1,10 @@
-import frappe
-from frappe.desk.form.assign_to import add as assign_to_user, clear as clear_all_assignments
+from frappe.desk.form.assign_to import add as assign_to_user
+from frappe.desk.form.assign_to import clear as clear_all_assignments
+from frappe.utils import now_datetime
 from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket
+
+import frappe
+
 
 class HDTicketOverride(HDTicket):
 
@@ -142,3 +146,62 @@ def assign_to_current_user(docname, doctype):
     })
 
     return {"message": f"Ticket {docname} assigned to {current_user}"}
+
+
+
+
+def process_escalation_notifications():
+    """
+    	Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
+    """
+    hd_settings = frappe.get_single("HD Settings")
+    if not hd_settings.enable_escalation_notifications:
+        return
+
+    now = now_datetime()
+    escalation_data = [
+        ("response_due_escalation_send", "first_responded_on", "response_by", hd_settings.response_due_template, "Response"),
+        ("resolution_due_escalation_send", "resolution_date", "resolution_by", hd_settings.resolution_due_template, "Resolution")
+    ]
+
+    for flag, date_field, due_field, template, notif_type in escalation_data:
+        if not template:
+            continue
+        tickets = frappe.get_all(
+            "HD Ticket",
+            filters={flag: 0, date_field: ["is", "not set"], due_field: ["<", now]},
+            fields=["name", "agent_group"]
+        )
+        for ticket in tickets:
+            ticket_doc = frappe.get_doc("HD Ticket", ticket.name)
+            send_escalation_notification(ticket_doc, template, notif_type)
+            frappe.db.set_value("HD Ticket", ticket.name, flag, 1)
+
+
+def send_escalation_notification(ticket_doc, template_name):
+    """
+    	Send an escalation email notification to the designated escalation contact for a Helpdesk ticket.
+    """
+    hd_team = ticket_doc.agent_group
+    if not hd_team:
+        return
+
+    hd_team_doc = frappe.get_doc("HD Team", hd_team)
+    if not hd_team_doc.escalation_to:
+        return
+
+    user_email = frappe.db.get_value("Employee", hd_team_doc.escalation_to, "user_id")
+    if not user_email:
+        return
+
+    email_template = frappe.get_doc("Email Template", template_name)
+    subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
+    message = frappe.render_template(email_template.response, {"doc": ticket_doc})
+
+    frappe.sendmail(
+        recipients=[user_email],
+        subject=subject,
+        message=message,
+        reference_doctype="HD Ticket",
+        reference_name=ticket_doc.name
+    )

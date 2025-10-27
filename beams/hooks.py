@@ -452,6 +452,11 @@ scheduler_events = {
 	"monthly": [
 		"beams.beams.custom_scripts.asset.asset.asset_notifications"
 	],
+	"cron": {
+		"* * * * *": [  # runs every minute
+			"beams.beams.custom_scripts.hd_ticket.hd_ticket.process_escalation_notifications"
+		]
+	}
   }
 
 # Testing
