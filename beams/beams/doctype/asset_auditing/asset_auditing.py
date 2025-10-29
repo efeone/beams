@@ -15,12 +15,3 @@ class AssetAuditing(Document):
         if self.posting_date:
             if self.posting_date > today():
                 frappe.throw(_("Posting Date cannot be set after today's date."))
-
-    def before_submit(self):
-        if len(self.asset_photos) < 3:
-            frappe.msgprint(
-                msg="Please upload atleast 3 photos before submission.",
-                title="Message",
-                indicator="red"
-            )
-            raise frappe.ValidationError

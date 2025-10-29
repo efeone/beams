@@ -6,16 +6,14 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "scan_qr_code",
-  "asset",
   "employee",
+  "employee_name",
+  "bureau",
   "column_break_bgwn",
   "posting_date",
   "location",
-  "employee_name",
   "section_break_rev9",
-  "asset_photos",
-  "has_damage",
+  "asset_auditing_detail",
   "remarks",
   "amended_from"
  ],
@@ -25,38 +23,13 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Asset Auditing",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
-   "fieldname": "asset",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "label": "Asset",
-   "options": "Asset",
-   "reqd": 1
-  },
-  {
-   "description": "A minimum of 3 photos must be uploaded",
-   "fieldname": "asset_photos",
-   "fieldtype": "Table",
-   "label": "Asset Photos",
-   "options": "Attachments Detail",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "asset.location",
+   "fetch_from": "bureau.location",
    "fieldname": "location",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Location",
    "options": "Location",
-   "reqd": 1
+   "read_only": 1
   },
   {
    "fieldname": "remarks",
@@ -64,14 +37,9 @@
    "label": "Remarks"
   },
   {
-   "default": "0",
-   "fieldname": "has_damage",
-   "fieldtype": "Check",
-   "label": "Has Damage"
-  },
-  {
    "fieldname": "employee",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Employee",
    "options": "Employee",
    "reqd": 1
@@ -87,22 +55,40 @@
    "fieldtype": "Column Break"
   },
   {
-   "fieldname": "scan_qr_code",
-   "fieldtype": "Data",
-   "label": "Scan QR Code",
-   "options": "Barcode"
-  },
-  {
    "fetch_from": "employee.employee_name",
    "fieldname": "employee_name",
    "fieldtype": "Data",
    "label": "Employee Name"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bureau",
+   "options": "Bureau",
+   "reqd": 1
+  },
+  {
+   "fieldname": "asset_auditing_detail",
+   "fieldtype": "Table",
+   "label": "Asset Auditing Detail",
+   "options": "Asset Auditing Detail"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Asset Auditing",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-23 13:12:53.697528",
+ "modified": "2025-10-29 11:12:10.998704",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing",
@@ -123,7 +109,8 @@
    "write": 1
   }
  ],
- "search_fields": "asset",
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "creation",
  "sort_order": "DESC",
  "states": []

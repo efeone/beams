@@ -2,31 +2,43 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Asset Auditing', {
-    asset: function(frm) {
-        if (frm.doc.asset) {
-            frappe.db.get_value('Asset', frm.doc.asset, 'custodian', (r) => {
-                if (r && r.custodian) {
-                    frm.set_value('employee', r.custodian);
-                }
-            });
+    refresh: async function(frm) {
+        if (frm.doc.bureau) {
+            await set_asset_filter(frm);
         }
     },
-    posting_date:function (frm){
-      frm.call("validate_posting_date");
-    },
-    // Fetch asset by scanned QR code and set 'asset' field
-    scan_qr_code: function(frm) {
-        if (frm.doc.scan_qr_code) {
-            frappe.db.get_value('Asset', frm.doc.scan_qr_code, 'name')
-                .then(r => {
-                    if (r && r.message) {
-                        frm.set_value('asset', r.message.name);
-                    } else {
-                        frappe.msgprint(__('Asset not found for scanned QR code'));
-                        frm.set_value('asset', null);
-                    }
-                    frm.set_value('scan_qr_code', null);
-                });
-        }
+
+    bureau: async function(frm) {
+        await handle_bureau_change(frm);
     }
 });
+
+
+/**
+ * Handles logic when Bureau field value changes
+ */
+async function handle_bureau_change(frm) {
+    if (!frm.doc.bureau) return;
+
+    await set_asset_filter(frm);
+
+    // Clear child table to avoid mismatched assets
+    frm.clear_table('asset_auditing_detail');
+    frm.refresh_field('asset_auditing_detail');
+}
+
+
+/**
+ * Sets filter on Asset field in child table based on Bureau location
+ */
+async function set_asset_filter(frm) {
+    const { message } = await frappe.db.get_value('Bureau', frm.doc.bureau, 'location');
+    if (!message?.location) return;
+
+    frm.fields_dict['asset_auditing_detail'].grid.get_field('asset').get_query = function() {
+        return {
+            filters: { location: message.location }
+        };
+    };
+}
+
