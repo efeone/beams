@@ -36,8 +36,7 @@
    "fieldname": "image",
    "fieldtype": "Attach",
    "in_list_view": 1,
-   "label": "Image 1",
-   "reqd": 1
+   "label": "Image 1"
   },
   {
    "fieldname": "remarks",
@@ -74,7 +73,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-10-28 09:46:12.091190",
+ "modified": "2025-10-29 14:23:31.126130",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Asset Auditing Detail",
