@@ -5063,7 +5063,35 @@ def get_property_setters():
 			"field_name": "raised_by",
 			"property": "hidden",
 			"value": 1
-		}
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status_category",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "template",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "key",
+			"property": "hidden",
+			"value": 1
+		},
 
 ]
 
@@ -5755,9 +5783,9 @@ def get_hd_team_custom_fields():
 			},
 			{
 				"fieldname": "escalation_to",
-				"fieldtype": "Link",
+				"fieldtype": "Table MultiSelect",
 				"label": "Escalation To",
-				"options": "Employee",
+				"options": "HD Ticket Escalation To",
 				"insert_after": "agents"
 			}
 		]

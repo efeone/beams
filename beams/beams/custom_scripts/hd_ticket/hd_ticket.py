@@ -187,12 +187,24 @@ def send_escalation_notification(ticket_doc, template_name):
     if not hd_team:
         return
 
-    escalation_to = frappe.get_value("HD Team", hd_team, "escalation_to")
-    if not escalation_to:
+    escalation_list = frappe.get_all(
+        "HD Team Escalation To",
+        filters={"parent": hd_team},
+        pluck="employee"
+    )
+
+
+    if not escalation_list:
         return
 
-    user_email = frappe.db.get_value("Employee", escalation_to, "user_id")
-    if not user_email:
+    user_emails = frappe.db.get_list(
+        "Employee",
+        filters={"name": ["in", escalation_list]},
+        pluck="user_id"
+    )
+
+    user_emails = [email for email in user_emails if email]
+    if not user_emails:
         return
 
     email_template = frappe.get_doc("Email Template", template_name)
@@ -200,7 +212,7 @@ def send_escalation_notification(ticket_doc, template_name):
     message = frappe.render_template(email_template.response, {"doc": ticket_doc})
 
     frappe.sendmail(
-        recipients=[user_email],
+        recipients= user_emails,
         subject=subject,
         message=message,
         reference_doctype="HD Ticket",
