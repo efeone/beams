@@ -187,9 +187,12 @@ def send_escalation_notification(ticket_doc, template_name):
     if not hd_team:
         return
 
-    hd_team_doc = frappe.get_doc("HD Team", hd_team)
-    if hasattr(hd_team_doc, "escalation_to"):
-            escalation_list = [row.employee for row in hd_team_doc.escalation_to]
+    escalation_list = frappe.get_all(
+        "HD Team Escalation To",
+        filters={"parent": hd_team},
+        pluck="employee"
+    )
+
 
     if not escalation_list:
         return
