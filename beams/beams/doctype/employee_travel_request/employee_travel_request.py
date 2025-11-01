@@ -30,6 +30,7 @@ class EmployeeTravelRequest(Document):
 
 	def before_save(self):
 		self.validate_posting_date()
+		self.check_management_employee()
 		if not self.requested_by:
 			return
 
@@ -358,6 +359,10 @@ class EmployeeTravelRequest(Document):
 			end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
 
 			self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
+
+	def check_management_employee(self):
+		if frappe.db.exists("Has Role", {"parent": frappe.session.user, "role": "Management"}):
+			self.management_employee = 1
 
 
 @frappe.whitelist()
