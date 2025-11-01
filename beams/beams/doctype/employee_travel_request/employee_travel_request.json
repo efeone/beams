@@ -15,7 +15,7 @@
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
-  "management_employee",
+  "is_management_employee",
   "travel_details_section",
   "travel_type",
   "batta_policy",
@@ -250,10 +250,10 @@
   },
   {
    "default": "0",
-   "fieldname": "management_employee",
+   "fieldname": "is_management_employee",
    "fieldtype": "Check",
    "hidden": 1,
-   "label": "Management Employee"
+   "label": "Is Management Employee"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -272,7 +272,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-11-01 16:17:39.623766",
+ "modified": "2025-11-01 17:04:12.490167",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

@@ -361,8 +361,13 @@ class EmployeeTravelRequest(Document):
 			self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
 
 	def check_management_employee(self):
-		if frappe.db.exists("Has Role", {"parent": frappe.session.user, "role": "Management"}):
-			self.management_employee = 1
+		"""
+			Set management_employee to 1 if the requested_by employee's user has the Management role.
+		"""
+		employee_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
+		
+		if employee_user and frappe.db.exists("Has Role", {"parent": employee_user, "role": "Management"}):
+			self.is_management_employee = 1
 
 
 @frappe.whitelist()
