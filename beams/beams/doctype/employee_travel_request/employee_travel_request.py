@@ -368,6 +368,8 @@ class EmployeeTravelRequest(Document):
 		
 		if employee_user and frappe.db.exists("Has Role", {"parent": employee_user, "role": "Management"}):
 			self.is_management_employee = 1
+		else:
+			self.is_management_employee = 0
 
 
 @frappe.whitelist()
