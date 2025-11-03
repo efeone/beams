@@ -30,6 +30,7 @@ class EmployeeTravelRequest(Document):
 
 	def before_save(self):
 		self.validate_posting_date()
+		self.check_management_employee()
 		if not self.requested_by:
 			return
 
@@ -358,6 +359,27 @@ class EmployeeTravelRequest(Document):
 			end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
 
 			self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
+
+	def check_management_employee(self):
+		"""
+		Set is_management_employee to 1 if the requested_by employee's user has
+		the Management role or the custom role defined in BEAMS Admin Settings.
+		"""
+
+		self.is_management_employee = 0
+
+		employee_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
+		if not employee_user:
+			return
+
+		role_to_check = frappe.db.get_value(
+			"BEAMS Admin Settings", "BEAMS Admin Settings", "management_user_role"
+		) or "Management"
+
+
+		if frappe.db.exists("Has Role", {"parent": employee_user, "role": role_to_check}):
+			self.is_management_employee = 1
+
 
 
 @frappe.whitelist()
