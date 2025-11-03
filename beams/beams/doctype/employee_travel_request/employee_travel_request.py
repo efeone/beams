@@ -376,7 +376,6 @@ class EmployeeTravelRequest(Document):
 			"BEAMS Admin Settings", "BEAMS Admin Settings", "management_user_role"
 		) or "Management"
 
-		frappe.log_error(role_to_check)
 
 		if frappe.db.exists("Has Role", {"parent": employee_user, "role": role_to_check}):
 			self.is_management_employee = 1
