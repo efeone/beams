@@ -362,14 +362,25 @@ class EmployeeTravelRequest(Document):
 
 	def check_management_employee(self):
 		"""
-			Set management_employee to 1 if the requested_by employee's user has the Management role.
+		Set is_management_employee to 1 if the requested_by employee's user has
+		the Management role or the custom role defined in BEAMS Admin Settings.
 		"""
+
+		self.is_management_employee = 0
+
 		employee_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
-		
-		if employee_user and frappe.db.exists("Has Role", {"parent": employee_user, "role": "Management"}):
+		if not employee_user:
+			return
+
+		role_to_check = frappe.db.get_value(
+			"BEAMS Admin Settings", "BEAMS Admin Settings", "management_user_role"
+		) or "Management"
+
+		frappe.log_error(role_to_check)
+
+		if frappe.db.exists("Has Role", {"parent": employee_user, "role": role_to_check}):
 			self.is_management_employee = 1
-		else:
-			self.is_management_employee = 0
+
 
 
 @frappe.whitelist()

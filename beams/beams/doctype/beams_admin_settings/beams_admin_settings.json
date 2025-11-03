@@ -16,6 +16,7 @@
   "default_hd_ticket_team",
   "technical_asset_manager",
   "non_technical_asset_manager",
+  "management_user_role",
   "column_break_qndy",
   "default_asset_location",
   "asset_transfer_warehouse",
@@ -180,12 +181,18 @@
    "fieldtype": "Link",
    "label": "Default Fuel UOM",
    "options": "UOM"
+  },
+  {
+   "fieldname": "management_user_role",
+   "fieldtype": "Link",
+   "label": "Management User Role",
+   "options": "Role"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-10-02 15:27:13.963359",
+ "modified": "2025-11-01 17:32:59.658720",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "BEAMS Admin Settings",
@@ -203,6 +210,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
