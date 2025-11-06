@@ -307,6 +307,7 @@ def create_release_order():
 		ro_item_row.base_rate = float(input_data.get('amount') or 0)
 		ro_doc.ignore_mandatory = True
 		ro_doc.save(ignore_permissions=True)
+		frappe.db.commit()
 		frappe.clear_messages()
 		return response('Created Release Order Successfully', ro_doc.as_dict(), True, 201)
 
@@ -403,6 +404,7 @@ def create_sales_order():
 			so_doc.tax_category = ''
 		so_doc.ignore_mandatory = True
 		so_doc.save(ignore_permissions=True)
+		frappe.db.commit()
 		frappe.clear_messages()
 		return response('Sales Order Created Successfully', so_doc.as_dict(), True, 201)
 
