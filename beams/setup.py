@@ -5092,6 +5092,20 @@ def get_property_setters():
 			"property": "hidden",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "users",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team Member",
+			"field_name": "user",
+			"property": "reqd",
+			"value": 1
+		},
 
 ]
 
