@@ -25,30 +25,12 @@ frappe.ui.form.on('Trip Sheet', {
 	},
 
 	refresh: function (frm) {
-		if (!frm.is_new()){
-			frm.add_custom_button(__('Vehicle Incident Record'), function () {
-				frappe.call({
-					method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
-					args: {
-						trip_sheet: frm.doc.name
-					},
-					callback: function (r) {
-						if (r.message) {
-							frappe.new_doc("Vehicle Incident Record", r.message);
-						}
-					}
-				});
-			}, __("Create"));
+		if (!frm.is_new()) {
+			add_vehicle_incident_button(frm);
 		}
 
-		frm.set_query('travel_requests', function () {
-			return {
-				query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
-				filters: {
-					driver: frm.doc.driver
-				}
-			};
-		});
+		set_travel_request_filter(frm);
+		filter_employee_field(frm);
 
 	},
 
@@ -183,6 +165,53 @@ frappe.ui.form.on('Trip Sheet', {
 		frm.set_value('safety_inspection_completed', all_fit_for_use ? 1 : 0);
 	}
 });
+
+/*
+Add custom button for Vehicle Incident Record
+*/
+
+function add_vehicle_incident_button(frm) {
+	frm.add_custom_button(__('Vehicle Incident Record'), function () {
+		frappe.call({
+			method: "beams.beams.doctype.trip_sheet.trip_sheet.create_vehicle_incident_record",
+			args: {
+				trip_sheet: frm.doc.name
+			},
+			callback: function (r) {
+				if (r.message) {
+					frappe.new_doc("Vehicle Incident Record", r.message);
+				}
+			}
+		});
+	}, __("Create"));
+}
+
+/*
+Set query filter for Travel Requests
+*/
+function set_travel_request_filter(frm) {
+	frm.set_query('travel_requests', function () {
+		return {
+			query: 'beams.beams.doctype.trip_sheet.trip_sheet.get_filtered_travel_requests',
+			filters: {
+				driver: frm.doc.driver
+			}
+		};
+	});
+}
+
+/*
+Function to filter active employees
+*/
+function filter_employee_field(frm) {
+	frm.set_query("employees", () => {
+		return {
+			filters: {
+				status: "Active"
+			}
+		};
+	});
+}
 
 frappe.ui.form.on('Trip Details', {
 	from_time: function (frm, cdt, cdn) {
