@@ -206,6 +206,55 @@ def create_vehicle_incident_record(trip_sheet):
 	return vehicle_incident_data
 
 @frappe.whitelist()
+def create_batta_request(trip_sheet):
+	"""
+	Creates a new Batta Claim for the given Trip Sheet or returns existing one.
+	"""
+	if not trip_sheet:
+		frappe.throw("Trip Sheet is required to create a Batta Request.")
+
+	trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
+
+	existing_bc = frappe.db.exists("Batta Claim", {"trip_sheet": trip_sheet_doc.name})
+	if existing_bc:
+		return {"status": "exists", "name": existing_bc}
+
+	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+	if not employee:
+		frappe.throw("No Employee record found for the current user.")
+
+	trip_details = trip_sheet_doc.get("trip_details")
+	if not trip_details:
+		frappe.throw("No Trip Details found in the Trip Sheet.")
+
+	first_trip = trip_details[0]
+	last_trip = trip_details[-1]
+
+	batta_claim = frappe.new_doc("Batta Claim")
+	batta_claim.trip_sheet = trip_sheet_doc.name
+	batta_claim.employee = employee
+	batta_claim.origin = first_trip.departure
+	batta_claim.destination = last_trip.destination
+
+	work_detail = []
+	for row in trip_details:
+		work_detail.append({
+			"origin": row.departure,
+			"destination": row.destination,
+			"from_date_and_time": row.from_time,
+			"to_date_and_time": row.to_time,
+			"distance_travelled_km": row.distance_traveled,
+			"total_hours": row.hrs
+		})
+
+	batta_claim.insert(ignore_permissions=True)
+
+	return {
+		"status": "new",
+		"name": batta_claim.name
+	}
+
+@frappe.whitelist()
 def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):
 	driver = filters.get("driver") if filters else None
 	if not driver:

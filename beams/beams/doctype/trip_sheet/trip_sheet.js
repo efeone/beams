@@ -24,7 +24,29 @@ frappe.ui.form.on('Trip Sheet', {
 		frm.call("calculate_and_validate_fuel_data");
 	},
 
-	refresh: function (frm) {
+	refresh: function(frm) {
+		if (!frm.is_new()) {
+			frm.add_custom_button(__('Request Batta'), function () {
+				frappe.call({
+					method: "beams.beams.doctype.trip_sheet.trip_sheet.create_batta_request",
+					args: { 
+						trip_sheet: frm.doc.name 
+					},
+					callback: function (r) {
+						if (!r.message) return;
+
+						if (r.message.status === "exists") {
+							frappe.msgprint("Existing Batta Claim found.");
+						} else {
+							frappe.msgprint("New Batta Claim created.");
+						}
+
+						frappe.set_route("Form", "Batta Claim", r.message.name);
+					}
+				});
+			}, __("Create"));
+		}
+
 		if (!frm.is_new()){
 			frm.add_custom_button(__('Vehicle Incident Record'), function () {
 				frappe.call({

@@ -27,6 +27,8 @@
   "is_avail_room_rent",
   "room_criteria",
   "attach",
+  "trip_sheet",
+  "travel_request",
   "section_break_bkxb",
   "room_rent_batta",
   "batta_based_on",
@@ -101,9 +103,8 @@
   },
   {
    "fieldname": "destination",
-   "fieldtype": "Link",
-   "label": "Destination",
-   "options": "Location"
+   "fieldtype": "Data",
+   "label": "Destination"
   },
   {
    "fieldname": "column_break_lgjy",
@@ -215,9 +216,8 @@
   },
   {
    "fieldname": "origin",
-   "fieldtype": "Link",
-   "label": "Origin",
-   "options": "Location"
+   "fieldtype": "Data",
+   "label": "Origin"
   },
   {
    "depends_on": "eval:doc.batta_type == \"Internal\"",
@@ -277,6 +277,18 @@
    "fieldname": "is_delhi_bureau",
    "fieldtype": "Check",
    "label": "Is Delhi Bureau"
+  },
+  {
+   "fieldname": "trip_sheet",
+   "fieldtype": "Link",
+   "label": "Trip Sheet",
+   "options": "Trip Sheet"
+  },
+  {
+   "fieldname": "travel_request",
+   "fieldtype": "Link",
+   "label": "Travel Request",
+   "options": "Employee Travel Request"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -291,7 +303,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-10-02 13:44:09.312155",
+ "modified": "2025-11-06 17:01:38.114454",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
@@ -312,6 +324,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
