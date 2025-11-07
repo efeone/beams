@@ -5,7 +5,8 @@ import frappe
 from frappe import _
 import json
 import re
-from frappe.utils import getdate, get_datetime, date_diff, add_days
+from frappe.utils import getdate, get_datetime, date_diff, add_days,flt
+import math
 from frappe.model.document import Document
 
 
@@ -23,10 +24,12 @@ class BattaClaim(Document):
 				self.create_journal_entry_from_batta_claim()
 
 	def validate(self):
-		self.calculate_total_distance_travelled()
-		self.calculate_total_daily_batta()
-		self.calculate_batta()
 		self.calculate_total_hours()
+		self.calculate_total_distance_travelled()
+		self.calculate_batta()
+		self.calculate_daily_batta()
+		self.calculate_total_daily_batta()
+		self.calculate_total_batta()
 
 	def create_purchase_invoice_from_batta_claim(self):
 		'''
@@ -128,21 +131,86 @@ class BattaClaim(Document):
 		'''
 		total_daily_batta = 0
 
-		if self.work_detail:
-			for row in self.work_detail:
-				if row.total_batta:
-					total_daily_batta += row.total_batta
-
-		# Set the 'total_distance_travelled_km' field with the calculated sum
-		self.total_daily_batta = total_daily_batta
-
 	def calculate_batta(self):
 		'''
 			Calculation of Total Batta based on room rent batta,daily batta with overnight stay and daily batta without Overnight stay
 		'''
 		self.batta = (self.room_rent_batta or 0) \
-				   + (self.daily_batta_without_overnight_stay or 0) \
-				   + (self.daily_batta_with_overnight_stay or 0)
+					+ (self.daily_batta_without_overnight_stay or 0) \
+					+ (self.daily_batta_with_overnight_stay or 0)
+		
+	def calculate_daily_batta(self):
+		"""
+		Auto creation logic:
+
+			✔ 100+ KM AND >= 8 Hours      → BATTA (no food allowance)
+			✔ 50–100 KM AND >= 6 Hours    → Food Allowance
+			✔ 100+ KM AND 6–8 Hours       → Food Allowance
+			✔ Else → No Allowance
+		"""
+		self.daily_batta_without_overnight_stay = 0
+		if not self.get("work_detail"):
+			return
+		for row in self.work_detail:
+			total_hours = flt(row.total_hours or 0)
+			distance = flt(row.distance_travelled_km or 0)
+			row.number_of_days = max(1, math.ceil(total_hours / 24))
+			row.daily_batta = 0
+			row.breakfast = 0
+			row.lunch = 0
+			row.dinner = 0
+			row.total_food_allowance = 0
+			if distance >= 100 and total_hours >= 8:
+				batta_data = calculate_batta_allowance(
+					designation=self.designation,
+					is_travelling_outside_kerala=self.is_travelling_outside_kerala,
+					is_overnight_stay=self.is_overnight_stay,
+					is_avail_room_rent=self.is_avail_room_rent,
+					total_distance_travelled_km=distance,
+					total_hours=total_hours
+				)
+				parent_daily_batta_value = flt(
+					batta_data.get("daily_batta_without_overnight_stay", 0)
+				)
+				self.daily_batta_without_overnight_stay = parent_daily_batta_value
+				row.daily_batta = row.number_of_days * parent_daily_batta_value
+				continue
+			if not self.is_overnight_stay:
+				if (50 <= distance < 100 and total_hours >= 6) or \
+				(distance >= 100 and 6 <= total_hours < 8):
+					values = get_batta_for_food_allowance(
+						designation=self.designation,
+						from_date_time=row.from_date_and_time,
+						to_date_time=row.to_date_and_time,
+						total_hrs=total_hours
+					)
+					row.breakfast = values.get("break_fast", 0)
+					row.lunch = values.get("lunch", 0)
+					row.dinner = values.get("dinner", 0)
+					row.total_food_allowance = (
+						flt(row.breakfast) + flt(row.lunch) + flt(row.dinner)
+					)
+
+					row.daily_batta = 0
+					continue
+				row.lunch = 0
+				row.dinner = 0
+				row.total_food_allowance = 0
+
+	def calculate_total_batta(self):
+		"""
+		Server-side equivalent of JS calculate_total_batta.
+		Calculates total_batta = daily_batta + total_food_allowance for each row.
+		"""
+		if not self.get('work_detail'):
+			return
+
+		for row in self.work_detail:
+			daily_batta = row.daily_batta or 0
+			food_allowance = row.total_food_allowance or 0
+			row.total_batta = daily_batta + food_allowance
+
+			
 
 @frappe.whitelist()
 def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, is_avail_room_rent=0, total_distance_travelled_km=0, total_hours=0):

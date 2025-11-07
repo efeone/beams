@@ -28,6 +28,8 @@
   "is_avail_room_rent",
   "room_criteria",
   "attach",
+  "trip_sheet",
+  "travel_request",
   "section_break_bkxb",
   "room_rent_batta",
   "batta_based_on",
@@ -88,6 +90,7 @@
   },
   {
    "depends_on": "eval:doc.batta_type !== 'External'",
+   "fetch_from": "employee.designation",
    "fieldname": "designation",
    "fieldtype": "Link",
    "label": "Designation",
@@ -104,9 +107,8 @@
   },
   {
    "fieldname": "destination",
-   "fieldtype": "Link",
-   "label": "Destination",
-   "options": "Location"
+   "fieldtype": "Data",
+   "label": "Destination"
   },
   {
    "fieldname": "column_break_lgjy",
@@ -218,9 +220,8 @@
   },
   {
    "fieldname": "origin",
-   "fieldtype": "Link",
-   "label": "Origin",
-   "options": "Location"
+   "fieldtype": "Data",
+   "label": "Origin"
   },
   {
    "depends_on": "eval:doc.batta_type == \"Internal\"",
@@ -289,6 +290,18 @@
    "mandatory_depends_on": "eval:doc.workflow_state==\"Pending Approval\"",
    "options": "\nDirect\nIndirect",
    "permlevel": 1
+  },
+  {
+   "fieldname": "trip_sheet",
+   "fieldtype": "Link",
+   "label": "Trip Sheet",
+   "options": "Trip Sheet"
+  },
+  {
+   "fieldname": "travel_request",
+   "fieldtype": "Link",
+   "label": "Travel Request",
+   "options": "Employee Travel Request"
   }
  ],
  "index_web_pages_for_search": 1,

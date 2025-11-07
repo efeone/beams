@@ -23,13 +23,8 @@ frappe.ui.form.on('Trip Sheet', {
 	fuel_consumed: function (frm) {
 		frm.call("calculate_and_validate_fuel_data");
 	},
-
-	refresh: function (frm) {
-		if (!frm.is_new()) {
-			add_vehicle_incident_button(frm);
-		}
+	refresh: function(frm) {
 		if (!frm.is_new()&& frm.doc.workflow_state === 'Approved') {
-
 			frm.add_custom_button(__('Request Batta'), function () {
 				frappe.call({
 					method: "beams.beams.doctype.trip_sheet.trip_sheet.create_batta_request",

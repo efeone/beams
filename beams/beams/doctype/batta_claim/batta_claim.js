@@ -15,16 +15,6 @@ frappe.ui.form.on('Batta Claim', {
     ot_batta: function(frm) {
         update_all_daily_batta(frm);
     },
-    onload: function(frm) {
-        handle_designation_based_on_batta_type(frm);
-    },
-    batta_type: function(frm) {
-        handle_designation_based_on_batta_type(frm);
-        set_batta_based_on_options(frm);
-    },
-    employee: function(frm) {
-        handle_designation_based_on_batta_type(frm);
-    },
     room_rent_batta: function(frm) {
         calculate_batta(frm);
         if (frm.doc.room_rent_batta < 0) {
@@ -54,12 +44,6 @@ frappe.ui.form.on('Batta Claim', {
             });
             frm.set_value("daily_batta_with_overnight_stay", 0);
         }
-    },
-    total_distance_travelled_km: function(frm) {
-        calculate_allowance(frm);
-    },
-    total_hours: function(frm) {
-        calculate_allowance(frm);
     },
     is_travelling_outside_kerala: function(frm) {
         update_all_daily_batta(frm);
@@ -268,18 +252,21 @@ function calculate_hours(frm, cdt, cdn) {
 */
 function calculate_daily_batta(frm, cdt, cdn) {
     let row = frappe.get_doc(cdt, cdn);
-
-    if (!row.total_hours) row.total_hours = 0;
-
-    let number_of_days = Math.max(1, Math.ceil(row.total_hours / 24)); // Ensure at least 1 day
-    let daily_batta = 0;
-
+    let total_hours = row.total_hours || 0;
+    let distance = row.distance_travelled_km || 0;
+    let number_of_days = Math.max(1, Math.ceil(total_hours / 24));
+    frappe.model.set_value(cdt, cdn, "number_of_days", number_of_days);
+    frappe.model.set_value(cdt, cdn, "daily_batta", 0);
     if (frm.doc.batta_based_on === 'Daily') {
-        daily_batta = number_of_days * (frm.doc.batta || 0);
-    }
+    if (distance >= 100 && total_hours >= 8) {
+        let parent_batta = frm.doc.daily_batta_without_overnight_stay || 0;
+        let daily_batta = number_of_days * parent_batta;
 
-    frappe.model.set_value(cdt, cdn, 'number_of_days', number_of_days);
-    frappe.model.set_value(cdt, cdn, 'daily_batta', daily_batta);
+        frappe.model.set_value(cdt, cdn, "daily_batta", daily_batta);
+
+    }
+    } 
+    
 }
 
 /*
@@ -304,28 +291,9 @@ function calculate_total_daily_batta(frm) {
     frm.set_value('total_daily_batta', totalDailyBatta);
 }
 
-/* Function to handle designation field based on batta_type */
-function handle_designation_based_on_batta_type(frm) {
-    if (frm.doc.batta_type === 'Internal' && frm.doc.employee) {
-        // Fetch and set designation when batta_type is Internal
-        designation = frappe.db.get_value('Employee', frm.doc.employee, 'designation', function (r) {
-            if (r && r.designation) {
-                frm.set_value('designation', r.designation);
-            } else {
-                frappe.msgprint(__('Designation not found for the selected employee.'));
-            }
-        });
-    } else if (frm.doc.batta_type === 'External') {
-        frm.set_value('designation', '');
-    }
-}
-
 /* Sets the batta-based options based on the selected batta type.*/
 function set_batta_based_on_options(frm) {
-    if (frm.doc.batta_type === 'External') {
-        frm.set_df_property('batta_based_on', 'options', 'Hours');
-        frm.set_value('batta_based_on', 'Hours');
-    } else {
+    if (frm.doc.batta_type === 'Internal') {
         frm.set_df_property('batta_based_on', 'options', ['Daily']);
         frm.set_value('batta_based_on', 'Daily');
     }
@@ -366,7 +334,6 @@ function calculate_allowance(frm) {
         }
     });
 }
-
 /* Determines eligibility for food allowance and updates fields accordingly.*/
 function set_batta_for_food_allowance(frm, cdt, cdn) {
     let child = locals[cdt][cdn];
@@ -374,21 +341,34 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
     let is_overnight_stay = frm.doc.is_overnight_stay;
     let is_delhi_bureau = frm.doc.is_delhi_bureau;
 
-    if (designation.length <= 0) {
-        return;
-    }
+    if (!designation) return;
+    let distance = parseFloat(child.distance_travelled_km) || 0;
+    let total_hours = parseFloat(child.total_hours) || 0;
+
     let is_eligible = false;
-
     if (is_delhi_bureau) {
-        if (child.distance_travelled_km >= 30 && child.total_hours > 4) {
+        if (distance >= 30 && total_hours >= 4) {
+            is_eligible = true;
+        } else {
+            frappe.model.set_value(child.doctype, child.name, "breakfast", 0);
+            frappe.model.set_value(child.doctype, child.name, "lunch", 0);
+            frappe.model.set_value(child.doctype, child.name, "dinner", 0);
+            frappe.model.set_value(child.doctype, child.name, "total_food_allowance", 0);
+            return;
+        }
+    } 
+    else {
+        if (distance >= 50 && total_hours >= 6 && total_hours <= 8) {
             is_eligible = true;
         }
-    } else {
-        if (child.distance_travelled_km >= 50 && child.distance_travelled_km < 100 && child.total_hours > 6) {
-            is_eligible = true;
+        else if (distance >= 100 && total_hours >= 8) {
+            frappe.model.set_value(child.doctype, child.name, "breakfast", 0);
+            frappe.model.set_value(child.doctype, child.name, "lunch", 0);
+            frappe.model.set_value(child.doctype, child.name, "dinner", 0);
+            frappe.model.set_value(child.doctype, child.name, "total_food_allowance", 0);
+            return;
         }
     }
-
     if (is_overnight_stay) {
         frappe.model.set_value(child.doctype, child.name, "breakfast", 0);
         frappe.model.set_value(child.doctype, child.name, "lunch", 0);
@@ -396,14 +376,14 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
         frappe.model.set_value(child.doctype, child.name, "total_food_allowance", 0);
         return;
     }
-    else if (is_eligible && !is_overnight_stay) {
+    if (is_eligible && !is_overnight_stay) {
         frappe.call({
             method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_for_food_allowance",
             args: {
                 designation: designation,
                 from_date_time: child.from_date_and_time,
                 to_date_time: child.to_date_and_time,
-                total_hrs: child.total_hours,
+                total_hrs: total_hours,
                 is_delhi_bureau: is_delhi_bureau
             },
             callback: function (r) {
@@ -418,6 +398,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
         });
     }
 }
+
 
 /* Calculation of Total Food Allowance. */
 function calculate_total_food_allowance(frm, cdt, cdn) {
