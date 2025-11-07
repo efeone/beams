@@ -156,35 +156,9 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		frm.call("calculate_total_distance_based_on_odometer");
 	},
 	refresh: function(frm) {
-		// Fetch Batta Policy values and set read-only properties
-		frappe.call({
-			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_batta_policy_values",
-			callback: function(response) {
-				if (response.message) {
-					let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
-					let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
-					let is_actual_food_allowance = response.message.is_actual___;
-
-					// Set read-only properties
-					frm.set_df_property('daily_batta_without_overnight_stay', 'read_only', is_actual_daily_batta_without_overnight_stay == 0);
-					frm.set_df_property('daily_batta_with_overnight_stay', 'read_only', is_actual_daily_batta_with_overnight_stay == 0);
-
-					// Refresh fields
-					frm.refresh_field('daily_batta_without_overnight_stay');
-					frm.refresh_field('daily_batta_with_overnight_stay');
-
-					frm.fields_dict['work_details'].grid.update_docfield_property('breakfast', 'read_only', is_actual_food_allowance == 0);
-					frm.fields_dict['work_details'].grid.update_docfield_property('lunch', 'read_only', is_actual_food_allowance == 0);
-					frm.fields_dict['work_details'].grid.update_docfield_property('dinner', 'read_only', is_actual_food_allowance == 0);
-
-					// Refresh child table
-					frm.refresh_field('work_details');
-				}
-			}
-		});
-
-		// Call the supplier filter function
 		filter_supplier_field(frm);
+		set_batta_policy_properties(frm);
+		filter_employee_field(frm);
 	},
 
 	onload: function(frm) {
@@ -201,6 +175,47 @@ function filter_supplier_field(frm) {
 				is_transporter: 1
 			}
 		};
+	});
+}
+
+/* Function to filter active employees */
+function filter_employee_field(frm) {
+	frm.set_query("employees", () => {
+		return {
+			filters: {
+				status: "Active"
+			}
+		};
+	});
+}
+
+/* Function to set Batta Policy properties */
+function set_batta_policy_properties(frm) {
+	frappe.call({
+		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_batta_policy_values",
+		callback: function(response) {
+			if (response.message) {
+				let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
+				let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
+				let is_actual_food_allowance = response.message.is_actual___;
+
+				// Set read-only properties for parent fields
+				frm.set_df_property('daily_batta_without_overnight_stay', 'read_only', is_actual_daily_batta_without_overnight_stay == 0);
+				frm.set_df_property('daily_batta_with_overnight_stay', 'read_only', is_actual_daily_batta_with_overnight_stay == 0);
+
+				// Refresh parent fields
+				frm.refresh_field('daily_batta_without_overnight_stay');
+				frm.refresh_field('daily_batta_with_overnight_stay');
+
+				// Set read-only properties for child table fields
+				frm.fields_dict['work_details'].grid.update_docfield_property('breakfast', 'read_only', is_actual_food_allowance == 0);
+				frm.fields_dict['work_details'].grid.update_docfield_property('lunch', 'read_only', is_actual_food_allowance == 0);
+				frm.fields_dict['work_details'].grid.update_docfield_property('dinner', 'read_only', is_actual_food_allowance == 0);
+
+				// Refresh child table
+				frm.refresh_field('work_details');
+			}
+		}
 	});
 }
 
