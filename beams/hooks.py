@@ -548,7 +548,18 @@ fixtures = [
 	{
 		"dt": "Custom HTML Block",
 		"filters": [
-			["name", "in", ["Media One HR", "Employee View"]]
-		]
+			[
+				"name",
+				"in",
+				[
+					"Media One HR",
+					"Employee View",
+					"Details",
+					"Availability and Attendance",
+					"HR Message",
+					"Adherence and Break",
+				],
+			]
+		],
 	}
 ]
