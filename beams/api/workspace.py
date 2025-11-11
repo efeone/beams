@@ -324,43 +324,46 @@ def get_employee_attendance():
 
 @frappe.whitelist()
 def get_absent_days(user_id=None):
-    """Return absent dates + leave status for the employee mapped to this user_id"""
-    if not user_id:
-        user_id = frappe.session.user
+    """Return leave applications active today (with their workflow_state).
+    If user_id is provided, restrict to the employee mapped to that user.
+    Otherwise return all leave applications that cover today.
+    """
+    # If user_id is provided, resolve employee; otherwise return for all employees
+    employee = None
+    if user_id:
+        employee = frappe.db.get_value(
+            "Employee", {"user_id": user_id}, "name", as_dict=False
+        )
+        if not employee:
+            return []
 
-    # Get Employee linked to user_id
-    employee = frappe.db.get_value(
-        "Employee", {"user_id": user_id}, "name", as_dict=False
-    )
-    if not employee:
-        return []
+    today_date = today()  # YYYY-MM-DD
 
-    # Fetch last 10 absent days (safe, ignoring permissions)
-    attendance = frappe.get_all(
-        "Attendance",
-        filters={"employee": employee, "status": "Absent", "docstatus": ["!=", 2]},
-        fields=["attendance_date", "status"],
-        order_by="attendance_date desc",
-        page_length=10,
+    filters = {
+        "docstatus": ["!=", 2],
+        "from_date": ["<=", today_date],
+        "to_date": [">=", today_date],
+    }
+    # if employee:
+    # 	filters["employee"] = employee
+
+    leaves = frappe.db.get_all(
+        "Leave Application",
+        filters=filters,
+        fields=[
+            "name",
+            "employee",
+            "leave_type",
+            "from_date",
+            "to_date",
+            "workflow_state",
+            "status",
+        ],
+        order_by="from_date asc, name asc",
         ignore_permissions=True,
     )
 
-    # Check if leave already applied for those dates
-    for att in attendance:
-        leave_app = frappe.get_all(
-            "Leave Application",
-            filters={
-                "employee": employee,
-                "from_date": att["attendance_date"],
-                "to_date": att["attendance_date"],
-                "docstatus": ["!=", 2],
-            },
-            limit=1,
-            ignore_permissions=True,
-        )
-        att["leave_applied"] = True if leave_app else False
-
-    return attendance
+    return leaves
 
 
 @frappe.whitelist()
