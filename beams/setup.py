@@ -1735,6 +1735,13 @@ def get_supplier_custom_fields():
 				"insert_after": "is_transporter",
 				"depends_on": "eval:doc.is_transporter == 1"
 
+			},
+			{
+				"fieldname": "ot_working_hours",
+				"fieldtype": "Float",
+				"label": "OT Working Hours",
+				"insert_after": "ot_batta",
+				"depends_on": "eval:doc.is_transporter == 1"
 			}
 		]
 	}

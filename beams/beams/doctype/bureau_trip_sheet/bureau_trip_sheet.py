@@ -187,3 +187,19 @@ def get_batta_policy_values():
 	'''
 	result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
 	return result
+
+@frappe.whitelist()
+def get_ot_working_hours(supplier):
+    """
+    Returns OT working hours based on Supplier or Beams Account Settings.
+    If the supplier has a valid 'ot_working_hours', use that.
+    Otherwise, fall back to 'default_working_hours' from Beams Accounts Settings.
+    """
+    ot_hours = frappe.db.get_value("Supplier", supplier, "ot_working_hours")
+
+    # Check for None, 0, or empty string
+    if not ot_hours:
+        ot_hours = frappe.db.get_single_value("Beams Accounts Settings", "default_working_hours")
+
+    # Return a numeric value (float for better accuracy)
+    return float(ot_hours or 0)

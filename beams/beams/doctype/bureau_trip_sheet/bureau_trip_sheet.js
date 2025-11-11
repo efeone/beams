@@ -228,23 +228,38 @@ function calculate_hours_and_days(frm, cdt, cdn) {
 		let to_date = new Date(row.to_date_and_time);
 
 		let total_hours = (to_date - from_date) / (1000 * 60 * 60);
+		total_hours = Math.round(total_hours);
 		let number_of_days = Math.ceil(total_hours / 24);
 
-		frappe.db.get_single_value('Beams Accounts Settings', 'default_working_hours')
-			.then(default_hours => {
-				default_hours = parseFloat(default_hours) || 0;
-				let ot_hours = Math.max(0, total_hours - default_hours);
+		if (!frm.doc.supplier) {
+			frappe.msgprint(__('Please select a Supplier to calculate OT hours.'));
+			return;
+		}
+		frappe.call({
+			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_ot_working_hours",
+			args: {
+				supplier: frm.doc.supplier
+			},
+			callback: function (r) {
+				if (r.message != null) {
+					let ot_working_hours = parseFloat(r.message) || 0;
+					let ot_hours = 0;
+					if (total_hours > ot_working_hours) {
+						ot_hours = total_hours - ot_working_hours;
+					}
+					frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
+					frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
+					frappe.model.set_value(cdt, cdn, 'number_of_days', number_of_days);
 
-				frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
-				frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
-				frappe.model.set_value(cdt, cdn, 'number_of_days', number_of_days);
+					frm.refresh_field("work_details");
 
-				frm.refresh_field("work_details");
-				setTimeout(() => {
-					calculate_daily_batta(frm, cdt, cdn);
-					calculate_ot_batta(frm, cdt, cdn);
-				}, 200);
-			});
+					setTimeout(() => {
+						calculate_daily_batta(frm, cdt, cdn);
+						calculate_ot_batta(frm, cdt, cdn);
+					}, 200);
+				}
+			}
+		});
 	}
 }
 
@@ -285,7 +300,6 @@ function update_all_daily_batta(frm) {
 
 	}
 }
-
 
 /* Update OT batta for all work details rows */
 function update_all_ot_batta(frm) {
