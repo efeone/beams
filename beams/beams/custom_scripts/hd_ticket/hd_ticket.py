@@ -188,7 +188,7 @@ def send_escalation_notification(ticket_doc, template_name):
         return
 
     escalation_list = frappe.get_all(
-        "HD Team Escalation To",
+        "HD Ticket Escalation To",
         filters={"parent": hd_team},
         pluck="employee"
     )
