@@ -69,3 +69,20 @@ class HDTeamOverride(HDTeam):
 			if total_users_in_assignment_rule == 0:
 				assignment_rule_doc.disabled = True
 				assignment_rule_doc.save()
+
+
+def disable_hd_team_assignment_rule_if_enabled(doc, method):
+    """
+		Disable the assignment rule linked to the HD Team if it is enabled.
+    """
+    assignment_rule = frappe.get_value(
+        "HD Team",
+        doc.name,
+        "assignment_rule"
+    )
+    if not assignment_rule:
+        return
+
+    is_disabled = frappe.get_value("Assignment Rule", assignment_rule, "disabled")
+    if not is_disabled:
+        frappe.db.set_value("Assignment Rule", assignment_rule, "disabled", 1)
