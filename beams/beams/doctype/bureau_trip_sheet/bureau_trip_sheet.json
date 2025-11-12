@@ -20,6 +20,7 @@
   "column_break_hzfr",
   "ot_batta",
   "batta",
+  "purchase_invoice",
   "section_break_tjbr",
   "work_details",
   "section_break_xxsb",
@@ -245,12 +246,19 @@
    "fieldtype": "Table MultiSelect",
    "label": "Employees",
    "options": "Employees"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-07 10:28:03.398951",
+ "modified": "2025-11-11 13:59:02.866885",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

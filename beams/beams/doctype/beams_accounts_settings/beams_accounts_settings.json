@@ -7,6 +7,7 @@
  "field_order": [
   "adhoc_budget_threshold",
   "default_sales_invoice_print_format",
+  "default_trip_sheet_service_item",
   "column_break_eqou",
   "equalize_purchase_and_quotation_amounts",
   "single_sales_order",
@@ -23,7 +24,8 @@
   "default_credit_account",
   "default_debit_account",
   "stringer_settings_tab",
-  "stringer_service_item"
+  "stringer_service_item",
+  "column_break_ixlf"
  ],
  "fields": [
   {
@@ -131,12 +133,22 @@
    "fieldname": "purchase_threshold",
    "fieldtype": "Float",
    "label": "Purchase Threshold "
+  },
+  {
+   "fieldname": "column_break_ixlf",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "default_trip_sheet_service_item",
+   "fieldtype": "Link",
+   "label": "Default Trip Sheet Service Item",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-09-17 10:09:26.560768",
+ "modified": "2025-11-11 14:56:31.922654",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
@@ -154,6 +166,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
