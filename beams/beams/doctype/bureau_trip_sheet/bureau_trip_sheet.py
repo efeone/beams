@@ -130,7 +130,7 @@ class BureauTripSheet(Document):
 
 
 @frappe.whitelist()
-def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):
+def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs, distance_travelled_km=0):
 	'''
 		Method to get Batta for Food
 	'''
@@ -139,8 +139,9 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
 	from_date_time = get_datetime(from_date_time)
 	to_date_time = get_datetime(to_date_time)
 	required_hours = 6
+	distance = float(distance_travelled_km or 0)
 
-	if batta_policy and float(total_hrs) > required_hours:
+	if batta_policy and float(total_hrs) > required_hours and 50 < distance <= 100:
 		break_fast, lunch, dinner = frappe.db.get_value('Batta Policy', batta_policy, ['break_fast', 'lunch', 'dinner'])
 		same_date = getdate(from_date_time) == getdate(to_date_time)
 

@@ -390,11 +390,6 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
 	let designation = "Driver";
 	let is_overnight_stay = frm.doc.is_overnight_stay;
 
-	let is_eligible = false;
-	if (child.distance_travelled_km >= 50 && child.distance_travelled_km <= 100 && child.total_hours > 6) {
-		is_eligible = true;
-	}
-
 	if (is_overnight_stay) {
 		  frappe.model.set_value(child.doctype, child.name, "breakfast", 0);
 		  frappe.model.set_value(child.doctype, child.name, "lunch", 0);
@@ -403,7 +398,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
 		  return;
 	  }
 
-	else if (is_eligible && !is_overnight_stay) {
+	else {
 		frappe.call({
 			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_batta_for_food_allowance",
 			args: {
@@ -411,6 +406,7 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
 				from_date_time: child.from_date_and_time,
 				to_date_time: child.to_date_and_time,
 				total_hrs: child.total_hours,
+				distance_travelled_km: child.distance_travelled_km
 			},
 			callback: function (r) {
 				if (r && r.message) {
@@ -445,6 +441,14 @@ function calculate_allowance(frm) {
 				frm.set_value("daily_batta_with_overnight_stay", r.message.daily_batta_with_overnight_stay);
 				frm.set_value("daily_batta_without_overnight_stay", r.message.daily_batta_without_overnight_stay);
 				frm.set_value("batta", r.message.batta);
+
+				if (r.message.daily_batta_without_overnight_stay > 0) {
+					frm.doc.work_details.forEach(row => {
+						frappe.model.set_value(row.doctype, row.name, "breakfast", 0);
+						frappe.model.set_value(row.doctype, row.name, "lunch", 0);
+						frappe.model.set_value(row.doctype, row.name, "dinner", 0);
+					});
+				}
 			}
 		}
 	});
