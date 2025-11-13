@@ -242,3 +242,59 @@ def get_ot_working_hours(supplier):
 
     # Return a numeric value (float for better accuracy)
     return float(ot_hours or 0)
+
+
+@frappe.whitelist()
+def recalculate_all_allowances(doc):
+    doc = frappe._dict(doc)
+
+    # 1. Calculate totals from the child table
+    total_distance = sum(float(row.get('distance_travelled_km') or 0) for row in doc.work_details)
+    total_hours = sum(float(row.get('total_hours') or 0) for row in doc.work_details)
+
+    doc.total_distance_travelled_km = total_distance
+    doc.total_hours = total_hours
+
+    # 2. Determine and calculate Travel Batta for the whole trip
+    travel_batta_result = calculate_batta_allowance(
+        designation=doc.designation,
+        is_travelling_outside_kerala=doc.is_travelling_outside_kerala,
+        is_overnight_stay=doc.is_overnight_stay,
+        total_distance_travelled_km=total_distance,
+        total_hours=total_hours
+    )
+    doc.daily_batta_with_overnight_stay = travel_batta_result.get('daily_batta_with_overnight_stay', 0)
+    doc.daily_batta_without_overnight_stay = travel_batta_result.get('daily_batta_without_overnight_stay', 0)
+
+    travel_batta_applied = doc.daily_batta_with_overnight_stay > 0 or doc.daily_batta_without_overnight_stay > 0
+
+    # 3. Calculate Food Batta for each row, ONLY if Travel Batta is NOT applied
+    for row in doc.work_details:
+        if travel_batta_applied:
+            row.breakfast = 0
+            row.lunch = 0
+            row.dinner = 0
+        else:
+            # Check eligibility for food allowance for this specific row
+            is_eligible_for_food = (
+                not doc.is_overnight_stay and
+                50 < float(row.get('distance_travelled_km') or 0) and
+                float(row.get('total_hours') or 0) > 6
+            )
+
+            if is_eligible_for_food:
+                food_allowance_result = get_batta_for_food_allowance(
+                    designation=doc.designation,
+                    from_date_time=row.from_date_and_time,
+                    to_date_time=row.to_date_and_time,
+                    total_hrs=row.total_hours
+                )
+                row.breakfast = food_allowance_result.get('break_fast', 0)
+                row.lunch = food_allowance_result.get('lunch', 0)
+                row.dinner = food_allowance_result.get('dinner', 0)
+            else:
+                row.breakfast = 0
+                row.lunch = 0
+                row.dinner = 0
+
+    return doc
