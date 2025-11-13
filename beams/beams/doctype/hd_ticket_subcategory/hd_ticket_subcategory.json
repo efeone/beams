@@ -6,7 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "ticket_subcategory",
-  "ticket_team"
+  "ticket_type"
  ],
  "fields": [
   {
@@ -17,17 +17,17 @@
    "unique": 1
   },
   {
-   "fieldname": "ticket_team",
+   "fieldname": "ticket_type",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Ticket Team",
-   "options": "HD Team"
+   "label": "Ticket Type",
+   "options": "HD Ticket Type"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-13 10:20:14.053893",
+ "modified": "2025-11-13 14:27:44.597546",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "HD Ticket SubCategory",
