@@ -415,6 +415,9 @@ doc_events = {
 	},
 	"HD Settings": {
 		"validate": "beams.beams.custom_scripts.hd_settings.hd_settings.update_ticket_type"
+	},
+	"HD Team": {
+		"on_update":"beams.beams.custom_scripts.hd_team.hd_team.disable_hd_team_assignment_rule_if_enabled"
 	}
 }
 
