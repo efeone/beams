@@ -256,6 +256,14 @@ def get_hd_ticket_custom_fields():
 				"label": "Resolution Due Escalation Send",
 				"read_only": 1,
 				"insert_after": "user_resolution_time"
+			},
+			{
+				"fieldname": "ticket_subcategory",
+				"fieldtype": "Link",
+				"label": "Ticket Subcategory",
+				"options":"HD Ticket SubCategory",
+				"insert_after": "ticket_type",
+				"allow_in_quick_entry": 1
 			}
 
 		]
