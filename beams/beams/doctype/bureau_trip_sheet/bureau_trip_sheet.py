@@ -130,7 +130,7 @@ class BureauTripSheet(Document):
 
 
 @frappe.whitelist()
-def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):
+def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs, distance_travelled_km=0):
 	'''
 		Method to get Batta for Food
 	'''
@@ -139,8 +139,9 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
 	from_date_time = get_datetime(from_date_time)
 	to_date_time = get_datetime(to_date_time)
 	required_hours = 6
+	distance = float(distance_travelled_km or 0)
 
-	if batta_policy and float(total_hrs) > required_hours:
+	if batta_policy and float(total_hrs) > required_hours and 50 < distance <= 100:
 		break_fast, lunch, dinner = frappe.db.get_value('Batta Policy', batta_policy, ['break_fast', 'lunch', 'dinner'])
 		same_date = getdate(from_date_time) == getdate(to_date_time)
 
@@ -242,3 +243,57 @@ def get_ot_working_hours(supplier):
 
     # Return a numeric value (float for better accuracy)
     return float(ot_hours or 0)
+
+@frappe.whitelist()
+def get_allowances(designation, distance_travelled_km, total_hours, from_date_time, to_date_time, is_overnight_stay=0, is_travelling_outside_kerala=0):
+    """
+    Decide which allowance applies:
+    - Overnight stay → Travel Batta
+    - >100 km & >=8 hrs → Travel Batta
+    - >50 km & >6 hrs → Food Allowance
+    - Otherwise → No Allowance
+    """
+    distance = float(distance_travelled_km or 0)
+    hours = float(total_hours or 0)
+    is_overnight_stay = int(is_overnight_stay or 0)
+    is_outside_kerala = int(is_travelling_outside_kerala or 0)
+
+    # Get the batta policy for this designation
+    policies = frappe.get_all("Batta Policy", filters={"designation": designation}, fields=["*"])
+    if not policies:
+        frappe.throw(f"No Batta Policy found for designation {designation}")
+    policy = policies[0]
+
+    response = {
+        "daily_batta_with_overnight_stay": 0,
+        "daily_batta_without_overnight_stay": 0,
+        "food_allowance": {"break_fast": 0, "lunch": 0, "dinner": 0}
+    }
+
+    # --- 1️⃣ Overnight stay → Travel Batta ---
+    if is_overnight_stay:
+        if is_outside_kerala:
+            response["daily_batta_with_overnight_stay"] = policy.get("outside_kerala__", 0)
+        else:
+            response["daily_batta_with_overnight_stay"] = policy.get("inside_kerala__", 0)
+        return response
+
+    # --- 2️⃣ >100 km & >=8 hours → Travel Batta ---
+    if distance > 100 and hours >= 8:
+        if is_outside_kerala:
+            response["daily_batta_without_overnight_stay"] = policy.get("outside_kerala", 0)
+        else:
+            response["daily_batta_without_overnight_stay"] = policy.get("inside_kerala", 0)
+        return response
+
+    # --- 3️⃣ >50 km & >6 hours → Food Allowance ---
+    if distance > 50 and hours > 6:
+        response["food_allowance"] = {
+            "break_fast": policy.get("break_fast", 0),
+            "lunch": policy.get("lunch", 0),
+            "dinner": policy.get("dinner", 0)
+        }
+        return response
+
+    # --- 4️⃣ Not eligible ---
+    return response
