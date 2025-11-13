@@ -92,6 +92,59 @@ class BureauTripSheet(Document):
 
 		self.total_ot_batta = total_ot_batta
 
+	@frappe.whitelist()
+	def recalculate_all_allowances(self):
+		# 1. Calculate totals from the child table
+		total_distance = sum(float(row.get('distance_travelled_km') or 0) for row in self.work_details)
+		total_hours = sum(float(row.get('total_hours') or 0) for row in self.work_details)
+
+		self.total_distance_travelled_km = total_distance
+		self.total_hours = total_hours
+
+		# 2. Determine and calculate Travel Batta for the whole trip
+		travel_batta_result = calculate_batta_allowance(
+			designation=self.designation,
+			is_travelling_outside_kerala=self.is_travelling_outside_kerala,
+			is_overnight_stay=self.is_overnight_stay,
+			total_distance_travelled_km=total_distance,
+			total_hours=total_hours
+		)
+		self.daily_batta_with_overnight_stay = travel_batta_result.get('daily_batta_with_overnight_stay', 0)
+		self.daily_batta_without_overnight_stay = travel_batta_result.get('daily_batta_without_overnight_stay', 0)
+
+		travel_batta_applied = self.daily_batta_with_overnight_stay > 0 or self.daily_batta_without_overnight_stay > 0
+
+		# 3. Calculate Food Batta for each row, ONLY if Travel Batta is NOT applied
+		for row in self.work_details:
+			if travel_batta_applied:
+				row.breakfast = 0
+				row.lunch = 0
+				row.dinner = 0
+			else:
+				# Check eligibility for food allowance for this specific row
+				is_eligible_for_food = (
+					not self.is_overnight_stay and
+					50 < float(row.get('distance_travelled_km') or 0) and
+					float(row.get('total_hours') or 0) > 6
+				)
+
+				if is_eligible_for_food:
+					food_allowance_result = get_batta_for_food_allowance(
+						designation=self.designation,
+						from_date_time=row.from_date_and_time,
+						to_date_time=row.to_date_and_time,
+						total_hrs=row.total_hours
+					)
+					row.breakfast = food_allowance_result.get('break_fast', 0)
+					row.lunch = food_allowance_result.get('lunch', 0)
+					row.dinner = food_allowance_result.get('dinner', 0)
+				else:
+					row.breakfast = 0
+					row.lunch = 0
+					row.dinner = 0
+
+		return self
+
 	def on_submit(self):
 		'''
 			Create a Purchase Invoice on submission of Bureau Trip Sheet
