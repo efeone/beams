@@ -4,10 +4,7 @@
 frappe.ui.form.on('Bureau Trip Details', {
 	from_date_and_time: function (frm, cdt, cdn) {
 		calculate_hours_and_days(frm, cdt, cdn);
-		setTimeout(() => {
-			set_batta_for_food_allowance(frm, cdt, cdn);
-			calculate_batta(frm, cdt, cdn);
-		}, 200);
+		get_allowances(frm);
 	},
 	to_date_and_time: function (frm, cdt, cdn) {
 		let row = locals[cdt][cdn];
@@ -21,18 +18,9 @@ frappe.ui.form.on('Bureau Trip Details', {
 				frappe.model.set_value(cdt, cdn, 'to_date_and_time', null);
 				return;
 			}
-			setTimeout(() => {
-				set_batta_for_food_allowance(frm, cdt, cdn);
-				calculate_batta(frm, cdt, cdn);
-		}, 200);
 		}
-
 		calculate_hours_and_days(frm, cdt, cdn);
-	},
-	total_hours: function (frm, cdt, cdn) {
-		calculate_daily_batta(frm, cdt, cdn);
-		calculate_ot_batta(frm, cdt, cdn);
-		set_batta_for_food_allowance(frm, cdt, cdn);
+		get_allowances(frm);
 	},
 	ot_hours: function (frm, cdt, cdn) {
 		calculate_ot_batta(frm, cdt, cdn);
@@ -48,10 +36,7 @@ frappe.ui.form.on('Bureau Trip Details', {
 	},
 	distance_travelled_km: function(frm, cdt, cdn) {
 		calculate_total_distance_travelled(frm, cdt, cdn);
-		setTimeout(() => {
-			set_batta_for_food_allowance(frm, cdt, cdn);
-			calculate_batta(frm, cdt, cdn);
-		}, 30);
+		get_allowances(frm);
 	},
 	work_details_add:  function(frm, cdt, cdn) {
 
@@ -62,25 +47,14 @@ frappe.ui.form.on('Bureau Trip Details', {
 		calculate_total_daily_batta(frm, cdt, cdn);
 
 		calculate_total_ot_batta(frm, cdt, cdn);
-
-		setTimeout(() => {
-			set_batta_for_food_allowance(frm, cdt, cdn);
-			calculate_batta(frm, cdt, cdn);
-		}, 30);
+		get_allowances(frm);
 	},
 	work_details_remove: function(frm, cdt, cdn) {
 		calculate_total_distance_travelled(frm, cdt, cdn);
 		calculate_hours(frm, cdt, cdn);
 		calculate_total_daily_batta(frm, cdt, cdn);
 		calculate_total_ot_batta(frm, cdt, cdn);
-		setTimeout(() => {
-			set_batta_for_food_allowance(frm, cdt, cdn);
-			calculate_batta(frm, cdt, cdn);
-		}, 30);
-	},
-	total_hours: function(frm, cdt, cdn) {
-		calculate_hours(frm, cdt, cdn);
-		set_batta_for_food_allowance(frm, cdt, cdn);
+		get_allowances(frm);
 	},
 	daily_batta: function(frm, cdt, cdn) {
 		calculate_total_food_allowance(frm, cdt, cdn);
@@ -98,7 +72,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		filter_supplier_field(frm);
 		update_all_daily_batta(frm);
 		update_all_ot_batta(frm);
-		calculate_allowance(frm);
+		get_allowances(frm);
 	},
 	validate: function (frm) {
 		update_all_daily_batta(frm);
@@ -128,26 +102,18 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		calculate_total_driver_batta(frm);
 	},
 	is_overnight_stay: function (frm) {
-		calculate_allowance(frm);
+		get_allowances(frm);
 		calculate_daily_batta(frm);
 	},
 	is_travelling_outside_kerala: function (frm) {
-		calculate_allowance(frm);
+		get_allowances(frm);
 		calculate_daily_batta(frm);
 	},
 	total_distance_travelled_km: function (frm) {
-		calculate_allowance(frm);
+		get_allowances(frm);
 	},
 	total_hours: function(frm) {
-		calculate_allowance(frm);
-	},
-	is_overnight_stay: function(frm) {
-		calculate_allowance(frm);
-		frm.doc.work_details.forEach(row => {
-		  set_batta_for_food_allowance(frm, row["doctype"], row["name"]);
-		  set_batta_for_food_allowance(frm, row["doctype"], row["name"]);
-		})
-
+		get_allowances(frm);
 	},
 	initial_odometer_reading: function (frm) {
 		frm.call("calculate_total_distance_based_on_odometer");
@@ -383,69 +349,23 @@ function calculate_total_driver_batta(frm) {
 }
 
 
-/* Determines eligibility for food allowance and updates fields accordingly.*/
-function set_batta_for_food_allowance(frm, cdt, cdn) {
-	let child = locals[cdt][cdn];
-
-	let designation = "Driver";
-	let is_overnight_stay = frm.doc.is_overnight_stay;
-
-	let is_eligible = false;
-	if (child.distance_travelled_km >= 50 && child.distance_travelled_km <= 100 && child.total_hours > 6) {
-		is_eligible = true;
-	}
-
-	if (is_overnight_stay) {
-		  frappe.model.set_value(child.doctype, child.name, "breakfast", 0);
-		  frappe.model.set_value(child.doctype, child.name, "lunch", 0);
-		  frappe.model.set_value(child.doctype, child.name, "dinner", 0);
-		  frappe.model.set_value(child.doctype, child.name, "total_food_allowance", 0);
-		  return;
-	  }
-
-	else if (is_eligible && !is_overnight_stay) {
+function get_allowances(frm) {
+	if (frm.doc.supplier) {
 		frappe.call({
-			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_batta_for_food_allowance",
+			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_allowances",
 			args: {
-				designation: designation,
-				from_date_time: child.from_date_and_time,
-				to_date_time: child.to_date_and_time,
-				total_hrs: child.total_hours,
+				doc: JSON.stringify(frm.doc)
 			},
-			callback: function (r) {
-				if (r && r.message) {
-				  let response = r.message;
-				  frappe.model.set_value(child.doctype, child.name, "breakfast", response.break_fast);
-				  frappe.model.set_value(child.doctype, child.name, "lunch", response.lunch);
-				  frappe.model.set_value(child.doctype, child.name, "dinner", response.dinner);
-				  frappe.model.set_value(child.doctype, child.name, "total_food_allowance", response.break_fast + response.lunch + response.dinner);
+			callback: function(r) {
+				if (r.message) {
+					frm.set_value("daily_batta_with_overnight_stay", r.message.daily_batta_with_overnight_stay);
+					frm.set_value("daily_batta_without_overnight_stay", r.message.daily_batta_without_overnight_stay);
+					frm.set_value("batta", r.message.batta);
+
+					frm.doc.work_details = r.message.work_details;
+					frm.refresh_field("work_details");
 				}
 			}
 		});
 	}
-}
-
-function calculate_allowance(frm) {
-	if (!frm.doc.supplier.length) {
-		frappe.msgprint(__("Please select a supplier."));
-		return;
-	}
-
-	frappe.call({
-		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.calculate_batta_allowance",
-		args: {
-			designation: frm.doc.designation,
-			is_travelling_outside_kerala: frm.doc.is_travelling_outside_kerala || 0,
-			is_overnight_stay: frm.doc.is_overnight_stay || 0,
-			total_distance_travelled_km: frm.doc.total_distance_travelled_km || 0,
-			total_hours: frm.doc.total_hours || 0
-		},
-		callback: function(r) {
-			if (r.message) {
-				frm.set_value("daily_batta_with_overnight_stay", r.message.daily_batta_with_overnight_stay);
-				frm.set_value("daily_batta_without_overnight_stay", r.message.daily_batta_without_overnight_stay);
-				frm.set_value("batta", r.message.batta);
-			}
-		}
-	});
 }

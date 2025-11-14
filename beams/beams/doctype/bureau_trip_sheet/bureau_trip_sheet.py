@@ -6,6 +6,7 @@ from frappe.model.document import Document
 from frappe.utils import get_datetime, getdate
 from frappe import _
 from frappe.utils import nowdate
+import json
 
 
 class BureauTripSheet(Document):
@@ -171,55 +172,6 @@ def check_meal_time(from_date_time, to_date_time, date_threshold, start_time, en
 	return (from_date_time <= start_datetime <= to_date_time) or (from_date_time <= end_datetime <= to_date_time)
 
 @frappe.whitelist()
-def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, total_distance_travelled_km=0, total_hours=0):
-	'''
-		Calculation Of Total Batta Allowance based on Batta Policy
-	'''
-	def sanitize_number(value):
-		try:
-			return float(value)
-		except:
-			return 0
-	total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
-	total_hours = sanitize_number(total_hours)
-
-	batta_policy = frappe.get_all('Batta Policy', filters={'designation': 'Driver'}, fields=['*'])
-	if not batta_policy:
-		frappe.throw(f"No Batta Policy found for the designation: {designation}")
-		return {"batta": 0}
-
-	policy = batta_policy[0]
-
-	is_actual_daily_batta = policy.get('is_actual_') or 0
-	is_actual_daily_batta_without_overnight = policy.get('is_actual__') or 0
-
-	is_travelling_outside_kerala = bool(int(is_travelling_outside_kerala or 0))
-	is_overnight_stay = bool(int(is_overnight_stay or 0))
-
-	daily_batta_with_overnight_stay = 0
-	daily_batta_without_overnight_stay = 0
-
-	if not is_actual_daily_batta:
-		if is_overnight_stay:
-			if is_travelling_outside_kerala:
-				daily_batta_with_overnight_stay = float(policy.get('outside_kerala__', 0))
-			else:
-				daily_batta_with_overnight_stay = float(policy.get('inside_kerala__', 0))
-
-	if not is_actual_daily_batta_without_overnight:
-		if not is_overnight_stay:
-			if total_distance_travelled_km > 100 and total_hours >= 8:
-				if is_travelling_outside_kerala:
-					daily_batta_without_overnight_stay = float(policy.get('outside_kerala', 0))
-				else:
-					daily_batta_without_overnight_stay = float(policy.get('inside_kerala', 0))
-
-	return {
-		"daily_batta_with_overnight_stay": daily_batta_with_overnight_stay,
-		"daily_batta_without_overnight_stay": daily_batta_without_overnight_stay
-	}
-
-@frappe.whitelist()
 def get_batta_policy_values():
 	'''
 		Fetch and return the batta policy values from the 'Batta Policy' doctype
@@ -242,3 +194,60 @@ def get_ot_working_hours(supplier):
 
     # Return a numeric value (float for better accuracy)
     return float(ot_hours or 0)
+
+@frappe.whitelist()
+def get_allowances(doc):
+	doc = frappe._dict(json.loads(doc))
+	batta_policy = frappe.get_all('Batta Policy', filters={'designation': 'Driver'}, fields=['*'])
+	if not batta_policy:
+		return
+
+	policy = batta_policy[0]
+	is_travelling_outside_kerala = doc.is_travelling_outside_kerala
+	is_overnight_stay = doc.is_overnight_stay
+	total_distance_travelled_km = doc.total_distance_travelled_km
+	total_hours = doc.total_hours
+	work_details = doc.work_details
+
+	daily_batta_with_overnight_stay = 0
+	daily_batta_without_overnight_stay = 0
+
+	# Daily Batta Calculation
+	if is_overnight_stay:
+		if is_travelling_outside_kerala:
+			daily_batta_with_overnight_stay = float(policy.get('outside_kerala__', 0))
+		else:
+			daily_batta_with_overnight_stay = float(policy.get('inside_kerala__', 0))
+
+	if not is_overnight_stay:
+		if total_distance_travelled_km > 100 and total_hours >= 8:
+			if is_travelling_outside_kerala:
+				daily_batta_without_overnight_stay = float(policy.get('outside_kerala', 0))
+			else:
+				daily_batta_without_overnight_stay = float(policy.get('inside_kerala', 0))
+
+	batta = daily_batta_with_overnight_stay + daily_batta_without_overnight_stay
+
+	# Food Allowance Calculation
+	for row in work_details:
+		row = frappe._dict(row)
+		food_allowance = {'break_fast': 0, 'lunch': 0, 'dinner': 0}
+		if not is_overnight_stay:
+			is_eligible = False
+			if row.distance_travelled_km >= 50 and row.distance_travelled_km <= 100 and row.total_hours > 6:
+				is_eligible = True
+
+			if is_eligible:
+				food_allowance = get_batta_for_food_allowance('Driver', row.from_date_and_time, row.to_date_and_time, row.total_hours)
+
+		row.breakfast = food_allowance.get('break_fast')
+		row.lunch = food_allowance.get('lunch')
+		row.dinner = food_allowance.get('dinner')
+		row.total_food_allowance = row.breakfast + row.lunch + row.dinner
+
+	return {
+		"daily_batta_with_overnight_stay": daily_batta_with_overnight_stay,
+		"daily_batta_without_overnight_stay": daily_batta_without_overnight_stay,
+		"batta": batta,
+		"work_details": work_details
+	}
