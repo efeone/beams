@@ -77,6 +77,7 @@ def after_install():
 	create_custom_fields(get_purchase_receipt_item_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_team_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_settings_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_hd_agent_custom_fields(), ignore_validate=True)
 	
 	setup_notifications()
 
@@ -264,6 +265,14 @@ def get_hd_ticket_custom_fields():
 				"options":"HD Ticket SubCategory",
 				"insert_after": "ticket_type",
 				"allow_in_quick_entry": 1
+			},
+			{
+				"fieldname": "assigned_agent",
+				"fieldtype": "Link",
+				"label": "Assigned Agent",
+				"options":"HD Agent",
+				"insert_after": "agent_group",
+				"hidden": 1
 			}
 
 		]
@@ -5814,7 +5823,7 @@ def get_hd_team_custom_fields():
 				"fieldname": "escalation_to",
 				"fieldtype": "Table MultiSelect",
 				"label": "Escalation To",
-				"options": "HD Ticket Escalation To",
+				"options": "Ticket Agents",
 				"insert_after": "agents"
 			}
 		]
@@ -5852,6 +5861,22 @@ def get_hd_settings_custom_fields():
 				"label": "Resolution Due Template",
 				"options": "Email Template",
 				"insert_after": "response_due_template"
+			}
+		]
+	}
+
+
+def get_hd_agent_custom_fields():
+	""" 
+		Custom fields that need to be added to the HD Agent DocType
+	"""
+	return {
+		"HD Agent": [
+			{
+				"fieldname": "is_l2_user",
+				"fieldtype": "Check",
+				"label": "Is L2 User",
+				"insert_after": "is_active"
 			}
 		]
 	}

@@ -97,9 +97,6 @@ def assign_ticket_to_agent(ticket_name, agent):
     Assign ticket to a specific agent
     """
 
-    if not frappe.db.exists('HD Agent', {'user': agent, 'is_active': 1}):
-        frappe.throw(f'User {agent} is not an active HD Agent.')
-
     if not frappe.db.exists('HD Ticket', ticket_name):
         frappe.throw(f'Ticket {ticket_name} does not exist.')
 
@@ -121,7 +118,7 @@ def assign_ticket_to_agent(ticket_name, agent):
         'description': 'Ticket assigned to you.',
     })
 
-    frappe.msgprint(f'Ticket {ticket_name} has been assigned to {agent}.')
+    frappe.msgprint(f'Ticket has been assigned to {agent}.')
 
 
 
@@ -136,7 +133,12 @@ def assign_to_current_user(docname, doctype):
         clear_all_assignments(doctype, docname, ignore_permissions=True)
 
         doc.status = 'Replied'
+        doc.assigned_agent = current_user
         doc.save(ignore_permissions=True)
+    
+    doc.status = 'Replied'
+    doc.assigned_agent = current_user
+    doc.save(ignore_permissions=True)
 
     assign_to_user({
         "assign_to": [current_user],
@@ -181,29 +183,29 @@ def process_escalation_notifications():
 
 def send_escalation_notification(ticket_doc, template_name):
     """
-    	Send an escalation email notification to the designated escalation contact for a Helpdesk ticket.
+    Send an escalation email notification to the designated escalation contact 
+    for a Helpdesk ticket.
     """
-    hd_team = ticket_doc.agent_group
-    if not hd_team:
+
+    if not ticket_doc.agent_group:
         return
 
-    escalation_list = frappe.get_all(
-        "HD Ticket Escalation To",
-        filters={"parent": hd_team},
-        pluck="employee"
-    )
+    hd_team = frappe.get_doc("HD Team", ticket_doc.agent_group)
 
-
-    if not escalation_list:
+    escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
+    if not escalation_agent_ids:
         return
 
     user_emails = frappe.db.get_list(
-        "Employee",
-        filters={"name": ["in", escalation_list]},
-        pluck="user_id"
+        "HD Agent",
+        filters={
+            "name": ["in", escalation_agent_ids]
+        },
+        pluck="user"
     )
 
     user_emails = [email for email in user_emails if email]
+
     if not user_emails:
         return
 
@@ -211,10 +213,12 @@ def send_escalation_notification(ticket_doc, template_name):
     subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
     message = frappe.render_template(email_template.response, {"doc": ticket_doc})
 
+
     frappe.sendmail(
-        recipients= user_emails,
+        recipients=user_emails,
         subject=subject,
         message=message,
         reference_doctype="HD Ticket",
         reference_name=ticket_doc.name
     )
+
