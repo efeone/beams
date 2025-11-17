@@ -2,19 +2,22 @@
 # For license information, please see license.txt
 
 import frappe
+import math
 from frappe.model.document import Document
-from frappe.utils import get_datetime, getdate
+from frappe.utils import get_datetime, getdate, flt
 from frappe import _
 from frappe.utils import nowdate
 
 
 class BureauTripSheet(Document):
 	def validate(self):
-		self.calculate_batta()
 		self.calculate_total_distance_travelled()
 		self.calculate_hours()
-		self.calculate_total_daily_batta()
+		self.calculate_daily_batta()
+		self.calculate_batta()
 		self.calculate_total_ot_batta()
+		self.calculate_total_batta()
+		self.calculate_total_daily_batta()
 		self.calculate_total_distance_based_on_odometer()
 
 	def calculate_batta(self):
@@ -80,9 +83,9 @@ class BureauTripSheet(Document):
 		self.total_daily_batta = total_batta
 
 	def calculate_total_ot_batta(self):
-		"""
+		'''
 		Calculate the total OT batta by summing up the 'ot_batta' values from work details.
-		"""
+		'''
 		total_ot_batta = 0
 
 		if self.work_details:
@@ -91,6 +94,82 @@ class BureauTripSheet(Document):
 					total_ot_batta += row.ot_batta
 
 		self.total_ot_batta = total_ot_batta
+
+	def calculate_daily_batta(self):
+		'''
+		Auto creation logic:
+		✔ For Overnight Stay: BATTA (no food allowance) - always applies based on policy
+		✔ For Normal (non-overnight):
+		  - 100+ KM AND >= 8 Hours → BATTA (no food allowance)
+		  - 50 to 100 KM AND >= 6 Hours → Food Allowance
+		  - 100+ KM AND 6 to 8 Hours → Food Allowance
+		  - Else → No Allowance
+		'''
+		self.daily_batta_without_overnight_stay = 0
+		self.daily_batta_with_overnight_stay = 0
+		if not self.get("work_details"):
+			return
+		for row in self.work_details:
+			total_hours = flt(row.total_hours or 0)
+			distance = flt(row.distance_travelled_km or 0)
+			row.number_of_days = max(1, math.ceil(total_hours / 24))
+			row.daily_batta = 0
+			row.breakfast = 0
+			row.lunch = 0
+			row.dinner = 0
+			row.total_food_allowance = 0
+			if self.is_overnight_stay:
+				batta_data = calculate_batta_allowance(
+					designation="Driver",
+					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+					is_overnight_stay=1,
+					total_distance_travelled_km=distance,
+					total_hours=total_hours
+				)
+				parent_daily_batta_value = flt(batta_data.get("daily_batta_with_overnight_stay", 0))
+				if parent_daily_batta_value > 0:
+					self.daily_batta_with_overnight_stay = parent_daily_batta_value
+					row.daily_batta = row.number_of_days * parent_daily_batta_value
+				continue
+			if distance >= 100 and total_hours >= 8:
+				batta_data = calculate_batta_allowance(
+					designation="Driver",
+					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+					is_overnight_stay=0,
+					total_distance_travelled_km=distance,
+					total_hours=total_hours
+				)
+				parent_daily_batta_value = flt(batta_data.get("daily_batta_without_overnight_stay", 0))
+				if parent_daily_batta_value > 0:
+					self.daily_batta_without_overnight_stay = parent_daily_batta_value
+					row.daily_batta = row.number_of_days * parent_daily_batta_value
+				continue
+			elif ((50 <= distance < 100 and total_hours >= 6) or
+				  (distance >= 100 and 6 <= total_hours < 8)):
+				values = get_batta_for_food_allowance(
+					designation="Driver",
+					from_date_time=row.from_date_and_time,
+					to_date_time=row.to_date_and_time,
+					total_hrs=total_hours
+				)
+				row.breakfast = values.get("break_fast", 0)
+				row.lunch = values.get("lunch", 0)
+				row.dinner = values.get("dinner", 0)
+				row.total_food_allowance = flt(row.breakfast) + flt(row.lunch) + flt(row.dinner)
+				continue
+
+	def calculate_total_batta(self):
+		'''
+		Server-side equivalent of JS calculate_total_batta.
+		Calculates total_batta = daily_batta + total_food_allowance for each row.
+		'''
+		if not self.get('work_details'):
+			return
+
+		for row in self.work_details:
+			daily_batta = row.daily_batta or 0
+			food_allowance = row.total_food_allowance or 0
+			row.total_batta = daily_batta + food_allowance
 
 	def on_submit(self):
 		'''
@@ -183,9 +262,9 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
 	total_hours = sanitize_number(total_hours)
 
-	batta_policy = frappe.get_all('Batta Policy', filters={'designation': 'Driver'}, fields=['*'])
+	batta_policy = frappe.get_all('Batta Policy', filters={'designation':'Driver'}, fields=['*'])
 	if not batta_policy:
-		frappe.throw(f"No Batta Policy found for the designation: {designation}")
+		frappe.throw(f"No Batta Policy found for the designation: Driver")
 		return {"batta": 0}
 
 	policy = batta_policy[0]
@@ -229,16 +308,14 @@ def get_batta_policy_values():
 
 @frappe.whitelist()
 def get_ot_working_hours(supplier):
-    """
-    Returns OT working hours based on Supplier or Beams Account Settings.
-    If the supplier has a valid 'ot_working_hours', use that.
-    Otherwise, fall back to 'default_working_hours' from Beams Accounts Settings.
-    """
-    ot_hours = frappe.db.get_value("Supplier", supplier, "ot_working_hours")
+	"""
+	Returns OT working hours based on Supplier or Beams Account Settings.
+	If the supplier has a valid 'ot_working_hours', use that.
+	Otherwise, fall back to 'default_working_hours' from Beams Accounts Settings.
+	"""
+	ot_hours = frappe.db.get_value("Supplier", supplier, "ot_working_hours")
 
-    # Check for None, 0, or empty string
-    if not ot_hours:
-        ot_hours = frappe.db.get_single_value("Beams Accounts Settings", "default_working_hours")
+	if not ot_hours:
+		ot_hours = frappe.db.get_single_value("Beams Accounts Settings", "default_working_hours")
 
-    # Return a numeric value (float for better accuracy)
-    return float(ot_hours or 0)
+	return float(ot_hours or 0)
