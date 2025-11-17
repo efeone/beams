@@ -43,7 +43,9 @@ frappe.ui.form.on('Trip Sheet', {
 		}
 		set_travel_request_filter(frm);
 		filter_employee_field(frm);
-
+		if (!frm.is_new()){
+			add_vehicle_incident_button(frm);
+		}
 	},
 	total_distance_travelled_km: function(frm) {
 		calculate_allowance(frm);
