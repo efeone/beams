@@ -15,29 +15,41 @@ frappe.ui.form.on('HD Ticket', {
         }
     },
 
-    refresh(frm) {
+    refresh: async function(frm) {
+        const current_user = frappe.session.user;
+        const user_roles = frappe.user_roles;
+        const is_admin = current_user === "Administrator" || user_roles.includes("System Manager");
 
-        frappe.call({
-            method: 'frappe.client.get_value',
-            args: {
-                doctype: 'HD Agent',
-                fieldname: 'name',
+        hide_assignment_btn(frm);
+
+        if (frm.doc.status === "Open" || is_admin) {
+            working_button(frm);
+        }
+
+        // Show Transfer/Resolved buttons only if status is Replied or Administrator/System Manager
+        if (frm.doc.status === "Replied" || is_admin) {
+
+            // Fetch all active ToDos for this ticket
+            const todos = await frappe.db.get_list("ToDo", {
+                fields: ["allocated_to"],
                 filters: {
-                    user: frappe.session.user
+                    reference_type: "HD Ticket",
+                    reference_name: frm.doc.name,
+                    status: ["!=", "Cancelled"]
                 }
-            },
-            callback: function(r) {
-                if (r.message && r.message.name) {
-                    working_button(frm);
-                    transfer_ticket(frm);
-                    resolved_button(frm);
-                    add_request_buttons(frm);
-                }
-                hide_assignment_btn(frm);
-            }
-        });
-    },
+            });
 
+            const assigned_users = todos.map(todo => todo.allocated_to);
+            const is_assigned = assigned_users.includes(current_user);
+            if (is_assigned || is_admin) {
+                transfer_ticket(frm);
+                resolved_button(frm);
+                add_request_buttons(frm);
+            } else {
+                frm.disable_form();
+            }
+        }
+    },
     ticket_type(frm) {
         if (!frm.doc.ticket_type) return frm.set_value('agent_group', '');
 
