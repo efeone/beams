@@ -15,41 +15,42 @@ frappe.ui.form.on('HD Ticket', {
         }
     },
 
-    refresh: async function(frm) {
-        const current_user = frappe.session.user;
-        const user_roles = frappe.user_roles;
-        const is_admin = current_user === "Administrator" || user_roles.includes("System Manager");
+    refresh(frm) {
 
-        hide_assignment_btn(frm);
-
-        if (frm.doc.status === "Open" || is_admin) {
-            working_button(frm);
-        }
-
-        // Show Transfer/Resolved buttons only if status is Replied or Administrator/System Manager
-        if (frm.doc.status === "Replied" || is_admin) {
-
-            // Fetch all active ToDos for this ticket
-            const todos = await frappe.db.get_list("ToDo", {
-                fields: ["allocated_to"],
+        frappe.call({
+            method: 'frappe.client.get_value',
+            args: {
+                doctype: 'HD Agent',
+                fieldname: 'name',
                 filters: {
-                    reference_type: "HD Ticket",
-                    reference_name: frm.doc.name,
-                    status: ["!=", "Cancelled"]
+                    user: frappe.session.user
                 }
-            });
+            },
+            callback: function(r) {
+                if (r.message && r.message.name) {
+                   const current_agent = r.message ? r.message.name : null;
+                   const is_l2 = r.message ? r.message.is_l2_user : 0;
 
-            const assigned_users = todos.map(todo => todo.allocated_to);
-            const is_assigned = assigned_users.includes(current_user);
-            if (is_assigned || is_admin) {
-                transfer_ticket(frm);
-                resolved_button(frm);
-                add_request_buttons(frm);
-            } else {
-                frm.disable_form();
+                    if (!current_agent) {
+                        hide_assignment_btn(frm);
+                        return;
+                    }
+
+                    working_button(frm);
+
+                     // Transfer / Resolved logic
+                    if (is_l2 || frm.doc.assigned_agent === current_agent) {
+                        transfer_ticket(frm);
+                        resolved_button(frm);
+                    }
+
+                    add_request_buttons(frm);
+                    hide_assignment_btn(frm);
+                }
             }
-        }
+        });
     },
+
     ticket_type(frm) {
         if (!frm.doc.ticket_type) return frm.set_value('agent_group', '');
 
@@ -58,6 +59,7 @@ frappe.ui.form.on('HD Ticket', {
             .catch(() => frm.set_value('agent_group', ''));
     },
 });
+
 
 
 /**
@@ -95,14 +97,22 @@ function working_button(frm) {
 }
 
 
-
 /**
- * Open dialog to transfer ticket to any HD Agent
- */
+* Open dialog to transfer ticket to any HD Agent
+*/
 function transfer_ticket(frm) {
     if (!['Closed', 'Open'].includes(frm.doc.status)) {
 
-        const btn = frm.add_custom_button(__('Transfer'), () => {
+        const btn = frm.add_custom_button(__('Transfer'), async () => {
+
+            if (!frm.doc.agent_group) {
+                frappe.msgprint(__('Please select a Team (Agent Group) first'));
+                return;
+            }
+
+            // Fetch the HD Team document to get the agents
+            let team = await frappe.db.get_doc('HD Team', frm.doc.agent_group);
+            let agent_users = (team.agents || []).map(a => a.user);
 
             let d = new frappe.ui.Dialog({
                 title: 'Transfer Ticket',
@@ -111,12 +121,18 @@ function transfer_ticket(frm) {
                         label: 'Agent',
                         fieldname: 'agent',
                         fieldtype: 'Link',
-                        options: 'HD Agent'
+                        options: 'HD Agent',
+                        get_query: () => {
+                            return {
+                                filters: {
+                                    user: ['in', agent_users]
+                                }
+                            };
+                        }
                     }
                 ],
                 size: 'small',
                 primary_action_label: 'Assign',
-
                 primary_action(values) {
                     frappe.call({
                         method: 'beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_ticket_to_agent',
@@ -150,6 +166,7 @@ function transfer_ticket(frm) {
         });
     }
 }
+
 
 
 /**
