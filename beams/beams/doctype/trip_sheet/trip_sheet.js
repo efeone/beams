@@ -45,7 +45,12 @@ frappe.ui.form.on('Trip Sheet', {
 		filter_employee_field(frm);
 
 	},
-
+	total_distance_travelled_km: function(frm) {
+		calculate_allowance(frm);
+	},
+	total_hours: function(frm) {
+		calculate_allowance(frm);
+	},
 	onload: function (frm) {
 			// Get Employee linked to current user
 			frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
