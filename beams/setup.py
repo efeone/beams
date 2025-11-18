@@ -5137,7 +5137,7 @@ def get_property_setters():
 			"property": "default",
 			"property_type": "Data",
 			"value": "Material Issue",
-		}
+		},
 ]
 
 def get_material_request_custom_fields():
