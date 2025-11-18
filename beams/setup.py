@@ -5130,6 +5130,14 @@ def get_property_setters():
 			"property": "reqd",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Material Request",
+			"field_name": "material_request_type",
+			"property": "default",
+			"property_type": "Select",
+			"value": "Material Issue"
+		}	
 
 ]
 
