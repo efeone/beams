@@ -5748,7 +5748,17 @@ def get_supplier_quotation_custom_fields():
 				"label": "Suggested Items by Supplier",	
 				"options": "Suggested Items By Supplier",
 				"insert_after": "items"
-   			}
+   			},
+			{
+				"fieldname": "priority",
+				"fieldtype": "Select",
+				"label": "Priority",	
+				"options": "Low\nMedium\nHigh\nUrgent",
+				"default":"Medium",
+				"insert_after": "company",
+				"in_list_view": 1
+   			},
+			   
 		]
 	}
 
