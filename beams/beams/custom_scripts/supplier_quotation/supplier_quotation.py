@@ -5,6 +5,8 @@ from frappe.model.mapper import get_mapped_doc
 
 @frappe.whitelist()
 def make_purchase_order_from_supplier_quotation(source_name, target_doc=None):
+    '''Map Supplier Quotation to Purchase Order including both Items tables.
+        Filters out items without Qty and Rate.'''
     def postprocess(source_doc, target_doc,source_parent):
         target_doc.items = []
         for row in source_doc.get("items", []):
