@@ -5135,10 +5135,9 @@ def get_property_setters():
 			"doc_type": "Material Request",
 			"field_name": "material_request_type",
 			"property": "default",
-			"property_type": "Select",
-			"value": "Material Issue"
-		}	
-
+			"property_type": "Data",
+			"value": "Material Issue",
+		}
 ]
 
 def get_material_request_custom_fields():
