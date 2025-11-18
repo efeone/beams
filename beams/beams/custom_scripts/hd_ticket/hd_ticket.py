@@ -32,6 +32,10 @@ class HDTicketOverride(HDTicket):
 
 		# Fetch all active users from the team
 		active_users = self.get_active_users_from_team(self.agent_group)
+
+		# Clear all previous assignments
+		clear_all_assignments(self.doctype, self.name)
+
 		if not active_users:
 			return
 
