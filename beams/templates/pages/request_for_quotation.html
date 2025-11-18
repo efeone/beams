@@ -52,7 +52,7 @@
             <label class="block text-sm font-medium text-gray-700 mb-1">Rate <span class="text-red-500">*</span></label>
             <div class="flex">
               <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 rounded-l-md">{{ doc.currency_symbol or "₹" }}</span>
-              <input type="number" class="rate-input flex-1 px-3 py-2 border rounded-r-md focus:ring-2 focus:ring-blue-500" placeholder="0.00" step="0.01" onchange="calculateAmount(this)" />
+              <input type="number" value="0.00" class="rate-input flex-1 px-3 py-2 border rounded-r-md focus:ring-2 focus:ring-blue-500" placeholder="0.00" step="0.01" onchange="calculateAmount(this)" />
             </div>
             <small class="text-xs text-gray-500 mt-1 block">Required to include item</small>
           </div>
@@ -227,11 +227,6 @@
   // --- Data Collection - Separate original and suggested items ---
   function getOriginalItemData(card) {
     const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
-    
-    // Only return data if rate is present
-    if (rate <= 0) {
-      return null;
-    }
 
     return {
       item_code: card.dataset.itemCode || null,
@@ -250,12 +245,6 @@
 
   function getSuggestedItemData(card) {
     const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
-    
-    // Only return data if rate is present
-    if (rate <= 0) {
-      return null;
-    }
-
     const qty = parseFloat(card.querySelector(".qty-input")?.value) || 1;
     const amount = qty * rate;
 
@@ -347,11 +336,6 @@
     console.log("Validation data:", data);
     const totalItems = data.items.length + data.suggested_items.length;
     console.log("Total items for validation:", totalItems);
-    
-    if (totalItems === 0) {
-      alert("Please enter a rate for at least one item to submit the quotation.");
-      return false;
-    }
     return true;
   }
 
