@@ -470,9 +470,9 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# "frappe.desk.doctype.event.event.get_events": "beams.event.get_events"
-# }
+override_whitelisted_methods = {
+    "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
