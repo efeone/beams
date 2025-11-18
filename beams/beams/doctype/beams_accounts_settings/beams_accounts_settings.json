@@ -15,9 +15,10 @@
   "tab_break_4hid",
   "default_working_hours",
   "batta_claim_service_item",
+  "batta_payable_account",
   "column_break_jaqb",
   "batta_expense_account",
-  "batta_payable_account",
+  "default_indirect_expense_account",
   "naming_rule_tab",
   "beams_naming_rule",
   "substitute_booking_tab",
@@ -93,7 +94,7 @@
   {
    "fieldname": "batta_expense_account",
    "fieldtype": "Link",
-   "label": "Batta Expense Account",
+   "label": "Default Direct Expense Account",
    "options": "Account"
   },
   {
@@ -143,12 +144,18 @@
    "fieldtype": "Link",
    "label": "Default Trip Sheet Service Item",
    "options": "Item"
+  },
+  {
+   "fieldname": "default_indirect_expense_account",
+   "fieldtype": "Link",
+   "label": "Default Indirect Expense Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-11-11 14:56:31.922654",
+ "modified": "2025-11-18 10:03:19.688942",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

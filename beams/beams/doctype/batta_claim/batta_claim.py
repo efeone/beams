@@ -11,6 +11,8 @@ from frappe.model.document import Document
 class BattaClaim(Document):
     def on_submit(self):
         if self.workflow_state == 'Approved':
+            if not self.expense_type:
+                frappe.throw("Please select Expense Type")
             if self.batta_type == 'External':
                 self.create_purchase_invoice_from_batta_claim()
             elif self.batta_type == 'Internal':
@@ -49,15 +51,21 @@ class BattaClaim(Document):
         journal_entry.batta_claim_reference = self.name
         journal_entry.posting_date = frappe.utils.nowdate()
         batta_payable_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_payable_account')
-        batta_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
-        # Validate that both accounts are set
-        if not batta_payable_account and not batta_expense_account:
-            frappe.throw("Please configure both the Batta Payable Account and the Batta Expense Account in the Beams Accounts Settings.")
+        direct_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'batta_expense_account')
+        indirect_expense_account = frappe.db.get_single_value('Beams Accounts Settings', 'default_indirect_expense_account')
+
         # Validate that both accounts are set
         if not batta_payable_account:
             frappe.throw("Please configure the Batta Payable Account in the Beams Accounts Settings.")
-        if not batta_expense_account:
-            frappe.throw("Please configure the Batta Expense  Account in the Beams Accounts Settings..")
+        if not direct_expense_account:
+            frappe.throw("Default Direct Expense Account is not set in Beams Accounts Settings.")
+        if not indirect_expense_account:
+            frappe.throw("Default Indirect Expense Account is not set in Beams Accounts Settings.")
+
+        if self.expense_type == 'Direct':
+                selected_expense_account = direct_expense_account
+        else:
+                selected_expense_account = indirect_expense_account
 
         journal_entry.append('accounts', {
             'account': batta_payable_account,
@@ -67,12 +75,11 @@ class BattaClaim(Document):
             'credit_in_account_currency': 0,
         })
         journal_entry.append('accounts', {
-            'account': batta_expense_account,
+            'account': selected_expense_account,
             'debit_in_account_currency': 0,
             'credit_in_account_currency': self.total_daily_batta,
         })
         journal_entry.insert()
-        journal_entry.submit()
         frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True,indicator="green")
 
     def calculate_total_distance_travelled(self):

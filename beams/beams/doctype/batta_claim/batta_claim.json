@@ -9,6 +9,7 @@
   "section_break_twbt",
   "amended_from",
   "batta_type",
+  "expense_type",
   "employee",
   "employee_name",
   "supplier",
@@ -279,6 +280,15 @@
    "fieldname": "is_delhi_bureau",
    "fieldtype": "Check",
    "label": "Is Delhi Bureau"
+  },
+  {
+   "depends_on": "eval:doc.workflow_state==\"Pending Approval\"",
+   "fieldname": "expense_type",
+   "fieldtype": "Select",
+   "label": "Expense Type",
+   "mandatory_depends_on": "eval:doc.workflow_state==\"Pending Approval\"",
+   "options": "\nDirect\nIndirect",
+   "permlevel": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -293,7 +303,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-11-18 09:25:07.845171",
+ "modified": "2025-11-18 10:37:46.469811",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
@@ -311,6 +321,30 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Expense Approver",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Expense Approver",
+   "share": 1,
    "write": 1
   }
  ],
