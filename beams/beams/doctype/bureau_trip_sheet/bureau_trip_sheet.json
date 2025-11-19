@@ -244,6 +244,7 @@
   {
    "fieldname": "employees",
    "fieldtype": "Table MultiSelect",
+   "ignore_user_permissions": 1,
    "label": "Employees",
    "options": "Employees"
   },
@@ -258,7 +259,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-11 13:59:02.866885",
+ "modified": "2025-11-19 14:46:18.341478",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
