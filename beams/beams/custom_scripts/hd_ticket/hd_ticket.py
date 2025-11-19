@@ -209,6 +209,8 @@ def send_escalation_notification(ticket_doc, template_name):
 	for a Helpdesk ticket.
 	"""
 
+	instantly_send_email = frappe.db.get_single_value("HD Settings", "instantly_send_email") or 0
+
 	if not ticket_doc.agent_group:
 		return
 
@@ -240,6 +242,17 @@ def send_escalation_notification(ticket_doc, template_name):
 		subject=subject,
 		message=message,
 		reference_doctype="HD Ticket",
-		reference_name=ticket_doc.name
+		reference_name=ticket_doc.name,
+		now=instantly_send_email
 	)
 
+	for email in user_emails:
+		frappe.get_doc({
+			"doctype": "Notification Log",
+			"subject": subject,
+			"for_user": email,
+			"type": "Alert",
+			"document_type": "HD Ticket",
+			"document_name": ticket_doc.name,
+			"email_content": message
+		}).insert(ignore_permissions=True)
