@@ -18,7 +18,17 @@ class HDTicketOverride(HDTicket):
 		'''Extend validate to set agent group automatically.'''
 
 		super().validate()
+		self.set_missing_values()
 		self.set_agent_group()
+
+	def set_missing_values(self):
+		'''Set missing values before saving.'''
+
+		if not self.requested_employee:
+			if frappe.db.exists('Employee', {'user_id': frappe.session.user}):
+				self.requested_employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user})
+		if not self.raised_by:
+			self.raised_by = frappe.session.user
 
 	def handle_assignment_by_team(self):
 		'''Assign ticket to all active agents in the selected agent group.'''
