@@ -23,17 +23,31 @@ frappe.ui.form.on('Trip Sheet', {
 	fuel_consumed: function (frm) {
 		frm.call("calculate_and_validate_fuel_data");
 	},
-
-	refresh: function (frm) {
-		if (!frm.is_new()) {
-			add_vehicle_incident_button(frm);
+	refresh: function(frm) {
+		if (!frm.is_new()&& frm.doc.workflow_state === 'Approved') {
+			frm.add_custom_button(__('Request Batta'), function () {
+				frappe.call({
+					method: "beams.beams.doctype.trip_sheet.trip_sheet.create_batta_request",
+					args: { trip_sheet: frm.doc.name },
+					callback: function (r) {
+						if (!r.message) return;
+						frappe.set_route("Form", "Batta Claim", r.message.name);
+					}
+				});
+			}, __("Create"));
 		}
-
 		set_travel_request_filter(frm);
 		filter_employee_field(frm);
-
+		if (!frm.is_new()){
+			add_vehicle_incident_button(frm);
+		}
 	},
-
+	total_distance_travelled_km: function(frm) {
+		calculate_allowance(frm);
+	},
+	total_hours: function(frm) {
+		calculate_allowance(frm);
+	},
 	onload: function (frm) {
 			// Get Employee linked to current user
 			frappe.db.get_value('Employee', { user_id: frappe.session.user }, 'name')
