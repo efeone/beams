@@ -274,6 +274,26 @@ def get_hd_ticket_custom_fields():
 				"ignore_user_permissions":1,
 				"insert_after": "agent_group",
 				"hidden": 1
+			},
+			{
+				"fieldname": "reports_to",
+				"fieldtype": "Link",
+				"label": "Reports To",
+				"options":"Employee",
+				"fetch_from":"requested_employee.reports_to",
+				"ignore_user_permissions":1,
+				"insert_after": "attach",
+				"read_only": 1
+			},
+			{
+				"fieldname": "reports_to_email",
+				"fieldtype": "Link",
+				"label": "Reports To Email",
+				"options":"User",
+				"fetch_from":"reports_to.user_id",
+				"ignore_user_permissions":1,
+				"insert_after": "reports_to",
+				"read_only": 1
 			}
 
 		]
