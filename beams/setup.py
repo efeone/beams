@@ -242,6 +242,7 @@ def get_hd_ticket_custom_fields():
 				"fieldtype": "Link",
 				"label": "Requested Employee",
 				"options":"Employee",
+				"ignore_user_permissions": 1,
 				"insert_after": "raised_by",
 			},
 			{
@@ -270,6 +271,7 @@ def get_hd_ticket_custom_fields():
 				"fieldtype": "Link",
 				"label": "Assigned Agent",
 				"options":"HD Agent",
+				"ignore_user_permissions":1,
 				"insert_after": "agent_group",
 				"hidden": 1
 			}
