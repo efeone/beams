@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 import frappe
+from frappe import _
 import json
 import re
 from frappe.utils import getdate, get_datetime, date_diff, add_days
@@ -12,7 +13,10 @@ class BattaClaim(Document):
 	def on_submit(self):
 		if self.workflow_state == 'Approved':
 			if not self.expense_type:
-				frappe.throw("Please select Expense Type")
+				frappe.throw(
+					title="Expense Type Required",
+					msg=_("Please select Expense Type")
+				)
 			if self.batta_type == 'External':
 				self.create_purchase_invoice_from_batta_claim()
 			elif self.batta_type == 'Internal':
@@ -56,11 +60,20 @@ class BattaClaim(Document):
 
 		# Validate that both accounts are set
 		if not batta_payable_account:
-			frappe.throw("Please configure the Batta Payable Account in the Beams Accounts Settings.")
+			frappe.throw(
+				title="Batta Payable Account Not Configured",
+				msg=_("Please configure the Batta Payable Account in the Beams Accounts Settings.")
+			)
 		if not direct_expense_account:
-			frappe.throw("Default Direct Expense Account is not set in Beams Accounts Settings.")
+			frappe.throw(
+				title="Direct Expense Account Missing",
+				msg=_("Default Direct Expense Account is not set. Please configure it in Beams Accounts Settings.")
+			)
 		if not indirect_expense_account:
-			frappe.throw("Default Indirect Expense Account is not set in Beams Accounts Settings.")
+			frappe.throw(
+				title="Indirect Expense Account Missing",
+				msg=_("Default Indirect Expense Account is not set in Beams Accounts Settings.")
+			)
 
 		if self.expense_type == 'Direct':
 				selected_expense_account = direct_expense_account
