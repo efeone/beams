@@ -116,15 +116,22 @@ class SubstituteBooking(Document):
 		employee = self.substituting_for
 		if self.substitution_bill_date and employee:
 			for date_entry in self.substitution_bill_date:
-				leave_exists = frappe.db.exists('Leave Application', {
-					'employee': employee,
-					'status': 'Approved',
-					'from_date': ('<=', date_entry.date),
-					'to_date': ('>=', date_entry.date)
-				})
+
+				leave_exists = frappe.db.exists(
+					'Leave Application',
+					{
+						'employee': employee,
+						'status': 'Approved',
+						'from_date': ('<=', date_entry.date),
+						'to_date': ('>=', date_entry.date)
+					}
+				)
+
 				if not leave_exists:
 					formatted_date = date_entry.date.strftime("%d/%m/%Y")
-					frappe.throw(f"Employee {employee} is not on leave on {formatted_date}.")		
+					frappe.throw(
+						f"Employee {employee} is not on leave on {formatted_date}."
+					)
 
 	@frappe.whitelist()
 	def check_leave_application(employee, dates):
