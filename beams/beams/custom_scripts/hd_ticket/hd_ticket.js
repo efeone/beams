@@ -49,6 +49,12 @@ frappe.ui.form.on('HD Ticket', {
                 }
             }
         });
+
+        if (frm.is_new()) {
+		    frm.set_df_property("ticket_subcategory", "hidden", 1)
+		} else {
+		    frm.set_df_property("ticket_subcategory", "hidden", 0)
+		}
     },
 
     ticket_type(frm) {
