@@ -5,7 +5,6 @@ from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket
 
 import frappe
 
-
 class HDTicketOverride(HDTicket):
 
 	def on_update(self):
@@ -30,31 +29,40 @@ class HDTicketOverride(HDTicket):
 		if not frappe.db.exists('HD Team', self.agent_group):
 			return
 
-		# Fetch all active users from the team
-		active_users = self.get_active_users_from_team(self.agent_group)
+		prev_doc = self.get_doc_before_save()
+		do_assign = False
+		if prev_doc and prev_doc.agent_group != self.agent_group:
+			do_assign = True
+			# Clear all previous assignments
+			clear_all_assignments(self.doctype, self.name)
+		elif prev_doc:
+			do_assign = False
+		else:
+			do_assign = True
 
-		# Clear all previous assignments
-		clear_all_assignments(self.doctype, self.name)
+		if do_assign:
+			# Fetch all active users from the team
+			active_users = self.get_active_users_from_team(self.agent_group)
 
-		if not active_users:
-			return
+			if not active_users:
+				return
 
-		# Assign to all active agents
-		for user in active_users:
-			existing_todo = frappe.db.exists('ToDo', {
-				'reference_type': self.doctype,
-				'reference_name': self.name,
-				'owner': user,
-				'status': ['!=', 'Cancelled'],
-			})
-
-			if not existing_todo:
-				assign_to_user({
-					'doctype': self.doctype,
-					'name': self.name,
-					'assign_to': [user],
-					'description': f'You have been assigned a ticket by  team {self.agent_group}',
+			# Assign to all active agents
+			for user in active_users:
+				existing_todo = frappe.db.exists('ToDo', {
+					'reference_type': self.doctype,
+					'reference_name': self.name,
+					'allocated_to': user,
+					'status': ['!=', 'Cancelled'],
 				})
+
+				if not existing_todo:
+					assign_to_user({
+						'doctype': self.doctype,
+						'name': self.name,
+						'assign_to': [user],
+						'description': f'You have been assigned a ticket by  team {self.agent_group}',
+					})
 
 	def get_active_users_from_team(self, team_name):
 		'''Return active users (User IDs) from HD Team based on active HD Agent mapping.'''
@@ -216,7 +224,6 @@ def send_escalation_notification(ticket_doc, template_name):
 	email_template = frappe.get_doc("Email Template", template_name)
 	subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
 	message = frappe.render_template(email_template.response, {"doc": ticket_doc})
-
 
 	frappe.sendmail(
 		recipients=user_emails,
