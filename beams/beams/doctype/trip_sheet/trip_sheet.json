@@ -234,6 +234,7 @@
   {
    "fieldname": "employees",
    "fieldtype": "Table MultiSelect",
+   "ignore_user_permissions": 1,
    "label": "Employees",
    "options": "Employees"
   }
@@ -246,7 +247,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-11-07 11:25:27.747808",
+ "modified": "2025-11-19 14:46:36.960867",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
