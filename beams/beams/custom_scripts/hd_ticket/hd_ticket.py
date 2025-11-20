@@ -163,6 +163,10 @@ def assign_ticket_to_agent(ticket_name, agent):
 		frappe.msgprint(f'Ticket {ticket_name} is already assigned to {agent}.')
 		return
 
+	# Clear previous assignments
+	clear_all_assignments("HD Ticket", ticket_name)
+
+
 	assign_to_user({
 		'doctype': 'HD Ticket',
 		'name': ticket_name,
