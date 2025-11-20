@@ -14,6 +14,10 @@ class HDTicketOverride(HDTicket):
 		if self.agent_group and self.status == 'Open':
 			self.handle_assignment_by_team()
 
+	def before_insert(self):
+		super().before_insert()
+		self.set_missing_values()
+
 	def validate(self):
 		'''Extend validate to set agent group automatically.'''
 
