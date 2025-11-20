@@ -1,7 +1,7 @@
 from frappe.desk.form.assign_to import add as assign_to_user
 from frappe.desk.form.assign_to import clear as clear_all_assignments
 from frappe.utils import now_datetime
-from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket
+from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket, get_customer, is_admin, is_agent
 
 import frappe
 
@@ -299,3 +299,88 @@ def send_escalation_notification(ticket_doc, template_name):
 			"document_name": ticket_doc.name,
 			"email_content": message
 		}).insert(ignore_permissions=True)
+
+def get_permission_query_conditions(user):
+	if not user:
+		user = frappe.session.user
+	if is_admin(user):
+		return
+
+	#  To handle the case for normal users i.e. not agents
+	customer = get_customer(user)
+	query = "(`tabHD Ticket`.owner = {user} OR `tabHD Ticket`.contact = {user} \
+	OR `tabHD Ticket`.raised_by = {user} OR `tabHD Ticket`.raised_for = {user} \
+	OR `tabHD Ticket`.custom_reports_to_email = {user})".format(
+		user=frappe.db.escape(user)
+	)
+	for c in customer:
+		query += " OR `tabHD Ticket`.customer={customer}".format(
+			customer=frappe.db.escape(c)
+		)
+
+	if not is_agent(user):
+		return query
+
+	enable_restrictions = frappe.db.get_single_value(
+		"HD Settings", "restrict_tickets_by_agent_group"
+	)
+	if not enable_restrictions:
+		return  # If not enabled, return all tickets
+
+	show_tickets_without_team = frappe.db.get_single_value(
+		"HD Settings", "do_not_restrict_tickets_without_an_agent_group"
+	)
+
+	teams = get_agents_team()
+
+	if show_tickets_without_team:
+		query += " OR (`tabHD Ticket`.agent_group is null OR `tabHD Ticket`.agent_group = '')"
+
+	# If agent belongs to the team which has ignore_permission set to 1.
+	# that means this team can see all the tickets without any restriction,
+	# Event the other team's tickets.
+	if any(team.get("ignore_restrictions") for team in teams):
+		all_teams = frappe.get_all("HD Team", pluck="name")
+		if not all_teams:
+			return query
+		all_teams = ", ".join(f"'{team}'" for team in all_teams)
+		query += f" OR (`tabHD Ticket`.agent_group in ({all_teams}))".format(
+			all_teams=all_teams
+		)
+		if not show_tickets_without_team:
+			query += " OR (`tabHD Ticket`.agent_group is null)"
+		return query
+
+	query += (
+		" OR (JSON_SEARCH(`tabHD Ticket`._assign, 'all', {user}) IS NOT NULL)".format(
+			user=frappe.db.escape(user)
+		)
+	)
+
+	team_names = [t.get("team_name") for t in teams]
+
+	if not team_names:
+		return query
+
+	# Here we will apply the restriction based on the teams the agent belongs to.
+	team_names = ", ".join(f"'{team}'" for team in team_names)
+	query += f" OR (`tabHD Ticket`.agent_group in ({team_names}))".format(
+		team_names=team_names
+	)
+
+	return query
+
+def get_agents_team():
+	QBTeam = frappe.qb.DocType("HD Team")
+	QBTeamMember = frappe.qb.DocType("HD Team Member")
+	QBEscalationTo = frappe.qb.DocType("Ticket Agents")
+
+	teams = (
+		frappe.qb.from_(QBTeamMember)
+		.where(QBTeamMember.user == frappe.session.user or QBEscalationTo.user == frappe.session.user)
+		.join(QBTeam)
+		.on(QBTeam.name == QBTeamMember.parent)
+		.select(QBTeam.team_name, QBTeam.ignore_restrictions)
+		.run(as_dict=True)
+	)
+	return teams

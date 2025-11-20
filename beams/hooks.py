@@ -156,6 +156,7 @@ permission_query_conditions = {
 	"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions",
 	"Employee Travel Request": "beams.beams.doctype.employee_travel_request.employee_travel_request.get_permission_query_conditions",
 	"Shift Swap Request": "beams.beams.doctype.shift_swap_request.shift_swap_request.get_permission_query_conditions",
+	"HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.get_permission_query_conditions",
 }
 
 # has_permission = {
