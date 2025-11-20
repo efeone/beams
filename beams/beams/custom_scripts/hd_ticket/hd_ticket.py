@@ -111,6 +111,32 @@ class HDTicketOverride(HDTicket):
 		else:
 			self.agent_group = ''
 
+	def after_insert(self):
+		'''After insert event of HD Ticket'''
+
+		super().on_update()
+		self.send_after_insert_notification()
+
+	def send_after_insert_notification(self):
+		if self.agent_group and frappe.db.exists('Notification', { 'enabled':1, 'document_type':'HD Ticket', 'event':'New' }):
+			notification = frappe.db.get_value('Notification', { 'enabled':1, 'document_type':'HD Ticket', 'event':'New' } )
+			subject_template = frappe.db.get_value('Notification', notification, 'subject') or ''
+			message_template = frappe.db.get_value('Notification', notification, 'message') or ''
+			subject = frappe.render_template(subject_template, {"doc": self})
+			message = frappe.render_template(message_template, {"doc": self})
+			# Fetch all L2 users from the team
+			hd_team = frappe.get_doc("HD Team", self.agent_group)
+			escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
+			for email in escalation_agent_ids:
+				frappe.get_doc({
+					"doctype": "Notification Log",
+					"subject": subject,
+					"for_user": email,
+					"type": "Alert",
+					"document_type": "HD Ticket",
+					"document_name": self.name,
+					"email_content": message
+				}).insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
