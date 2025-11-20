@@ -2249,7 +2249,7 @@ def get_voucher_entry_custom_fields():
 				"fieldtype": "Link",
 				"options": "Bureau",
 				"label": "Bureau",
-				"insert_after": "balance"
+				"insert_after": "naming_series"
 			}
 		]
 	}
