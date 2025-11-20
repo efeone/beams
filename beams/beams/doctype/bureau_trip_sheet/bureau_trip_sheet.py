@@ -19,6 +19,7 @@ class BureauTripSheet(Document):
 		self.calculate_total_batta()
 		self.calculate_total_daily_batta()
 		self.calculate_total_distance_based_on_odometer()
+		self.validate_batta_policy()
 
 	def calculate_batta(self):
 		'''
@@ -207,6 +208,28 @@ class BureauTripSheet(Document):
 			)
 			self.db_set("purchase_invoice", pi.name)
 
+	def validate_batta_policy(self):
+		'''
+		Validate that a Driver Batta Policy exists for the supplier's designation.
+		'''
+		if not self.supplier:
+			frappe.throw(title="Supplier Required", msg="Please select a Supplier before saving.")
+
+		designation = frappe.db.get_value("Supplier", self.supplier, "designation")
+
+		if not designation:
+			frappe.throw(title="Designation Missing", msg=f"Designation not set for Supplier: {self.supplier}.")
+
+		policy = frappe.db.exists(
+			"Batta Policy",
+			{"designation": designation}
+		)
+
+		if not policy:
+			frappe.throw(
+				title="Batta Policy Missing",
+				msg=f"No Driver Batta Policy found for designation {designation}. Please create before saving."
+			)
 
 @frappe.whitelist()
 def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):
@@ -264,7 +287,6 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 
 	batta_policy = frappe.get_all('Batta Policy', filters={'designation':'Driver'}, fields=['*'])
 	if not batta_policy:
-		frappe.throw(f"No Batta Policy found for the designation: Driver")
 		return {"batta": 0}
 
 	policy = batta_policy[0]
