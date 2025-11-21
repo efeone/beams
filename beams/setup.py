@@ -2270,7 +2270,7 @@ def get_voucher_entry_custom_fields():
 				"fieldtype": "Link",
 				"options": "Bureau",
 				"label": "Bureau",
-				"insert_after": "balance"
+				"insert_after": "naming_series"
 			}
 		]
 	}
@@ -5158,6 +5158,19 @@ def get_property_setters():
 			"property": "default",
 			"property_type": "Data",
 			"value": "Material Issue",
+		},
+		{
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "fetch_from",
+			"value": "bureau.mode_of_payment"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "fetch_if_empty",
+			"value": 1
 		},
 ]
 
