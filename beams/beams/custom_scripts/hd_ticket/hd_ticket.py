@@ -203,7 +203,7 @@ def assign_to_current_user(docname, doctype):
 		doc.status = 'Replied'
 		doc.assigned_agent = current_user
 		doc.save(ignore_permissions=True)
-	
+
 	doc.status = 'Replied'
 	doc.assigned_agent = current_user
 	doc.save(ignore_permissions=True)
@@ -251,7 +251,7 @@ def process_escalation_notifications():
 
 def send_escalation_notification(ticket_doc, template_name):
 	"""
-	Send an escalation email notification to the designated escalation contact 
+	Send an escalation email notification to the designated escalation contact
 	for a Helpdesk ticket.
 	"""
 
@@ -380,9 +380,14 @@ def get_agents_team():
 
 	teams = (
 		frappe.qb.from_(QBTeamMember)
-		.where(QBTeamMember.user == frappe.session.user or QBEscalationTo.user == frappe.session.user)
+		.where(
+			(QBTeamMember.user == frappe.session.user)
+			| (QBEscalationTo.user == frappe.session.user)
+		)
 		.join(QBTeam)
 		.on(QBTeam.name == QBTeamMember.parent)
+		.join(QBEscalationTo)
+		.on(QBTeam.name == QBEscalationTo.parent)
 		.select(QBTeam.team_name, QBTeam.ignore_restrictions)
 		.run(as_dict=True)
 	)
