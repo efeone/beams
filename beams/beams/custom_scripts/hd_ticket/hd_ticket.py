@@ -14,8 +14,8 @@ class HDTicketOverride(HDTicket):
 		if self.agent_group and self.status == 'Open':
 			self.handle_assignment_by_team()
 
-	def before_insert(self):
-		super().before_insert()
+	def before_save(self):
+		super().before_save()
 		self.set_missing_values()
 
 	def validate(self):
@@ -23,7 +23,6 @@ class HDTicketOverride(HDTicket):
 
 		super().validate()
 		self.set_missing_values()
-		self.set_agent_group()
 
 	def set_missing_values(self):
 		'''Set missing values before saving.'''
@@ -33,6 +32,14 @@ class HDTicketOverride(HDTicket):
 				self.requested_employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user})
 		if not self.raised_by:
 			self.raised_by = frappe.session.user
+		if self.requested_employee:
+			if not self.employee_name:
+				self.employee_name = frappe.db.get_value('Employee', self.requested_employee ,'employee_name')
+			if not self.reports_to:
+				self.reports_to = frappe.db.get_value('Employee', self.requested_employee ,'reports_to')
+			if self.reports_to and not self.reports_to_email:
+				self.reports_to_email = frappe.db.get_value('Employee', self.reports_to ,'reports_to')
+		self.set_agent_group()
 
 	def handle_assignment_by_team(self):
 		'''Assign ticket to all active agents in the selected agent group.'''
@@ -112,8 +119,10 @@ class HDTicketOverride(HDTicket):
 
 		if default_team:
 			self.agent_group = default_team
-		else:
-			self.agent_group = ''
+
+		if self.ticket_type and not self.agent_group:
+			if frappe.db.get_value('HD Ticket Type', self.ticket_type ,'team_name'):
+				self.agent_group = frappe.db.get_value('HD Ticket Type', self.ticket_type ,'team_name')
 
 	def after_insert(self):
 		'''After insert event of HD Ticket'''
