@@ -64,12 +64,12 @@ class EmployeeTravelRequest(Document):
 		if self.reason_for_rejection:
 			frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
-
 	def create_missing_trip_sheets_for_etr(doc):
-		'''
-		Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
-		if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
-		'''
+		"""
+		1.Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
+			if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
+		2. Fetch all the employees into the Trip Sheet from the ETR including the requested_by employee.
+		"""
 		etr_name = doc.name
 
 		linked_ts_rows = frappe.get_all(
@@ -134,10 +134,29 @@ class EmployeeTravelRequest(Document):
 			if "final_odometer" in trip_sheet_columns:
 				ts_data["final_odometer"] = None
 
+			requested_by = frappe.db.get_value(
+				"Employee Travel Request",
+				etr_name,
+				"requested_by"
+			)
+
+			travellers = frappe.get_all(
+				"Traveller",
+				filters={"parent": etr_name},
+				pluck="employee"
+			)
+
+			employees = set(travellers)
+			if requested_by:
+				employees.add(requested_by)
+
+			ts_data["employees"] = [{"employee": emp} for emp in employees]
+
 			if safety_inspection:
 				ts_data["vehicle_template"] = safety_inspection[0].name
 				inspection_doc = frappe.get_doc("Vehicle Safety Inspection", safety_inspection[0].name)
 				ts_data["vehicle_safety_inspection_details"] = []
+
 				for detail in inspection_doc.vehicle_safety_inspection:
 					ts_data["vehicle_safety_inspection_details"].append({
 						"item": detail.item,
@@ -154,6 +173,7 @@ class EmployeeTravelRequest(Document):
 
 			ts = frappe.get_doc(ts_data)
 			ts.insert()
+
 			frappe.msgprint(
 				f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
 				alert=True
