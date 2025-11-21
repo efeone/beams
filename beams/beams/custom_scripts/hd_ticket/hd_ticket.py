@@ -231,7 +231,7 @@ def process_escalation_notifications():
 
 	now = now_datetime()
 	escalation_data = [
-		("response_due_escalation_send", "first_responded_on", "response_by", response_template),
+		("response_due_escalation_send", "assigned_agent", "response_by", response_template),
 		("resolution_due_escalation_send", "resolution_date", "resolution_by", resolution_template)
 	]
 
