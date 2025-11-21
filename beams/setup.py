@@ -5151,7 +5151,6 @@ def get_property_setters():
 			"property": "fetch_if_empty",
 			"value": 1
 		},
-
 ]
 
 def get_material_request_custom_fields():
