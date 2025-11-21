@@ -34,14 +34,14 @@ class HDTicketOverride(HDTicket):
 		if not self.raised_by:
 			self.raised_by = frappe.session.user
 		if self.requested_employee:
-			if frappe.db.get_value('Employee', self.requested_employee ,'employee_name'):
-				self.raised_by = frappe.db.get_value('Employee', self.requested_employee ,'user_id')
+			if frappe.db.get_value('Employee', self.requested_employee , 'user_id'):
+				self.raised_by = frappe.db.get_value('Employee', self.requested_employee , 'user_id')
 			if not self.employee_name:
-				self.employee_name = frappe.db.get_value('Employee', self.requested_employee ,'employee_name')
+				self.employee_name = frappe.db.get_value('Employee', self.requested_employee , 'employee_name')
 			if not self.reports_to:
-				self.reports_to = frappe.db.get_value('Employee', self.requested_employee ,'reports_to')
+				self.reports_to = frappe.db.get_value('Employee', self.requested_employee , 'reports_to')
 			if self.reports_to and not self.reports_to_email:
-				self.reports_to_email = frappe.db.get_value('Employee', self.reports_to ,'user_id')
+				self.reports_to_email = frappe.db.get_value('Employee', self.reports_to , 'user_id')
 		self.set_agent_group()
 
 	def handle_assignment_by_team(self):
