@@ -27,7 +27,6 @@ def after_install():
 	create_custom_fields(get_purchase_order_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
-	create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
@@ -109,7 +108,6 @@ def before_uninstall():
 	delete_custom_fields(get_driver_custom_fields())
 	delete_custom_fields(get_material_request_custom_fields())
 	delete_custom_fields(get_sales_order_custom_fields())
-	delete_custom_fields(get_employee_advance_custom_fields())
 	delete_custom_fields(get_employee_custom_fields())
 	delete_custom_fields(get_journal_entry_custom_fields())
 	delete_custom_fields(get_voucher_entry_custom_fields())
@@ -4079,14 +4077,6 @@ def get_property_setters():
 		},
 		{
 			"doctype_or_field": "DocField",
-			"doc_type": "Employee Advance",
-			"field_name": "purpose",
-			"property": "hidden",
-			"property_type": "Small Text",
-			"value":1
-		},
-		{
-			"doctype_or_field": "DocField",
 			"doc_type": "Purchase Invoice",
 			"field_name": "update_stock",
 			"property": "hidden",
@@ -5308,31 +5298,6 @@ def get_sales_order_custom_fields():
 				"read_only":1,
 				"insert_after": "naming_series"
 			}
-		]
-	}
-
-def get_employee_advance_custom_fields():
-	'''
-	Custom fields that need to be added to the Employee Advance  Doctype
-	'''
-	return {
-		"Employee Advance": [
-			{
-				"fieldname": "purpose",
-				"fieldtype": "Link",
-				"label": "Purpose",
-				"options": "Employee Advance Purpose",
-				"insert_after":"currency"
-			},
-			{
-				"fieldname": "purpose",
-				"fieldtype": "Link",
-				"label": "Purpose",
-				"options": "Employee Advance Purpose",
-				"insert_after": "currency",
-				"reqd": 1
-			}
-
 		]
 	}
 
