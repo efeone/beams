@@ -1,14 +1,12 @@
 frappe.ui.form.on('HD Ticket', {
 	onload(frm) {
 		if (frm.is_new() && !frm.doc.requested_employee) {
-			frappe.db.get_value("Employee", { "user_id": frappe.session.user }, "name")
-				.then(r => {
-					if (r.message && r.message.name) {
-						frm.set_value('requested_employee', r.message.name);
-					}
-				});
+			frappe.db.get_value("Employee", { "user_id": frappe.session.user }, "name").then(r => {
+				if (r.message && r.message.name) {
+					frm.set_value('requested_employee', r.message.name);
+				}
+			});
 		}
-
 		if (frm.is_new() && !frm.doc.raised_by) {
 			frm.set_value('raised_by', frappe.session.user);
 		}
@@ -167,8 +165,6 @@ function transfer_ticket(frm) {
 	}
 }
 
-
-
 /**
  * Set ticket status to Closed
  */
@@ -197,33 +193,17 @@ function resolved_button(frm) {
  * Add Asset Request + Material Request Buttons
  */
 function add_request_buttons(frm) {
+	frm.add_custom_button(__('Asset Request'), () => {
+		frappe.new_doc('Asset Request', {
+			'requested_by': frm.doc.requested_employee
+		});
+	}, __('Create'));
 
-	frappe.call({
-		method: 'frappe.client.get_value',
-		args: {
-			doctype: 'HD Agent',
-			fieldname: 'name',
-			filters: {
-				user: frappe.session.user
-			}
-		},
-		callback: function (r) {
-			if (r.message && r.message.name) {
-
-				frm.add_custom_button(__('Asset Request'), () => {
-					frappe.new_doc('Asset Request', {
-						'requested_by': frm.doc.requested_employee
-					});
-				}, __('Create'));
-
-				frm.add_custom_button(__('Material Request'), () => {
-					frappe.new_doc('Material Request', {
-						'requested_by': frm.doc.requested_employee
-					});
-				}, __('Create'));
-			}
-		}
-	});
+	frm.add_custom_button(__('Material Request'), () => {
+		frappe.new_doc('Material Request', {
+			'requested_by': frm.doc.requested_employee
+		});
+	}, __('Create'));
 }
 
 /**

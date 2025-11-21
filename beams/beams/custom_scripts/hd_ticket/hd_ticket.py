@@ -15,6 +15,10 @@ class HDTicketOverride(HDTicket):
 		if self.agent_group and self.status == 'Open':
 			self.handle_assignment_by_team()
 
+		if self.status == 'Closed':
+			# Clear all assignments on ticket close
+			clear_all_assignments(self.doctype, self.name)
+
 	def before_save(self):
 		super().before_save()
 		self.set_missing_values()
@@ -178,17 +182,13 @@ def assign_ticket_to_agent(ticket_name, agent):
 	# Clear previous assignments
 	clear_all_assignments("HD Ticket", ticket_name)
 
-
 	assign_to_user({
 		'doctype': 'HD Ticket',
 		'name': ticket_name,
 		'assign_to': [agent],
 		'description': 'Ticket assigned to you.',
 	})
-
-	frappe.msgprint(f'Ticket has been assigned to {agent}.')
-
-
+	return {"message": f'Ticket {ticket_name} assigned to {agent}.'}
 
 @frappe.whitelist()
 def assign_to_current_user(docname, doctype):
