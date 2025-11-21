@@ -4,6 +4,7 @@ from frappe.utils import now_datetime
 from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket, get_customer, is_admin, is_agent
 
 import frappe
+import json
 
 class HDTicketOverride(HDTicket):
 
@@ -386,3 +387,64 @@ def get_agents_team():
 		.run(as_dict=True)
 	)
 	return teams
+
+def has_permission(doc, user=None):
+	if not user:
+		user = frappe.session.user
+
+	# Direct access for non-agent users based on same fields used in get_permission_query_conditions
+	if (
+		doc.owner == user
+		or doc.contact == user
+		or doc.raised_by == user
+		or doc.raised_for == user
+		or getattr(doc, "reports_to_email", None) == user
+		or doc.customer in get_customer(user)
+		or is_admin(user)
+	):
+		return True
+
+	# If user is not an agent, same as query builder: they should not see anything else
+	if not is_agent(user):
+		return False
+
+	# Agent restriction settings
+	enable_restrictions = frappe.db.get_single_value(
+		"HD Settings", "restrict_tickets_by_agent_group"
+	)
+	if not enable_restrictions:
+		return True
+
+	show_tickets_without_team = frappe.db.get_single_value(
+		"HD Settings", "do_not_restrict_tickets_without_an_agent_group"
+	)
+
+	# Same logic: if tickets without a team should be visible
+	if show_tickets_without_team and not doc.get("agent_group"):
+		return True
+
+	# Assigned tickets (JSON_SEARCH equivalent)
+	if doc.get("_assign"):
+		try:
+			assignees = json.loads(doc._assign)
+			if user in assignees:
+				return True
+		except Exception as e:
+			frappe.log_error("Error in Has Permission check of HD Ticket", e)
+			return False
+
+	# Agent teams
+	teams = get_agents_team()
+
+	# Same logic: team with ignore_restrictions sees all tickets
+	if any(team.get("ignore_restrictions") for team in teams):
+		return True
+
+	# Collect team names
+	team_names = [t.get("team_name") for t in teams]
+
+	# If user is part of team and ticket belongs to that team, allow
+	if doc.get("agent_group") in team_names:
+		return True
+
+	return False

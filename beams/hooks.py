@@ -159,9 +159,9 @@ permission_query_conditions = {
 	"HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.get_permission_query_conditions",
 }
 
-# has_permission = {
-#
-# }
+has_permission = {
+	"HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.has_permission"
+}
 
 # DocType Class
 # ---------------
