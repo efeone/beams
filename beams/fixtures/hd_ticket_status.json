@@ -1,0 +1,28 @@
+[
+ {
+  "category": "Open",
+  "color": "Blue",
+  "different_view": 0,
+  "docstatus": 0,
+  "doctype": "HD Ticket Status",
+  "enabled": 1,
+  "label_agent": "Working",
+  "label_customer": null,
+  "modified": "2025-11-22 19:20:32.642739",
+  "name": "Working",
+  "order": 3
+ },
+ {
+  "category": "Paused",
+  "color": "purple",
+  "different_view": 0,
+  "docstatus": 0,
+  "doctype": "HD Ticket Status",
+  "enabled": 1,
+  "label_agent": "Hold",
+  "label_customer": null,
+  "modified": "2025-11-22 19:20:26.940481",
+  "name": "Hold",
+  "order": 5
+ }
+]

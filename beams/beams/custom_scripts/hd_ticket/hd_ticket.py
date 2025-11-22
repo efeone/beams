@@ -1,10 +1,11 @@
+import frappe
+import json
+
 from frappe.desk.form.assign_to import add as assign_to_user
 from frappe.desk.form.assign_to import clear as clear_all_assignments
 from frappe.utils import now_datetime
 from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket, get_customer, is_admin, is_agent
-
-import frappe
-import json
+from frappe.utils.user import get_user_fullname
 
 class HDTicketOverride(HDTicket):
 
@@ -160,63 +161,33 @@ class HDTicketOverride(HDTicket):
 
 
 @frappe.whitelist()
-def assign_ticket_to_agent(ticket_name, agent):
+def assign_ticket_to_agent(ticket_id, agent):
 	"""
-	Assign ticket to a specific agent
+		Assign ticket to a specific agent
 	"""
+	notify = 0
+	if agent != frappe.session.user:
+		notify = 1
+	if not frappe.db.exists('HD Ticket', ticket_id):
+		frappe.throw(f'Ticket {ticket_id} does not exist.')
 
-	if not frappe.db.exists('HD Ticket', ticket_name):
-		frappe.throw(f'Ticket {ticket_name} does not exist.')
-
-	todo_exists = frappe.db.exists('ToDo', {
-		'reference_type': 'HD Ticket',
-		'reference_name': ticket_name,
-		'owner': agent,
-		'status': ['!=', 'Cancelled'],
-	})
-
-	if todo_exists:
-		frappe.msgprint(f'Ticket {ticket_name} is already assigned to {agent}.')
-		return
+	ticket_doc = frappe.get_doc('HD Ticket', ticket_id)
+	ticket_doc.status = 'Working'
+	ticket_doc.assigned_agent = agent
+	ticket_doc.assigned_agent_name = frappe.db.get_value('User', agent, 'full_name') or ''
+	ticket_doc.save(ignore_permissions=True)
 
 	# Clear previous assignments
-	clear_all_assignments("HD Ticket", ticket_name)
+	clear_all_assignments('HD Ticket', ticket_id, ignore_permissions=True)
 
 	assign_to_user({
 		'doctype': 'HD Ticket',
-		'name': ticket_name,
+		'name': ticket_id,
 		'assign_to': [agent],
 		'description': 'Ticket assigned to you.',
+		'notify': notify
 	})
-	return {"message": f'Ticket {ticket_name} assigned to {agent}.'}
-
-@frappe.whitelist()
-def assign_to_current_user(docname, doctype):
-	"""Assign ticket to current user if it's Open or Transferred using Document API"""
-	current_user = frappe.session.user
-
-	doc = frappe.get_doc(doctype, docname)
-
-	if doc.status in ['Open', 'Transferred'] and doc.status_category == 'Open':
-		clear_all_assignments(doctype, docname, ignore_permissions=True)
-
-		doc.status = 'Replied'
-		doc.assigned_agent = current_user
-		doc.save(ignore_permissions=True)
-
-	doc.status = 'Replied'
-	doc.assigned_agent = current_user
-	doc.save(ignore_permissions=True)
-
-	assign_to_user({
-		"assign_to": [current_user],
-		"doctype": doctype,
-		"name": docname,
-		"notify": 0
-	})
-
-	return {"message": f"Ticket {docname} assigned to {current_user}"}
-
+	return {"message": f'Ticket {ticket_id} assigned to {agent}.'}
 
 def process_escalation_notifications():
 	"""

@@ -274,6 +274,13 @@ def get_hd_ticket_custom_fields():
 				"hidden": 1
 			},
 			{
+				"fieldname": "assigned_agent_name",
+				"fieldtype": "Data",
+				"label": "Assigned Agent Name",
+				"insert_after": "assigned_agent",
+				"hidden": 1
+			},
+			{
 				"fieldname": "reports_to",
 				"fieldtype": "Link",
 				"label": "Reports To",
@@ -5150,6 +5157,7 @@ def get_property_setters():
 			"value": "Material Issue",
 		},
 		{
+			"doctype_or_field": "DocField",
 			"doc_type": "Voucher Entry",
 			"field_name": "mode_of_payment",
 			"property": "fetch_from",
