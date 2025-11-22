@@ -1,0 +1,41 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"HGm0aWWSd-\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">Ticket</span>\",\"col\":12}},{\"id\":\"7xhmgaoB-z\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Ticket Summary\",\"col\":12}}]",
+ "creation": "2025-11-22 17:54:26.682582",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Ticket Summary",
+   "label": "Ticket Summary"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "support",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "Ticket",
+ "links": [],
+ "modified": "2025-11-22 17:56:17.456197",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Ticket",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Agent"
+  },
+  {
+   "role": "Agent Manager"
+  }
+ ],
+ "sequence_id": 5.0,
+ "shortcuts": [],
+ "title": "Ticket"
+}
