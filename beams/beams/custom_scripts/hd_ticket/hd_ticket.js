@@ -31,12 +31,14 @@ frappe.ui.form.on('HD Ticket', {
 						return;
 					}
 
-					working_button(frm);
+					add_working_button(frm);
+					add_reopen_button(frm);
+					add_hold_button(frm);
 
 					// Transfer / Resolved logic
 					if (is_l2 || frm.doc.assigned_agent === current_agent) {
-						transfer_ticket(frm);
-						resolved_button(frm);
+						add_transfer_button(frm);
+						add_resolved_button(frm);
 					}
 
 					add_request_buttons(frm);
@@ -61,22 +63,22 @@ frappe.ui.form.on('HD Ticket', {
 });
 
 
-/**
- * Assign ticket to current user if status is Open or Transferred
+/*
+* Assign ticket to current user on clicking Accept Button
  */
-function working_button(frm) {
-	if (['Open', 'Transferred'].includes(frm.doc.status)) {
-		const btn = frm.add_custom_button(__('Working'), () => {
+function add_working_button(frm) {
+	if (frm.doc.status == 'Open') {
+		const btn = frm.add_custom_button(__('Accept'), () => {
 			frappe.call({
-				method: "beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_to_current_user",
+				method: "beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_ticket_to_agent",
 				args: {
-					docname: frm.doc.name,
-					doctype: frm.doc.doctype
+					ticket_id: frm.doc.name,
+					agent: frappe.session.user
 				},
 				callback: function (r) {
-					if (!r.exc) {
+					if (r && r.message) {
 						frappe.show_alert({
-							message: __('Ticket assigned to you'),
+							message: __(r.message),
 							indicator: 'green'
 						});
 						frm.reload_doc();
@@ -98,16 +100,13 @@ function working_button(frm) {
 /**
 * Open dialog to transfer ticket to any HD Agent
 */
-function transfer_ticket(frm) {
-	if (!['Closed', 'Open'].includes(frm.doc.status)) {
-
+function add_transfer_button(frm) {
+	if (frm.doc.status == 'Working') {
 		const btn = frm.add_custom_button(__('Transfer'), async () => {
-
 			if (!frm.doc.agent_group) {
 				frappe.msgprint(__('Please select a Team (Agent Group) first'));
 				return;
 			}
-
 			// Fetch the HD Team document to get the agents
 			let team = await frappe.db.get_doc('HD Team', frm.doc.agent_group);
 			let agent_users = (team.agents || []).map(a => a.user);
@@ -135,7 +134,7 @@ function transfer_ticket(frm) {
 					frappe.call({
 						method: 'beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_ticket_to_agent',
 						args: {
-							ticket_name: frm.doc.name,
+							ticket_id: frm.doc.name,
 							agent: values.agent
 						},
 						callback: function (r) {
@@ -144,8 +143,7 @@ function transfer_ticket(frm) {
 									message: __('Ticket transferred successfully'),
 									indicator: 'orange'
 								});
-								frm.set_value('status', 'Transferred');
-								frm.save().then(() => frm.reload_doc());
+								frm.reload_doc();
 							}
 						}
 					});
@@ -168,8 +166,8 @@ function transfer_ticket(frm) {
 /**
  * Set ticket status to Closed
  */
-function resolved_button(frm) {
-	if (!['Closed', 'Open'].includes(frm.doc.status)) {
+function add_resolved_button(frm) {
+	if (!['Closed', 'Open', 'Hold'].includes(frm.doc.status)) {
 
 		const btn = frm.add_custom_button(__('Resolved'), () => {
 			frm.set_value('status', 'Closed');
@@ -188,6 +186,68 @@ function resolved_button(frm) {
 	}
 }
 
+/**
+ * Set ticket status to Hold
+ */
+function add_hold_button(frm) {
+	if (!['Closed', 'Hold'].includes(frm.doc.status)) {
+		const btn = frm.add_custom_button(__('Hold'), () => {
+			frm.set_value('status', 'Hold');
+			frm.save().then(() => {
+				frappe.show_alert({
+					message: __('Ticket Hold successfully'),
+					indicator: 'green'
+				});
+				frm.reload_doc();
+			});
+
+		});
+
+		btn.css({
+			backgroundColor: '#e303fc',
+			color: 'white',
+			border: 'none',
+			fontWeight: '500'
+		});
+	}
+}
+
+/**
+ * Option to Re-Open the Closed Ticket
+ */
+function add_reopen_button(frm) {
+	if (['Closed', 'Hold'].includes(frm.doc.status)) {
+		const btn = frm.add_custom_button(__('Re-Open'), () => {
+			frm.set_value('status', 'Open');
+			frm.save().then(() => {
+				frappe.call({
+					method: 'beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_ticket_to_agent',
+					args: {
+						ticket_id: frm.doc.name,
+						agent: frappe.session.user
+					},
+					callback: function (r) {
+						if (!r.exc) {
+							frappe.show_alert({
+								message: __('Ticket Re-Opened successfully'),
+								indicator: 'green'
+							});
+							frm.reload_doc();
+						}
+					}
+				});
+			});
+
+		});
+
+		btn.css({
+			backgroundColor: '#f23346',
+			color: 'white',
+			border: 'none',
+			fontWeight: '500'
+		});
+	}
+}
 
 /**
  * Add Asset Request + Material Request Buttons

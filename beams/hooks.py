@@ -565,5 +565,16 @@ fixtures = [
 				],
 			]
 		],
+		"dt": "HD Ticket Status",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"Hold",
+					"Working",
+				],
+			]
+		],
 	}
 ]
