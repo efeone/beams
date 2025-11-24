@@ -283,7 +283,7 @@ def get_permission_query_conditions(user):
 	#  To handle the case for normal users i.e. not agents
 	customer = get_customer(user)
 	query = "(`tabHD Ticket`.owner = {user} OR `tabHD Ticket`.contact = {user} \
-	OR `tabHD Ticket`.raised_by = {user} OR `tabHD Ticket`.raised_for = {user} \
+	OR `tabHD Ticket`.raised_by = {user} \
 	OR `tabHD Ticket`.reports_to_email = {user})".format(
 		user=frappe.db.escape(user)
 	)
@@ -373,7 +373,6 @@ def has_permission(doc, user=None):
 		doc.owner == user
 		or doc.contact == user
 		or doc.raised_by == user
-		or doc.raised_for == user
 		or getattr(doc, "reports_to_email", None) == user
 		or doc.customer in get_customer(user)
 		or is_admin(user)
