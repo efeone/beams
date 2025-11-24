@@ -8,6 +8,7 @@
  "field_order": [
   "product_name",
   "quantity",
+  "item_code",
   "column_break_bnog",
   "rate",
   "uom",
@@ -65,19 +66,28 @@
   {
    "fieldname": "section_break_myob",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "item_code",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Item Code",
+   "options": "Item",
+   "reqd": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-09-01 09:41:31.945187",
+ "modified": "2025-11-17 16:58:44.236800",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Suggested Items By Supplier",
  "owner": "Administrator",
  "permissions": [],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -10,6 +10,8 @@
   "bureau_name",
   "cost_center",
   "amended_from",
+  "mode_of_payment",
+  "column_break_xpwx",
   "company",
   "location"
  ],
@@ -53,11 +55,21 @@
    "fieldtype": "Link",
    "label": "Location ",
    "options": "Location"
+  },
+  {
+   "fieldname": "mode_of_payment",
+   "fieldtype": "Link",
+   "label": "Mode of Payment ",
+   "options": "Mode of Payment"
+  },
+  {
+   "fieldname": "column_break_xpwx",
+   "fieldtype": "Column Break"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-01-18 11:38:59.252359",
+ "modified": "2025-11-19 09:58:28.027679",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
@@ -77,6 +89,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

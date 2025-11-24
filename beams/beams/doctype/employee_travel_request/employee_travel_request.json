@@ -15,6 +15,7 @@
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
+  "is_management_employee",
   "travel_details_section",
   "travel_type",
   "batta_policy",
@@ -27,6 +28,7 @@
   "start_date",
   "end_date",
   "total_days",
+  "remarks",
   "expected_check_in_time",
   "expected_check_out_time",
   "amended_from",
@@ -246,6 +248,18 @@
    "label": "Journal Entry Expenses Table",
    "options": "Journal Entry Expenses",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_management_employee",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "Is Management Employee"
+  },
+  {
+   "fieldname": "remarks",
+   "fieldtype": "Small Text",
+   "label": "Remarks"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -264,7 +278,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-10-16 09:53:04.933813",
+ "modified": "2025-11-04 15:27:48.573167",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

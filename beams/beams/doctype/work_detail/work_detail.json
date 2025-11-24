@@ -55,7 +55,6 @@
    "read_only": 1
   },
   {
-   "description": "Daily Batta Without Food Allowance",
    "fieldname": "daily_batta",
    "fieldtype": "Currency",
    "in_list_view": 1,
@@ -86,18 +85,16 @@
   {
    "columns": 1,
    "fieldname": "origin",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Origin",
-   "options": "Location"
+   "label": "Origin"
   },
   {
    "columns": 1,
    "fieldname": "destination",
-   "fieldtype": "Link",
+   "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Destination ",
-   "options": "Location"
+   "label": "Destination "
   },
   {
    "columns": 2,
@@ -185,12 +182,14 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-03-26 11:50:57.516655",
+ "modified": "2025-11-19 14:40:30.451617",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Work Detail",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

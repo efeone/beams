@@ -30,6 +30,7 @@ class EmployeeTravelRequest(Document):
 
 	def before_save(self):
 		self.validate_posting_date()
+		self.check_management_employee()
 		if not self.requested_by:
 			return
 
@@ -63,12 +64,12 @@ class EmployeeTravelRequest(Document):
 		if self.reason_for_rejection:
 			frappe.throw(title="Approval Error", msg="You cannot approve this request if 'Reason for Rejection' is filled.")
 
-
 	def create_missing_trip_sheets_for_etr(doc):
-		'''
-		Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
-		if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
-		'''
+		"""
+		1.Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
+			if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
+		2. Fetch all the employees into the Trip Sheet from the ETR including the requested_by employee.
+		"""
 		etr_name = doc.name
 
 		linked_ts_rows = frappe.get_all(
@@ -133,10 +134,29 @@ class EmployeeTravelRequest(Document):
 			if "final_odometer" in trip_sheet_columns:
 				ts_data["final_odometer"] = None
 
+			requested_by = frappe.db.get_value(
+				"Employee Travel Request",
+				etr_name,
+				"requested_by"
+			)
+
+			travellers = frappe.get_all(
+				"Traveller",
+				filters={"parent": etr_name},
+				pluck="employee"
+			)
+
+			employees = set(travellers)
+			if requested_by:
+				employees.add(requested_by)
+
+			ts_data["employees"] = [{"employee": emp} for emp in employees]
+
 			if safety_inspection:
 				ts_data["vehicle_template"] = safety_inspection[0].name
 				inspection_doc = frappe.get_doc("Vehicle Safety Inspection", safety_inspection[0].name)
 				ts_data["vehicle_safety_inspection_details"] = []
+
 				for detail in inspection_doc.vehicle_safety_inspection:
 					ts_data["vehicle_safety_inspection_details"].append({
 						"item": detail.item,
@@ -153,6 +173,7 @@ class EmployeeTravelRequest(Document):
 
 			ts = frappe.get_doc(ts_data)
 			ts.insert()
+
 			frappe.msgprint(
 				f"Trip Sheet <a href='/app/trip-sheet/{ts.name}'>{ts.name}</a> created for Vehicle {vehicle} with Driver {driver}",
 				alert=True
@@ -358,6 +379,27 @@ class EmployeeTravelRequest(Document):
 			end_date = self.end_date if isinstance(self.end_date, datetime) else datetime.strptime(self.end_date, "%Y-%m-%d %H:%M:%S")
 
 			self.total_days = 1 if start_date.date() == end_date.date() else (end_date.date() - start_date.date()).days + 1
+
+	def check_management_employee(self):
+		"""
+		Set is_management_employee to 1 if the requested_by employee's user has
+		the Management role or the custom role defined in BEAMS Admin Settings.
+		"""
+
+		self.is_management_employee = 0
+
+		employee_user = frappe.db.get_value("Employee", self.requested_by, "user_id")
+		if not employee_user:
+			return
+
+		role_to_check = frappe.db.get_value(
+			"BEAMS Admin Settings", "BEAMS Admin Settings", "management_user_role"
+		) or "Management"
+
+
+		if frappe.db.exists("Has Role", {"parent": employee_user, "role": role_to_check}):
+			self.is_management_employee = 1
+
 
 
 @frappe.whitelist()

@@ -1,7 +1,7 @@
 # Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 import frappe
-from frappe.model.document import Document
+from frappe.model.document import Document, flt
 from frappe.utils import get_datetime
 from frappe.utils import today
 from frappe import _
@@ -204,6 +204,42 @@ def create_vehicle_incident_record(trip_sheet):
 	}
 
 	return vehicle_incident_data
+
+@frappe.whitelist()
+def create_batta_request(trip_sheet):
+    """
+    Creates a new Batta Claim for the given Trip Sheet or returns existing one.
+    Automatically calculates daily batta or food allowance.
+    """
+    trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
+    existing_bc = frappe.db.exists("Batta Claim", {"trip_sheet": trip_sheet_doc.name})
+    if existing_bc:
+        return {"status": "exists", "name": existing_bc}
+    employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+    trip_details = trip_sheet_doc.get("trip_details")
+    first_trip = trip_details[0]
+    last_trip = trip_details[-1]
+    batta_claim = frappe.new_doc("Batta Claim")
+    batta_claim.trip_sheet = trip_sheet_doc.name
+    batta_claim.employee = employee
+    batta_claim.origin = first_trip.departure
+    batta_claim.destination = last_trip.destination
+    for row in trip_details:
+        batta_claim.append("work_detail", {
+            "origin": row.departure,
+            "destination": row.destination,
+            "from_date_and_time": row.from_time,
+            "to_date_and_time": row.to_time,
+            "distance_travelled_km": row.distance_traveled,
+            "total_hours": row.hrs
+        })
+    batta_claim.insert(ignore_permissions=True)
+    batta_claim.save(ignore_permissions=True)
+
+    return {
+        "status": "new",
+        "name": batta_claim.name
+    }
 
 @frappe.whitelist()
 def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):

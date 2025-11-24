@@ -27,7 +27,6 @@ def after_install():
 	create_custom_fields(get_purchase_order_custom_fields(),ignore_validate=True)
 	create_custom_fields(get_material_request_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_sales_order_custom_fields(), ignore_validate=True)
-	create_custom_fields(get_employee_advance_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_journal_entry_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_voucher_entry_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_contract_custom_fields(),ignore_validate=True)
@@ -77,6 +76,7 @@ def after_install():
 	create_custom_fields(get_purchase_receipt_item_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_team_custom_fields(), ignore_validate=True)
 	create_custom_fields(get_hd_settings_custom_fields(), ignore_validate=True)
+	create_custom_fields(get_hd_agent_custom_fields(), ignore_validate=True)
 	
 	setup_notifications()
 
@@ -108,7 +108,6 @@ def before_uninstall():
 	delete_custom_fields(get_driver_custom_fields())
 	delete_custom_fields(get_material_request_custom_fields())
 	delete_custom_fields(get_sales_order_custom_fields())
-	delete_custom_fields(get_employee_advance_custom_fields())
 	delete_custom_fields(get_employee_custom_fields())
 	delete_custom_fields(get_journal_entry_custom_fields())
 	delete_custom_fields(get_voucher_entry_custom_fields())
@@ -241,6 +240,7 @@ def get_hd_ticket_custom_fields():
 				"fieldtype": "Link",
 				"label": "Requested Employee",
 				"options":"Employee",
+				"ignore_user_permissions": 1,
 				"insert_after": "raised_by",
 			},
 			{
@@ -256,6 +256,49 @@ def get_hd_ticket_custom_fields():
 				"label": "Resolution Due Escalation Send",
 				"read_only": 1,
 				"insert_after": "user_resolution_time"
+			},
+			{
+				"fieldname": "ticket_subcategory",
+				"fieldtype": "Link",
+				"label": "Ticket Subcategory",
+				"options":"HD Ticket SubCategory",
+				"insert_after": "ticket_type"
+			},
+			{
+				"fieldname": "assigned_agent",
+				"fieldtype": "Link",
+				"label": "Assigned Agent",
+				"options":"HD Agent",
+				"ignore_user_permissions":1,
+				"insert_after": "agent_group",
+				"hidden": 1
+			},
+			{
+				"fieldname": "assigned_agent_name",
+				"fieldtype": "Data",
+				"label": "Assigned Agent Name",
+				"insert_after": "assigned_agent",
+				"hidden": 1
+			},
+			{
+				"fieldname": "reports_to",
+				"fieldtype": "Link",
+				"label": "Reports To",
+				"options":"Employee",
+				"fetch_from":"requested_employee.reports_to",
+				"ignore_user_permissions":1,
+				"insert_after": "attach",
+				"read_only": 1
+			},
+			{
+				"fieldname": "reports_to_email",
+				"fieldtype": "Link",
+				"label": "Reports To Email",
+				"options":"User",
+				"fetch_from":"reports_to.user_id",
+				"ignore_user_permissions":1,
+				"insert_after": "reports_to",
+				"read_only": 1
 			}
 
 		]
@@ -1735,6 +1778,13 @@ def get_supplier_custom_fields():
 				"insert_after": "is_transporter",
 				"depends_on": "eval:doc.is_transporter == 1"
 
+			},
+			{
+				"fieldname": "ot_working_hours",
+				"fieldtype": "Float",
+				"label": "OT Working Hours",
+				"insert_after": "ot_batta",
+				"depends_on": "eval:doc.is_transporter == 1"
 			}
 		]
 	}
@@ -2225,7 +2275,7 @@ def get_voucher_entry_custom_fields():
 				"fieldtype": "Link",
 				"options": "Bureau",
 				"label": "Bureau",
-				"insert_after": "balance"
+				"insert_after": "naming_series"
 			}
 		]
 	}
@@ -4034,14 +4084,6 @@ def get_property_setters():
 		},
 		{
 			"doctype_or_field": "DocField",
-			"doc_type": "Employee Advance",
-			"field_name": "purpose",
-			"property": "hidden",
-			"property_type": "Small Text",
-			"value":1
-		},
-		{
-			"doctype_or_field": "DocField",
 			"doc_type": "Purchase Invoice",
 			"field_name": "update_stock",
 			"property": "hidden",
@@ -5092,7 +5134,42 @@ def get_property_setters():
 			"property": "hidden",
 			"value": 1
 		},
-
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "users",
+			"property": "hidden",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team Member",
+			"field_name": "user",
+			"property": "reqd",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Material Request",
+			"field_name": "material_request_type",
+			"property": "default",
+			"property_type": "Data",
+			"value": "Material Issue",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "fetch_from",
+			"value": "bureau.mode_of_payment"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "fetch_if_empty",
+			"value": 1
+		},
 ]
 
 def get_material_request_custom_fields():
@@ -5229,31 +5306,6 @@ def get_sales_order_custom_fields():
 				"read_only":1,
 				"insert_after": "naming_series"
 			}
-		]
-	}
-
-def get_employee_advance_custom_fields():
-	'''
-	Custom fields that need to be added to the Employee Advance  Doctype
-	'''
-	return {
-		"Employee Advance": [
-			{
-				"fieldname": "purpose",
-				"fieldtype": "Link",
-				"label": "Purpose",
-				"options": "Employee Advance Purpose",
-				"insert_after":"currency"
-			},
-			{
-				"fieldname": "purpose",
-				"fieldtype": "Link",
-				"label": "Purpose",
-				"options": "Employee Advance Purpose",
-				"insert_after": "currency",
-				"reqd": 1
-			}
-
 		]
 	}
 
@@ -5427,7 +5479,18 @@ def get_beams_roles():
 	'''
 		Method to get BEAMS specific roles
 	'''
-	return ['Production Manager', 'CEO', 'Company Secretary', 'HOD','Enquiry Officer','Enquiry Manager','Shift Publisher','Program Producer','Operations Head','Operations User','Admin','Driver','Budget User','Technical Store Head','Budget Verifier','Budget Verifier Finance','Budget Approver','Admin User','Bureau User','Coordinating Editor','News Coordinator','Security','Reporter','Salary Increment Approver','Front Desk User', 'Asset Manager', 'Asset User']
+	return [
+        'Production Manager', 'CEO', 'Company Secretary',
+        'HOD','Enquiry Officer','Enquiry Manager',
+        'Shift Publisher','Program Producer','Operations Head',
+        'Operations User','Admin','Driver',
+        'Budget User','Technical Store Head','Budget Verifier',
+        'Budget Verifier Finance','Budget Approver','Admin User',
+        'Bureau User','Coordinating Editor','News Coordinator',
+        'Security','Reporter','Salary Increment Approver',
+        'Front Desk User', 'Asset Manager', 'Asset User',
+        'Management', 'Expense Approver'
+    ]
 
 def get_custom_translations():
 	'''
@@ -5710,7 +5773,17 @@ def get_supplier_quotation_custom_fields():
 				"label": "Suggested Items by Supplier",	
 				"options": "Suggested Items By Supplier",
 				"insert_after": "items"
-   			}
+   			},
+			{
+				"fieldname": "priority",
+				"fieldtype": "Select",
+				"label": "Priority",	
+				"options": "Low\nMedium\nHigh\nUrgent",
+				"default":"Medium",
+				"insert_after": "company",
+				"in_list_view": 1
+   			},
+			   
 		]
 	}
 
@@ -5785,7 +5858,7 @@ def get_hd_team_custom_fields():
 				"fieldname": "escalation_to",
 				"fieldtype": "Table MultiSelect",
 				"label": "Escalation To",
-				"options": "HD Ticket Escalation To",
+				"options": "Ticket Agents",
 				"insert_after": "agents"
 			}
 		]
@@ -5823,6 +5896,22 @@ def get_hd_settings_custom_fields():
 				"label": "Resolution Due Template",
 				"options": "Email Template",
 				"insert_after": "response_due_template"
+			}
+		]
+	}
+
+
+def get_hd_agent_custom_fields():
+	""" 
+		Custom fields that need to be added to the HD Agent DocType
+	"""
+	return {
+		"HD Agent": [
+			{
+				"fieldname": "is_l2_user",
+				"fieldtype": "Check",
+				"label": "Is L2 User",
+				"insert_after": "is_active"
 			}
 		]
 	}

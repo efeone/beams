@@ -216,7 +216,11 @@ fields_to_remove = [
 	{
 		'dt':'Employee',
 		'fieldname': 'are_you_related_to_employee'
-	}
+	},
+	{
+		'dt':'Employee Advance',
+		'fieldname': 'purpose'
+	},
 ]
 
 def execute():

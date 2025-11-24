@@ -1,10 +1,11 @@
+import frappe
+import json
+
 from frappe.desk.form.assign_to import add as assign_to_user
 from frappe.desk.form.assign_to import clear as clear_all_assignments
 from frappe.utils import now_datetime
-from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket
-
-import frappe
-
+from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket, get_customer, is_admin, is_agent
+from frappe.utils.user import get_user_fullname
 
 class HDTicketOverride(HDTicket):
 
@@ -15,10 +16,37 @@ class HDTicketOverride(HDTicket):
 		if self.agent_group and self.status == 'Open':
 			self.handle_assignment_by_team()
 
+		if self.status == 'Closed':
+			# Clear all assignments on ticket close
+			clear_all_assignments(self.doctype, self.name)
+
+	def before_save(self):
+		super().before_save()
+		self.set_missing_values()
+
 	def validate(self):
 		'''Extend validate to set agent group automatically.'''
 
 		super().validate()
+		self.set_missing_values()
+
+	def set_missing_values(self):
+		'''Set missing values before saving.'''
+
+		if not self.requested_employee:
+			if frappe.db.exists('Employee', {'user_id': frappe.session.user}):
+				self.requested_employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user})
+		if not self.raised_by:
+			self.raised_by = frappe.session.user
+		if self.requested_employee:
+			if frappe.db.get_value('Employee', self.requested_employee , 'user_id'):
+				self.raised_by = frappe.db.get_value('Employee', self.requested_employee , 'user_id')
+			if not self.employee_name:
+				self.employee_name = frappe.db.get_value('Employee', self.requested_employee , 'employee_name')
+			if not self.reports_to:
+				self.reports_to = frappe.db.get_value('Employee', self.requested_employee , 'reports_to')
+			if self.reports_to and not self.reports_to_email:
+				self.reports_to_email = frappe.db.get_value('Employee', self.reports_to , 'user_id')
 		self.set_agent_group()
 
 	def handle_assignment_by_team(self):
@@ -30,27 +58,40 @@ class HDTicketOverride(HDTicket):
 		if not frappe.db.exists('HD Team', self.agent_group):
 			return
 
-		# Fetch all active users from the team
-		active_users = self.get_active_users_from_team(self.agent_group)
-		if not active_users:
-			return
+		prev_doc = self.get_doc_before_save()
+		do_assign = False
+		if prev_doc and prev_doc.agent_group != self.agent_group:
+			do_assign = True
+			# Clear all previous assignments
+			clear_all_assignments(self.doctype, self.name)
+		elif prev_doc:
+			do_assign = False
+		else:
+			do_assign = True
 
-		# Assign to all active agents
-		for user in active_users:
-			existing_todo = frappe.db.exists('ToDo', {
-				'reference_type': self.doctype,
-				'reference_name': self.name,
-				'owner': user,
-				'status': ['!=', 'Cancelled'],
-			})
+		if do_assign:
+			# Fetch all active users from the team
+			active_users = self.get_active_users_from_team(self.agent_group)
 
-			if not existing_todo:
-				assign_to_user({
-					'doctype': self.doctype,
-					'name': self.name,
-					'assign_to': [user],
-					'description': f'You have been assigned a ticket by  team {self.agent_group}',
+			if not active_users:
+				return
+
+			# Assign to all active agents
+			for user in active_users:
+				existing_todo = frappe.db.exists('ToDo', {
+					'reference_type': self.doctype,
+					'reference_name': self.name,
+					'allocated_to': user,
+					'status': ['!=', 'Cancelled'],
 				})
+
+				if not existing_todo:
+					assign_to_user({
+						'doctype': self.doctype,
+						'name': self.name,
+						'assign_to': [user],
+						'description': f'You have been assigned a ticket by  team {self.agent_group}',
+					})
 
 	def get_active_users_from_team(self, team_name):
 		'''Return active users (User IDs) from HD Team based on active HD Agent mapping.'''
@@ -86,135 +127,299 @@ class HDTicketOverride(HDTicket):
 
 		if default_team:
 			self.agent_group = default_team
-		else:
-			self.agent_group = ''
 
+		if self.ticket_type and not self.agent_group:
+			if frappe.db.get_value('HD Ticket Type', self.ticket_type ,'team_name'):
+				self.agent_group = frappe.db.get_value('HD Ticket Type', self.ticket_type ,'team_name')
 
+	def after_insert(self):
+		'''After insert event of HD Ticket'''
 
-@frappe.whitelist()
-def assign_ticket_to_agent(ticket_name, agent):
-    """
-    Assign ticket to a specific agent
-    """
+		super().on_update()
+		self.send_after_insert_notification()
 
-    if not frappe.db.exists('HD Agent', {'user': agent, 'is_active': 1}):
-        frappe.throw(f'User {agent} is not an active HD Agent.')
-
-    if not frappe.db.exists('HD Ticket', ticket_name):
-        frappe.throw(f'Ticket {ticket_name} does not exist.')
-
-    todo_exists = frappe.db.exists('ToDo', {
-        'reference_type': 'HD Ticket',
-        'reference_name': ticket_name,
-        'owner': agent,
-        'status': ['!=', 'Cancelled'],
-    })
-
-    if todo_exists:
-        frappe.msgprint(f'Ticket {ticket_name} is already assigned to {agent}.')
-        return
-
-    assign_to_user({
-        'doctype': 'HD Ticket',
-        'name': ticket_name,
-        'assign_to': [agent],
-        'description': 'Ticket assigned to you.',
-    })
-
-    frappe.msgprint(f'Ticket {ticket_name} has been assigned to {agent}.')
-
+	def send_after_insert_notification(self):
+		if self.agent_group and frappe.db.exists('Notification', { 'enabled':1, 'document_type':'HD Ticket', 'event':'New' }):
+			notification = frappe.db.get_value('Notification', { 'enabled':1, 'document_type':'HD Ticket', 'event':'New' } )
+			subject_template = frappe.db.get_value('Notification', notification, 'subject') or ''
+			message_template = frappe.db.get_value('Notification', notification, 'message') or ''
+			subject = frappe.render_template(subject_template, {"doc": self})
+			message = frappe.render_template(message_template, {"doc": self})
+			# Fetch all L2 users from the team
+			hd_team = frappe.get_doc("HD Team", self.agent_group)
+			escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
+			for email in escalation_agent_ids:
+				frappe.get_doc({
+					"doctype": "Notification Log",
+					"subject": subject,
+					"for_user": email,
+					"type": "Alert",
+					"document_type": "HD Ticket",
+					"document_name": self.name,
+					"email_content": message
+				}).insert(ignore_permissions=True)
 
 
 @frappe.whitelist()
-def assign_to_current_user(docname, doctype):
-    """Assign ticket to current user if it's Open or Transferred using Document API"""
-    current_user = frappe.session.user
+def assign_ticket_to_agent(ticket_id, agent):
+	"""
+		Assign ticket to a specific agent
+	"""
+	notify = 0
+	if agent != frappe.session.user:
+		notify = 1
+	if not frappe.db.exists('HD Ticket', ticket_id):
+		frappe.throw(f'Ticket {ticket_id} does not exist.')
 
-    doc = frappe.get_doc(doctype, docname)
+	ticket_doc = frappe.get_doc('HD Ticket', ticket_id)
+	ticket_doc.status = 'Working'
+	ticket_doc.assigned_agent = agent
+	ticket_doc.assigned_agent_name = frappe.db.get_value('User', agent, 'full_name') or ''
+	ticket_doc.save(ignore_permissions=True)
 
-    if doc.status in ['Open', 'Transferred'] and doc.status_category == 'Open':
-        clear_all_assignments(doctype, docname, ignore_permissions=True)
+	# Clear previous assignments
+	clear_all_assignments('HD Ticket', ticket_id, ignore_permissions=True)
 
-        doc.status = 'Replied'
-        doc.save(ignore_permissions=True)
-
-    assign_to_user({
-        "assign_to": [current_user],
-        "doctype": doctype,
-        "name": docname,
-        "notify": 0
-    })
-
-    return {"message": f"Ticket {docname} assigned to {current_user}"}
-
+	assign_to_user({
+		'doctype': 'HD Ticket',
+		'name': ticket_id,
+		'assign_to': [agent],
+		'description': 'Ticket assigned to you.',
+		'notify': notify
+	})
+	return {"message": f'Ticket {ticket_id} assigned to {agent}.'}
 
 def process_escalation_notifications():
-    """
-    Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
-    """
-    enable_escalation = frappe.db.get_single_value("HD Settings", "enable_escalation_notifications")
-    if not enable_escalation:
-        return
+	"""
+	Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
+	"""
+	enable_escalation = frappe.db.get_single_value("HD Settings", "enable_escalation_notifications")
+	if not enable_escalation:
+		return
 
-    response_template = frappe.db.get_single_value("HD Settings", "response_due_template")
-    resolution_template = frappe.db.get_single_value("HD Settings", "resolution_due_template")
+	response_template = frappe.db.get_single_value("HD Settings", "response_due_template")
+	resolution_template = frappe.db.get_single_value("HD Settings", "resolution_due_template")
 
-    now = now_datetime()
-    escalation_data = [
-        ("response_due_escalation_send", "first_responded_on", "response_by", response_template),
-        ("resolution_due_escalation_send", "resolution_date", "resolution_by", resolution_template)
-    ]
+	now = now_datetime()
+	escalation_data = [
+		("response_due_escalation_send", "assigned_agent", "response_by", response_template),
+		("resolution_due_escalation_send", "resolution_date", "resolution_by", resolution_template)
+	]
 
-    for flag, date_field, due_field, template in escalation_data:
-        if not template:
-            continue
-        tickets = frappe.get_all(
-            "HD Ticket",
-            filters={flag: 0, date_field: ["is", "not set"], due_field: ["<", now]},
-            fields=["name", "agent_group"]
-        )
-        for ticket in tickets:
-            ticket_doc = frappe.get_doc("HD Ticket", ticket.name)
-            send_escalation_notification(ticket_doc, template)
-            frappe.db.set_value("HD Ticket", ticket.name, flag, 1)
+	for flag, date_field, due_field, template in escalation_data:
+		if not template:
+			continue
+		tickets = frappe.get_all(
+			"HD Ticket",
+			filters={flag: 0, date_field: ["is", "not set"], due_field: ["<", now]},
+			fields=["name", "agent_group"]
+		)
+		for ticket in tickets:
+			ticket_doc = frappe.get_doc("HD Ticket", ticket.name)
+			send_escalation_notification(ticket_doc, template)
+			frappe.db.set_value("HD Ticket", ticket.name, flag, 1)
 
 
 def send_escalation_notification(ticket_doc, template_name):
-    """
-    	Send an escalation email notification to the designated escalation contact for a Helpdesk ticket.
-    """
-    hd_team = ticket_doc.agent_group
-    if not hd_team:
-        return
+	"""
+	Send an escalation email notification to the designated escalation contact
+	for a Helpdesk ticket.
+	"""
 
-    escalation_list = frappe.get_all(
-        "HD Team Escalation To",
-        filters={"parent": hd_team},
-        pluck="employee"
-    )
+	instantly_send_email = frappe.db.get_single_value("HD Settings", "instantly_send_email") or 0
 
+	if not ticket_doc.agent_group:
+		return
 
-    if not escalation_list:
-        return
+	hd_team = frappe.get_doc("HD Team", ticket_doc.agent_group)
 
-    user_emails = frappe.db.get_list(
-        "Employee",
-        filters={"name": ["in", escalation_list]},
-        pluck="user_id"
-    )
+	escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
+	if not escalation_agent_ids:
+		return
 
-    user_emails = [email for email in user_emails if email]
-    if not user_emails:
-        return
+	user_emails = frappe.db.get_list(
+		"HD Agent",
+		filters={
+			"name": ["in", escalation_agent_ids]
+		},
+		pluck="user"
+	)
 
-    email_template = frappe.get_doc("Email Template", template_name)
-    subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
-    message = frappe.render_template(email_template.response, {"doc": ticket_doc})
+	user_emails = [email for email in user_emails if email]
 
-    frappe.sendmail(
-        recipients= user_emails,
-        subject=subject,
-        message=message,
-        reference_doctype="HD Ticket",
-        reference_name=ticket_doc.name
-    )
+	if not user_emails:
+		return
+
+	email_template = frappe.get_doc("Email Template", template_name)
+	subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
+	message = frappe.render_template(email_template.response, {"doc": ticket_doc})
+
+	frappe.sendmail(
+		recipients=user_emails,
+		subject=subject,
+		message=message,
+		reference_doctype="HD Ticket",
+		reference_name=ticket_doc.name,
+		now=instantly_send_email
+	)
+
+	for email in user_emails:
+		frappe.get_doc({
+			"doctype": "Notification Log",
+			"subject": subject,
+			"for_user": email,
+			"type": "Alert",
+			"document_type": "HD Ticket",
+			"document_name": ticket_doc.name,
+			"email_content": message
+		}).insert(ignore_permissions=True)
+
+def get_permission_query_conditions(user):
+	if not user:
+		user = frappe.session.user
+	if is_admin(user):
+		return
+
+	#  To handle the case for normal users i.e. not agents
+	customer = get_customer(user)
+	query = "(`tabHD Ticket`.owner = {user} OR `tabHD Ticket`.contact = {user} \
+	OR `tabHD Ticket`.raised_by = {user} \
+	OR `tabHD Ticket`.reports_to_email = {user})".format(
+		user=frappe.db.escape(user)
+	)
+	for c in customer:
+		query += " OR `tabHD Ticket`.customer={customer}".format(
+			customer=frappe.db.escape(c)
+		)
+
+	if not is_agent(user):
+		return query
+
+	enable_restrictions = frappe.db.get_single_value(
+		"HD Settings", "restrict_tickets_by_agent_group"
+	)
+	if not enable_restrictions:
+		return  # If not enabled, return all tickets
+
+	show_tickets_without_team = frappe.db.get_single_value(
+		"HD Settings", "do_not_restrict_tickets_without_an_agent_group"
+	)
+
+	teams = get_agents_team()
+
+	if show_tickets_without_team:
+		query += " OR (`tabHD Ticket`.agent_group is null OR `tabHD Ticket`.agent_group = '')"
+
+	# If agent belongs to the team which has ignore_permission set to 1.
+	# that means this team can see all the tickets without any restriction,
+	# Event the other team's tickets.
+	if any(team.get("ignore_restrictions") for team in teams):
+		all_teams = frappe.get_all("HD Team", pluck="name")
+		if not all_teams:
+			return query
+		all_teams = ", ".join(f"'{team}'" for team in all_teams)
+		query += f" OR (`tabHD Ticket`.agent_group in ({all_teams}))".format(
+			all_teams=all_teams
+		)
+		if not show_tickets_without_team:
+			query += " OR (`tabHD Ticket`.agent_group is null)"
+		return query
+
+	query += (
+		" OR (JSON_SEARCH(`tabHD Ticket`._assign, 'all', {user}) IS NOT NULL)".format(
+			user=frappe.db.escape(user)
+		)
+	)
+
+	team_names = [t.get("team_name") for t in teams]
+
+	if not team_names:
+		return query
+
+	# Here we will apply the restriction based on the teams the agent belongs to.
+	team_names = ", ".join(f"'{team}'" for team in team_names)
+	query += f" OR (`tabHD Ticket`.agent_group in ({team_names}))".format(
+		team_names=team_names
+	)
+
+	return query
+
+def get_agents_team():
+	QBTeam = frappe.qb.DocType("HD Team")
+	QBTeamMember = frappe.qb.DocType("HD Team Member")
+	QBEscalationTo = frappe.qb.DocType("Ticket Agents")
+
+	teams = (
+		frappe.qb.from_(QBTeamMember)
+		.where(
+			(QBTeamMember.user == frappe.session.user)
+			| (QBEscalationTo.user == frappe.session.user)
+		)
+		.join(QBTeam)
+		.on(QBTeam.name == QBTeamMember.parent)
+		.join(QBEscalationTo)
+		.on(QBTeam.name == QBEscalationTo.parent)
+		.select(QBTeam.team_name, QBTeam.ignore_restrictions)
+		.run(as_dict=True)
+	)
+	return teams
+
+def has_permission(doc, user=None):
+	if not user:
+		user = frappe.session.user
+
+	# Direct access for non-agent users based on same fields used in get_permission_query_conditions
+	if (
+		doc.owner == user
+		or doc.contact == user
+		or doc.raised_by == user
+		or getattr(doc, "reports_to_email", None) == user
+		or doc.customer in get_customer(user)
+		or is_admin(user)
+	):
+		return True
+
+	# If user is not an agent, same as query builder: they should not see anything else
+	if not is_agent(user):
+		return False
+
+	# Agent restriction settings
+	enable_restrictions = frappe.db.get_single_value(
+		"HD Settings", "restrict_tickets_by_agent_group"
+	)
+	if not enable_restrictions:
+		return True
+
+	show_tickets_without_team = frappe.db.get_single_value(
+		"HD Settings", "do_not_restrict_tickets_without_an_agent_group"
+	)
+
+	# Same logic: if tickets without a team should be visible
+	if show_tickets_without_team and not doc.get("agent_group"):
+		return True
+
+	# Assigned tickets (JSON_SEARCH equivalent)
+	if doc.get("_assign"):
+		try:
+			assignees = json.loads(doc._assign)
+			if user in assignees:
+				return True
+		except Exception as e:
+			frappe.log_error("Error in Has Permission check of HD Ticket", e)
+			return False
+
+	# Agent teams
+	teams = get_agents_team()
+
+	# Same logic: team with ignore_restrictions sees all tickets
+	if any(team.get("ignore_restrictions") for team in teams):
+		return True
+
+	# Collect team names
+	team_names = [t.get("team_name") for t in teams]
+
+	# If user is part of team and ticket belongs to that team, allow
+	if doc.get("agent_group") in team_names:
+		return True
+
+	return False

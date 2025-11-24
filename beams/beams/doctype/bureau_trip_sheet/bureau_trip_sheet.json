@@ -8,8 +8,9 @@
  "field_order": [
   "section_break_qq5d",
   "supplier",
-  "bureau",
+  "employees",
   "column_break_psaw",
+  "bureau",
   "company",
   "section_break_qavf",
   "is_overnight_stay",
@@ -19,11 +20,15 @@
   "column_break_hzfr",
   "ot_batta",
   "batta",
+  "purchase_invoice",
   "section_break_tjbr",
   "work_details",
   "section_break_xxsb",
-  "total_distance_travelled_km",
+  "initial_odometer_reading",
+  "final_odometer_reading",
+  "total_distance_km",
   "column_break_fgob",
+  "total_distance_travelled_km",
   "total_hours",
   "trip_details_section",
   "departure_location",
@@ -216,12 +221,45 @@
    "fieldtype": "Currency",
    "label": "Total Driver Batta",
    "read_only": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Final Odometer Reading",
+   "mandatory_depends_on": "eval:doc.docstatus==\"Saved\" "
+  },
+  {
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Initial Odometer Reading",
+   "mandatory_depends_on": "eval:doc.docstatus==\"Saved\" "
+  },
+  {
+   "description": "Based on Odometer",
+   "fieldname": "total_distance_km",
+   "fieldtype": "Float",
+   "label": "Total Distance (KM)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "employees",
+   "fieldtype": "Table MultiSelect",
+   "ignore_user_permissions": 1,
+   "label": "Employees",
+   "options": "Employees"
+  },
+  {
+   "fieldname": "purchase_invoice",
+   "fieldtype": "Link",
+   "label": "Purchase Invoice",
+   "options": "Purchase Invoice",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-10-02 11:25:11.106938",
+ "modified": "2025-11-19 14:46:18.341478",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
@@ -242,6 +280,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

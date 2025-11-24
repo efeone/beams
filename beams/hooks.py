@@ -156,11 +156,12 @@ permission_query_conditions = {
 	"Interview": "beams.beams.custom_scripts.interview.interview.get_permission_query_conditions",
 	"Employee Travel Request": "beams.beams.doctype.employee_travel_request.employee_travel_request.get_permission_query_conditions",
 	"Shift Swap Request": "beams.beams.doctype.shift_swap_request.shift_swap_request.get_permission_query_conditions",
+	"HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.get_permission_query_conditions",
 }
 
-# has_permission = {
-#
-# }
+has_permission = {
+	"HD Ticket": "beams.beams.custom_scripts.hd_ticket.hd_ticket.has_permission"
+}
 
 # DocType Class
 # ---------------
@@ -415,6 +416,9 @@ doc_events = {
 	},
 	"HD Settings": {
 		"validate": "beams.beams.custom_scripts.hd_settings.hd_settings.update_ticket_type"
+	},
+	"HD Team": {
+		"on_update":"beams.beams.custom_scripts.hd_team.hd_team.disable_hd_team_assignment_rule_if_enabled"
 	}
 }
 
@@ -467,9 +471,9 @@ scheduler_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# "frappe.desk.doctype.event.event.get_events": "beams.event.get_events"
-# }
+override_whitelisted_methods = {
+    "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
@@ -548,7 +552,29 @@ fixtures = [
 	{
 		"dt": "Custom HTML Block",
 		"filters": [
-			["name", "in", ["Media One HR", "Employee View"]]
-		]
+			[
+				"name",
+				"in",
+				[
+					"Media One HR",
+					"Employee View",
+					"Details",
+					"Availability and Attendance",
+					"HR Message",
+					"Adherence and Break",
+				],
+			]
+		],
+		"dt": "HD Ticket Status",
+		"filters": [
+			[
+				"name",
+				"in",
+				[
+					"Hold",
+					"Working",
+				],
+			]
+		],
 	}
 ]

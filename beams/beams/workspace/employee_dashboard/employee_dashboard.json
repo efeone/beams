@@ -1,0 +1,50 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"gAhunEa47y\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"HR Message\",\"col\":12}},{\"id\":\"apjWBwJbIk\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Availability and Attendance\",\"col\":12}},{\"id\":\"0FRNNCD67H\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Adherence and Break\",\"col\":12}},{\"id\":\"UINBkXZv_J\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Details\",\"col\":12}}]",
+ "creation": "2025-09-03 12:52:23.255626",
+ "custom_blocks": [
+  {
+   "custom_block_name": "HR Message",
+   "label": "HR Message"
+  },
+  {
+   "custom_block_name": "Availability and Attendance",
+   "label": "Availability and Attendance"
+  },
+  {
+   "custom_block_name": "Adherence and Break",
+   "label": "Adherence and Break"
+  },
+  {
+   "custom_block_name": "Details",
+   "label": "Details"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "dashboard-list",
+ "idx": 0,
+ "indicator_color": "",
+ "is_hidden": 0,
+ "label": "Employee Dashboard",
+ "links": [],
+ "modified": "2025-10-23 12:13:12.013807",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Employee Dashboard",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Employee"
+  }
+ ],
+ "sequence_id": 1.0,
+ "shortcuts": [],
+ "title": "Employee Dashboard"
+}
