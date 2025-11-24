@@ -101,7 +101,7 @@ function add_working_button(frm) {
 * Open dialog to transfer ticket to any HD Agent
 */
 function add_transfer_button(frm) {
-	if (frm.doc.status == 'Working') {
+	if (!frm.is_new() && frm.doc.status == 'Working') {
 		const btn = frm.add_custom_button(__('Transfer'), async () => {
 			if (!frm.doc.agent_group) {
 				frappe.msgprint(__('Please select a Team (Agent Group) first'));
@@ -167,7 +167,7 @@ function add_transfer_button(frm) {
  * Set ticket status to Closed
  */
 function add_resolved_button(frm) {
-	if (!['Closed', 'Open', 'Hold'].includes(frm.doc.status)) {
+	if (!frm.is_new() && !['Closed', 'Open', 'Hold'].includes(frm.doc.status)) {
 
 		const btn = frm.add_custom_button(__('Resolved'), () => {
 			frm.set_value('status', 'Closed');
@@ -190,7 +190,7 @@ function add_resolved_button(frm) {
  * Set ticket status to Hold
  */
 function add_hold_button(frm) {
-	if (!['Closed', 'Hold'].includes(frm.doc.status)) {
+	if (!frm.is_new() && !['Closed', 'Hold'].includes(frm.doc.status)) {
 		const btn = frm.add_custom_button(__('Hold'), () => {
 			frm.set_value('status', 'Hold');
 			frm.save().then(() => {
@@ -216,7 +216,7 @@ function add_hold_button(frm) {
  * Option to Re-Open the Closed Ticket
  */
 function add_reopen_button(frm) {
-	if (['Closed', 'Hold'].includes(frm.doc.status)) {
+	if (!frm.is_new() && ['Closed', 'Hold'].includes(frm.doc.status)) {
 		const btn = frm.add_custom_button(__('Re-Open'), () => {
 			frm.set_value('status', 'Open');
 			frm.save().then(() => {
@@ -253,17 +253,19 @@ function add_reopen_button(frm) {
  * Add Asset Request + Material Request Buttons
  */
 function add_request_buttons(frm) {
-	frm.add_custom_button(__('Asset Request'), () => {
-		frappe.new_doc('Asset Request', {
-			'requested_by': frm.doc.requested_employee
-		});
-	}, __('Create'));
+	if (!frm.is_new()) {
+		frm.add_custom_button(__('Asset Request'), () => {
+			frappe.new_doc('Asset Request', {
+				'requested_by': frm.doc.requested_employee
+			});
+		}, __('Create'));
 
-	frm.add_custom_button(__('Material Request'), () => {
-		frappe.new_doc('Material Request', {
-			'requested_by': frm.doc.requested_employee
-		});
-	}, __('Create'));
+		frm.add_custom_button(__('Material Request'), () => {
+			frappe.new_doc('Material Request', {
+				'requested_by': frm.doc.requested_employee
+			});
+		}, __('Create'));
+	}
 }
 
 /**
