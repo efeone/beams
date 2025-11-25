@@ -24,8 +24,6 @@
   "section_break_tjbr",
   "work_details",
   "section_break_xxsb",
-  "initial_odometer_reading",
-  "final_odometer_reading",
   "total_distance_km",
   "column_break_fgob",
   "total_distance_travelled_km",
@@ -223,18 +221,6 @@
    "read_only": 1
   },
   {
-   "fieldname": "final_odometer_reading",
-   "fieldtype": "Int",
-   "label": "Final Odometer Reading",
-   "mandatory_depends_on": "eval:doc.docstatus==\"Saved\" "
-  },
-  {
-   "fieldname": "initial_odometer_reading",
-   "fieldtype": "Int",
-   "label": "Initial Odometer Reading",
-   "mandatory_depends_on": "eval:doc.docstatus==\"Saved\" "
-  },
-  {
    "description": "Based on Odometer",
    "fieldname": "total_distance_km",
    "fieldtype": "Float",
@@ -259,7 +245,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-19 14:46:18.341478",
+ "modified": "2025-11-25 11:26:52.163599",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
