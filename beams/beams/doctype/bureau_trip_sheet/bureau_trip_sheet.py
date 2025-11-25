@@ -11,6 +11,8 @@ from frappe.utils import nowdate
 
 class BureauTripSheet(Document):
 	def validate(self):
+		self.validate_odometer_readings()
+		self.calculate_distance_from_odometer()
 		self.calculate_total_distance_travelled()
 		self.calculate_hours()
 		self.calculate_daily_batta()
@@ -18,7 +20,6 @@ class BureauTripSheet(Document):
 		self.calculate_total_ot_batta()
 		self.calculate_total_batta()
 		self.calculate_total_daily_batta()
-		self.calculate_total_distance_based_on_odometer()
 		self.validate_batta_policy()
 
 	def calculate_batta(self):
@@ -42,20 +43,65 @@ class BureauTripSheet(Document):
 
 		self.total_distance_travelled_km = total_distance
 
-	@frappe.whitelist()
-	def calculate_total_distance_based_on_odometer(self):
+	def validate_odometer_readings(self):
 		'''
-		Validate odometer readings and calculate distance travelled.
-		Automatically updates the fields on the same document.
+			Validate odometer readings in child table rows.
+			Conditions:
+			- Initial and Final readings cannot be negative.
+			- If both readings are entered, Final must be greater than Initial.
 		'''
-		if self.final_odometer_reading is None or self.initial_odometer_reading is None:
+		if not self.work_details:
 			return
 
-		if self.initial_odometer_reading > self.final_odometer_reading:
-			frappe.throw(_("Initial Odometer Reading must be less than Final Odometer Reading"))
+		for row in self.work_details:
+			# Validate Initial Reading
+			if row.initial_odometer_reading is not None:
+				initial = flt(row.initial_odometer_reading)
+				if initial < 0:
+					frappe.throw(
+						_(f"Row {row.idx}: Initial Odometer Reading cannot be negative."),
+						title=_("Invalid Odometer Reading")
+					)
 
-		self.total_distance_km = self.final_odometer_reading - self.initial_odometer_reading
-		return self.total_distance_km
+			# Validate Final Reading
+			if row.final_odometer_reading is not None:
+				final = flt(row.final_odometer_reading)
+				if final < 0:
+					frappe.throw(
+						_(f"Row {row.idx}: Final Odometer Reading cannot be negative."),
+						title=_("Invalid Odometer Reading")
+					)
+
+			# Validate Final Reading > Initial Reading only If both readings are present
+			if (
+				row.initial_odometer_reading is not None
+				and row.final_odometer_reading is not None
+			):
+				initial = flt(row.initial_odometer_reading)
+				final = flt(row.final_odometer_reading)
+
+				if final <= initial:
+					frappe.throw(
+						_(f"Row {row.idx}: Final Odometer Reading ({final}) "
+						f"must be greater than Initial Odometer Reading ({initial})."),
+						title=_("Invalid Odometer Reading")
+					)
+
+	def calculate_distance_from_odometer(self):
+		'''
+			Calculate distance based on odometer readings for each row in child table.
+			Sets distance_travelled_km = final_odometer_reading - initial_odometer_reading
+		'''
+		if not self.work_details:
+			return
+
+		for row in self.work_details:
+			if row.initial_odometer_reading is not None and row.final_odometer_reading is not None:
+				initial = flt(row.initial_odometer_reading)
+				final = flt(row.final_odometer_reading)
+				# Calculate and set distance
+				calculated_distance = final - initial
+				row.distance_travelled_km = calculated_distance
 
 	def calculate_hours(self):
 		'''

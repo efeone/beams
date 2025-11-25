@@ -62,7 +62,13 @@ frappe.ui.form.on('Bureau Trip Details', {
 		setTimeout(() => {
 			calculate_row_allowances(frm, cdt, cdn);
 		}, 30);
-	}
+	},
+	initial_odometer_reading: function(frm, cdt, cdn) {
+		calculate_distance_from_odometer(frm, cdt, cdn);
+	},
+	final_odometer_reading: function(frm, cdt, cdn) {
+		calculate_distance_from_odometer(frm, cdt, cdn);
+	},
 });
 
 frappe.ui.form.on("Bureau Trip Sheet", {
@@ -114,12 +120,6 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 	},
 	total_hours: function(frm) {
 		calculate_allowance(frm);
-	},
-	initial_odometer_reading: function (frm) {
-		frm.call("calculate_total_distance_based_on_odometer");
-	},
-	final_odometer_reading: function (frm) {
-		frm.call("calculate_total_distance_based_on_odometer");
 	},
 	refresh: function(frm) {
 		filter_supplier_field(frm);
@@ -438,4 +438,72 @@ function calculate_allowance(frm) {
 			}
 		}
 	});
+}
+
+/* Calculate distance travelled from odometer readings and validate inputs */
+function calculate_distance_from_odometer(frm, cdt, cdn) {
+	let row = locals[cdt][cdn];
+
+	let initial = row.initial_odometer_reading;
+	let final = row.final_odometer_reading;
+
+	// Validate Initial Odometer Reading
+	if (initial !== null && initial !== undefined) {
+		initial = parseInt(initial) || 0;
+
+		// Initial Odometer Reading should not be negative
+		if (initial < 0) {
+			frappe.msgprint({
+				title: __('Invalid Odometer Reading'),
+				message: __('Row {0}: Initial Odometer Reading cannot be negative (got {1})', [row.idx, initial]),
+				indicator: 'red'
+			});
+			frappe.model.set_value(cdt, cdn, 'initial_odometer_reading', null);
+			frappe.model.set_value(cdt, cdn, 'distance_travelled_km', 0);
+			return;
+		}
+	}
+
+	// Validate Final Odometer Reading
+	if (final !== null && final !== undefined) {
+		final = parseInt(final) || 0;
+
+		// Final Odometer Reading should not be negative
+		if (final < 0) {
+			frappe.msgprint({
+				title: __('Invalid Odometer Reading'),
+				message: __('Row {0}: Final Odometer Reading cannot be negative (got {1})', [row.idx, final]),
+				indicator: 'red'
+			});
+			frappe.model.set_value(cdt, cdn, 'final_odometer_reading', null);
+			frappe.model.set_value(cdt, cdn, 'distance_travelled_km', 0);
+			return;
+		}
+	}
+
+	// Calculate distance only if both readings are present
+	if (row.initial_odometer_reading && row.final_odometer_reading) {
+		initial = parseInt(row.initial_odometer_reading);
+		final = parseInt(row.final_odometer_reading);
+		// Final Odometer Reading must be greater than Initial Odometer Reading
+		if (final <= initial) {
+			frappe.msgprint({
+				title: __('Invalid Odometer Reading'),
+				message: __('Row {0}: Final Odometer Reading must be greater than Initial Odometer Reading', [row.idx]),
+				indicator: 'red'
+			});
+			frappe.model.set_value(cdt, cdn, 'final_odometer_reading', null);
+			frappe.model.set_value(cdt, cdn, 'distance_travelled_km', 0);
+			return;
+		}
+
+		// Calculate distance travelled
+		let distance = final - initial;
+		frappe.model.set_value(cdt, cdn, 'distance_travelled_km', distance);
+
+		setTimeout(() => {
+			calculate_total_distance_travelled(frm);
+			calculate_row_allowances(frm, cdt, cdn);
+		}, 100);
+	}
 }

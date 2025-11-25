@@ -9,6 +9,8 @@
  "field_order": [
   "origin",
   "destination",
+  "initial_odometer_reading",
+  "final_odometer_reading",
   "distance_travelled_km",
   "number_of_days",
   "batta_type",
@@ -192,17 +194,32 @@
    "in_list_view": 1,
    "label": "OT Hours",
    "read_only": 1
+  },
+  {
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Initial Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Final Odometer Reading",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-11-19 15:20:43.780054",
+ "modified": "2025-11-25 12:29:35.710177",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Details",
  "owner": "Administrator",
  "permissions": [],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
