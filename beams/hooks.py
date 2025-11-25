@@ -458,7 +458,8 @@ scheduler_events = {
 	],
 	"cron": {
 		"* * * * *": [  # runs every minute
-			"beams.beams.custom_scripts.hd_ticket.hd_ticket.process_escalation_notifications"
+			"beams.beams.custom_scripts.hd_ticket.hd_ticket.process_escalation_notifications",
+			"frappe.email.doctype.email_account.email_account.pull",
 		]
 	}
   }
