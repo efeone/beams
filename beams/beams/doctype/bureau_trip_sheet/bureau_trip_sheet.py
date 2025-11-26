@@ -288,7 +288,7 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
 	to_date_time = get_datetime(to_date_time)
 	required_hours = 6
 
-	if batta_policy and float(total_hrs) > required_hours:
+	if batta_policy and float(total_hrs) >= required_hours:
 		break_fast, lunch, dinner = frappe.db.get_value('Batta Policy', batta_policy, ['break_fast', 'lunch', 'dinner'])
 		same_date = getdate(from_date_time) == getdate(to_date_time)
 
@@ -355,7 +355,7 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 
 	if not is_actual_daily_batta_without_overnight:
 		if not is_overnight_stay:
-			if total_distance_travelled_km > 100 and total_hours >= 8:
+			if total_distance_travelled_km >= 100 and total_hours >= 8:
 				if is_travelling_outside_kerala:
 					daily_batta_without_overnight_stay = float(policy.get('outside_kerala', 0))
 				else:
