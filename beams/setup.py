@@ -5489,7 +5489,7 @@ def get_beams_roles():
         'Bureau User','Coordinating Editor','News Coordinator',
         'Security','Reporter','Salary Increment Approver',
         'Front Desk User', 'Asset Manager', 'Asset User',
-        'Management', 'Expense Approver'
+        'Management', 'Expense Approver','Bureau Head',
     ]
 
 def get_custom_translations():
