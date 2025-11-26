@@ -207,39 +207,39 @@ def create_vehicle_incident_record(trip_sheet):
 
 @frappe.whitelist()
 def create_batta_request(trip_sheet):
-    """
-    Creates a new Batta Claim for the given Trip Sheet or returns existing one.
-    Automatically calculates daily batta or food allowance.
-    """
-    trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
-    existing_bc = frappe.db.exists("Batta Claim", {"trip_sheet": trip_sheet_doc.name})
-    if existing_bc:
-        return {"status": "exists", "name": existing_bc}
-    employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
-    trip_details = trip_sheet_doc.get("trip_details")
-    first_trip = trip_details[0]
-    last_trip = trip_details[-1]
-    batta_claim = frappe.new_doc("Batta Claim")
-    batta_claim.trip_sheet = trip_sheet_doc.name
-    batta_claim.employee = employee
-    batta_claim.origin = first_trip.departure
-    batta_claim.destination = last_trip.destination
-    for row in trip_details:
-        batta_claim.append("work_detail", {
-            "origin": row.departure,
-            "destination": row.destination,
-            "from_date_and_time": row.from_time,
-            "to_date_and_time": row.to_time,
-            "distance_travelled_km": row.distance_traveled,
-            "total_hours": row.hrs
-        })
-    batta_claim.insert(ignore_permissions=True)
-    batta_claim.save(ignore_permissions=True)
+	"""
+	Creates a new Batta Claim for the given Trip Sheet or returns existing one.
+	Automatically calculates daily batta or food allowance.
+	"""
+	trip_sheet_doc = frappe.get_doc("Trip Sheet", trip_sheet)
+	existing_bc = frappe.db.exists("Batta Claim", {"trip_sheet": trip_sheet_doc.name})
+	if existing_bc:
+		return {"status": "exists", "name": existing_bc}
+	employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+	trip_details = trip_sheet_doc.get("trip_details")
+	first_trip = trip_details[0]
+	last_trip = trip_details[-1]
+	batta_claim = frappe.new_doc("Batta Claim")
+	batta_claim.trip_sheet = trip_sheet_doc.name
+	batta_claim.employee = employee
+	batta_claim.origin = first_trip.departure
+	batta_claim.destination = last_trip.destination
+	for row in trip_details:
+		batta_claim.append("work_detail", {
+			"origin": row.departure,
+			"destination": row.destination,
+			"from_date_and_time": row.from_time,
+			"to_date_and_time": row.to_time,
+			"distance_travelled_km": row.distance_traveled,
+			"total_hours": row.hrs
+		})
+	batta_claim.insert(ignore_permissions=True)
+	batta_claim.save(ignore_permissions=True)
 
-    return {
-        "status": "new",
-        "name": batta_claim.name
-    }
+	return {
+		"status": "new",
+		"name": batta_claim.name
+	}
 
 @frappe.whitelist()
 def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, filters):
@@ -272,3 +272,30 @@ def get_filtered_travel_requests(doctype, txt, searchfield, start, page_len, fil
 		},
 		as_list=True,
 	)
+
+@frappe.whitelist()
+def get_permission_query_conditions(user=None):
+	"""
+	Permission query conditions for Trip Sheet based on user roles.
+
+	- System Manager and Administrator have unrestricted access.
+	- Users linked to an Employee and Driver can access Trip Sheets where they are the driver.
+	- Users without an Employee or Driver record cannot access any Trip Sheets.
+	"""
+	if not user:
+		user = frappe.session.user
+
+	roles = frappe.get_roles(user)
+
+	if "System Manager" in roles or user == "Administrator":
+		return ""
+
+	employee_id = frappe.db.get_value("Employee", {"user_id": user}, "name")
+	if not employee_id:
+		return "1=0"
+
+	driver_id = frappe.db.get_value("Driver", {"employee": employee_id}, "name")
+	if not driver_id:
+		return "1=0"
+
+	return f"`tabTrip Sheet`.driver = '{driver_id}'"
