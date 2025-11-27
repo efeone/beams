@@ -226,9 +226,8 @@
    "fieldname": "travel_vehicle_allocation",
    "fieldtype": "Table",
    "label": "Travel Vehicle Allocation",
-   "mandatory_depends_on": "eval:doc.workflow_state == 'Approved'",
-   "options": "Vehicle Allocation",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.workflow_state == 'Approved by HOD' && doc.is_vehicle_required == 1\n",
+   "options": "Vehicle Allocation"
   },
   {
    "allow_on_submit": 1,
@@ -278,7 +277,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-11-04 15:27:48.573167",
+ "modified": "2025-11-27 13:32:29.099720",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
