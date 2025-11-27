@@ -3,6 +3,7 @@ from frappe import _
 from frappe.utils import formatdate
 
 from erpnext.controllers.website_list_for_contact import get_customers_suppliers
+import json
 
 
 def get_context(context):
@@ -55,14 +56,14 @@ def get_supplier():
 
 
 def check_supplier_has_docname_access(supplier):
-    """Ensure supplier has access to this RFQ"""
-    rfqs = frappe.db.get_all(
-        "Request for Quotation Supplier",
-        filters={"supplier": supplier},
-        fields=["parent"],
-        limit=1
-    )
-    return bool(rfqs)
+	"""Ensure supplier has access to this RFQ"""
+	rfqs = frappe.db.get_all(
+		"Request for Quotation Supplier",
+		filters={"supplier": supplier},
+		fields=["parent"],
+		limit=1
+	)
+	return bool(rfqs)
 
 
 def unauthorized_user(supplier):
@@ -113,10 +114,12 @@ def get_link_quotation(supplier, rfq):
 
 
 @frappe.whitelist()
-def submit_supplier_quotation(data):
+def save_supplier_quotation(data):
 	"""Save Supplier Quotation from supplier portal"""
-	import json
+
 	data = json.loads(data)
+ 
+	frappe.log_error("submit_supplier_quotation", data)
 	
 
 	supplier = data.get("supplier")
@@ -149,15 +152,24 @@ def submit_supplier_quotation(data):
 		if item.get("item_description"):
 			full_description += f"Details: {item['item_description']}\n"
 
+		# Convert rate properly
+		rate = float(item.get("rate") or 0)
+		no_rate_flag = 1 if rate <= 0 else 0
+
+		# If supplier didn't give rate → qty becomes 0
+		qty = 0 if rate == 0 else item.get("qty")
+
 		quotation.append("items", {
 			"item_code": item.get("item_code"),
 			"item_name": item.get("item_name"),
 			"item_description": full_description.strip(),
-			"qty": item.get("qty"),
+			"qty": qty,
 			"uom": item.get("uom"),
-			"rate": item.get("rate"),
+			"rate": rate,
 			"request_for_quotation": rfq,
+			"no_rate_provided": no_rate_flag,
 		})
+
 
 	# Process suggested items by supplier
 	for suggested_item in suggested_items:
@@ -172,7 +184,6 @@ def submit_supplier_quotation(data):
 		})
 
 	quotation.insert(ignore_permissions=True)
-	quotation.submit()
 
 	total_original = len(items)
 	total_suggested = len(suggested_items)

@@ -1,170 +1,664 @@
 {% extends "templates/web.html" %}
 
 {% block header %}
-<script src="https://cdn.tailwindcss.com"></script>
 <style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: #f9fafb;
+  }
+
   /* Custom styles */
-  .remove-btn { display: none; }
-  .suggested-item:hover .remove-btn { display: block; }
-  .specs-section { display: none; }
-  .specs-section.show { display: block; }
+  .remove-btn {
+    display: none;
+  }
+
+  .suggested-item:hover .remove-btn {
+    display: block;
+  }
+
+  .specs-section {
+    display: none;
+  }
+
+  .specs-section.show {
+    display: block;
+  }
+
+  /* Header */
+  .header-container {
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 40px;
+    padding-right: 76px;
+    margin-bottom: 24px;
+    padding-right: 27rem;
+    margin-left: 1rem;
+  }
+
+  .header-title {
+    font-size: 48px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+
+  .header-meta {
+    color: #4b5563;
+    margin-bottom: 0;
+  }
+
+  /* Main Container */
+  .main-container {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 16px;
+  }
+
+  /* Instructions Box */
+  .instructions-box {
+    background-color: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1e40af;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .instructions-box strong {
+    font-weight: 600;
+  }
+
+  /* Items Container */
+  .items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  /* Item Card */
+  .item-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+    transition: box-shadow 0.2s ease;
+    position: relative;
+  }
+
+  .item-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Card Grid */
+  .card-grid {
+    display: grid;
+    gap: 28px;
+  }
+
+  @media (min-width: 768px) {
+    .card-grid {
+      grid-template-columns: repeat(12, 1fr);
+      align-items: start;
+    }
+  }
+
+  .col-span-4 {
+    grid-column: span 1;
+  }
+
+  @media (min-width: 768px) {
+    .col-span-4 {
+      grid-column: span 4;
+    }
+  }
+
+  .col-span-2 {
+    grid-column: span 1;
+  }
+
+  @media (min-width: 768px) {
+    .col-span-2 {
+      grid-column: span 2;
+    }
+  }
+
+  /* Item Title and Description */
+  .item-title {
+    font-size: 18px;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+
+  .item-description {
+    font-size: 14px;
+    color: #4b5563;
+    margin-bottom: 12px;
+  }
+
+  .item-code {
+    margin-left: 8px;
+    color: #9ca3af;
+    font-size: 12px;
+  }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ffffff;
+    background-color: #000000;
+    border-radius: 4px;
+  }
+
+  .badge-suggested {
+    background-color: #facc15;
+    color: #000000;
+  }
+
+  /* Form Controls */
+  .form-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 4px;
+  }
+
+  .form-label .required {
+    color: #ef4444;
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  .form-textarea {
+    resize: vertical;
+  }
+
+  .form-help {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+    display: block;
+  }
+
+  .form-uom {
+    font-size: 12px;
+    color: #6b7280;
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* Currency Input */
+  .currency-wrapper {
+    display: flex;
+  }
+
+  .currency-symbol {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 14px;
+    color: #6b7280;
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+  }
+
+  .currency-wrapper .form-input {
+    border-radius: 0 6px 6px 0;
+    border-left: none;
+  }
+
+  /* Amount Display */
+  .amount-display {
+    background-color: #f9fafb;
+  }
+
+  .amount-display:focus {
+    background-color: #f9fafb;
+  }
+
+  /* Button */
+  .btn {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #374151;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    width: 100%;
+  }
+
+  .btn:hover {
+    background-color: #f3f4f6;
+  }
+
+  .btn-primary {
+    width: 100%;
+    padding: 12px 24px;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #000000;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-primary:hover {
+    background-color: #f3f4f6;
+  }
+
+  .btn-remove {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 24px;
+    height: 24px;
+    background-color: #dc2626;
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  .btn-remove:hover {
+    background-color: #991b1b;
+  }
+
+  /* Specifications Section */
+  .specs-section {
+    background-color: #f9fafb;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+
+  .specs-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+  }
+
+  .specs-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .specs-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .specs-column {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  /* Add New Product Button */
+  .add-product-section {
+    text-align: center;
+    margin-bottom: 24px;
+    margin-top: 16px;
+  }
+
+  .btn-add-product {
+    padding: 8px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #000000;
+    border-radius: 6px;
+    background-color: transparent;
+    color: #000000;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .btn-add-product:hover {
+    background-color: #f3f4f6;
+  }
+
+  /* Grand Total */
+  .grand-total-section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+
+  .grand-total-amount {
+    text-align: right;
+    font-size: 18px;
+    font-weight: 500;
+    color: #111827;
+  }
+
+  .grand-total-note {
+    text-align: right;
+    font-size: 14px;
+    color: #6b7280;
+    margin-top: 4px;
+  }
+
+  /* Notes Section */
+  .notes-section {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .notes-header {
+    background-color: #f9fafb;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .notes-header h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #111827;
+    margin: 0;
+  }
+
+  .notes-body {
+    padding: 16px;
+  }
+
+  .notes-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 14px;
+    resize: vertical;
+  }
+
+  .notes-textarea:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #3b82f6;
+    border-color: #3b82f6;
+  }
+
+  /* Action Buttons */
+  .action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .action-buttons .btn-primary {
+    width: auto;
+    min-width: 200px;
+  }
+
+  /* Border Colors for Rate Input */
+  .rate-input-error {
+    border-color: #fca5a5 !important;
+  }
+
+  .rate-input-success {
+    border-color: #86efac !important;
+  }
+
+  /* Input Styling */
+  input[type="number"],
+  input[type="text"],
+  textarea {
+    font-size: 14px;
+  }
 </style>
 
-<div class="w-full bg-white rounded-lg shadow-sm p-10 pe-19 mb-6">
-  <h1 class="text-5xl font-semibold text-gray-900 mb-2">{{ doc.name }}</h1>
-  <p class="text-gray-600 mb-0">
+<div class="header-container">
+  <h1 class="header-title">{{ doc.name }}</h1>
+  <p class="header-meta">
     Supplier: {{ doc.supplier }} | Date: {{ doc.get_formatted("transaction_date") }}
   </p>
 </div>
 {% endblock %}
 
 {% block page_content %}
-<div class="max-w-7xl mx-auto px-4">
+<div class="main-container">
 
-  <div class="bg-blue-50 border border-blue-200 text-blue-800 rounded-lg p-4 mb-6">
-    <strong class="font-semibold">Instructions:</strong> Enter your rates and quantities. Only items with rates will be included in the quotation. Click "Add Specifications" for detailed specs. Use "Add New Product" to suggest alternatives.
+  <div class="instructions-box">
+    <strong>Instructions:</strong> Enter your rates and quantities. Only items with rates will be included in the quotation. Click "Add Specifications" for detailed specs. Use "Add New Product" to suggest alternatives.
   </div>
 
   <!-- Items Section -->
-  <div id="items-container" class="space-y-4">
+  <div id="items-container" class="items-container">
     {% if doc.items %}
       {% for d in doc.items %}
-      <div class="item-card bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow duration-200" data-idx="{{ d.idx }}" data-item-code="{{ d.item_code }}" data-is-original="true">
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-7 items-start">
-          <div class="md:col-span-4">
-            <h5 class="text-lg font-medium text-gray-900 mb-2">{{ d.item_name }}</h5>
-            <p class="text-sm text-gray-600 mb-3">
+      <div class="item-card" data-idx="{{ d.idx }}" data-item-code="{{ d.item_code }}" data-is-original="true">
+        <div class="card-grid">
+          
+          <div class="col-span-4">
+            <h5 class="item-title">{{ d.item_name }}</h5>
+            <p class="item-description">
               {{ d.description or "" }}
               {% if d.item_code %}
-              <span class="ml-2 text-gray-500 text-xs">[Code: {{ d.item_code }}]</span>
+              <span class="item-code">[Code: {{ d.item_code }}]</span>
               {% endif %}
             </p>
-            <span class="inline-block px-2 py-1 text-xs font-semibold text-white bg-black rounded">Original Item</span>
+            <span class="badge">Original Item</span>
           </div>
 
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Quantity</label>
-            <input type="number" class="qty-input w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue-500" value="{{ d.qty }}" min="1" onchange="calculateAmount(this)" />
-            <small class="text-xs text-gray-500 mt-1 block">{{ d.uom }}</small>
-          </div>
-
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Rate <span class="text-red-500">*</span></label>
-            <div class="flex">
-              <span class="inline-flex items-center px-3 text-sm text-gray-500 bg-gray-50 border border-r-0 rounded-l-md">{{ doc.currency_symbol or "₹" }}</span>
-              <input type="number" value="0.00" class="rate-input flex-1 px-3 py-2 border rounded-r-md focus:ring-2 focus:ring-blue-500" placeholder="0.00" step="0.01" onchange="calculateAmount(this)" />
+          <div class="col-span-2">
+            <div class="form-group">
+              <label class="form-label">Quantity</label>
+              <input type="number" class="qty-input form-input"
+                     value="{{ d.qty }}" min="0"
+                     oninput="restrictNegative(this)"
+                     onchange="calculateAmount(this)" />
+              <span class="form-uom">{{ d.uom }}</span>
             </div>
-            <small class="text-xs text-gray-500 mt-1 block">Required to include item</small>
           </div>
 
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Amount</label>
-            <input type="text" class="amount-display w-full px-3 py-2 border rounded-md bg-gray-50" value="{{ doc.currency_symbol or '₹' }}0.00" readonly />
+          <div class="col-span-2">
+            <div class="form-group">
+              <label class="form-label">Rate <span class="required">*</span></label>
+              <div class="currency-wrapper">
+                <span class="currency-symbol">{{ doc.currency_symbol or "₹" }}</span>
+                <input type="number" value="0" class="rate-input form-input"
+                       placeholder="0.00" step="0.01" min="0"
+                       oninput="restrictNegative(this)"
+                       onchange="calculateAmount(this)" />
+              </div>
+              <small class="form-help">Required to include item</small>
+            </div>
           </div>
 
-          <div class="md:col-span-2">
-            <label class="block text-sm font-medium text-gray-700 mb-1">&nbsp;</label>
-            <button type="button" class="w-full px-3 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50" onclick="toggleSpecs(this)">Add Specifications</button>
+          <div class="col-span-2">
+            <div class="form-group">
+              <label class="form-label">Amount</label>
+              <input type="text" class="amount-display form-input" value="{{ doc.currency_symbol or '₹' }}0.00" readonly />
+            </div>
+          </div>
+
+          <div class="col-span-2">
+            <div class="form-group">
+              <label class="form-label">&nbsp;</label>
+              <button type="button" class="btn" onclick="toggleSpecs(this)">Add Specifications</button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Specs -->
+        <div class="specs-section">
+          <h6 class="specs-title">Product Specifications</h6>
+          <div class="specs-grid">
+            <div class="specs-column">
+              <div class="form-group">
+                <label class="form-label">Brand</label>
+                <input type="text" name="brand" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Model</label>
+                <input type="text" name="model" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Warranty</label>
+                <input type="text" name="warranty" class="form-input" />
+              </div>
+            </div>
+
+            <div class="specs-column">
+              <div class="form-group">
+                <label class="form-label">Lead Time</label>
+                <input type="text" name="lead_time" class="form-input" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Item Description</label>
+                <textarea name="item_description" rows="3" class="form-textarea"></textarea>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Specifications -->
-        <div class="specs-section bg-gray-50 rounded-lg p-4 mt-4">
-          <h6 class="text-base font-semibold text-gray-900 mb-4">Product Specifications</h6>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="space-y-3">
-              <div><label class="block text-sm">Brand</label><input type="text" name="brand" placeholder="Enter brand" class="w-full px-3 py-2 border rounded-md" /></div>
-              <div><label class="block text-sm">Model</label><input type="text" name="model" placeholder="Enter model" class="w-full px-3 py-2 border rounded-md" /></div>
-              <div><label class="block text-sm">Warranty</label><input type="text" name="warranty" placeholder="e.g., 1 year" class="w-full px-3 py-2 border rounded-md" /></div>
-            </div>
-            <div class="space-y-3">
-              <div><label class="block text-sm">Lead Time</label><input type="text" name="lead_time" placeholder="e.g., 10 days" class="w-full px-3 py-2 border rounded-md" /></div>
-              <div><label class="block text-sm">Item Description</label><textarea name="item_description" placeholder="Brief item description" rows="3" class="w-full px-3 py-2 border rounded-md"></textarea></div>
-            </div>
-          </div>
-        </div>
       </div>
       {% endfor %}
     {% endif %}
   </div>
 
   <!-- Add New Product -->
-  <div class="text-center mb-6 mt-4">
-    <button class="px-6 py-2 text-black border border-black rounded-md hover:bg-gray-100" onclick="addNewProduct()">+ Add New Product</button>
+  <div class="add-product-section">
+    <button class="btn-add-product" onclick="addNewProduct()">+ Add New Product</button>
   </div>
 
   <!-- Grand Total -->
-  <div class="bg-white rounded-lg shadow-sm p-4 mb-6">
-    <div class="text-right text-lg font-medium text-gray-900">
+  <div class="grand-total-section">
+    <div class="grand-total-amount">
       Grand Total: {{ doc.currency_symbol or "₹" }}<span id="grandTotal">0.00</span>
     </div>
-    <div class="text-right text-sm text-gray-500 mt-1">
-      Only items with rates are included
+    <div class="grand-total-note">Only items with rates are included</div>
+  </div>
+
+  <!-- Notes + Submit -->
+  <div class="notes-section">
+    <div class="notes-header"><h3>Additional Notes</h3></div>
+    <div class="notes-body">
+      <textarea rows="4" class="notes-textarea"></textarea>
     </div>
   </div>
 
-  <!-- Notes -->
-  <div class="bg-white border border-gray-200 rounded-lg overflow-hidden mb-6">
-    <div class="bg-gray-50 px-4 py-3 border-b"><h3 class="text-sm font-semibold text-gray-900">Additional Notes</h3></div>
-    <div class="p-4">
-      <textarea placeholder="Add any notes or terms here..." rows="4" class="w-full px-3 py-2 border rounded-md"></textarea>
-    </div>
-  </div>
-
-  <!-- Action Buttons -->
-  <div class="flex justify-end mb-6 space-x-4">
+  <div class="action-buttons">
     {% if doc.items %}
-    <button 
-        class="w-full px-6 py-3 border border-black rounded-md hover:bg-gray-100" 
-        onclick="submitQuotation()">
-        Submit Quotation
-    </button>
+    <button class="btn-primary" onclick="submitQuotation()">Create Quotation</button>
     {% endif %}
   </div>
 
-</div> 
+</div>
 
 <script>
-  
+
+
+  function restrictNegative(el) {
+    if (parseFloat(el.value) < 0) el.value = 0;
+  }
+
+
+
   function calculateAmount(element) {
     const card = element.closest(".item-card");
     const qty = parseFloat(card.querySelector(".qty-input").value) || 0;
     const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
     const amount = qty * rate;
     const currencySymbol = "{{ doc.currency_symbol or '₹' }}";
-    card.querySelector(".amount-display").value = currencySymbol + amount.toFixed(2);
+
+    card.querySelector(".amount-display").value =
+      currencySymbol + amount.toFixed(2);
+
     calculateGrandTotal();
     updateItemStatus(card, rate);
   }
 
   function updateItemStatus(card, rate) {
-    // Visual feedback for items with/without rates
     const rateInput = card.querySelector(".rate-input");
-    if (rate > 0) {
-      rateInput.classList.remove("border-red-300");
-      rateInput.classList.add("border-green-300");
+
+    if (card.hasAttribute("data-is-suggested")) {
+      if (rate > 0) {
+        rateInput.classList.remove("rate-input-error");
+        rateInput.classList.add("rate-input-success");
+      } else {
+        rateInput.classList.add("rate-input-error");
+        rateInput.classList.remove("rate-input-success");
+      }
     } else {
-      rateInput.classList.remove("border-green-300");
-      rateInput.classList.add("border-red-300");
+      rateInput.classList.remove("rate-input-error");
+      rateInput.classList.remove("rate-input-success");
     }
   }
 
   function calculateGrandTotal() {
     let total = 0;
+
     document.querySelectorAll(".item-card").forEach((card) => {
       const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
-      if (rate > 0) { // Only include items with rates in grand total
-        const value = card.querySelector(".amount-display").value.replace(/[^0-9.-]/g, "");
-        total += parseFloat(value) || 0;
+      if (rate > 0) {
+        const val = card.querySelector(".amount-display").value.replace(/[^0-9.-]/g, "");
+        total += parseFloat(val) || 0;
       }
     });
+
     document.getElementById("grandTotal").textContent = total.toFixed(2);
   }
 
   function toggleSpecs(button) {
     const specs = button.closest(".item-card").querySelector(".specs-section");
     specs.classList.toggle("show");
-    button.textContent = specs.classList.contains("show") ? "Hide Specifications" : "Add Specifications";
+    button.textContent = specs.classList.contains("show")
+      ? "Hide Specifications"
+      : "Add Specifications";
   }
 
   function removeItem(button) {
@@ -174,68 +668,80 @@
 
   function addNewProduct() {
     const container = document.getElementById("items-container");
+
     const newItem = document.createElement("div");
-    newItem.className = "item-card suggested-item bg-white border rounded-lg p-6 relative";
+    newItem.className = "item-card suggested-item";
     newItem.setAttribute("data-is-suggested", "true");
+
     newItem.innerHTML = `
-      <button class="remove-btn absolute top-3 right-3 w-6 h-6 bg-red-600 text-white rounded-full" onclick="removeItem(this)">×</button>
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-start">
-        <div class="md:col-span-4">
-          <input type="text" placeholder="Product Name" class="product-name-input w-full px-3 py-2 border rounded-md mb-2" required>
-          <textarea placeholder="Product Description" rows="2" class="product-description-input w-full px-3 py-2 border rounded-md mb-3"></textarea>
-          <span class="inline-block px-2 py-1 text-xs font-semibold bg-yellow-400 rounded">Suggested Product</span>
+      <button class="remove-btn btn-remove" onclick="removeItem(this)">×</button>
+      <div class="card-grid">
+
+        <div class="col-span-4">
+          <input type="text" placeholder="Product Name" class="product-name-input form-input" required>
+          <textarea placeholder="Product Description" rows="2" class="product-description-input form-textarea" style="margin-top: 8px; margin-bottom: 12px;"></textarea>
+          <span class="badge badge-suggested">Suggested Product</span>
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-sm mb-1">Quantity</label>
-          <input type="number" value="1" min="1" class="qty-input w-full px-3 py-2 border rounded-md" onchange="calculateAmount(this)">
-          <input type="text" value="Nos" placeholder="UOM" class="uom-input w-full px-3 py-2 border rounded-md mt-1">
+
+        <div class="col-span-2">
+          <label class="form-label">Quantity</label>
+          <input type="number" value="1" class="qty-input form-input"
+                 min="1" oninput="restrictNegative(this)"
+                 onchange="calculateAmount(this)">
+          <input type="text" class="uom-input form-input" value="Nos" style="margin-top: 8px;">
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-sm mb-1">Rate <span class="text-red-500">*</span></label>
-          <div class="flex">
-            <span class="inline-flex items-center px-3 bg-gray-50 border border-r-0 rounded-l-md">{{ doc.currency_symbol or "₹" }}</span>
-            <input type="number" placeholder="0.00" step="0.01" class="rate-input flex-1 px-3 py-2 border rounded-r-md border-red-300" onchange="calculateAmount(this)">
+
+        <div class="col-span-2">
+          <label class="form-label">Rate *</label>
+          <div class="currency-wrapper">
+            <span class="currency-symbol">{{ doc.currency_symbol or "₹" }}</span>
+            <input type="number" class="rate-input form-input rate-input-error"
+                   step="0.01" placeholder="0.00" min="0"
+                   oninput="restrictNegative(this)"
+                   onchange="calculateAmount(this)">
           </div>
-          <small class="text-xs text-gray-500 mt-1 block">Required to include item</small>
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-sm mb-1">Amount</label>
-          <input type="text" value="{{ doc.currency_symbol or '₹' }}0.00" readonly class="amount-display w-full px-3 py-2 border rounded-md bg-gray-50">
+
+        <div class="col-span-2">
+          <label class="form-label">Amount</label>
+          <input type="text" readonly class="amount-display form-input"
+                 value="{{ doc.currency_symbol or '₹' }}0.00">
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-sm mb-1">&nbsp;</label>
-          <button type="button" class="w-full px-3 py-2 border rounded-md" onclick="toggleSpecs(this)">Add Specifications</button>
+
+        <div class="col-span-2">
+          <button type="button" class="btn" onclick="toggleSpecs(this)">Add Specifications</button>
+        </div>
+
+      </div>
+
+      <div class="specs-section">
+        <h6 class="specs-title">Product Specifications</h6>
+        <div class="specs-grid">
+          <div class="specs-column">
+            <input type="text" name="brand" placeholder="Brand" class="form-input">
+            <input type="text" name="model" placeholder="Model" class="form-input">
+            <input type="text" name="warranty" placeholder="Warranty" class="form-input">
+          </div>
+          <div class="specs-column">
+            <input type="text" name="lead_time" placeholder="Lead Time" class="form-input">
+            <textarea name="item_description" placeholder="Item Description" rows="3" class="form-textarea"></textarea>
+          </div>
         </div>
       </div>
-      <div class="specs-section bg-gray-50 rounded-lg p-4 mt-4">
-        <h6 class="text-base font-semibold mb-4">Product Specifications</h6>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="space-y-3">
-            <div><label class="block text-sm">Brand</label><input type="text" name="brand" placeholder="Enter brand" class="w-full px-3 py-2 border rounded-md"></div>
-            <div><label class="block text-sm">Model</label><input type="text" name="model" placeholder="Enter model" class="w-full px-3 py-2 border rounded-md"></div>
-            <div><label class="block text-sm">Warranty</label><input type="text" name="warranty" placeholder="e.g., 1 year" class="w-full px-3 py-2 border rounded-md"></div>
-          </div>
-          <div class="space-y-3">
-            <div><label class="block text-sm">Lead Time</label><input type="text" name="lead_time" placeholder="e.g., 10 days" class="w-full px-3 py-2 border rounded-md"></div>
-            <div><label class="block text-sm">Item Description</label><textarea name="item_description" placeholder="Brief item description" rows="3" class="w-full px-3 py-2 border rounded-md"></textarea></div>
-          </div>
-        </div>
-      </div>`;
+    `;
+
     container.appendChild(newItem);
   }
 
-  // --- Data Collection - Separate original and suggested items ---
   function getOriginalItemData(card) {
-    const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
-
     return {
-      item_code: card.dataset.itemCode || null,
+      item_code: card.dataset.itemCode || "",
       item_name: card.querySelector("h5")?.textContent || "",
-      description: card.querySelector("p")?.textContent || "",
+      description: card.querySelector(".item-description")?.textContent || "",
       item_description: card.querySelector("textarea[name='item_description']")?.value || "",
-      qty: parseFloat(card.querySelector(".qty-input")?.value) || 1,
-      uom: card.querySelector("small")?.textContent || "",
-      rate: rate,
+      qty: parseFloat(card.querySelector(".qty-input").value) || 0,
+      uom: card.querySelector(".form-uom")?.textContent || "",
+      rate: parseFloat(card.querySelector(".rate-input").value) || 0,
       brand: card.querySelector("input[name='brand']")?.value || "",
       model: card.querySelector("input[name='model']")?.value || "",
       warranty: card.querySelector("input[name='warranty']")?.value || "",
@@ -244,9 +750,8 @@
   }
 
   function getSuggestedItemData(card) {
-    const rate = parseFloat(card.querySelector(".rate-input")?.value) || 0;
-    const qty = parseFloat(card.querySelector(".qty-input")?.value) || 1;
-    const amount = qty * rate;
+    const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
+    const qty = parseFloat(card.querySelector(".qty-input").value) || 1;
 
     return {
       product_name: card.querySelector(".product-name-input")?.value || "",
@@ -255,96 +760,72 @@
       quantity: qty,
       uom: card.querySelector(".uom-input")?.value || "",
       rate: rate,
-      amount: amount
+      amount: qty * rate
     };
   }
 
   function collectFormData() {
     const originalItems = [];
     const suggestedItems = [];
-    
-    document.querySelectorAll(".item-card").forEach(card => {
+
+    document.querySelectorAll(".item-card").forEach((card) => {
       if (card.hasAttribute("data-is-original")) {
-        // Original RFQ item
-        const itemData = getOriginalItemData(card);
-        if (itemData) {
-          originalItems.push(itemData);
-        }
-      } else if (card.hasAttribute("data-is-suggested") || card.classList.contains("suggested-item")) {
-        // Suggested item by supplier
-        const itemData = getSuggestedItemData(card);
-        if (itemData) {
-          suggestedItems.push(itemData);
-        }
+        originalItems.push(getOriginalItemData(card));
+      } else if (card.hasAttribute("data-is-suggested")) {
+        const item = getSuggestedItemData(card);
+        if (item.rate > 0) suggestedItems.push(item);
       }
     });
-    
-    const notes = document.querySelector("textarea[placeholder='Add any notes or terms here...']")?.value || "";
-    
-    return { 
-      supplier: "{{ doc.supplier }}", 
-      rfq: "{{ doc.name }}", 
-      items: originalItems, 
+
+    return {
+      supplier: "{{ doc.supplier }}",
+      rfq: "{{ doc.name }}",
+      items: originalItems,
       suggested_items: suggestedItems,
-      notes: notes 
+      notes: document.querySelector(".notes-textarea")?.value || ""
     };
   }
 
-  // --- Actions ---
-  function submitQuotation() {
-    console.log("Submit button clicked");
-    
-    if (!validateForm()) {
-      console.log("Form validation failed");
-      return;
-    }
-    
-    if (!confirm("Submit quotation? Only items with rates will be included. You cannot edit after submission.")) {
-      console.log("User cancelled submission");
-      return;
-    }
+  function validateForm() {
+    let ok = true;
 
-    const formData = collectFormData();
-    console.log("Form data collected:", formData);
-    console.log("Items count:", formData.items.length);
-    console.log("Suggested items count:", formData.suggested_items.length);
-
-    frappe.call({
-      method: "beams.templates.pages.request_for_quotation.submit_supplier_quotation",
-      args: { data: JSON.stringify(formData) },
-      freeze: true,
-      freeze_message: "Submitting Quotation...",
-      callback: function (r) {
-        console.log("Response received:", r);
-        if (!r.exc) {
-          frappe.show_alert({ message: r.message.message, indicator: "green" });
-          setTimeout(() => location.reload(), 1000);
-        } else {
-          console.error("Error in submission:", r.exc);
-          frappe.show_alert({ message: "Error submitting quotation", indicator: "red" });
-        }
-      },
-      error: function(r) {
-        console.error("AJAX error:", r);
-        frappe.show_alert({ message: "Network error during submission", indicator: "red" });
+    document.querySelectorAll("[data-is-suggested]").forEach(card => {
+      const rate = parseFloat(card.querySelector(".rate-input").value) || 0;
+      if (rate === 0) {
+        ok = false;
+        card.querySelector(".rate-input").classList.add("rate-input-error");
       }
     });
+
+    return ok;
   }
 
-  function validateForm() {
-    const data = collectFormData();
-    console.log("Validation data:", data);
-    const totalItems = data.items.length + data.suggested_items.length;
-    console.log("Total items for validation:", totalItems);
-    return true;
+  function submitQuotation() {
+
+    if (!validateForm()) {
+      frappe.msgprint("Please enter rate for suggested items.");
+      return;
+    }
+
+    frappe.confirm(
+      "Submit quotation? Only items with rates will be included.",
+      () => {
+        frappe.call({
+          method: "beams.templates.pages.request_for_quotation.save_supplier_quotation",
+          args: { data: JSON.stringify(collectFormData()) },
+          freeze: true,
+          freeze_message: "Submitting...",
+          callback: function (r) {
+            if (!r.exc) {
+              frappe.msgprint("Quotation submitted successfully!");
+              location.reload();
+            }
+          }
+        });
+      }
+    );
   }
 
-  document.addEventListener("DOMContentLoaded", function() {
-    calculateGrandTotal();
-    // Add visual indicators for required fields
-    document.querySelectorAll(".rate-input").forEach(input => {
-      input.classList.add("border-red-300");
-    });
-  });
 </script>
+
 {% endblock %}

@@ -419,6 +419,9 @@ doc_events = {
 	},
 	"HD Team": {
 		"on_update":"beams.beams.custom_scripts.hd_team.hd_team.disable_hd_team_assignment_rule_if_enabled"
+	},
+	"Supplier Quotation": {
+		"validate":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.clear_rate_if_no_rate_provided"
 	}
 }
 
