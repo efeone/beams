@@ -19,7 +19,8 @@
    "fieldname": "departure",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Departure"
+   "label": "Departure",
+   "reqd": 1
   },
   {
    "fieldname": "destination",
@@ -61,7 +62,7 @@
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-05-06 09:53:53.084978",
+ "modified": "2025-11-27 15:25:26.278913",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Details",
