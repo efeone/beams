@@ -181,7 +181,8 @@
    "fieldname": "trip_details",
    "fieldtype": "Table",
    "label": "Trip Details",
-   "options": "Trip Details"
+   "options": "Trip Details",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ygej",
@@ -247,7 +248,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-11-19 14:46:36.960867",
+ "modified": "2025-11-27 14:50:29.374334",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
