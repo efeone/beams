@@ -10,27 +10,16 @@ def get_context(context):
 	context.no_cache = 1
 	context.show_sidebar = True
 
+	rfq = frappe.form_dict.rfq
+
 	# Get supplier linked to current user
 	supplier = get_supplier()
 	if not supplier:
 		frappe.throw(_("No Supplier linked to this user"), frappe.PermissionError)
 
-	# Get the latest RFQ assigned to this supplier
-	rfq_list = frappe.db.get_all(
-		"Request for Quotation Supplier",
-		filters={"supplier": supplier},
-		fields=["parent"],
-		order_by="creation desc",
-		limit=1
-		)
-
-	rfq_name = rfq_list[0]["parent"] if rfq_list else None
-	if not rfq_name:
-		frappe.throw(_("No Request for Quotation found for this supplier"))
-
 
 	# Load RFQ doc
-	context.doc = frappe.get_doc("Request for Quotation", rfq_name)
+	context.doc = frappe.get_doc("Request for Quotation", rfq)
 	context.doc.supplier = supplier
 
 	# Ensure supplier has access
@@ -44,6 +33,7 @@ def get_context(context):
 
 	# Page title
 	context["title"] = context.doc.name
+	return context
 
 
 def get_supplier():
