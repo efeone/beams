@@ -69,6 +69,7 @@ class EmployeeTravelRequest(Document):
 		1.Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
 			if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
 		2. Fetch all the employees into the Trip Sheet from the ETR including the requested_by employee.
+		3. Fetch Trip Details from  Employee Travel Request fields
 		"""
 		etr_name = doc.name
 
@@ -151,6 +152,16 @@ class EmployeeTravelRequest(Document):
 				employees.add(requested_by)
 
 			ts_data["employees"] = [{"employee": emp} for emp in employees]
+
+			ts_data["trip_details"] = [{
+				"departure": doc.source,
+				"destination": doc.destination,
+				"from_time": doc.start_date,
+				"to_time": doc.end_date,
+				"hrs": None,
+				"distance_traveled": None,
+				"remark": None
+			}]
 
 			if safety_inspection:
 				ts_data["vehicle_template"] = safety_inspection[0].name
