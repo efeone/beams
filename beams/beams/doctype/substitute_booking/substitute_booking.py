@@ -51,6 +51,8 @@ class SubstituteBooking(Document):
 			frappe.throw("Please configure the Default Credit Account in the Beams Accounts Settings.")
 		if not default_debit_account:
 			frappe.throw("Please configure the Default Debit Account in the Beams Accounts Settings.")
+		if not self.is_paid:
+			frappe.throw("Please mark the booking as Paid before Approval.")
 
 		# Check if a Journal Entry exists for this Substitute Booking, excluding canceled entries
 		journal_entry_exists = frappe.db.exists("Journal Entry", {"substitute_booking_reference": self.name,"docstatus": ["!=", 2] })
@@ -79,8 +81,6 @@ class SubstituteBooking(Document):
 				journal_entry.insert(ignore_permissions=True)
 				journal_entry.submit()
 				frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True)
-			else:
-				frappe.msgprint("Please make the payment to proceed.")
 
 
 	def before_save(self):
