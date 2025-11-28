@@ -47,3 +47,11 @@ def make_purchase_order_from_supplier_quotation(source_name, target_doc=None):
 	)
 
 	return target_doc
+
+
+def clear_rate_if_no_rate_provided(doc, method):
+	"''Clear rate and amount for items where no_rate_provided is set.'''"
+	for item in doc.items:
+		if item.no_rate_provided:
+			item.rate = 0
+			item.amount = 0

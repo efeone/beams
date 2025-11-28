@@ -5816,6 +5816,13 @@ def get_supplier_quotation_item_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Item Description",
 				"insert_after": "item_code"
+			},
+			{
+				"fieldname": "no_rate_provided",
+				"fieldtype": "Check",
+				"label": "No Rate Provided",
+				"insert_after": "is_free_item",
+				"hidden": 1
 			}
 		]
 	}
