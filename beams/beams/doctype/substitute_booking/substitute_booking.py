@@ -182,9 +182,14 @@ class SubstituteBooking(Document):
 			})
 
 	def validate_duplicate_assignment(self):
+		"""
+		Validate that no other active Substitute Booking exists for the same 'substituting_for' and 'date'.
+		Cancelled entries (docstatus = 2) are excluded from the check.
+		"""
 		# Iterate over each row in the child table 'substitution_bill_date'
 		for row in self.substitution_bill_date:
-			# Check if any other Substitute Booking exists for the same 'substituting_for' and 'date'
+			# Check if any other active Substitute Booking exists for the same 'substituting_for' and 'date'
+			# Exclude cancelled documents (docstatus = 2)
 			duplicate_exists = frappe.db.sql("""
 				SELECT
 					parent
@@ -200,12 +205,14 @@ class SubstituteBooking(Document):
 					sbd.date = %s
 				AND
 					`tabSubstitute Booking`.name != %s
+				AND
+					`tabSubstitute Booking`.docstatus != 2
 			""", (self.substituting_for, row.date, self.name))
 
 			# If a duplicate is found, raise an error
 			if duplicate_exists:
 				frappe.throw(_("A substitute is already assigned for {0} on {1}. No duplicate bookings are allowed.")
-							 .format(self.substituting_for, row.date))
+							.format(self.substituting_for, row.date))
 
 
 @frappe.whitelist()
