@@ -15,7 +15,8 @@
   "petty_cash_account",
   "account",
   "requested_amount",
-  "reason"
+  "reason",
+  "is_budgeted"
  ],
  "fields": [
   {
@@ -77,12 +78,18 @@
    "fieldname": "reason",
    "fieldtype": "Small Text",
    "label": "Reason"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-24 16:15:48.424785",
+ "modified": "2025-11-29 10:37:22.784579",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Petty Cash Request",
@@ -103,6 +110,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

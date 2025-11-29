@@ -28,6 +28,7 @@
   "safety_inspection_completed",
   "trip_details_section",
   "trip_details",
+  "is_budgeted",
   "section_break_ygej",
   "initial_odometer_reading",
   "final_odometer_reading",
@@ -238,6 +239,12 @@
    "ignore_user_permissions": 1,
    "label": "Employees",
    "options": "Employees"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -248,7 +255,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-11-27 14:50:29.374334",
+ "modified": "2025-11-29 11:24:23.153422",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",

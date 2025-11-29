@@ -13,6 +13,7 @@
   "number_of_travellers",
   "is_vehicle_required",
   "is_unplanned",
+  "is_budgeted",
   "column_break_ooli",
   "posting_date",
   "is_management_employee",
@@ -259,6 +260,12 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -277,7 +284,7 @@
    "link_fieldname": "employee_travel_request"
   }
  ],
- "modified": "2025-11-27 13:32:29.099720",
+ "modified": "2025-11-29 10:35:23.823497",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
