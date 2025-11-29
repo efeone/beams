@@ -1022,7 +1022,13 @@ def get_purchase_order_custom_fields():
 				"insert_after": "rejection_section",
 				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending Accounts Approval'  || doc.workflow_state == 'Pending CEO Approval'",
 				"read_only_depends_on": "eval:!(doc.workflow_state == 'Pending Accounts Approval' || doc.workflow_state == 'Pending CEO Approval')"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "is_subcontracted"
+			},
 		],
 		"Purchase Order Item": [
 			{
@@ -1730,7 +1736,13 @@ def get_purchase_invoice_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Attachments",
 				"insert_after": "base_net_total"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "is_reverse_charge"
+			},
 		]
 	}
 
@@ -2276,7 +2288,13 @@ def get_voucher_entry_custom_fields():
 				"options": "Bureau",
 				"label": "Bureau",
 				"insert_after": "naming_series"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "project"
+			},
 		]
 	}
 
@@ -5182,11 +5200,10 @@ def get_material_request_custom_fields():
 				"fieldname": "budget_exceeded",
 				"fieldtype": "Check",
 				"label": "Budget Exceeded",
-				"insert_after": "schedule_date",
+				"insert_after": "location",
 				"read_only":1,
 				"no_copy":1,
 				"depends_on": "eval:doc.budget_exceeded == 1"
-
 			},
 			{
 				"fieldname": "requested_by",
@@ -5218,7 +5235,14 @@ def get_material_request_custom_fields():
 				"insert_after": "requested_by",
 				"read_only": 1,
 				"fetch_from": "requested_by.employee_name"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "buying_price_list",
+			},
+
 		]
 	}
 
