@@ -23,6 +23,7 @@
   "origin",
   "destination",
   "mode_of_travelling",
+  "is_budgeted",
   "is_travelling_outside_kerala",
   "is_overnight_stay",
   "is_avail_room_rent",
@@ -302,6 +303,12 @@
    "fieldtype": "Link",
    "label": "Travel Request",
    "options": "Employee Travel Request"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -316,7 +323,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-11-18 10:37:46.469811",
+ "modified": "2025-11-29 09:26:33.695459",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
