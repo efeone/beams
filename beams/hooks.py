@@ -73,7 +73,8 @@ doctype_js = {
 	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js",
 	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js",
 	"Purchase Order":"beams/custom_scripts/purchase_order/purchase_order.js",
-	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js"
+	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
+	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
 }
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
