@@ -253,9 +253,13 @@
   {
    "link_doctype": "Vehicle Incident Record",
    "link_fieldname": "trip_sheet"
+  },
+  {
+   "link_doctype": "Batta Claim",
+   "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-11-29 11:24:23.153422",
+ "modified": "2025-12-01 09:46:08.527134",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",
