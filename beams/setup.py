@@ -204,7 +204,9 @@ def get_hd_ticket_type_custom_fields():
 				"fieldtype": "Link",
 				"label": "Team Name",
 				"options":"HD Team",
-				"insert_after": "is_system"
+				"insert_after": "is_system",
+				"mandatory_depends_on": "eval:doc.is_system==0",
+				"allow_in_quick_entry": 1
 			}
 		]
 	}
@@ -5188,7 +5190,47 @@ def get_property_setters():
 			"property": "fetch_if_empty",
 			"value": 1
 		},
-]
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "ignore_restrictions",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "assignment_rule",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "column_break_feto",
+			"property": "label",
+			"property_type": "Dagta",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket Type",
+			"field_name": "priority",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket Type",
+			"field_name": "is_system",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+	]
 
 def get_material_request_custom_fields():
 	'''
