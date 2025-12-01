@@ -5230,6 +5230,102 @@ def get_property_setters():
 			"property_type": "Check",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "agreement_details_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "status_details",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "branding_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "misc_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "search_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "email_customisations_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "feedback_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "ticket_restrictions_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "assign_within_team",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "assignment_rules_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "knowledge_base_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "is_ticket_type_mandatory",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
 	]
 
 def get_material_request_custom_fields():
