@@ -83,17 +83,17 @@
    "label": "Is Parent Bureau"
   },
   {
-   "depends_on": "eval:!doc.is_parent_bureau",
+   "fetch_from": "regional_bureau.parent_bureau_head",
    "fieldname": "parent_bureau_head",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Parent Bureau Head",
+   "label": "Bureau Head",
    "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-26 12:16:52.601463",
+ "modified": "2025-12-01 14:26:58.708333",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
