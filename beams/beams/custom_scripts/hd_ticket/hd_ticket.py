@@ -175,6 +175,8 @@ def assign_ticket_to_agent(ticket_id, agent):
 	ticket_doc.status = 'Working'
 	ticket_doc.assigned_agent = agent
 	ticket_doc.assigned_agent_name = frappe.db.get_value('User', agent, 'full_name') or ''
+	if not ticket_doc.first_responded_on:
+		ticket_doc.first_responded_on = now_datetime()
 	ticket_doc.save(ignore_permissions=True)
 
 	# Clear previous assignments
