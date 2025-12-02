@@ -282,9 +282,13 @@
   {
    "link_doctype": "Trip Sheet",
    "link_fieldname": "employee_travel_request"
+  },
+  {
+   "link_doctype": "Batta Claim",
+   "link_fieldname": "travel_request"
   }
  ],
- "modified": "2025-11-29 10:35:23.823497",
+ "modified": "2025-12-02 15:35:03.167518",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
