@@ -12,6 +12,7 @@ from frappe.utils import nowdate
 from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils import get_datetime
 
 
 class EmployeeTravelRequest(Document):
@@ -762,4 +763,56 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 					"doctype": "Journal Entry",
 					"name": journal_entry_name,
 					"description": description
-				})	
+				})
+
+@frappe.whitelist()
+def create_batta_claim_from_etr(travel_request):
+	'''
+	Create Batta Claim from Employee Travel Request.
+	'''
+	doc = frappe.get_doc("Employee Travel Request", travel_request)
+	employee = doc.requested_by
+
+	if not employee:
+		frappe.throw("No Employee linked to this Travel Request.")
+
+	existing_bc_name = frappe.db.exists("Batta Claim", {"travel_request": doc.name})
+	if existing_bc_name:
+		return {"status": "exists", "name": existing_bc_name}
+
+	bc = frappe.new_doc("Batta Claim")
+	bc.travel_request = doc.name
+	bc.employee = employee
+	bc.origin = doc.source
+	bc.destination = doc.destination
+	bc.purpose= doc.travel_type
+	bc.is_travelling_outside_kerala = 0 if doc.inside_kerala else 1
+
+	if doc.get("mode_of_travel"):
+		bc.append("mode_of_travelling", {
+			"mode_of_travel": doc.mode_of_travel
+		})
+
+	if hasattr(bc, 'work_detail'):
+		work_detail_row = {
+			"from_date_and_time": doc.start_date,
+			"to_date_and_time": doc.end_date
+		}
+
+		start = get_datetime(doc.start_date)
+		end = get_datetime(doc.end_date)
+
+		diff_hours = (end - start).total_seconds() / 3600
+		work_detail_row["total_hours"] = diff_hours if diff_hours > 0 else 0
+
+		if doc.get("source"):
+			work_detail_row["origin"] = doc.source
+		if doc.get("destination"):
+			work_detail_row["destination"] = doc.destination
+
+		bc.append("work_detail", work_detail_row)
+
+		bc.insert(ignore_permissions=True)
+
+	return {"status": "new", "name": bc.name}
+
