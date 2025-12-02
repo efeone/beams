@@ -13,6 +13,8 @@ frappe.ui.form.on('Employee Travel Request', {
 		set_expense_claim_html(frm)
 	},
 	refresh: function (frm) {
+
+		create_batta_claim_from_travel(frm);
 		if (!frm.is_new() && frappe.user.has_role("Admin")) {
 			frm.add_custom_button(__('Journal Entry'), function () {
 				const dialog = new frappe.ui.Dialog({
@@ -477,5 +479,25 @@ function validate_expense_date(field, frm) {
 			}
 		}
 	}
+}
+
+/*
+Helper Function: Add Batta Claim Button
+*/
+function create_batta_claim_from_travel(frm) {
+    if (frm.is_new() || frm.doc.workflow_state !== "Approved") {
+        return;
+    }
+
+    frm.add_custom_button(__('Batta Claim'), () => {
+				frappe.call({
+					method: "beams.beams.doctype.employee_travel_request.employee_travel_request.create_batta_claim_from_etr",
+					args: {travel_request: frm.doc.name },
+					callback: function (r) {
+						if (!r.message) return;
+						frappe.set_route("Form", "Batta Claim", r.message.name);
+					}
+				});
+    }, __("Create"));
 }
 
