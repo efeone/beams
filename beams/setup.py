@@ -5326,6 +5326,139 @@ def get_property_setters():
 			"property_type": "Check",
 			"value": 1
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "feedback_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "meta_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "meta_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "via_customer_portal",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "split_and_merge_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "content_type",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "reqd",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "HD Ticket",
+			"property": "sort_field",
+			"property_type": "Data",
+			"value": "creation",
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "HD Ticket",
+			"property": "sort_order",
+			"property_type": "Select",
+			"value": "DESC"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 0,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 0,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "in_list_view",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "raised_for",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": "Open",
+		},
 	]
 
 def get_material_request_custom_fields():
@@ -6046,31 +6179,32 @@ def get_hd_settings_custom_fields():
 				"fieldname": "escalation_notifications_templates",
 				"fieldtype": "Tab Break",
 				"label": "Escalation Notifications Templates",
-				"insert_after": "reply_via_agent_email_content"
+				"insert_after": "reply_via_agent_email_content",
 			},
 			{
 				"fieldname": "enable_escalation_notifications",
 				"fieldtype": "Check",
 				"label": "Enable Escalation Notifications",
-				"insert_after": "escalation_notifications_templates"
+				"insert_after": "escalation_notifications_templates",
 			},
 			{
 				"fieldname": "response_due_template",
 				"fieldtype": "Link",
 				"label": "Response Due Template",
 				"options": "Email Template",
-				"insert_after": "enable_escalation_notifications"
+				"insert_after": "enable_escalation_notifications",
+				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
 			},
 			{
 				"fieldname": "resolution_due_template",
 				"fieldtype": "Link",
 				"label": "Resolution Due Template",
 				"options": "Email Template",
-				"insert_after": "response_due_template"
+				"insert_after": "response_due_template",
+				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
 			}
 		]
 	}
-
 
 def get_hd_agent_custom_fields():
 	""" 

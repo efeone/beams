@@ -76,11 +76,14 @@ doctype_js = {
 	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
 	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
 }
+
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
 	"Purchase Invoice":"beams/custom_scripts/purchase_invoice/purchase_invoice_list.js",
-	"Job Applicant":"beams/custom_scripts/job_applicant/job_applicant_list.js"
+	"Job Applicant":"beams/custom_scripts/job_applicant/job_applicant_list.js",
+	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket_list.js",
 }
+
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
