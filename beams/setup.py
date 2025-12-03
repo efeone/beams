@@ -96,6 +96,8 @@ def after_install():
 
 def after_migrate():
 	after_install()
+	update_portal_settings()
+
 
 def before_uninstall():
 	delete_custom_fields(get_customer_custom_fields())
@@ -6257,3 +6259,15 @@ def get_hd_agent_custom_fields():
 			}
 		]
 	}
+
+def update_portal_settings():
+    """ update portal settings to change routes for specific menu items """
+    portal_settings = frappe.get_single('Portal Settings')
+
+    for data in portal_settings.menu:
+        if data.title == "Request for Quotations" and data.enabled:
+            data.route = "/request_for_quotation_list_view"
+        if data.title == "Supplier Quotation" and data.enabled:
+            data.route = "/supplier_quotation_list_view"
+
+    portal_settings.save()
