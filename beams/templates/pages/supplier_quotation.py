@@ -101,7 +101,6 @@ def update_supplier_quotation(data):
 					break
 	
 	# Update suggested items
-	# First, remove existing suggested items
 	doc.suggested_items_by_supplier = []
 	
 	# Add updated/new suggested items
