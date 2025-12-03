@@ -1743,7 +1743,15 @@ def get_purchase_invoice_custom_fields():
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
 				"label": "Is Budgeted",
-				"insert_after": "is_reverse_charge"
+				"insert_after": "is_reverse_charge",
+				"default": "1"
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Budget Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted"
 			},
 		]
 	}
@@ -2295,7 +2303,24 @@ def get_voucher_entry_custom_fields():
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
 				"label": "Is Budgeted",
-				"insert_after": "project"
+				"insert_after": "project",
+				"default": "1",
+			},
+		],
+		"Voucher Account": [
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "party",
+				"default": "1"
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Budget Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted",
 			},
 		]
 	}
