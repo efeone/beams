@@ -88,7 +88,7 @@ def update_supplier_quotation(data):
 	
 	# Only allow editing draft documents
 	if doc.docstatus != 0:
-		frappe.throw(_("Cannot edit submitted quotation"))
+		frappe.throw(_("Only draft documents can be edited."))
 	
 	# Update quoted items (qty and rate)
 	for item_data in data.get("items", []):
