@@ -3740,7 +3740,19 @@ def get_employee_separation_custom_fields():
 				"options":"Pending\nCompleted",
 				"insert_after": "employee_clearance",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "remarks",
+				"fieldtype": "Small Text",
+				"label": "Remarks",
+				"insert_after": "notice_period_end_date",
+			},
+			{
+				"fieldname": "notice_period_end_date",
+				"fieldtype": "Date",
+				"label": "Notice Period End Date",
+				"insert_after": "boarding_begins_on",
+			},
 		]
 	}
 
