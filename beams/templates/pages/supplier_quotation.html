@@ -455,6 +455,14 @@
     <button class="btn" onclick="cancelEdit()">Cancel</button>
   </div>
 
+  <!-- ACTION BUTTONS -->
+  <div class="action-buttons">
+    {% if doc.docstatus == 0 %}
+      <button class="btn" id="editBtn" onclick="enableEdit()">Edit Quotation</button>
+      <button class="btn-primary btn" id="saveBtn" onclick="saveChanges()" style="display: none;">Save Changes</button>
+    {% endif %}
+  </div>
+
   <!-- ITEMS WITH RATE -->
   {% if doc.items_with_rate %}
   <div class="section">
@@ -486,7 +494,7 @@
               <div class="item-code">{{ item.item_code }}</div>
               {% endif %}
               {% if item.description or item.item_description %}
-              <div class="item-description">{{ item.item_description or item.description }}</div>
+              <!-- <div class="item-description">{{ item.item_description or item.description }}</div> -->
               {% endif %}
             </td>
 
@@ -556,7 +564,7 @@
               <div class="item-code">{{ item.item_code }}</div>
               {% endif %}
               {% if item.description %}
-              <div class="item-description">{{ item.description }}</div>
+              <!-- <div class="item-description">{{ item.description }}</div> -->
               {% endif %}
             </td>
 
@@ -719,13 +727,7 @@
   </div>
 
 
-  <!-- ACTION BUTTONS -->
-  <div class="action-buttons">
-    {% if doc.docstatus == 0 %}
-      <button class="btn" id="editBtn" onclick="enableEdit()">Edit Quotation</button>
-      <button class="btn-primary btn" id="saveBtn" onclick="saveChanges()" style="display: none;">Save Changes</button>
-    {% endif %}
-  </div>
+  
 
 </div>
 
