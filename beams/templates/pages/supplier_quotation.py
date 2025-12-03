@@ -96,6 +96,7 @@ def update_supplier_quotation(data):
 		if item_name:
 			for item in doc.items:
 				if item.name == item_name:
+					item.no_rate_provided = 0
 					item.qty = item_data.get("qty", item.qty)
 					item.rate = item_data.get("rate", item.rate)
 					break
