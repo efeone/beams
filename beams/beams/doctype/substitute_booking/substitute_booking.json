@@ -17,6 +17,8 @@
   "phone_number",
   "column_break_unny",
   "email_id",
+  "is_budgeted",
+  "is_budget_exceeded",
   "section_break_lftz",
   "column_break_rbcg",
   "bureau",
@@ -220,6 +222,19 @@
    "fieldtype": "Check",
    "label": "Is Paid",
    "mandatory_depends_on": "eval:doc.workflow_state === \"Pending Approval\";"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceeded",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceeded"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -230,7 +245,7 @@
    "link_fieldname": "substitute_booking_reference"
   }
  ],
- "modified": "2025-11-28 17:10:33.801865",
+ "modified": "2025-12-03 14:13:49.862015",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Substitute Booking",
