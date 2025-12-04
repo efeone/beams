@@ -2308,6 +2308,13 @@ def get_voucher_entry_custom_fields():
 				"insert_after": "project",
 				"default": "1",
 			},
+						{
+				"fieldname": "is_budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Is Budgete Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
 		],
 		"Voucher Account": [
 			{
