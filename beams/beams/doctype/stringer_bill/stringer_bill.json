@@ -15,6 +15,7 @@
   "bureau",
   "cost_center",
   "is_budgeted",
+  "is_budget_exceed",
   "section_break_njgm",
   "stringer_bill_detail",
   "section_break_zcsv",
@@ -115,10 +116,17 @@
    "read_only": 1
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceed",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceed"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -129,7 +137,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2025-11-29 10:26:41.561924",
+ "modified": "2025-12-04 14:59:10.669682",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
