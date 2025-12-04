@@ -1731,7 +1731,6 @@ def get_purchase_invoice_custom_fields():
 				"fieldname": "bureau",
 				"fieldtype": "Link",
 				"label": "Bureau",
-				"read_only": 1,
 				"options": "Bureau",
 				"insert_after": "supplier"
 			},
