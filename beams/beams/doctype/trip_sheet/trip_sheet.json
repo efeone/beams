@@ -29,6 +29,7 @@
   "trip_details_section",
   "trip_details",
   "is_budgeted",
+  "is_budget_exceed",
   "section_break_ygej",
   "initial_odometer_reading",
   "final_odometer_reading",
@@ -241,10 +242,17 @@
    "options": "Employees"
   },
   {
-   "default": "0",
+   "default": "1",
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceed",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceed "
   }
  ],
  "index_web_pages_for_search": 1,
@@ -259,7 +267,7 @@
    "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-12-01 09:46:08.527134",
+ "modified": "2025-12-04 15:00:58.861731",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",

@@ -1002,9 +1002,8 @@ def get_purchase_order_custom_fields():
 				"fieldtype": "Check",
 				"label": "Is Budget Exceed",
 				"insert_after": "items_section",
-				"read_only":1,
 				"no_copy":1,
-				"depends_on": "eval:doc.is_budget_exceed == 1"
+				"depends_on": "eval:doc.is_budgeted == 1"
 
 			},
 			{
@@ -1030,6 +1029,7 @@ def get_purchase_order_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
+				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "is_subcontracted"
 			},
@@ -5515,11 +5515,10 @@ def get_material_request_custom_fields():
 			{
 				"fieldname": "budget_exceeded",
 				"fieldtype": "Check",
-				"label": "Budget Exceeded",
+				"label": " Is Budget Exceed",
 				"insert_after": "location",
-				"read_only":1,
 				"no_copy":1,
-				"depends_on": "eval:doc.budget_exceeded == 1"
+				"depends_on": "eval:doc.is_budgeted == 1"
 			},
 			{
 				"fieldname": "requested_by",
@@ -5555,8 +5554,9 @@ def get_material_request_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
+				"default": "1",
 				"label": "Is Budgeted",
-				"insert_after": "buying_price_list",
+				"insert_after": "price_list",
 			},
 
 		]
@@ -5695,7 +5695,21 @@ def get_journal_entry_custom_fields():
 				"options": "Vehicle Incident Record",
 				"insert_after": "reference_voucher_entry",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "apply_tds",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
 		]
 	}
 
@@ -6078,7 +6092,22 @@ def get_expense_claim_custom_fields():
 				"options": "Employee Travel Request",
 				"insert_after": "approval_status",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "travel_request",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
+
 		]
 	}
 
