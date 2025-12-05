@@ -13,11 +13,11 @@
   "number_of_travellers",
   "is_vehicle_required",
   "is_unplanned",
-  "is_budgeted",
-  "is__budget_exceed",
   "column_break_ooli",
   "posting_date",
   "is_management_employee",
+  "is_budgeted",
+  "is__budget_exceed",
   "travel_details_section",
   "travel_type",
   "batta_policy",
@@ -296,7 +296,7 @@
    "link_fieldname": "travel_request"
   }
  ],
- "modified": "2025-12-04 14:57:36.267473",
+ "modified": "2025-12-05 12:31:57.633771",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
