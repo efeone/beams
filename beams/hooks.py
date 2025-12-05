@@ -76,6 +76,8 @@ doctype_js = {
 	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
 	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
 	"Item":"beams/custom_scripts/item/item.js",
+    "Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
+    "Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
 }
 
 doctype_list_js = {

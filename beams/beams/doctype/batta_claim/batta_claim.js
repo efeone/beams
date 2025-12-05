@@ -69,6 +69,7 @@ frappe.ui.form.on('Batta Claim', {
     },
     //fetching policy values and setting fields read-only accordingly
     refresh: function(frm) {
+        clear_checkbox_exceed(frm);
         frappe.call({
             method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
             callback: function(response) {
@@ -97,6 +98,9 @@ frappe.ui.form.on('Batta Claim', {
                 }
             }
         });
+    },
+    is_budgeted: function(frm){
+        clear_checkbox_exceed(frm);
     }
 });
 
@@ -413,4 +417,13 @@ function calculate_total_batta(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
     frappe.model.set_value(cdt, cdn, "total_batta", (row.daily_batta || 0) + (row.total_food_allowance || 0));
     frm.refresh_field("work_detail");
+}
+
+/**
+* Clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+*/      
+function clear_checkbox_exceed(frm){
+    if(frm.doc.is_budgeted == 0){
+        frm.set_value("is_budget_exceed", 0);
+    }
 }
