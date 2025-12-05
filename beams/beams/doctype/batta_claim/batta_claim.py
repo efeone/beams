@@ -223,7 +223,7 @@ class BattaClaim(Document):
 			
 
 @frappe.whitelist()
-def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, is_avail_room_rent=0, total_distance_travelled_km=0, total_hours=0):
+def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, is_avail_room_rent=0, total_distance_travelled_km=0, total_hours=0, number_of_days_staying=1):
 	'''
 		Calculation Of Total Batta Allowance based on Batta Policy
 	'''
@@ -266,17 +266,17 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	if is_overnight_stay and is_avail_room_rent:
 		if not is_actual_room_rent:  # Check if policy is not actual
 			if is_travelling_outside_kerala:
-				room_rent_batta = float(policy.get('outside_kerala_', 0))
+				room_rent_batta = float(policy.get('outside_kerala_', 0)) * flt(number_of_days_staying)
 			else:
-				room_rent_batta = float(policy.get('inside_kerala_', 0))
+				room_rent_batta = float(policy.get('inside_kerala_', 0)) * flt(number_of_days_staying)
 
 	# Calculate Daily Batta with Overnight Stay
 	if not is_actual_daily_batta:  # Check if policy is not actual
 		if is_overnight_stay:
 			if is_travelling_outside_kerala:
-				daily_batta_with_overnight_stay = float(policy.get('outside_kerala__', 0))
+				daily_batta_with_overnight_stay = float(policy.get('outside_kerala__', 0)) * flt(number_of_days_staying)
 			else:
-				daily_batta_with_overnight_stay = float(policy.get('inside_kerala__', 0))
+				daily_batta_with_overnight_stay = float(policy.get('inside_kerala__', 0)) * flt(number_of_days_staying)
 
 	# Calculate Daily Batta without Overnight Stay
 	if not is_actual_daily_batta_without_overnight:  # Check if policy is not actual

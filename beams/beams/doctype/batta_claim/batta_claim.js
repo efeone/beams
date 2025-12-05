@@ -9,6 +9,9 @@ frappe.ui.form.on('Batta Claim', {
         calculate_batta(frm);
         calculate_total_hours(frm);
     },
+    number_of_days_staying: function(frm) {
+        calculate_allowance(frm);
+    },
     batta: function(frm) {
         update_all_daily_batta(frm);
     },
@@ -322,7 +325,8 @@ function calculate_allowance(frm) {
             is_overnight_stay: frm.doc.is_overnight_stay || 0,
             is_avail_room_rent: frm.doc.is_avail_room_rent || 0,
             total_distance_travelled_km: frm.doc.total_distance_travelled_km || 0,
-            total_hours: frm.doc.total_hours || 0
+            total_hours: frm.doc.total_hours || 0,
+            number_of_days_staying: frm.doc.number_of_days_staying || 1
         },
         callback: function(r) {
             if (r.message) {

@@ -27,6 +27,7 @@
   "is_travelling_outside_kerala",
   "is_overnight_stay",
   "is_avail_room_rent",
+  "number_of_days_staying",
   "room_criteria",
   "attach",
   "trip_sheet",
@@ -309,6 +310,13 @@
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
+  },
+  {
+   "default": "1",
+   "depends_on": "eval: (doc.batta_type == 'Internal' && doc.is_overnight_stay ==1);",
+   "fieldname": "number_of_days_staying",
+   "fieldtype": "Int",
+   "label": "Number of Days Staying"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -323,7 +331,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-11-29 09:26:33.695459",
+ "modified": "2025-12-05 15:45:02.442990",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
