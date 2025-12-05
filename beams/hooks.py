@@ -224,7 +224,10 @@ doc_events = {
 		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
 	},
 	"Material Request":{
-		"before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+		"before_save":[
+			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+			"beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type"
+             ],
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
 		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
 		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"

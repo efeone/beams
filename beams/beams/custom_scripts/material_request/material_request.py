@@ -189,3 +189,24 @@ def create_todo_for_hod(doc, method):
 		"priority": "Medium",
 		"description": f"Please review Material Request {doc.name}"
 	})
+
+
+def set_checkbox_for_item_type(doc, method):
+	"""
+	Sets Technical or Non-Technical checkboxes on Material Request
+    based on the Item Type of items.
+
+	"""
+	doc.technical = 0
+	doc.non_technical = 0
+
+	for row in doc.items:
+		if not row.item_code:
+			continue
+		
+		item_type = frappe.db.get_value("Item", row.item_code, "item_type")
+		
+		if item_type == "Technical Item":
+			doc.technical = 1
+		elif item_type == "Non-Technical Item":
+			doc.non_technical = 1
