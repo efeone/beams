@@ -75,6 +75,7 @@ doctype_js = {
 	"Purchase Order":"beams/custom_scripts/purchase_order/purchase_order.js",
 	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
 	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
+	"Item":"beams/custom_scripts/item/item.js",
 }
 
 doctype_list_js = {
@@ -382,7 +383,10 @@ doc_events = {
 	"Item": {
 		"before_insert": [
 			"beams.beams.custom_scripts.item.item.before_insert"
-		]
+		],
+		"before_save": [
+			"beams.beams.custom_scripts.item.item.clear_warehouse_for_service_items"
+		],
 	},
 	"Asset Movement": {
 		"on_submit": [
