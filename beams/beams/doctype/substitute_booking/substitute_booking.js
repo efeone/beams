@@ -21,6 +21,7 @@ frappe.ui.form.on("Substitute Booking", {
 },
 
   refresh: function(frm) {
+      update_budget_exceeded_visibility(frm);
       frm.add_custom_button(__('Leave Application List'), function() {
           if (!frm.doc.substitution_bill_date || frm.doc.substitution_bill_date.length === 0) {
               frappe.msgprint(__('No dates found in Substitution Bill Date child table.'));
@@ -119,6 +120,9 @@ frappe.ui.form.on("Substitute Booking", {
         } else {
             frm.set_value('paid_amount', null); // Clear paid amount if not paid
         }
+    },
+    is_budgeted(frm) {
+        update_budget_exceeded_visibility(frm);
     }
 });
 
@@ -167,3 +171,15 @@ if (no_of_days && daily_wage) {
   frm.set_value('total_wage', total_wage);
 }
 }
+
+/*
+ Handles showing / hiding is_budget_exceeded
+*/
+function update_budget_exceeded_visibility(frm) {
+    frm.toggle_display("is_budget_exceeded", frm.doc.is_budgeted);
+
+    if (!frm.doc.is_budgeted) {
+        frm.set_value("is_budget_exceeded", 0);
+    }
+}
+

@@ -2310,7 +2310,7 @@ def get_voucher_entry_custom_fields():
 						{
 				"fieldname": "is_budget_exceeded",
 				"fieldtype": "Check",
-				"label": "Is Budgete Exceeded",
+				"label": "Is Budget Exceeded",
 				"insert_after": "is_budgeted",
 				"depends_on": "eval:doc.is_budgeted == 1"
 			},
@@ -2324,9 +2324,9 @@ def get_voucher_entry_custom_fields():
 				"default": "1"
 			},
 			{
-				"fieldname": "budget_exceeded",
+				"fieldname": "is_budget_exceeded",
 				"fieldtype": "Check",
-				"label": "Budget Exceeded",
+				"label": "Is Budget Exceeded",
 				"insert_after": "is_budgeted",
 				"depends_on": "eval:doc.is_budgeted",
 			},

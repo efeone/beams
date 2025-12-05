@@ -20,6 +20,7 @@ frappe.ui.form.on("Voucher Entry", {
 			});
 		}
 		update_parent_checkboxes(frm);
+		update_budget_exceeded_visibility(frm);
 	},
 	voucher_accounts_add: function(frm) {
 		update_parent_checkboxes(frm);
@@ -30,10 +31,17 @@ frappe.ui.form.on("Voucher Entry", {
 });
 
 frappe.ui.form.on('Voucher Account', {
-	is_budgeted: function(frm) {
+	is_budgeted: function(frm, cdt, cdn) {
+		let row = locals[cdt][cdn];
+
+		if (!row.is_budgeted) {
+			frappe.model.set_value(cdt, cdn, "is_budget_exceeded", 0);
+		}
+
 		update_parent_checkboxes(frm);
+		update_budget_exceeded_visibility(frm);
 	},
-	budget_exceeded: function(frm) {
+	is_budget_exceeded: function(frm) {
 		update_parent_checkboxes(frm);
 	}
 });
@@ -51,7 +59,7 @@ function update_parent_checkboxes(frm) {
 			if (row.is_budgeted !== 1 && row.is_budgeted !== '1') {
 				is_budgeted_all = false;
 			}
-			if (row.budget_exceeded === 1 || row.budget_exceeded === '1') {
+			if (row.is_budget_exceeded === 1 || row.is_budget_exceeded === '1') {
 				is_budget_exceeded_any = true;
 			}
 		});
@@ -60,11 +68,18 @@ function update_parent_checkboxes(frm) {
 		is_budget_exceeded_any = false;
 	}
 
-	if (frm.doc.is_budgeted !== (is_budgeted_all ? 1 : 0)) {
-		frm.set_value('is_budgeted', is_budgeted_all ? 1 : 0);
+	let parent_is_budgeted = frm.doc.is_budgeted ? cint(frm.doc.is_budgeted) : 0;
+	let parent_is_budget_exceeded = frm.doc.is_budget_exceeded ? cint(frm.doc.is_budget_exceeded) : 0;
+
+	let new_is_budgeted = is_budgeted_all ? 1 : 0;
+	let new_is_budget_exceeded = is_budget_exceeded_any ? 1 : 0;
+
+	if (parent_is_budgeted !== new_is_budgeted) {
+		frm.set_value("is_budgeted", new_is_budgeted);
 	}
-	if (frm.doc.is_budget_exceeded !== (is_budget_exceeded_any ? 1 : 0)) {
-		frm.set_value('is_budget_exceeded', is_budget_exceeded_any ? 1 : 0);
+
+	if (parent_is_budget_exceeded !== new_is_budget_exceeded) {
+		frm.set_value("is_budget_exceeded", new_is_budget_exceeded);
 	}
 
 	frm.refresh_field('is_budgeted');
@@ -134,4 +149,15 @@ function submit_petty_cash_request(frm, values, dialog) {
 			}
 		}
 	});
+}
+
+/*
+ Handles showing / hiding is_budget_exceeded
+*/
+function update_budget_exceeded_visibility(frm) {
+	frm.toggle_display("is_budget_exceeded", frm.doc.is_budgeted == 1);
+
+	if (!frm.doc.is_budgeted) {
+		frm.set_value("is_budget_exceeded", 0);
+	}
 }
