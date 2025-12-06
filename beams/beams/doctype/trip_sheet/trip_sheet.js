@@ -24,6 +24,7 @@ frappe.ui.form.on('Trip Sheet', {
 		frm.call("calculate_and_validate_fuel_data");
 	},
 	refresh: function(frm) {
+		clear_checkbox_exceed(frm);
 		if (!frm.is_new()&& frm.doc.workflow_state === 'Approved') {
 			frm.add_custom_button(__('Request Batta'), function () {
 				frappe.call({
@@ -177,6 +178,9 @@ frappe.ui.form.on('Trip Sheet', {
 	vehicle_safety_inspection_details: function(frm) {
 		let all_fit_for_use = frm.doc.vehicle_safety_inspection_details.every(row => row.fit_for_use === 1);
 		frm.set_value('safety_inspection_completed', all_fit_for_use ? 1 : 0);
+	},
+	is_budgeted: function(frm){
+		clear_checkbox_exceed(frm);
 	}
 });
 
@@ -241,3 +245,12 @@ frappe.ui.form.on('Trip Details', {
 		});
 	}
 });
+
+/*
+clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+*/
+function clear_checkbox_exceed(frm){
+	if (frm.doc.is_budgeted == 0){
+		frm.set_value("is_budget_exceed", 0);
+	}
+}

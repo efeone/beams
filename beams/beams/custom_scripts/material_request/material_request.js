@@ -10,19 +10,22 @@ frappe.ui.form.on('Material Request', {
 				});
 		}
 	},
-    refresh(frm) {
+	refresh(frm) {
+		clear_checkbox_exceed(frm);
+		setTimeout(() => {
+			handle_workflow_actions(frm);
 
-        setTimeout(() => {
-            handle_workflow_actions(frm);
-
-            if (['Approved by HOD', 'Approved by Admin'].includes(frm.doc.workflow_state)) {
-                add_asset_movement_button(frm);
-                add_stock_entry_button(frm);
-            } else {
-                customize_material_request_buttons(frm);
-            }
-        }, 50);
-    }
+			if (['Approved by HOD', 'Approved by Admin'].includes(frm.doc.workflow_state)) {
+				add_asset_movement_button(frm);
+				add_stock_entry_button(frm);
+			} else {
+				customize_material_request_buttons(frm);
+			}
+		}, 50);
+	},
+	is_budgeted: function(frm){	
+		clear_checkbox_exceed(frm);
+	}
 });
 
 /**
@@ -315,4 +318,13 @@ function customize_material_request_buttons(frm) {
 	frm.remove_custom_button('Purchase Order', 'Create');
 	frm.remove_custom_button('Request for Quotation', 'Create');
 	frm.remove_custom_button('Supplier Quotation', 'Create');
+}
+
+/**
+* Clears the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
+*/
+function clear_checkbox_exceed(frm){
+	if (frm.doc.is_budgeted == 0){
+		frm.set_value("budget_exceeded", 0);
+	}
 }
