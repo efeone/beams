@@ -6316,13 +6316,31 @@ def get_hd_agent_custom_fields():
 	}
 
 def update_portal_settings():
-    """ update portal settings to change routes for specific menu items """
+    """Update Portal Settings:
+       - Remove standard RFQ & SQ pages
+       - Add custom menu items with custom routes and roles
+    """
     portal_settings = frappe.get_single('Portal Settings')
-
-    for data in portal_settings.menu:
-        if data.title == "Request for Quotations" and data.enabled:
-            data.route = "/request_for_quotation_list_view"
-        if data.title == "Supplier Quotation" and data.enabled:
-            data.route = "/supplier_quotation_list_view"
-
+    replace_titles = ["Request for Quotations", "Supplier Quotation"]
+    portal_settings.menu = [row for row in portal_settings.menu if row.title not in replace_titles]
+    custom_menu = [
+        {
+            "title": "Request for Quotations",
+            "route": "/request_for_quotation_list_view",
+            "enabled": 1,
+            "reference_doctype": "Request for Quotation",
+            "role": "Supplier"
+        },
+        {
+            "title": "Supplier Quotation",
+            "route": "/supplier_quotation_list_view",
+            "enabled": 1,
+            "reference_doctype": "Supplier Quotation",
+            "role": "Supplier"
+        }
+    ]
+    existing_titles = [row.title for row in portal_settings.custom_menu]
+    for item in custom_menu:
+        if item["title"] not in existing_titles:
+            portal_settings.append("custom_menu", item)
     portal_settings.save()
