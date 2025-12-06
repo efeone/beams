@@ -3,103 +3,104 @@
 
 frappe.ui.form.on("Substitute Booking", {
   daily_wage: function(frm) {
-      calculate_total_wage(frm);
+	  calculate_total_wage(frm);
   },
 
   onload: function(frm) {
-    if (frm.is_new() && !frm.doc.expense_account) {  // Check if it's a new form and the field is empty
-    // Fetch the default debit account from Beams Account Settings
-      frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
-        .then(default_account => {
-          if (default_account) {
-            frm.set_value('expense_account', default_account);
-          } else {
-            frappe.msgprint(__('Default Debit Account is not set in Beams Account Settings.'));
-                  }
-             });
-    }
+	if (frm.is_new() && !frm.doc.expense_account) {  // Check if it's a new form and the field is empty
+	// Fetch the default debit account from Beams Account Settings
+	  frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
+		.then(default_account => {
+		  if (default_account) {
+			frm.set_value('expense_account', default_account);
+		  } else {
+			frappe.msgprint(__('Default Debit Account is not set in Beams Account Settings.'));
+				  }
+			 });
+	}
 },
 
   refresh: function(frm) {
       update_budget_exceeded_visibility(frm);
-      frm.add_custom_button(__('Leave Application List'), function() {
-          if (!frm.doc.substitution_bill_date || frm.doc.substitution_bill_date.length === 0) {
-              frappe.msgprint(__('No dates found in Substitution Bill Date child table.'));
-              return;
-          }
+	  set_bureau_and_account(frm);
+	  frm.add_custom_button(__('Leave Application List'), function() {
+		  if (!frm.doc.substitution_bill_date || frm.doc.substitution_bill_date.length === 0) {
+			  frappe.msgprint(__('No dates found in Substitution Bill Date child table.'));
+			  return;
+		  }
 
-          // Collect dates from the child table
-          let dates = frm.doc.substitution_bill_date.map(row => row.date);
-          if (dates.length === 0) {
-              frappe.msgprint(__('Please enter at least one date in the Substitution Bill Date table.'));
-              return;
-          }
+		  // Collect dates from the child table
+		  let dates = frm.doc.substitution_bill_date.map(row => row.date);
+		  if (dates.length === 0) {
+			  frappe.msgprint(__('Please enter at least one date in the Substitution Bill Date table.'));
+			  return;
+		  }
 
-          frappe.call({
-              method: 'beams.beams.doctype.substitute_booking.substitute_booking.check_leave_application',
-              args: {
-                  employee: frm.doc.substituting_for,
-                  dates: JSON.stringify(dates)
-              },
-              callback: function(r) {
-                  if (r.message) {
-                      let { leave_applications, missing_dates } = r.message;
+		  frappe.call({
+			  method: 'beams.beams.doctype.substitute_booking.substitute_booking.check_leave_application',
+			  args: {
+				  employee: frm.doc.substituting_for,
+				  dates: JSON.stringify(dates)
+			  },
+			  callback: function(r) {
+				  if (r.message) {
+					  let { leave_applications, missing_dates } = r.message;
 
-                      if (missing_dates && missing_dates.length > 0) {
-                          frappe.msgprint(__('No approved leave applications found for these dates: {0}', [missing_dates.join(', ')]));
-                      }
+					  if (missing_dates && missing_dates.length > 0) {
+						  frappe.msgprint(__('No approved leave applications found for these dates: {0}', [missing_dates.join(', ')]));
+					  }
 
-                      // Display approved leave applications
-                      if (leave_applications && Object.keys(leave_applications).length > 0) {
-                          let leaveDetails = Object.entries(leave_applications).map(([date, applications]) => {
-                              return `For date ${date}: ` + applications.map(leave =>
-                                  `Leave Application ${leave.name} from ${leave.from_date} to ${leave.to_date}`
-                              ).join(', ');
-                          }).join('<br>');
+					  // Display approved leave applications
+					  if (leave_applications && Object.keys(leave_applications).length > 0) {
+						  let leaveDetails = Object.entries(leave_applications).map(([date, applications]) => {
+							  return `For date ${date}: ` + applications.map(leave =>
+								  `Leave Application ${leave.name} from ${leave.from_date} to ${leave.to_date}`
+							  ).join(', ');
+						  }).join('<br>');
 
-                          frappe.msgprint(__('Approved Leave Applications:<br>{0}', [leaveDetails]));
+						  frappe.msgprint(__('Approved Leave Applications:<br>{0}', [leaveDetails]));
 
-                          // Navigate to Leave Application list view with filters
-                          frappe.set_route('List', 'Leave Application', {
-                              employee: frm.doc.substituting_for,
-                              status: 'Approved',
-                              from_date: ['<=', dates[0]],
-                              to_date: ['>=', dates[dates.length - 1]]
-                          });
-                      } else {
-                          frappe.msgprint(__('No approved leave applications found for the specified dates.'));
-                      }
-                  } else {
-                      frappe.msgprint(__('Error: No response received from the server.'));
-                  }
-              }
-          });
-      }, __("View"));
-
-
-
+						  // Navigate to Leave Application list view with filters
+						  frappe.set_route('List', 'Leave Application', {
+							  employee: frm.doc.substituting_for,
+							  status: 'Approved',
+							  from_date: ['<=', dates[0]],
+							  to_date: ['>=', dates[dates.length - 1]]
+						  });
+					  } else {
+						  frappe.msgprint(__('No approved leave applications found for the specified dates.'));
+					  }
+				  } else {
+					  frappe.msgprint(__('Error: No response received from the server.'));
+				  }
+			  }
+		  });
+	  }, __("View"));
 
 
-        // Check for payment button visibility
-        if (!frm.is_new() && !frm.doc.is_paid && frm.doc.workflow_state === "Approved") {
-            frm.add_custom_button(__('Make Payment'), function() {
-                frm.set_value("is_paid", 1); // Set payment status
-                frm.remove_custom_button(__('Make Payment')); // Remove button after setting paid
 
-                frm.call({
-                    doc: frm.doc,
-                    method: "create_journal_entry_from_substitute_booking",
-                });
-            });
-        }
 
-        // disabled '+' icon in connections for creating journal entry manually
-        if (frm.doc.status === 'Approved') {
-            frm.fields_dict['connections'].grid.wrapper.find('.grid-add').hide();
-        } else {
-            frm.fields_dict['connections'].grid.wrapper.find('.grid-add').show();
-        }
-    },
+
+		// Check for payment button visibility
+		if (!frm.is_new() && !frm.doc.is_paid && frm.doc.workflow_state === "Approved") {
+			frm.add_custom_button(__('Make Payment'), function() {
+				frm.set_value("is_paid", 1); // Set payment status
+				frm.remove_custom_button(__('Make Payment')); // Remove button after setting paid
+
+				frm.call({
+					doc: frm.doc,
+					method: "create_journal_entry_from_substitute_booking",
+				});
+			});
+		}
+
+		// disabled '+' icon in connections for creating journal entry manually
+		if (frm.doc.status === 'Approved') {
+			frm.fields_dict['connections'].grid.wrapper.find('.grid-add').hide();
+		} else {
+			frm.fields_dict['connections'].grid.wrapper.find('.grid-add').show();
+		}
+	},
 
     // Triggered when the 'substituting_for' field is changed
     substituting_for: function(frm) {
@@ -181,5 +182,23 @@ function update_budget_exceeded_visibility(frm) {
     if (!frm.doc.is_budgeted) {
         frm.set_value("is_budget_exceeded", 0);
     }
+}
+
+/*
+Set Bureau and Mode of Payment based on logged-in user's Employee record.
+*/
+function set_bureau_and_account(frm) {
+	frappe.db.get_value("Employee", { "user_id": frappe.session.user }, "bureau")
+		.then(res => {
+			if (res.message && res.message.bureau) {
+				frm.set_value("bureau", res.message.bureau);
+				frappe.db.get_value("Bureau", res.message.bureau, "mode_of_payment")
+					.then(r2 => {
+						if (r2.message && r2.message.mode_of_payment) {
+							frm.set_value("mode_of_payment", r2.message.mode_of_payment);
+						}
+					});
+			}
+		});
 }
 

@@ -43,12 +43,22 @@ class SubstituteBooking(Document):
 		"""
 		Creation of Journal Entry on the Approval of the Substitute Booking.
 		"""
-		# Fetch debit and credit accounts from custom settings or any relevant logic
-		default_credit_account = frappe.db.get_single_value('Beams Accounts Settings', 'default_credit_account')
+		mode_of_payment = self.mode_of_payment
+		if not mode_of_payment:
+			frappe.throw("Mode of Payment is not selected. Please select a Mode of Payment.")
+		credit_account = frappe.db.get_value(
+			"Mode of Payment Account",
+			{
+				"parent": mode_of_payment,
+				"parenttype": "Mode of Payment"
+			},
+			"default_account"
+		)
 		default_debit_account = frappe.db.get_single_value('Beams Accounts Settings', 'default_debit_account')
 		# Validate that both debit and credit accounts are configured and different
-		if not default_credit_account:
-			frappe.throw("Please configure the Default Credit Account in the Beams Accounts Settings.")
+		if not credit_account:
+			frappe.throw(f"Please Configure for the Selected Mode of Payment "f"<b>{mode_of_payment}</b> Account")
+
 		if not default_debit_account:
 			frappe.throw("Please configure the Default Debit Account in the Beams Accounts Settings.")
 		if not self.is_paid:
@@ -64,24 +74,19 @@ class SubstituteBooking(Document):
 				journal_entry.substitute_booking_reference = self.name
 				journal_entry.posting_date = frappe.utils.nowdate()
 				journal_entry.append('accounts', {
-					'account': default_credit_account,
-					'party_type': 'Employee',
-					'party': self.substituting_for,
+					'account': credit_account,
 					'debit_in_account_currency': 0,
 					'credit_in_account_currency': self.total_wage,
 				})
 				journal_entry.append('accounts', {
 					'account': default_debit_account,
-					'party_type': 'Employee',
-					'party': self.substituting_for,
 					'debit_in_account_currency': self.total_wage,
 					'credit_in_account_currency': 0,
 				})
+				journal_entry.user_remark = f"Created from Substitute Booking.{self.name}  Substitute Person: {self.substituted_by} and substituted to {self.substituting_for}"
 				# Insert and submit the Journal Entry
 				journal_entry.insert(ignore_permissions=True)
-				journal_entry.submit()
 				frappe.msgprint(f"Journal Entry {journal_entry.name} has been created successfully.", alert=True)
-
 
 	def before_save(self):
 		self.calculate_no_of_days()
