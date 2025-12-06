@@ -998,15 +998,6 @@ def get_purchase_order_custom_fields():
 	return {
 		"Purchase Order": [
 			{
-				"fieldname": "is_budget_exceed",
-				"fieldtype": "Check",
-				"label": "Is Budget Exceed",
-				"insert_after": "items_section",
-				"no_copy":1,
-				"depends_on": "eval:doc.is_budgeted == 1"
-
-			},
-			{
 				"fieldname": "attach",
 				"fieldtype": "Attach",
 				"label": "Attachments",
@@ -1032,6 +1023,14 @@ def get_purchase_order_custom_fields():
 				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "is_subcontracted"
+			},
+			{
+				"fieldname": "is_budget_exceed",
+				"fieldtype": "Check",
+				"label": "Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"no_copy":1,
+				"depends_on": "eval:doc.is_budgeted == 1"
 			},
 		],
 		"Purchase Order Item": [
