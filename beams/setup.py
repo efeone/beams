@@ -5520,14 +5520,6 @@ def get_material_request_custom_fields():
 	return {
 		"Material Request": [
 			{
-				"fieldname": "budget_exceeded",
-				"fieldtype": "Check",
-				"label": " Is Budget Exceed",
-				"insert_after": "location",
-				"no_copy":1,
-				"depends_on": "eval:doc.is_budgeted == 1"
-			},
-			{
 				"fieldname": "requested_by",
 				"fieldtype": "Link",
 				"label": "Requested By",
@@ -5563,7 +5555,15 @@ def get_material_request_custom_fields():
 				"fieldtype": "Check",
 				"default": "1",
 				"label": "Is Budgeted",
-				"insert_after": "price_list",
+				"insert_after": "location",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"no_copy":1,
+				"depends_on": "eval:doc.is_budgeted == 1",
 			},
 			{
 				"fieldname": "technical",
