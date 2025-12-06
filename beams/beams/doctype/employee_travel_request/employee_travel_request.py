@@ -16,6 +16,18 @@ from frappe.utils import get_datetime
 
 
 class EmployeeTravelRequest(Document):
+	def before_insert(self):
+		self.set_from_bureau_flag()
+
+	def set_from_bureau_flag(self):
+		"""
+		Sets the 'from_bureau' flag to 1 if the creating user has the
+		'Bureau User' role.
+		"""
+		user = frappe.session.user
+		if "Bureau User" in frappe.get_roles(user):
+			self.from_bureau = 1
+
 	def validate_reason_reject(self):
 		old_doc = self.get_doc_before_save()
 		if old_doc and old_doc.workflow_state != self.workflow_state:
