@@ -1754,6 +1754,13 @@ def get_purchase_invoice_custom_fields():
 				"insert_after": "is_budgeted",
 				"depends_on": "eval:doc.is_budgeted"
 			},
+			{
+				"fieldname": "from_bureau",
+				"fieldtype": "Check",
+				"label": "From Bureau",
+				"insert_after": "budget_exceeded",
+				"hidden": 1,
+			}
 		]
 	}
 

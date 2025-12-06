@@ -15,6 +15,7 @@
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
+  "from_bureau",
   "is_management_employee",
   "is_budgeted",
   "is__budget_exceed",
@@ -274,6 +275,13 @@
    "fieldname": "is__budget_exceed",
    "fieldtype": "Check",
    "label": "Is  Budget Exceed"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_bureau",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "From Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -296,7 +304,7 @@
    "link_fieldname": "travel_request"
   }
  ],
- "modified": "2025-12-05 12:31:57.633771",
+ "modified": "2025-12-06 11:56:26.926500",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",

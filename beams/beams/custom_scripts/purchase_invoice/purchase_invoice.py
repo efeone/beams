@@ -24,3 +24,12 @@ def validate_purchase_invoice(doc):
             # Compare the rounded totals
             if doc.rounded_total != quotation.rounded_total:
                 frappe.throw(_("The total amount of the Purchase Invoice does not match the Quotation amount. Please check and try again."))
+
+def set_from_bureau_flag(doc, method):
+    """
+	Sets the 'from_bureau' flag on the Purchase Invoice if the current user has the 'Bureau User' role.
+	"""
+    user = frappe.session.user
+    if "Bureau User" in frappe.get_roles(user):
+        doc.from_bureau = 1
+

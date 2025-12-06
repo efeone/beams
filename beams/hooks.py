@@ -197,7 +197,8 @@ doc_events = {
 		"autoname": "beams.beams.custom_scripts.quotation.quotation.autoname"
 	},
 	"Purchase Invoice": {
-		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
+		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save",
+		"before_insert": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_from_bureau_flag",
 	},
 	"Account": {
 		"after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"

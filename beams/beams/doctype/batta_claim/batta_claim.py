@@ -11,6 +11,18 @@ from frappe.model.document import Document
 
 
 class BattaClaim(Document):
+	def before_insert(self):
+		self.set_from_bureau_flag()
+
+	def set_from_bureau_flag(self):
+		"""
+		Sets the 'from_bureau' flag to 1 if the creating user has the
+		'Bureau User' role.
+		"""
+		user = frappe.session.user
+		if "Bureau User" in frappe.get_roles(user):
+			self.from_bureau = 1
+
 	def on_submit(self):
 		if self.workflow_state == 'Approved':
 			if not self.expense_type:

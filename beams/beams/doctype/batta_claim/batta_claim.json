@@ -23,6 +23,7 @@
   "origin",
   "destination",
   "mode_of_travelling",
+  "from_bureau",
   "is_budgeted",
   "is_budget_exceed",
   "is_travelling_outside_kerala",
@@ -317,6 +318,13 @@
    "fieldname": "is_budget_exceed",
    "fieldtype": "Check",
    "label": " Is Budget Exceed"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_bureau",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "From Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -331,7 +339,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-12-04 14:58:19.506788",
+ "modified": "2025-12-06 11:55:57.725516",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
