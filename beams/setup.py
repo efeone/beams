@@ -5558,7 +5558,20 @@ def get_material_request_custom_fields():
 				"label": "Is Budgeted",
 				"insert_after": "price_list",
 			},
-
+			{
+				"fieldname": "technical",
+				"fieldtype": "Check",
+				"label": " Technical",
+				"insert_after": "company",
+				"read_only": 1,
+			},
+			{
+				"fieldname": "non_technical",
+				"fieldtype": "Check",
+				"label": "Non-Technical",
+				"insert_after": "technical",
+				"read_only": 1,
+			},
 		]
 	}
 
