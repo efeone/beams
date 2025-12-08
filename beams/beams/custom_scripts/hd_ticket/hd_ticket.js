@@ -16,7 +16,7 @@ frappe.ui.form.on('HD Ticket', {
 			method: 'frappe.client.get_value',
 			args: {
 				doctype: 'HD Agent',
-				fieldname: 'name',
+				fieldname: ['name', 'is_l2_user'],
 				filters: {
 					user: frappe.session.user
 				}
