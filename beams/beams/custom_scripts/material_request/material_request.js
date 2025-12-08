@@ -13,8 +13,6 @@ frappe.ui.form.on('Material Request', {
 	refresh(frm) {
 		clear_checkbox_exceed(frm);
 		setTimeout(() => {
-			handle_workflow_actions(frm);
-
 			if (['Approved by HOD', 'Approved by Admin'].includes(frm.doc.workflow_state)) {
 				add_asset_movement_button(frm);
 				add_stock_entry_button(frm);
@@ -27,44 +25,6 @@ frappe.ui.form.on('Material Request', {
 		clear_checkbox_exceed(frm);
 	}
 });
-
-/**
- *Adds workflow action buttons based on item groups in the document.
- */
-function handle_workflow_actions(frm) {
-	if (!frm.doc.items || frm.doc.items.length === 0) return;
-
-	let has_technical = false;
-	let has_non_technical = false;
-
-	frm.doc.items.forEach(row => {
-		if (row.item_group === "Technical") has_technical = true;
-		if (row.item_group === "Non Technical") has_non_technical = true;
-	});
-
-	// Only hide/show if the doc is in Draft
-	if (frm.doc.workflow_state === "Draft") {
-		frm.page.clear_actions_menu();
-
-		if (has_technical) {
-			frm.page.add_action_item(__('Inform HOD'), function() {
-				frappe.xcall("frappe.model.workflow.apply_workflow", {
-					doc: frm.doc,
-					action: "Inform HOD"
-				}).then(() => frm.reload_doc());
-			});
-		}
-
-		if (has_non_technical) {
-			frm.page.add_action_item(__('Inform Admin'), function() {
-				frappe.xcall("frappe.model.workflow.apply_workflow", {
-					doc: frm.doc,
-					action: "Inform Admin"
-				}).then(() => frm.reload_doc());
-			});
-		}
-	}
-}
 
 /**
  * Add "Asset Movement" button to Material Request
