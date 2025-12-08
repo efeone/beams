@@ -159,6 +159,45 @@ class HDTicketOverride(HDTicket):
 					"email_content": message
 				}).insert(ignore_permissions=True)
 
+	def set_first_responded_on(self):
+		'''
+			Override set_first_responded_on to prevent updating the field on email reply.
+		'''
+		return
+
+	# `on_communication_update` is a special method exposed from `Communication` doctype.
+	# It is called when a communication is updated. Beware of changes as this effectively
+	# is an external dependency. Refer `communication.py` of Frappe framework for more.
+	# Since this is called from communication itself, `c` is the communication doc.
+	def on_communication_update(self, c):
+		# If communication is incoming, then it is a reply from customer, and ticket must
+		# be reopened.
+		# handle re opening tickets for email
+		if c.sent_or_received == "Received":
+			# check if agent has replied
+
+			if self.has_agent_replied:
+				self.status = self.ticket_reopen_status
+			else:
+				self.status = self.default_open_status
+		# If communication is outgoing, it must be a reply from agent
+		if c.sent_or_received == "Sent":
+			# Set first response date if not set already
+			# self.first_responded_on = (
+			# 	self.first_responded_on or frappe.utils.now_datetime()
+			# )
+
+			# TODO: remove this feature once we add automation feature
+			if frappe.db.get_single_value("HD Settings", "auto_update_status"):
+				self.status = frappe.db.get_single_value(
+					"HD Settings", "update_status_to"
+				)
+
+		# Fetch description from communication if not set already. This might not be needed
+		# anymore as a communication is created when a ticket is created.
+		self.description = self.description or c.content
+		# Save the ticket, allowing for hooks to run.
+		self.save()
 
 @frappe.whitelist()
 def assign_ticket_to_agent(ticket_id, agent):
