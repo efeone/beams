@@ -5510,6 +5510,13 @@ def get_property_setters():
 			"property_type": "Small Text",
 			"value": "Open",
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "mandatory_depends_on",
+			"value": "eval: doc.workflow_state == 'Approved By Accounts User'",
+		},
 	]
 
 def get_material_request_custom_fields():
@@ -5864,7 +5871,7 @@ def get_beams_roles():
 		'Front Desk User', 'Asset Manager', 'Asset User',
 		'Management', 'Expense Approver', 'Bureau Head', 'News Coordinator',
 		'Expense Approver', 'Bureau Reporter', 'Expense Manager', 'News Coordinator', 'Budget Approver',
-		'Regional Bureau Head', 'Budget Manager', 'Stringer',
+		'Regional Bureau Head', 'Budget Manager', 'Stringer', 'Expense user',
 	]
 
 def get_custom_translations():
