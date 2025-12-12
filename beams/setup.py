@@ -1014,8 +1014,8 @@ def get_purchase_order_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Reason for Rejection",
 				"insert_after": "rejection_section",
-				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending Accounts Approval'  || doc.workflow_state == 'Pending CEO Approval'",
-				"read_only_depends_on": "eval:!(doc.workflow_state == 'Pending Accounts Approval' || doc.workflow_state == 'Pending CEO Approval')"
+				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending HOD Approval' || doc.workflow_state == 'Pending Admin Approval' || doc.workflow_state == 'Pending Finance Approval' || doc.workflow_state == 'Pending CEO Approval' || doc.workflow_state == 'Rejected by CEO' || doc.workflow_state == 'Rejected By Finance'",
+				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Rejected by CEO' || doc.workflow_state == 'Rejected By Finance'",
 			},
 			{
 				"fieldname": "is_budgeted",
