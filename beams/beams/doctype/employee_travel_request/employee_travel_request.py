@@ -30,10 +30,14 @@ class EmployeeTravelRequest(Document):
 
 	def validate_reason_reject(self):
 		old_doc = self.get_doc_before_save()
+
 		if old_doc and old_doc.workflow_state != self.workflow_state:
-			# Validate that "Reason for Rejection" is provided if the status is "Rejected"
-			if self.workflow_state == "Rejected" and not self.reason_for_rejection:
-				frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
+			rejection_states = ["Rejected", "Rejected by Coordinator"]
+
+			if self.workflow_state in rejection_states and not self.reason_for_rejection:
+				frappe.throw("Reason for Rejection is required when rejecting this request.")
+
 
 	def validate(self):
 		self.validate_reason_reject()
