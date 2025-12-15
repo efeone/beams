@@ -72,15 +72,14 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Item Code",
-   "options": "Item",
-   "reqd": 1
+   "options": "Item"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-11-17 16:58:44.236800",
+ "modified": "2025-11-26 10:43:33.023104",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Suggested Items By Supplier",

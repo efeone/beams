@@ -13,6 +13,8 @@ frappe.ui.form.on('Employee Travel Request', {
 		set_expense_claim_html(frm)
 	},
 	refresh: function (frm) {
+
+		create_batta_claim_from_travel(frm);
 		if (!frm.is_new() && frappe.user.has_role("Admin")) {
 			frm.add_custom_button(__('Journal Entry'), function () {
 				const dialog = new frappe.ui.Dialog({
@@ -79,7 +81,9 @@ frappe.ui.form.on('Employee Travel Request', {
 								employee: frm.doc.requested_by,
 								employee_travel_request: frm.doc.name,
 								expenses: expenses,
-								mode_of_payment: values.mode_of_payment
+								mode_of_payment: values.mode_of_payment,
+								is_budgeted: frm.doc.is_budgeted || 0,
+								budget_exceeded: frm.doc.is__budget_exceed || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -194,7 +198,9 @@ frappe.ui.form.on('Employee Travel Request', {
 							args: {
 								employee: frm.doc.requested_by,
 								travel_request: frm.doc.name,
-								expenses: expenses
+								expenses: expenses,
+								is_budgeted: frm.doc.is_budgeted || 0,
+								budget_exceeded: frm.doc.is__budget_exceed || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -477,5 +483,29 @@ function validate_expense_date(field, frm) {
 			}
 		}
 	}
+}
+
+/*
+Helper Function: Add Batta Claim Button
+*/
+function create_batta_claim_from_travel(frm) {
+	if (frm.is_new() || frm.doc.workflow_state !== "Approved") {
+		return;
+	}
+
+	frm.add_custom_button(__('Batta Claim'), () => {
+				frappe.call({
+					method: "beams.beams.doctype.employee_travel_request.employee_travel_request.create_batta_claim_from_etr",
+					args: {
+						travel_request: frm.doc.name,
+						is_budgeted: frm.doc.is_budgeted || 0,
+						is_budget_exceed: frm.doc.is__budget_exceed || 0
+					},
+					callback: function (r) {
+						if (!r.message) return;
+						frappe.set_route("Form", "Batta Claim", r.message.name);
+					}
+				});
+	}, __("Create"));
 }
 

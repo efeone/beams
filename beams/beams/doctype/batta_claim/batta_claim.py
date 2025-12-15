@@ -11,6 +11,18 @@ from frappe.model.document import Document
 
 
 class BattaClaim(Document):
+	def before_insert(self):
+		self.set_from_bureau_flag()
+
+	def set_from_bureau_flag(self):
+		"""
+		Sets the 'from_bureau' flag to 1 if the creating user has the
+		'Bureau User' role.
+		"""
+		user = frappe.session.user
+		if "Bureau User" in frappe.get_roles(user):
+			self.from_bureau = 1
+
 	def on_submit(self):
 		if self.workflow_state == 'Approved':
 			if not self.expense_type:
@@ -26,9 +38,9 @@ class BattaClaim(Document):
 	def validate(self):
 		self.calculate_total_hours()
 		self.calculate_total_distance_travelled()
-		self.calculate_batta()
 		self.calculate_daily_batta()
 		self.calculate_total_daily_batta()
+		self.calculate_batta()
 		self.calculate_total_batta()
 
 	def create_purchase_invoice_from_batta_claim(self):
@@ -129,7 +141,17 @@ class BattaClaim(Document):
 		'''
 			Calculation of Total Daily Batta
 		'''
-		total_daily_batta = 0
+		rows_total = 0.0
+		sum_food = 0.0
+
+		for row in self.get("work_detail") or []:
+			rows_total += flt(row.daily_batta or 0)
+			sum_food += flt(row.total_food_allowance or 0)
+
+		parent_components = flt(self.room_rent_batta or 0) \
+						+ flt(self.daily_batta_with_overnight_stay or 0)
+
+		self.total_daily_batta = flt(rows_total + parent_components + sum_food)
 
 	def calculate_batta(self):
 		'''

@@ -16,7 +16,7 @@ frappe.ui.form.on('HD Ticket', {
 			method: 'frappe.client.get_value',
 			args: {
 				doctype: 'HD Agent',
-				fieldname: 'name',
+				fieldname: ['name', 'is_l2_user'],
 				filters: {
 					user: frappe.session.user
 				}
@@ -171,6 +171,7 @@ function add_resolved_button(frm) {
 
 		const btn = frm.add_custom_button(__('Resolved'), () => {
 			frm.set_value('status', 'Closed');
+			frm.set_value('resolution_date', frappe.datetime.now_datetime());
 			frm.save().then(() => {
 				frappe.show_alert({ message: __('Ticket marked as closed'), indicator: 'green' });
 				frm.reload_doc();

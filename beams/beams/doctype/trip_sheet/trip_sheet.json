@@ -28,6 +28,8 @@
   "safety_inspection_completed",
   "trip_details_section",
   "trip_details",
+  "is_budgeted",
+  "is_budget_exceed",
   "section_break_ygej",
   "initial_odometer_reading",
   "final_odometer_reading",
@@ -181,7 +183,8 @@
    "fieldname": "trip_details",
    "fieldtype": "Table",
    "label": "Trip Details",
-   "options": "Trip Details"
+   "options": "Trip Details",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_ygej",
@@ -237,6 +240,19 @@
    "ignore_user_permissions": 1,
    "label": "Employees",
    "options": "Employees"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceed",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceed "
   }
  ],
  "index_web_pages_for_search": 1,
@@ -245,9 +261,13 @@
   {
    "link_doctype": "Vehicle Incident Record",
    "link_fieldname": "trip_sheet"
+  },
+  {
+   "link_doctype": "Batta Claim",
+   "link_fieldname": "trip_sheet"
   }
  ],
- "modified": "2025-11-19 14:46:36.960867",
+ "modified": "2025-12-04 15:00:58.861731",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Trip Sheet",

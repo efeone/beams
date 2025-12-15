@@ -13,6 +13,7 @@
   "bureau",
   "company",
   "section_break_qavf",
+  "is_budgeted",
   "is_overnight_stay",
   "is_travelling_outside_kerala",
   "daily_batta_with_overnight_stay",
@@ -66,7 +67,8 @@
    "fieldname": "bureau",
    "fieldtype": "Link",
    "label": "Bureau",
-   "options": "Bureau"
+   "options": "Bureau",
+   "reqd": 1
   },
   {
    "fieldname": "section_break_qavf",
@@ -240,12 +242,18 @@
    "label": "Purchase Invoice",
    "options": "Purchase Invoice",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-25 11:26:52.163599",
+ "modified": "2025-11-29 10:27:43.300740",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

@@ -13,7 +13,10 @@
   "mode_of_payment",
   "column_break_xpwx",
   "company",
-  "location"
+  "location",
+  "is_parent_bureau",
+  "regional_bureau",
+  "parent_bureau_head"
  ],
  "fields": [
   {
@@ -65,11 +68,32 @@
   {
    "fieldname": "column_break_xpwx",
    "fieldtype": "Column Break"
+  },
+  {
+   "depends_on": "eval:!doc.is_parent_bureau",
+   "fieldname": "regional_bureau",
+   "fieldtype": "Link",
+   "label": "Parent Bureau",
+   "options": "Bureau"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_parent_bureau",
+   "fieldtype": "Check",
+   "label": "Is Parent Bureau"
+  },
+  {
+   "fetch_from": "regional_bureau.parent_bureau_head",
+   "fieldname": "parent_bureau_head",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bureau Head",
+   "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-11-19 09:58:28.027679",
+ "modified": "2025-12-01 14:26:58.708333",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",

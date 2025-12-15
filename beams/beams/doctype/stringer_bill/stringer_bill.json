@@ -14,6 +14,8 @@
   "date",
   "bureau",
   "cost_center",
+  "is_budgeted",
+  "is_budget_exceed",
   "section_break_njgm",
   "stringer_bill_detail",
   "section_break_zcsv",
@@ -112,6 +114,19 @@
    "fieldtype": "Data",
    "label": "Area",
    "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceed",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceed"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -122,7 +137,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2025-03-22 09:35:39.704283",
+ "modified": "2025-12-04 14:59:10.669682",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
@@ -143,6 +158,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

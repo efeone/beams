@@ -10,6 +10,14 @@ def before_insert(doc, method):
         service_item = create_service_item(doc)
         doc.service_item = service_item
 
+def clear_warehouse_for_service_items(doc, method):
+	"""Before saving an Item, ensure warehouse fields are cleared for Service Items."""
+
+	# clear warehouse fields for Service Items
+	if doc.item_group == "Services" or not doc.is_stock_item:
+		for d in doc.item_defaults:
+			d.default_warehouse = None
+
 def create_service_item(doc):
     """Creates a Service Item and ensures 'Hireable' is disabled."""
 

@@ -15,7 +15,10 @@
   "is_unplanned",
   "column_break_ooli",
   "posting_date",
+  "from_bureau",
   "is_management_employee",
+  "is_budgeted",
+  "is__budget_exceed",
   "travel_details_section",
   "travel_type",
   "batta_policy",
@@ -196,11 +199,11 @@
   },
   {
    "allow_on_submit": 1,
-   "depends_on": "eval: doc.workflow_state == \"Pending\" || doc.workflow_state == \"Rejected\" || doc.workflow_state == \"Approved by HOD\";",
+   "depends_on": "eval:doc.workflow_state==\"Pending\" || doc.workflow_state==\"Rejected\" || doc.workflow_state==\"Approved by HOD\" || doc.workflow_state==\"Pending Admin Approval\" || doc.workflow_state==\"Pending Coordinator Approval\" || doc.workflow_state==\"Verified By Coordinating Editor\" || doc.workflow_state==\"Rejected by Coordinator\"",
    "fieldname": "reason_for_rejection",
    "fieldtype": "Small Text",
    "label": "Reason for Rejection ",
-   "read_only_depends_on": "eval: doc.workflow_state == \"Rejected\";"
+   "read_only_depends_on": "eval:doc.workflow_state == \"Rejected\" || doc.workflow_state == \"Rejected by Coordinator\"\n"
   },
   {
    "fieldname": "attendance_request",
@@ -226,9 +229,8 @@
    "fieldname": "travel_vehicle_allocation",
    "fieldtype": "Table",
    "label": "Travel Vehicle Allocation",
-   "mandatory_depends_on": "eval:doc.workflow_state == 'Approved'",
-   "options": "Vehicle Allocation",
-   "reqd": 1
+   "mandatory_depends_on": "eval:doc.workflow_state == 'Approved by HOD' && doc.is_vehicle_required == 1\n",
+   "options": "Vehicle Allocation"
   },
   {
    "allow_on_submit": 1,
@@ -260,6 +262,26 @@
    "fieldname": "remarks",
    "fieldtype": "Small Text",
    "label": "Remarks"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is__budget_exceed",
+   "fieldtype": "Check",
+   "label": "Is  Budget Exceed"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_bureau",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "From Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -276,9 +298,13 @@
   {
    "link_doctype": "Trip Sheet",
    "link_fieldname": "employee_travel_request"
+  },
+  {
+   "link_doctype": "Batta Claim",
+   "link_fieldname": "travel_request"
   }
  ],
- "modified": "2025-11-04 15:27:48.573167",
+ "modified": "2025-12-12 16:02:28.896125",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
@@ -296,6 +322,102 @@
    "role": "System Manager",
    "share": 1,
    "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HOD",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin User",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Coordinating Editor",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "HOD",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Admin User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "permlevel": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Coordinating Editor",
+   "share": 1,
    "write": 1
   }
  ],

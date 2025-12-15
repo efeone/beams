@@ -9,7 +9,13 @@ def validate_reason_for_rejection(doc,method):
 		'''
 			Validate that "Reason for Rejection" is filled if the status is "Rejected"
 		'''
-		if doc.workflow_state == "Rejected" and not doc.reason_for_rejection:
+		rejection_states = [
+			"Rejected",
+			"Rejected By Finance",
+			"Rejected by CEO"
+		]
+
+		if doc.workflow_state in rejection_states and not doc.reason_for_rejection:
 			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
 @frappe.whitelist()

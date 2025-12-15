@@ -96,6 +96,8 @@ def after_install():
 
 def after_migrate():
 	after_install()
+	update_portal_settings()
+
 
 def before_uninstall():
 	delete_custom_fields(get_customer_custom_fields())
@@ -204,7 +206,9 @@ def get_hd_ticket_type_custom_fields():
 				"fieldtype": "Link",
 				"label": "Team Name",
 				"options":"HD Team",
-				"insert_after": "is_system"
+				"insert_after": "is_system",
+				"mandatory_depends_on": "eval:doc.is_system==0",
+				"allow_in_quick_entry": 1
 			}
 		]
 	}
@@ -994,16 +998,6 @@ def get_purchase_order_custom_fields():
 	return {
 		"Purchase Order": [
 			{
-				"fieldname": "is_budget_exceed",
-				"fieldtype": "Check",
-				"label": "Is Budget Exceed",
-				"insert_after": "items_section",
-				"read_only":1,
-				"no_copy":1,
-				"depends_on": "eval:doc.is_budget_exceed == 1"
-
-			},
-			{
 				"fieldname": "attach",
 				"fieldtype": "Attach",
 				"label": "Attachments",
@@ -1020,9 +1014,24 @@ def get_purchase_order_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Reason for Rejection",
 				"insert_after": "rejection_section",
-				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending Accounts Approval'  || doc.workflow_state == 'Pending CEO Approval'",
-				"read_only_depends_on": "eval:!(doc.workflow_state == 'Pending Accounts Approval' || doc.workflow_state == 'Pending CEO Approval')"
-			}
+				"depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Pending HOD Approval' || doc.workflow_state == 'Pending Admin Approval' || doc.workflow_state == 'Pending Finance Approval' || doc.workflow_state == 'Pending CEO Approval' || doc.workflow_state == 'Rejected by CEO' || doc.workflow_state == 'Rejected By Finance'",
+				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Rejected by CEO' || doc.workflow_state == 'Rejected By Finance'",
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "is_subcontracted"
+			},
+			{
+				"fieldname": "is_budget_exceed",
+				"fieldtype": "Check",
+				"label": "Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"no_copy":1,
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
 		],
 		"Purchase Order Item": [
 			{
@@ -1721,7 +1730,6 @@ def get_purchase_invoice_custom_fields():
 				"fieldname": "bureau",
 				"fieldtype": "Link",
 				"label": "Bureau",
-				"read_only": 1,
 				"options": "Bureau",
 				"insert_after": "supplier"
 			},
@@ -1730,6 +1738,27 @@ def get_purchase_invoice_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Attachments",
 				"insert_after": "base_net_total"
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "is_reverse_charge",
+				"default": "1"
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Budget Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted"
+			},
+			{
+				"fieldname": "from_bureau",
+				"fieldtype": "Check",
+				"label": "From Bureau",
+				"insert_after": "budget_exceeded",
+				"hidden": 1,
 			}
 		]
 	}
@@ -2276,7 +2305,37 @@ def get_voucher_entry_custom_fields():
 				"options": "Bureau",
 				"label": "Bureau",
 				"insert_after": "naming_series"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "project",
+				"default": "1",
+			},
+						{
+				"fieldname": "is_budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Is Budget Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
+		],
+		"Voucher Account": [
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"label": "Is Budgeted",
+				"insert_after": "party",
+				"default": "1"
+			},
+			{
+				"fieldname": "is_budget_exceeded",
+				"fieldtype": "Check",
+				"label": "Is Budget Exceeded",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted",
+			},
 		]
 	}
 
@@ -3695,7 +3754,19 @@ def get_employee_separation_custom_fields():
 				"options":"Pending\nCompleted",
 				"insert_after": "employee_clearance",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "remarks",
+				"fieldtype": "Small Text",
+				"label": "Remarks",
+				"insert_after": "notice_period_end_date",
+			},
+			{
+				"fieldname": "notice_period_end_date",
+				"fieldtype": "Date",
+				"label": "Notice Period End Date",
+				"insert_after": "boarding_begins_on",
+			},
 		]
 	}
 
@@ -5170,7 +5241,283 @@ def get_property_setters():
 			"property": "fetch_if_empty",
 			"value": 1
 		},
-]
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "ignore_restrictions",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "assignment_rule",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Team",
+			"field_name": "column_break_feto",
+			"property": "label",
+			"property_type": "Dagta",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket Type",
+			"field_name": "priority",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket Type",
+			"field_name": "is_system",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "agreement_details_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "status_details",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "branding_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "misc_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "search_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "email_customisations_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "feedback_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "ticket_restrictions_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "assign_within_team",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "assignment_rules_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "knowledge_base_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Settings",
+			"field_name": "is_ticket_type_mandatory",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "feedback_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "meta_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "meta_tab",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "via_customer_portal",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "split_and_merge_section",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "content_type",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "reqd",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "HD Ticket",
+			"property": "sort_field",
+			"property_type": "Data",
+			"value": "creation",
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "HD Ticket",
+			"property": "sort_order",
+			"property_type": "Select",
+			"value": "DESC"
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 0,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "customer",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 0,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "ticket_type",
+			"property": "in_list_view",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "raised_for",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status",
+			"property": "in_standard_filter",
+			"property_type": "Check",
+			"value": 1,
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Ticket",
+			"field_name": "status",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": "Open",
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "Voucher Entry",
+			"field_name": "mode_of_payment",
+			"property": "mandatory_depends_on",
+			"value": "eval: doc.workflow_state == 'Approved By Accounts User'",
+		},
+	]
 
 def get_material_request_custom_fields():
 	'''
@@ -5178,16 +5525,6 @@ def get_material_request_custom_fields():
 	'''
 	return {
 		"Material Request": [
-			{
-				"fieldname": "budget_exceeded",
-				"fieldtype": "Check",
-				"label": "Budget Exceeded",
-				"insert_after": "schedule_date",
-				"read_only":1,
-				"no_copy":1,
-				"depends_on": "eval:doc.budget_exceeded == 1"
-
-			},
 			{
 				"fieldname": "requested_by",
 				"fieldtype": "Link",
@@ -5218,7 +5555,36 @@ def get_material_request_custom_fields():
 				"insert_after": "requested_by",
 				"read_only": 1,
 				"fetch_from": "requested_by.employee_name"
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "location",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"no_copy":1,
+				"depends_on": "eval:doc.is_budgeted == 1",
+			},
+			{
+				"fieldname": "technical",
+				"fieldtype": "Check",
+				"label": " Technical",
+				"insert_after": "company",
+				"read_only": 1,
+			},
+			{
+				"fieldname": "non_technical",
+				"fieldtype": "Check",
+				"label": "Non-Technical",
+				"insert_after": "technical",
+				"read_only": 1,
+			},
 		]
 	}
 
@@ -5355,7 +5721,21 @@ def get_journal_entry_custom_fields():
 				"options": "Vehicle Incident Record",
 				"insert_after": "reference_voucher_entry",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "apply_tds",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
 		]
 	}
 
@@ -5480,17 +5860,19 @@ def get_beams_roles():
 		Method to get BEAMS specific roles
 	'''
 	return [
-        'Production Manager', 'CEO', 'Company Secretary',
-        'HOD','Enquiry Officer','Enquiry Manager',
-        'Shift Publisher','Program Producer','Operations Head',
-        'Operations User','Admin','Driver',
-        'Budget User','Technical Store Head','Budget Verifier',
-        'Budget Verifier Finance','Budget Approver','Admin User',
-        'Bureau User','Coordinating Editor','News Coordinator',
-        'Security','Reporter','Salary Increment Approver',
-        'Front Desk User', 'Asset Manager', 'Asset User',
-        'Management', 'Expense Approver'
-    ]
+		'Production Manager', 'CEO', 'Company Secretary',
+		'HOD', 'Enquiry Officer', 'Enquiry Manager',
+		'Shift Publisher', 'Program Producer', 'Operations Head',
+		'Operations User', 'Admin', 'Driver',
+		'Budget User', 'Technical Store Head', 'Budget Verifier',
+		'Budget Verifier Finance', 'Budget Approver','Admin User',
+		'Bureau User', 'Coordinating Editor', 'News Coordinator',
+		'Security', 'Reporter', 'Salary Increment Approver',
+		'Front Desk User', 'Asset Manager', 'Asset User',
+		'Management', 'Expense Approver', 'Bureau Head', 'News Coordinator',
+		'Expense Approver', 'Bureau Reporter', 'Expense Manager', 'News Coordinator', 'Budget Approver',
+		'Regional Bureau Head', 'Budget Manager', 'Stringer', 'Expense user',
+	]
 
 def get_custom_translations():
 	'''
@@ -5736,7 +6118,22 @@ def get_expense_claim_custom_fields():
 				"options": "Employee Travel Request",
 				"insert_after": "approval_status",
 				"read_only": 1
-			}
+			},
+			{
+				"fieldname": "is_budgeted",
+				"fieldtype": "Check",
+				"default": "1",
+				"label": "Is Budgeted",
+				"insert_after": "travel_request",
+			},
+			{
+				"fieldname": "budget_exceeded",
+				"fieldtype": "Check",
+				"label": " Is Budget Exceed",
+				"insert_after": "is_budgeted",
+				"depends_on": "eval:doc.is_budgeted == 1"
+			},
+
 		]
 	}
 
@@ -5814,6 +6211,13 @@ def get_supplier_quotation_item_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Item Description",
 				"insert_after": "item_code"
+			},
+			{
+				"fieldname": "no_rate_provided",
+				"fieldtype": "Check",
+				"label": "No Rate Provided",
+				"insert_after": "is_free_item",
+				"hidden": 1
 			}
 		]
 	}
@@ -5875,31 +6279,32 @@ def get_hd_settings_custom_fields():
 				"fieldname": "escalation_notifications_templates",
 				"fieldtype": "Tab Break",
 				"label": "Escalation Notifications Templates",
-				"insert_after": "reply_via_agent_email_content"
+				"insert_after": "reply_via_agent_email_content",
 			},
 			{
 				"fieldname": "enable_escalation_notifications",
 				"fieldtype": "Check",
 				"label": "Enable Escalation Notifications",
-				"insert_after": "escalation_notifications_templates"
+				"insert_after": "escalation_notifications_templates",
 			},
 			{
 				"fieldname": "response_due_template",
 				"fieldtype": "Link",
 				"label": "Response Due Template",
 				"options": "Email Template",
-				"insert_after": "enable_escalation_notifications"
+				"insert_after": "enable_escalation_notifications",
+				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
 			},
 			{
 				"fieldname": "resolution_due_template",
 				"fieldtype": "Link",
 				"label": "Resolution Due Template",
 				"options": "Email Template",
-				"insert_after": "response_due_template"
+				"insert_after": "response_due_template",
+				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
 			}
 		]
 	}
-
 
 def get_hd_agent_custom_fields():
 	""" 
@@ -5915,3 +6320,33 @@ def get_hd_agent_custom_fields():
 			}
 		]
 	}
+
+def update_portal_settings():
+    """Update Portal Settings:
+       - Remove standard RFQ & SQ pages
+       - Add custom menu items with custom routes and roles
+    """
+    portal_settings = frappe.get_single('Portal Settings')
+    replace_titles = ["Request for Quotations", "Supplier Quotation"]
+    portal_settings.menu = [row for row in portal_settings.menu if row.title not in replace_titles]
+    custom_menu = [
+        {
+            "title": "Request for Quotations",
+            "route": "/request_for_quotation_list_view",
+            "enabled": 1,
+            "reference_doctype": "Request for Quotation",
+            "role": "Supplier"
+        },
+        {
+            "title": "Supplier Quotation",
+            "route": "/supplier_quotation_list_view",
+            "enabled": 1,
+            "reference_doctype": "Supplier Quotation",
+            "role": "Supplier"
+        }
+    ]
+    existing_titles = [row.title for row in portal_settings.custom_menu]
+    for item in custom_menu:
+        if item["title"] not in existing_titles:
+            portal_settings.append("custom_menu", item)
+    portal_settings.save()

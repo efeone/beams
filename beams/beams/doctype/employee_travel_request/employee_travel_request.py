@@ -12,15 +12,32 @@ from frappe.utils import nowdate
 from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
+from frappe.utils import get_datetime
 
 
 class EmployeeTravelRequest(Document):
+	def before_insert(self):
+		self.set_from_bureau_flag()
+
+	def set_from_bureau_flag(self):
+		"""
+		Sets the 'from_bureau' flag to 1 if the creating user has the
+		'Bureau User' role.
+		"""
+		user = frappe.session.user
+		if "Bureau User" in frappe.get_roles(user):
+			self.from_bureau = 1
+
 	def validate_reason_reject(self):
 		old_doc = self.get_doc_before_save()
+
 		if old_doc and old_doc.workflow_state != self.workflow_state:
-			# Validate that "Reason for Rejection" is provided if the status is "Rejected"
-			if self.workflow_state == "Rejected" and not self.reason_for_rejection:
-				frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+
+			rejection_states = ["Rejected", "Rejected by Coordinator"]
+
+			if self.workflow_state in rejection_states and not self.reason_for_rejection:
+				frappe.throw("Reason for Rejection is required when rejecting this request.")
+
 
 	def validate(self):
 		self.validate_reason_reject()
@@ -69,6 +86,7 @@ class EmployeeTravelRequest(Document):
 		1.Create Trip Sheets for vehicles in the Travel Vehicle Allocation child table
 			if no Trip Sheet exists yet for the current Employee Travel Request (ETR).
 		2. Fetch all the employees into the Trip Sheet from the ETR including the requested_by employee.
+		3. Fetch Trip Details from  Employee Travel Request fields
 		"""
 		etr_name = doc.name
 
@@ -151,6 +169,16 @@ class EmployeeTravelRequest(Document):
 				employees.add(requested_by)
 
 			ts_data["employees"] = [{"employee": emp} for emp in employees]
+
+			ts_data["trip_details"] = [{
+				"departure": doc.source,
+				"destination": doc.destination,
+				"from_time": doc.start_date,
+				"to_time": doc.end_date,
+				"hrs": None,
+				"distance_traveled": None,
+				"remark": None
+			}]
 
 			if safety_inspection:
 				ts_data["vehicle_template"] = safety_inspection[0].name
@@ -450,7 +478,7 @@ def filter_mode_of_travel(batta_policy_name):
 		return []
 
 @frappe.whitelist()
-def create_expense_claim(employee, travel_request, expenses):
+def create_expense_claim(employee, travel_request, expenses, is_budgeted, budget_exceeded):
 	'''
 	Create an Expense Claim from Travel Request.
 	'''
@@ -463,11 +491,14 @@ def create_expense_claim(employee, travel_request, expenses):
 
 	expense_claim = frappe.new_doc("Expense Claim")
 	expense_claim.travel_request = travel_request
+	expense_claim.is_budgeted = is_budgeted
+	expense_claim.budget_exceeded = budget_exceeded
 	expense_claim.employee = employee
 	expense_claim.approval_status = "Draft"
 	expense_claim.posting_date = today()
 	employee_doc = frappe.db.get_value("Employee", employee,["company","expense_approver"],as_dict=True)
 	company = employee_doc.company
+
 	expense_approver = employee_doc.expense_approver
 	expense_claim.expense_approver = expense_approver
 
@@ -651,7 +682,7 @@ def get_permission_query_conditions(user):
 	return " OR ".join(f"({cond.strip()})" for cond in conditions)
 
 @frappe.whitelist()
-def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment):
+def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment, is_budgeted, budget_exceeded):
 	"""
 		Create a Journal Entry from Travel Request
 	"""
@@ -681,6 +712,8 @@ def create_journal_entry_from_travel(employee, employee_travel_request, expenses
 	jv.user_remark = f"Journal Entry for Travel Request {employee_travel_request}"
 	jv.employee = employee
 	jv.employee_travel_request = employee_travel_request
+	jv.budget_exceeded = budget_exceeded
+	jv.is_budgeted = is_budgeted
 	jv.docstatus = 0
 
 	total_amount = 0
@@ -751,4 +784,58 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 					"doctype": "Journal Entry",
 					"name": journal_entry_name,
 					"description": description
-				})	
+				})
+
+@frappe.whitelist()
+def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceed):
+	'''
+	Create Batta Claim from Employee Travel Request.
+	'''
+	doc = frappe.get_doc("Employee Travel Request", travel_request)
+	employee = doc.requested_by
+
+	if not employee:
+		frappe.throw("No Employee linked to this Travel Request.")
+
+	existing_bc_name = frappe.db.exists("Batta Claim", {"travel_request": doc.name})
+	if existing_bc_name:
+		return {"status": "exists", "name": existing_bc_name}
+
+	bc = frappe.new_doc("Batta Claim")
+	bc.travel_request = doc.name
+	bc.employee = employee
+	bc.is_budgeted = is_budgeted
+	bc.is_budget_exceed = is_budget_exceed
+	bc.origin = doc.source
+	bc.destination = doc.destination
+	bc.purpose= doc.travel_type
+	bc.is_travelling_outside_kerala = 0 if doc.inside_kerala else 1
+
+	if doc.get("mode_of_travel"):
+		bc.append("mode_of_travelling", {
+			"mode_of_travel": doc.mode_of_travel
+		})
+
+	if hasattr(bc, 'work_detail'):
+		work_detail_row = {
+			"from_date_and_time": doc.start_date,
+			"to_date_and_time": doc.end_date
+		}
+
+		start = get_datetime(doc.start_date)
+		end = get_datetime(doc.end_date)
+
+		diff_hours = (end - start).total_seconds() / 3600
+		work_detail_row["total_hours"] = diff_hours if diff_hours > 0 else 0
+
+		if doc.get("source"):
+			work_detail_row["origin"] = doc.source
+		if doc.get("destination"):
+			work_detail_row["destination"] = doc.destination
+
+		bc.append("work_detail", work_detail_row)
+
+		bc.insert(ignore_permissions=True)
+
+	return {"status": "new", "name": bc.name}
+

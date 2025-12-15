@@ -73,13 +73,20 @@ doctype_js = {
 	"Job Opening": "beams/custom_scripts/job_opening/job_opening.js",
 	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket.js",
 	"Purchase Order":"beams/custom_scripts/purchase_order/purchase_order.js",
-	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js"
+	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
+	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
+	"Item":"beams/custom_scripts/item/item.js",
+    "Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
+    "Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
 }
+
 doctype_list_js = {
 	"Sales Invoice" : "beams/custom_scripts/sales_invoice/sales_invoice_list.js",
 	"Purchase Invoice":"beams/custom_scripts/purchase_invoice/purchase_invoice_list.js",
-	"Job Applicant":"beams/custom_scripts/job_applicant/job_applicant_list.js"
+	"Job Applicant":"beams/custom_scripts/job_applicant/job_applicant_list.js",
+	"HD Ticket":"beams/custom_scripts/hd_ticket/hd_ticket_list.js",
 }
+
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
@@ -192,7 +199,8 @@ doc_events = {
 		"autoname": "beams.beams.custom_scripts.quotation.quotation.autoname"
 	},
 	"Purchase Invoice": {
-		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save"
+		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save",
+		"before_insert": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_from_bureau_flag",
 	},
 	"Account": {
 		"after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
@@ -219,7 +227,10 @@ doc_events = {
 		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
 	},
 	"Material Request":{
-		"before_save":"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+		"before_save":[
+			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
+			"beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type"
+             ],
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
 		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
 		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"
@@ -378,7 +389,10 @@ doc_events = {
 	"Item": {
 		"before_insert": [
 			"beams.beams.custom_scripts.item.item.before_insert"
-		]
+		],
+		"before_save": [
+			"beams.beams.custom_scripts.item.item.clear_warehouse_for_service_items"
+		],
 	},
 	"Asset Movement": {
 		"on_submit": [
@@ -419,6 +433,9 @@ doc_events = {
 	},
 	"HD Team": {
 		"on_update":"beams.beams.custom_scripts.hd_team.hd_team.disable_hd_team_assignment_rule_if_enabled"
+	},
+	"Supplier Quotation": {
+		"validate":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.clear_rate_if_no_rate_provided"
 	}
 }
 

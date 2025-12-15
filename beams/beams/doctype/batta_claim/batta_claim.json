@@ -23,6 +23,9 @@
   "origin",
   "destination",
   "mode_of_travelling",
+  "from_bureau",
+  "is_budgeted",
+  "is_budget_exceed",
   "is_travelling_outside_kerala",
   "is_overnight_stay",
   "is_avail_room_rent",
@@ -302,6 +305,26 @@
    "fieldtype": "Link",
    "label": "Travel Request",
    "options": "Employee Travel Request"
+  },
+  {
+   "default": "1",
+   "fieldname": "is_budgeted",
+   "fieldtype": "Check",
+   "label": "Is Budgeted"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceed",
+   "fieldtype": "Check",
+   "label": " Is Budget Exceed"
+  },
+  {
+   "default": "0",
+   "fieldname": "from_bureau",
+   "fieldtype": "Check",
+   "hidden": 1,
+   "label": "From Bureau"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -316,7 +339,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-11-18 10:37:46.469811",
+ "modified": "2025-12-06 11:55:57.725516",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
