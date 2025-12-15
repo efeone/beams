@@ -25,28 +25,31 @@ class HDTicketOverride(HDTicket):
 		self.set_missing_values()
 
 	def validate(self):
-		'''Extend validate to set agent group automatically.'''
-
+		'''
+			Extend validate to set agent group automatically.
+		'''
 		super().validate()
 		self.set_missing_values()
 
 	def set_missing_values(self):
-		'''Set missing values before saving.'''
-
-		if not self.requested_employee:
-			if frappe.db.exists('Employee', {'user_id': frappe.session.user}):
-				self.requested_employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user})
-		if not self.raised_by:
-			self.raised_by = frappe.session.user
-		if self.requested_employee:
-			if frappe.db.get_value('Employee', self.requested_employee , 'user_id'):
-				self.raised_by = frappe.db.get_value('Employee', self.requested_employee , 'user_id')
-			if not self.employee_name:
-				self.employee_name = frappe.db.get_value('Employee', self.requested_employee , 'employee_name')
-			if not self.reports_to:
-				self.reports_to = frappe.db.get_value('Employee', self.requested_employee , 'reports_to')
-			if self.reports_to and not self.reports_to_email:
-				self.reports_to_email = frappe.db.get_value('Employee', self.reports_to , 'user_id')
+		'''
+			Set missing values before saving, for manual ticket creation.
+		'''
+		if not self.email_account:
+			if not self.requested_employee:
+				if frappe.db.exists('Employee', {'user_id': frappe.session.user}):
+					self.requested_employee = frappe.db.get_value('Employee', {'user_id': frappe.session.user})
+			if not self.raised_by:
+				self.raised_by = frappe.session.user
+			if self.requested_employee:
+				if frappe.db.get_value('Employee', self.requested_employee , 'user_id'):
+					self.raised_by = frappe.db.get_value('Employee', self.requested_employee , 'user_id')
+				if not self.employee_name:
+					self.employee_name = frappe.db.get_value('Employee', self.requested_employee , 'employee_name')
+				if not self.reports_to:
+					self.reports_to = frappe.db.get_value('Employee', self.requested_employee , 'reports_to')
+				if self.reports_to and not self.reports_to_email:
+					self.reports_to_email = frappe.db.get_value('Employee', self.reports_to , 'user_id')
 		self.set_agent_group()
 
 	def handle_assignment_by_team(self):
