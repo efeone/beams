@@ -5517,6 +5517,54 @@ def get_property_setters():
 			"property": "mandatory_depends_on",
 			"value": "eval: doc.workflow_state == 'Approved By Accounts User'",
 		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "apply_sla_for_resolution",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "apply_sla_for_resolution",
+			"property": "hidden",
+			"property_type": "Check",
+			"value": 1
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "enable_email_ticket_feedback",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "send_acknowledgement_email",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "enable_reply_email_to_agent",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": 0
+		},
+		{
+			"doctype_or_field": "DocField",
+			"doc_type": "HD Service Level Agreement",
+			"field_name": "enable_reply_email_via_agent",
+			"property": "default",
+			"property_type": "Small Text",
+			"value": 0
+		},
 	]
 
 def get_material_request_custom_fields():
