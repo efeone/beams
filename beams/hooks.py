@@ -580,9 +580,13 @@ fixtures = [
 					"Availability and Attendance",
 					"HR Message",
 					"Adherence and Break",
+					"Ticket Summary",
+					"Ticket Dashboard",
 				],
 			]
 		],
+	},
+	{
 		"dt": "HD Ticket Status",
 		"filters": [
 			[
