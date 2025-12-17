@@ -13,9 +13,12 @@ from beams.beams.doctype.trip_sheet.trip_sheet import get_last_odometer
 from frappe.utils.user import get_users_with_role
 from frappe.desk.form.assign_to import add as add_assign
 from frappe.utils import get_datetime
+import frappe
+from frappe import get_roles
 
 
 class EmployeeTravelRequest(Document):
+
 	def before_insert(self):
 		self.set_from_bureau_flag()
 
@@ -27,6 +30,8 @@ class EmployeeTravelRequest(Document):
 		user = frappe.session.user
 		if "Bureau User" in frappe.get_roles(user):
 			self.from_bureau = 1
+
+		self.set_bureau_flag()
 
 	def validate_reason_reject(self):
 		old_doc = self.get_doc_before_save()
@@ -428,6 +433,32 @@ class EmployeeTravelRequest(Document):
 		if frappe.db.exists("Has Role", {"parent": employee_user, "role": role_to_check}):
 			self.is_management_employee = 1
 
+	def set_bureau_flag(self):
+		"""
+		Sets `has_bureau_head_role` automatically based on:
+		- Creator's roles
+		- Employee's linked user's roles (via requested_by)
+		"""
+		creator = frappe.session.user
+		if self.has_bureau_role(creator):
+			self.has_bureau_head_role = 1
+			return
+
+		employee = self.requested_by
+		if employee:
+			emp_user = frappe.db.get_value("Employee", employee, "user_id")
+			if emp_user and self.has_bureau_role(emp_user):
+				self.has_bureau_head_role = 1
+				return
+
+		self.has_bureau_head_role = 0
+
+	def has_bureau_role(self, user):
+		"""
+		Helper: Check whether a given User has the 'Bureau User' role.
+		"""
+		roles = get_roles(user)
+		return "Bureau User" in roles
 
 
 @frappe.whitelist()
