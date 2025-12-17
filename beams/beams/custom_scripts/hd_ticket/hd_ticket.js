@@ -112,19 +112,23 @@ function add_transfer_button(frm) {
 			// Fetch the HD Team document to get the agents
 			let team = await frappe.db.get_doc('HD Team', frm.doc.agent_group);
 			let agent_users = (team.agents || []).map(a => a.user);
+			let l2_users = (team.escalation_to || []).map(a => a.user);
+			let team_users = [...new Set(
+				[...agent_users, ...l2_users]
+			)].filter(user => user && user !== frappe.session.user);
 
 			let d = new frappe.ui.Dialog({
 				title: 'Transfer Ticket',
 				fields: [
 					{
-						label: 'Agent',
+						label: 'Agent/L2 User',
 						fieldname: 'agent',
 						fieldtype: 'Link',
 						options: 'HD Agent',
 						get_query: () => {
 							return {
 								filters: {
-									user: ['in', agent_users]
+									user: ['in', team_users]
 								}
 							};
 						}
