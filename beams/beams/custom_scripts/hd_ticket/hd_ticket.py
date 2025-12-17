@@ -1,6 +1,7 @@
 import frappe
 import json
 
+from frappe import _
 from frappe.desk.form.assign_to import add as assign_to_user
 from frappe.desk.form.assign_to import clear as clear_all_assignments
 from frappe.utils import now_datetime
@@ -243,7 +244,7 @@ def assign_ticket_to_agent(ticket_id, agent):
 
 def process_escalation_notifications():
 	"""
-	Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
+		Check for overdue Helpdesk tickets and send escalation emails for response or resolution delays.
 	"""
 	enable_escalation = frappe.db.get_single_value("HD Settings", "enable_escalation_notifications")
 	if not enable_escalation:
@@ -274,8 +275,7 @@ def process_escalation_notifications():
 
 def send_escalation_notification(ticket_doc, template_name):
 	"""
-	Send an escalation email notification to the designated escalation contact
-	for a Helpdesk ticket.
+		Send an escalation email notification to the designated escalation contact for a Helpdesk ticket.
 	"""
 
 	instantly_send_email = frappe.db.get_single_value("HD Settings", "instantly_send_email") or 0
@@ -475,3 +475,39 @@ def has_permission(doc, user=None):
 		return True
 
 	return False
+
+@frappe.whitelist()
+def handle_reason_for_status_change(ticket_id, status, reason):
+	"""
+		Handle reason for status on ticket
+	"""
+	valid_statuses = ['Closed', 'Open', 'Hold']
+
+	if not frappe.db.exists('HD Ticket', ticket_id):
+		frappe.throw(f'Ticket {ticket_id} does not exist.')
+
+	if status not in valid_statuses:
+		frappe.throw(f'Invalid status {status}. Valid statuss are: {", ".join(valid_statuses)}')
+
+	#Using get_doc and save to tigger hooks and other logics
+	ticket_doc = frappe.get_doc('HD Ticket', ticket_id)
+	ticket_doc.status = status
+	if status == 'Closed':
+		ticket_doc.resolution_date = frappe.utils.now_datetime()
+		ticket_doc.resolution_details = reason
+	ticket_doc.save(ignore_permissions=True)
+
+	# Auto assign ticket to session user on Re-Open
+	if status == 'Open':
+		assign_ticket_to_agent(ticket_id, frappe.session.user)
+
+	# Add comment with reason
+	text = _('Changing the Status to {0} with Reason : {1}').format(
+		frappe.bold(status),
+		frappe.bold(reason)
+	)
+	ticket_doc.add_comment(comment_type='Comment', text=text)
+
+	return {
+		"message": f'Ticket {ticket_id} status updated successfully.'
+	}
