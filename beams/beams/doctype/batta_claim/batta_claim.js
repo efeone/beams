@@ -407,16 +407,38 @@ function set_batta_for_food_allowance(frm, cdt, cdn) {
 /* Calculation of Total Food Allowance. */
 function calculate_total_food_allowance(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
-    row.total_food_allowance = (row.breakfast || 0) + (row.lunch || 0) + (row.dinner || 0);
-
-    frm.refresh_field("work_detail");
+    frm.call({
+        method: "beams.beams.doctype.batta_claim.batta_claim.calculate_total_food_allowance_server",
+        args: {
+            breakfast: row.breakfast || 0,
+            lunch: row.lunch || 0,
+            dinner: row.dinner || 0
+        },
+        callback: function(r) {
+            if (r.message) {
+                row.total_food_allowance = r.message.total_food_allowance;
+                frm.refresh_field("work_detail");
+            }
+        }
+    });
 }
 
 /* Calculation of total batta based on daily batta and food allowance. */
 function calculate_total_batta(frm, cdt, cdn) {
     let row = locals[cdt][cdn];
-    frappe.model.set_value(cdt, cdn, "total_batta", (row.daily_batta || 0) + (row.total_food_allowance || 0));
-    frm.refresh_field("work_detail");
+    frm.call({
+        method: "beams.beams.doctype.batta_claim.batta_claim.calculate_total_batta_server",
+        args: {
+            daily_batta: row.daily_batta || 0,
+            total_food_allowance: row.total_food_allowance || 0
+        },
+        callback: function(r) {
+            if (r.message) {
+                frappe.model.set_value(cdt, cdn, "total_batta", r.message.total_batta);
+                frm.refresh_field("work_detail");
+            }
+        }
+    });
 }
 
 /**

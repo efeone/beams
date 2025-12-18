@@ -359,3 +359,23 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
 			current_date = add_days(current_date, 1)
 
 	return values
+
+@frappe.whitelist()
+def calculate_total_food_allowance_server(breakfast=0, lunch=0, dinner=0):
+    try:
+        total = (frappe.utils.flt(breakfast) +
+                 frappe.utils.flt(lunch) +
+                 frappe.utils.flt(dinner))
+        return {"total_food_allowance": total}
+    except Exception as e:
+        frappe.throw(f"Error calculating food allowance: {e}")
+
+@frappe.whitelist()
+def calculate_total_batta_server(daily_batta=0, total_food_allowance=0):
+    try:
+        total = (frappe.utils.flt(daily_batta) +
+                 frappe.utils.flt(total_food_allowance))
+        return {"total_batta": total}
+    except Exception as e:
+        frappe.throw(f"Error calculating total batta: {e}")
+
