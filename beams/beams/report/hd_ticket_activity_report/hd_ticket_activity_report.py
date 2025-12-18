@@ -63,29 +63,6 @@ def get_data(filters):
     # date range filter
     date_filter = ["between", [from_date, f"{to_date} 23:59:59"]]
 
-    # Ticket Creation Logs
-
-    ticket_filters = {"creation": date_filter}
-    if ticket_id:
-        ticket_filters = {"name": ticket_id}
-
-    tickets = frappe.get_all(
-        "HD Ticket",
-        filters=ticket_filters,
-        fields=["name", "owner", "creation"]
-    )
-
-    for ticket in tickets:
-        if user_filter and ticket.owner != user_filter:
-            continue
-
-        activity_log.append({
-            "ticket_id": ticket.name,
-            "timestamp": ticket.creation,
-            "user": ticket.owner,
-            "activity_type": "Creation",
-            "activity": "Created the Ticket"
-        })
 
     # Version Logs
 
@@ -143,6 +120,8 @@ def get_data(filters):
             })
 
     # Comments
+    # comment types to exclude
+    excluded_comment_types = ["Deleted", "Assignment Completed"]
 
     comment_filters = {
         "reference_doctype": "HD Ticket",
@@ -167,8 +146,16 @@ def get_data(filters):
         order_by="creation asc"
     )
 
+
     for comment in comments:
+        # Skip unwanted comment types
+        if comment.comment_type in excluded_comment_types:
+            continue
+        
+        # Skip comments with empty content
         content = strip_html(cstr(comment.content))
+        if not content or content.strip() == "":
+            continue
 
         activity_log.append({
             "ticket_id": comment.reference_name,
