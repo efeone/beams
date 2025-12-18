@@ -120,7 +120,7 @@ def get_data(filters):
             })
 
     # Comments
-    # Define comment types to exclude
+    # comment types to exclude
     excluded_comment_types = ["Deleted", "Assignment Completed"]
 
     comment_filters = {
