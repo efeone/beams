@@ -40,6 +40,7 @@ def make_purchase_order_from_supplier_quotation(source_name, target_doc=None):
 			},
 			"Supplier Quotation Item": {
 				"doctype": "Purchase Order Item",
+				"condition": lambda doc: flt(doc.qty) > 0,
 				"field_map": [
 					["name", "supplier_quotation_item"],
 					["parent", "supplier_quotation"],
