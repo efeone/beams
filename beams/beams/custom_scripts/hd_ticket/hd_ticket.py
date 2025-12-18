@@ -272,59 +272,20 @@ def process_escalation_notifications():
 			send_escalation_notification(ticket_doc, template)
 			frappe.db.set_value("HD Ticket", ticket.name, flag, 1)
 
-
 def send_escalation_notification(ticket_doc, template_name):
 	"""
 		Send an escalation email notification to the designated escalation contact for a Helpdesk ticket.
 	"""
-
-	instantly_send_email = frappe.db.get_single_value("HD Settings", "instantly_send_email") or 0
-
 	if not ticket_doc.agent_group:
 		return
 
-	hd_team = frappe.get_doc("HD Team", ticket_doc.agent_group)
-
-	escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
-	if not escalation_agent_ids:
-		return
-
-	user_emails = frappe.db.get_list(
-		"HD Agent",
-		filters={
-			"name": ["in", escalation_agent_ids]
-		},
-		pluck="user"
-	)
-
-	user_emails = [email for email in user_emails if email]
-
-	if not user_emails:
-		return
+	escalation_agent_ids = get_l2_agents_for_team(ticket_doc.agent_group)
 
 	email_template = frappe.get_doc("Email Template", template_name)
 	subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc})
 	message = frappe.render_template(email_template.response, {"doc": ticket_doc})
 
-	frappe.sendmail(
-		recipients=user_emails,
-		subject=subject,
-		message=message,
-		reference_doctype="HD Ticket",
-		reference_name=ticket_doc.name,
-		now=instantly_send_email
-	)
-
-	for email in user_emails:
-		frappe.get_doc({
-			"doctype": "Notification Log",
-			"subject": subject,
-			"for_user": email,
-			"type": "Alert",
-			"document_type": "HD Ticket",
-			"document_name": ticket_doc.name,
-			"email_content": message
-		}).insert(ignore_permissions=True)
+	send_email_notifications(subject, message, escalation_agent_ids, "HD Ticket", ticket_doc.name, send_system_notification=True)
 
 def get_permission_query_conditions(user):
 	if not user:
@@ -501,6 +462,10 @@ def handle_reason_for_status_change(ticket_id, status, reason):
 	if status == 'Open':
 		assign_ticket_to_agent(ticket_id, frappe.session.user)
 
+	# Send on hold notification to L2 agents
+	if status == 'Hold' and ticket_doc.agent_group:
+		send_on_hold_notification_to_l2(ticket_id, ticket_doc.agent_group, reason)
+
 	# Add comment with reason
 	text = _('Changing the Status to {0} with Reason : {1}').format(
 		frappe.bold(status),
@@ -511,3 +476,64 @@ def handle_reason_for_status_change(ticket_id, status, reason):
 	return {
 		"message": f'Ticket {ticket_id} status updated successfully.'
 	}
+
+def send_on_hold_notification_to_l2(ticket_id, team, reason):
+	"""
+		Send notification to L2 agents when ticket is put on Hold
+	"""
+	template_name = frappe.db.get_single_value("HD Settings", "on_hold_template")
+	escalation_agent_ids = []
+
+	if template_name and frappe.db.exists('HD Ticket', ticket_id) and frappe.db.exists('HD Team', team):
+		escalation_agent_ids = get_l2_agents_for_team(team)
+		if escalation_agent_ids:
+			ticket_doc = frappe.get_doc('HD Ticket', ticket_id)
+
+			email_template = frappe.get_doc("Email Template", template_name)
+			subject = frappe.render_template(email_template.subject or "", {"doc": ticket_doc, "reason": reason})
+			message = frappe.render_template(email_template.response, {"doc": ticket_doc, "reason": reason})
+
+			send_email_notifications(subject, message, escalation_agent_ids, "HD Ticket", ticket_doc.name, send_system_notification=True)
+
+def get_l2_agents_for_team(hd_team):
+	"""
+		Get L2 agents for a given HD Team
+	"""
+	if not frappe.db.exists('HD Team', hd_team):
+		return []
+
+	# Fetch all L2 users from the team
+	hd_team = frappe.get_doc("HD Team", hd_team)
+	escalation_agent_ids = [row.agent for row in hd_team.escalation_to]
+	return escalation_agent_ids
+
+def send_email_notifications(subject, message, recipients, doctype, docname, send_system_notification=False):
+	"""
+		Send email notifications
+	"""
+	instantly_send_email = frappe.db.get_single_value("HD Settings", "instantly_send_email") or 0
+
+	#Send email notification
+	frappe.sendmail(
+		recipients = recipients,
+		subject = subject,
+		message = message,
+		reference_doctype = doctype,
+		reference_name = docname,
+		now = instantly_send_email
+	)
+
+	#Send notification log entries
+	if send_system_notification:
+		for email in recipients:
+			# Avoid sending notification to non existing users or self
+			if frappe.db.exists('User', email) and frappe.session.user != email:
+				frappe.get_doc({
+					"doctype": "Notification Log",
+					"subject": subject,
+					"email_content": message,
+					"for_user": email,
+					"type": "Alert",
+					"document_type": doctype,
+					"document_name": docname,
+				}).insert(ignore_permissions=True)

@@ -14,6 +14,28 @@ hod_leave_approval_response = '''<div class="ql-editor read-mode">
 	<p>Please review the application and take the necessary action in the system.</p>
 </div>'''
 
+ticket_response_due_response = '''<div class="ql-editor read-mode">
+	<p>Response time for ticket {{ doc.name }} - "{{ doc.subject }}" has been exceeded.</p>
+	<p><br></p>
+	<p>Details:</p>
+	<p>- Priority: {{ doc.priority }}</p>
+	<p>- Created On: {{ doc.creation }}</p>
+	<p>- Response By (SLA): {{ doc.response_by }}</p>
+	<p>- Current Status: {{ doc.status }}</p>
+</div>
+'''
+
+ticket_resolution_due_response = '''<div class="ql-editor read-mode">
+	<p>Resolution time for ticket {{ doc.name }} - "{{ doc.subject }}" has been exceeded.</p>
+	<p><br></p>
+	<p>Details:</p>
+	<p>- Priority: {{ doc.priority }}</p>
+	<p>- Created On: {{ doc.creation }}</p>
+	<p>- Resolution By (SLA): {{ doc.resolution_by }}</p>
+	<p>- Current Status: {{ doc.status }}</p>
+</div>
+'''
+
 def after_install():
 	#Creating BEAMS specific custom fields
 	create_custom_fields(get_customer_custom_fields(), ignore_validate=True)
@@ -190,6 +212,27 @@ def get_email_template_records():
 			"name": _("Leave Application HOD Approval Notification"),
 			"response": hod_leave_approval_response,
 			"subject": _("Leave Application from {{ employee_name }} Pending Your Approval"),
+			"owner": frappe.session.user,
+		},
+		{
+			"doctype": "Email Template",
+			"name": _("Ticket Response Due Template"),
+			"response": ticket_response_due_response,
+			"subject": _("Ticket:{{doc.name}}, {{ doc.subject }} Response Due"),
+			"owner": frappe.session.user,
+		},
+		{
+			"doctype": "Email Template",
+			"name": _("Ticket Resolution Due Template"),
+			"response": ticket_resolution_due_response,
+			"subject": _("Ticket:{{doc.name}}, {{ doc.subject }} Resolution Due"),
+			"owner": frappe.session.user,
+		},
+		{
+			"doctype": "Email Template",
+			"name": _("Ticket On Hold Template"),
+			"response": '`<div class="ql-editor read-mode"><p>The ticket {{doc.name}} has been put on Hold. Please review the ticket for further actions. Reason provided as {{reason}}.</p></div>`',
+			"subject": _("Ticket {{doc.name}} has been put on Hold"),
 			"owner": frappe.session.user,
 		}
 	]
@@ -6324,16 +6367,16 @@ def get_hd_settings_custom_fields():
 	return {
 		"HD Settings": [
 			{
-				"fieldname": "escalation_notifications_templates",
+				"fieldname": "notifications_templates",
 				"fieldtype": "Tab Break",
-				"label": "Escalation Notifications Templates",
+				"label": "Notifications Templates",
 				"insert_after": "reply_via_agent_email_content",
 			},
 			{
 				"fieldname": "enable_escalation_notifications",
 				"fieldtype": "Check",
 				"label": "Enable Escalation Notifications",
-				"insert_after": "escalation_notifications_templates",
+				"insert_after": "notifications_templates",
 			},
 			{
 				"fieldname": "response_due_template",
@@ -6341,6 +6384,7 @@ def get_hd_settings_custom_fields():
 				"label": "Response Due Template",
 				"options": "Email Template",
 				"insert_after": "enable_escalation_notifications",
+				"depends_on": "eval:doc.enable_escalation_notifications == 1",
 				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
 			},
 			{
@@ -6349,8 +6393,22 @@ def get_hd_settings_custom_fields():
 				"label": "Resolution Due Template",
 				"options": "Email Template",
 				"insert_after": "response_due_template",
+				"depends_on": "eval:doc.enable_escalation_notifications == 1",
 				"mandatory_depends_on": "eval:doc.enable_escalation_notifications == 1",
-			}
+			},
+			{
+				"fieldname": "column_break_nt1",
+				"fieldtype": "Column Break",
+				"insert_after": "resolution_due_template",
+			},
+			{
+				"fieldname": "on_hold_template",
+				"fieldtype": "Link",
+				"label": "On Hold Template",
+				"options": "Email Template",
+				"insert_after": "column_break_nt1",
+				"description": "Email notification to L2 users on ticket hold",
+			},
 		]
 	}
 
