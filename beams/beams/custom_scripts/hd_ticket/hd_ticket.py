@@ -2,11 +2,10 @@ import frappe
 import json
 
 from frappe import _
+from frappe.utils import now_datetime
 from frappe.desk.form.assign_to import add as assign_to_user
 from frappe.desk.form.assign_to import clear as clear_all_assignments
-from frappe.utils import now_datetime
 from helpdesk.helpdesk.doctype.hd_ticket.hd_ticket import HDTicket, get_customer, is_admin, is_agent
-from frappe.utils.user import get_user_fullname
 
 class HDTicketOverride(HDTicket):
 

@@ -2264,7 +2264,6 @@ def get_employee_custom_fields():
 			{
 				"fieldname": "permanent_pin_code",
 				"fieldtype": "Data",
-				"options": "Pin",
 				"label": "Pin Code",
 				"insert_after": "permanent_address"
 			},
@@ -5607,6 +5606,13 @@ def get_property_setters():
 			"property": "default",
 			"property_type": "Small Text",
 			"value": 0
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Employee",
+			"property": "search_fields",
+			"property_type": "Data",
+			"value": "employee_name, designation"
 		},
 	]
 
