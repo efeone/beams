@@ -1,0 +1,44 @@
+{
+ "charts": [],
+ "content": "[{\"id\":\"Qj1cGDw5ye\",\"type\":\"header\",\"data\":{\"text\":\"<span class=\\\"h4\\\">HD Dashboard</span>\",\"col\":12}},{\"id\":\"lk1nTonwte\",\"type\":\"custom_block\",\"data\":{\"custom_block_name\":\"Ticket Dashboard\",\"col\":12}}]",
+ "creation": "2025-12-16 12:00:06.500951",
+ "custom_blocks": [
+  {
+   "custom_block_name": "Ticket Dashboard",
+   "label": "Ticket Dashboard"
+  }
+ ],
+ "docstatus": 0,
+ "doctype": "Workspace",
+ "for_user": "",
+ "hide_custom": 0,
+ "icon": "chart",
+ "idx": 0,
+ "indicator_color": "green",
+ "is_hidden": 0,
+ "label": "HD Dashboard",
+ "links": [],
+ "modified": "2025-12-16 15:47:35.937278",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "HD Dashboard",
+ "number_cards": [],
+ "owner": "Administrator",
+ "parent_page": "",
+ "public": 1,
+ "quick_lists": [],
+ "roles": [
+  {
+   "role": "Agent"
+  },
+  {
+   "role": "TP Agent"
+  },
+  {
+   "role": "Agent Manager"
+  }
+ ],
+ "sequence_id": 7.0,
+ "shortcuts": [],
+ "title": "HD Dashboard"
+}

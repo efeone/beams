@@ -221,6 +221,10 @@ fields_to_remove = [
 		'dt':'Employee Advance',
 		'fieldname': 'purpose'
 	},
+	{
+		'dt':'HD Settings',
+		'fieldname': 'escalation_notifications_templates'
+	},
 ]
 
 def execute():

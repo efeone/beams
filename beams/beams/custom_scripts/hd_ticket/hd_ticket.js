@@ -1,5 +1,6 @@
 frappe.ui.form.on('HD Ticket', {
 	onload(frm) {
+		hide_edit_coment_btn(frm);
 		if (frm.is_new() && !frm.doc.requested_employee) {
 			frappe.db.get_value("Employee", { "user_id": frappe.session.user }, "name").then(r => {
 				if (r.message && r.message.name) {
@@ -12,6 +13,7 @@ frappe.ui.form.on('HD Ticket', {
 		}
 	},
 	refresh(frm) {
+		hide_edit_coment_btn(frm);
 		frappe.call({
 			method: 'frappe.client.get_value',
 			args: {
@@ -110,19 +112,23 @@ function add_transfer_button(frm) {
 			// Fetch the HD Team document to get the agents
 			let team = await frappe.db.get_doc('HD Team', frm.doc.agent_group);
 			let agent_users = (team.agents || []).map(a => a.user);
+			let l2_users = (team.escalation_to || []).map(a => a.user);
+			let team_users = [...new Set(
+				[...agent_users, ...l2_users]
+			)].filter(user => user && user !== frappe.session.user);
 
 			let d = new frappe.ui.Dialog({
 				title: 'Transfer Ticket',
 				fields: [
 					{
-						label: 'Agent',
+						label: 'Agent/L2 User',
 						fieldname: 'agent',
 						fieldtype: 'Link',
 						options: 'HD Agent',
 						get_query: () => {
 							return {
 								filters: {
-									user: ['in', agent_users]
+									user: ['in', team_users]
 								}
 							};
 						}
@@ -170,12 +176,7 @@ function add_resolved_button(frm) {
 	if (!frm.is_new() && !['Closed', 'Open', 'Hold'].includes(frm.doc.status)) {
 
 		const btn = frm.add_custom_button(__('Resolved'), () => {
-			frm.set_value('status', 'Closed');
-			frm.set_value('resolution_date', frappe.datetime.now_datetime());
-			frm.save().then(() => {
-				frappe.show_alert({ message: __('Ticket marked as closed'), indicator: 'green' });
-				frm.reload_doc();
-			});
+			handle_status_change(frm, 'Closed');
 		});
 
 		btn.css({
@@ -193,15 +194,7 @@ function add_resolved_button(frm) {
 function add_hold_button(frm) {
 	if (!frm.is_new() && !['Closed', 'Hold'].includes(frm.doc.status)) {
 		const btn = frm.add_custom_button(__('Hold'), () => {
-			frm.set_value('status', 'Hold');
-			frm.save().then(() => {
-				frappe.show_alert({
-					message: __('Ticket Hold successfully'),
-					indicator: 'green'
-				});
-				frm.reload_doc();
-			});
-
+			handle_status_change(frm, 'Hold');
 		});
 
 		btn.css({
@@ -219,26 +212,7 @@ function add_hold_button(frm) {
 function add_reopen_button(frm) {
 	if (!frm.is_new() && ['Closed', 'Hold'].includes(frm.doc.status)) {
 		const btn = frm.add_custom_button(__('Re-Open'), () => {
-			frm.set_value('status', 'Open');
-			frm.save().then(() => {
-				frappe.call({
-					method: 'beams.beams.custom_scripts.hd_ticket.hd_ticket.assign_ticket_to_agent',
-					args: {
-						ticket_id: frm.doc.name,
-						agent: frappe.session.user
-					},
-					callback: function (r) {
-						if (!r.exc) {
-							frappe.show_alert({
-								message: __('Ticket Re-Opened successfully'),
-								indicator: 'green'
-							});
-							frm.reload_doc();
-						}
-					}
-				});
-			});
-
+			handle_status_change(frm, 'Open');
 		});
 
 		btn.css({
@@ -269,9 +243,47 @@ function add_request_buttons(frm) {
 	}
 }
 
-/**
- * hide assignment button
- */
+/*
+	hide assignment button
+*/
 function hide_assignment_btn(frm) {
 	$(".add-assignment-btn").hide();
+}
+
+/*
+	hide edit comment button
+*/
+function hide_edit_coment_btn(frm) {
+	$(".btn.btn-link.action-btn").hide();
+}
+
+
+function handle_status_change(frm, new_status) {
+	let d = new frappe.ui.Dialog({
+		title: 'Update Ticket Status',
+		fields: [
+			{
+				label: 'Reason for Status Change',
+				fieldname: 'reason',
+				fieldtype: 'Small Text',
+				reqd: 1
+			}
+		],
+		primary_action_label: 'Update',
+		primary_action(values) {
+			frappe.call('beams.beams.custom_scripts.hd_ticket.hd_ticket.handle_reason_for_status_change', {
+				ticket_id: frm.doc.name,
+				status: new_status,
+				reason: values.reason,
+			}).then(r => {
+				d.hide();
+				frappe.show_alert({
+					message: __('Ticket status updated successfully'),
+					indicator: 'green'
+				});
+				frm.reload_doc();
+			})
+		}
+	});
+	d.show();
 }
