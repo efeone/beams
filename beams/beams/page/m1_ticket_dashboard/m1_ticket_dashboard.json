@@ -1,0 +1,26 @@
+{
+ "content": null,
+ "creation": "2025-12-23 11:20:02.531060",
+ "docstatus": 0,
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2025-12-23 11:20:02.531060",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "m1-ticket-dashboard",
+ "owner": "Administrator",
+ "page_name": "m1-ticket-dashboard",
+ "roles": [
+  {
+   "role": "Agent"
+  },
+  {
+   "role": "Agent Manager"
+  }
+ ],
+ "script": null,
+ "standard": "Yes",
+ "style": null,
+ "system_page": 1,
+ "title": "Ticket Dashboard"
+}
