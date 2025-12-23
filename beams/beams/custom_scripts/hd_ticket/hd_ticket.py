@@ -187,7 +187,7 @@ class HDTicketOverride(HDTicket):
 		if c.sent_or_received == "Received":
 			# check if agent has replied
 
-			if self.has_agent_replied:
+			if self.first_responded_on and self.status != "Closed":
 				self.status = self.ticket_reopen_status
 			else:
 				self.status = self.default_open_status
