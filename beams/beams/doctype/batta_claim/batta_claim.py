@@ -5,7 +5,7 @@ import frappe
 from frappe import _
 import json
 import re
-from frappe.utils import getdate, get_datetime, date_diff, add_days,flt
+from frappe.utils import getdate, get_datetime, date_diff, add_days, flt, cint
 import math
 from frappe.model.document import Document
 
@@ -166,40 +166,70 @@ class BattaClaim(Document):
 		Auto creation logic:
 
 			✔ 100+ KM AND >= 8 Hours      → BATTA (no food allowance)
-			✔ 50–100 KM AND >= 6 Hours    → Food Allowance
-			✔ 100+ KM AND 6–8 Hours       → Food Allowance
+			✔ 50-100 KM AND >= 6 Hours    → Food Allowance
+			✔ 100+ KM AND 6-8 Hours       → Food Allowance
 			✔ Else → No Allowance
+
+		When policy is Actual (relevant flag=1):
+		- Skip all resets and calculations for that component.
+		- Preserve manual entries in fields (e.g., row.daily_batta, row.breakfast).
+		- Parent fields (e.g., daily_batta_without_overnight_stay) are not reset/overridden.
 		"""
-		self.daily_batta_without_overnight_stay = 0
 		if not self.get("work_detail"):
 			return
+
+		batta_policy = frappe.get_all('Batta Policy', filters={'designation': self.designation}, fields=['*'])
+		if not batta_policy:
+			return
+		policy = batta_policy[0]
+
+		is_actual_with = cint(policy.get('is_actual_', 0))
+		is_actual_without = cint(policy.get('is_actual__', 0))
+		is_actual_food = cint(policy.get('is_actual___', 0))
+
+		if not is_actual_without:
+			self.daily_batta_without_overnight_stay = 0
+		if not is_actual_with:
+			self.daily_batta_with_overnight_stay = 0
+
 		for row in self.work_detail:
 			total_hours = flt(row.total_hours or 0)
 			distance = flt(row.distance_travelled_km or 0)
 			row.number_of_days = max(1, math.ceil(total_hours / 24))
-			row.daily_batta = 0
-			row.breakfast = 0
-			row.lunch = 0
-			row.dinner = 0
-			row.total_food_allowance = 0
-			if distance >= 100 and total_hours >= 8:
-				batta_data = calculate_batta_allowance(
-					designation=self.designation,
-					is_travelling_outside_kerala=self.is_travelling_outside_kerala,
-					is_overnight_stay=self.is_overnight_stay,
-					is_avail_room_rent=self.is_avail_room_rent,
-					total_distance_travelled_km=distance,
-					total_hours=total_hours
-				)
-				parent_daily_batta_value = flt(
-					batta_data.get("daily_batta_without_overnight_stay", 0)
-				)
-				self.daily_batta_without_overnight_stay = parent_daily_batta_value
-				row.daily_batta = row.number_of_days * parent_daily_batta_value
+
+			full_batta_condition = (distance >= 100 and total_hours >= 8)
+			food_condition = (not self.is_overnight_stay and
+							((50 <= distance < 100 and total_hours >= 6) or
+							(distance >= 100 and 6 <= total_hours < 8)))
+
+			if full_batta_condition:
+				if self.is_overnight_stay:
+					actual_flag = is_actual_with
+					rate_key = "daily_batta_with_overnight_stay"
+					parent_field = "daily_batta_with_overnight_stay"
+				else:
+					actual_flag = is_actual_without
+					rate_key = "daily_batta_without_overnight_stay"
+					parent_field = "daily_batta_without_overnight_stay"
+
+				if not actual_flag:
+					batta_data = calculate_batta_allowance(
+						designation=self.designation,
+						is_travelling_outside_kerala=self.is_travelling_outside_kerala,
+						is_overnight_stay=self.is_overnight_stay,
+						is_avail_room_rent=self.is_avail_room_rent,
+						total_distance_travelled_km=distance,
+						total_hours=total_hours
+					)
+					parent_rate = flt(batta_data.get(rate_key, 0))
+					setattr(self, parent_field, parent_rate)
+					row.daily_batta = row.number_of_days * parent_rate
 				continue
-			if not self.is_overnight_stay:
-				if (50 <= distance < 100 and total_hours >= 6) or \
-				(distance >= 100 and 6 <= total_hours < 8):
+
+			actual_flag = is_actual_without
+
+			if food_condition:
+				if not is_actual_food:
 					values = get_batta_for_food_allowance(
 						designation=self.designation,
 						from_date_time=row.from_date_and_time,
@@ -212,9 +242,14 @@ class BattaClaim(Document):
 					row.total_food_allowance = (
 						flt(row.breakfast) + flt(row.lunch) + flt(row.dinner)
 					)
-
+				if not actual_flag:
 					row.daily_batta = 0
-					continue
+				continue
+
+			if not actual_flag and not self.is_overnight_stay:
+				row.daily_batta = 0
+			if not is_actual_food:
+				row.breakfast = 0
 				row.lunch = 0
 				row.dinner = 0
 				row.total_food_allowance = 0
@@ -231,8 +266,6 @@ class BattaClaim(Document):
 			daily_batta = row.daily_batta or 0
 			food_allowance = row.total_food_allowance or 0
 			row.total_batta = daily_batta + food_allowance
-
-			
 
 @frappe.whitelist()
 def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, is_avail_room_rent=0, total_distance_travelled_km=0, total_hours=0):
@@ -361,21 +394,24 @@ def get_batta_for_food_allowance(designation, from_date_time, to_date_time, tota
 	return values
 
 @frappe.whitelist()
-def calculate_total_food_allowance_server(breakfast=0, lunch=0, dinner=0):
-    try:
-        total = (frappe.utils.flt(breakfast) +
-                 frappe.utils.flt(lunch) +
-                 frappe.utils.flt(dinner))
-        return {"total_food_allowance": total}
-    except Exception as e:
-        frappe.throw(f"Error calculating food allowance: {e}")
+def calculate_total_food_allowance(breakfast=0, lunch=0, dinner=0):
+	try:
+		total = (frappe.utils.flt(breakfast) +
+				 frappe.utils.flt(lunch) +
+				 frappe.utils.flt(dinner))
+		return {"total_food_allowance": total}
+	except Exception as e:
+		return {
+			"total_food_allowance": 0
+		}
 
 @frappe.whitelist()
-def calculate_total_batta_server(daily_batta=0, total_food_allowance=0):
-    try:
-        total = (frappe.utils.flt(daily_batta) +
-                 frappe.utils.flt(total_food_allowance))
-        return {"total_batta": total}
-    except Exception as e:
-        frappe.throw(f"Error calculating total batta: {e}")
-
+def calculate_total_batta(daily_batta=0, total_food_allowance=0):
+	try:
+		total = (frappe.utils.flt(daily_batta) +
+				 frappe.utils.flt(total_food_allowance))
+		return {"total_batta": total}
+	except Exception as e:
+		return {
+			"total_batta": 0
+		}
