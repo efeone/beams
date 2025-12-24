@@ -33,7 +33,7 @@ def get_ticket_summary(filters=None):
 	portal_tickets = get_ticket_count(from_date, to_date, conds+"AND email_account IS NULL")
 	response_breach_tickets = get_ticket_count(from_date, to_date, conds+"AND response_due_escalation_send = 1")
 	resolution_breach_tickets = get_ticket_count(from_date, to_date, conds+"AND resolution_due_escalation_send = 1")
-	full_breach_tickets = get_ticket_count(from_date, to_date, conds+"AND (response_due_escalation_send = 1 OR resolution_due_escalation_send = 1)")
+	full_breach_tickets = get_ticket_count(from_date, to_date, conds+"AND response_due_escalation_send = 1 AND resolution_due_escalation_send = 1")
 	escalated_tickets = full_breach_tickets
 
 	avg_reponse_time = get_avg_time(from_date, to_date, conds, time_field="first_response_time")
@@ -121,19 +121,22 @@ def get_ticket_count(from_date, to_date, conds=""):
 def get_avg_time(from_date, to_date, conds="", time_field="first_response_time"):
 	"""
 		Get average time for the dashboard.
+		Shows minutes by default, hours if >= 60 mins.
 	"""
 	from_datetime = get_datetime(f"{from_date} 00:00:00")
 	to_datetime = get_datetime(f"{to_date} 23:59:59")
 
+	# Calculate average time in minutes from seconds
 	result = frappe.db.sql(
 		f"""
 		SELECT 
 			AVG(CASE 
-				WHEN creation >= %(from_datetime)s AND creation <= %(to_datetime)s
+				WHEN creation >= %(from_datetime)s
+				AND creation <= %(to_datetime)s
 				{conds}
-				THEN CEIL({time_field} / 3600)
+				THEN ({time_field})
 				ELSE NULL
-			END) as avg_time
+			END) AS avg_seconds
 		FROM `tabHD Ticket`
 	""",
 		{
@@ -142,5 +145,29 @@ def get_avg_time(from_date, to_date, conds="", time_field="first_response_time")
 		},
 		as_dict=1,
 	)
-	current_month_avg = result[0].avg_time or 0
-	return "{0} Hrs".format(round(current_month_avg, 2))
+
+	avg_seconds = int(result[0].avg_seconds or 0)
+	return format_seconds(avg_seconds)
+
+def format_seconds(seconds):
+	"""
+		Formats seconds into:
+		- X Secs
+		- X Mins
+		- X Hrs
+		- X Hrs Y Mins Z Secs
+	"""
+	if seconds < 60:
+		return f"{seconds} Secs"
+
+	minutes, secs = divmod(seconds, 60)
+
+	if minutes < 60:
+		return f"{minutes} Mins {secs} Secs" if secs > 0 else f"{minutes} Mins"
+
+	hours, mins = divmod(minutes, 60)
+
+	if mins == 0:
+		return f"{hours} Hrs"
+
+	return f"{hours} Hrs {mins} Mins {secs} Secs" if secs > 0 else f"{hours} Hrs {mins} Mins"
