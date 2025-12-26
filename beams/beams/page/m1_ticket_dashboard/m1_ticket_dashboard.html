@@ -1,0 +1,8 @@
+{% for card in card_data %}
+<div class="card" id="{{card.id}}">
+    <div style="padding:12px;border-radius:10px; ">
+        <div style="font-size:14px;">{{card.title}}</div>
+        <div style="font-size:22px;font-weight:bold;">{{card.value}}</div>
+    </div>
+</div>
+{% endfor %}
