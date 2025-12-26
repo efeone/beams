@@ -4,7 +4,7 @@ app_publisher = "efeone"
 app_description = "BEAMS (Broadcast Enterprise Administration Management System)"
 app_email = "info@efeone.com"
 app_license = "mit"
-# required_apps = []
+required_apps = ["frappe/erpnext", "frappe/hrms", "frappe/helpdesk", "efeone/voucher_utility"]
 
 # Includes in <head>
 # ------------------
