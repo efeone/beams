@@ -296,8 +296,13 @@ frappe.ui.form.on('Employee Travel Request', {
 
 	is_unplanned: function (frm) {
 		update_number_of_travellers_visibility(frm);
-	}
+	},
+
+	is_budgeted: function(frm){
+		clear_checkbox_exceed(frm);
+	},
 });
+
 // Toggles visibility of 'number_of_travellers' field based on 'is_group' status and 'travellers' table length.
 
 function update_number_of_travellers_visibility(frm) {
@@ -509,3 +514,11 @@ function create_batta_claim_from_travel(frm) {
 	}, __("Create"));
 }
 
+/**
+* clear the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
+*/
+function clear_checkbox_exceed(frm){
+	if(!frm.doc.is_budgeted){
+		frm.set_value("is__budget_exceed",0);
+	}
+}
