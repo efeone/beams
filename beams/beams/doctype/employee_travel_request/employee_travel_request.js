@@ -13,7 +13,6 @@ frappe.ui.form.on('Employee Travel Request', {
 		set_expense_claim_html(frm)
 	},
 	refresh: function (frm) {
-		clear_checkbox_exceed(frm)
 
 		create_batta_claim_from_travel(frm);
 		if (!frm.is_new() && frappe.user.has_role("Admin")) {
