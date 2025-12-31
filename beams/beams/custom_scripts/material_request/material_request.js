@@ -12,11 +12,41 @@ frappe.ui.form.on('Material Request', {
 	},
 	refresh(frm) {
 		clear_checkbox_exceed(frm);
+		calculate_total_amount(frm);
+
 	},
 	is_budgeted: function(frm){	
 		clear_checkbox_exceed(frm);
 	}
 });
+
+frappe.ui.form.on('Material Request Item', {
+	amount: function(frm, cdt, cdn) {
+		calculate_total_amount(frm);
+	},
+	qty: function(frm, cdt, cdn) {
+		calculate_total_amount(frm);
+	},
+	rate: function(frm, cdt, cdn) {
+		calculate_total_amount(frm);
+	},
+	items_remove: function(frm, cdt, cdn) {
+		calculate_total_amount(frm);
+	}
+});
+
+/**
+ * Calculates total amount from qty × rate for all items
+ */
+function calculate_total_amount(frm) {
+	let total = 0.0;
+	if (frm.doc.items && frm.doc.items.length) {
+		frm.doc.items.forEach(function(item) {
+			total += (item.amount || 0);
+		});
+	}
+	frm.set_value('total_amount', total);
+}
 
 /**
 * Clears the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
