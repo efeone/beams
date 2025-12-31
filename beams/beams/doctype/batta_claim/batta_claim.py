@@ -36,6 +36,7 @@ class BattaClaim(Document):
 				self.create_journal_entry_from_batta_claim()
 
 	def validate(self):
+		self.assign_hod_role()
 		self.calculate_total_hours()
 		self.calculate_total_distance_travelled()
 		self.calculate_daily_batta()
@@ -289,6 +290,31 @@ class BattaClaim(Document):
 			daily_batta = row.daily_batta or 0
 			food_allowance = row.total_food_allowance or 0
 			row.total_batta = daily_batta + food_allowance
+
+	def assign_hod_role(self):
+		if not self.employee:
+			return
+
+		department = frappe.db.get_value("Employee", self.employee, "department")
+		if not department:
+			return
+
+		hod = frappe.db.get_value("Department", department, "head_of_department")
+		if not hod:
+			return
+
+		hod_user = frappe.db.get_value("Employee", hod, "user_id")
+		if not hod_user:
+			return
+
+		if not frappe.db.exists(
+			"Has Role",
+			{"parent": hod_user, "role": "HOD"}
+		):
+			user = frappe.get_doc("User", hod_user)
+			user.append("roles", {"role": "HOD"})
+			user.save(ignore_permissions=True)
+
 
 @frappe.whitelist()
 def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, is_overnight_stay=0, is_avail_room_rent=0, total_distance_travelled_km=0, total_hours=0):
