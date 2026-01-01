@@ -1146,7 +1146,7 @@ def get_budget_custom_fields():
 				"label": "Rejection Feedback",
 				"options":"Rejection Feedback",
 				"insert_after": "december",
-				"depends_on": "eval: doc.workflow_state.includes('Rejected')"
+				"depends_on": "eval: doc.workflow_state == 'Rejected'"
 			},
 			{
 				"fieldname": "total_amount",
