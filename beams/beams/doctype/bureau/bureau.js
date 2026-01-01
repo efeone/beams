@@ -4,6 +4,20 @@
 frappe.ui.form.on("Bureau", {
 	setup(frm) {
 		set_filters(frm);
+	},
+	regional_bureau(frm) {
+		if (frm.doc.regional_bureau) {
+			frappe.db.get_value(
+				'Bureau',
+				frm.doc.regional_bureau,
+				'regional_bureau_head',
+				(r) => {
+					if (r && r.regional_bureau_head) {
+						frm.set_value('regional_bureau_head', r.regional_bureau_head);
+					}
+				}
+			);
+		}
 	}
 });
 
