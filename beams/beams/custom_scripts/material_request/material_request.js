@@ -9,11 +9,16 @@ frappe.ui.form.on('Material Request', {
 					}
 				});
 		}
+		frm.total_edited = false;
 	},
 	refresh(frm) {
 		clear_checkbox_exceed(frm);
-		calculate_total_amount(frm);
-
+		if (!frm.total_edited) {
+			calculate_total_amount(frm);
+		}
+	},
+	total_amount: function(frm) {
+		frm.total_edited = true;
 	},
 	is_budgeted: function(frm){	
 		clear_checkbox_exceed(frm);
@@ -21,31 +26,47 @@ frappe.ui.form.on('Material Request', {
 });
 
 frappe.ui.form.on('Material Request Item', {
+	items_add: function(frm, cdt, cdn) {
+		frm.total_edited = false;
+		calculate_total_amount(frm);
+	},
 	amount: function(frm, cdt, cdn) {
+		frm.total_edited = false;
 		calculate_total_amount(frm);
 	},
 	qty: function(frm, cdt, cdn) {
+		frm.total_edited = false;
 		calculate_total_amount(frm);
 	},
 	rate: function(frm, cdt, cdn) {
+		frm.total_edited = false;
 		calculate_total_amount(frm);
 	},
 	items_remove: function(frm, cdt, cdn) {
+		frm.total_edited = false;
+		calculate_total_amount(frm);
+	},
+	item_code: function(frm, cdt, cdn) {
+		frm.total_edited = false;
 		calculate_total_amount(frm);
 	}
 });
-
 /**
  * Calculates total amount from qty × rate for all items
  */
 function calculate_total_amount(frm) {
 	let total = 0.0;
-	if (frm.doc.items && frm.doc.items.length) {
-		frm.doc.items.forEach(function(item) {
-			total += (item.amount || 0);
+
+	if (frm.doc.items?.length) {
+		frm.doc.items.forEach(item => {
+			total += flt(item.amount);
 		});
 	}
-	frm.set_value('total_amount', total);
+
+	if (!frm.total_edited) {
+		frm.set_value('total_amount', total);
+		frm.refresh_field('total_amount');
+	}
 }
 
 /**

@@ -5694,7 +5694,6 @@ def get_material_request_custom_fields():
 				"fieldtype": "Currency",
 				"label": "Total Amount",
 				"insert_after": "items",
-				"read_only": 1,
 				"description": "Auto calculated from item amounts"
 			},
 		]
