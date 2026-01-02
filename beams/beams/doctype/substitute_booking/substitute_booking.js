@@ -124,7 +124,10 @@ frappe.ui.form.on("Substitute Booking", {
     },
     is_budgeted(frm) {
         update_budget_exceeded_visibility(frm);
-    }
+    },
+    bureau(frm) {
+		fetch_mode_of_payment_from_bureau(frm, frm.doc.bureau);
+	}
 });
 
 
@@ -202,3 +205,23 @@ function set_bureau_and_account(frm) {
 		});
 }
 
+
+/*
+	Fetch Mode of Payment from Bureau and set it
+*/
+function fetch_mode_of_payment_from_bureau(frm, bureau) {
+	if (!bureau) {
+		frm.set_value("mode_of_payment", null);
+		return;
+	}
+
+	frappe.db
+		.get_value("Bureau", bureau, "mode_of_payment")
+		.then(r => {
+			if (r.message?.mode_of_payment) {
+				frm.set_value("mode_of_payment", r.message.mode_of_payment);
+			} else {
+				frm.set_value("mode_of_payment", null);
+			}
+		});
+}
