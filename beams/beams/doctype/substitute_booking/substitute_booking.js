@@ -125,7 +125,7 @@ frappe.ui.form.on("Substitute Booking", {
     is_budgeted(frm) {
         update_budget_exceeded_visibility(frm);
     },
-   bureau(frm) {
+    bureau(frm) {
 		fetch_mode_of_payment_from_bureau(frm, frm.doc.bureau);
 	}
 });
