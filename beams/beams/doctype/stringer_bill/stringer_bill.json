@@ -130,7 +130,7 @@
    "label": "Is Budget Exceed"
   },
   {
-   "fetch_from": "bureau.parent_bureau_head",
+   "fetch_from": "bureau.regional_bureau_head",
    "fieldname": "bureau_head",
    "fieldtype": "Link",
    "hidden": 1,
@@ -146,7 +146,7 @@
    "link_fieldname": "stringer_bill_reference"
   }
  ],
- "modified": "2025-12-24 11:01:47.212630",
+ "modified": "2026-01-03 15:22:45.560448",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Stringer Bill",
