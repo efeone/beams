@@ -33,7 +33,7 @@
   "attach",
   "trip_sheet",
   "travel_request",
-  "hod_user",
+  "hod_email",
   "section_break_bkxb",
   "room_rent_batta",
   "batta_based_on",
@@ -328,11 +328,11 @@
    "label": "From Bureau"
   },
   {
-   "fieldname": "hod_user",
-   "fieldtype": "Link",
+   "fieldname": "hod_email",
+   "fieldtype": "Data",
    "hidden": 1,
-   "label": "HOD User",
-   "options": "User",
+   "label": "HOD Email",
+   "options": "Email",
    "read_only": 1
   }
  ],
@@ -348,7 +348,7 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2025-12-31 14:38:53.705321",
+ "modified": "2026-01-05 14:51:52.507275",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
