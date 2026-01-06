@@ -292,28 +292,37 @@ class BattaClaim(Document):
 			row.total_batta = daily_batta + food_allowance
 
 	def assign_hod_role(self):
-		if not self.employee:
+		'''
+			Set the Head of Department (HOD) for the Leave Application based on the Employee's department.
+		'''
+		if not self.employee or self.hod_email:
 			return
 
-		department = frappe.db.get_value("Employee", self.employee, "department")
+		department = frappe.db.get_value(
+			"Employee",
+			self.employee,
+			"department"
+		)
 		if not department:
 			return
 
-		hod = frappe.db.get_value("Department", department, "head_of_department")
-		if not hod:
+		hod_employee = frappe.db.get_value(
+			"Department",
+			department,
+			"head_of_department"
+		)
+		if not hod_employee:
 			return
 
-		hod_user = frappe.db.get_value("Employee", hod, "user_id")
+		hod_user = frappe.db.get_value(
+			"Employee",
+			hod_employee,
+			"user_id"
+		)
 		if not hod_user:
 			return
 
-		if not frappe.db.exists(
-			"Has Role",
-			{"parent": hod_user, "role": "HOD"}
-		):
-			user = frappe.get_doc("User", hod_user)
-			user.append("roles", {"role": "HOD"})
-			user.save(ignore_permissions=True)
+		self.hod_email = hod_user
 
 
 @frappe.whitelist()
