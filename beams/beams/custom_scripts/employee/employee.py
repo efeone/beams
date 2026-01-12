@@ -118,20 +118,21 @@ def autoname(doc, method):
 		doc.name = get_next_employee_id(department_abbr)
 	doc.employee = doc.name
 
-def get_next_employee_id(department_abbr):
-	'''
-		Method to get next Employee ID
-	'''
-	series_prefix = "MB/{0}/".format(department_abbr)
-	next_employee_id = '{0}1'.format(series_prefix)
-	employees = frappe.db.get_all('Employee', { 'name': ['like', '%{0}%'.format(series_prefix)] }, order_by='name desc', pluck='name')
-	if employees:
-		employee_id = employees[0]
-		employee_id = employee_id.replace(series_prefix, "")
-		employee_count = int(employee_id)
-		next_employee_id = '{0}{1}'.format(series_prefix, str(employee_count+1))
-	return next_employee_id
 
+def get_next_employee_id(department_abbr):
+	series_prefix = f"MB/{department_abbr}/"
+	employees = frappe.db.get_all(
+		'Employee',
+		filters={'name': ['like', f'{series_prefix}%']},
+		pluck='name'
+	)
+	max_no = 0
+	for emp in employees:
+		num = int(emp.replace(series_prefix, ""))
+		if num > max_no:
+			max_no = num
+	next_no = max_no + 1
+	return f"{series_prefix}{str(next_no).zfill(3)}"
 
 def validate_offer_dates(doc, method):
 	"""Validate Employee fields before saving/submitting."""
