@@ -5648,9 +5648,9 @@ def get_material_request_custom_fields():
 				"fieldtype": "Small Text",
 				"label": "Reason for Rejection",
 				"insert_after": "items",
-				"depends_on":"eval:doc.workflow_state == 'Rejected' || doc.workflow_state == 'Informed Admin' || doc.workflow_state == 'Informed HR' || doc.workflow_state == 'Informed HOD'",
+				"depends_on": "eval:doc.workflow_state != 'Draft' && doc.workflow_state != 'Approved'",
 				"allow_on_submit": 1,
-				"read_only_depends_on": "eval:doc.workflow_state == 'Rejected'"
+				"read_only_depends_on": "eval:doc.workflow_state && doc.workflow_state.includes('Rejected')"
 			},
 			{
 				"fieldname": "employee_name",
