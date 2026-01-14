@@ -122,16 +122,16 @@ def get_next_employee_id(department_abbr):
 	'''
 		Method to get next Employee ID
 	'''
-	series_prefix = "MB/{0}/".format(department_abbr)
-	next_employee_id = '{0}1'.format(series_prefix)
-	employees = frappe.db.get_all('Employee', { 'name': ['like', '%{0}%'.format(series_prefix)] }, order_by='name desc', pluck='name')
-	if employees:
-		employee_id = employees[0]
-		employee_id = employee_id.replace(series_prefix, "")
-		employee_count = int(employee_id)
-		next_employee_id = '{0}{1}'.format(series_prefix, str(employee_count+1))
-	return next_employee_id
-
+	p = f"MB/{department_abbr}/"
+	last = frappe.db.get_all(
+		"Employee",
+		filters={"name": ["like", f"{p}%"]},
+		order_by="creation desc",
+		pluck="name",
+		limit=1
+	)
+	last_no = int(last[0].split("/")[-1]) if last else 0
+	return f"{p}{last_no + 1:03d}"
 
 def validate_offer_dates(doc, method):
 	"""Validate Employee fields before saving/submitting."""
