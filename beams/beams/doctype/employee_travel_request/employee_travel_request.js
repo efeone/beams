@@ -13,7 +13,7 @@ frappe.ui.form.on('Employee Travel Request', {
 		set_expense_claim_html(frm)
 	},
 	refresh: function (frm) {
-
+		toggle_vehicle_allocation_table(frm);
 		create_batta_claim_from_travel(frm);
 		if (!frm.is_new() && frappe.user.has_role("Admin")) {
 			frm.add_custom_button(__('Journal Entry'), function () {
@@ -213,12 +213,6 @@ frappe.ui.form.on('Employee Travel Request', {
 				});
 				dialog.show();
 			}, __('Create'));
-
-		if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
-		} else {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
-		}
 
 		if (frm.doc.is_unplanned === 1) {
 			frm.set_df_property("attachments", "read_only", 0);
@@ -520,5 +514,18 @@ function create_batta_claim_from_travel(frm) {
 function clear_checkbox_exceed(frm){
 	if(!frm.doc.is_budgeted){
 		frm.set_value("is__budget_exceed",0);
+	}
+}
+
+/**
+ * Toggles the read-only state of the vehicle allocation table based on whether a vehicle is required
+ * and the current workflow state of the travel request.
+ */
+function toggle_vehicle_allocation_table(frm) {
+	if (frm.doc.is_vehicle_required &&
+		(frm.doc.workflow_state === "Approved by HOD" || frm.doc.workflow_state === "Pending Admin Approval")) {
+		frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
+	} else {
+		frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
 	}
 }
