@@ -340,15 +340,11 @@
  "is_submittable": 1,
  "links": [
   {
-   "link_doctype": "Purchase Invoice",
-   "link_fieldname": "batta_claim_reference"
-  },
-  {
    "link_doctype": "Journal Entry",
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2026-01-05 14:51:52.507275",
+ "modified": "2026-01-21 11:13:17.198649",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
