@@ -21,9 +21,9 @@ def get_budget_html(budget):
 	is_editable = 0
 	if frappe.db.exists('Budget', budget):
 		# Defining Columns
-		columns = ['Cost Head', 'Cost Sub Head', 'Cost Category', 'Cost Description', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'Total Budget']
+		columns = ['Cost Head', 'Budget Group', 'Account Head', 'Cost Category', 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December', 'Total Budget']
 
-        # Building Data
+		# Building Data
 		data = []
 		budget_doc = frappe.get_doc('Budget', budget)
 		is_editable = 1
@@ -31,15 +31,15 @@ def get_budget_html(budget):
 		if budget_doc.docstatus:
 			is_editable = 0
 			values_read_only = 1
-		for row in budget_doc.accounts:
+		for row in budget_doc.budget_accounts:
 			budget_row = get_budget_item_details(row.name, values_read_only)
 			data.append(budget_row)
 		total_row = ''
 		html_data = frappe.render_template('beams/doctype/budget_tool/budget_tool.html', {
-            'columns': columns,
-            'data': data,
-            'total_row': total_row
-        })
+			'columns': columns,
+			'data': data,
+			'total_row': total_row
+		})
 	return {
 		'html':html_data,
 		'is_editable': is_editable
@@ -47,16 +47,16 @@ def get_budget_html(budget):
 
 def get_budget_item_details(row_id, read_only=0):
 	'''
-        Method to get Budget Account Row Details
+		Method to get Budget Account Row Details
 	'''
 	data = []
-	if frappe.db.exists('Budget Account', row_id):
-		row_detail = frappe.get_doc('Budget Account', row_id)
+	if frappe.db.exists('M1 Budget Account', row_id):
+		row_detail = frappe.get_doc('M1 Budget Account', row_id)
 		# Set Master Links
 		data.append({ 'type':'text', 'value': row_detail.cost_head, 'read_only':1, 'primary': 1, 'ref_link': get_absolute_url('Cost Head', row_detail.cost_head) })
-		data.append({ 'type':'text', 'value': row_detail.cost_subhead, 'read_only':1, 'primary': 1, 'ref_link': get_absolute_url('Cost Subhead', row_detail.cost_subhead) })
+		data.append({ 'type':'text', 'value': row_detail.budget_group, 'read_only':1, 'primary': 1, 'ref_link': get_absolute_url('Budget Group', row_detail.budget_group) })
+		data.append({ 'type':'text', 'value': row_detail.account, 'read_only':1, 'primary': 1, 'ref_link': get_absolute_url('Account', row_detail.account) })
 		data.append({ 'type':'text', 'value': row_detail.cost_category, 'read_only':1, 'primary': 1, 'ref_link': get_absolute_url('Cost Category', row_detail.cost_category) })
-		data.append({ 'type':'text', 'value': row_detail.cost_description or '', 'read_only':read_only, 'class_name':'budget_notes' })
 		# Monthly Distribution
 		for field_name in month_fields:
 			data.append({ 'type':'number', 'value': int(row_detail.get(field_name)), 'read_only':read_only, 'class_name':'text-right month_input'})
@@ -69,11 +69,10 @@ def save_budget_data(budget, data):
 		budget_doc = frappe.get_doc('Budget', budget)
 		data = json.loads(data)
 		row_idx = 0
-		for budget_row in budget_doc.accounts:
+		# Update Budget Rows
+		for budget_row in budget_doc.budget_accounts:
 			month_idx = 5
 			budget_total = 0
-			cost_description = data[row_idx][4] or ''
-			budget_row.cost_description = cost_description
 			for month in month_fields:
 				value = 0
 				try:
@@ -90,20 +89,36 @@ def save_budget_data(budget, data):
 	return 1
 
 @frappe.whitelist()
-def add_budget_row(budget, cost_head, cost_subhead, cost_category):
+def add_budget_row(budget, cost_head):
 	'''
-        Method to add a row in Budget
+		Method to add a row in Budget
 	'''
 	if frappe.db.exists('Budget', budget):
 		budget_doc = frappe.get_doc('Budget', budget)
-		budget_row = budget_doc.append('accounts')
+		budget_row = budget_doc.append('budget_accounts')
 		if frappe.db.exists('Cost Head', cost_head):
-			budget_row.cost_head = cost_head
-		if frappe.db.exists('Cost Subhead', cost_subhead):
-			budget_row.cost_subhead = cost_subhead
-			budget_row.account = frappe.get_value('Cost Subhead', cost_subhead, 'account')
-		if frappe.db.exists('Cost Category', cost_category):
-			budget_row.cost_category = cost_category
+			cost_head_doc = frappe.get_doc('Cost Head', cost_head)
+			budget_row.cost_head = cost_head_doc.name
+			budget_row.budget_group = cost_head_doc.budget_group
+			budget_row.cost_category = cost_head_doc.cost_category
+			for account in cost_head_doc.accounts:
+				if account.company == budget_doc.company:
+					budget_row.account = account.default_account
+					break
 		budget_doc.flags.ignore_mandatory = 1
 		budget_doc.save(ignore_permissions=True)
 	return 1
+
+@frappe.whitelist()
+def get_cost_head_details(cost_head):
+	'''
+		Method to get Cost Head Details
+	'''
+	if frappe.db.exists('Cost Head', cost_head):
+		cost_head_doc = frappe.get_doc('Cost Head', cost_head)
+		return {
+			'cost_head': cost_head_doc.name,
+			'budget_group': cost_head_doc.budget_group,
+			'cost_category': cost_head_doc.cost_category
+		}
+	return {}
