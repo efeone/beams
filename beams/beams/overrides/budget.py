@@ -16,18 +16,14 @@ def validate_expense_against_budget(args, expense_amount=0, for_check=0):
 	if not frappe.get_all("Budget", limit=1):
 		return
 
-
 	if args.get("company") and not args.fiscal_year:
 		args.fiscal_year = get_fiscal_year(args.get("posting_date"), company=args.get("company"))[0]
 		frappe.flags.exception_approver_role = frappe.get_cached_value(
 			"Company", args.get("company"), "exception_budget_approver_role"
 		)
 
-
 	if not frappe.get_cached_value("Budget", {"fiscal_year": args.fiscal_year, "company": args.company}):  # nosec
 		return
-
-
 
 	if not args.account:
 		args.account = args.get("expense_account")
@@ -37,7 +33,6 @@ def validate_expense_against_budget(args, expense_amount=0, for_check=0):
 
 	if not args.account:
 		return
-
 
 	default_dimensions = [
 		{
@@ -97,7 +92,6 @@ def validate_expense_against_budget(args, expense_amount=0, for_check=0):
 				as_dict=True,
 			)  # nosec
 
-
 			if budget_records:
 				validate_budget_records(args, budget_records, expense_amount, for_check)
 
@@ -136,7 +130,6 @@ def validate_budget_records(args, budget_records, expense_amount, for_check):
 					for_check
 				)
 
-
 def compare_expense_with_budget(args, budget_amount, action_for, action, budget_against, amount=0, for_check=0):
 	args.actual_expense, args.requested_amount, args.ordered_amount = get_actual_expense(args), 0, 0
 	if not amount:
@@ -149,7 +142,6 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 			amount = args.ordered_amount
 
 	total_expense = args.actual_expense + amount
-
 
 	if total_expense > budget_amount:
 		if args.actual_expense > budget_amount:
@@ -186,7 +178,7 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 				args.get("object").budget_exceeded = 1
 		else:
 			if action == "Stop":
-				frappe.throw(msg, BudgetError, title=_("Budget Exceeded"))
+				frappe.throw(msg, title=_("Budget Exceeded"))
 			else:
 				frappe.msgprint(msg, indicator="orange", title=_("Budget Exceeded"))
 	else:
@@ -196,9 +188,6 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 				args.get("object").is_budget_exceed = 0
 			elif args.get("doctype") == "Material Request" and args.for_material_request:
 				args.get("object").budget_exceeded = 0
-
-
-
 
 def get_expense_breakup(args, currency, budget_against):
 	msg = "<hr>Total Expenses booked through - <ul>"
@@ -291,7 +280,6 @@ def get_actions(args, budget):
 
 	return yearly_action, monthly_action
 
-
 def get_requested_amount(args):
 	item_code = args.get("item_code")
 	condition = get_other_condition(args, "Material Request")
@@ -334,7 +322,6 @@ def get_ordered_amount(args, for_check):
 
 		data[0][0] += unsubmitted_ordered_amount
 	return data[0][0] if data else 0
-
 
 def get_other_condition(args, for_doc):
 	condition = "expense_account = '%s'" % (args.expense_account)
@@ -406,7 +393,6 @@ def get_accumulated_monthly_budget(monthly_distribution, posting_date, fiscal_ye
 	]
 
 	dt = frappe.get_cached_value("Fiscal Year", fiscal_year, "year_start_date")
-	accumulated_percentage = 0.0
 
 	accummulated_budget = 0
 
@@ -446,7 +432,6 @@ def get_item_details(args):
 				return cost_center, expense_account
 
 	return cost_center, expense_account
-
 
 def get_expense_cost_center(doctype, args):
 	if doctype == "Item Group":

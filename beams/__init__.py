@@ -25,16 +25,16 @@ __version__ = "0.0.1"
 # You’ve been warned.
 # -----------------------------------------------------------------------------
 
-# from erpnext.accounts.doctype.budget import budget
+from erpnext.accounts.doctype.budget import budget
 from helpdesk.helpdesk.doctype.hd_ticket import hd_ticket
 
 from beams.beams.custom_scripts.hd_ticket.hd_ticket import (
     get_permission_query_conditions,
     has_permission,
 )
-# from beams.beams.overrides.budget import validate_expense_against_budget
+from beams.beams.overrides.budget import validate_expense_against_budget
 
-# budget.validate_expense_against_budget = validate_expense_against_budget
+budget.validate_expense_against_budget = validate_expense_against_budget
 
 hd_ticket.permission_query = get_permission_query_conditions
 hd_ticket.has_permission = has_permission
