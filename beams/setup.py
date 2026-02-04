@@ -866,13 +866,6 @@ def get_department_custom_fields():
 				"label": "Threshold Amount",
 				"insert_after": "parent_department"
 			},
-			{
-				"fieldname": "finance_group",
-				"fieldtype": "Link",
-				"label": "Finance Group",
-				"options":"Finance Group",
-				"insert_after": "company"
-			}
 		]
 	}
 
@@ -1110,15 +1103,6 @@ def get_budget_custom_fields():
 				"insert_after": "company"
 			},
 			{
-				"fieldname": "finance_group",
-				"fieldtype": "Link",
-				"label": "Finance Group",
-				"options":"Finance Group",
-				"insert_after": "department",
-				"read_only":1,
-				"fetch_from": "department.finance_group"
-			},
-			{
 				"fieldname": "division",
 				"fieldtype": "Link",
 				"label": "Division",
@@ -1141,14 +1125,6 @@ def get_budget_custom_fields():
 				"insert_after": "fiscal_year"
 			},
 			{
-				"fieldname": "rejection_feedback",
-				"fieldtype": "Table",
-				"label": "Rejection Feedback",
-				"options":"Rejection Feedback",
-				"insert_after": "december",
-				"depends_on": "eval: doc.workflow_state == 'Rejected'"
-			},
-			{
 				"fieldname": "total_amount",
 				"fieldtype": "Currency",
 				"label": "Total Amount",
@@ -1157,18 +1133,11 @@ def get_budget_custom_fields():
 				"options": "company_currency"
 			},
 			{
-				"fieldname": "budget_accounts_custom",
+				"fieldname": "budget_accounts",
 				"fieldtype": "Table",
 				"label": "Budget Accounts",
-				"options": "Budget Account",
-				"insert_after": "accounts"
-			},
-			{
-				"fieldname": "budget_accounts_hr",
-				"fieldtype": "Table",
-				"label": "Budget Accounts(HR Overheads)",
-				"options": "Budget Account",
-				"insert_after": "budget_accounts_custom"
+				"options": "M1 Budget Account",
+				"insert_after": "accounts",
 			},
 			{
 				"fieldname": "default_currency",
@@ -1177,7 +1146,7 @@ def get_budget_custom_fields():
 				"options": "Currency",
 				"read_only": 1,
 				"hidden":1,
-				"insert_after": "budget_accounts_hr",
+				"insert_after": "budget_accounts",
 				"default": "INR"
 			},
 			{
@@ -1190,50 +1159,16 @@ def get_budget_custom_fields():
 				"insert_after": "default_currency",
 				"fetch_from": "company.default_currency"
 			},
+			{
+				"fieldname": "rejection_feedback",
+				"fieldtype": "Table",
+				"label": "Rejection Feedback",
+				"options":"Rejection Feedback",
+				"insert_after": "company_currency",
+				"read_only":1
+			},
 		],
 		"Budget Account": [
-			{
-				"fieldname": "cost_head",
-				"fieldtype": "Link",
-				"label": "Cost Head",
-				"options":"Cost Head",
-				"insert_before": "cost_subhead",
-				"in_list_view":1
-			},
-			{
-				"fieldname": "cost_subhead",
-				"fieldtype": "Link",
-				"label": "Cost Sub Head",
-				"options":"Cost Subhead",
-				"insert_after": "cost_head",
-				"in_list_view":1
-			},
-			{
-				"fieldname": "cost_category",
-				"fieldtype": "Link",
-				"label": "Cost Category",
-				"options":"Cost Category",
-				"insert_after": "account",
-				"in_list_view":1
-			},
-			{
-				"fieldname": "column_break_cd",
-				"fieldtype": "Column Break",
-				"label": " ",
-				"insert_after": "cost_category"
-			},
-			{
-				"fieldname": "cost_description",
-				"fieldtype": "Small Text",
-				"label": "Cost Description",
-				"insert_after": "column_break_cd"
-			},
-			{
-				"fieldname": "equal_monthly_distribution",
-				"fieldtype": "Check",
-				"label": "Equal Monthly Distribution ",
-				"insert_after": "cost_description"
-			},
 			{
 				"fieldname": "section_break_ab",
 				"fieldtype": "Section Break",
@@ -4849,13 +4784,6 @@ def get_property_setters():
 			"field_name": "coupon_code",
 			"property": "hidden",
 			"property_type": "Link",
-			"value":1
-		},
-		{
-			"doctype_or_field": "DocField",
-			"doc_type": "Budget",
-			"field_name": "accounts",
-			"property": "hidden",
 			"value":1
 		},
 		{

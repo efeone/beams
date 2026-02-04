@@ -76,8 +76,8 @@ doctype_js = {
 	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
 	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
 	"Item":"beams/custom_scripts/item/item.js",
-    "Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
-    "Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
+	"Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
+	"Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
 }
 
 doctype_list_js = {
@@ -230,7 +230,7 @@ doc_events = {
 		"before_save":[
 			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
 			"beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type"
-             ],
+			 ],
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
 		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
 		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"
@@ -490,7 +490,7 @@ scheduler_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-    "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
+	"erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
 }
 #
 # each overriding function accepts a `data` argument;
@@ -598,5 +598,8 @@ fixtures = [
 				],
 			]
 		],
-	}
+	},
+	{
+		"dt": "Cost Category",
+	},
 ]
