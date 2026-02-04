@@ -225,6 +225,50 @@ fields_to_remove = [
 		'dt':'HD Settings',
 		'fieldname': 'escalation_notifications_templates'
 	},
+	{
+		'dt':'Department',
+		'fieldname': 'finance_group'
+	},
+	{
+		'dt':'Budget',
+		'fieldname': 'finance_group'
+	},
+	{
+		'dt':'Budget',
+		'fieldname': 'rejection_feedback'
+	},
+	{
+		'dt':'Budget',
+		'fieldname': 'budget_accounts_custom'
+	},
+	{
+		'dt':'Budget',
+		'fieldname': 'budget_accounts_hr'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'cost_head'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'cost_subhead'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'cost_category'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'column_break_cd'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'cost_description'
+	},
+	{
+		'dt':'Budget Account',
+		'fieldname': 'equal_monthly_distribution'
+	}
 ]
 
 def execute():
