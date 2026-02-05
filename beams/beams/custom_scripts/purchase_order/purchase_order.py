@@ -6,17 +6,17 @@ from frappe.utils.user import get_users_with_role
 
 
 def validate_reason_for_rejection(doc,method):
-		'''
-			Validate that "Reason for Rejection" is filled if the status is "Rejected"
-		'''
-		rejection_states = [
-			"Rejected",
-			"Rejected By Finance",
-			"Rejected by CEO"
-		]
+	'''
+		Validate that "Reason for Rejection" is filled if the status is "Rejected"
+	'''
+	rejection_states = [
+		"Rejected",
+		"Rejected By Finance",
+		"Rejected by CEO"
+	]
 
-		if doc.workflow_state in rejection_states and not doc.reason_for_rejection:
-			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+	if doc.workflow_state in rejection_states and not doc.reason_for_rejection:
+		frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
 @frappe.whitelist()
 def create_todo_on_finance_verification(doc, method):
@@ -46,55 +46,6 @@ def create_todo_on_finance_verification(doc, method):
 			"name": doc.name,
 			"description": description
 		})
-
-
-def validate(self):
-	'''
-		This function validates the expenses for each item in the document against the defined budget.
-	'''
-	for item in self.items:
-		if item.cost_center:
-			budget = frappe.get_value('Budget', {'cost_center': item.cost_center, 'fiscal_year': self.fiscal_year}, 'total_budget')
-
-			# Get the actual expenses from GL Entry
-			actual_expense = frappe.db.sql("""
-				SELECT SUM(credit)
-				FROM `tabGL Entry`
-				WHERE cost_center = %s
-				AND account = %s
-				AND fiscal_year = %s
-			""", (item.cost_center, item.expense_account, self.fiscal_year))
-
-			# Calculate the total expense including the current Purchase Order amount
-			total_expense = actual_expense[0][0] or 0
-			total_expense += item.amount
-
-			if total_expense > budget:
-				self.is_budget_exceed = 1  # Automatically check the checkbox
-				frappe.msgprint(_("The budget for Cost Center {0} has been exceeded.").format(item.cost_center))
-
-def validate_budget(self, method=None):
-	'''
-		Validating Budget for Purchase order and material request
-	'''
-	from beams.beams.overrides.budget import validate_expense_against_budget
-	if self.name:
-		for data in self.get("items"):
-			args = data.as_dict()
-			args.update(
-				{
-					"object": self,
-					"doctype": self.doctype,
-					"company": self.company,
-					"posting_date": (
-						self.schedule_date
-						if self.doctype == "Material Request"
-						else self.transaction_date
-					),
-				}
-			)
-
-			validate_expense_against_budget(args, 0, 1)
 
 @frappe.whitelist()
 def fetch_department_from_cost_center(doc, method):

@@ -18,7 +18,7 @@
   "from_bureau",
   "is_management_employee",
   "is_budgeted",
-  "is__budget_exceed",
+  "is_budget_exceeded",
   "has_bureau_head_role",
   "travel_details_section",
   "travel_type",
@@ -272,13 +272,6 @@
   },
   {
    "default": "0",
-   "depends_on": "eval:doc.is_budgeted == 1",
-   "fieldname": "is__budget_exceed",
-   "fieldtype": "Check",
-   "label": "Is  Budget Exceed"
-  },
-  {
-   "default": "0",
    "fieldname": "from_bureau",
    "fieldtype": "Check",
    "hidden": 1,
@@ -290,6 +283,13 @@
    "fieldtype": "Check",
    "hidden": 1,
    "label": "Has Bureau Head Role"
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceeded",
+   "fieldtype": "Check",
+   "label": "Is Budget Exceeded"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -312,11 +312,11 @@
    "link_fieldname": "travel_request"
   }
  ],
- "modified": "2026-01-14 15:45:41.546113",
+ "modified": "2026-02-05 15:08:09.440498",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Employee Travel Request",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

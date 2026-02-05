@@ -70,7 +70,6 @@ frappe.ui.form.on('Batta Claim', {
 	},
 	refresh: function(frm) {
 		toggle_room_rent_batta_field(frm);
-		clear_checkbox_exceed(frm);
 		frappe.call({
 			method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
 			callback: function(response) {
@@ -451,10 +450,10 @@ function calculate_total_batta(frm, cdt, cdn) {
 }
 
 /**
-* Clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+* Clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */    
 function clear_checkbox_exceed(frm){
 	if(frm.doc.is_budgeted == 0){
-		frm.set_value("is_budget_exceed", 0);
+		frm.set_value("is_budget_exceeded", 0);
 	}
 }

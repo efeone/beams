@@ -818,7 +818,7 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 				})
 
 @frappe.whitelist()
-def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceed):
+def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceeded):
 	'''
 	Create Batta Claim from Employee Travel Request.
 	'''
@@ -836,7 +836,7 @@ def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceed):
 	bc.travel_request = doc.name
 	bc.employee = employee
 	bc.is_budgeted = is_budgeted
-	bc.is_budget_exceed = is_budget_exceed
+	bc.is_budget_exceeded = is_budget_exceeded
 	bc.origin = doc.source
 	bc.destination = doc.destination
 	bc.purpose= doc.travel_type
