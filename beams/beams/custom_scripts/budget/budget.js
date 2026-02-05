@@ -1,135 +1,152 @@
 frappe.ui.form.on('Budget', {
-	onload: function (frm) {
-		hide_main_tables(frm);
-	},
-	refresh: function (frm) {
-		hide_main_tables(frm);
-		set_filters(frm);
-		if (!frm.is_new()) {
-			frm.add_custom_button('Open Budget Tool', () => {
-				frappe.set_route('Form', 'Budget Tool', 'Budget Tool');
-			});
-		}
-	},
-	department: function (frm) {
-		set_filters(frm);
-		if (!frm.doc.department) {
-			frm.set_value('division', null);
-		}
-	},
-	company: function (frm) {
-		frm.set_value('department', null);
-	},
-	budget_template: function (frm) {
-		if (!frm.doc.budget_template) {
-			frm.set_value('cost_center', null);
-			frm.set_value('region', null);
-			frm.clear_table('budget_accounts');
-			frm.refresh_field('budget_accounts');
-			frm.clear_table('accounts');
-			frm.refresh_field('accounts');
-			return;
-		}
+    onload: function (frm) {
+        hide_main_tables(frm);
+    },
 
-		if (frm.doc.budget_template === frm._previous_budget_template) {
-			return;
-		}
+    refresh: function (frm) {
+        hide_main_tables(frm);
+        set_filters(frm);
 
-		let previous_template = frm.doc.__last_value || frm._previous_budget_template;
+        if (!frm.is_new()) {
+            frm.add_custom_button('Open Budget Tool', () => {
+                frappe.set_route('Form', 'Budget Tool', 'Budget Tool');
+            });
+        }
+    },
 
-		frappe.confirm(
-			__('Are you sure you want to change the Budget Template? This will reset existing budget data.'),
-			function () {
-				frm.clear_table('budget_accounts');
-				frm.clear_table('accounts');
-				frm.refresh_field('accounts');
+    department: function (frm) {
+        set_filters(frm);
+        if (!frm.doc.department) {
+            frm.set_value('division', null);
+        }
+    },
 
-				frappe.call({
-					method: 'frappe.client.get',
-					args: {
-						doctype: 'Budget Template',
-						name: frm.doc.budget_template
-					},
-					callback: function (response) {
-						if (response.message) {
-							let budget_template = response.message;
-							frm.set_value('cost_center', budget_template.cost_center);
-							frm.set_value('region', budget_template.region);
+    company: function (frm) {
+        frm.set_value('department', null);
+    },
 
-							let budget_template_items = budget_template.budget_template_items || [];
-							let accountMap = {};
-							budget_template_items.forEach(function (item) {
-								let row1 = frm.add_child('budget_accounts');
-								row1.cost_head = item.cost_head;
-								row1.budget_group = item.budget_group;
-								row1.account = item.account_head;
-								row1.cost_category = item.cost_category;
-								row1.budget_amount = 0
+    budget_template: function (frm) {
+        // If cleared
+        if (!frm.doc.budget_template) {
+            frm.set_value('cost_center', null);
+            frm.set_value('region', null);
 
-								if (!accountMap[item.account_head]) {
-									accountMap[item.account_head] = {
-										account: item.account_head,
-										budget_amount: 0
-									};
-								}
+            frm.clear_table('budget_accounts');
+            frm.clear_table('accounts');
 
-								// Add amount (use item.budget_amount if available, else 0)
-								accountMap[item.account_head].budget_amount += flt(item.budget_amount || 0);
-							});
-							frm.refresh_field('budget_accounts');
+            frm.refresh_field('budget_accounts');
+            frm.refresh_field('accounts');
+            return;
+        }
 
-							// Update sum to accounts table
-							Object.values(accountMap).forEach(data => {
-								let row = frm.add_child('accounts');
-								row.account = data.account;
-								row.budget_amount = data.budget_amount;
-							});
-							frm.refresh_field('accounts');
-						}
-					}
-				});
+        // Prevent re-trigger
+        if (frm.doc.budget_template === frm._previous_budget_template) {
+            return;
+        }
 
-				frm._previous_budget_template = frm.doc.budget_template;
-			},
-			function () {
-				frm.set_value('budget_template', previous_template);
-			}
-		);
-	}
+        let previous_template = frm._previous_budget_template;
+
+        frappe.confirm(
+            __('Are you sure you want to change the Budget Template? This will reset existing budget data.'),
+            function () {
+                frm.clear_table('budget_accounts');
+                frm.clear_table('accounts');
+                frm.refresh_field('accounts');
+
+                frappe.call({
+                    method: 'frappe.client.get',
+                    args: {
+                        doctype: 'Budget Template',
+                        name: frm.doc.budget_template
+                    },
+                    callback: function (response) {
+                        if (!response.message) return;
+
+                        let budget_template = response.message;
+                        frm.set_value('cost_center', budget_template.cost_center);
+                        frm.set_value('region', budget_template.region);
+
+                        let items = budget_template.budget_template_items || [];
+                        let accountMap = {};
+
+                        items.forEach(item => {
+                            let row = frm.add_child('budget_accounts');
+                            row.cost_head = item.cost_head;
+                            row.budget_group = item.budget_group;
+                            row.account = item.account_head;
+                            row.cost_category = item.cost_category;
+                            row.budget_amount = 0;
+
+                            if (!accountMap[item.account_head]) {
+                                accountMap[item.account_head] = {
+                                    account: item.account_head,
+                                    budget_amount: 0
+                                };
+                            }
+
+                            accountMap[item.account_head].budget_amount += flt(item.budget_amount || 0);
+                        });
+
+                        frm.refresh_field('budget_accounts');
+
+                        Object.values(accountMap).forEach(data => {
+                            let row = frm.add_child('accounts');
+                            row.account = data.account;
+                            row.budget_amount = data.budget_amount;
+                        });
+
+                        frm.refresh_field('accounts');
+                    }
+                });
+
+                frm._previous_budget_template = frm.doc.budget_template;
+            },
+            function () {
+                frm.set_value('budget_template', previous_template);
+            }
+        );
+    },
+
+    budget_for: function (frm) {
+        if (frm.doc.budget_for) {
+            frm.set_value("budget_against", frm.doc.budget_for);
+        }
+    }
 });
 
 // Function to apply filters in the cost subhead field in Budget Account
 function set_filters(frm) {
-	frm.set_query('division', function () {
-		return {
-			filters: {
-				department: frm.doc.department,
-				company: frm.doc.company
-			}
-		};
-	});
-	frm.set_query('budget_template', function () {
-		return {
-			filters: {
-				division: frm.doc.division,
-				company: frm.doc.company
-			}
-		};
-	});
-	frm.set_query('department', function () {
-		return {
-			filters: {
-				company: frm.doc.company
-			}
-		};
-	});
-	frm.set_query('region', function () {
-		return {
-			filters: {
-				company: frm.doc.company
-			}
-		};
-	});
+    frm.set_query('division', function () {
+        return {
+            filters: {
+                department: frm.doc.department,
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('budget_template', function () {
+        return {
+            filters: {
+                division: frm.doc.division,
+                company: frm.doc.company,
+                cost_center: frm.doc.cost_center
+            }
+        };
+    });
+    frm.set_query('department', function () {
+        return {
+            filters: {
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('region', function () {
+        return {
+            filters: {
+                company: frm.doc.company
+            }
+        };
+    });
 }
 
 frappe.ui.form.on('M1 Budget Account', {

@@ -57,24 +57,45 @@ frappe.ui.form.on('Budget Template Item', {
 	},
 });
 
+// Set query filters for link fields
 function set_filters(frm) {
-	frm.set_query('division', function () {
-		return {
-			filters: {
-				department: frm.doc.department,
-				company: frm.doc.company
-			}
-		};
-	});
-	frm.set_query('department', function () {
-		return {
-			filters: {
-				company: frm.doc.company
-			}
-		};
-	});
+
+    frm.set_query('division', function () {
+        return {
+            filters: {
+                department: frm.doc.department,
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query('department', function () {
+        return {
+            filters: {
+                company: frm.doc.company
+            }
+        };
+    });
+    frm.set_query("cost_center", function () {
+        return {
+            filters: {
+                company: frm.doc.company,
+                is_group: 0,
+                disabled: 0
+            }
+        }
+    });
+    frm.set_query('budget_head', function() {
+        return {
+            query: 'beams.beams.doctype.budget_template.budget_template.get_budget_approver_employees',
+            filters: {
+                'company': frm.doc.company,
+                'department': frm.doc.department
+            }
+        };
+    });
 }
 
+// Clear budget items table
 function clear_budget_items(frm) {
 	frm.clear_table('budget_template_items');
 	frm.refresh_field('budget_template_items');

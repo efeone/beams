@@ -3,11 +3,11 @@ import frappe
 month_fields = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december']
 
 def beams_budget_validate(doc, method=None):
-	"""
-		method runs custom validations for budget doctype
-	"""
-	update_total_amount(doc, method)
-	convert_currency(doc, method)
+    """method runs custom validations for budget doctype"""
+    update_total_amount(doc, method)
+    convert_currency(doc, method)
+    update_budget_against(doc, method)
+
 
 def update_total_amount(doc, method):
 	total = sum([row.budget_amount for row in doc.get("accounts") if row.budget_amount])
@@ -70,3 +70,10 @@ def convert_currency(doc, method):
 
 	for row in (*doc.accounts, *doc.budget_accounts):
 		apply_conversion(row)
+
+
+def update_budget_against(doc, method=None):
+    """Set budget_against field based on budget_for selection"""
+    if doc.budget_for:
+        doc.budget_against = doc.budget_for
+
