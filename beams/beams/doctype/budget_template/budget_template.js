@@ -57,6 +57,7 @@ frappe.ui.form.on('Budget Template Item', {
 	},
 });
 
+// Set query filters for link fields
 function set_filters(frm) {
 
     frm.set_query('division', function () {
@@ -94,6 +95,7 @@ function set_filters(frm) {
     });
 }
 
+// Clear budget items table
 function clear_budget_items(frm) {
 	frm.clear_table('budget_template_items');
 	frm.refresh_field('budget_template_items');
