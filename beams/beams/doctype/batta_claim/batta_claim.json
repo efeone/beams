@@ -25,7 +25,7 @@
   "mode_of_travelling",
   "from_bureau",
   "is_budgeted",
-  "is_budget_exceed",
+  "is_budget_exceeded",
   "is_travelling_outside_kerala",
   "is_overnight_stay",
   "is_avail_room_rent",
@@ -299,26 +299,21 @@
    "fieldname": "trip_sheet",
    "fieldtype": "Link",
    "label": "Trip Sheet",
-   "options": "Trip Sheet"
+   "options": "Trip Sheet",
+   "search_index": 1
   },
   {
    "fieldname": "travel_request",
    "fieldtype": "Link",
    "label": "Travel Request",
-   "options": "Employee Travel Request"
+   "options": "Employee Travel Request",
+   "search_index": 1
   },
   {
    "default": "1",
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
-  },
-  {
-   "default": "0",
-   "depends_on": "eval:doc.is_budgeted == 1",
-   "fieldname": "is_budget_exceed",
-   "fieldtype": "Check",
-   "label": " Is Budget Exceed"
   },
   {
    "default": "0",
@@ -334,6 +329,13 @@
    "label": "HOD Email",
    "options": "Email",
    "read_only": 1
+  },
+  {
+   "default": "0",
+   "depends_on": "eval:doc.is_budgeted == 1",
+   "fieldname": "is_budget_exceeded",
+   "fieldtype": "Check",
+   "label": " Is Budget Exceeded"
   }
  ],
  "index_web_pages_for_search": 1,
@@ -344,11 +346,11 @@
    "link_fieldname": "batta_claim_reference"
   }
  ],
- "modified": "2026-01-21 11:13:17.198649",
+ "modified": "2026-02-05 14:16:38.084292",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Batta Claim",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

@@ -268,6 +268,26 @@ fields_to_remove = [
 	{
 		'dt':'Budget Account',
 		'fieldname': 'equal_monthly_distribution'
+	},
+	{
+		'dt':'Expense Claim',
+		'fieldname': 'budget_exceeded'
+	},
+	{
+		'dt':'Journal Entry',
+		'fieldname': 'budget_exceeded'
+	},
+	{
+		'dt':'Material Request',
+		'fieldname': 'budget_exceeded'
+	},
+	{
+		'dt':'Purchase Invoice',
+		'fieldname': 'budget_exceeded'
+	},
+	{
+		'dt':'Purchase Order',
+		'fieldname': 'is_budget_exceed'
 	}
 ]
 

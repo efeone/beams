@@ -509,7 +509,7 @@ def filter_mode_of_travel(batta_policy_name):
 		return []
 
 @frappe.whitelist()
-def create_expense_claim(employee, travel_request, expenses, is_budgeted, budget_exceeded):
+def create_expense_claim(employee, travel_request, expenses, is_budgeted, is_budget_exceeded):
 	'''
 	Create an Expense Claim from Travel Request.
 	'''
@@ -523,7 +523,7 @@ def create_expense_claim(employee, travel_request, expenses, is_budgeted, budget
 	expense_claim = frappe.new_doc("Expense Claim")
 	expense_claim.travel_request = travel_request
 	expense_claim.is_budgeted = is_budgeted
-	expense_claim.budget_exceeded = budget_exceeded
+	expense_claim.is_budget_exceeded = is_budget_exceeded
 	expense_claim.employee = employee
 	expense_claim.approval_status = "Draft"
 	expense_claim.posting_date = today()
@@ -713,7 +713,7 @@ def get_permission_query_conditions(user):
 	return " OR ".join(f"({cond.strip()})" for cond in conditions)
 
 @frappe.whitelist()
-def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment, is_budgeted, budget_exceeded):
+def create_journal_entry_from_travel(employee, employee_travel_request, expenses, mode_of_payment, is_budgeted, is_budget_exceeded):
 	"""
 		Create a Journal Entry from Travel Request
 	"""
@@ -743,7 +743,7 @@ def create_journal_entry_from_travel(employee, employee_travel_request, expenses
 	jv.user_remark = f"Journal Entry for Travel Request {employee_travel_request}"
 	jv.employee = employee
 	jv.employee_travel_request = employee_travel_request
-	jv.budget_exceeded = budget_exceeded
+	jv.is_budget_exceeded = is_budget_exceeded
 	jv.is_budgeted = is_budgeted
 	jv.docstatus = 0
 
@@ -818,7 +818,7 @@ def assign_todo_for_accounts(employee_travel_request, journal_entry_name):
 				})
 
 @frappe.whitelist()
-def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceed):
+def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceeded):
 	'''
 	Create Batta Claim from Employee Travel Request.
 	'''
@@ -836,7 +836,7 @@ def create_batta_claim_from_etr(travel_request, is_budgeted, is_budget_exceed):
 	bc.travel_request = doc.name
 	bc.employee = employee
 	bc.is_budgeted = is_budgeted
-	bc.is_budget_exceed = is_budget_exceed
+	bc.is_budget_exceeded = is_budget_exceeded
 	bc.origin = doc.source
 	bc.destination = doc.destination
 	bc.purpose= doc.travel_type

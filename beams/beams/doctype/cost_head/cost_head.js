@@ -15,6 +15,7 @@ function set_filters(frm) {
 				is_group: 0,
 				disabled: 0,
 				report_type: 'Profit and Loss',
+				root_type: 'Expense',
 				company: row.company
 			}
 		}
