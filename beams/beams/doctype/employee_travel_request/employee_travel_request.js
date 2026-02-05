@@ -83,7 +83,7 @@ frappe.ui.form.on('Employee Travel Request', {
 								expenses: expenses,
 								mode_of_payment: values.mode_of_payment,
 								is_budgeted: frm.doc.is_budgeted || 0,
-								budget_exceeded: frm.doc.is_budget_exceeded || 0
+								is_budget_exceeded: frm.doc.is_budget_exceeded || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -200,7 +200,7 @@ frappe.ui.form.on('Employee Travel Request', {
 								travel_request: frm.doc.name,
 								expenses: expenses,
 								is_budgeted: frm.doc.is_budgeted || 0,
-								budget_exceeded: frm.doc.is_budget_exceeded || 0
+								is_budget_exceeded: frm.doc.is_budget_exceeded || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -509,7 +509,7 @@ function create_batta_claim_from_travel(frm) {
 }
 
 /**
-* clear the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
+* clear the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
 function clear_checkbox_exceed(frm){
 	if(!frm.doc.is_budgeted){

@@ -49,10 +49,10 @@ function calculate_total_amount(frm) {
 }
 
 /**
-* Clears the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
+* Clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
 function clear_checkbox_exceed(frm){
 	if (frm.doc.is_budgeted == 0){
-		frm.set_value("budget_exceeded", 0);
+		frm.set_value("is_budget_exceeded", 0);
 	}
 }
