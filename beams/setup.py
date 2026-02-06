@@ -3589,6 +3589,13 @@ def get_company_custom_fields():
 				"label": "Budget Exchange Rate to INR",
 				"insert_after": "exception_budget_column",
 				"description": "1 Unit of Company Currency = [?] INR"
+			},
+			{
+				"fieldtype": "Link",
+				"fieldname": "budget_region",
+				"label": "Budget Region",
+				"options": "Budget Region",
+				"insert_after": "default_holiday_list"
 			}
 		]
 	}
