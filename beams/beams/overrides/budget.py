@@ -201,6 +201,7 @@ def get_expense_breakup(args, currency, budget_against):
 			args.budget_against_field: budget_against,
 			'account': args.account,
 			'company': args.company,
+			'cost_head': args.get('cost_head'),
 		}
 	)
 
