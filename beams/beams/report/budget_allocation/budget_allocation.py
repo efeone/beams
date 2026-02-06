@@ -190,8 +190,6 @@ def get_dimension_target_details(filters):
 		cond += "and ba.budget_group = '{0}'".format(filters.get("budget_group"))
 	if filters.get("cost_category"):
 		cond += "and ba.cost_category = '{0}'".format(filters.get("cost_category"))
-	if filters.get("finance_group"):
-		cond += "and b.finance_group = '{0}'".format(filters.get("finance_group"))
 
 	return frappe.db.sql(
 		f"""
@@ -230,22 +228,39 @@ def get_dimension_target_details(filters):
 
 
 def get_target_distribution_details(filters):
+	budget_against = frappe.scrub(filters.get("budget_against"))
+	budget_against_filter = filters.get("budget_against_filter") or []
+	if not budget_against_filter:
+		if filters.get("budget_against") in ["Cost Center", "Project"]:
+			budget_against_filter = get_cost_centers(filters)
+	budget_against_data = (
+		",".join(f"'{bud_ag}'" for bud_ag in budget_against_filter)
+		if budget_against_filter
+		else "''"
+	)
+
 	target_details = {}
 
+	budget_query = f"""
+		select
+			b.name as budget_name,
+			b.fiscal_year
+		from
+			`tabBudget` b
+		where
+			b.fiscal_year between %s and %s and
+			b.company = %s and
+			b.budget_against = %s and
+			b.{budget_against} in ({budget_against_data})
+	"""
+	budgets = frappe.db.sql(
+		budget_query,
+		(filters.from_fiscal_year, filters.to_fiscal_year, filters.company, filters.budget_against),
+		as_dict=True
+	)
+
 	# Loop through the Budget records to get the amounts for each month from the Budget Account child table
-	for budget in frappe.db.sql(
-		"""
-			select
-				b.name as budget_name,
-				b.fiscal_year
-			from
-				`tabBudget` b
-			where
-				b.fiscal_year between %s and %s
-		""",
-		(filters.from_fiscal_year, filters.to_fiscal_year),
-		as_dict=True,
-	):
+	for budget in budgets:
 		# Get the Budget Account details for each budget
 		budget_accounts = frappe.get_all(
 			"M1 Budget Account",
@@ -300,7 +315,6 @@ def get_dimension_account_month_map(filters):
 			tav_dict = cam_map[ccd.budget_against][ccd.cost_head][ccd.fiscal_year][month]
 
 			tav_dict.target = tdd[ccd.cost_head][ccd.fiscal_year][month_map[month]]
-
 	return cam_map
 
 def get_fiscal_years(filters):
