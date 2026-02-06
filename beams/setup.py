@@ -749,7 +749,7 @@ def get_leave_application_custom_fields():
 				"fieldtype": "Attach",
 				"label": "Medical Certificate",
 				"hidden": 1,
-			   "insert_after": "leave_type"
+				"insert_after": "leave_type"
 			}
 
 		]
@@ -1677,7 +1677,7 @@ def get_quotation_custom_fields():
 				"label": "Sales Type",
 				"options": "Sales Type",
 				"insert_after": "item_name"
-		   }
+			}
 		]
 	}
 
@@ -1866,60 +1866,60 @@ def get_item_custom_fields():
 				"label": "Sales Type",
 				"options": "Sales Type",
 				"insert_after": "is_production_item"
-		   },
-		   {
-			   "fieldname": "hireable",
-			   "fieldtype": "Check",
-			   "label": "Hireable",
-			   "fetch_from":"item_group.hireable",
-			   "set_only_once":1,
-			   "insert_after": "gst_hsn_code"
-		   },
-		   {
-			   "fieldname": "service_item",
-			   "fieldtype": "Link",
-			   "label": "Service Item",
-			   "options": "Item",
-			   "read_only":1,
-			   "insert_after": "item_group"
-		   },
-		   {
-			   "fieldname": "item_audit_notification",
-			   "fieldtype": "Check",
-			   "label": "Periodic Notification for Asset Auditing ",
-			   "depends_on": "eval:doc.is_fixed_asset == 1",
-			   "insert_after": "asset_category"
-		   },
-		   {
-			   "fieldname": "item_notification_frequency",
-			   "fieldtype": "Select",
-			   "label": "Notification Frequency",
-			   "options":"\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly",
-			   "depends_on": "eval:doc.item_audit_notification == 1",
-			   "insert_after": "item_audit_notification"
-		   }   ,
-		   {
-			   "fieldname": "item_notification_template",
-			   "fieldtype": "Link",
-			   "label": "Notification Template",
-			   "options":"Email Template",
-			   "depends_on": "eval:doc.item_audit_notification == 1",
-			   "insert_after": "item_notification_frequency"
-		   },
-		   {
-			   "fieldname": "start_notification_from",
-			   "fieldtype": "Select",
-			   "label": "Start Notification From",
-			   "options":"\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
-			   "depends_on": "eval:doc.item_audit_notification == 1",
-			   "insert_after": "item_audit_notification"
-		   },
-		   {
-			   "fieldname": "is_makeup_item",
-			   "fieldtype": "Check",
-			   "label": "Is Makeup Item",
-			   "insert_after": "is_exempt"
-		   },
+			},
+			{
+				"fieldname": "hireable",
+				"fieldtype": "Check",
+				"label": "Hireable",
+				"fetch_from":"item_group.hireable",
+				"set_only_once":1,
+				"insert_after": "gst_hsn_code"
+			},
+			{
+				"fieldname": "service_item",
+				"fieldtype": "Link",
+				"label": "Service Item",
+				"options": "Item",
+				"read_only":1,
+				"insert_after": "item_group"
+			},
+			{
+				"fieldname": "item_audit_notification",
+				"fieldtype": "Check",
+				"label": "Periodic Notification for Asset Auditing ",
+				"depends_on": "eval:doc.is_fixed_asset == 1",
+				"insert_after": "asset_category"
+			},
+			{
+				"fieldname": "item_notification_frequency",
+				"fieldtype": "Select",
+				"label": "Notification Frequency",
+				"options":"\nMonthly\nTrimonthly\nQuarterly\nHalf Yearly\nYearly",
+				"depends_on": "eval:doc.item_audit_notification == 1",
+				"insert_after": "item_audit_notification"
+			},
+			{
+				"fieldname": "item_notification_template",
+				"fieldtype": "Link",
+				"label": "Notification Template",
+				"options":"Email Template",
+				"depends_on": "eval:doc.item_audit_notification == 1",
+				"insert_after": "item_notification_frequency"
+			},
+			{
+				"fieldname": "start_notification_from",
+				"fieldtype": "Select",
+				"label": "Start Notification From",
+				"options":"\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember",
+				"depends_on": "eval:doc.item_audit_notification == 1",
+				"insert_after": "item_audit_notification"
+			},
+			{
+				"fieldname": "is_makeup_item",
+				"fieldtype": "Check",
+				"label": "Is Makeup Item",
+				"insert_after": "is_exempt"
+			},
 			{
 				"fieldname": "item_type",
 				"fieldtype": "Select",
@@ -2256,7 +2256,6 @@ def get_employee_custom_fields():
 				"insert_after": "address_section"
 			},
 		],
-
 		"Employee External Work History":[
 			{
 				"fieldname": "period_from",
@@ -2323,7 +2322,7 @@ def get_voucher_entry_custom_fields():
 				"insert_after": "project",
 				"default": "1",
 			},
-						{
+			{
 				"fieldname": "is_budget_exceeded",
 				"fieldtype": "Check",
 				"label": "Is Budget Exceeded",
@@ -3488,7 +3487,7 @@ def get_job_opening_custom_fields():
 				"insert_after": "license_type",
 			},
 			{
-			   "fieldname": "min_education_qual",
+				"fieldname": "min_education_qual",
 				"fieldtype": "Table MultiSelect",
 				"label": "Preferred Educational Qualification",
 				'options':"Educational Qualifications",
@@ -3535,7 +3534,7 @@ def get_job_opening_custom_fields():
 				"insert_after": "skill_proficiency"
 			},
 			{
-			   "fieldname": "interview_rounds",
+				"fieldname": "interview_rounds",
 				"fieldtype": "Table MultiSelect",
 				"label": "Interview Rounds",
 				'options':"Interview Rounds",
@@ -3714,24 +3713,24 @@ def get_leave_type_custom_fields():
 				"insert_after": "min_continuous_days_allowed"
 			},
 			{
-			   "fieldname": "is_proof_document",
-			   "fieldtype": "Check",
-			   "label": "Is Proof Document Required",
-			   "insert_after": "is_optional_leave"
+				"fieldname": "is_proof_document",
+				"fieldtype": "Check",
+				"label": "Is Proof Document Required",
+				"insert_after": "is_optional_leave"
 
 			},
 			{
 			  "fieldname": "medical_leave_required",
-			   "fieldtype": "Float",
-			   "label": "Medical Leave Required for Days",
-			   "depends_on": "eval:doc.is_proof_document",
-			   "insert_after": "is_proof_document"
+				"fieldtype": "Float",
+				"label": "Medical Leave Required for Days",
+				"depends_on": "eval:doc.is_proof_document",
+				"insert_after": "is_proof_document"
 			},
 			{
-			   "fieldname": "allow_in_notice_period",
-			   "fieldtype": "Check",
-			   "label": "Allow in Notice Period",
-			   "insert_after": "is_compensatory"
+				"fieldname": "allow_in_notice_period",
+				"fieldtype": "Check",
+				"label": "Allow in Notice Period",
+				"insert_after": "is_compensatory"
 
 			},
 			{
@@ -5132,7 +5131,7 @@ def get_property_setters():
 			"property": "allow_in_quick_entry",
 			"value": 1,
 		},
-		{   
+		{
 			"doctype_or_field": "DocField",
 			"doc_type": "HD Ticket",
 			"field_name": "agent_group",
@@ -5952,14 +5951,13 @@ def get_training_event_custom_fields():
 	'''
 	return {
 		"Training Event": [
-		   {
+			{
 				"fieldname": "training_request",
 				"fieldtype": "Link",
 				"label": "Training Request",
 				"options": "Training Request",
 				"insert_after": "company",
 				"hidden": 1
-
 			}
 		]
 	}
@@ -6018,12 +6016,12 @@ def get_email_templates():
 			'name': 'Job Applicant Follow Up',
 			'subject': "{{applicant_name}}, Complete your Application",
 			'response': """Dear {{ applicant_name }},
-						   We're excited to move forward with your application!
-						   To continue, please upload the required documents by clicking the link: <a href="{{ magic_link }}">Click Here</a>.
-						   Thank you for your interest in joining us!
-						   If you have any questions, feel free to reach out.
-						   Best regards,
-						   HR Manager"""
+						We're excited to move forward with your application!
+						To continue, please upload the required documents by clicking the link: <a href="{{ magic_link }}">Click Here</a>.
+						Thank you for your interest in joining us!
+						If you have any questions, feel free to reach out.
+						Best regards,
+						HR Manager"""
 		}
 ]
 
@@ -6273,13 +6271,13 @@ def get_supplier_quotation_custom_fields():
 				"label": "Attachments",
 				"insert_after": "base_net_total"
 			},
-   			{
+			{
 				"fieldname": "suggested_items_by_supplier",
 				"fieldtype": "Table",
 				"label": "Suggested Items by Supplier",	
 				"options": "Suggested Items By Supplier",
 				"insert_after": "items"
-   			},
+			},
 			{
 				"fieldname": "priority",
 				"fieldtype": "Select",
@@ -6288,8 +6286,8 @@ def get_supplier_quotation_custom_fields():
 				"default":"Medium",
 				"insert_after": "company",
 				"in_list_view": 1
-   			},
-			   
+			},
+			
 		]
 	}
 
@@ -6446,31 +6444,32 @@ def get_hd_agent_custom_fields():
 	}
 
 def update_portal_settings():
-    """Update Portal Settings:
-       - Remove standard RFQ & SQ pages
-       - Add custom menu items with custom routes and roles
-    """
-    portal_settings = frappe.get_single('Portal Settings')
-    replace_titles = ["Request for Quotations", "Supplier Quotation"]
-    portal_settings.menu = [row for row in portal_settings.menu if row.title not in replace_titles]
-    custom_menu = [
-        {
-            "title": "Request for Quotations",
-            "route": "/request_for_quotation_list_view",
-            "enabled": 1,
-            "reference_doctype": "Request for Quotation",
-            "role": "Supplier"
-        },
-        {
-            "title": "Supplier Quotation",
-            "route": "/supplier_quotation_list_view",
-            "enabled": 1,
-            "reference_doctype": "Supplier Quotation",
-            "role": "Supplier"
-        }
-    ]
-    existing_titles = [row.title for row in portal_settings.custom_menu]
-    for item in custom_menu:
-        if item["title"] not in existing_titles:
-            portal_settings.append("custom_menu", item)
-    portal_settings.save()
+	"""
+		Update Portal Settings:
+		- Remove standard RFQ & SQ pages
+		- Add custom menu items with custom routes and roles
+	"""
+	portal_settings = frappe.get_single('Portal Settings')
+	replace_titles = ["Request for Quotations", "Supplier Quotation"]
+	portal_settings.menu = [row for row in portal_settings.menu if row.title not in replace_titles]
+	custom_menu = [
+		{
+			"title": "Request for Quotations",
+			"route": "/request_for_quotation_list_view",
+			"enabled": 1,
+			"reference_doctype": "Request for Quotation",
+			"role": "Supplier"
+		},
+		{
+			"title": "Supplier Quotation",
+			"route": "/supplier_quotation_list_view",
+			"enabled": 1,
+			"reference_doctype": "Supplier Quotation",
+			"role": "Supplier"
+		}
+	]
+	existing_titles = [row.title for row in portal_settings.custom_menu]
+	for item in custom_menu:
+		if item["title"] not in existing_titles:
+			portal_settings.append("custom_menu", item)
+	portal_settings.save()
