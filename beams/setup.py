@@ -3596,7 +3596,7 @@ def get_company_custom_fields():
 				"label": "Budget Region",
 				"options": "Budget Region",
 				"insert_after": "default_holiday_list"
-			}
+			},
 		]
 	}
 

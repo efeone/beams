@@ -33,53 +33,70 @@ class BudgetTemplate(Document):
 		self.set_default_account()
 
 
-	def validate_account_per_cost_center(self):
-		if not self.budget_template_items and self.cost_center:
-			return
+def validate_account_per_cost_center(self):
+	"""
+	Validates that there are no duplicate Cost Heads within the same Budget Template and
+	no duplicate Account Heads across different Budget Templates for the same Cost Center.
+   """
 
-		for row in self.budget_template_items or []:
-			if not row.account_head:
-				continue
+	if not self.cost_center or not self.budget_template_items:
+		return
 
-			duplicates = frappe.get_all(
-				"Budget Template Item",
-				filters={
-					"account_head": row.account_head,
-					"parenttype": "Budget Template",
-					"parent": ["!=", self.name],
-				},
-				fields=["parent"],
-				limit=1,
-			)
+	seen_cost_heads = set()
 
-			if not duplicates:
-				continue
+	for row in self.budget_template_items:
+		# Duplicate Cost Head in same Template
+		if row.cost_head:
+			if row.cost_head in seen_cost_heads:
+				frappe.throw(
+					_("Duplicate Cost Head <b>{0}</b> is not allowed in the same Budget Template.")
+					.format(row.cost_head),
+					title=_("Duplicate Cost Head"),
+				)
+			seen_cost_heads.add(row.cost_head)
 
-			template = duplicates[0].parent
+		# Duplicate Account across Templates (same Cost Center)
+		if not row.account_head:
+			continue
 
-			# check cost center of that template
-			cost_center = frappe.db.get_value(
-				"Budget Template", template, "cost_center"
-			)
+		duplicates = frappe.get_all(
+			"Budget Template Item",
+			filters={
+				"account_head": row.account_head,
+				"parenttype": "Budget Template",
+				"parent": ["!=", self.name],
+			},
+			fields=["parent"],
+			limit=1,
+		)
 
-			if cost_center != self.cost_center:
-				continue
+		if not duplicates:
+			continue
 
-			template_link = frappe.utils.get_link_to_form(
-				"Budget Template", template
-			)
+		template = duplicates[0].parent
 
-			frappe.throw(
-				_(
-					"Account : <b>{0}</b> is used in the {1} Budget Template "
-					"with the same Cost Center : <b>{2}</b>."
-				).format(
-					row.account_head,
-					template_link,
-					self.cost_center,
-				),
-				title=_("Duplicate Account Found"),
-			)
+		template_cost_center = frappe.db.get_value(
+			"Budget Template", template, "cost_center"
+		)
+
+		if template_cost_center != self.cost_center:
+			continue
+
+		template_link = frappe.utils.get_link_to_form(
+			"Budget Template", template
+		)
+
+		frappe.throw(
+			_(
+				"Account : <b>{0}</b> is used in the {1} Budget Template "
+				"with the same Cost Center : <b>{2}</b>."
+			).format(
+				row.account_head,
+				template_link,
+				self.cost_center,
+			),
+			title=_("Duplicate Account Found"),
+		)
 
 
 @frappe.whitelist()
