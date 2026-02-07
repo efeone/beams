@@ -10,34 +10,11 @@ class BudgetTemplate(Document):
 	def validate(self):
 		self.validate_account_per_cost_center()
 
-	def set_default_account(self):
-		"""  Set the default account for each budget template item based on the associated cost subhead and company.
-		"""
-		if not hasattr(self, "budget_template_item") or not self.budget_template_item:
-			return
-
-		for item in self.budget_template_item:
-			if not item.cost_sub_head or not self.company:
-				item.account = ""
-				continue
-
-			cost_subhead_doc = frappe.get_doc("Cost Subhead", item.cost_sub_head)
-
-			if cost_subhead_doc.accounts:
-				account_found = next((acc for acc in cost_subhead_doc.accounts if acc.company == self.company), None)
-				item.account = account_found.default_account if account_found else ""
-			else:
-				item.account = ""
-
-	def before_save(self):
-		self.set_default_account()
-
-
 	def validate_account_per_cost_center(self):
 		"""
-		Validates that there are no duplicate Cost Heads within the same Budget Template and
-		no duplicate Account Heads across different Budget Templates for the same Cost Center.
-	"""
+			Validates that there are no duplicate Cost Heads within the same Budget Template and
+			no duplicate Account Heads across different Budget Templates for the same Cost Center.
+		"""
 
 		if not self.cost_center or not self.budget_template_items:
 			return
@@ -103,7 +80,7 @@ class BudgetTemplate(Document):
 @frappe.whitelist()
 def get_budget_approver_employees(doctype, txt, searchfield, start, page_len, filters):
 	"""  
-	Fetch employees with the role of 'Budget Approver' for the current company.
+		Fetch employees with the role of 'Budget Approver' for the current company.
 	"""
 	users = frappe.get_all(
 		"Has Role",
@@ -123,5 +100,3 @@ def get_budget_approver_employees(doctype, txt, searchfield, start, page_len, fi
 	)
 
 	return [(row.name, row.employee_name) for row in result]
-
-
