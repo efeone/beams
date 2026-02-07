@@ -2,8 +2,9 @@
 # For license information, please see license.txt
 
 import frappe
-from frappe.model.document import Document
 from frappe import _
+from frappe.model.document import Document
+
 
 class BudgetTemplate(Document):
 
@@ -79,24 +80,46 @@ class BudgetTemplate(Document):
 
 @frappe.whitelist()
 def get_budget_approver_employees(doctype, txt, searchfield, start, page_len, filters):
-	"""  
-		Fetch employees with the role of 'Budget Approver' for the current company.
-	"""
-	users = frappe.get_all(
-		"Has Role",
-		filters={"role": "Budget Approver"},
-		pluck="parent"
-	)
+    """
+    Fetch active employees for a given company & department
+    whose user has the role 'Budget Approver'.
+    """
 
-	if not users:
-		return []
+    if not filters:
+        return []
 
-	result = frappe.get_all(
-		"Employee",
-		filters={
-			"user_id": ["in", users]
-		},
-		fields=["name", "employee_name"],
-	)
+    company = filters.get("company")
+    department = filters.get("department")
 
-	return [(row.name, row.employee_name) for row in result]
+    if not company or not department:
+        return []
+
+    # Users with 'Budget Approver' role
+    budget_approver_users = frappe.get_all(
+        "Has Role",
+        filters={"role": "Budget Approver"},
+        pluck="parent",
+    )
+
+    if not budget_approver_users:
+        return []
+
+    employee_filters = {
+        "user_id": ["in", budget_approver_users],
+        "company": company,
+        "department": department,
+        "status": "Active",
+    }
+
+    
+    employees = frappe.get_all(
+            "Employee",
+            filters=employee_filters,
+            fields=["name", "employee_name"],
+            limit_start=int(start or 0),
+            limit_page_length=int(page_len or 20),
+            order_by="employee_name",
+        )
+
+    return [(emp.name, emp.employee_name) for emp in employees]
+
