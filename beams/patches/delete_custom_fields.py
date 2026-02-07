@@ -288,6 +288,10 @@ fields_to_remove = [
 	{
 		'dt':'Purchase Order',
 		'fieldname': 'is_budget_exceed'
+	},
+	{
+		'dt':'Budget',
+		'fieldname': 'column_break_ab'
 	}
 ]
 

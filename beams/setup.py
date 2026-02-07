@@ -1178,12 +1178,6 @@ def get_budget_custom_fields():
 				"in_standard_filter": 1,
 			},
 			{
-				"fieldtype": "Column Break",
-				"fieldname": "column_break_ab",
-				"label": " ",
-				"insert_after": "division"
-			},
-			{
 				"fieldname": "budget_head",
 				"fieldtype": "Data",
 				"label": "Budget Head",
@@ -1197,7 +1191,8 @@ def get_budget_custom_fields():
 				"label": "Budget Head User",
 				"insert_after": "budget_head",
 				"read_only": 1,
-				"fetch_from": "budget_template.budget_head_user"
+				"fetch_from": "budget_template.budget_head_user",
+				"hidden": 1
 			}
 			
 		],
@@ -1266,7 +1261,7 @@ def get_budget_custom_fields():
 				"fieldname": "column_break_ab",
 				"fieldtype": "Column Break",
 				"label": " ",
-				"insert_after": "august"
+				"insert_after": "july"
 			},
 			{
 				"fieldname": "september",
@@ -5623,6 +5618,12 @@ def get_property_setters():
 			"property": "in_standard_filter",
 			"property_type": "Check",
 			"value": "0"
+		},
+		{
+			"doctype_or_field": "DocType",
+			"doc_type": "Budget",
+			"property": "field_order",
+			"value": "[\"workflow_state\", \"naming_series\", \"budget_against\", \"budget_for\", \"project\", \"cost_center\", \"cost_head\", \"fiscal_year\", \"budget_head\", \"budget_head_user\", \"total_amount\", \"column_break_3\", \"company\", \"department\", \"division\", \"budget_template\", \"region\", \"monthly_distribution\", \"amended_from\", \"section_break_6\", \"applicable_on_material_request\", \"action_if_annual_budget_exceeded_on_mr\", \"action_if_accumulated_monthly_budget_exceeded_on_mr\", \"column_break_13\", \"applicable_on_purchase_order\", \"action_if_annual_budget_exceeded_on_po\", \"action_if_accumulated_monthly_budget_exceeded_on_po\", \"section_break_16\", \"applicable_on_booking_actual_expenses\", \"action_if_annual_budget_exceeded\", \"action_if_accumulated_monthly_budget_exceeded\", \"section_break_21\", \"accounts\", \"budget_accounts\", \"default_currency\", \"company_currency\", \"rejection_feedback\"]"
 		},
 	]
 
