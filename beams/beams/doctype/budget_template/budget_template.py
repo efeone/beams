@@ -64,6 +64,7 @@ class BudgetTemplate(Document):
 				filters={
 					"account_head": row.account_head,
 					"parenttype": "Budget Template",
+					"parentfield": "budget_template_items",
 					"parent": ["!=", self.name],
 				},
 				fields=["parent"],
