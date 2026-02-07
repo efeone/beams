@@ -12,6 +12,7 @@ frappe.ui.form.on('Budget Template', {
 			frm.set_value('division',)
 			clear_budget_items(frm);
 		}
+		set_filters(frm);
 	},
 	company: function (frm) {
 		frm.set_value('department', null);
@@ -84,12 +85,12 @@ function set_filters(frm) {
             }
         }
     });
-    frm.set_query('budget_head', function() {
+    frm.set_query('budget_head', function () {
         return {
             query: 'beams.beams.doctype.budget_template.budget_template.get_budget_approver_employees',
             filters: {
-                'company': frm.doc.company,
-                'department': frm.doc.department
+                company: frm.doc.company || "",
+                department: frm.doc.department || ""
             }
         };
     });
