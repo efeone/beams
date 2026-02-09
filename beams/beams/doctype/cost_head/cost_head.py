@@ -8,25 +8,24 @@ from frappe import _
 
 class CostHead(Document):
 	def validate(self):
-		self.validate_no_duplicate_company_account()
+		self.validate_duplicate_company()
 
-	def validate_no_duplicate_company_account(self):
-		"""No duplicate rows with same Company and Default Account in this Cost Head."""
+	def validate_duplicate_company(self):
+		"""Allow only one row per Company in this Cost Head."""
 		if not getattr(self, "accounts", None):
 			return
 
-		seen = set()
+		seen_companies = set()
+
 		for row in self.accounts:
-			if not row.company or not row.default_account:
+			if not row.company:
 				continue
-			key = (row.company, row.default_account)
-			if key in seen:
-				print(seen, "set")
+
+			if row.company in seen_companies:
 				frappe.throw(
-					_(
-						"Duplicate Company and Account: <b>{0}</b> and <b>{1}</b> are already used in another row."
-					).format(row.company, row.default_account),
-					title=_("Duplicate Company & Account"),
+					_("Cannot set multiple Item Defaults for a company."),
+					title=_("Duplicate Company"),
 				)
-			seen.add(key)
+
+			seen_companies.add(row.company)
 
