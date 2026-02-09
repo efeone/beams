@@ -12,8 +12,6 @@ class CostHead(Document):
 
 	def validate_duplicate_company(self):
 		"""Allow only one row per Company in this Cost Head."""
-		if not getattr(self, "accounts", None):
-			return
 
 		seen_companies = set()
 
