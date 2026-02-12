@@ -116,6 +116,9 @@ def after_install():
 	#Creating BEAMS specific Email Template
 	create_email_templates(get_email_templates())
 
+	# Create Budget Workflow
+	setup_budget_workflow()
+
 def after_migrate():
 	after_install()
 	update_portal_settings()
@@ -5889,6 +5892,7 @@ def create_email_templates(email_templates):
 			frappe.get_doc(email_template).insert(ignore_permissions=True)
 	frappe.db.commit()
 
+
 def get_interview_feedback_custom_fields():
 	'''
 	Custom fields that need to be added to the Interview Feedback
@@ -6481,3 +6485,138 @@ def update_portal_settings():
 		if item["title"] not in existing_titles:
 			portal_settings.append("custom_menu", item)
 	portal_settings.save()
+
+
+def setup_budget_workflow():
+	"""
+	Create Budget Workflow
+	"""
+	setup_workflow(get_budget_workflow_config())
+
+
+def setup_workflow(workflow_config):
+	"""
+	General workflow setup: ensure all Workflow States, Workflow Action Master
+	records, and Roles referenced in the workflow exist, then create the workflow
+	"""
+	workflow_name = workflow_config.get("workflow_name")
+	if not workflow_name:
+		return
+
+	# Create master records and roles if missing (order: states, actions, roles)
+	state_names = get_states_from_workflow_config(workflow_config)
+	ensure_workflow_states_exist(state_names)
+
+	action_names = get_actions_from_workflow_config(workflow_config)
+	ensure_workflow_actions_exist(action_names)
+
+	roles = get_roles_from_workflow_config(workflow_config)
+	ensure_roles_exist(roles)
+
+	# Create workflow
+	if frappe.db.exists("Workflow", workflow_name):
+		return
+	workflow = frappe.get_doc(workflow_config)
+	workflow.insert(ignore_permissions=True)
+
+
+def get_states_from_workflow_config(workflow_config):
+	"""Extract unique state names from workflow states and transitions (state, next_state)."""
+	states = set()
+	for s in workflow_config.get("states") or []:
+		if s.get("state"):
+			states.add(s["state"])
+	for t in workflow_config.get("transitions") or []:
+		if t.get("state"):
+			states.add(t["state"])
+		if t.get("next_state"):
+			states.add(t["next_state"])
+	return list(states)
+
+
+def get_actions_from_workflow_config(workflow_config):
+	"""Extract unique action names from workflow transitions."""
+	actions = set()
+	for t in workflow_config.get("transitions") or []:
+		if t.get("action"):
+			actions.add(t["action"])
+	return list(actions)
+
+
+def get_roles_from_workflow_config(workflow_config):
+	"""Extract unique role names from workflow states ."""
+	roles = set()
+	for state in workflow_config.get("states") or []:
+		if state.get("allow_edit"):
+			roles.add(state["allow_edit"])
+	for transition in workflow_config.get("transitions") or []:
+		if transition.get("allowed"):
+			roles.add(transition["allowed"])
+	return list(roles)
+
+
+def ensure_workflow_states_exist(state_names):
+	"""Create any Workflow State that does not exist."""
+	for name in state_names:
+		if not name or frappe.db.exists("Workflow State", name):
+			continue
+		frappe.get_doc({
+			"doctype": "Workflow State",
+			"workflow_state_name": name,
+		}).insert(ignore_permissions=True)
+
+
+def ensure_workflow_actions_exist(action_names):
+	"""Create any Workflow Action Master that does not exist."""
+	for name in action_names:
+		if not name or frappe.db.exists("Workflow Action Master", name):
+			continue
+		frappe.get_doc({
+			"doctype": "Workflow Action Master",
+			"workflow_action_name": name,
+		}).insert(ignore_permissions=True)
+
+
+def ensure_roles_exist(role_names):
+	"""Create any Role that does not exist."""
+	for role_name in role_names:
+		if not role_name or frappe.db.exists("Role", role_name):
+			continue
+		frappe.get_doc({
+			"doctype": "Role",
+			"role_name": role_name,
+		}).insert(ignore_permissions=True)
+
+
+def get_budget_workflow_config():
+	"""Return the Budget Workflow configuration (states and transitions)."""
+	return {
+		"doctype": "Workflow",
+		"workflow_name": "Budget Workflow",
+		"document_type": "Budget",
+		"is_active": 1,
+		"override_status": 0,
+		"send_email_alert": 0,
+		"workflow_state_field": "workflow_state",
+		"states": [
+			{"state": "Draft", "doc_status": "0", "allow_edit": "Budget User", "idx": 1},
+			{"state": "Pending Department Verification", "doc_status": "0", "allow_edit": "Budget Approver", "idx": 2},
+			{"state": "Pending Accounts Approval", "doc_status": "0", "allow_edit": "Budget Manager", "idx": 3},
+			{"state": "Pending Finance Approval", "doc_status": "0", "allow_edit": "Finance Manager", "idx": 4},
+			{"state": "Approved by Finance", "doc_status": "1", "allow_edit": "CEO", "idx": 5},
+			{"state": "Approved", "doc_status": "1", "allow_edit": "CEO", "idx": 6},
+			{"state": "Rejected", "doc_status": "2", "allow_edit": "CEO", "idx": 7},
+		],
+		"transitions": [
+			{"state": "Draft", "action": "Request for Review", "next_state": "Pending Department Verification", "allowed": "Budget User", "idx": 1},
+			{"state": "Pending Department Verification", "action": "Forward to Accounts", "next_state": "Pending Accounts Approval", "allowed": "Budget Approver", "idx": 2},
+			{"state": "Pending Department Verification", "action": "Send for Revision", "next_state": "Draft", "allowed": "Budget Approver", "idx": 3},
+			{"state": "Pending Accounts Approval", "action": "Forward to FM", "next_state": "Pending Finance Approval", "allowed": "Budget Manager", "idx": 4},
+			{"state": "Pending Accounts Approval", "action": "Send for Revision", "next_state": "Pending Department Verification", "allowed": "Budget Manager", "idx": 5},
+			{"state": "Pending Finance Approval", "action": "Approve", "next_state": "Approved by Finance", "allowed": "Finance Manager", "idx": 6},
+			{"state": "Pending Finance Approval", "action": "Send for Revision", "next_state": "Pending Accounts Approval", "allowed": "Finance Manager", "idx": 7},
+			{"state": "Approved by Finance", "action": "Approve", "next_state": "Approved", "allowed": "CEO", "idx": 8},
+			{"state": "Approved by Finance", "action": "Reject", "next_state": "Rejected", "allowed": "CEO", "idx": 9},
+		],
+	}
+
