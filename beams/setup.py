@@ -123,6 +123,15 @@ def after_migrate():
 	after_install()
 	update_portal_settings()
 
+def update_salary_detail_fields():
+	# Ensure all fields in Job Offer Salary Detail allow on submit
+	frappe.db.sql("""
+		UPDATE `tabDocField`
+		SET allow_on_submit = 1
+		WHERE parent = 'Job Offer Salary Detail'
+	""")
+	frappe.clear_cache(doctype='Job Offer Salary Detail')
+
 
 def before_uninstall():
 	delete_custom_fields(get_customer_custom_fields())
@@ -1024,9 +1033,56 @@ def get_job_offer_custom_fields():
 				"fieldname": "ctc",
 				"fieldtype": "Currency",
 				"label": "CTC",
-				"insert_after": "Compensation Proposal",
-				"fetch_from" : "Compensation Proposal.proposed_ctc"
-			}
+				"insert_after": "compensation_proposal",
+				"fetch_from" : "compensation_proposal.proposed_ctc"
+			},
+			{
+				"fieldname": "salutation",
+				"fieldtype": "Link",
+				"label": "Salutation",
+				"options":"Salutation",
+				"insert_after": "job_applicant"
+			},
+			{
+				"fieldname": "salary_details_section",
+				"fieldtype": "Section Break",
+				"label": "Salary Details",
+				"insert_after": "company"
+			},
+			{
+				"fieldname": "salary_details",
+				"fieldtype": "Table",
+				"label": "Salary Details",
+				"options": "Job Offer Salary Detail",
+				"insert_after": "salary_details_section"
+			},
+			{
+				"fieldname": "gross_monthly_salary",
+				"fieldtype": "Currency",
+				"label": "Gross Monthly Salary",
+				"read_only": 1,
+				"insert_after": "salary_details"
+			},
+			{
+				"fieldname": "other_contribution_details_section",
+				"fieldtype": "Section Break",
+				"label": "Other Contribution Details",
+				"insert_after": "gross_monthly_salary"
+			},
+			{
+				"fieldname": "other_contribution_details",
+				"fieldtype": "Table",
+				"label": "Other Contribution Details",
+				"options": "Job Offer Salary Detail",
+				"insert_after": "other_contribution_details_section"
+			},
+			{
+				"fieldname": "total_ctc_per_month",
+				"fieldtype": "Currency",
+				"label": "Total CTC per month",
+				"read_only": 1,
+				"insert_after": "other_contribution_details"
+			},
 		]
 	}
 
@@ -2253,6 +2309,19 @@ def get_employee_custom_fields():
 				"label": "Current Address",
 				"insert_after": "address_section"
 			},
+			{
+				"fieldname": "division",
+				"fieldtype": "Link",
+				"options": "Division",
+				"label": "Division",
+				"insert_after": "department"
+			},
+			{
+				"fieldname": "employee_location",
+				"fieldtype": "Data",
+				"label": "Employee Location",
+				"insert_after": "designation"
+			},
 		],
 		"Employee External Work History":[
 			{
@@ -2690,6 +2759,13 @@ def get_job_applicant_custom_fields():
 	'''
 	return {
 		"Job Applicant": [
+			{
+				"fieldname": "salutation",
+				"fieldtype": "Link",
+				"label": "Salutation",
+				"options": "Salutation",
+				"insert_after": "applicant_name"
+			},
 			{
 				"fieldname": "date_of_birth",
 				"fieldtype": "Date",
@@ -6047,8 +6123,15 @@ def get_appointment_letter_custom_fields():
 				"fieldname": "notice_period",
 				"fieldtype": "Int",
 				"label": "Notice Period (In Days)",
+				"insert_after": "salutation"
+			},
+			{
+				"fieldname": "salutation",
+				"fieldtype": "Link",
+				"label": "Salutation",
+				"options": "Salutation",
 				"insert_after": "applicant_name"
-			}
+			},
 		]
 	}
 

@@ -56,6 +56,7 @@ doctype_js = {
 	"Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
 	"Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
 	"Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
+    "Appointment Letter": "beams/custom_scripts/appointment_letter/appointment_letter.js",
 	"Appraisal":"beams/custom_scripts/appraisal/appraisal.js",
 	"Project":"beams/custom_scripts/project/project.js",
 	"Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js",
@@ -324,7 +325,9 @@ doc_events = {
 	},
 	"Job Offer" : {
 		"on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
-		"validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
+		"validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc",
+		"before_update_after_submit":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc",
+		"on_update_after_submit":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
 	},
 	"Employee Separation": {
 		"on_update": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"

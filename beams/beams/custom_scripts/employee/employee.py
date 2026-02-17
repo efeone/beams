@@ -582,6 +582,7 @@ def populate_employee_details_from_applicant(doc, method):
 	doc.permanent_address = "\n ".join([part for part in permanent_address_parts if part])
 	doc.permanent_pin_code = job_applicant.ppin_code
 	doc.aadhar_id = job_applicant.aadhar_number
+	doc.salutation = job_applicant.salutation
 	doc.education_qualification = []
 	for row in job_applicant.education_qualification:
 		doc.append("education_qualification", {

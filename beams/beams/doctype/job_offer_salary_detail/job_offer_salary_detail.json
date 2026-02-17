@@ -1,0 +1,50 @@
+{
+    "actions": [],
+    "allow_rename": 1,
+    "creation": "2024-05-22 12:00:00.000000",
+    "doctype": "DocType",
+    "editable_grid": 1,
+    "engine": "InnoDB",
+    "field_order": [
+     "component",
+     "amount",
+     "description"
+    ],
+    "fields": [
+     {
+      "fieldname": "component",
+      "fieldtype": "Link",
+      "in_list_view": 1,
+      "label": "Component",
+      "options": "Salary Component",
+      "reqd": 1
+     },
+     {
+      "fieldname": "amount",
+      "fieldtype": "Currency",
+      "in_list_view": 1,
+      "label": "Amount",
+      "reqd": 1
+     },
+     {
+      "fieldname": "description",
+      "fieldtype": "Small Text",
+      "in_list_view": 1,
+      "label": "Description"
+     }
+    ],
+    "index_web_pages_for_search": 1,
+    "istable": 1,
+    "links": [],
+    "modified": "2024-05-22 12:00:00.000000",
+    "modified_by": "Administrator",
+    "module": "BEAMS",
+    "name": "Job Offer Salary Detail",
+    "owner": "Administrator",
+    "permissions": [],
+    "row_format": "Dynamic",
+    "sort_field": "modified",
+    "sort_order": "DESC",
+    "states": []
+   }
+   
