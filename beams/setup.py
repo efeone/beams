@@ -373,7 +373,7 @@ def get_shift_assignment_custom_fields():
 				"fieldname": "roster_type",
 				"fieldtype": "Select",
 				"label": "Roster Type",
-				"options":"\nRegular\nDouble Shift",
+				"options":"Regular\nDouble Shift",
 				"insert_after": "shift_type"
 			},
 			{

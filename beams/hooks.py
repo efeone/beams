@@ -79,6 +79,8 @@ doctype_js = {
 	"Item":"beams/custom_scripts/item/item.js",
 	"Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
 	"Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
+	"Shift Assignment":"beams/custom_scripts/shift_assignment/shift_assignment.js",
+	"Shift Assignment Tool":"beams/custom_scripts/shift_assignment_tool/shift_assignment_tool.js",
 }
 
 doctype_list_js = {
@@ -438,6 +440,9 @@ doc_events = {
 	},
 	"Supplier Quotation": {
 		"validate":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.clear_rate_if_no_rate_provided"
+	},
+	"Shift Assignment": {
+		"validate": "beams.beams.custom_scripts.shift_assignment.shift_assignment.validate"
 	},
 }
 
