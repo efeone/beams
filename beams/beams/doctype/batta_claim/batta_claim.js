@@ -58,6 +58,7 @@ frappe.ui.form.on('Batta Claim', {
 		})
 	},
 	is_avail_room_rent: function(frm) {
+		toggle_room_rent_batta_field(frm);
 		update_all_daily_batta(frm);
 		calculate_allowance(frm);
 	},
@@ -68,7 +69,7 @@ frappe.ui.form.on('Batta Claim', {
 	  })
 	},
 	refresh: function(frm) {
-		clear_checkbox_exceed(frm);
+		toggle_room_rent_batta_field(frm);
 		frappe.call({
 			method: "beams.beams.doctype.batta_claim.batta_claim.get_batta_policy_values",
 			callback: function(response) {
@@ -213,6 +214,19 @@ frappe.ui.form.on('Work Detail', {
 	}
   }
 });
+
+/*
+  Toggle room_rent_batta field visibility based on is_avail_room_rent checkbox
+*/
+function toggle_room_rent_batta_field(frm) {
+	if (frm.doc.is_avail_room_rent) {
+		frm.set_df_property('room_rent_batta', 'hidden', 0);
+	} else {
+		frm.set_df_property('room_rent_batta', 'hidden', 1);
+		frm.set_value('room_rent_batta', 0);
+	}
+	frm.refresh_field('room_rent_batta');
+}
 
 /*
   Calculates the total distance traveled based on all work detail entries.
@@ -436,10 +450,10 @@ function calculate_total_batta(frm, cdt, cdn) {
 }
 
 /**
-* Clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+* Clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */    
 function clear_checkbox_exceed(frm){
 	if(frm.doc.is_budgeted == 0){
-		frm.set_value("is_budget_exceed", 0);
+		frm.set_value("is_budget_exceeded", 0);
 	}
 }

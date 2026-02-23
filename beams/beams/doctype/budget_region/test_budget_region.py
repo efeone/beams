@@ -1,9 +1,9 @@
-# Copyright (c) 2024, efeone and Contributors
+# Copyright (c) 2026, efeone and Contributors
 # See license.txt
 
 # import frappe
 from frappe.tests.utils import FrappeTestCase
 
 
-class TestCostSubhead(FrappeTestCase):
+class TestBudgetRegion(FrappeTestCase):
 	pass

@@ -6,9 +6,13 @@ from frappe.desk.form.assign_to import add as add_assign
 
 
 def validate(doc,method):
-		# Validate that "Reason for Rejection" is filled if the status is "Rejected"
-		if doc.workflow_state == "Rejected" and not doc.reason_for_rejection:
-			frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
+	rejected_states = [
+		"Rejected",
+		"Rejected by Non-Technical User",
+		"Rejected by Technical User"
+	]
+	if doc.workflow_state in rejected_states and not doc.reason_for_rejection:
+		frappe.throw("Please provide a Reason for Rejection before rejecting this request.")
 
 @frappe.whitelist()
 def notify_stock_managers(doc=None, method=None):
@@ -194,7 +198,7 @@ def create_todo_for_hod(doc, method):
 def set_checkbox_for_item_type(doc, method):
 	"""
 	Sets Technical or Non-Technical checkboxes on Material Request
-    based on the Item Type of items.
+	based on the Item Type of items.
 
 	"""
 	doc.technical = 0

@@ -56,6 +56,7 @@ doctype_js = {
 	"Employee Onboarding":"beams/custom_scripts/employee_onboarding/employee_onboarding.js",
 	"Leave Application":"beams/custom_scripts/leave_application/leave_application.js",
 	"Job Offer": "beams/custom_scripts/job_offer/job_offer.js",
+    "Appointment Letter": "beams/custom_scripts/appointment_letter/appointment_letter.js",
 	"Appraisal":"beams/custom_scripts/appraisal/appraisal.js",
 	"Project":"beams/custom_scripts/project/project.js",
 	"Asset Movement":"beams/custom_scripts/asset_movement/asset_movement.js",
@@ -76,8 +77,10 @@ doctype_js = {
 	"Employment Type":"beams/custom_scripts/employment_type/employment_type.js",
 	"HD Team":"beams/custom_scripts/hd_team/hd_team.js",
 	"Item":"beams/custom_scripts/item/item.js",
-    "Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
-    "Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
+	"Journal Entry":"beams/custom_scripts/journal_entry/journal_entry.js",
+	"Expense Claim":"beams/custom_scripts/expense_claim/expense_claim.js",
+	"Shift Assignment":"beams/custom_scripts/shift_assignment/shift_assignment.js",
+	"Shift Assignment Tool":"beams/custom_scripts/shift_assignment_tool/shift_assignment_tool.js",
 }
 
 doctype_list_js = {
@@ -188,6 +191,9 @@ override_doctype_class = {
 # Hook on document methods and events
 
 doc_events = {
+	"*":{
+		"on_update": "beams.beams.custom_scripts.utils.validate_budget"
+	},
 	"Sales Invoice": {
 		"on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.on_update_after_submit",
 		"autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname",
@@ -222,15 +228,11 @@ doc_events = {
 	},
 	"Purchase Order": {
 		"on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
-		"before_save": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
 		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_reason_for_rejection",
 		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
 	},
 	"Material Request":{
-		"before_save":[
-			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_budget",
-			"beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type"
-             ],
+		"before_save": "beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type",
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
 		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
 		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"
@@ -325,7 +327,9 @@ doc_events = {
 	},
 	"Job Offer" : {
 		"on_submit":"beams.beams.custom_scripts.job_offer.job_offer.make_employee",
-		"validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
+		"validate":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc",
+		"before_update_after_submit":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc",
+		"on_update_after_submit":"beams.beams.custom_scripts.job_offer.job_offer.validate_ctc"
 	},
 	"Employee Separation": {
 		"on_update": "beams.beams.custom_scripts.employee_separation.employee_separation.create_exit_clearance"
@@ -436,7 +440,10 @@ doc_events = {
 	},
 	"Supplier Quotation": {
 		"validate":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.clear_rate_if_no_rate_provided"
-	}
+	},
+	"Shift Assignment": {
+		"validate": "beams.beams.custom_scripts.shift_assignment.shift_assignment.validate"
+	},
 }
 
 # Scheduled Tasks
@@ -490,7 +497,7 @@ scheduler_events = {
 # ------------------------------
 #
 override_whitelisted_methods = {
-    "erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
+	"erpnext.buying.doctype.supplier_quotation.supplier_quotation.make_purchase_order":"beams.beams.custom_scripts.supplier_quotation.supplier_quotation.make_purchase_order_from_supplier_quotation",
 }
 #
 # each overriding function accepts a `data` argument;
@@ -580,8 +587,6 @@ fixtures = [
 					"Availability and Attendance",
 					"HR Message",
 					"Adherence and Break",
-					"Ticket Summary",
-					"Ticket Dashboard",
 				],
 			]
 		],
@@ -598,5 +603,8 @@ fixtures = [
 				],
 			]
 		],
-	}
+	},
+	{
+		"dt": "Cost Category",
+	},
 ]

@@ -24,6 +24,7 @@ class CompensationProposal(Document):
 		if self.workflow_state == "Applicant Accepted":
 			job_offer = frappe.new_doc('Job Offer')
 			job_offer.job_applicant = self.job_applicant
+			job_offer.salutation = frappe.db.get_value("Job Applicant", self.job_applicant, "salutation")
 			job_offer.designation = self.designation
 			job_offer.offer_date = getdate(today())
 			job_offer.compensation_proposal = self.name
@@ -47,7 +48,6 @@ class CompensationProposal(Document):
 			job_offer.flags.ignore_mandatory = True
 			job_offer.flags.ignore_validate = True
 			job_offer.insert()
-			job_offer.submit()
 			frappe.db.set_value("Compensation Proposal", self.name, "job_offer", job_offer.name)
 			frappe.msgprint(
 				'Job Offer Created: <a href="{0}">{1}</a>'.format(

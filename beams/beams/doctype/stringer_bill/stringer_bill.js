@@ -1,21 +1,8 @@
 frappe.ui.form.on('Stringer Bill', {
-	onload: function(frm) {
-	  /*
-	  * Set a query filter for the 'supplier' field to only show suppliers with 'is_stringer' set to 1
-	  */
-		frm.set_query('supplier', function() {
-			return {
-				filters: {
-					'is_stringer': 1
-				}
-			};
-		});
-	},
 	refresh: function (frm) {
-		calculate_total(frm);
-		clear_checkbox_exceed(frm);
+		set_filters(frm);
 	},
-	is_budgeted: function(frm){
+	is_budgeted: function (frm) {
 		clear_checkbox_exceed(frm);
 	}
 });
@@ -25,6 +12,9 @@ frappe.ui.form.on('Stringer Bill Detail', {
 		calculate_total(frm);
 	},
 	stringer_bill_detail_remove: function (frm) {
+		calculate_total(frm);
+	},
+	stringer_bill_detail_add: function (frm) {
 		calculate_total(frm);
 	}
 });
@@ -38,10 +28,20 @@ function calculate_total(frm) {
 }
 
 /**
-* Clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+* Clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
-function clear_checkbox_exceed(frm){
-	if(frm.doc.is_budgeted == 0){
-		frm.set_value("is_budget_exceed", 0);
+function clear_checkbox_exceed(frm) {
+	if (frm.doc.is_budgeted == 0) {
+		frm.set_value("is_budget_exceeded", 0);
 	}
+}
+
+function set_filters(frm) {
+	frm.set_query('supplier', function () {
+		return {
+			filters: {
+				'is_stringer': 1
+			}
+		};
+	});
 }

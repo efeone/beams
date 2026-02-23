@@ -1,10 +1,8 @@
 # Copyright (c) 2015, Frappe Technologies Pvt. Ltd. and Contributors
 # License: GNU General Public License v3. See license.txt
 
-
-import datetime
-
 import frappe
+import datetime
 from frappe import _
 from frappe.utils import flt, formatdate
 
@@ -34,12 +32,15 @@ def execute(filters=None):
 
 
 def get_final_data(dimension, dimension_items, filters, period_month_ranges, data, DCC_allocation):
-	for account, monthwise_data in dimension_items.items():
-		cost_head = monthwise_data.get("cost_head", "")
-		cost_subhead = monthwise_data.get("cost_subhead", "")
-		cost_category = monthwise_data.get("cost_category", "")  # Added cost_category
+	'''
+		Method to prepare the final data for the report based on the dimension (Cost Center/Project) and the month-wise target distribution details.
+	'''
+	for cost_head, monthwise_data in dimension_items.items():
+		account = monthwise_data.get("account", "")
+		budget_group = monthwise_data.get("budget_group", "")
+		cost_category = monthwise_data.get("cost_category", "")
 
-		row = [dimension, account, cost_head, cost_subhead, cost_category]  # Added cost_category to row
+		row = [dimension, cost_head, account, budget_group, cost_category]
 		totals = [0]
 
 		for year in get_fiscal_years(filters):
@@ -73,32 +74,34 @@ def get_columns(filters):
 			"fieldtype": "Link",
 			"fieldname": "budget_against",
 			"options": filters.get("budget_against"),
-			"width": 150,
+			"width": 200,
+		},
+		{
+			"label": _("Cost Head"),
+			"fieldname": "cost_head",
+			"fieldtype": "Link",
+			"options": "Cost Head",
+			"width": 200,
 		},
 		{
 			"label": _("Account"),
 			"fieldname": "Account",
 			"fieldtype": "Link",
 			"options": "Account",
-			"width": 150,
+			"width": 220,
 		},
 		{
-			"label": _("Cost Head"),
-			"fieldname": "cost_head",
-			"fieldtype": "Data",
-			"width": 150,
-		},
-		{
-			"label": _("Cost Subhead"),
-			"fieldname": "cost_subhead",
-			"fieldtype": "Data",
-			"width": 150,
+			"label": _("Budget Group"),
+			"fieldname": "budget_group",
+			"fieldtype": "Link",
+			"options": "Budget Group",
+			"width": 200,
 		},
 		{
 			"label": _("Cost Category"),
 			"fieldname": "cost_category",
 			"fieldtype": "Data",
-			"width": 150,
+			"width": 160,
 		}
 	]
 
@@ -170,7 +173,7 @@ def get_cost_centers(filters):
 				from
 					`tab{tab}`
 			""".format(tab=filters.get("budget_against"))
-		)  # nosec
+		)	# nosec
 
 
 # Get dimension & target details
@@ -183,12 +186,10 @@ def get_dimension_target_details(filters):
 		)
 	if filters.get("cost_head"):
 		cond += "and ba.cost_head = '{0}'".format(filters.get("cost_head"))
-	if filters.get("cost_subhead"):
-		cond += "and ba.cost_subhead = '{0}'".format(filters.get("cost_subhead"))
+	if filters.get("budget_group"):
+		cond += "and ba.budget_group = '{0}'".format(filters.get("budget_group"))
 	if filters.get("cost_category"):
 		cond += "and ba.cost_category = '{0}'".format(filters.get("cost_category"))
-	if filters.get("finance_group"):
-		cond += "and b.finance_group = '{0}'".format(filters.get("finance_group"))
 
 	return frappe.db.sql(
 		f"""
@@ -198,12 +199,12 @@ def get_dimension_target_details(filters):
 				ba.account,
 				ba.budget_amount,
 				ba.cost_head,
-				ba.cost_subhead,
-				ba.cost_category,  -- Added cost_category field
+				ba.budget_group,
+				ba.cost_category,
 				b.fiscal_year
 			from
 				`tabBudget` b,
-				`tabBudget Account` ba
+				`tabM1 Budget Account` ba
 			where
 				b.name = ba.parent
 				and b.fiscal_year between %s and %s
@@ -227,32 +228,49 @@ def get_dimension_target_details(filters):
 
 
 def get_target_distribution_details(filters):
+	budget_against = frappe.scrub(filters.get("budget_against"))
+	budget_against_filter = filters.get("budget_against_filter") or []
+	if not budget_against_filter:
+		if filters.get("budget_against") in ["Cost Center", "Project"]:
+			budget_against_filter = get_cost_centers(filters)
+	budget_against_data = (
+		",".join(f"'{bud_ag}'" for bud_ag in budget_against_filter)
+		if budget_against_filter
+		else "''"
+	)
+
 	target_details = {}
 
+	budget_query = f"""
+		select
+			b.name as budget_name,
+			b.fiscal_year
+		from
+			`tabBudget` b
+		where
+			b.fiscal_year between %s and %s and
+			b.company = %s and
+			b.budget_against = %s and
+			b.{budget_against} in ({budget_against_data})
+	"""
+	budgets = frappe.db.sql(
+		budget_query,
+		(filters.from_fiscal_year, filters.to_fiscal_year, filters.company, filters.budget_against),
+		as_dict=True
+	)
+
 	# Loop through the Budget records to get the amounts for each month from the Budget Account child table
-	for budget in frappe.db.sql(
-		"""
-			select
-				b.name as budget_name,
-				b.fiscal_year
-			from
-				`tabBudget` b
-			where
-				b.fiscal_year between %s and %s
-		""",
-		(filters.from_fiscal_year, filters.to_fiscal_year),
-		as_dict=True,
-	):
+	for budget in budgets:
 		# Get the Budget Account details for each budget
 		budget_accounts = frappe.get_all(
-			"Budget Account",
+			"M1 Budget Account",
 			filters={"parent": budget.budget_name},
-			fields=["account", "january", "february", "march", "april", "may", "june",
+			fields=["cost_head", "january", "february", "march", "april", "may", "june",
 					"july", "august", "september", "october", "november", "december"]
 		)
 
 		for d in budget_accounts:
-			target_details.setdefault(d.account, {}).setdefault(budget.fiscal_year, {})
+			target_details.setdefault(d.cost_head, {}).setdefault(budget.fiscal_year, {})
 
 			# Assign the actual amount for each month
 			for month, amount in zip(
@@ -261,8 +279,7 @@ def get_target_distribution_details(filters):
 				[d.january, d.february, d.march, d.april, d.may, d.june,
 				 d.july, d.august, d.september, d.october, d.november, d.december]
 			):
-				target_details[d.account][budget.fiscal_year][month] = flt(amount)
-
+				target_details[d.cost_head][budget.fiscal_year][month] = flt(amount)
 
 	return target_details
 
@@ -281,33 +298,29 @@ def get_dimension_account_month_map(filters):
 	}
 
 	for ccd in dimension_target_details:
-		# Ensure cost_head, cost_subhead, and cost_category are stored at the account level
-		cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.account, {
-			"cost_head": ccd.cost_head,
-			"cost_subhead": ccd.cost_subhead,
-			"cost_category": ccd.cost_category  # Added cost_category
+		# Ensure cost_head, budget_group, and cost_category are stored at the account level
+		cam_map.setdefault(ccd.budget_against, {}).setdefault(ccd.cost_head, {
+			"account": ccd.account,
+			"budget_group": ccd.budget_group,
+			"cost_category": ccd.cost_category
 		}).setdefault(ccd.fiscal_year, {})
 
 		for month_id in range(1, 13):
 			month = datetime.date(2013, month_id, 1).strftime("%B")
 
-			cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year].setdefault(
+			cam_map[ccd.budget_against][ccd.cost_head][ccd.fiscal_year].setdefault(
 				month, frappe._dict({"target": 0.0, "actual": 0.0})
 			)
 
-			tav_dict = cam_map[ccd.budget_against][ccd.account][ccd.fiscal_year][month]
+			tav_dict = cam_map[ccd.budget_against][ccd.cost_head][ccd.fiscal_year][month]
 
-			month_percentage = (
-				tdd.get(ccd.monthly_distribution, {}).get(month, 0)
-				if ccd.monthly_distribution
-				else 100.0 / 12
-			)
-
-			tav_dict.target = tdd[ccd.account][ccd.fiscal_year][month_map[month]]
-
+			tav_dict.target = tdd[ccd.cost_head][ccd.fiscal_year][month_map[month]]
 	return cam_map
 
 def get_fiscal_years(filters):
+	'''
+		Returns the list of fiscal years between from_fiscal_year and to_fiscal_year
+	'''
 	fiscal_year = frappe.db.sql(
 		"""
 			select

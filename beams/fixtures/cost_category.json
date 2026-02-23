@@ -1,0 +1,23 @@
+[
+ {
+  "cost_category": "Operational Expenses",
+  "docstatus": 0,
+  "doctype": "Cost Category",
+  "modified": "2026-01-30 12:41:34.900178",
+  "name": "Operational Expenses"
+ },
+ {
+  "cost_category": "HR Overheads",
+  "docstatus": 0,
+  "doctype": "Cost Category",
+  "modified": "2026-01-30 12:42:17.934486",
+  "name": "HR Overheads"
+ },
+ {
+  "cost_category": "Capital Expenses",
+  "docstatus": 0,
+  "doctype": "Cost Category",
+  "modified": "2026-02-03 14:13:33.137732",
+  "name": "Capital Expenses"
+ }
+]

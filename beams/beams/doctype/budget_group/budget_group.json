@@ -1,50 +1,37 @@
 {
  "actions": [],
+ "allow_import": 1,
  "allow_rename": 1,
- "autoname": "field:cost_subhead",
- "creation": "2024-10-17 14:25:11.465299",
+ "autoname": "field:budget_group_name",
+ "creation": "2025-01-27 10:25:39.939893",
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "section_break_9os0",
-  "cost_subhead",
-  "cost_head",
-  "accounts"
+  "budget_group_name",
+  "description"
  ],
  "fields": [
   {
-   "fieldname": "section_break_9os0",
-   "fieldtype": "Section Break"
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
   },
   {
-   "fieldname": "cost_subhead",
+   "fieldname": "budget_group_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "Cost Subhead",
+   "label": "Budget Group Name",
+   "no_copy": 1,
    "reqd": 1,
    "unique": 1
-  },
-  {
-   "fieldname": "cost_head",
-   "fieldtype": "Link",
-   "label": "Cost Head",
-   "options": "Cost Head",
-   "reqd": 1
-  },
-  {
-   "fieldname": "accounts",
-   "fieldtype": "Table",
-   "label": "Accounts",
-   "options": "Accounts",
-   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-03 09:24:01.050075",
+ "modified": "2026-01-31 12:46:39.613937",
  "modified_by": "Administrator",
  "module": "BEAMS",
- "name": "Cost Subhead",
+ "name": "Budget Group",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
  "permissions": [
@@ -61,6 +48,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -13,7 +13,7 @@ frappe.ui.form.on('Employee Travel Request', {
 		set_expense_claim_html(frm)
 	},
 	refresh: function (frm) {
-
+		toggle_vehicle_allocation_table(frm);
 		create_batta_claim_from_travel(frm);
 		if (!frm.is_new() && frappe.user.has_role("Admin")) {
 			frm.add_custom_button(__('Journal Entry'), function () {
@@ -83,7 +83,7 @@ frappe.ui.form.on('Employee Travel Request', {
 								expenses: expenses,
 								mode_of_payment: values.mode_of_payment,
 								is_budgeted: frm.doc.is_budgeted || 0,
-								budget_exceeded: frm.doc.is__budget_exceed || 0
+								is_budget_exceeded: frm.doc.is_budget_exceeded || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -200,7 +200,7 @@ frappe.ui.form.on('Employee Travel Request', {
 								travel_request: frm.doc.name,
 								expenses: expenses,
 								is_budgeted: frm.doc.is_budgeted || 0,
-								budget_exceeded: frm.doc.is__budget_exceed || 0
+								is_budget_exceeded: frm.doc.is_budget_exceeded || 0
 							},
 							callback: function (r) {
 								if (!r.exc) {
@@ -213,12 +213,6 @@ frappe.ui.form.on('Employee Travel Request', {
 				});
 				dialog.show();
 			}, __('Create'));
-
-		if (frm.doc.workflow_state === "Approved by HOD" && frm.doc.is_vehicle_required) {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
-		} else {
-			frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
-		}
 
 		if (frm.doc.is_unplanned === 1) {
 			frm.set_df_property("attachments", "read_only", 0);
@@ -504,7 +498,7 @@ function create_batta_claim_from_travel(frm) {
 					args: {
 						travel_request: frm.doc.name,
 						is_budgeted: frm.doc.is_budgeted || 0,
-						is_budget_exceed: frm.doc.is__budget_exceed || 0
+						is_budget_exceeded: frm.doc.is_budget_exceeded || 0
 					},
 					callback: function (r) {
 						if (!r.message) return;
@@ -515,10 +509,23 @@ function create_batta_claim_from_travel(frm) {
 }
 
 /**
-* clear the "budget_exceeded" checkbox if "is_budgeted" is unchecked.
+* clear the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
 function clear_checkbox_exceed(frm){
 	if(!frm.doc.is_budgeted){
-		frm.set_value("is__budget_exceed",0);
+		frm.set_value("is_budget_exceeded", 0);
+	}
+}
+
+/**
+ * Toggles the read-only state of the vehicle allocation table based on whether a vehicle is required
+ * and the current workflow state of the travel request.
+ */
+function toggle_vehicle_allocation_table(frm) {
+	if (frm.doc.is_vehicle_required &&
+		(frm.doc.workflow_state === "Approved by HOD" || frm.doc.workflow_state === "Pending Admin Approval")) {
+		frm.set_df_property("travel_vehicle_allocation", "read_only", 0);
+	} else {
+		frm.set_df_property("travel_vehicle_allocation", "read_only", 1);
 	}
 }

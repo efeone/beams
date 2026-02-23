@@ -1,0 +1,335 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-30 16:52:46.142596",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "cost_head",
+  "budget_group",
+  "account",
+  "cost_category",
+  "company_currency",
+  "column_break_ndgp",
+  "cost_description",
+  "equal_monthly_distribution",
+  "budget_amount",
+  "monthly_amount_distribution_section",
+  "january",
+  "february",
+  "march",
+  "april",
+  "column_break_qqgq",
+  "may",
+  "june",
+  "july",
+  "august",
+  "column_break_iiwj",
+  "september",
+  "october",
+  "november",
+  "december",
+  "monthly_amount_distribution_inr_section",
+  "january_inr",
+  "february_inr",
+  "march_inr",
+  "april_inr",
+  "column_break_ovgi",
+  "may_inr",
+  "june_inr",
+  "july_inr",
+  "august_inr",
+  "column_break_enqc",
+  "september_inr",
+  "october_inr",
+  "november_inr",
+  "december_inr",
+  "budget_amount_inr"
+ ],
+ "fields": [
+  {
+   "fieldname": "cost_head",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Head",
+   "options": "Cost Head",
+   "reqd": 1
+  },
+  {
+   "fetch_from": "cost_head.budget_group",
+   "fieldname": "budget_group",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Budget Group",
+   "options": "Budget Group",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "account",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Account",
+   "options": "Account",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fetch_from": "cost_head.cost_category",
+   "fieldname": "cost_category",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Cost Category",
+   "options": "Cost Category",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ndgp",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "cost_description",
+   "fieldtype": "Small Text",
+   "label": "Cost Description"
+  },
+  {
+   "default": "0",
+   "fieldname": "equal_monthly_distribution",
+   "fieldtype": "Check",
+   "label": "Equal Monthly Distribution "
+  },
+  {
+   "default": "0",
+   "fieldname": "budget_amount",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Budget Amount",
+   "options": "company_currency",
+   "reqd": 1
+  },
+  {
+   "fieldname": "monthly_amount_distribution_section",
+   "fieldtype": "Section Break",
+   "label": "Monthly Amount Distribution"
+  },
+  {
+   "default": "0",
+   "fieldname": "january",
+   "fieldtype": "Currency",
+   "label": "January",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "february",
+   "fieldtype": "Currency",
+   "label": "February",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "march",
+   "fieldtype": "Currency",
+   "label": "March",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "april",
+   "fieldtype": "Currency",
+   "label": "April",
+   "options": "company_currency"
+  },
+  {
+   "fieldname": "column_break_qqgq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "may",
+   "fieldtype": "Currency",
+   "label": "May",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "june",
+   "fieldtype": "Currency",
+   "label": "June",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "july",
+   "fieldtype": "Currency",
+   "label": "July",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "august",
+   "fieldtype": "Currency",
+   "label": "August",
+   "options": "company_currency"
+  },
+  {
+   "fieldname": "column_break_iiwj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "september",
+   "fieldtype": "Currency",
+   "label": "September",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "october",
+   "fieldtype": "Currency",
+   "label": "October",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "november",
+   "fieldtype": "Currency",
+   "label": "November",
+   "options": "company_currency"
+  },
+  {
+   "default": "0",
+   "fieldname": "december",
+   "fieldtype": "Currency",
+   "label": "December",
+   "options": "company_currency"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "monthly_amount_distribution_inr_section",
+   "fieldtype": "Section Break",
+   "label": "Monthly Amount Distribution (INR)"
+  },
+  {
+   "default": "0",
+   "fieldname": "january_inr",
+   "fieldtype": "Currency",
+   "label": "January (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "february_inr",
+   "fieldtype": "Currency",
+   "label": "February (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "march_inr",
+   "fieldtype": "Currency",
+   "label": "March (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "april_inr",
+   "fieldtype": "Currency",
+   "label": "April (INR)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_ovgi",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "may_inr",
+   "fieldtype": "Currency",
+   "label": "May (INR)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_enqc",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "september_inr",
+   "fieldtype": "Currency",
+   "label": "September (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "october_inr",
+   "fieldtype": "Currency",
+   "label": "October (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "november_inr",
+   "fieldtype": "Currency",
+   "label": "November (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "december_inr",
+   "fieldtype": "Currency",
+   "label": "December (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "budget_amount_inr",
+   "fieldtype": "Currency",
+   "label": "Budget Amount (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "june_inr",
+   "fieldtype": "Currency",
+   "label": "June (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "july_inr",
+   "fieldtype": "Currency",
+   "label": "July (INR)",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "august_inr",
+   "fieldtype": "Currency",
+   "label": "August (INR)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company_currency",
+   "fieldtype": "Link",
+   "label": "Company Currency",
+   "options": "Currency"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-02-07 12:11:36.342976",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "M1 Budget Account",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

@@ -247,10 +247,10 @@ frappe.ui.form.on('Trip Details', {
 });
 
 /*
-clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
 function clear_checkbox_exceed(frm){
 	if (frm.doc.is_budgeted == 0){
-		frm.set_value("is_budget_exceed", 0);
+		frm.set_value("is_budget_exceeded", 0);
 	}
 }

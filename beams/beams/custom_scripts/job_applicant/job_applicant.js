@@ -75,7 +75,8 @@ function handle_custom_buttons(frm) {
 					if (!result || !result.name) {
 						frm.add_custom_button(__('Appointment Letter'), function () {
 							frappe.new_doc('Appointment Letter', {
-								job_applicant: frm.doc.name
+								job_applicant: frm.doc.name,
+								salutation: frm.doc.salutation
 							});
 						}, __('Create'));
 					}

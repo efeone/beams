@@ -1,7 +1,6 @@
 frappe.ui.form.on('Purchase Order', {
 	refresh(frm) {
 		workflow_actions(frm);
-		clear_checkbox_exceed(frm);
 	},
 	is_budgeted: function(frm){
 		clear_checkbox_exceed(frm);
@@ -42,10 +41,10 @@ function workflow_actions(frm) {
 }
 
 /**
-* Clears the "is_budget_exceed" checkbox if "is_budgeted" is unchecked.
+* Clears the "is_budget_exceeded" checkbox if "is_budgeted" is unchecked.
 */
 function clear_checkbox_exceed(frm){
 	if (frm.doc.is_budgeted == 0){
-		frm.set_value("is_budget_exceed", 0);
+		frm.set_value("is_budget_exceeded", 0);
 	}
 }

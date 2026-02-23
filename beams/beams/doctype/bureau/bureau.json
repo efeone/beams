@@ -11,12 +11,13 @@
   "cost_center",
   "amended_from",
   "mode_of_payment",
+  "bureau_head",
   "column_break_xpwx",
   "company",
   "location",
   "is_parent_bureau",
   "regional_bureau",
-  "parent_bureau_head"
+  "regional_bureau_head"
  ],
  "fields": [
   {
@@ -83,36 +84,28 @@
    "label": "Is Parent Bureau"
   },
   {
-   "fetch_from": "regional_bureau.parent_bureau_head",
-   "fieldname": "parent_bureau_head",
+   "fieldname": "regional_bureau_head",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "label": "Regional Bureau Head",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "bureau_head",
+   "fieldtype": "Link",
    "label": "Bureau Head",
    "options": "Employee"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-01 14:26:58.708333",
+ "modified": "2026-01-01 15:25:28.045824",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "System Manager",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
