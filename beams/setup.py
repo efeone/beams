@@ -1115,7 +1115,6 @@ def get_purchase_order_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
-				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "is_subcontracted"
 			},
@@ -1809,7 +1808,6 @@ def get_purchase_invoice_custom_fields():
 				"fieldtype": "Check",
 				"label": "Is Budgeted",
 				"insert_after": "is_reverse_charge",
-				"default": "1"
 			},
 			{
 				"fieldname": "is_budget_exceeded",
@@ -5774,7 +5772,6 @@ def get_material_request_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
-				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "location",
 			},
@@ -5948,7 +5945,6 @@ def get_journal_entry_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
-				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "apply_tds",
 			},
@@ -6352,7 +6348,6 @@ def get_expense_claim_custom_fields():
 			{
 				"fieldname": "is_budgeted",
 				"fieldtype": "Check",
-				"default": "1",
 				"label": "Is Budgeted",
 				"insert_after": "travel_request",
 			},

@@ -207,6 +207,7 @@ doc_events = {
 	"Purchase Invoice": {
 		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save",
 		"before_insert": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_from_bureau_flag",
+		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
 	},
 	"Account": {
 		"after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
@@ -228,14 +229,20 @@ doc_events = {
 	},
 	"Purchase Order": {
 		"on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
-		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_reason_for_rejection",
-		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities"
+		"validate": [
+			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_reason_for_rejection",
+			"beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
+		],
+		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities",
 	},
 	"Material Request":{
 		"before_save": "beams.beams.custom_scripts.material_request.material_request.set_checkbox_for_item_type",
 		"after_insert":"beams.beams.custom_scripts.material_request.material_request.notify_stock_managers",
 		"on_update": "beams.beams.custom_scripts.material_request.material_request.create_todo_for_hod",
-		"validate": "beams.beams.custom_scripts.material_request.material_request.validate"
+		"validate": [
+			"beams.beams.custom_scripts.material_request.material_request.validate",
+			"beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
+		],
 	},
 	"Sales Order": {
 		"autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
@@ -263,7 +270,8 @@ doc_events = {
 	},
 
 	"Journal Entry": {
-		"on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel"
+		"on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel",
+		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
 	},
 	"Job Applicant": {
 		"validate": [
@@ -443,6 +451,9 @@ doc_events = {
 	},
 	"Shift Assignment": {
 		"validate": "beams.beams.custom_scripts.shift_assignment.shift_assignment.validate"
+	},
+	"Expense Claim": {
+		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
 	},
 }
 
