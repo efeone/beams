@@ -12,6 +12,22 @@
   "column_break_psaw",
   "bureau",
   "company",
+  "trip_details_section",
+  "departure_location",
+  "destination_location",
+  "initial_odometer_reading",
+  "final_odometer_reading",
+  "column_break_cdph",
+  "starting_date_and_time",
+  "ending_date_and_time",
+  "distance_travelledkm",
+  "section_break_tjbr",
+  "purpose",
+  "section_break_xxsb",
+  "total_distance_km",
+  "column_break_fgob",
+  "total_distance_travelled_km",
+  "total_hours",
   "section_break_qavf",
   "is_budgeted",
   "is_overnight_stay",
@@ -22,26 +38,13 @@
   "ot_batta",
   "batta",
   "purchase_invoice",
-  "section_break_tjbr",
-  "work_details",
-  "section_break_xxsb",
-  "total_distance_km",
-  "column_break_fgob",
-  "total_distance_travelled_km",
-  "total_hours",
-  "trip_details_section",
-  "departure_location",
-  "destination_location",
-  "column_break_cdph",
-  "starting_date_and_time",
-  "ending_date_and_time",
-  "amended_from",
   "section_break_dwds",
   "total_daily_batta",
   "column_break_zjgd",
   "total_ot_batta",
   "column_break_jevl",
-  "total_driver_batta"
+  "total_driver_batta",
+  "amended_from"
  ],
  "fields": [
   {
@@ -120,12 +123,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "work_details",
-   "fieldtype": "Table",
-   "label": "Work Details",
-   "options": "Bureau Trip Details"
-  },
-  {
    "fieldname": "trip_details_section",
    "fieldtype": "Section Break",
    "label": "Trip Details"
@@ -161,16 +158,6 @@
   {
    "fieldname": "column_break_psaw",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Bureau Trip Sheet",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "section_break_xxsb",
@@ -248,12 +235,45 @@
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
+  },
+  {
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Initial Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Final Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "distance_travelledkm",
+   "fieldtype": "Float",
+   "label": "Distance Travelled(km) ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bureau Trip Sheet",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-29 10:27:43.300740",
+ "modified": "2026-03-09 14:47:52.792328",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
