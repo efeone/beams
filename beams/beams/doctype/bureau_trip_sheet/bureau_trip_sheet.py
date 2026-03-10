@@ -30,117 +30,45 @@ class BureauTripSheet(Document):
 				   + (self.daily_batta_with_overnight_stay or 0)
 
 	def calculate_total_distance_travelled(self):
-		'''
-		Calculate the total distance travelled by summing up the
-		distance_travelled_km' values from work details.
-		'''
-		total_distance = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.distance_travelled_km:
-					total_distance += row.distance_travelled_km
-
-		self.total_distance_travelled_km = total_distance
+		""" Calculate total distance travelled in km based on odometer readings or distance travelled field."""
+		self.total_distance_travelled_km = flt(self.distance_travelledkm) or 0
 
 	def validate_odometer_readings(self):
-		'''
-			Validate odometer readings in child table rows.
-			Conditions:
-			- Initial and Final readings cannot be negative.
-			- If both readings are entered, Final must be greater than Initial.
-		'''
-		if not self.work_details:
-			return
-
-		for row in self.work_details:
-			# Validate Initial Reading
-			if row.initial_odometer_reading is not None:
-				initial = flt(row.initial_odometer_reading)
-				if initial < 0:
-					frappe.throw(
-						_(f"Row {row.idx}: Initial Odometer Reading cannot be negative."),
-						title=_("Invalid Odometer Reading")
-					)
-
-			# Validate Final Reading
-			if row.final_odometer_reading is not None:
-				final = flt(row.final_odometer_reading)
-				if final < 0:
-					frappe.throw(
-						_(f"Row {row.idx}: Final Odometer Reading cannot be negative."),
-						title=_("Invalid Odometer Reading")
-					)
-
-			# Validate Final Reading > Initial Reading only If both readings are present
-			if (
-				row.initial_odometer_reading is not None
-				and row.final_odometer_reading is not None
-			):
-				initial = flt(row.initial_odometer_reading)
-				final = flt(row.final_odometer_reading)
-
-				if final <= initial:
-					frappe.throw(
-						_(f"Row {row.idx}: Final Odometer Reading ({final}) "
-						f"must be greater than Initial Odometer Reading ({initial})."),
-						title=_("Invalid Odometer Reading")
-					)
+		""" Validate that odometer readings are non-negative and final reading is greater than initial reading. """
+		initial = flt(self.initial_odometer_reading)
+		final = flt(self.final_odometer_reading)
+		if initial is not None and initial < 0:
+			frappe.throw(_("Initial Odometer Reading cannot be negative."), title=_("Invalid Odometer Reading"))
+		if final is not None and final < 0:
+			frappe.throw(_("Final Odometer Reading cannot be negative."), title=_("Invalid Odometer Reading"))
+		if initial is not None and final is not None and final <= initial:
+			frappe.throw(
+				_(f"Final Odometer Reading ({final}) must be greater than Initial ({initial})."),
+				title=_("Invalid Odometer Reading")
+			)
 
 	def calculate_distance_from_odometer(self):
-		'''
-			Calculate distance based on odometer readings for each row in child table.
-			Sets distance_travelled_km = final_odometer_reading - initial_odometer_reading
-		'''
-		if not self.work_details:
-			return
-
-		for row in self.work_details:
-			if row.initial_odometer_reading is not None and row.final_odometer_reading is not None:
-				initial = flt(row.initial_odometer_reading)
-				final = flt(row.final_odometer_reading)
-				# Calculate and set distance
-				calculated_distance = final - initial
-				row.distance_travelled_km = calculated_distance
+		""" Calculate distance travelled in km based on initial and final odometer readings, if both are provided."""
+		if self.initial_odometer_reading is not None and self.final_odometer_reading is not None:
+			self.distance_travelledkm = flt(self.final_odometer_reading) - flt(self.initial_odometer_reading)
 
 	def calculate_hours(self):
-		'''
-		Calculate the total hours worked by summing up the 'total_hours' values from work details.
-		'''
-		total_hours = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.total_hours:
-					total_hours += float(row.total_hours)
-
-		self.total_hours = total_hours
+		""" Calculate total hours of the trip based on starting and ending date/time."""
+		if self.get("starting_date_and_time") and self.get("ending_date_and_time"):
+			start = get_datetime(self.starting_date_and_time)
+			end = get_datetime(self.ending_date_and_time)
+			if end > start:
+				self.total_hours = round((end - start).total_seconds() / 3600.0, 2)
+			else:
+				self.total_hours = 0
+		else:
+			self.total_hours = 0
 
 	def calculate_total_daily_batta(self):
-		'''
-		Calculate the total daily batta by summing up the 'total_batta' values from work details.
-		'''
-		total_batta = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.total_batta:
-					total_batta += row.total_batta
-
-		self.total_daily_batta = total_batta
+		self.total_daily_batta = flt(self.batta) or 0
 
 	def calculate_total_ot_batta(self):
-		'''
-		Calculate the total OT batta by summing up the 'ot_batta' values from work details.
-		'''
-		total_ot_batta = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.ot_batta:
-					total_ot_batta += row.ot_batta
-
-		self.total_ot_batta = total_ot_batta
+		self.total_ot_batta = flt(self.ot_batta) or 0
 
 	def calculate_daily_batta(self):
 		'''
@@ -154,69 +82,44 @@ class BureauTripSheet(Document):
 		'''
 		self.daily_batta_without_overnight_stay = 0
 		self.daily_batta_with_overnight_stay = 0
-		if not self.get("work_details"):
-			return
-		for row in self.work_details:
-			total_hours = flt(row.total_hours or 0)
-			distance = flt(row.distance_travelled_km or 0)
-			row.number_of_days = max(1, math.ceil(total_hours / 24))
-			row.daily_batta = 0
-			row.breakfast = 0
-			row.lunch = 0
-			row.dinner = 0
-			row.total_food_allowance = 0
-			if self.is_overnight_stay:
-				batta_data = calculate_batta_allowance(
-					designation="Driver",
-					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
-					is_overnight_stay=1,
-					total_distance_travelled_km=distance,
-					total_hours=total_hours
-				)
-				parent_daily_batta_value = flt(batta_data.get("daily_batta_with_overnight_stay", 0))
-				if parent_daily_batta_value > 0:
-					self.daily_batta_with_overnight_stay = parent_daily_batta_value
-					row.daily_batta = row.number_of_days * parent_daily_batta_value
-				continue
-			if distance >= 100 and total_hours >= 8:
-				batta_data = calculate_batta_allowance(
-					designation="Driver",
-					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
-					is_overnight_stay=0,
-					total_distance_travelled_km=distance,
-					total_hours=total_hours
-				)
-				parent_daily_batta_value = flt(batta_data.get("daily_batta_without_overnight_stay", 0))
-				if parent_daily_batta_value > 0:
-					self.daily_batta_without_overnight_stay = parent_daily_batta_value
-					row.daily_batta = row.number_of_days * parent_daily_batta_value
-				continue
-			elif ((50 <= distance < 100 and total_hours >= 6) or
-				  (distance >= 100 and 6 <= total_hours < 8)):
-				values = get_batta_for_food_allowance(
-					designation="Driver",
-					from_date_time=row.from_date_and_time,
-					to_date_time=row.to_date_and_time,
-					total_hrs=total_hours
-				)
-				row.breakfast = values.get("break_fast", 0)
-				row.lunch = values.get("lunch", 0)
-				row.dinner = values.get("dinner", 0)
-				row.total_food_allowance = flt(row.breakfast) + flt(row.lunch) + flt(row.dinner)
-				continue
+		total_hours = flt(self.total_hours or 0)
+		distance = flt(self.distance_travelledkm or self.total_distance_travelled_km or 0)
+		number_of_days = max(1, math.ceil(total_hours / 24))
+		if self.is_overnight_stay:
+			batta_data = calculate_batta_allowance(
+				designation="Driver",
+				is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+				is_overnight_stay=1,
+				total_distance_travelled_km=distance,
+				total_hours=total_hours
+			)
+			parent_daily_batta_value = flt(batta_data.get("daily_batta_with_overnight_stay", 0))
+			if parent_daily_batta_value > 0:
+				self.daily_batta_with_overnight_stay = parent_daily_batta_value
+				self.batta = number_of_days * parent_daily_batta_value
+		elif distance >= 100 and total_hours >= 8:
+			batta_data = calculate_batta_allowance(
+				designation="Driver",
+				is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+				is_overnight_stay=0,
+				total_distance_travelled_km=distance,
+				total_hours=total_hours
+			)
+			parent_daily_batta_value = flt(batta_data.get("daily_batta_without_overnight_stay", 0))
+			if parent_daily_batta_value > 0:
+				self.daily_batta_without_overnight_stay = parent_daily_batta_value
+				self.batta = number_of_days * parent_daily_batta_value
+		elif ((50 <= distance < 100 and total_hours >= 6) or (distance >= 100 and 6 <= total_hours < 8)):
+			values = get_batta_for_food_allowance(
+				designation="Driver",
+				from_date_time=self.starting_date_and_time,
+				to_date_time=self.ending_date_and_time,
+				total_hrs=total_hours
+			)
+			self.batta = flt(values.get("break_fast", 0)) + flt(values.get("lunch", 0)) + flt(values.get("dinner", 0))
 
 	def calculate_total_batta(self):
-		'''
-		Server-side equivalent of JS calculate_total_batta.
-		Calculates total_batta = daily_batta + total_food_allowance for each row.
-		'''
-		if not self.get('work_details'):
-			return
-
-		for row in self.work_details:
-			daily_batta = row.daily_batta or 0
-			food_allowance = row.total_food_allowance or 0
-			row.total_batta = daily_batta + food_allowance
+		pass
 
 	def on_submit(self):
 		'''
@@ -276,6 +179,14 @@ class BureauTripSheet(Document):
 				title="Batta Policy Missing",
 				msg=f"No Driver Batta Policy found for designation {designation}. Please create before saving."
 			)
+
+	def before_save(self):
+		self.total_distance_travelled()
+
+	def total_distance_travelled(self):
+		""" Calculate total distance travelled in km based on initial and final odometer readings, if both are provided."""
+		self.distance_travelledkm = flt(self.final_odometer_reading or 0) - flt(self.initial_odometer_reading or 0)
+
 
 @frappe.whitelist()
 def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):

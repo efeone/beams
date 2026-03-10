@@ -1,81 +1,12 @@
 // Copyright (c) 2025, efeone and contributors
 // For license information, please see license.txt
 
-frappe.ui.form.on('Bureau Trip Details', {
-	from_date_and_time: function (frm, cdt, cdn) {
-		calculate_hours_and_days(frm, cdt, cdn);
-		setTimeout(() => {
-			calculate_row_allowances(frm, cdt, cdn);
-		}, 200);
-	},
-	to_date_and_time: function (frm, cdt, cdn) {
-		let row = locals[cdt][cdn];
-
-		if (row.from_date_and_time && row.to_date_and_time) {
-			let from_date = new Date(row.from_date_and_time);
-			let to_date = new Date(row.to_date_and_time);
-
-			if (to_date <= from_date) {
-				frappe.msgprint(__('To Date & Time must be greater than From Date & Time'));
-				frappe.model.set_value(cdt, cdn, 'to_date_and_time', null);
-				return;
-			}
-			setTimeout(() => {
-				calculate_row_allowances(frm, cdt, cdn);
-			}, 200);
-		}
-
-		calculate_hours_and_days(frm, cdt, cdn);
-	},
-	total_hours: function (frm, cdt, cdn) {
-		calculate_ot_batta(frm, cdt, cdn);
-		calculate_row_allowances(frm, cdt, cdn);
-	},
-	ot_hours: function (frm, cdt, cdn) {
-		calculate_ot_batta(frm, cdt, cdn);
-	},
-	distance_travelled_km: function(frm, cdt, cdn) {
-		calculate_total_distance_travelled(frm, cdt, cdn);
-		setTimeout(() => {
-			calculate_row_allowances(frm, cdt, cdn);
-		}, 30);
-	},
-	work_details_add:  function(frm, cdt, cdn) {
-
-		calculate_total_distance_travelled(frm, cdt, cdn);
-
-		calculate_hours(frm, cdt, cdn);
-
-		calculate_total_daily_batta(frm, cdt, cdn);
-
-		calculate_total_ot_batta(frm, cdt, cdn);
-
-		setTimeout(() => {
-			calculate_row_allowances(frm, cdt, cdn);
-		}, 30);
-	},
-	work_details_remove: function(frm, cdt, cdn) {
-		calculate_total_distance_travelled(frm, cdt, cdn);
-		calculate_hours(frm, cdt, cdn);
-		calculate_total_daily_batta(frm, cdt, cdn);
-		calculate_total_ot_batta(frm, cdt, cdn);
-		setTimeout(() => {
-			calculate_row_allowances(frm, cdt, cdn);
-		}, 30);
-	},
-	initial_odometer_reading: function(frm, cdt, cdn) {
-		calculate_distance_from_odometer(frm, cdt, cdn);
-	},
-	final_odometer_reading: function(frm, cdt, cdn) {
-		calculate_distance_from_odometer(frm, cdt, cdn);
-	},
-});
-
 frappe.ui.form.on("Bureau Trip Sheet", {
 	refresh: function (frm) {
 		filter_supplier_field(frm);
 		calculate_allowance(frm);
-		frm.doc.work_details.forEach(row => calculate_row_allowances(frm, row.doctype, row.name));
+		set_batta_policy_properties(frm);
+		filter_employee_field(frm);
 	},
 	validate: function (frm) {
 		calculate_batta(frm);
@@ -83,13 +14,10 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		calculate_hours(frm);
 		calculate_total_daily_batta(frm);
 		calculate_total_ot_batta(frm);
-		frm.doc.work_details.forEach(row => calculate_row_allowances(frm, row.doctype, row.name));
 	},
 	batta: function (frm) {
-		frm.doc.work_details.forEach(row => calculate_ot_batta(frm, row.doctype, row.name));
 	},
 	ot_batta: function (frm) {
-		frm.doc.work_details.forEach(row => calculate_ot_batta(frm, row.doctype, row.name));
 	},
 	daily_batta_with_overnight_stay: function (frm) {
 		calculate_batta(frm);
@@ -105,15 +33,9 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 	},
 	is_overnight_stay: function (frm) {
 		calculate_allowance(frm);
-		frm.doc.work_details.forEach(row => {
-			calculate_row_allowances(frm, row.doctype, row.name);
-		});
 	},
 	is_travelling_outside_kerala: function (frm) {
 		calculate_allowance(frm);
-		frm.doc.work_details.forEach(row => {
-			calculate_row_allowances(frm, row.doctype, row.name);
-		});
 	},
 	total_distance_travelled_km: function (frm) {
 		calculate_allowance(frm);
@@ -121,14 +43,21 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 	total_hours: function(frm) {
 		calculate_allowance(frm);
 	},
-	refresh: function(frm) {
-		filter_supplier_field(frm);
-		set_batta_policy_properties(frm);
-		filter_employee_field(frm);
+	initial_odometer_reading: function(frm) {
+		calculate_distance_from_odometer_parent(frm);
 	},
-
+	final_odometer_reading: function(frm) {
+		calculate_distance_from_odometer_parent(frm);
+	},
+	starting_date_and_time: function(frm) {
+		calculate_hours(frm);
+		calculate_allowance(frm);
+	},
+	ending_date_and_time: function(frm) {
+		calculate_hours(frm);
+		calculate_allowance(frm);
+	},
 	onload: function(frm) {
-		// Ensure the filter is applied on form load as well
 		filter_supplier_field(frm);
 	}
 });
@@ -163,93 +92,58 @@ function set_batta_policy_properties(frm) {
 			if (response.message) {
 				let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
 				let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
-				let is_actual_food_allowance = response.message.is_actual___;
 
-				// Set read-only properties for parent fields
 				frm.set_df_property('daily_batta_without_overnight_stay', 'read_only', is_actual_daily_batta_without_overnight_stay == 0);
 				frm.set_df_property('daily_batta_with_overnight_stay', 'read_only', is_actual_daily_batta_with_overnight_stay == 0);
 
-				// Refresh parent fields
 				frm.refresh_field('daily_batta_without_overnight_stay');
 				frm.refresh_field('daily_batta_with_overnight_stay');
-
-				// Set read-only properties for child table fields
-				frm.fields_dict['work_details'].grid.update_docfield_property('breakfast', 'read_only', is_actual_food_allowance == 0);
-				frm.fields_dict['work_details'].grid.update_docfield_property('lunch', 'read_only', is_actual_food_allowance == 0);
-				frm.fields_dict['work_details'].grid.update_docfield_property('dinner', 'read_only', is_actual_food_allowance == 0);
-
-				// Refresh child table
-				frm.refresh_field('work_details');
 			}
 		}
 	});
 }
 
-/* Calculate total hours, number of days, and overtime hours */
+// Calculate total hours, OT hours and number of days for a given row based on from and to date/time, and update the respective fields in the child table.
 function calculate_hours_and_days(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
-
-	if (row.from_date_and_time && row.to_date_and_time) {
-		let from_date = new Date(row.from_date_and_time);
-		let to_date = new Date(row.to_date_and_time);
-
-		let total_hours = (to_date - from_date) / (1000 * 60 * 60);
-		total_hours = Math.round(total_hours * 100) / 100;
-		let number_of_days = Math.ceil(total_hours / 24);
-
-		if (!frm.doc.supplier) {
-			frappe.msgprint(__('Please select a Supplier to calculate OT hours.'));
-			return;
-		}
-		frappe.call({
-			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_ot_working_hours",
-			args: {
-				supplier: frm.doc.supplier
-			},
-			callback: function (r) {
-				if (r.message != null) {
-					let ot_working_hours = parseFloat(r.message) || 0;
-					let ot_hours = 0;
-					if (total_hours > ot_working_hours) {
-						ot_hours = total_hours - ot_working_hours;
-					}
-					frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
-					frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
-					frappe.model.set_value(cdt, cdn, 'number_of_days', number_of_days);
-
-					frm.refresh_field("work_details");
-
-					setTimeout(() => {
-						calculate_ot_batta(frm, cdt, cdn);
-						calculate_row_allowances(frm, cdt, cdn);
-					}, 200);
-				}
-			}
-		});
+	if (!row || !row.from_date_and_time || !row.to_date_and_time) return;
+	let from_date = new Date(row.from_date_and_time);
+	let to_date = new Date(row.to_date_and_time);
+	let total_hours = (to_date - from_date) / (1000 * 60 * 60);
+	total_hours = Math.round(total_hours * 100) / 100;
+	if (!frm.doc.supplier) {
+		frappe.msgprint(__('Please select a Supplier to calculate OT hours.'));
+		return;
 	}
+	frappe.call({
+		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_ot_working_hours",
+		args: { supplier: frm.doc.supplier },
+		callback: function (r) {
+			if (r.message != null) {
+				let ot_working_hours = parseFloat(r.message) || 0;
+				let ot_hours = total_hours > ot_working_hours ? total_hours - ot_working_hours : 0;
+				frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
+				frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
+				frappe.model.set_value(cdt, cdn, 'number_of_days', Math.ceil(total_hours / 24));
+				setTimeout(() => {
+					calculate_ot_batta(frm, cdt, cdn);
+					calculate_row_allowances(frm, cdt, cdn);
+				}, 200);
+			}
+		}
+	});
 }
 
-/* Calculate overtime batta based on OT hours and OT batta rate */
+// Calculate OT batta for a given row based on OT hours and OT batta rate, and update the respective field in the child table.
 function calculate_ot_batta(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
-
+	if (!row) return;
 	let ot_hours = row.ot_hours || 0;
 	let ot_batta = ot_hours * (frm.doc.ot_batta || 0);
-
 	frappe.model.set_value(cdt, cdn, 'ot_batta', ot_batta);
-	frm.refresh_field('work_details');
 }
 
-/* Update OT batta for all work details rows */
 function update_all_ot_batta(frm) {
-	if (frm.doc.work_details) {
-		frm.doc.work_details.forEach(row => {
-			calculate_ot_batta(frm, row.doctype, row.name);
-		});
-		setTimeout(() => {
-			frm.refresh_field('work_details');
-		}, 200);
-	}
 }
 
 /* Calculate total batta by summing daily batta values */
@@ -265,53 +159,40 @@ function calculate_batta(frm) {
 	frm.set_value("batta", batta);
 }
 
-/* Calculate total_batta = daily_batta + total_food_allowance for a row and update totals */
+// Calculate total batta for the entire trip by summing up daily batta and OT batta for all rows in the child table, and update the total batta field in the parent form.
 function calculate_total_batta_for_row(frm, cdt, cdn) {
-	let row = locals[cdt][cdn];
-	let total = (row.daily_batta || 0) + (row.total_food_allowance || 0);
-	frappe.model.set_value(cdt, cdn, "total_batta", total);
-	frm.refresh_field("work_details");
 	calculate_total_daily_batta(frm);
 	calculate_total_driver_batta(frm);
 }
 
-/* Calculate total distance travelled across all work details rows */
+// Calculate total distance travelled by summing up distance travelled for all rows in the child table, and update the total distance travelled field in the parent form.
 function calculate_total_distance_travelled(frm) {
-	let total_distance = 0;
-	frm.doc.work_details.forEach(row => {
-		total_distance += row.distance_travelled_km || 0;
-	});
-	frm.set_value('total_distance_travelled_km', total_distance);
+	frm.set_value('total_distance_travelled_km', frm.doc.distance_travelledkm || 0);
 	frm.refresh_field("total_distance_travelled_km");
 }
 
-/* Calculate total hours from all work details rows */
+// Calculate total hours for the entire trip by summing up total hours for all rows in the child table, and update the total hours field in the parent form.
 function calculate_hours(frm) {
-	let total_hours = 0;
-	frm.doc.work_details.forEach(row => {
-		total_hours += row.total_hours || 0;
-	});
-	frm.set_value('total_hours', total_hours);
+	if (frm.doc.starting_date_and_time && frm.doc.ending_date_and_time) {
+		let start = new Date(frm.doc.starting_date_and_time);
+		let end = new Date(frm.doc.ending_date_and_time);
+		let total_hours = end > start ? Math.round((end - start) / (1000 * 60 * 60) * 100) / 100 : 0;
+		frm.set_value('total_hours', total_hours);
+	} else {
+		frm.set_value('total_hours', 0);
+	}
 	frm.refresh_field("total_hours");
 }
 
-/* Calculate total daily batta for all work details rows */
+// Calculate total daily batta by summing up daily batta for all rows in the child table, and update the total daily batta field in the parent form.
 function calculate_total_daily_batta(frm) {
-	let total_batta = 0;
-	frm.doc.work_details.forEach(row => {
-		total_batta += row.total_batta || 0;
-	});
-	frm.set_value('total_daily_batta', total_batta);
+	frm.set_value('total_daily_batta', frm.doc.batta || 0);
 	frm.refresh_field("total_daily_batta");
 }
 
-/* Calculate total OT batta for all work details rows */
+//  Calculate total OT batta by summing up OT batta for all rows in the child table, and update the total OT batta field in the parent form.
 function calculate_total_ot_batta(frm) {
-	let total_ot_batta = 0;
-	frm.doc.work_details.forEach(row => {
-		total_ot_batta += row.ot_batta || 0;
-	});
-	frm.set_value('total_ot_batta', total_ot_batta);
+	frm.set_value('total_ot_batta', frm.doc.ot_batta || 0);
 	frm.refresh_field("total_ot_batta");
 }
 
@@ -341,10 +222,6 @@ function calculate_row_allowances(frm, cdt, cdn) {
 	frappe.model.set_value(child.doctype, child.name, "dinner", 0);
 	frappe.model.set_value(child.doctype, child.name, "total_food_allowance", 0);
 
-	if (!frm.doc.supplier) {
-		frappe.msgprint(__("Please select a supplier."));
-		return;
-	}
 
 	if (is_overnight_stay) {
 		frappe.call({
@@ -414,12 +291,9 @@ function calculate_row_allowances(frm, cdt, cdn) {
 		return;
 	}
 }
-/* Calculates daily batta allowances based on the selected policy*/
+
+// Calculate allowance for the entire trip based on designation, whether travelling outside Kerala, whether there is an overnight stay, total distance travelled and total hours, and update the respective fields in the parent form.
 function calculate_allowance(frm) {
-	if (!frm.doc.supplier.length) {
-		frappe.msgprint(__("Please select a supplier."));
-		return;
-	}
 
 	frappe.call({
 		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.calculate_batta_allowance",
@@ -440,9 +314,43 @@ function calculate_allowance(frm) {
 	});
 }
 
-/* Calculate distance travelled from odometer readings and validate inputs */
+
+// Calculate distance travelled based on initial and final odometer readings, and update the distance travelled field in the child table. Also perform validation to ensure that readings are non-negative and final reading is greater than initial reading.
+function calculate_distance_from_odometer_parent(frm) {
+	let initial = frm.doc.initial_odometer_reading;
+	let final = frm.doc.final_odometer_reading;
+	if (initial != null && initial !== undefined && (parseInt(initial) || 0) < 0) {
+		frappe.msgprint({ title: __('Invalid Odometer Reading'), message: __('Initial Odometer Reading cannot be negative.'), indicator: 'red' });
+		frm.set_value('initial_odometer_reading', null);
+		frm.set_value('distance_travelledkm', 0);
+		return;
+	}
+	if (final != null && final !== undefined && (parseInt(final) || 0) < 0) {
+		frappe.msgprint({ title: __('Invalid Odometer Reading'), message: __('Final Odometer Reading cannot be negative.'), indicator: 'red' });
+		frm.set_value('final_odometer_reading', null);
+		frm.set_value('distance_travelledkm', 0);
+		return;
+	}
+	if (initial != null && initial !== undefined && final != null && final !== undefined) {
+		initial = parseInt(initial) || 0;
+		final = parseInt(final) || 0;
+		if (final <= initial) {
+			frappe.msgprint({ title: __('Invalid Odometer Reading'), message: __('Final must be greater than Initial.'), indicator: 'red' });
+			frm.set_value('final_odometer_reading', null);
+			frm.set_value('distance_travelledkm', 0);
+			return;
+		}
+		frm.set_value('distance_travelledkm', final - initial);
+		calculate_total_distance_travelled(frm);
+		calculate_allowance(frm);
+	}
+}
+
+
+// Calculate distance travelled based on initial and final odometer readings, and update the distance travelled field in the child table. Also perform validation to ensure that readings are non-negative and final reading is greater than initial reading.
 function calculate_distance_from_odometer(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
+	if (!row) return;
 
 	let initial = row.initial_odometer_reading;
 	let final = row.final_odometer_reading;
