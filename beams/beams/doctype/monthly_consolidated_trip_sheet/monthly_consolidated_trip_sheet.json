@@ -1,0 +1,88 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format: {year}-{month}-{bureau}-{supplier}",
+ "creation": "2026-03-09 16:54:11.562533",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier",
+  "bureau",
+  "column_break_dmcr",
+  "year",
+  "month",
+  "section_break_vkfd",
+  "monthly_consolidated_trip_sheet_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Year"
+  },
+  {
+   "fieldname": "column_break_dmcr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Month",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "section_break_vkfd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "monthly_consolidated_trip_sheet_details",
+   "fieldtype": "Table",
+   "label": "Monthly Consolidated Trip Sheet Details",
+   "options": "Monthly Consolidated Trip Sheet Details"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-10 10:16:43.397333",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Monthly Consolidated Trip Sheet",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
