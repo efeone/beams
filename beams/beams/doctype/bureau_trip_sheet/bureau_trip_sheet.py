@@ -298,3 +298,43 @@ def get_ot_working_hours(supplier):
 		ot_hours = frappe.db.get_single_value("Beams Accounts Settings", "default_working_hours")
 
 	return float(ot_hours or 0)
+
+
+@frappe.whitelist()
+def can_show_request_batta_button(bureau_trip_sheet):
+	"""Return True if the current user's Employee is in the Bureau Trip Sheet's employees list."""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	employee_names = [row.employee for row in (bts.employees or []) if row.get("employee")]
+	if not employee_names:
+		return False
+	current_user_employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+	if not current_user_employee:
+		return False
+	return current_user_employee in employee_names
+
+
+@frappe.whitelist()
+def create_batta_claim(bureau_trip_sheet):
+	"""  Create a Batta Claim based on the Bureau Trip Sheet details and return the claim document."""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	
+	claim = frappe.new_doc("Batta Claim")
+	claim.batta_type = "External"
+	claim.supplier = bts.supplier
+	claim.bureau = bts.bureau
+	claim.company = bts.company
+	claim.purpose = bts.purpose
+	claim.origin = bts.departure_location
+	claim.destination = bts.destination_location
+	claim.is_budgeted = bts.is_budgeted
+	claim.is_travelling_outside_kerala = bts.is_travelling_outside_kerala
+	claim.is_overnight_stay = bts.is_overnight_stay
+	claim.daily_batta_with_overnight_stay = flt(bts.daily_batta_with_overnight_stay)
+	claim.daily_batta_without_overnight_stay = flt(bts.daily_batta_without_overnight_stay)
+	claim.batta = flt(bts.batta)
+	claim.ot_batta = flt(bts.ot_batta)
+	claim.total_distance_travelled_km = bts.total_distance_travelled_km
+	claim.total_hours = flt(bts.total_hours)
+	claim.total_daily_batta = flt(bts.total_daily_batta)
+
+	return claim

@@ -7,6 +7,17 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		calculate_allowance(frm);
 		set_batta_policy_properties(frm);
 		filter_employee_field(frm);
+		if (!frm.is_new()) {
+			frappe.call({
+				method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.can_show_request_batta_button",
+				args: { bureau_trip_sheet: frm.doc.name },
+				callback: function (r) {
+					if (r.message) {
+						create_batta_claim(frm);
+					}
+				}
+			});
+		}
 	},
 	validate: function (frm) {
 		calculate_batta(frm);
@@ -414,4 +425,20 @@ function calculate_distance_from_odometer(frm, cdt, cdn) {
 			calculate_row_allowances(frm, cdt, cdn);
 		}, 100);
 	}
+}
+
+// create batta claim from trip sheet
+function create_batta_claim(frm) {
+	frm.add_custom_button(__("Request Batta"), function () {
+		frappe.call({
+			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.create_batta_claim",
+			args: { bureau_trip_sheet: frm.doc.name },
+			callback: function (response) {
+				if (response.message) {
+					let doc = frappe.model.sync(response.message)[0];
+					frappe.set_route("Form", doc.doctype, doc.name);
+				}
+			}
+		});
+	});
 }
