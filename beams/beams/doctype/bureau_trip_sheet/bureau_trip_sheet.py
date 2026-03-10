@@ -30,9 +30,11 @@ class BureauTripSheet(Document):
 				   + (self.daily_batta_with_overnight_stay or 0)
 
 	def calculate_total_distance_travelled(self):
+		""" Calculate total distance travelled in km based on odometer readings or distance travelled field."""
 		self.total_distance_travelled_km = flt(self.distance_travelledkm) or 0
 
 	def validate_odometer_readings(self):
+		""" Validate that odometer readings are non-negative and final reading is greater than initial reading. """
 		initial = flt(self.initial_odometer_reading)
 		final = flt(self.final_odometer_reading)
 		if initial is not None and initial < 0:
@@ -46,10 +48,12 @@ class BureauTripSheet(Document):
 			)
 
 	def calculate_distance_from_odometer(self):
+		""" Calculate distance travelled in km based on initial and final odometer readings, if both are provided."""
 		if self.initial_odometer_reading is not None and self.final_odometer_reading is not None:
 			self.distance_travelledkm = flt(self.final_odometer_reading) - flt(self.initial_odometer_reading)
 
 	def calculate_hours(self):
+		""" Calculate total hours of the trip based on starting and ending date/time."""
 		if self.get("starting_date_and_time") and self.get("ending_date_and_time"):
 			start = get_datetime(self.starting_date_and_time)
 			end = get_datetime(self.ending_date_and_time)
@@ -180,6 +184,7 @@ class BureauTripSheet(Document):
 		self.total_distance_travelled()
 
 	def total_distance_travelled(self):
+		""" Calculate total distance travelled in km based on initial and final odometer readings, if both are provided."""
 		self.distance_travelledkm = flt(self.final_odometer_reading or 0) - flt(self.initial_odometer_reading or 0)
 
 

@@ -103,6 +103,7 @@ function set_batta_policy_properties(frm) {
 	});
 }
 
+// Calculate total hours, OT hours and number of days for a given row based on from and to date/time, and update the respective fields in the child table.
 function calculate_hours_and_days(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
 	if (!row || !row.from_date_and_time || !row.to_date_and_time) return;
@@ -133,6 +134,7 @@ function calculate_hours_and_days(frm, cdt, cdn) {
 	});
 }
 
+// Calculate OT batta for a given row based on OT hours and OT batta rate, and update the respective field in the child table.
 function calculate_ot_batta(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
 	if (!row) return;
@@ -157,16 +159,19 @@ function calculate_batta(frm) {
 	frm.set_value("batta", batta);
 }
 
+// Calculate total batta for the entire trip by summing up daily batta and OT batta for all rows in the child table, and update the total batta field in the parent form.
 function calculate_total_batta_for_row(frm, cdt, cdn) {
 	calculate_total_daily_batta(frm);
 	calculate_total_driver_batta(frm);
 }
 
+// Calculate total distance travelled by summing up distance travelled for all rows in the child table, and update the total distance travelled field in the parent form.
 function calculate_total_distance_travelled(frm) {
 	frm.set_value('total_distance_travelled_km', frm.doc.distance_travelledkm || 0);
 	frm.refresh_field("total_distance_travelled_km");
 }
 
+// Calculate total hours for the entire trip by summing up total hours for all rows in the child table, and update the total hours field in the parent form.
 function calculate_hours(frm) {
 	if (frm.doc.starting_date_and_time && frm.doc.ending_date_and_time) {
 		let start = new Date(frm.doc.starting_date_and_time);
@@ -179,11 +184,13 @@ function calculate_hours(frm) {
 	frm.refresh_field("total_hours");
 }
 
+// Calculate total daily batta by summing up daily batta for all rows in the child table, and update the total daily batta field in the parent form.
 function calculate_total_daily_batta(frm) {
 	frm.set_value('total_daily_batta', frm.doc.batta || 0);
 	frm.refresh_field("total_daily_batta");
 }
 
+//  Calculate total OT batta by summing up OT batta for all rows in the child table, and update the total OT batta field in the parent form.
 function calculate_total_ot_batta(frm) {
 	frm.set_value('total_ot_batta', frm.doc.ot_batta || 0);
 	frm.refresh_field("total_ot_batta");
@@ -284,6 +291,8 @@ function calculate_row_allowances(frm, cdt, cdn) {
 		return;
 	}
 }
+
+// Calculate allowance for the entire trip based on designation, whether travelling outside Kerala, whether there is an overnight stay, total distance travelled and total hours, and update the respective fields in the parent form.
 function calculate_allowance(frm) {
 
 	frappe.call({
@@ -305,6 +314,8 @@ function calculate_allowance(frm) {
 	});
 }
 
+
+// Calculate distance travelled based on initial and final odometer readings, and update the distance travelled field in the child table. Also perform validation to ensure that readings are non-negative and final reading is greater than initial reading.
 function calculate_distance_from_odometer_parent(frm) {
 	let initial = frm.doc.initial_odometer_reading;
 	let final = frm.doc.final_odometer_reading;
@@ -335,6 +346,8 @@ function calculate_distance_from_odometer_parent(frm) {
 	}
 }
 
+
+// Calculate distance travelled based on initial and final odometer readings, and update the distance travelled field in the child table. Also perform validation to ensure that readings are non-negative and final reading is greater than initial reading.
 function calculate_distance_from_odometer(frm, cdt, cdn) {
 	let row = locals[cdt][cdn];
 	if (!row) return;
