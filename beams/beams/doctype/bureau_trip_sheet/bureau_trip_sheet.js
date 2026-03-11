@@ -4,20 +4,13 @@
 frappe.ui.form.on("Bureau Trip Sheet", {
 	refresh: function (frm) {
 		filter_supplier_field(frm);
-		calculate_allowance(frm);
+		// Only recalculate allowance for new docs; saved docs already have values from server (avoids "Not Saved" after save)
+		if (frm.is_new()) {
+			calculate_allowance(frm);
+		}
 		set_batta_policy_properties(frm);
 		filter_employee_field(frm);
-		if (!frm.is_new()) {
-			frappe.call({
-				method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.can_show_request_batta_button",
-				args: { bureau_trip_sheet: frm.doc.name },
-				callback: function (r) {
-					if (r.message) {
-						create_batta_claim(frm);
-					}
-				}
-			});
-		}
+		show_batta_button(frm);
 	},
 	validate: function (frm) {
 		calculate_batta(frm);
@@ -305,7 +298,6 @@ function calculate_row_allowances(frm, cdt, cdn) {
 
 // Calculate allowance for the entire trip based on designation, whether travelling outside Kerala, whether there is an overnight stay, total distance travelled and total hours, and update the respective fields in the parent form.
 function calculate_allowance(frm) {
-
 	frappe.call({
 		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.calculate_batta_allowance",
 		args: {
@@ -426,6 +418,22 @@ function calculate_distance_from_odometer(frm, cdt, cdn) {
 		}, 100);
 	}
 }
+
+// Show "Request Batta" button if the user is eligible to request batta claim based on the trip sheet details and user's permissions.
+function show_batta_button(frm) {
+    if (!frm.is_new()) {
+			frappe.call({
+				method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.can_show_request_batta_button",
+				args: { bureau_trip_sheet: frm.doc.name },
+				callback: function (r) {
+					if (r.message) {
+						create_batta_claim(frm);
+					}
+				}
+			});
+		}
+}
+
 
 // create batta claim from trip sheet
 function create_batta_claim(frm) {

@@ -1,12 +1,13 @@
 #  Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 
-import frappe
 import math
+
 from frappe.model.document import Document
-from frappe.utils import get_datetime, getdate, flt
+from frappe.utils import flt, get_datetime, getdate, nowdate
+
+import frappe
 from frappe import _
-from frappe.utils import nowdate
 
 
 class BureauTripSheet(Document):
@@ -26,8 +27,11 @@ class BureauTripSheet(Document):
 		'''
 		Calculate the total batta (allowance) based on daily batta amounts.
 		'''
-		self.batta = (self.daily_batta_without_overnight_stay or 0) \
-				   + (self.daily_batta_with_overnight_stay or 0)
+		if self.total_food_allowance:
+			self.batta = self.total_food_allowance
+		else:
+			self.batta = (self.daily_batta_without_overnight_stay or 0) + \
+						(self.daily_batta_with_overnight_stay or 0)
 
 	def calculate_total_distance_travelled(self):
 		""" Calculate total distance travelled in km based on odometer readings or distance travelled field."""
@@ -82,6 +86,11 @@ class BureauTripSheet(Document):
 		'''
 		self.daily_batta_without_overnight_stay = 0
 		self.daily_batta_with_overnight_stay = 0
+		self.breakfast = 0
+		self.lunch = 0
+		self.dinner = 0
+		self.total_food_allowance = 0
+		self.batta = 0
 		total_hours = flt(self.total_hours or 0)
 		distance = flt(self.distance_travelledkm or self.total_distance_travelled_km or 0)
 		number_of_days = max(1, math.ceil(total_hours / 24))
@@ -116,7 +125,11 @@ class BureauTripSheet(Document):
 				to_date_time=self.ending_date_and_time,
 				total_hrs=total_hours
 			)
-			self.batta = flt(values.get("break_fast", 0)) + flt(values.get("lunch", 0)) + flt(values.get("dinner", 0))
+			self.breakfast = flt(values.get("break_fast", 0))
+			self.lunch = flt(values.get("lunch", 0))
+			self.dinner = flt(values.get("dinner", 0))
+			self.total_food_allowance = self.breakfast + self.lunch + self.dinner
+			self.batta = self.total_food_allowance
 
 	def calculate_total_batta(self):
 		pass
@@ -242,7 +255,7 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
 	total_hours = sanitize_number(total_hours)
 
-	batta_policy = frappe.get_all('Batta Policy', filters={'designation':'Driver'}, fields=['*'])
+	batta_policy = frappe.get_all('Batta Policy', filters={'designation':designation}, fields=['*'])
 	if not batta_policy:
 		return {"batta": 0}
 
@@ -319,8 +332,7 @@ def create_batta_claim(bureau_trip_sheet):
 	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
 	
 	claim = frappe.new_doc("Batta Claim")
-	claim.batta_type = "External"
-	claim.supplier = bts.supplier
+	claim.employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
 	claim.bureau = bts.bureau
 	claim.company = bts.company
 	claim.purpose = bts.purpose
@@ -329,12 +341,13 @@ def create_batta_claim(bureau_trip_sheet):
 	claim.is_budgeted = bts.is_budgeted
 	claim.is_travelling_outside_kerala = bts.is_travelling_outside_kerala
 	claim.is_overnight_stay = bts.is_overnight_stay
-	claim.daily_batta_with_overnight_stay = flt(bts.daily_batta_with_overnight_stay)
-	claim.daily_batta_without_overnight_stay = flt(bts.daily_batta_without_overnight_stay)
-	claim.batta = flt(bts.batta)
-	claim.ot_batta = flt(bts.ot_batta)
-	claim.total_distance_travelled_km = bts.total_distance_travelled_km
-	claim.total_hours = flt(bts.total_hours)
-	claim.total_daily_batta = flt(bts.total_daily_batta)
+	claim.append("work_detail", {
+		"origin": bts.departure_location,
+		"destination": bts.destination_location,
+		"from_date_and_time": bts.starting_date_and_time,
+		"to_date_and_time": bts.ending_date_and_time,
+		"distance_travelled_km": bts.distance_travelledkm,
+		"total_hours": bts.total_hours
+	})
 
 	return claim
