@@ -61,6 +61,24 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		calculate_hours(frm);
 		calculate_allowance(frm);
 	},
+	supplier: function(frm) {
+		if (frm.doc.supplier) {
+			frappe.db.get_value("Supplier", frm.doc.supplier, "average_mileage_kmpl", function(r) {
+				if (r && r.average_mileage_kmpl) {
+					frm.set_value("average_mileage_kmpl", r.average_mileage_kmpl);
+				}
+			});
+		}
+	},
+	distance_travelledkm: function(frm) {
+		calculate_fuel(frm);
+	},
+	fuel_rate__litre: function(frm) {
+		calculate_fuel(frm);
+	},
+	average_mileage_kmpl: function(frm) {
+		calculate_fuel(frm);
+	},
 	onload: function(frm) {
 		filter_supplier_field(frm);
 	}
@@ -209,6 +227,22 @@ function calculate_total_driver_batta(frm) {
 	frm.refresh_field("total_driver_batta");
 }
 
+/* Calculate fuel consumption and total fuel expense from distance, mileage and rate */
+function calculate_fuel(frm) {
+	let distance = parseFloat(frm.doc.distance_travelledkm) || 0;
+	let mileage = parseFloat(frm.doc.average_mileage_kmpl) || 0;
+	let rate = parseFloat(frm.doc.fuel_rate__litre) || 0;
+
+	if (distance && mileage) {
+		let fuel_consumption = distance / mileage;
+		frm.set_value("fuel_consumption_l", fuel_consumption);
+		let expense = fuel_consumption * rate;
+		frm.set_value("total_fuel_expense", expense);
+		frm.refresh_field("fuel_consumption_l");
+		frm.refresh_field("total_fuel_expense");
+	}
+}
+
 /* Determines eligibility for batta/food allowance per row and updates fields accordingly. */
 function calculate_row_allowances(frm, cdt, cdn) {
 	let child = locals[cdt][cdn];
@@ -346,6 +380,7 @@ function calculate_distance_from_odometer_parent(frm) {
 		frm.set_value('distance_travelledkm', final - initial);
 		calculate_total_distance_travelled(frm);
 		calculate_allowance(frm);
+		calculate_fuel(frm);
 	}
 }
 
@@ -450,3 +485,4 @@ function create_batta_claim(frm) {
 		});
 	});
 }
+

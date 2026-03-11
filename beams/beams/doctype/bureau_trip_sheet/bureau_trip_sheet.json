@@ -23,6 +23,12 @@
   "distance_travelledkm",
   "section_break_tjbr",
   "purpose",
+  "fuel_details_section",
+  "average_mileage_kmpl",
+  "fuel_rate__litre",
+  "column_break_vvvy",
+  "fuel_consumption_l",
+  "total_fuel_expense",
   "section_break_xxsb",
   "total_distance_km",
   "column_break_fgob",
@@ -297,12 +303,44 @@
    "fieldname": "total_food_allowance",
    "fieldtype": "Currency",
    "label": "Total Food Allowance"
+  },
+  {
+   "fieldname": "fuel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Fuel Details"
+  },
+  {
+   "fieldname": "fuel_rate__litre",
+   "fieldtype": "Float",
+   "label": "Fuel Rate / Litre"
+  },
+  {
+   "fieldname": "fuel_consumption_l",
+   "fieldtype": "Float",
+   "label": "Fuel Consumption (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vvvy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_fuel_expense",
+   "fieldtype": "Float",
+   "label": "Total Fuel Expense",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_mileage_kmpl",
+   "fieldtype": "Float",
+   "label": "Average Mileage (KMPL)",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-11 14:12:47.457781",
+ "modified": "2026-03-11 15:09:03.157295",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
