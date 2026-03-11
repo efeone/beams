@@ -38,6 +38,11 @@
   "ot_batta",
   "batta",
   "purchase_invoice",
+  "column_break_bzmn",
+  "breakfast",
+  "lunch",
+  "dinner",
+  "total_food_allowance",
   "section_break_dwds",
   "total_daily_batta",
   "column_break_zjgd",
@@ -268,12 +273,36 @@
    "print_hide": 1,
    "read_only": 1,
    "search_index": 1
+  },
+  {
+   "fieldname": "column_break_bzmn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "breakfast",
+   "fieldtype": "Currency",
+   "label": "Breakfast"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner"
+  },
+  {
+   "fieldname": "total_food_allowance",
+   "fieldtype": "Currency",
+   "label": "Total Food Allowance"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-09 14:47:52.792328",
+ "modified": "2026-03-11 14:12:47.457781",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
