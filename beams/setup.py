@@ -1877,6 +1877,14 @@ def get_supplier_custom_fields():
 				"label": "OT Working Hours",
 				"insert_after": "ot_batta",
 				"depends_on": "eval:doc.is_transporter == 1"
+			},
+			{
+				
+				"fieldname": "average_mileage_kmpl",
+				"fieldtype": "Float",
+    			"label": "Average Mileage(kmpl)",
+				"insert_after": "ot_working_hours",
+				"depends_on": "eval:doc.is_transporter == 1"
 			}
 		]
 	}

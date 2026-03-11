@@ -7,7 +7,7 @@ from frappe.utils import get_first_day, get_last_day, getdate
 
 
 class MonthlyConsolidatedTripSheet(Document):
-	def after_insert(self):
+	def validate(self):
 		self.fetch_trip_sheets()
 
 	def fetch_trip_sheets(self):
@@ -47,8 +47,6 @@ class MonthlyConsolidatedTripSheet(Document):
 				"distance_travelledkm": ts.get("distance_travelledkm"),
 				"bureau_trip_sheet": ts.get("name")
 			})
-		if self.monthly_consolidated_trip_sheet_details:
-			self.save()
 
 	def _month_name_to_number(self, month_name):
 		months = [
