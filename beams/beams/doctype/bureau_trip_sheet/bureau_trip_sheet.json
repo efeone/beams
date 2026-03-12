@@ -281,8 +281,7 @@
    "fieldname": "settlement_journal_entries",
    "fieldtype": "Table",
    "label": "Journal Entries",
-   "options": "Bureau Trip Sheet Journal Entry",
-   "read_only": 1
+   "options": "Bureau Trip Sheet Journal Entry"
   },
   {
    "fieldname": "amended_from",
@@ -358,7 +357,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-12 13:24:53.723572",
+ "modified": "2026-03-12 14:46:56.188025",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

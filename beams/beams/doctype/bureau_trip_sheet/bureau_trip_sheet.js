@@ -491,14 +491,6 @@ function create_batta_claim(frm) {
 // Settlement Journal Entry: we have given (paid) the supplier the amount.
 // JE: Debit Supplier payable, Credit Bank/Cash. Supplier account from Supplier doctype Default Accounts table.
 function create_settlement_journal_entry(frm) {
-	if (!frm.doc.supplier) {
-		frappe.msgprint(__("Please select a Supplier first."), __("Cannot create settlement"));
-		return;
-	}
-	if (!frm.doc.company) {
-		frappe.msgprint(__("Please set Company on this Bureau Trip Sheet."), __("Cannot create settlement"));
-		return;
-	}
 
 	frm.add_custom_button(__("Settlement Journal Entry"), function () {
 		open_settlement_dialog(frm);
