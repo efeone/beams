@@ -434,6 +434,7 @@ def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=N
 	journal_entry.user_remark = _("Settlement for Bureau Trip Sheet {0} – Driver: {1}").format(
 		bts.name, bts.supplier
 	)
+	journal_entry.bureau_trip_sheet = bts.name
 
 	# We have given the supplier the amount: Debit Supplier payable, Credit Bank/Cash
 	journal_entry.append("accounts", {

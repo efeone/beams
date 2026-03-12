@@ -5963,6 +5963,14 @@ def get_journal_entry_custom_fields():
 				"insert_after": "is_budgeted",
 				"depends_on": "eval:doc.is_budgeted == 1"
 			},
+			{
+				"fieldname": "bureau_trip_sheet",
+				"fieldtype": "Link",
+				"label": "Bureau Trip Sheet",
+				"options": "Bureau Trip Sheet",
+				"insert_after": "due_date",
+				"read_only"	: 1
+			}
 		]
 	}
 
