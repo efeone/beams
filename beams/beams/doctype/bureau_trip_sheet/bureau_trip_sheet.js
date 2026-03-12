@@ -11,6 +11,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		set_batta_policy_properties(frm);
 		filter_employee_field(frm);
 		show_batta_button(frm);
+        create_settlement_journal_entry(frm);
 	},
 	validate: function (frm) {
 		calculate_batta(frm);
@@ -483,6 +484,107 @@ function create_batta_claim(frm) {
 				}
 			}
 		});
+	});
+}
+
+
+// Settlement Journal Entry: we have given (paid) the supplier the amount.
+// JE: Debit Supplier payable, Credit Bank/Cash. Supplier account from Supplier doctype Default Accounts table.
+function create_settlement_journal_entry(frm) {
+
+	frm.add_custom_button(__("Settlement Journal Entry"), function () {
+		open_settlement_dialog(frm);
+	});
+}
+
+function open_settlement_dialog(frm) {
+	if (!frm.doc.bureau) {
+		frappe.msgprint(__("Please select a Bureau first."), __("Cannot create settlement"));
+		return;
+	}
+
+	const default_amount = frm.doc.total_driver_batta || 0;
+
+	// Get Bureau's mode of payment so popup uses only that
+	frappe.db.get_value("Bureau", frm.doc.bureau, "mode_of_payment", function (r) {
+		const bureau_mop = r && r.mode_of_payment;
+
+		const d = new frappe.ui.Dialog({
+			title: __("Create Settlement Journal Entry"),
+			fields: [
+				{
+					fieldname: "mode_of_payment",
+					fieldtype: "Link",
+					label: __("Mode of Payment"),
+					options: "Mode of Payment",
+					reqd: 1,
+					default: bureau_mop || "",
+					get_query: function () {
+						// Restrict to this Bureau's mode of payment
+						if (bureau_mop) {
+							return { filters: { name: bureau_mop } };
+						}
+						return {};
+					},
+				},
+				{
+					fieldname: "amount",
+					fieldtype: "Currency",
+					label: __("Amount"),
+					reqd: 1,
+					default: default_amount,
+				},
+				{
+					fieldname: "supplier_account_info",
+					fieldtype: "Small Text",
+					label: __("Supplier account (from Supplier)"),
+					read_only: 1,
+				},
+			],
+			size: "medium",
+			primary_action_label: __("Create"),
+			primary_action: function () {
+				const values = d.get_values();
+				if (!values) return;
+				d.hide();
+				submit_settlement_journal_entry(frm, values.mode_of_payment, values.amount);
+			},
+		});
+
+		// Show which supplier account will be used (fetched from Supplier doctype)
+		frappe.call({
+			method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_supplier_payable_account",
+			args: {
+				supplier: frm.doc.supplier,
+				company: frm.doc.company,
+			},
+			callback: function (r) {
+				if (r.message && d.fields_dict.supplier_account_info) {
+					d.fields_dict.supplier_account_info.set_value(r.message);
+					d.fields_dict.supplier_account_info.df.hidden = 0;
+					d.fields_dict.supplier_account_info.refresh();
+				}
+			},
+		});
+
+		d.show();
+	});
+}
+
+function submit_settlement_journal_entry(frm, mode_of_payment, amount) {
+	frappe.call({
+		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.create_settlement_journal_entry",
+		args: {
+			bureau_trip_sheet: frm.doc.name,
+			mode_of_payment: mode_of_payment,
+			amount: amount,
+		},
+		callback: function (response) {
+			if (response.message) {
+				const doc = frappe.model.sync(response.message)[0];
+				frappe.set_route("Form", doc.doctype, doc.name);
+			}
+		},
 	});
 }
 

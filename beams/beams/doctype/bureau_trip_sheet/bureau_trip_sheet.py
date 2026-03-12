@@ -351,3 +351,109 @@ def create_batta_claim(bureau_trip_sheet):
 	})
 
 	return claim
+
+
+@frappe.whitelist()
+def get_supplier_payable_account(supplier=None, company=None):
+	"""
+	Get the supplier's default payable account for the given company.
+	Looks up Supplier's accounts child table (Party Account or Accounts).
+	Returns account name or empty string for use in UI.
+	"""
+	account = _get_supplier_payable_account(supplier, company)
+	return account or ""
+
+
+def _get_supplier_payable_account(supplier, company):
+	"""
+	Internal: get supplier default payable account for company.
+	Supports Supplier Account (ERPNext) and Accounts (Beams) child tables.
+	"""
+	if not supplier or not company:
+		return None
+	# Standard ERPNext: Supplier Account child (company, account)
+	account = frappe.db.get_value(
+		"Party Account",
+		{"parent": supplier, "parenttype": "Supplier", "company": company},
+		"account"
+	)
+	if account:
+		return account
+
+
+def get_mode_of_payment_account(mode_of_payment, company):
+	"""Get the default account for the given Mode of Payment and company."""
+	if not mode_of_payment or not company:
+		return None
+	return frappe.db.get_value(
+		"Mode of Payment Account",
+		{"parent": mode_of_payment, "parenttype": "Mode of Payment", "company": company},
+		"default_account"
+	)
+
+
+@frappe.whitelist()
+def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=None):
+	"""
+	Create a Journal Entry for: we have given (paid) the supplier the amount.
+	- Debit: Supplier payable (our liability to supplier goes down)
+	- Credit: Bank/Cash (money paid out to supplier)
+	Supplier account is taken from Supplier doctype Default Accounts table.
+	"""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	if not bts.supplier:
+		frappe.throw(_("Supplier is not set on this Bureau Trip Sheet."))
+	company = bts.company or frappe.defaults.get_user_default("Company")
+	if not company:
+		frappe.throw(_("Company is not set on the Bureau Trip Sheet and no default Company found."))
+
+	settlement_amount = flt(amount) if amount is not None else flt(bts.total_driver_batta)
+	if settlement_amount <= 0:
+		frappe.throw(_("Settlement amount must be greater than zero."))
+
+	supplier_payable_account = _get_supplier_payable_account(bts.supplier, company)
+	if not supplier_payable_account:
+		frappe.throw(
+			_("No default payable account found for Supplier {0} and Company {1}. Please set it in the Supplier's Accounting tab.").format(
+				bts.supplier, company
+			)
+		)
+
+	payment_account = get_mode_of_payment_account(mode_of_payment, company)
+	if not payment_account:
+		frappe.throw(
+			_("No default account found for Mode of Payment {0} and Company {1}. Please configure it in Mode of Payment.").format(
+				mode_of_payment, company
+			)
+		)
+
+	journal_entry = frappe.new_doc("Journal Entry")
+	journal_entry.voucher_type = "Journal Entry"
+	journal_entry.posting_date = nowdate()
+	journal_entry.company = company
+	journal_entry.user_remark = _("Settlement for Bureau Trip Sheet {0} – Driver: {1}").format(
+		bts.name, bts.supplier
+	)
+	journal_entry.bureau_trip_sheet = bts.name
+
+	# We have given the supplier the amount: Debit Supplier payable, Credit Bank/Cash
+	journal_entry.append("accounts", {
+		"account": supplier_payable_account,
+		"party_type": "Supplier",
+		"party": bts.supplier,
+		"debit_in_account_currency": settlement_amount,
+		"credit_in_account_currency": 0,
+	})
+	journal_entry.append("accounts", {
+		"account": payment_account,
+		"debit_in_account_currency": 0,
+		"credit_in_account_currency": settlement_amount,
+	})
+
+	frappe.msgprint(
+		_("Journal Entry opened for settlement. Review and save manually."),
+		alert=True,
+		indicator="blue"
+	)
+	return journal_entry
+

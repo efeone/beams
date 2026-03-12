@@ -1,5 +1,36 @@
 import frappe
 from frappe import _
+from frappe.utils import flt, getdate
+
+
+def after_insert(doc, method=None):
+	"""When a Journal Entry linked to a Bureau Trip Sheet is saved, add it to the BTS settlement table."""
+	if not getattr(doc, "bureau_trip_sheet", None):
+		return
+	bts_name = doc.bureau_trip_sheet
+	if not frappe.db.exists("Bureau Trip Sheet", bts_name):
+		return
+	# Avoid duplicate row if already in table
+	existing = frappe.db.get_all(
+		"Bureau Trip Sheet Journal Entry",
+		filters={"parent": bts_name, "parenttype": "Bureau Trip Sheet", "journal_entry": doc.name},
+		limit=1,
+	)
+	if existing:
+		return
+	# Settlement amount = total debit (or credit) in the JE
+	amount = sum(flt(acc.get("debit_in_account_currency") or 0) for acc in (doc.accounts or []))
+	if amount <= 0:
+		amount = sum(flt(acc.get("credit_in_account_currency") or 0) for acc in (doc.accounts or []))
+	bts = frappe.get_doc("Bureau Trip Sheet", bts_name)
+	bts.append("settlement_journal_entries", {
+		"journal_entry": doc.name,
+		"posting_date": getdate(doc.posting_date),
+		"amount": amount,
+	})
+	bts.flags.ignore_validate_update_after_submit = True
+	bts.save(ignore_permissions=True)
+
 
 def on_cancel(doc, method):
     """

@@ -55,6 +55,8 @@
   "total_ot_batta",
   "column_break_jevl",
   "total_driver_batta",
+  "settlement_section",
+  "settlement_journal_entries",
   "amended_from"
  ],
  "fields": [
@@ -271,6 +273,17 @@
    "label": "Purpose"
   },
   {
+   "fieldname": "settlement_section",
+   "fieldtype": "Section Break",
+   "label": "Settlement Journal Entries"
+  },
+  {
+   "fieldname": "settlement_journal_entries",
+   "fieldtype": "Table",
+   "label": "Journal Entries",
+   "options": "Bureau Trip Sheet Journal Entry"
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
    "label": "Amended From",
@@ -287,22 +300,26 @@
   {
    "fieldname": "breakfast",
    "fieldtype": "Currency",
-   "label": "Breakfast"
+   "label": "Breakfast",
+   "read_only": 1
   },
   {
    "fieldname": "lunch",
    "fieldtype": "Currency",
-   "label": "Lunch"
+   "label": "Lunch",
+   "read_only": 1
   },
   {
    "fieldname": "dinner",
    "fieldtype": "Currency",
-   "label": "Dinner"
+   "label": "Dinner",
+   "read_only": 1
   },
   {
    "fieldname": "total_food_allowance",
    "fieldtype": "Currency",
-   "label": "Total Food Allowance"
+   "label": "Total Food Allowance",
+   "read_only": 1
   },
   {
    "fieldname": "fuel_details_section",
@@ -340,7 +357,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-11 15:09:03.157295",
+ "modified": "2026-03-12 14:46:56.188025",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
