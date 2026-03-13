@@ -3,10 +3,13 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import get_first_day, get_last_day, getdate
+from frappe.utils import flt, get_first_day, get_last_day, getdate
 
 
 class MonthlyConsolidatedTripSheet(Document):
+	def validate(self):
+		self._set_batta_totals_from_details()
+
 	def _month_name_to_number(self, month_name):
 		months = [
 			"January", "February", "March", "April", "May", "June",
@@ -15,6 +18,16 @@ class MonthlyConsolidatedTripSheet(Document):
 		if month_name in months:
 			return months.index(month_name) + 1
 		return None
+
+	def _set_batta_totals_from_details(self):
+		"""Set total_batta and total_ot_batta from sum of child table rows."""
+		total_batta = 0
+		total_ot_batta = 0
+		for row in self.get("monthly_consolidated_trip_sheet_details") or []:
+			total_batta += flt(row.get("total_batta"))
+			total_ot_batta += flt(row.get("total_ot_batta"))
+		self.total_batta = total_batta
+		self.total_ot_batta = total_ot_batta
 
 
 @frappe.whitelist()

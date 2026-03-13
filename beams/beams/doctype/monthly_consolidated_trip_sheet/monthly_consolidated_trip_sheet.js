@@ -10,9 +10,13 @@ frappe.ui.form.on('Monthly Consolidated Trip Sheet', {
     },
     refresh(frm) {
         add_fetch_trip_sheets_button(frm);
+        calculate_batta_totals(frm);
     },
     fuel_rate__litre: function(frm) {
-        calculate_fuel_expense(frm)
+        calculate_fuel_expense(frm);
+    },
+    monthly_consolidated_trip_sheet_details_on_form_rendered: function(frm, cdt, cdn) {
+        calculate_batta_totals(frm);
     }
 });
 
@@ -56,6 +60,8 @@ function add_fetch_trip_sheets_button(frm) {
                         frm.add_child("monthly_consolidated_trip_sheet_details", row);
                     });
                     frm.refresh_field("monthly_consolidated_trip_sheet_details");
+                    calculate_batta_totals(frm);
+                    calculate_fuel_expense(frm);
                     frappe.show_alert({ message: __("Fetched {0} trip sheet(s).", [r.message.length]), indicator: "green" });
                 } else {
                     frappe.msgprint(__("No trip sheets found for the selected criteria."));
@@ -65,7 +71,21 @@ function add_fetch_trip_sheets_button(frm) {
     });
 }
 
-// calculate fuel expense of monthly_consolidated_trip_sheet_details
+// Sum total_batta and total_ot_batta from child rows into Batta Details section
+function calculate_batta_totals(frm) {
+    var total_batta = 0;
+    var total_ot_batta = 0;
+    (frm.doc.monthly_consolidated_trip_sheet_details || []).forEach(function(row) {
+        total_batta += flt(row.total_batta);
+        total_ot_batta += flt(row.total_ot_batta);
+    });
+    frm.set_value("total_batta", total_batta);
+    frm.set_value("total_ot_batta", total_ot_batta);
+    frm.refresh_field("total_batta");
+    frm.refresh_field("total_ot_batta");
+}
+
+// Calculate fuel expense of monthly_consolidated_trip_sheet_details
 function calculate_fuel_expense(frm) {
 
     let fuel_rate__litre = frm.doc.fuel_rate__litre || 0;
