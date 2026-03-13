@@ -130,10 +130,15 @@ def get_purchase_invoice_details(monthly_consolidated_trip_sheet_name):
 		item_code = frappe.db.get_single_value("Beams Accounts Settings", field)
 		if not item_code:
 			continue
-		item_name = frappe.db.get_value("Item", item_code, "item_name") or item_code
+		item_row = frappe.db.get_value(
+			"Item", item_code, ["item_name", "stock_uom"], as_dict=True
+		)
+		item_name = (item_row and item_row.get("item_name")) or item_code
+		uom = (item_row and item_row.get("stock_uom")) or "Nos"
 		items.append({
 			"item_code": item_code,
 			"item_name": item_name,
+			"uom": uom,
 			"label": label,
 			"rate": rate,
 		})

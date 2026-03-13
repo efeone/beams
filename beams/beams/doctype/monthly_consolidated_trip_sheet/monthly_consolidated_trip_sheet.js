@@ -162,6 +162,8 @@ function show_create_pi_dialog(frm, details) {
                     if (flt(row.rate) === 0) return;
                     var child = frappe.model.add_child(doc, "Purchase Invoice Item", "items");
                     child.item_code = row.item_code;
+                    child.item_name = row.item_name || row.item_code;
+                    child.uom = row.uom || "Nos";
                     child.qty = 1;
                     child.rate = flt(row.rate);
                 });
