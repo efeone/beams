@@ -25,10 +25,8 @@
   "purpose",
   "fuel_details_section",
   "average_mileage_kmpl",
-  "fuel_rate__litre",
   "column_break_vvvy",
   "fuel_consumption_l",
-  "total_fuel_expense",
   "section_break_xxsb",
   "total_distance_km",
   "column_break_fgob",
@@ -327,11 +325,6 @@
    "label": "Fuel Details"
   },
   {
-   "fieldname": "fuel_rate__litre",
-   "fieldtype": "Float",
-   "label": "Fuel Rate / Litre"
-  },
-  {
    "fieldname": "fuel_consumption_l",
    "fieldtype": "Float",
    "label": "Fuel Consumption (L)",
@@ -340,12 +333,6 @@
   {
    "fieldname": "column_break_vvvy",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "total_fuel_expense",
-   "fieldtype": "Float",
-   "label": "Total Fuel Expense",
-   "read_only": 1
   },
   {
    "fieldname": "average_mileage_kmpl",
@@ -357,7 +344,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-12 14:46:56.188025",
+ "modified": "2026-03-13 09:23:13.957430",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

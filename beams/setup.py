@@ -1885,6 +1885,13 @@ def get_supplier_custom_fields():
     			"label": "Average Mileage(kmpl)",
 				"insert_after": "ot_working_hours",
 				"depends_on": "eval:doc.is_transporter == 1"
+			},
+			{
+				"fieldname": "montly_rent",
+				"fieldtype": "Currency",
+				"label": "Montly Rent",
+				"insert_after": "designation",
+				"depends_on": "eval:doc.is_transporter == 1"
 			}
 		]
 	}

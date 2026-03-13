@@ -12,7 +12,21 @@
   "year",
   "month",
   "section_break_vkfd",
-  "monthly_consolidated_trip_sheet_details"
+  "monthly_consolidated_trip_sheet_details",
+  "fuel_details_section",
+  "fuel_rate__litre",
+  "column_break_aulq",
+  "total_fuel_consumed",
+  "column_break_dqtr",
+  "total_fuel_expense",
+  "batta_details_section",
+  "total_batta",
+  "column_break_jykh",
+  "total_ot_batta",
+  "rent_details_section",
+  "total_montly_rent",
+  "column_break_qfbo",
+  "total_amount_received_driver"
  ],
  "fields": [
   {
@@ -55,12 +69,85 @@
    "fieldtype": "Table",
    "label": "Monthly Consolidated Trip Sheet Details",
    "options": "Monthly Consolidated Trip Sheet Details"
+  },
+  {
+   "fieldname": "fuel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Fuel Details"
+  },
+  {
+   "fieldname": "fuel_rate__litre",
+   "fieldtype": "Currency",
+   "label": "Fuel Rate / Litre"
+  },
+  {
+   "fieldname": "column_break_aulq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_fuel_consumed",
+   "fieldtype": "Float",
+   "label": "Total Fuel Consumed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dqtr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_fuel_expense",
+   "fieldtype": "Float",
+   "label": "Total Fuel Expense",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batta_details_section",
+   "fieldtype": "Section Break",
+   "label": "Batta Details"
+  },
+  {
+   "fieldname": "total_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jykh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total OT Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rent_details_section",
+   "fieldtype": "Section Break",
+   "label": "Rent Details"
+  },
+  {
+   "fetch_from": "supplier.montly_rent",
+   "fieldname": "total_montly_rent",
+   "fieldtype": "Currency",
+   "label": "Montly Rent (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount_received_driver",
+   "fieldtype": "Currency",
+   "label": "Total amount Received (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qfbo",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-10 10:16:43.397333",
+ "modified": "2026-03-13 10:58:15.965104",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Monthly Consolidated Trip Sheet",
