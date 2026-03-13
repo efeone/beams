@@ -443,11 +443,13 @@ def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=N
 		"party": bts.supplier,
 		"debit_in_account_currency": settlement_amount,
 		"credit_in_account_currency": 0,
+		"is_advance": "Yes"
 	})
 	journal_entry.append("accounts", {
 		"account": payment_account,
 		"debit_in_account_currency": 0,
 		"credit_in_account_currency": settlement_amount,
+		"is_advance": "Yes"
 	})
 
 	frappe.msgprint(
