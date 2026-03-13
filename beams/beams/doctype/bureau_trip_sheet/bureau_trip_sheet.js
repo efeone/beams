@@ -237,10 +237,7 @@ function calculate_fuel(frm) {
 	if (distance && mileage) {
 		let fuel_consumption = distance / mileage;
 		frm.set_value("fuel_consumption_l", fuel_consumption);
-		let expense = fuel_consumption * rate;
-		frm.set_value("total_fuel_expense", expense);
 		frm.refresh_field("fuel_consumption_l");
-		frm.refresh_field("total_fuel_expense");
 	}
 }
 

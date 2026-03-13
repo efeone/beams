@@ -267,7 +267,7 @@ doc_events = {
 
 	"Journal Entry": {
 		"on_cancel": "beams.beams.custom_scripts.journal_entry.journal_entry.on_cancel",
-		"after_insert": "beams.beams.custom_scripts.journal_entry.journal_entry.after_insert",
+		"on_submit": "beams.beams.custom_scripts.journal_entry.journal_entry.on_submit",
 		"before_validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
 	},
 	"Job Applicant": {

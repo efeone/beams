@@ -22,7 +22,11 @@
   "batta_details_section",
   "total_batta",
   "column_break_jykh",
-  "total_ot_batta"
+  "total_ot_batta",
+  "rent_details_section",
+  "total_montly_rent",
+  "column_break_qfbo",
+  "total_amount_received_driver"
  ],
  "fields": [
   {
@@ -116,12 +120,34 @@
    "fieldtype": "Currency",
    "label": "Total OT Batta",
    "read_only": 1
+  },
+  {
+   "fieldname": "rent_details_section",
+   "fieldtype": "Section Break",
+   "label": "Rent Details"
+  },
+  {
+   "fetch_from": "supplier.montly_rent",
+   "fieldname": "total_montly_rent",
+   "fieldtype": "Currency",
+   "label": "Montly Rent (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount_received_driver",
+   "fieldtype": "Currency",
+   "label": "Total amount Received (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qfbo",
+   "fieldtype": "Column Break"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-12 18:14:33.812991",
+ "modified": "2026-03-13 10:58:15.965104",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Monthly Consolidated Trip Sheet",

@@ -26,7 +26,13 @@
   "default_debit_account",
   "stringer_settings_tab",
   "stringer_service_item",
-  "column_break_ixlf"
+  "column_break_ixlf",
+  "bureau_settings_tab",
+  "batta_expense_item",
+  "fuel_expense_item",
+  "column_break_jkfg",
+  "rent_expense_item",
+  "batta_ot_expense_item"
  ],
  "fields": [
   {
@@ -150,12 +156,45 @@
    "fieldtype": "Link",
    "label": "Default Indirect Expense Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "bureau_settings_tab",
+   "fieldtype": "Tab Break",
+   "label": "Bureau Trip Sheet Settings"
+  },
+  {
+   "fieldname": "batta_expense_item",
+   "fieldtype": "Link",
+   "label": "Batta Expense Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "fuel_expense_item",
+   "fieldtype": "Link",
+   "label": "Fuel Expense Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "column_break_jkfg",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rent_expense_item",
+   "fieldtype": "Link",
+   "label": "Rent Expense Item",
+   "options": "Item"
+  },
+  {
+   "fieldname": "batta_ot_expense_item",
+   "fieldtype": "Link",
+   "label": "OT Expense Item",
+   "options": "Item"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2025-11-18 10:03:19.688942",
+ "modified": "2026-03-13 14:44:11.652364",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
