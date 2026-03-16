@@ -101,7 +101,8 @@ function filter_employee_field(frm) {
 	frm.set_query("employees", () => {
 		return {
 			filters: {
-				status: "Active"
+				status: "Active",
+                bureau: frm.doc.bureau
 			}
 		};
 	});
@@ -485,13 +486,15 @@ function create_batta_claim(frm) {
 }
 
 
-// Settlement Journal Entry: we have given (paid) the supplier the amount.
+// Patty Cash Payment: we have given (paid) the supplier the amount.
 // JE: Debit Supplier payable, Credit Bank/Cash. Supplier account from Supplier doctype Default Accounts table.
 function create_settlement_journal_entry(frm) {
 
-	frm.add_custom_button(__("Settlement Journal Entry"), function () {
-		open_settlement_dialog(frm);
-	});
+    if (!frm.is_new()) {
+        frm.add_custom_button(__("Patty Cash Payment"), function () {
+            open_settlement_dialog(frm);
+        });
+    }
 }
 
 function open_settlement_dialog(frm) {

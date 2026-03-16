@@ -367,18 +367,26 @@ def get_supplier_payable_account(supplier=None, company=None):
 def _get_supplier_payable_account(supplier, company):
 	"""
 	Internal: get supplier default payable account for company.
-	Supports Supplier Account (ERPNext) and Accounts (Beams) child tables.
+	First from Party Account on Supplier; if not set, use ERPNext default
+	(Supplier Group or Company default payable account).
 	"""
 	if not supplier or not company:
 		return None
-	# Standard ERPNext: Supplier Account child (company, account)
+	# 1. Party Account on Supplier (company-specific account)
 	account = frappe.db.get_value(
 		"Party Account",
 		{"parent": supplier, "parenttype": "Supplier", "company": company},
-		"account"
+		"account",
 	)
 	if account:
 		return account
+	# 2. Fallback: ERPNext default (Supplier Group or Company default_payable_account)
+	try:
+		from erpnext.accounts.party import get_party_account
+		account = get_party_account("Supplier", supplier, company)
+		return account
+	except Exception:
+		return None
 
 
 def get_mode_of_payment_account(mode_of_payment, company):
