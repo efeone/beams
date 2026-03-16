@@ -172,6 +172,7 @@ def create_purchase_invoice_from_monthly_consolidated(monthly_consolidated_trip_
 	pi.cost_center = details.get("cost_center")
 	pi.set_posting_time = 1
 	pi.posting_date = frappe.utils.nowdate()
+	pi.allocate_advances_automatically = 1
 
 	for row in details["items"]:
 		if flt(row.get("rate")) == 0:

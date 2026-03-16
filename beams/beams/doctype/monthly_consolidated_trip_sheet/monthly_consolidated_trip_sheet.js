@@ -6,13 +6,14 @@ frappe.ui.form.on('Monthly Consolidated Trip Sheet', {
     onload(frm) {
         set_yeat(frm);
         set_supplier_filter(frm);
-        add_fetch_trip_sheets_button(frm);
         add_create_purchase_invoice_button(frm);
     },
     refresh(frm) {
-        add_fetch_trip_sheets_button(frm);
         add_create_purchase_invoice_button(frm);
         calculate_batta_totals(frm);
+    },
+    fetch_trip_sheets_btn: function(frm) {
+        run_fetch_trip_sheets(frm);
     },
     fuel_rate__litre: function(frm) {
         calculate_fuel_expense(frm);
@@ -40,36 +41,34 @@ function set_supplier_filter(frm) {
     });
 }
 
-// Button to fetch Bureau Trip Sheets for the selected supplier, bureau, month and year
-function add_fetch_trip_sheets_button(frm) {
-    frm.add_custom_button(__("Fetch Trip Sheets"), function() {
-        if (!frm.doc.supplier || !frm.doc.bureau || !frm.doc.month || !frm.doc.year) {
-            frappe.msgprint(__("Please set Supplier, Bureau, Month and Year first."));
-            return;
-        }
-        frappe.call({
-            method: "beams.beams.doctype.monthly_consolidated_trip_sheet.monthly_consolidated_trip_sheet.fetch_trip_sheets",
-            args: {
-                supplier: frm.doc.supplier,
-                bureau: frm.doc.bureau,
-                month: frm.doc.month,
-                year: frm.doc.year
-            },
-            callback: function(r) {
-                if (r.message && r.message.length) {
-                    frm.clear_table("monthly_consolidated_trip_sheet_details");
-                    (r.message || []).forEach(function(row) {
-                        frm.add_child("monthly_consolidated_trip_sheet_details", row);
-                    });
-                    frm.refresh_field("monthly_consolidated_trip_sheet_details");
-                    calculate_batta_totals(frm);
-                    calculate_fuel_expense(frm);
-                    frappe.show_alert({ message: __("Fetched {0} trip sheet(s).", [r.message.length]), indicator: "green" });
-                } else {
-                    frappe.msgprint(__("No trip sheets found for the selected criteria."));
-                }
+// Fetch Bureau Trip Sheets (used by the Fetch Trip Sheets button below Month field)
+function run_fetch_trip_sheets(frm) {
+    if (!frm.doc.supplier || !frm.doc.bureau || !frm.doc.month || !frm.doc.year) {
+        frappe.msgprint(__("Please set Supplier, Bureau, Month and Year first."));
+        return;
+    }
+    frappe.call({
+        method: "beams.beams.doctype.monthly_consolidated_trip_sheet.monthly_consolidated_trip_sheet.fetch_trip_sheets",
+        args: {
+            supplier: frm.doc.supplier,
+            bureau: frm.doc.bureau,
+            month: frm.doc.month,
+            year: frm.doc.year
+        },
+        callback: function(r) {
+            if (r.message && r.message.length) {
+                frm.clear_table("monthly_consolidated_trip_sheet_details");
+                (r.message || []).forEach(function(row) {
+                    frm.add_child("monthly_consolidated_trip_sheet_details", row);
+                });
+                frm.refresh_field("monthly_consolidated_trip_sheet_details");
+                calculate_batta_totals(frm);
+                calculate_fuel_expense(frm);
+                frappe.show_alert({ message: __("Fetched {0} trip sheet(s).", [r.message.length]), indicator: "green" });
+            } else {
+                frappe.msgprint(__("No trip sheets found for the selected criteria."));
             }
-        });
+        }
     });
 }
 
@@ -158,6 +157,7 @@ function show_create_pi_dialog(frm, details) {
                 doc.cost_center = details.cost_center || "";
                 doc.set_posting_time = 1;
                 doc.posting_date = details.posting_date || frappe.datetime.get_today();
+                doc.allocate_advances_automatically = 1;
                 (details.items || []).forEach(function(row) {
                     if (flt(row.rate) === 0) return;
                     var child = frappe.model.add_child(doc, "Purchase Invoice Item", "items");
@@ -167,6 +167,7 @@ function show_create_pi_dialog(frm, details) {
                     child.qty = 1;
                     child.rate = flt(row.rate);
                 });
+                frappe.route_options = { fetch_advances_from_mcts: 1 };
                 frappe.set_route("Form", "Purchase Invoice", doc.name);
             });
         }
