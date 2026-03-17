@@ -72,7 +72,15 @@ class BureauTripSheet(Document):
 		self.total_daily_batta = flt(self.batta) or 0
 
 	def calculate_total_ot_batta(self):
-		self.total_ot_batta = flt(self.ot_batta) or 0
+		"""Total OT batta = (total_hours - ot_working_hours) * ot_batta rate, when supplier and hours are set."""
+		total_hours = flt(self.total_hours or 0)
+		ot_rate = flt(self.ot_batta or 0)
+		if not self.supplier or not total_hours:
+			self.total_ot_batta = 0
+			return
+		ot_working_hours = flt(get_ot_working_hours(self.supplier) or 0)
+		ot_hours = max(0, total_hours - ot_working_hours)
+		self.total_ot_batta = round(ot_hours * ot_rate, 2)
 
 	def calculate_daily_batta(self):
 		'''
@@ -459,11 +467,7 @@ def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=N
 		"credit_in_account_currency": settlement_amount,
 		"is_advance": "Yes"
 	})
+	journal_entry.insert(ignore_permissions=True)
 
-	frappe.msgprint(
-		_("Journal Entry opened for settlement. Review and save manually."),
-		alert=True,
-		indicator="blue"
-	)
-	return journal_entry
+	return journal_entry.name
 
