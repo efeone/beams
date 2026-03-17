@@ -30,9 +30,11 @@
   "bureau_settings_tab",
   "batta_expense_item",
   "fuel_expense_item",
+  "fuel_card_account",
   "column_break_jkfg",
   "rent_expense_item",
-  "batta_ot_expense_item"
+  "batta_ot_expense_item",
+  "advance_account"
  ],
  "fields": [
   {
@@ -165,14 +167,14 @@
   {
    "fieldname": "batta_expense_item",
    "fieldtype": "Link",
-   "label": "Batta Expense Item",
-   "options": "Item"
+   "label": "Batta Expense Account",
+   "options": "Account"
   },
   {
    "fieldname": "fuel_expense_item",
    "fieldtype": "Link",
-   "label": "Fuel Expense Item",
-   "options": "Item"
+   "label": "Fuel Expense Account",
+   "options": "Account"
   },
   {
    "fieldname": "column_break_jkfg",
@@ -187,14 +189,26 @@
   {
    "fieldname": "batta_ot_expense_item",
    "fieldtype": "Link",
-   "label": "OT Expense Item",
-   "options": "Item"
+   "label": "OT Expense Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "fuel_card_account",
+   "fieldtype": "Link",
+   "label": "Fuel Card / Fuel Log Account",
+   "options": "Account"
+  },
+  {
+   "fieldname": "advance_account",
+   "fieldtype": "Link",
+   "label": "Advance Account",
+   "options": "Account"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-13 14:44:11.652364",
+ "modified": "2026-03-17 14:51:14.096058",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",
