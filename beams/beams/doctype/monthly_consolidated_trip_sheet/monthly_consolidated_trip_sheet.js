@@ -6,10 +6,10 @@ frappe.ui.form.on('Monthly Consolidated Trip Sheet', {
     onload(frm) {
         set_yeat(frm);
         set_supplier_filter(frm);
-        add_create_purchase_invoice_button(frm);
+        add_create_journal_entry_button(frm);
     },
     refresh(frm) {
-        add_create_purchase_invoice_button(frm);
+        add_create_journal_entry_button(frm);
         calculate_batta_totals(frm);
     },
     fetch_trip_sheets_btn: function(frm) {
@@ -20,6 +20,7 @@ frappe.ui.form.on('Monthly Consolidated Trip Sheet', {
     },
     monthly_consolidated_trip_sheet_details_on_form_rendered: function(frm, cdt, cdn) {
         calculate_batta_totals(frm);
+        calculate_fuel_expense(frm);
     }
 });
 
@@ -72,107 +73,21 @@ function run_fetch_trip_sheets(frm) {
     });
 }
 
-// Create Purchase Invoice: open popup with items/rates from Beams Accounts Settings and doc totals
-function add_create_purchase_invoice_button(frm) {
-    frm.add_custom_button(__("Create Purchase Invoice"), function() {
-        if (frm.is_dirty()) {
-            frappe.msgprint(__("Please save the document first."));
-            return;
-        }
-        if (!frm.doc.name) {
-            frappe.msgprint(__("Please save the document first."));
-            return;
-        }
-        frappe.call({
-            method: "beams.beams.doctype.monthly_consolidated_trip_sheet.monthly_consolidated_trip_sheet.get_purchase_invoice_details",
-            args: { monthly_consolidated_trip_sheet_name: frm.doc.name },
-            callback: function(r) {
-                if (r.message && r.message.items && r.message.items.length) {
-                    show_create_pi_dialog(frm, r.message);
-                } else {
-                    frappe.msgprint(
-                        __("No expense items to show. Open Beams Accounts Settings, go to the Bureau Trip Sheet Settings tab, and set at least one of: Batta Expense Item, Fuel Expense Item, Rent Expense Item, Batta Ot Expense Item. Save the settings and try again."),
-                        __("Settings required")
-                    );
-                }
-            }
-        });
-    });
-}
-
-function show_create_pi_dialog(frm, details) {
-    var table_data = (details.items || []).map(function(row) {
-        return {
-            expense_type: row.label || "",
-            item: row.item_name || row.item_code || "",
-            rate: flt(row.rate)
-        };
-    });
-
-    var d = new frappe.ui.Dialog({
-        title: __("Create Purchase Invoice"),
-        size: "medium",
-        fields: [
-            {
-                fieldtype: "Table",
-                fieldname: "items_table",
-                label: __("Invoice lines (from Bureau Trip Sheet Settings)"),
-                cannot_add_rows: true,
-                in_list_view: 1,
-                fields: [
-                    {
-                        fieldtype: "Data",
-                        fieldname: "expense_type",
-                        label: __("Expense"),
-                        read_only: 1,
-                        in_list_view: 1
-                    },
-                    {
-                        fieldtype: "Data",
-                        fieldname: "item",
-                        label: __("Item"),
-                        read_only: 1,
-                        in_list_view: 1
-                    },
-                    {
-                        fieldtype: "Currency",
-                        fieldname: "rate",
-                        label: __("Rate"),
-                        read_only: 1,
-                        in_list_view: 1
+// Create Journal Entry for supplier settlement (Batta, OT, Fuel Expense, Fuel Card, Advance; no rent)
+function add_create_journal_entry_button(frm) {
+    if (!frm.is_new()) {
+        frm.add_custom_button(__("Create Journal Entry"), function() {
+            frappe.call({
+                method: "beams.beams.doctype.monthly_consolidated_trip_sheet.monthly_consolidated_trip_sheet.create_journal_entry",
+                args: { monthly_consolidated_trip_sheet_name: frm.doc.name },
+                callback: function(r) {
+                    if (r.message) {
+                        frappe.set_route("Form", "Journal Entry", r.message);
                     }
-                ],
-                data: table_data
-            }
-        ],
-        primary_action_label: __("Create"),
-        primary_action: function() {
-            d.hide();
-            // Open new Purchase Invoice with data pre-filled; user saves manually
-            frappe.model.with_doctype("Purchase Invoice", function() {
-                var doc = frappe.model.get_new_doc("Purchase Invoice");
-                doc.supplier = details.supplier;
-                doc.bureau = details.bureau || "";
-                doc.company = details.company || frappe.defaults.get_default("company");
-                doc.cost_center = details.cost_center || "";
-                doc.set_posting_time = 1;
-                doc.posting_date = details.posting_date || frappe.datetime.get_today();
-                doc.allocate_advances_automatically = 1;
-                (details.items || []).forEach(function(row) {
-                    if (flt(row.rate) === 0) return;
-                    var child = frappe.model.add_child(doc, "Purchase Invoice Item", "items");
-                    child.item_code = row.item_code;
-                    child.item_name = row.item_name || row.item_code;
-                    child.uom = row.uom || "Nos";
-                    child.qty = 1;
-                    child.rate = flt(row.rate);
-                });
-                frappe.route_options = { fetch_advances_from_mcts: 1 };
-                frappe.set_route("Form", "Purchase Invoice", doc.name);
+                }
             });
-        }
-    });
-    d.show();
+        });
+    }
 }
 
 // Sum total_batta, total_ot_batta and amount_received_driver from child rows
@@ -198,14 +113,25 @@ function calculate_fuel_expense(frm) {
 
     let fuel_rate__litre = frm.doc.fuel_rate__litre || 0;
     let total_fuel = 0;
+    let total_distance_travelledkm = 0;
+    let avg_mileage = 0;
 
     (frm.doc.monthly_consolidated_trip_sheet_details || []).forEach(row => {
         total_fuel += row.fuel_consumption_l || 0;
+        total_distance_travelledkm += row.distance_travelledkm || 0;
+        avg_mileage = row.average_mileage_kmpl;
     });
 
     frm.set_value("total_fuel_consumed", total_fuel);
+    frm.set_value("total_distance_travelled", total_distance_travelledkm);
 
     let total_expense = fuel_rate__litre * total_fuel;
 
     frm.set_value("total_fuel_expense", total_expense);
+    frm.set_value("avg_mileage", avg_mileage)
+
+    frm.refresh_field("total_distance_travelled");
+    frm.refresh_field("total_fuel_consumed");
+    frm.refresh_field("total_fuel_expense");
+    frm.refresh_field("avg_mileage");
 }
