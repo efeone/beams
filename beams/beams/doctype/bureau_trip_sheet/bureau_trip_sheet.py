@@ -367,18 +367,26 @@ def get_supplier_payable_account(supplier=None, company=None):
 def _get_supplier_payable_account(supplier, company):
 	"""
 	Internal: get supplier default payable account for company.
-	Supports Supplier Account (ERPNext) and Accounts (Beams) child tables.
+	First from Party Account on Supplier; if not set, use ERPNext default
+	(Supplier Group or Company default payable account).
 	"""
 	if not supplier or not company:
 		return None
-	# Standard ERPNext: Supplier Account child (company, account)
+	# 1. Party Account on Supplier (company-specific account)
 	account = frappe.db.get_value(
 		"Party Account",
 		{"parent": supplier, "parenttype": "Supplier", "company": company},
-		"account"
+		"account",
 	)
 	if account:
 		return account
+	# 2. Fallback: ERPNext default (Supplier Group or Company default_payable_account)
+	try:
+		from erpnext.accounts.party import get_party_account
+		account = get_party_account("Supplier", supplier, company)
+		return account
+	except Exception:
+		return None
 
 
 def get_mode_of_payment_account(mode_of_payment, company):
@@ -443,11 +451,13 @@ def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=N
 		"party": bts.supplier,
 		"debit_in_account_currency": settlement_amount,
 		"credit_in_account_currency": 0,
+		"is_advance": "Yes"
 	})
 	journal_entry.append("accounts", {
 		"account": payment_account,
 		"debit_in_account_currency": 0,
 		"credit_in_account_currency": settlement_amount,
+		"is_advance": "Yes"
 	})
 
 	frappe.msgprint(

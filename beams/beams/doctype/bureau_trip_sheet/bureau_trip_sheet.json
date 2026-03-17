@@ -21,6 +21,7 @@
   "starting_date_and_time",
   "ending_date_and_time",
   "distance_travelledkm",
+  "total_hours",
   "section_break_tjbr",
   "purpose",
   "fuel_details_section",
@@ -31,7 +32,6 @@
   "total_distance_km",
   "column_break_fgob",
   "total_distance_travelled_km",
-  "total_hours",
   "section_break_qavf",
   "is_budgeted",
   "is_overnight_stay",
@@ -273,12 +273,12 @@
   {
    "fieldname": "settlement_section",
    "fieldtype": "Section Break",
-   "label": "Settlement Journal Entries"
+   "label": "Patty Cash Payment Entries"
   },
   {
    "fieldname": "settlement_journal_entries",
    "fieldtype": "Table",
-   "label": "Journal Entries",
+   "label": "Patty Cash Payments",
    "options": "Bureau Trip Sheet Journal Entry"
   },
   {
@@ -344,7 +344,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-13 09:23:13.957430",
+ "modified": "2026-03-16 11:55:32.456585",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

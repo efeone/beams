@@ -11,6 +11,7 @@
   "column_break_dmcr",
   "year",
   "month",
+  "fetch_trip_sheets_btn",
   "section_break_vkfd",
   "monthly_consolidated_trip_sheet_details",
   "fuel_details_section",
@@ -59,6 +60,11 @@
    "in_list_view": 1,
    "label": "Month",
    "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "fetch_trip_sheets_btn",
+   "fieldtype": "Button",
+   "label": "Fetch Trip Sheets"
   },
   {
    "fieldname": "section_break_vkfd",

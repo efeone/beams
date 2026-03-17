@@ -17,7 +17,8 @@
   "location",
   "is_parent_bureau",
   "regional_bureau",
-  "regional_bureau_head"
+  "regional_bureau_head",
+  "fuel_card"
  ],
  "fields": [
   {
@@ -95,11 +96,17 @@
    "fieldtype": "Link",
    "label": "Bureau Head",
    "options": "Employee"
+  },
+  {
+   "fieldname": "fuel_card",
+   "fieldtype": "Link",
+   "label": "Fuel Card",
+   "options": "Fuel Card"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-01-01 15:25:28.045824",
+ "modified": "2026-03-16 11:38:08.089256",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau",
