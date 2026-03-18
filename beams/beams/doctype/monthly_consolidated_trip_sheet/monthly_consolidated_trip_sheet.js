@@ -90,22 +90,48 @@ function add_create_journal_entry_button(frm) {
     }
 }
 
-// Sum total_batta, total_ot_batta and amount_received_driver from child rows
+// Sum totals; per row: deduct amount_received_driver from batta first, then from OT
 function calculate_batta_totals(frm) {
     var total_batta = 0;
     var total_ot_batta = 0;
     var total_amount_received_driver = 0;
+    var total_batta_after = 0;
+    var total_ot_after = 0;
     (frm.doc.monthly_consolidated_trip_sheet_details || []).forEach(function(row) {
-        total_batta += flt(row.total_batta);
-        total_ot_batta += flt(row.total_ot_batta);
-        total_amount_received_driver += flt(row.amount_received_driver);
+        var batta = flt(row.total_batta);
+        var ot = flt(row.total_ot_batta);
+        var advance = flt(row.amount_received_driver);
+        total_batta += batta;
+        total_ot_batta += ot;
+        total_amount_received_driver += advance;
+        var remaining_after_batta = Math.max(0, advance - batta);
+        var batta_after = Math.max(0, batta - advance);
+        var ot_after = Math.max(0, ot - remaining_after_batta);
+        frappe.model.set_value(
+            row.doctype,
+            row.name,
+            "total_batta_amount_after_advances",
+            batta_after
+        );
+        frappe.model.set_value(
+            row.doctype,
+            row.name,
+            "total_ot_amount_after_advances",
+            ot_after
+        );
+        total_batta_after += batta_after;
+        total_ot_after += ot_after;
     });
     frm.set_value("total_batta", total_batta);
     frm.set_value("total_ot_batta", total_ot_batta);
     frm.set_value("total_amount_received_driver", total_amount_received_driver);
+    frm.set_value("total_batta_amount_after_advances", total_batta_after);
+    frm.set_value("total_ot_amount_after_advances", total_ot_after);
     frm.refresh_field("total_batta");
     frm.refresh_field("total_ot_batta");
     frm.refresh_field("total_amount_received_driver");
+    frm.refresh_field("total_batta_amount_after_advances");
+    frm.refresh_field("total_ot_amount_after_advances");
 }
 
 // Calculate fuel expense of monthly_consolidated_trip_sheet_details

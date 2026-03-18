@@ -31,17 +31,32 @@ class MonthlyConsolidatedTripSheet(Document):
 		return None
 
 	def _set_batta_totals_from_details(self):
-		"""Set total_batta, total_ot_batta and total_amount_received_driver from sum of child table rows."""
+		"""Set total_batta, total_ot_batta, total_amount_received_driver; per-row and parent after-advance amounts."""
 		total_batta = 0
 		total_ot_batta = 0
 		total_amount_received_driver = 0
+		total_batta_after = 0
+		total_ot_after = 0
 		for row in self.get("monthly_consolidated_trip_sheet_details") or []:
-			total_batta += flt(row.get("total_batta"))
-			total_ot_batta += flt(row.get("total_ot_batta"))
-			total_amount_received_driver += flt(row.get("amount_received_driver"))
+			batta = flt(row.get("total_batta"))
+			ot = flt(row.get("total_ot_batta"))
+			advance = flt(row.get("amount_received_driver"))
+			total_batta += batta
+			total_ot_batta += ot
+			total_amount_received_driver += advance
+			# Advance applies to batta first, remainder to OT
+			remaining_after_batta = max(0, advance - batta)
+			batta_after = max(0, batta - advance)
+			ot_after = max(0, ot - remaining_after_batta)
+			row.total_batta_amount_after_advances = round(batta_after, 2)
+			row.total_ot_amount_after_advances = round(ot_after, 2)
+			total_batta_after += batta_after
+			total_ot_after += ot_after
 		self.total_batta = total_batta
 		self.total_ot_batta = total_ot_batta
 		self.total_amount_received_driver = total_amount_received_driver
+		self.total_batta_amount_after_advances = round(total_batta_after, 2)
+		self.total_ot_amount_after_advances = round(total_ot_after, 2)
 
 	def _set_total_distance_and_fuel_from_details(self):
 		"""Set total_distance_travelled, total_fuel_consumed and total_fuel_expense from child table rows."""
@@ -222,45 +237,40 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			)
 		)
 
-	total_batta = flt(doc.total_batta)
-	total_ot = flt(doc.total_ot_batta)
-	total_fuel_expense = flt(doc.total_fuel_expense)
-	total_fuel_log = flt(doc.total_fuel_card_expense)
-	total_advance = flt(doc.total_amount_received_driver)
+	total_batta = round(flt(doc.total_batta), 2)
+	total_ot = round(flt(doc.total_ot_batta), 2)
+	total_fuel_expense = round(flt(doc.total_fuel_expense), 2)
+	total_fuel_log = round(flt(doc.total_fuel_card_expense), 2)
+	total_advance = round(flt(doc.total_amount_received_driver), 2)
 
-	supplier_amount = total_batta + total_ot + total_fuel_expense - total_fuel_log - total_advance
+	supplier_amount = round(total_batta + total_ot + total_fuel_expense - total_fuel_log - total_advance, 2)
 
 	accounts = []
 	if batta_account and total_batta:
 		accounts.append({
 			"account": batta_account,
-			"debit_in_account_currency": total_batta,
-			"credit_in_account_currency": 0,
+			"debit_in_account_currency": 0,
+			"credit_in_account_currency": doc.total_batta_amount_after_advances,
 		})
 	if ot_account and total_ot:
 		accounts.append({
 			"account": ot_account,
-			"debit_in_account_currency": total_ot,
-			"credit_in_account_currency": 0,
+			"debit_in_account_currency": 0,
+			"credit_in_account_currency": doc.total_ot_amount_after_advances,
 		})
 	if fuel_expense_account and total_fuel_expense:
 		accounts.append({
 			"account": fuel_expense_account,
-			"debit_in_account_currency": total_fuel_expense,
-			"credit_in_account_currency": 0,
+			"debit_in_account_currency": 0,
+			"credit_in_account_currency": total_fuel_expense,
 		})
 	if fuel_card_account and total_fuel_log:
 		accounts.append({
 			"account": fuel_card_account,
-			"debit_in_account_currency": 0,
-			"credit_in_account_currency": total_fuel_log,
+			"debit_in_account_currency": total_fuel_log,
+			"credit_in_account_currency": 0,
 		})
-	if advance_account and total_advance:
-		accounts.append({
-			"account": advance_account,
-			"debit_in_account_currency": 0,
-			"credit_in_account_currency": total_advance,
-		})
+
 	if supplier_payable_account and supplier_amount != 0:
 		accounts.append({
 			"account": supplier_payable_account,
