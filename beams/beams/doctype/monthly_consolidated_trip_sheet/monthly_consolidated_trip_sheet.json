@@ -15,15 +15,20 @@
   "section_break_vkfd",
   "monthly_consolidated_trip_sheet_details",
   "fuel_details_section",
+  "total_distance_travelled",
   "fuel_rate__litre",
   "column_break_aulq",
-  "total_fuel_consumed",
-  "column_break_dqtr",
+  "avg_mileage",
   "total_fuel_expense",
+  "column_break_dqtr",
+  "total_fuel_consumed",
+  "total_fuel_card_expense",
   "batta_details_section",
   "total_batta",
+  "total_batta_amount_after_advances",
   "column_break_jykh",
   "total_ot_batta",
+  "total_ot_amount_after_advances",
   "rent_details_section",
   "total_montly_rent",
   "column_break_qfbo",
@@ -148,12 +153,41 @@
   {
    "fieldname": "column_break_qfbo",
    "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_distance_travelled",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_fuel_card_expense",
+   "fieldtype": "Currency",
+   "label": "Total Fuel Card Expense"
+  },
+  {
+   "fieldname": "avg_mileage",
+   "fieldtype": "Float",
+   "label": "Avg Mileage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_batta_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total Batta Amount After Advances",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_ot_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total OT Amount After Advances",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-03-13 10:58:15.965104",
+ "modified": "2026-03-18 14:34:37.846618",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Monthly Consolidated Trip Sheet",

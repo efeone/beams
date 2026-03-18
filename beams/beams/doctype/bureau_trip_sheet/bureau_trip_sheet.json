@@ -207,7 +207,7 @@
   {
    "fieldname": "total_ot_batta",
    "fieldtype": "Currency",
-   "label": "Total Ot Batta",
+   "label": "Total OT Batta",
    "read_only": 1
   },
   {
@@ -344,7 +344,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-16 11:55:32.456585",
+ "modified": "2026-03-18 15:56:41.737453",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

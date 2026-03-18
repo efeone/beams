@@ -11,7 +11,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		set_batta_policy_properties(frm);
 		filter_employee_field(frm);
 		show_batta_button(frm);
-        create_settlement_journal_entry(frm);
+		add_settlement_journal_entry_button(frm);
 	},
 	validate: function (frm) {
 		calculate_batta(frm);
@@ -23,6 +23,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 	batta: function (frm) {
 	},
 	ot_batta: function (frm) {
+        calculate_ot_batta(frm);
 	},
 	daily_batta_with_overnight_stay: function (frm) {
 		calculate_batta(frm);
@@ -55,11 +56,13 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		calculate_distance_from_odometer_parent(frm);
 	},
 	starting_date_and_time: function(frm) {
-		calculate_hours(frm);
+		// Update total hours and OT batta when trip start time changes
+		calculate_hours_and_days(frm);
 		calculate_allowance(frm);
 	},
 	ending_date_and_time: function(frm) {
-		calculate_hours(frm);
+		// Update total hours and OT batta when trip end time changes
+		calculate_hours_and_days(frm);
 		calculate_allowance(frm);
 	},
 	supplier: function(frm) {
@@ -127,44 +130,37 @@ function set_batta_policy_properties(frm) {
 	});
 }
 
-// Calculate total hours, OT hours and number of days for a given row based on from and to date/time, and update the respective fields in the child table.
-function calculate_hours_and_days(frm, cdt, cdn) {
-	let row = locals[cdt][cdn];
-	if (!row || !row.from_date_and_time || !row.to_date_and_time) return;
-	let from_date = new Date(row.from_date_and_time);
-	let to_date = new Date(row.to_date_and_time);
-	let total_hours = (to_date - from_date) / (1000 * 60 * 60);
-	total_hours = Math.round(total_hours * 100) / 100;
-	if (!frm.doc.supplier) {
-		frappe.msgprint(__('Please select a Supplier to calculate OT hours.'));
+// Calculate total hours on the parent and then compute OT batta using the parent's OT batta rate.
+function calculate_hours_and_days(frm) {
+	// Ensure total hours on the parent are up to date.
+	calculate_hours(frm);
+	// Then calculate OT batta based on those hours.
+	calculate_ot_batta(frm);
+}
+
+// Calculate OT batta on the parent document based on total hours and supplier-specific OT working hours.
+function calculate_ot_batta(frm) {
+	const total_hours = frm.doc.total_hours || 0;
+	// Require supplier and some hours before hitting the server
+	if (!frm.doc.supplier || !total_hours) {
 		return;
 	}
+
 	frappe.call({
 		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_ot_working_hours",
 		args: { supplier: frm.doc.supplier },
 		callback: function (r) {
-			if (r.message != null) {
-				let ot_working_hours = parseFloat(r.message) || 0;
-				let ot_hours = total_hours > ot_working_hours ? total_hours - ot_working_hours : 0;
-				frappe.model.set_value(cdt, cdn, 'total_hours', total_hours.toFixed(2));
-				frappe.model.set_value(cdt, cdn, 'ot_hours', ot_hours.toFixed(2));
-				frappe.model.set_value(cdt, cdn, 'number_of_days', Math.ceil(total_hours / 24));
-				setTimeout(() => {
-					calculate_ot_batta(frm, cdt, cdn);
-					calculate_row_allowances(frm, cdt, cdn);
-				}, 200);
+			if (r && r.message != null) {
+				const ot_working_hours = parseFloat(r.message) || 0;
+				const ot_hours = total_hours > ot_working_hours ? (total_hours - ot_working_hours) : 0;
+				const ot_rate = frm.doc.ot_batta || 0; // per-hour OT batta fetched from Supplier
+				const total_ot_batta = ot_hours * ot_rate;
+
+				frm.set_value('total_ot_batta', total_ot_batta);
+				calculate_total_driver_batta(frm);
 			}
 		}
 	});
-}
-
-// Calculate OT batta for a given row based on OT hours and OT batta rate, and update the respective field in the child table.
-function calculate_ot_batta(frm, cdt, cdn) {
-	let row = locals[cdt][cdn];
-	if (!row) return;
-	let ot_hours = row.ot_hours || 0;
-	let ot_batta = ot_hours * (frm.doc.ot_batta || 0);
-	frappe.model.set_value(cdt, cdn, 'ot_batta', ot_batta);
 }
 
 function update_all_ot_batta(frm) {
@@ -214,10 +210,9 @@ function calculate_total_daily_batta(frm) {
 	frm.refresh_field("total_daily_batta");
 }
 
-//  Calculate total OT batta by summing up OT batta for all rows in the child table, and update the total OT batta field in the parent form.
+//  Calculate total OT batta on the parent (wrapper to keep existing hooks working).
 function calculate_total_ot_batta(frm) {
-	frm.set_value('total_ot_batta', frm.doc.ot_batta || 0);
-	frm.refresh_field("total_ot_batta");
+	calculate_ot_batta(frm);
 }
 
 /* Calculate total driver batta as the sum of total daily batta and total OT batta */
@@ -488,13 +483,12 @@ function create_batta_claim(frm) {
 
 // Patty Cash Payment: we have given (paid) the supplier the amount.
 // JE: Debit Supplier payable, Credit Bank/Cash. Supplier account from Supplier doctype Default Accounts table.
-function create_settlement_journal_entry(frm) {
-
-    if (!frm.is_new()) {
-        frm.add_custom_button(__("Patty Cash Payment"), function () {
-            open_settlement_dialog(frm);
-        });
-    }
+function add_settlement_journal_entry_button(frm) {
+	if (!frm.is_new()) {
+		frm.add_custom_button(__("Patty Cash Payment"), function () {
+			open_settlement_dialog(frm);
+		});
+	}
 }
 
 function open_settlement_dialog(frm) {
@@ -581,10 +575,12 @@ function submit_settlement_journal_entry(frm, mode_of_payment, amount) {
 		},
 		callback: function (response) {
 			if (response.message) {
-				const doc = frappe.model.sync(response.message)[0];
-				frappe.set_route("Form", doc.doctype, doc.name);
+				frappe.msgprint({
+					title: __("Success"),
+					message: __("Settlement Journal Entry {0} created in Draft.", [response.message]),
+					indicator: "green"
+				});
 			}
-		},
+		}
 	});
 }
-

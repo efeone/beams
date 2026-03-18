@@ -28,12 +28,12 @@
   {
    "fieldname": "fuel_card_limit",
    "fieldtype": "Currency",
-   "label": "Fuel Card Limit"
+   "label": "Fuel Card Amount"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-20 16:02:10.561448",
+ "modified": "2026-03-17 12:07:12.324566",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Fuel Card",
@@ -54,6 +54,7 @@
   }
  ],
  "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
