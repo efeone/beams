@@ -200,13 +200,16 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 	Create a Journal Entry for Monthly Consolidated Trip Sheet settlement.
 	Uses accounts from Beams Accounts Settings (Bureau Trip Sheet Settings).
 
-	Debit: Total Batta, Total OT, Total Fuel Expense (expenses).
-	Credit: Total Fuel Card Expense (Fuel Log), Total Advance (amount received by driver).
-	Balancing: Supplier Account (final settlement = Batta + OT + Fuel Expense - Fuel Log - Advance).
+	Debit (expenses): Batta and OT after advances (advance already netted in those amounts), plus Fuel Expense.
+	Credit (already given): Total Fuel Card Expense (fuel log) only — do not post advance again.
+	Balancing: Supplier payable (Batta after + OT after + Fuel Expense - Fuel Log).
 	"""
 	doc = frappe.get_doc("Monthly Consolidated Trip Sheet", monthly_consolidated_trip_sheet_name)
 	if not doc.supplier:
 		frappe.throw(_("Supplier is not set on Monthly Consolidated Trip Sheet."))
+	# Ensure batta/OT after-advance and fuel totals match child rows before posting
+	doc._set_batta_totals_from_details()
+	doc._set_total_distance_and_fuel_from_details()
 
 	company = None
 	cost_center = None
@@ -227,7 +230,6 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 	fuel_expense_account = settings.get("fuel_expense_item")
 	ot_account = settings.get("batta_ot_expense_item")
 	fuel_card_account = settings.get("fuel_card_account")
-	advance_account = settings.get("advance_account")
 
 	supplier_payable_account = _get_supplier_payable_account(doc.supplier, company)
 	if not supplier_payable_account:
@@ -237,51 +239,54 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			)
 		)
 
-	total_batta = round(flt(doc.total_batta), 2)
-	total_ot = round(flt(doc.total_ot_batta), 2)
+	# Expense debits: batta/OT after advances (driver advance already reduced in those fields — do not deduct again)
+	total_batta_je = round(flt(doc.total_batta_amount_after_advances), 2)
+	total_ot_je = round(flt(doc.total_ot_amount_after_advances), 2)
 	total_fuel_expense = round(flt(doc.total_fuel_expense), 2)
+	# Credit: money already given via fuel card (fuel log)
 	total_fuel_log = round(flt(doc.total_fuel_card_expense), 2)
-	total_advance = round(flt(doc.total_amount_received_driver), 2)
 
-	supplier_amount = round(total_batta + total_ot + total_fuel_expense - total_fuel_log - total_advance, 2)
+	supplier_amount = round(total_batta_je + total_ot_je + total_fuel_expense - total_fuel_log, 2)
 
 	accounts = []
-	if batta_account and total_batta:
+	# Debits — expense accounts
+	if batta_account and total_batta_je:
 		accounts.append({
 			"account": batta_account,
-			"debit_in_account_currency": 0,
-			"credit_in_account_currency": doc.total_batta_amount_after_advances,
+			"debit_in_account_currency": total_batta_je,
+			"credit_in_account_currency": 0,
 		})
-	if ot_account and total_ot:
+	if ot_account and total_ot_je:
 		accounts.append({
 			"account": ot_account,
-			"debit_in_account_currency": 0,
-			"credit_in_account_currency": doc.total_ot_amount_after_advances,
+			"debit_in_account_currency": total_ot_je,
+			"credit_in_account_currency": 0,
 		})
 	if fuel_expense_account and total_fuel_expense:
 		accounts.append({
 			"account": fuel_expense_account,
-			"debit_in_account_currency": 0,
-			"credit_in_account_currency": total_fuel_expense,
+			"debit_in_account_currency": total_fuel_expense,
+			"credit_in_account_currency": 0,
 		})
+	# Credits — fuel card / fuel log only (advance is already reflected in batta_after / ot_after)
 	if fuel_card_account and total_fuel_log:
 		accounts.append({
 			"account": fuel_card_account,
-			"debit_in_account_currency": total_fuel_log,
-			"credit_in_account_currency": 0,
+			"debit_in_account_currency": 0,
+			"credit_in_account_currency": total_fuel_log,
 		})
-
+	# Supplier balancing: credit when company owes supplier, debit when recovering
 	if supplier_payable_account and supplier_amount != 0:
 		accounts.append({
 			"account": supplier_payable_account,
 			"party_type": "Supplier",
 			"party": doc.supplier,
-			"debit_in_account_currency": supplier_amount if supplier_amount > 0 else 0,
-			"credit_in_account_currency": abs(supplier_amount) if supplier_amount < 0 else 0,
+			"debit_in_account_currency": abs(supplier_amount) if supplier_amount < 0 else 0,
+			"credit_in_account_currency": supplier_amount if supplier_amount > 0 else 0,
 		})
 
 	if not accounts:
-		frappe.throw(_("No amounts to post. Set Batta, OT, Fuel Expense, Fuel Card or Advance, and ensure accounts are set in Beams Accounts Settings > Bureau Trip Sheet Settings."))
+		frappe.throw(_("No amounts to post. Set Batta, OT, Fuel Expense or Fuel Card, and ensure accounts are set in Beams Accounts Settings > Bureau Trip Sheet Settings."))
 
 	je = frappe.new_doc("Journal Entry")
 	je.voucher_type = "Journal Entry"

@@ -73,7 +73,7 @@ function run_fetch_trip_sheets(frm) {
     });
 }
 
-// Create Journal Entry for supplier settlement (Batta, OT, Fuel Expense, Fuel Card, Advance; no rent)
+// Create Journal Entry: debits batta/OT after advances + fuel expense; credit fuel log only (advance netted in batta/OT)
 function add_create_journal_entry_button(frm) {
     if (!frm.is_new()) {
         frm.add_custom_button(__("Create Journal Entry"), function() {
