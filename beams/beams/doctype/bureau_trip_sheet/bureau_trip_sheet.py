@@ -142,42 +142,6 @@ class BureauTripSheet(Document):
 	def calculate_total_batta(self):
 		pass
 
-	def on_submit(self):
-		'''
-			Create a Purchase Invoice on submission of Bureau Trip Sheet
-		'''
-		if not self.supplier:
-			frappe.throw(_("Please select a Supplier to create a Purchase Invoice."))
-
-		service_item = frappe.db.get_single_value("Beams Accounts Settings", "default_trip_sheet_service_item")
-		if not service_item:
-			frappe.throw(_("Please configure the Default Trip Sheet Service Item in Beams Accounts Settings."))
-
-		if not self.purchase_invoice:
-			pi = frappe.new_doc("Purchase Invoice")
-			pi.supplier = self.supplier
-			pi.company = self.company
-			pi.set_posting_time = 1
-			pi.posting_date = nowdate()
-			pi.append("items", {
-				"item_code": service_item,
-				"qty": 1,
-				"rate": self.total_driver_batta,
-				"amount": self.total_driver_batta
-			})
-			pi.flags.ignore_permissions = True
-			pi.insert()
-			pi.submit()
-			frappe.msgprint(
-				_('Purchase Invoice Created: <a href="{0}">{1}</a>').format(
-					frappe.utils.get_url_to_form("Purchase Invoice", pi.name),
-					pi.name
-				),
-				alert=True,
-				indicator='green'
-			)
-			self.db_set("purchase_invoice", pi.name)
-
 	def validate_batta_policy(self):
 		'''
 		Validate that a Driver Batta Policy exists for the supplier's designation.
