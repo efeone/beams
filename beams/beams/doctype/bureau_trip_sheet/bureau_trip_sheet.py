@@ -142,9 +142,6 @@ class BureauTripSheet(Document):
 	def calculate_total_batta(self):
 		pass
 
-	def on_submit(self):
-		pass
-
 	def validate_batta_policy(self):
 		'''
 		Validate that a Driver Batta Policy exists for the supplier's designation.
