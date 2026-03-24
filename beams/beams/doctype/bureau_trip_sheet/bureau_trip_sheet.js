@@ -166,17 +166,23 @@ function calculate_ot_batta(frm) {
 function update_all_ot_batta(frm) {
 }
 
-/* Calculate total batta by summing daily batta values */
+/* Trip batta = daily rate × number of days (or food allowance total) — matches server validate */
 function calculate_batta(frm) {
-	let batta = 0;
-
-	if (frm.doc.is_overnight_stay) {
-		batta = frm.doc.daily_batta_with_overnight_stay || 0;
+	let trip_batta_amount = 0;
+	if (frm.doc.total_food_allowance) {
+		trip_batta_amount = flt(frm.doc.total_food_allowance);
 	} else {
-		batta = frm.doc.daily_batta_without_overnight_stay || 0;
+		const total_trip_hours = flt(frm.doc.total_hours);
+		const number_of_days = Math.max(1, Math.ceil(total_trip_hours / 24));
+		if (frm.doc.is_overnight_stay) {
+			trip_batta_amount = number_of_days * flt(frm.doc.daily_batta_with_overnight_stay);
+		} else {
+			trip_batta_amount = number_of_days * flt(frm.doc.daily_batta_without_overnight_stay);
+		}
 	}
-
-	frm.set_value("batta", batta);
+	frm.set_value("batta", trip_batta_amount);
+	calculate_total_daily_batta(frm);
+	calculate_total_driver_batta(frm);
 }
 
 // Calculate total batta for the entire trip by summing up daily batta and OT batta for all rows in the child table, and update the total batta field in the parent form.
@@ -339,7 +345,8 @@ function calculate_allowance(frm) {
 			if (r.message) {
 				frm.set_value("daily_batta_with_overnight_stay", r.message.daily_batta_with_overnight_stay);
 				frm.set_value("daily_batta_without_overnight_stay", r.message.daily_batta_without_overnight_stay);
-				frm.set_value("batta", (r.message.daily_batta_with_overnight_stay || 0) + (r.message.daily_batta_without_overnight_stay || 0));
+				// Keep client behavior aligned with backend: trip batta uses daily rate x number_of_days.
+				calculate_batta(frm);
 			}
 		}
 	});
