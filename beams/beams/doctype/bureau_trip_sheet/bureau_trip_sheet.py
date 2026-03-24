@@ -25,13 +25,16 @@ class BureauTripSheet(Document):
 
 	def calculate_batta(self):
 		'''
-		Calculate the total batta (allowance) based on daily batta amounts.
+		Calculate total trip batta from daily rate × number of days (or food allowance total).
 		'''
 		if self.total_food_allowance:
 			self.batta = self.total_food_allowance
 		else:
-			self.batta = (self.daily_batta_without_overnight_stay or 0) + \
-						(self.daily_batta_with_overnight_stay or 0)
+			number_of_days = max(1, math.ceil(flt(self.total_hours or 0) / 24))
+			if self.is_overnight_stay:
+				self.batta = number_of_days * flt(self.daily_batta_with_overnight_stay or 0)
+			else:
+				self.batta = number_of_days * flt(self.daily_batta_without_overnight_stay or 0)
 
 	def calculate_total_distance_travelled(self):
 		""" Calculate total distance travelled in km based on odometer readings or distance travelled field."""
@@ -91,7 +94,14 @@ class BureauTripSheet(Document):
 		  - 50 to 100 KM AND >= 6 Hours → Food Allowance
 		  - 100+ KM AND 6 to 8 Hours → Food Allowance
 		  - Else → No Allowance
+		When policy allows actual (editable) daily amounts, user-entered values are preserved on save.
 		'''
+		# Preserve manually entered daily rates before reset.
+		manual_daily_batta_without_overnight = flt(self.get("daily_batta_without_overnight_stay"))
+		manual_daily_batta_with_overnight = flt(self.get("daily_batta_with_overnight_stay"))
+		has_manual_without_overnight = (not self.is_overnight_stay and manual_daily_batta_without_overnight > 0)
+		has_manual_with_overnight = (self.is_overnight_stay and manual_daily_batta_with_overnight > 0)
+
 		self.daily_batta_without_overnight_stay = 0
 		self.daily_batta_with_overnight_stay = 0
 		self.breakfast = 0
@@ -139,8 +149,23 @@ class BureauTripSheet(Document):
 			self.total_food_allowance = self.breakfast + self.lunch + self.dinner
 			self.batta = self.total_food_allowance
 
+		# Re-apply manual rate after auto logic so save does not overwrite entered values.
+		total_hours_for_manual_override = flt(self.total_hours or 0)
+		number_of_days_for_manual_override = max(1, math.ceil(total_hours_for_manual_override / 24))
+		if has_manual_without_overnight:
+			self.daily_batta_without_overnight_stay = manual_daily_batta_without_overnight
+			self.batta = number_of_days_for_manual_override * manual_daily_batta_without_overnight
+			self.breakfast = 0
+			self.lunch = 0
+			self.dinner = 0
+			self.total_food_allowance = 0
+		if has_manual_with_overnight:
+			self.daily_batta_with_overnight_stay = manual_daily_batta_with_overnight
+			self.batta = number_of_days_for_manual_override * manual_daily_batta_with_overnight
+
 	def calculate_total_batta(self):
-		pass
+		"""Calculate total driver batta on backend as daily + OT."""
+		self.total_driver_batta = flt(self.total_daily_batta) + flt(self.total_ot_batta)
 
 	def on_submit(self):
 		pass
