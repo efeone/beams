@@ -12,6 +12,7 @@ from frappe import _
 
 class BureauTripSheet(Document):
 	def validate(self):
+		self.set_check_in_time()
 		self.validate_odometer_readings()
 		self.calculate_distance_from_odometer()
 		self.calculate_total_distance_travelled()
@@ -22,6 +23,30 @@ class BureauTripSheet(Document):
 		self.calculate_total_batta()
 		self.calculate_total_daily_batta()
 		self.validate_batta_policy()
+
+	def set_check_in_time(self):
+		"""
+		Ensure single Check-In Time per day.
+		Fetch from first created Trip Sheet of same date.
+		"""
+		if not self.starting_date_and_time:
+			return
+
+		current_date = getdate(self.starting_date_and_time)
+
+		first_trip = frappe.db.get_value(
+			"Bureau Trip Sheet",
+			{
+				"name": ["!=", self.name],
+				"docstatus": ["!=", 2],
+				"starting_date_and_time": ["between", [f"{current_date} 00:00:00", f"{current_date} 23:59:59"]]
+			},
+			"check_in_time",
+			order_by="creation asc"
+		)
+
+		if first_trip:
+			self.check_in_time = first_trip
 
 	def calculate_batta(self):
 		'''
@@ -60,10 +85,14 @@ class BureauTripSheet(Document):
 			self.distance_travelledkm = flt(self.final_odometer_reading) - flt(self.initial_odometer_reading)
 
 	def calculate_hours(self):
-		""" Calculate total hours of the trip based on starting and ending date/time."""
-		if self.get("starting_date_and_time") and self.get("ending_date_and_time"):
-			start = get_datetime(self.starting_date_and_time)
+		""" Calculate total hours based on Check-In Time and Ending Date/Time """
+
+		start_time = self.check_in_time or self.starting_date_and_time
+
+		if start_time and self.get("ending_date_and_time"):
+			start = get_datetime(start_time)
 			end = get_datetime(self.ending_date_and_time)
+
 			if end > start:
 				self.total_hours = round((end - start).total_seconds() / 3600.0, 2)
 			else:

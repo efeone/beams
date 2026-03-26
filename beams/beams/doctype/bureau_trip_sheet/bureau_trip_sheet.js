@@ -199,8 +199,8 @@ function calculate_total_distance_travelled(frm) {
 
 // Calculate total hours for the entire trip by summing up total hours for all rows in the child table, and update the total hours field in the parent form.
 function calculate_hours(frm) {
-	if (frm.doc.starting_date_and_time && frm.doc.ending_date_and_time) {
-		let start = new Date(frm.doc.starting_date_and_time);
+	if (frm.doc.check_in_time && frm.doc.ending_date_and_time) {
+		let start = new Date(frm.doc.check_in_time);
 		let end = new Date(frm.doc.ending_date_and_time);
 		let total_hours = end > start ? Math.round((end - start) / (1000 * 60 * 60) * 100) / 100 : 0;
 		frm.set_value('total_hours', total_hours);
