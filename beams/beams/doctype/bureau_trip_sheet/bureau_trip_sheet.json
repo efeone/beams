@@ -17,10 +17,11 @@
   "destination_location",
   "initial_odometer_reading",
   "final_odometer_reading",
+  "distance_travelledkm",
   "column_break_cdph",
   "starting_date_and_time",
   "ending_date_and_time",
-  "distance_travelledkm",
+  "check_in_time",
   "total_hours",
   "section_break_tjbr",
   "purpose",
@@ -339,12 +340,17 @@
    "fieldtype": "Float",
    "label": "Average Mileage (KMPL)",
    "read_only": 1
+  },
+  {
+   "fieldname": "check_in_time",
+   "fieldtype": "Datetime",
+   "label": "Check In Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-18 15:56:41.737453",
+ "modified": "2026-03-26 15:50:44.470313",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
