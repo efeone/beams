@@ -150,9 +150,22 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 		return []
 	first_day = get_first_day(f"{year}-{month_number:02d}-01")
 	last_day = get_last_day(first_day)
+
+	existing_trip_sheets = []
+	if frappe.form_dict.get("docname"):
+		doc = frappe.get_doc("Monthly Consolidated Trip Sheet", frappe.form_dict.get("docname"))
+		existing_trip_sheets = [
+			d.bureau_trip_sheet for d in doc.get("monthly_consolidated_trip_sheet_details")
+		]
+
 	trip_sheets = frappe.db.get_all(
 		"Bureau Trip Sheet",
-		filters={"supplier": supplier, "bureau": bureau, "docstatus": 1},
+		filters={
+			"supplier": supplier,
+			"bureau": bureau,
+			"docstatus": 1,
+			"name": ["not in", existing_trip_sheets]
+		},
 		fields=[
 			"name", "departure_location", "destination_location",
 			"initial_odometer_reading", "final_odometer_reading",
@@ -163,8 +176,19 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 	)
 	rows = []
 	for ts in trip_sheets:
+
 		start_date = ts.get("starting_date_and_time") and getdate(ts["starting_date_and_time"])
 		if not start_date or not (first_day <= start_date <= last_day):
+			continue
+		already_processed = frappe.db.exists(
+			"Monthly Consolidated Trip Sheet Details",
+			{
+				"bureau_trip_sheet": ts.get("name"),
+				"is_processed": 1
+			}
+		)
+
+		if already_processed:
 			continue
 		# Sum of settlement_journal_entries.amount for this Bureau Trip Sheet
 		amount_received = frappe.db.sql(
@@ -193,7 +217,6 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 		})
 	return rows
 
-
 @frappe.whitelist()
 def create_journal_entry(monthly_consolidated_trip_sheet_name):
 	"""
@@ -210,6 +233,14 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 	# Ensure batta/OT after-advance and fuel totals match child rows before posting
 	doc._set_batta_totals_from_details()
 	doc._set_total_distance_and_fuel_from_details()
+
+	unprocessed_rows = [
+	row for row in doc.get("monthly_consolidated_trip_sheet_details") or []
+	if not row.is_processed
+	]
+
+	if not unprocessed_rows:
+		frappe.throw(_("All trip details are already processed."))
 
 	company = None
 	cost_center = None
@@ -239,12 +270,22 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			)
 		)
 
-	# Expense debits: batta/OT after advances (driver advance already reduced in those fields — do not deduct again)
-	total_batta_je = round(flt(doc.total_batta_amount_after_advances), 2)
-	total_ot_je = round(flt(doc.total_ot_amount_after_advances), 2)
-	total_fuel_expense = round(flt(doc.total_fuel_expense), 2)
-	# Credit: money already given via fuel card (fuel log)
+	total_batta_je = 0
+	total_ot_je = 0
+	total_fuel = 0
+
+	for row in unprocessed_rows:
+		total_batta_je += flt(row.total_batta_amount_after_advances)
+		total_ot_je += flt(row.total_ot_amount_after_advances)
+		total_fuel += flt(row.fuel_consumption_l)
+
+	fuel_rate = flt(doc.fuel_rate__litre)
+	total_fuel_expense = round(total_fuel * fuel_rate, 2)
+
 	total_fuel_log = round(flt(doc.total_fuel_card_expense), 2)
+
+	total_batta_je = round(total_batta_je, 2)
+	total_ot_je = round(total_ot_je, 2)
 
 	supplier_amount = round(total_batta_je + total_ot_je + total_fuel_expense - total_fuel_log, 2)
 
@@ -307,5 +348,11 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 
 	je.flags.ignore_permissions = True
 	je.insert()
+
+	for row in unprocessed_rows:
+		row.is_processed = 1
+		row.processed_in_jv = je.name
+
+	doc.save(ignore_permissions=True)
 
 	return je.name
