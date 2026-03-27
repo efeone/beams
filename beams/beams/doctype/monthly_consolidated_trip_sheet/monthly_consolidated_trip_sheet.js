@@ -48,6 +48,7 @@ function run_fetch_trip_sheets(frm) {
         frappe.msgprint(__("Please set Supplier, Bureau, Month and Year first."));
         return;
     }
+
     frappe.call({
         method: "beams.beams.doctype.monthly_consolidated_trip_sheet.monthly_consolidated_trip_sheet.fetch_trip_sheets",
         args: {
@@ -58,16 +59,36 @@ function run_fetch_trip_sheets(frm) {
         },
         callback: function(r) {
             if (r.message && r.message.length) {
-                frm.clear_table("monthly_consolidated_trip_sheet_details");
+
+                let existing = (frm.doc.monthly_consolidated_trip_sheet_details || [])
+                    .map(d => d.bureau_trip_sheet);
+
+                let added_count = 0;
+
                 (r.message || []).forEach(function(row) {
-                    frm.add_child("monthly_consolidated_trip_sheet_details", row);
+                    if (!existing.includes(row.bureau_trip_sheet)) {
+
+                        let child = frm.add_child("monthly_consolidated_trip_sheet_details");
+
+                        Object.assign(child, row);
+                        child.is_processed = 0;
+
+                        added_count++;
+                    }
                 });
+
                 frm.refresh_field("monthly_consolidated_trip_sheet_details");
+
                 calculate_batta_totals(frm);
                 calculate_fuel_expense(frm);
-                frappe.show_alert({ message: __("Fetched {0} trip sheet(s).", [r.message.length]), indicator: "green" });
+
+                frappe.show_alert({
+                    message: __("Added {0} new trip sheet(s).", [added_count]),
+                    indicator: "green"
+                });
+
             } else {
-                frappe.msgprint(__("No trip sheets found for the selected criteria."));
+                frappe.msgprint(__("No new trip sheets found."));
             }
         }
     });

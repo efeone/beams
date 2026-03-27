@@ -11,6 +11,7 @@ from beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet import _get_supplie
 
 class MonthlyConsolidatedTripSheet(Document):
 	def validate(self):
+		self._prevent_edit_of_processed_rows()
 		self._set_batta_totals_from_details()
 		self._set_total_distance_and_fuel_from_details()
 		self._validate_and_prepare_fuel_card_deduction()
@@ -29,6 +30,40 @@ class MonthlyConsolidatedTripSheet(Document):
 		if month_name in months:
 			return months.index(month_name) + 1
 		return None
+
+	def _prevent_edit_of_processed_rows(self):
+		'''Prevent editing of certain fields if the row was already processed (i.e. a Journal Entry was created for it).'''
+		if not self.get_doc_before_save():
+			return
+
+		old_doc = self.get_doc_before_save()
+
+		old_rows_map = {
+			row.bureau_trip_sheet: row
+			for row in old_doc.get("monthly_consolidated_trip_sheet_details")
+		}
+
+		for new_row in self.get("monthly_consolidated_trip_sheet_details"):
+
+			old_row = old_rows_map.get(new_row.bureau_trip_sheet)
+
+			if not old_row:
+				continue
+
+			if old_row.is_processed:
+				fields = [
+					"total_batta",
+					"total_ot_batta",
+					"amount_received_driver",
+					"fuel_consumption_l",
+					"distance_travelledkm"
+				]
+
+				for field in fields:
+					if flt(new_row.get(field)) != flt(old_row.get(field)):
+						frappe.throw(
+							_("Row {0} is already processed and cannot be modified").format(new_row.idx)
+						)
 
 	def _set_batta_totals_from_details(self):
 		"""Set total_batta, total_ot_batta, total_amount_received_driver; per-row and parent after-advance amounts."""
@@ -135,28 +170,39 @@ class MonthlyConsolidatedTripSheet(Document):
 
 @frappe.whitelist()
 def fetch_trip_sheets(supplier, bureau, month, year):
-	"""
-	Fetch Bureau Trip Sheets for the given supplier, bureau, month and year.
-	Returns a list of row dicts for the child table (monthly_consolidated_trip_sheet_details).
-	"""
 	if not all([supplier, bureau, month, year]):
 		return []
+
+	from frappe.utils import get_first_day, get_last_day, getdate, flt
+
 	months = [
 		"January", "February", "March", "April", "May", "June",
 		"July", "August", "September", "October", "November", "December",
 	]
+
 	month_number = months.index(month) + 1 if month in months else None
 	if not month_number:
 		return []
+
 	first_day = get_first_day(f"{year}-{month_number:02d}-01")
 	last_day = get_last_day(first_day)
 
+	docname = frappe.form_dict.get("docname")
+
 	existing_trip_sheets = []
-	if frappe.form_dict.get("docname"):
-		doc = frappe.get_doc("Monthly Consolidated Trip Sheet", frappe.form_dict.get("docname"))
+	if docname:
+		doc = frappe.get_doc("Monthly Consolidated Trip Sheet", docname)
 		existing_trip_sheets = [
 			d.bureau_trip_sheet for d in doc.get("monthly_consolidated_trip_sheet_details")
 		]
+
+	processed_trip_sheets = frappe.db.get_all(
+		"Monthly Consolidated Trip Sheet Details",
+		filters={"is_processed": 1},
+		pluck="bureau_trip_sheet"
+	)
+
+	exclude_trip_sheets = list(set((existing_trip_sheets or []) + (processed_trip_sheets or [])))
 
 	trip_sheets = frappe.db.get_all(
 		"Bureau Trip Sheet",
@@ -164,7 +210,7 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 			"supplier": supplier,
 			"bureau": bureau,
 			"docstatus": 1,
-			"name": ["not in", existing_trip_sheets]
+			"name": ["not in", exclude_trip_sheets or [""]]
 		},
 		fields=[
 			"name", "departure_location", "destination_location",
@@ -174,32 +220,25 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 			"average_mileage_kmpl", "fuel_consumption_l",
 		],
 	)
+
 	rows = []
 	for ts in trip_sheets:
 
 		start_date = ts.get("starting_date_and_time") and getdate(ts["starting_date_and_time"])
 		if not start_date or not (first_day <= start_date <= last_day):
 			continue
-		already_processed = frappe.db.exists(
-			"Monthly Consolidated Trip Sheet Details",
-			{
-				"bureau_trip_sheet": ts.get("name"),
-				"is_processed": 1
-			}
-		)
 
-		if already_processed:
-			continue
-		# Sum of settlement_journal_entries.amount for this Bureau Trip Sheet
 		amount_received = frappe.db.sql(
 			"""
-			SELECT COALESCE(SUM(amount), 0) FROM `tabBureau Trip Sheet Journal Entry`
+			SELECT COALESCE(SUM(amount), 0)
+			FROM `tabBureau Trip Sheet Journal Entry`
 			WHERE parent = %s
 			""",
 			(ts.get("name"),),
-			as_dict=False,
 		)
+
 		amount_received_driver = flt(amount_received[0][0]) if amount_received else 0
+
 		rows.append({
 			"departure_location": ts.get("departure_location") or "",
 			"destination_location": ts.get("destination_location") or "",
@@ -215,6 +254,7 @@ def fetch_trip_sheets(supplier, bureau, month, year):
 			"average_mileage_kmpl": ts.get("average_mileage_kmpl"),
 			"fuel_consumption_l": ts.get("fuel_consumption_l"),
 		})
+
 	return rows
 
 @frappe.whitelist()
