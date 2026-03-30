@@ -24,6 +24,7 @@ class BureauTripSheet(Document):
 		self.calculate_total_daily_batta()
 		self.validate_batta_policy()
 
+
 	def set_check_in_time(self):
 		"""
 		Ensure single Check-In Time per day.
@@ -317,12 +318,30 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	}
 
 @frappe.whitelist()
-def get_batta_policy_values():
+def get_batta_policy_values(designation=None, supplier=None):
 	'''
 		Fetch and return the batta policy values from the 'Batta Policy' doctype
 	'''
-	result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
-	return result
+	if not designation and supplier:
+		designation = frappe.db.get_value("Supplier", supplier, "designation")
+	if not designation:
+		return {}
+
+	result = frappe.db.get_value(
+		"Batta Policy",
+		{"designation": designation},
+		["is_actual_", "is_actual__", "is_actual___"],
+		as_dict=True
+	)
+
+	if not result:
+		return {}
+
+	return {
+		"is_actual_with":    int(result.get("is_actual_",   0) or 0),
+		"is_actual_without": int(result.get("is_actual__",  0) or 0),
+		"is_actual_food":    int(result.get("is_actual___", 0) or 0),
+	}
 
 @frappe.whitelist()
 def get_ot_working_hours(supplier):

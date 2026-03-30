@@ -7,8 +7,9 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 		// Only recalculate allowance for new docs; saved docs already have values from server (avoids "Not Saved" after save)
 		if (frm.is_new()) {
 			calculate_allowance(frm);
+		} else {
+			set_batta_policy_properties(frm);
 		}
-		set_batta_policy_properties(frm);
 		filter_employee_field(frm);
 		show_batta_button(frm);
 		add_settlement_journal_entry_button(frm);
@@ -23,7 +24,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 	batta: function (frm) {
 	},
 	ot_batta: function (frm) {
-        calculate_ot_batta(frm);
+		calculate_ot_batta(frm);
 	},
 	daily_batta_with_overnight_stay: function (frm) {
 		calculate_batta(frm);
@@ -73,6 +74,7 @@ frappe.ui.form.on("Bureau Trip Sheet", {
 				}
 			});
 		}
+		set_batta_policy_properties(frm);
 	},
 	distance_travelledkm: function(frm) {
 		calculate_fuel(frm);
@@ -105,7 +107,7 @@ function filter_employee_field(frm) {
 		return {
 			filters: {
 				status: "Active",
-                bureau: frm.doc.bureau
+				bureau: frm.doc.bureau
 			}
 		};
 	});
@@ -113,19 +115,67 @@ function filter_employee_field(frm) {
 
 /* Function to set Batta Policy properties */
 function set_batta_policy_properties(frm) {
+	const batta_fields = [
+		"daily_batta_with_overnight_stay",
+		"daily_batta_without_overnight_stay",
+		"total_food_allowance",
+		"breakfast",
+		"lunch",
+		"dinner"
+	];
+
+	function make_all_readonly() {
+		batta_fields.forEach(field => frm.set_df_property(field, "read_only", 1));
+		frm.refresh_fields(batta_fields);
+	}
+
+	if (!frm.doc.supplier) {
+		make_all_readonly();
+		return;
+	}
+
 	frappe.call({
 		method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.get_batta_policy_values",
-		callback: function(response) {
-			if (response.message) {
-				let is_actual_daily_batta_without_overnight_stay = response.message.is_actual__;
-				let is_actual_daily_batta_with_overnight_stay = response.message.is_actual_;
-
-				frm.set_df_property('daily_batta_without_overnight_stay', 'read_only', is_actual_daily_batta_without_overnight_stay == 0);
-				frm.set_df_property('daily_batta_with_overnight_stay', 'read_only', is_actual_daily_batta_with_overnight_stay == 0);
-
-				frm.refresh_field('daily_batta_without_overnight_stay');
-				frm.refresh_field('daily_batta_with_overnight_stay');
+		args: {
+			supplier: frm.doc.supplier
+		},
+		callback: function (response) {
+			if (!response.message || Object.keys(response.message).length === 0) {
+				make_all_readonly();
+				return;
 			}
+
+			let policy   = response.message;
+			let distance = flt(frm.doc.total_distance_travelled_km || 0);
+			let hours    = flt(frm.doc.total_hours || 0);
+			let is_overnight = frm.doc.is_overnight_stay ? 1 : 0;
+
+			let flag_with    = policy.is_actual_with    === 1;
+			let flag_without = policy.is_actual_without === 1;
+			let flag_food    = policy.is_actual_food    === 1;
+
+			let allow_with    = false;
+			let allow_without = false;
+			let allow_food    = false;
+
+			if (is_overnight) {
+				allow_with = flag_with;
+
+			} else if (distance >= 100 && hours >= 8) {
+				allow_without = flag_without;
+
+			} else if (distance >= 50 && hours >= 6) {
+				allow_food = flag_food;
+			}
+
+			frm.set_df_property("daily_batta_with_overnight_stay",    "read_only", allow_with    ? 0 : 1);
+			frm.set_df_property("daily_batta_without_overnight_stay", "read_only", allow_without ? 0 : 1);
+			frm.set_df_property("total_food_allowance",               "read_only", allow_food    ? 0 : 1);
+			frm.set_df_property("breakfast",                          "read_only", allow_food    ? 0 : 1);
+			frm.set_df_property("lunch",                              "read_only", allow_food    ? 0 : 1);
+			frm.set_df_property("dinner",                             "read_only", allow_food    ? 0 : 1);
+
+			frm.refresh_fields(batta_fields);
 		}
 	});
 }
@@ -347,6 +397,8 @@ function calculate_allowance(frm) {
 				frm.set_value("daily_batta_without_overnight_stay", r.message.daily_batta_without_overnight_stay);
 				// Keep client behavior aligned with backend: trip batta uses daily rate x number_of_days.
 				calculate_batta(frm);
+				set_batta_policy_properties(frm);
+
 			}
 		}
 	});
@@ -457,7 +509,7 @@ function calculate_distance_from_odometer(frm, cdt, cdn) {
 
 // Show "Request Batta" button if the user is eligible to request batta claim based on the trip sheet details and user's permissions.
 function show_batta_button(frm) {
-    if (!frm.is_new()) {
+	if (!frm.is_new()) {
 			frappe.call({
 				method: "beams.beams.doctype.bureau_trip_sheet.bureau_trip_sheet.can_show_request_batta_button",
 				args: { bureau_trip_sheet: frm.doc.name },
