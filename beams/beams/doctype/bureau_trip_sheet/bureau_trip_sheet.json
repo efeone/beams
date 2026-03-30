@@ -299,26 +299,22 @@
   {
    "fieldname": "breakfast",
    "fieldtype": "Currency",
-   "label": "Breakfast",
-   "read_only": 1
+   "label": "Breakfast"
   },
   {
    "fieldname": "lunch",
    "fieldtype": "Currency",
-   "label": "Lunch",
-   "read_only": 1
+   "label": "Lunch"
   },
   {
    "fieldname": "dinner",
    "fieldtype": "Currency",
-   "label": "Dinner",
-   "read_only": 1
+   "label": "Dinner"
   },
   {
    "fieldname": "total_food_allowance",
    "fieldtype": "Currency",
-   "label": "Total Food Allowance",
-   "read_only": 1
+   "label": "Total Food Allowance"
   },
   {
    "fieldname": "fuel_details_section",
