@@ -10,6 +10,7 @@
   "section_break_9os0",
   "cost_head",
   "budget_group",
+  "budget_behavior",
   "column_break_llbo",
   "cost_category",
   "accounts_section",
@@ -60,11 +61,20 @@
   {
    "fieldname": "accounts_section",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "budget_behavior",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Budget Behavior",
+   "options": "Budget Behavior",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-02-03 15:26:04.052315",
+ "modified": "2026-03-31 11:11:13.516424",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Cost Head",

@@ -615,4 +615,7 @@ fixtures = [
 	{
 		"dt": "Cost Category",
 	},
+	{
+		"dt": "Budget Behavior",
+	}
 ]
