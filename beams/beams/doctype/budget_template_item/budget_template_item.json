@@ -8,6 +8,7 @@
  "field_order": [
   "cost_head",
   "budget_group",
+  "budget_behavior",
   "column_break_jjqr",
   "account_head",
   "cost_category"
@@ -53,12 +54,20 @@
   {
    "fieldname": "column_break_jjqr",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "cost_head.budget_behavior",
+   "fieldname": "budget_behavior",
+   "fieldtype": "Link",
+   "label": "Budget Behavior",
+   "options": "Budget Behavior",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-02-03 14:39:31.292729",
+ "modified": "2026-03-31 11:23:42.390729",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Budget Template Item",

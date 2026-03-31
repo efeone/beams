@@ -1,0 +1,37 @@
+[
+ {
+  "budget_behavior": "Fixed",
+  "docstatus": 0,
+  "doctype": "Budget Behavior",
+  "modified": "2026-03-27 16:20:15.398914",
+  "name": "Fixed"
+ },
+ {
+  "budget_behavior": "Variable",
+  "docstatus": 0,
+  "doctype": "Budget Behavior",
+  "modified": "2026-03-27 16:20:23.820021",
+  "name": "Variable"
+ },
+ {
+  "budget_behavior": "Expansion & Provision",
+  "docstatus": 0,
+  "doctype": "Budget Behavior",
+  "modified": "2026-03-27 16:20:30.426569",
+  "name": "Expansion & Provision"
+ },
+ {
+  "budget_behavior": "Fixed with Variance",
+  "docstatus": 0,
+  "doctype": "Budget Behavior",
+  "modified": "2026-03-27 16:20:52.820671",
+  "name": "Fixed with Variance"
+ },
+ {
+  "budget_behavior": "Expansion",
+  "docstatus": 0,
+  "doctype": "Budget Behavior",
+  "modified": "2026-03-27 16:21:19.996488",
+  "name": "Expansion"
+ }
+]
