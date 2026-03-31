@@ -12,6 +12,27 @@
   "column_break_psaw",
   "bureau",
   "company",
+  "trip_details_section",
+  "departure_location",
+  "destination_location",
+  "initial_odometer_reading",
+  "final_odometer_reading",
+  "distance_travelledkm",
+  "column_break_cdph",
+  "starting_date_and_time",
+  "ending_date_and_time",
+  "check_in_time",
+  "total_hours",
+  "section_break_tjbr",
+  "purpose",
+  "fuel_details_section",
+  "average_mileage_kmpl",
+  "column_break_vvvy",
+  "fuel_consumption_l",
+  "section_break_xxsb",
+  "total_distance_km",
+  "column_break_fgob",
+  "total_distance_travelled_km",
   "section_break_qavf",
   "is_budgeted",
   "is_overnight_stay",
@@ -22,26 +43,20 @@
   "ot_batta",
   "batta",
   "purchase_invoice",
-  "section_break_tjbr",
-  "work_details",
-  "section_break_xxsb",
-  "total_distance_km",
-  "column_break_fgob",
-  "total_distance_travelled_km",
-  "total_hours",
-  "trip_details_section",
-  "departure_location",
-  "destination_location",
-  "column_break_cdph",
-  "starting_date_and_time",
-  "ending_date_and_time",
-  "amended_from",
+  "column_break_bzmn",
+  "breakfast",
+  "lunch",
+  "dinner",
+  "total_food_allowance",
   "section_break_dwds",
   "total_daily_batta",
   "column_break_zjgd",
   "total_ot_batta",
   "column_break_jevl",
-  "total_driver_batta"
+  "total_driver_batta",
+  "settlement_section",
+  "settlement_journal_entries",
+  "amended_from"
  ],
  "fields": [
   {
@@ -120,12 +135,6 @@
    "fieldtype": "Section Break"
   },
   {
-   "fieldname": "work_details",
-   "fieldtype": "Table",
-   "label": "Work Details",
-   "options": "Bureau Trip Details"
-  },
-  {
    "fieldname": "trip_details_section",
    "fieldtype": "Section Break",
    "label": "Trip Details"
@@ -161,16 +170,6 @@
   {
    "fieldname": "column_break_psaw",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Bureau Trip Sheet",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "section_break_xxsb",
@@ -209,7 +208,7 @@
   {
    "fieldname": "total_ot_batta",
    "fieldtype": "Currency",
-   "label": "Total Ot Batta",
+   "label": "Total OT Batta",
    "read_only": 1
   },
   {
@@ -248,12 +247,106 @@
    "fieldname": "is_budgeted",
    "fieldtype": "Check",
    "label": "Is Budgeted"
+  },
+  {
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Initial Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "label": "Final Odometer Reading",
+   "reqd": 1
+  },
+  {
+   "fieldname": "distance_travelledkm",
+   "fieldtype": "Float",
+   "label": "Distance Travelled(km) ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "purpose",
+   "fieldtype": "Small Text",
+   "label": "Purpose"
+  },
+  {
+   "fieldname": "settlement_section",
+   "fieldtype": "Section Break",
+   "label": "Patty Cash Payment Entries"
+  },
+  {
+   "fieldname": "settlement_journal_entries",
+   "fieldtype": "Table",
+   "label": "Patty Cash Payments",
+   "options": "Bureau Trip Sheet Journal Entry"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Bureau Trip Sheet",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "column_break_bzmn",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "breakfast",
+   "fieldtype": "Currency",
+   "label": "Breakfast"
+  },
+  {
+   "fieldname": "lunch",
+   "fieldtype": "Currency",
+   "label": "Lunch"
+  },
+  {
+   "fieldname": "dinner",
+   "fieldtype": "Currency",
+   "label": "Dinner"
+  },
+  {
+   "fieldname": "total_food_allowance",
+   "fieldtype": "Currency",
+   "label": "Total Food Allowance"
+  },
+  {
+   "fieldname": "fuel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Fuel Details"
+  },
+  {
+   "fieldname": "fuel_consumption_l",
+   "fieldtype": "Float",
+   "label": "Fuel Consumption (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_vvvy",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "average_mileage_kmpl",
+   "fieldtype": "Float",
+   "label": "Average Mileage (KMPL)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "check_in_time",
+   "fieldtype": "Datetime",
+   "label": "Check In Time"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-11-29 10:27:43.300740",
+ "modified": "2026-03-26 15:50:44.470313",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",

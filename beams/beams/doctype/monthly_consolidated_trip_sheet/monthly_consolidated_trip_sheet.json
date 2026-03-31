@@ -1,0 +1,215 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{year}-{month}-{bureau}-{supplier}-{####}",
+ "creation": "2026-03-09 16:54:11.562533",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "supplier",
+  "bureau",
+  "column_break_dmcr",
+  "year",
+  "month",
+  "fetch_trip_sheets_btn",
+  "section_break_vkfd",
+  "monthly_consolidated_trip_sheet_details",
+  "fuel_details_section",
+  "total_distance_travelled",
+  "fuel_rate__litre",
+  "column_break_aulq",
+  "avg_mileage",
+  "total_fuel_expense",
+  "column_break_dqtr",
+  "total_fuel_consumed",
+  "total_fuel_card_expense",
+  "batta_details_section",
+  "total_batta",
+  "total_batta_amount_after_advances",
+  "column_break_jykh",
+  "total_ot_batta",
+  "total_ot_amount_after_advances",
+  "rent_details_section",
+  "total_montly_rent",
+  "column_break_qfbo",
+  "total_amount_received_driver"
+ ],
+ "fields": [
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "bureau",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Bureau",
+   "options": "Bureau"
+  },
+  {
+   "fieldname": "year",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Year"
+  },
+  {
+   "fieldname": "column_break_dmcr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "month",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Month",
+   "options": "\nJanuary\nFebruary\nMarch\nApril\nMay\nJune\nJuly\nAugust\nSeptember\nOctober\nNovember\nDecember"
+  },
+  {
+   "fieldname": "fetch_trip_sheets_btn",
+   "fieldtype": "Button",
+   "label": "Fetch Trip Sheets"
+  },
+  {
+   "fieldname": "section_break_vkfd",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "monthly_consolidated_trip_sheet_details",
+   "fieldtype": "Table",
+   "label": "Monthly Consolidated Trip Sheet Details",
+   "options": "Monthly Consolidated Trip Sheet Details"
+  },
+  {
+   "fieldname": "fuel_details_section",
+   "fieldtype": "Section Break",
+   "label": "Fuel Details"
+  },
+  {
+   "fieldname": "fuel_rate__litre",
+   "fieldtype": "Currency",
+   "label": "Fuel Rate / Litre"
+  },
+  {
+   "fieldname": "column_break_aulq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_fuel_consumed",
+   "fieldtype": "Float",
+   "label": "Total Fuel Consumed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_dqtr",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_fuel_expense",
+   "fieldtype": "Float",
+   "label": "Total Fuel Expense",
+   "read_only": 1
+  },
+  {
+   "fieldname": "batta_details_section",
+   "fieldtype": "Section Break",
+   "label": "Batta Details"
+  },
+  {
+   "fieldname": "total_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_jykh",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total OT Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rent_details_section",
+   "fieldtype": "Section Break",
+   "label": "Rent Details"
+  },
+  {
+   "fetch_from": "supplier.montly_rent",
+   "fieldname": "total_montly_rent",
+   "fieldtype": "Currency",
+   "label": "Montly Rent (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_amount_received_driver",
+   "fieldtype": "Currency",
+   "label": "Total amount Received (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qfbo",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "total_distance_travelled",
+   "fieldtype": "Float",
+   "label": "Total Distance Travelled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_fuel_card_expense",
+   "fieldtype": "Currency",
+   "label": "Total Fuel Card Expense"
+  },
+  {
+   "fieldname": "avg_mileage",
+   "fieldtype": "Float",
+   "label": "Avg Mileage",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_batta_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total Batta Amount After Advances",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_ot_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total OT Amount After Advances",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-03-26 12:57:41.304053",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Monthly Consolidated Trip Sheet",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

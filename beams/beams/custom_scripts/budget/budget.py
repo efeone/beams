@@ -11,7 +11,7 @@ def beams_budget_validate(doc, method=None):
 	convert_currency(doc, method)
 
 def update_total_amount(doc, method):
-	total = sum([row.budget_amount for row in doc.get('accounts') if row.budget_amount])
+	total = sum([row.budget_amount for row in doc.get('budget_accounts') if row.budget_amount])
 	doc.total_amount = total
 
 def populate_og_accounts(doc, method=None):

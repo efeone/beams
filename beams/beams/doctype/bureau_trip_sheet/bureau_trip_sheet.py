@@ -1,16 +1,18 @@
 #  Copyright (c) 2025, efeone and contributors
 # For license information, please see license.txt
 
-import frappe
 import math
+
 from frappe.model.document import Document
-from frappe.utils import get_datetime, getdate, flt
+from frappe.utils import flt, get_datetime, getdate, nowdate
+
+import frappe
 from frappe import _
-from frappe.utils import nowdate
 
 
 class BureauTripSheet(Document):
 	def validate(self):
+		self.set_check_in_time()
 		self.validate_odometer_readings()
 		self.calculate_distance_from_odometer()
 		self.calculate_total_distance_travelled()
@@ -22,125 +24,96 @@ class BureauTripSheet(Document):
 		self.calculate_total_daily_batta()
 		self.validate_batta_policy()
 
+
+	def set_check_in_time(self):
+		"""
+		Ensure single Check-In Time per day.
+		Fetch from first created Trip Sheet of same date.
+		"""
+		if not self.starting_date_and_time:
+			return
+
+		current_date = getdate(self.starting_date_and_time)
+
+		first_trip = frappe.db.get_value(
+			"Bureau Trip Sheet",
+			{
+				"name": ["!=", self.name],
+				"docstatus": ["!=", 2],
+				"starting_date_and_time": ["between", [f"{current_date} 00:00:00", f"{current_date} 23:59:59"]]
+			},
+			"check_in_time",
+			order_by="creation asc"
+		)
+
+		if first_trip:
+			self.check_in_time = first_trip
+
 	def calculate_batta(self):
 		'''
-		Calculate the total batta (allowance) based on daily batta amounts.
+		Calculate total trip batta from daily rate × number of days (or food allowance total).
 		'''
-		self.batta = (self.daily_batta_without_overnight_stay or 0) \
-				   + (self.daily_batta_with_overnight_stay or 0)
+		if self.total_food_allowance:
+			self.batta = self.total_food_allowance
+		else:
+			number_of_days = max(1, math.ceil(flt(self.total_hours or 0) / 24))
+			if self.is_overnight_stay:
+				self.batta = number_of_days * flt(self.daily_batta_with_overnight_stay or 0)
+			else:
+				self.batta = number_of_days * flt(self.daily_batta_without_overnight_stay or 0)
 
 	def calculate_total_distance_travelled(self):
-		'''
-		Calculate the total distance travelled by summing up the
-		distance_travelled_km' values from work details.
-		'''
-		total_distance = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.distance_travelled_km:
-					total_distance += row.distance_travelled_km
-
-		self.total_distance_travelled_km = total_distance
+		""" Calculate total distance travelled in km based on odometer readings or distance travelled field."""
+		self.total_distance_travelled_km = flt(self.distance_travelledkm) or 0
 
 	def validate_odometer_readings(self):
-		'''
-			Validate odometer readings in child table rows.
-			Conditions:
-			- Initial and Final readings cannot be negative.
-			- If both readings are entered, Final must be greater than Initial.
-		'''
-		if not self.work_details:
-			return
-
-		for row in self.work_details:
-			# Validate Initial Reading
-			if row.initial_odometer_reading is not None:
-				initial = flt(row.initial_odometer_reading)
-				if initial < 0:
-					frappe.throw(
-						_(f"Row {row.idx}: Initial Odometer Reading cannot be negative."),
-						title=_("Invalid Odometer Reading")
-					)
-
-			# Validate Final Reading
-			if row.final_odometer_reading is not None:
-				final = flt(row.final_odometer_reading)
-				if final < 0:
-					frappe.throw(
-						_(f"Row {row.idx}: Final Odometer Reading cannot be negative."),
-						title=_("Invalid Odometer Reading")
-					)
-
-			# Validate Final Reading > Initial Reading only If both readings are present
-			if (
-				row.initial_odometer_reading is not None
-				and row.final_odometer_reading is not None
-			):
-				initial = flt(row.initial_odometer_reading)
-				final = flt(row.final_odometer_reading)
-
-				if final <= initial:
-					frappe.throw(
-						_(f"Row {row.idx}: Final Odometer Reading ({final}) "
-						f"must be greater than Initial Odometer Reading ({initial})."),
-						title=_("Invalid Odometer Reading")
-					)
+		""" Validate that odometer readings are non-negative and final reading is greater than initial reading. """
+		initial = flt(self.initial_odometer_reading)
+		final = flt(self.final_odometer_reading)
+		if initial is not None and initial < 0:
+			frappe.throw(_("Initial Odometer Reading cannot be negative."), title=_("Invalid Odometer Reading"))
+		if final is not None and final < 0:
+			frappe.throw(_("Final Odometer Reading cannot be negative."), title=_("Invalid Odometer Reading"))
+		if initial is not None and final is not None and final <= initial:
+			frappe.throw(
+				_(f"Final Odometer Reading ({final}) must be greater than Initial ({initial})."),
+				title=_("Invalid Odometer Reading")
+			)
 
 	def calculate_distance_from_odometer(self):
-		'''
-			Calculate distance based on odometer readings for each row in child table.
-			Sets distance_travelled_km = final_odometer_reading - initial_odometer_reading
-		'''
-		if not self.work_details:
-			return
-
-		for row in self.work_details:
-			if row.initial_odometer_reading is not None and row.final_odometer_reading is not None:
-				initial = flt(row.initial_odometer_reading)
-				final = flt(row.final_odometer_reading)
-				# Calculate and set distance
-				calculated_distance = final - initial
-				row.distance_travelled_km = calculated_distance
+		""" Calculate distance travelled in km based on initial and final odometer readings, if both are provided."""
+		if self.initial_odometer_reading is not None and self.final_odometer_reading is not None:
+			self.distance_travelledkm = flt(self.final_odometer_reading) - flt(self.initial_odometer_reading)
 
 	def calculate_hours(self):
-		'''
-		Calculate the total hours worked by summing up the 'total_hours' values from work details.
-		'''
-		total_hours = 0
+		""" Calculate total hours based on Check-In Time and Ending Date/Time """
 
-		if self.work_details:
-			for row in self.work_details:
-				if row.total_hours:
-					total_hours += float(row.total_hours)
+		start_time = self.check_in_time or self.starting_date_and_time
 
-		self.total_hours = total_hours
+		if start_time and self.get("ending_date_and_time"):
+			start = get_datetime(start_time)
+			end = get_datetime(self.ending_date_and_time)
+
+			if end > start:
+				self.total_hours = round((end - start).total_seconds() / 3600.0, 2)
+			else:
+				self.total_hours = 0
+		else:
+			self.total_hours = 0
 
 	def calculate_total_daily_batta(self):
-		'''
-		Calculate the total daily batta by summing up the 'total_batta' values from work details.
-		'''
-		total_batta = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.total_batta:
-					total_batta += row.total_batta
-
-		self.total_daily_batta = total_batta
+		self.total_daily_batta = flt(self.batta) or 0
 
 	def calculate_total_ot_batta(self):
-		'''
-		Calculate the total OT batta by summing up the 'ot_batta' values from work details.
-		'''
-		total_ot_batta = 0
-
-		if self.work_details:
-			for row in self.work_details:
-				if row.ot_batta:
-					total_ot_batta += row.ot_batta
-
-		self.total_ot_batta = total_ot_batta
+		"""Total OT batta = (total_hours - ot_working_hours) * ot_batta rate, when supplier and hours are set."""
+		total_hours = flt(self.total_hours or 0)
+		ot_rate = flt(self.ot_batta or 0)
+		if not self.supplier or not total_hours:
+			self.total_ot_batta = 0
+			return
+		ot_working_hours = flt(get_ot_working_hours(self.supplier) or 0)
+		ot_hours = max(0, total_hours - ot_working_hours)
+		self.total_ot_batta = round(ot_hours * ot_rate, 2)
 
 	def calculate_daily_batta(self):
 		'''
@@ -151,108 +124,78 @@ class BureauTripSheet(Document):
 		  - 50 to 100 KM AND >= 6 Hours → Food Allowance
 		  - 100+ KM AND 6 to 8 Hours → Food Allowance
 		  - Else → No Allowance
+		When policy allows actual (editable) daily amounts, user-entered values are preserved on save.
 		'''
+		# Preserve manually entered daily rates before reset.
+		manual_daily_batta_without_overnight = flt(self.get("daily_batta_without_overnight_stay"))
+		manual_daily_batta_with_overnight = flt(self.get("daily_batta_with_overnight_stay"))
+		has_manual_without_overnight = (not self.is_overnight_stay and manual_daily_batta_without_overnight > 0)
+		has_manual_with_overnight = (self.is_overnight_stay and manual_daily_batta_with_overnight > 0)
+
 		self.daily_batta_without_overnight_stay = 0
 		self.daily_batta_with_overnight_stay = 0
-		if not self.get("work_details"):
-			return
-		for row in self.work_details:
-			total_hours = flt(row.total_hours or 0)
-			distance = flt(row.distance_travelled_km or 0)
-			row.number_of_days = max(1, math.ceil(total_hours / 24))
-			row.daily_batta = 0
-			row.breakfast = 0
-			row.lunch = 0
-			row.dinner = 0
-			row.total_food_allowance = 0
-			if self.is_overnight_stay:
-				batta_data = calculate_batta_allowance(
-					designation="Driver",
-					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
-					is_overnight_stay=1,
-					total_distance_travelled_km=distance,
-					total_hours=total_hours
-				)
-				parent_daily_batta_value = flt(batta_data.get("daily_batta_with_overnight_stay", 0))
-				if parent_daily_batta_value > 0:
-					self.daily_batta_with_overnight_stay = parent_daily_batta_value
-					row.daily_batta = row.number_of_days * parent_daily_batta_value
-				continue
-			if distance >= 100 and total_hours >= 8:
-				batta_data = calculate_batta_allowance(
-					designation="Driver",
-					is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
-					is_overnight_stay=0,
-					total_distance_travelled_km=distance,
-					total_hours=total_hours
-				)
-				parent_daily_batta_value = flt(batta_data.get("daily_batta_without_overnight_stay", 0))
-				if parent_daily_batta_value > 0:
-					self.daily_batta_without_overnight_stay = parent_daily_batta_value
-					row.daily_batta = row.number_of_days * parent_daily_batta_value
-				continue
-			elif ((50 <= distance < 100 and total_hours >= 6) or
-				  (distance >= 100 and 6 <= total_hours < 8)):
-				values = get_batta_for_food_allowance(
-					designation="Driver",
-					from_date_time=row.from_date_and_time,
-					to_date_time=row.to_date_and_time,
-					total_hrs=total_hours
-				)
-				row.breakfast = values.get("break_fast", 0)
-				row.lunch = values.get("lunch", 0)
-				row.dinner = values.get("dinner", 0)
-				row.total_food_allowance = flt(row.breakfast) + flt(row.lunch) + flt(row.dinner)
-				continue
+		self.breakfast = 0
+		self.lunch = 0
+		self.dinner = 0
+		self.total_food_allowance = 0
+		self.batta = 0
+		total_hours = flt(self.total_hours or 0)
+		distance = flt(self.distance_travelledkm or self.total_distance_travelled_km or 0)
+		number_of_days = max(1, math.ceil(total_hours / 24))
+		if self.is_overnight_stay:
+			batta_data = calculate_batta_allowance(
+				designation="Driver",
+				is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+				is_overnight_stay=1,
+				total_distance_travelled_km=distance,
+				total_hours=total_hours
+			)
+			parent_daily_batta_value = flt(batta_data.get("daily_batta_with_overnight_stay", 0))
+			if parent_daily_batta_value > 0:
+				self.daily_batta_with_overnight_stay = parent_daily_batta_value
+				self.batta = number_of_days * parent_daily_batta_value
+		elif distance >= 100 and total_hours >= 8:
+			batta_data = calculate_batta_allowance(
+				designation="Driver",
+				is_travelling_outside_kerala=self.is_travelling_outside_kerala or 0,
+				is_overnight_stay=0,
+				total_distance_travelled_km=distance,
+				total_hours=total_hours
+			)
+			parent_daily_batta_value = flt(batta_data.get("daily_batta_without_overnight_stay", 0))
+			if parent_daily_batta_value > 0:
+				self.daily_batta_without_overnight_stay = parent_daily_batta_value
+				self.batta = number_of_days * parent_daily_batta_value
+		elif ((50 <= distance < 100 and total_hours >= 6) or (distance >= 100 and 6 <= total_hours < 8)):
+			values = get_batta_for_food_allowance(
+				designation="Driver",
+				from_date_time=self.starting_date_and_time,
+				to_date_time=self.ending_date_and_time,
+				total_hrs=total_hours
+			)
+			self.breakfast = flt(values.get("break_fast", 0))
+			self.lunch = flt(values.get("lunch", 0))
+			self.dinner = flt(values.get("dinner", 0))
+			self.total_food_allowance = self.breakfast + self.lunch + self.dinner
+			self.batta = self.total_food_allowance
+
+		# Re-apply manual rate after auto logic so save does not overwrite entered values.
+		total_hours_for_manual_override = flt(self.total_hours or 0)
+		number_of_days_for_manual_override = max(1, math.ceil(total_hours_for_manual_override / 24))
+		if has_manual_without_overnight:
+			self.daily_batta_without_overnight_stay = manual_daily_batta_without_overnight
+			self.batta = number_of_days_for_manual_override * manual_daily_batta_without_overnight
+			self.breakfast = 0
+			self.lunch = 0
+			self.dinner = 0
+			self.total_food_allowance = 0
+		if has_manual_with_overnight:
+			self.daily_batta_with_overnight_stay = manual_daily_batta_with_overnight
+			self.batta = number_of_days_for_manual_override * manual_daily_batta_with_overnight
 
 	def calculate_total_batta(self):
-		'''
-		Server-side equivalent of JS calculate_total_batta.
-		Calculates total_batta = daily_batta + total_food_allowance for each row.
-		'''
-		if not self.get('work_details'):
-			return
-
-		for row in self.work_details:
-			daily_batta = row.daily_batta or 0
-			food_allowance = row.total_food_allowance or 0
-			row.total_batta = daily_batta + food_allowance
-
-	def on_submit(self):
-		'''
-			Create a Purchase Invoice on submission of Bureau Trip Sheet
-		'''
-		if not self.supplier:
-			frappe.throw(_("Please select a Supplier to create a Purchase Invoice."))
-
-		service_item = frappe.db.get_single_value("Beams Accounts Settings", "default_trip_sheet_service_item")
-		if not service_item:
-			frappe.throw(_("Please configure the Default Trip Sheet Service Item in Beams Accounts Settings."))
-
-		if not self.purchase_invoice:
-			pi = frappe.new_doc("Purchase Invoice")
-			pi.supplier = self.supplier
-			pi.company = self.company
-			pi.set_posting_time = 1
-			pi.posting_date = nowdate()
-			pi.append("items", {
-				"item_code": service_item,
-				"qty": 1,
-				"rate": self.total_driver_batta,
-				"amount": self.total_driver_batta
-			})
-			pi.flags.ignore_permissions = True
-			pi.insert()
-			pi.submit()
-			frappe.msgprint(
-				_('Purchase Invoice Created: <a href="{0}">{1}</a>').format(
-					frappe.utils.get_url_to_form("Purchase Invoice", pi.name),
-					pi.name
-				),
-				alert=True,
-				indicator='green'
-			)
-			self.db_set("purchase_invoice", pi.name)
+		"""Calculate total driver batta on backend as daily + OT."""
+		self.total_driver_batta = flt(self.total_daily_batta) + flt(self.total_ot_batta)
 
 	def validate_batta_policy(self):
 		'''
@@ -276,6 +219,14 @@ class BureauTripSheet(Document):
 				title="Batta Policy Missing",
 				msg=f"No Driver Batta Policy found for designation {designation}. Please create before saving."
 			)
+
+	def before_save(self):
+		self.total_distance_travelled()
+
+	def total_distance_travelled(self):
+		""" Calculate total distance travelled in km based on initial and final odometer readings, if both are provided."""
+		self.distance_travelledkm = flt(self.final_odometer_reading or 0) - flt(self.initial_odometer_reading or 0)
+
 
 @frappe.whitelist()
 def get_batta_for_food_allowance(designation, from_date_time, to_date_time, total_hrs):
@@ -331,7 +282,7 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	total_distance_travelled_km = sanitize_number(total_distance_travelled_km)
 	total_hours = sanitize_number(total_hours)
 
-	batta_policy = frappe.get_all('Batta Policy', filters={'designation':'Driver'}, fields=['*'])
+	batta_policy = frappe.get_all('Batta Policy', filters={'designation':designation}, fields=['*'])
 	if not batta_policy:
 		return {"batta": 0}
 
@@ -367,12 +318,30 @@ def calculate_batta_allowance(designation=None, is_travelling_outside_kerala=0, 
 	}
 
 @frappe.whitelist()
-def get_batta_policy_values():
+def get_batta_policy_values(designation=None, supplier=None):
 	'''
 		Fetch and return the batta policy values from the 'Batta Policy' doctype
 	'''
-	result = frappe.db.get_value('Batta Policy', {}, ['is_actual', 'is_actual_', 'is_actual__', 'is_actual___'], as_dict=True)
-	return result
+	if not designation and supplier:
+		designation = frappe.db.get_value("Supplier", supplier, "designation")
+	if not designation:
+		return {}
+
+	result = frappe.db.get_value(
+		"Batta Policy",
+		{"designation": designation},
+		["is_actual_", "is_actual__", "is_actual___"],
+		as_dict=True
+	)
+
+	if not result:
+		return {}
+
+	return {
+		"is_actual_with":    int(result.get("is_actual_",   0) or 0),
+		"is_actual_without": int(result.get("is_actual__",  0) or 0),
+		"is_actual_food":    int(result.get("is_actual___", 0) or 0),
+	}
 
 @frappe.whitelist()
 def get_ot_working_hours(supplier):
@@ -387,3 +356,156 @@ def get_ot_working_hours(supplier):
 		ot_hours = frappe.db.get_single_value("Beams Accounts Settings", "default_working_hours")
 
 	return float(ot_hours or 0)
+
+
+@frappe.whitelist()
+def can_show_request_batta_button(bureau_trip_sheet):
+	"""Return True if the current user's Employee is in the Bureau Trip Sheet's employees list."""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	employee_names = [row.employee for row in (bts.employees or []) if row.get("employee")]
+	if not employee_names:
+		return False
+	current_user_employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+	if not current_user_employee:
+		return False
+	return current_user_employee in employee_names
+
+
+@frappe.whitelist()
+def create_batta_claim(bureau_trip_sheet):
+	"""  Create a Batta Claim based on the Bureau Trip Sheet details and return the claim document."""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	
+	claim = frappe.new_doc("Batta Claim")
+	claim.employee = frappe.db.get_value("Employee", {"user_id": frappe.session.user}, "name")
+	claim.bureau = bts.bureau
+	claim.company = bts.company
+	claim.purpose = bts.purpose
+	claim.origin = bts.departure_location
+	claim.destination = bts.destination_location
+	claim.is_budgeted = bts.is_budgeted
+	claim.is_travelling_outside_kerala = bts.is_travelling_outside_kerala
+	claim.is_overnight_stay = bts.is_overnight_stay
+	claim.append("work_detail", {
+		"origin": bts.departure_location,
+		"destination": bts.destination_location,
+		"from_date_and_time": bts.starting_date_and_time,
+		"to_date_and_time": bts.ending_date_and_time,
+		"distance_travelled_km": bts.distance_travelledkm,
+		"total_hours": bts.total_hours
+	})
+
+	return claim
+
+
+@frappe.whitelist()
+def get_supplier_payable_account(supplier=None, company=None):
+	"""
+	Get the supplier's default payable account for the given company.
+	Looks up Supplier's accounts child table (Party Account or Accounts).
+	Returns account name or empty string for use in UI.
+	"""
+	account = _get_supplier_payable_account(supplier, company)
+	return account or ""
+
+
+def _get_supplier_payable_account(supplier, company):
+	"""
+	Internal: get supplier default payable account for company.
+	First from Party Account on Supplier; if not set, use ERPNext default
+	(Supplier Group or Company default payable account).
+	"""
+	if not supplier or not company:
+		return None
+	# 1. Party Account on Supplier (company-specific account)
+	account = frappe.db.get_value(
+		"Party Account",
+		{"parent": supplier, "parenttype": "Supplier", "company": company},
+		"account",
+	)
+	if account:
+		return account
+	# 2. Fallback: ERPNext default (Supplier Group or Company default_payable_account)
+	try:
+		from erpnext.accounts.party import get_party_account
+		account = get_party_account("Supplier", supplier, company)
+		return account
+	except Exception:
+		return None
+
+
+def get_mode_of_payment_account(mode_of_payment, company):
+	"""Get the default account for the given Mode of Payment and company."""
+	if not mode_of_payment or not company:
+		return None
+	return frappe.db.get_value(
+		"Mode of Payment Account",
+		{"parent": mode_of_payment, "parenttype": "Mode of Payment", "company": company},
+		"default_account"
+	)
+
+
+@frappe.whitelist()
+def create_settlement_journal_entry(bureau_trip_sheet, mode_of_payment, amount=None):
+	"""
+	Create a Journal Entry for: we have given (paid) the supplier the amount.
+	- Debit: Supplier payable (our liability to supplier goes down)
+	- Credit: Bank/Cash (money paid out to supplier)
+	Supplier account is taken from Supplier doctype Default Accounts table.
+	"""
+	bts = frappe.get_doc("Bureau Trip Sheet", bureau_trip_sheet)
+	if not bts.supplier:
+		frappe.throw(_("Supplier is not set on this Bureau Trip Sheet."))
+	company = bts.company or frappe.defaults.get_user_default("Company")
+	if not company:
+		frappe.throw(_("Company is not set on the Bureau Trip Sheet and no default Company found."))
+
+	settlement_amount = flt(amount) if amount is not None else flt(bts.total_driver_batta)
+	if settlement_amount <= 0:
+		frappe.throw(_("Settlement amount must be greater than zero."))
+
+	supplier_payable_account = _get_supplier_payable_account(bts.supplier, company)
+	if not supplier_payable_account:
+		frappe.throw(
+			_("No default payable account found for Supplier {0} and Company {1}. Please set it in the Supplier's Accounting tab.").format(
+				bts.supplier, company
+			)
+		)
+
+	payment_account = get_mode_of_payment_account(mode_of_payment, company)
+	if not payment_account:
+		frappe.throw(
+			_("No default account found for Mode of Payment {0} and Company {1}. Please configure it in Mode of Payment.").format(
+				mode_of_payment, company
+			)
+		)
+
+	journal_entry = frappe.new_doc("Journal Entry")
+	journal_entry.voucher_type = "Journal Entry"
+	journal_entry.posting_date = nowdate()
+	journal_entry.company = company
+	journal_entry.user_remark = _("Settlement for Bureau Trip Sheet {0} – Driver: {1}").format(
+		bts.name, bts.supplier
+	)
+	if frappe.get_meta("Journal Entry").has_field("bureau_trip_sheet"):
+		journal_entry.bureau_trip_sheet = bts.name
+
+	# We have given the supplier the amount: Debit Supplier payable, Credit Bank/Cash
+	journal_entry.append("accounts", {
+		"account": supplier_payable_account,
+		"party_type": "Supplier",
+		"party": bts.supplier,
+		"debit_in_account_currency": settlement_amount,
+		"credit_in_account_currency": 0,
+		"is_advance": "Yes"
+	})
+	journal_entry.append("accounts", {
+		"account": payment_account,
+		"debit_in_account_currency": 0,
+		"credit_in_account_currency": settlement_amount,
+		"is_advance": "Yes"
+	})
+	journal_entry.insert(ignore_permissions=True)
+
+	return journal_entry.name
+

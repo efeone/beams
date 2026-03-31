@@ -177,7 +177,7 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 
 		#Setting Checkboxes for Budget Exceeded in the respective Doctypes
 		if doctype and docname:
-			if field_exists(doctype, 'is_budget_exceededed') and frappe.db.exists(doctype, docname):
+			if field_exists(doctype, 'is_budget_exceeded') and frappe.db.exists(doctype, docname):
 				frappe.db.set_value(doctype, docname, 'is_budget_exceeded', 1, update_modified=False)
 		
 		if for_check_only:
@@ -191,8 +191,11 @@ def compare_expense_with_budget(args, budget_amount, action_for, action, budget_
 	else:
 		if doctype and docname:
 			if field_exists(doctype, 'is_budget_exceeded') and frappe.db.exists(doctype, docname):
-				frappe.db.set_value(doctype, docname, 'is_budget_exceeded', 0, update_modified=False)
 
+				current_value = frappe.db.get_value(doctype, docname, "is_budget_exceeded")
+
+				if not current_value:
+					frappe.db.set_value(doctype, docname, 'is_budget_exceeded', 0, update_modified=False)
 def get_expense_breakup(args, currency, budget_against):
 	msg = '<hr>Total Expenses booked through - <ul>'
 

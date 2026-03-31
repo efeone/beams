@@ -42,5 +42,21 @@ frappe.ui.form.on('Beams Accounts Settings', {
                 }
             };
         });
+        Bureau_trip_sheet_filters(frm);
     }
 });
+
+// filters to get service items for Bureau trip sheet related fields
+function Bureau_trip_sheet_filters(frm) {
+
+
+    frm.set_query("rent_expense_item", function() {
+        return {
+            filters: {
+                "is_stock_item" : 0,
+                "is_fixed_asset": 0,
+                "is_bundle_item": 0
+            }
+        }
+    })
+}

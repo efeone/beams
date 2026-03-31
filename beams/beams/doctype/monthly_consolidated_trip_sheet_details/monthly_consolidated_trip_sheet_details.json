@@ -1,0 +1,159 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-03-09 17:18:51.166815",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "departure_location",
+  "destination_location",
+  "initial_odometer_reading",
+  "final_odometer_reading",
+  "total_batta",
+  "total_ot_batta",
+  "amount_received_driver",
+  "is_processed",
+  "processed_in_jv",
+  "column_break_qnaw",
+  "starting_date_and_time",
+  "ending_date_and_time",
+  "distance_travelledkm",
+  "bureau_trip_sheet",
+  "average_mileage_kmpl",
+  "fuel_consumption_l",
+  "total_batta_amount_after_advances",
+  "total_ot_amount_after_advances"
+ ],
+ "fields": [
+  {
+   "fieldname": "departure_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Departure Location",
+   "read_only": 1
+  },
+  {
+   "fieldname": "destination_location",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Destination Location",
+   "read_only": 1
+  },
+  {
+   "fieldname": "initial_odometer_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Initial Odometer Reading",
+   "read_only": 1
+  },
+  {
+   "fieldname": "final_odometer_reading",
+   "fieldtype": "Int",
+   "in_list_view": 1,
+   "label": "Final Odometer Reading",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_qnaw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "starting_date_and_time",
+   "fieldtype": "Datetime",
+   "label": "Starting Date and Time ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ending_date_and_time",
+   "fieldtype": "Datetime",
+   "label": "Ending Date and Time ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "distance_travelledkm",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Distance Travelled(km) ",
+   "read_only": 1
+  },
+  {
+   "fieldname": "bureau_trip_sheet",
+   "fieldtype": "Link",
+   "label": "Bureau Trip Sheet",
+   "options": "Bureau Trip Sheet",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_batta",
+   "fieldtype": "Currency",
+   "label": "Total Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_ot_batta",
+   "fieldtype": "Currency",
+   "label": "Total OT Batta",
+   "read_only": 1
+  },
+  {
+   "fieldname": "average_mileage_kmpl",
+   "fieldtype": "Float",
+   "label": "Average Mileage (KMPL)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "fuel_consumption_l",
+   "fieldtype": "Float",
+   "label": "Fuel Consumption (L)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_received_driver",
+   "fieldtype": "Currency",
+   "label": "Amount Received (Driver)",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_batta_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total Batta Amount After Advances",
+   "read_only": 1
+  },
+  {
+   "fieldname": "total_ot_amount_after_advances",
+   "fieldtype": "Currency",
+   "label": "Total OT Amount After Advances",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "is_processed",
+   "fieldtype": "Check",
+   "label": "Is Processed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "processed_in_jv",
+   "fieldtype": "Link",
+   "label": "Processed In JV",
+   "options": "Journal Entry",
+   "read_only": 1
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-03-26 11:12:55.886344",
+ "modified_by": "Administrator",
+ "module": "BEAMS",
+ "name": "Monthly Consolidated Trip Sheet Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
