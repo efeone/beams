@@ -80,7 +80,6 @@ function check_include_in_ibf(frm) {
  */
 function set_cost_head(cdt, cdn) {
 	let row = locals[cdt][cdn];
-
 	if (row.item_code) {
 		frappe.db.get_value('Item', row.item_code, 'cost_head')
 			.then(r => {
@@ -96,3 +95,4 @@ frappe.ui.form.on('Sales Invoice Item', {
 		set_cost_head(cdt, cdn);
 	}
 });
+

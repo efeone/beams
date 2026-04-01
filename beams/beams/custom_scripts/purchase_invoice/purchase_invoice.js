@@ -196,7 +196,6 @@ function fetch_advances_from_mcts(frm) {
  */
 function set_cost_head(cdt, cdn) {
 	let row = locals[cdt][cdn];
-
 	if (row.item_code) {
 		frappe.db.get_value('Item', row.item_code, 'cost_head')
 			.then(r => {
