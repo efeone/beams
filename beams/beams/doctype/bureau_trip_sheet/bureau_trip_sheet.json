@@ -23,6 +23,7 @@
   "ending_date_and_time",
   "check_in_time",
   "total_hours",
+  "last_trip",
   "section_break_tjbr",
   "purpose",
   "fuel_details_section",
@@ -341,12 +342,18 @@
    "fieldname": "check_in_time",
    "fieldtype": "Datetime",
    "label": "Check In Time"
+  },
+  {
+   "default": "0",
+   "fieldname": "last_trip",
+   "fieldtype": "Check",
+   "label": "Last Trip"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2026-03-26 15:50:44.470313",
+ "modified": "2026-04-01 10:46:15.616295",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Bureau Trip Sheet",
