@@ -33,3 +33,13 @@ def set_from_bureau_flag(doc, method):
     if "Bureau User" in frappe.get_roles(user):
         doc.from_bureau = 1
 
+def set_cost_head_from_item(doc, method=None):
+	"""
+		Fetch cost head from item doctype
+	"""
+	for row in doc.get("items"):
+		if not row.item_code:
+			continue
+		item_cost_head = frappe.db.get_value("Item", row.item_code, "cost_head")
+		if item_cost_head:
+			row.cost_head = item_cost_head
