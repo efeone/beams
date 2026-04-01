@@ -34,7 +34,8 @@
   "column_break_jkfg",
   "rent_expense_item",
   "batta_ot_expense_item",
-  "advance_account"
+  "advance_account",
+  "batta_expense_cost_head"
  ],
  "fields": [
   {
@@ -203,12 +204,18 @@
    "fieldtype": "Link",
    "label": "Advance Account",
    "options": "Account"
+  },
+  {
+   "fieldname": "batta_expense_cost_head",
+   "fieldtype": "Link",
+   "label": "Batta Expense Cost Head",
+   "options": "Cost Head"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2026-03-17 14:51:14.096058",
+ "modified": "2026-03-31 19:44:46.985532",
  "modified_by": "Administrator",
  "module": "BEAMS",
  "name": "Beams Accounts Settings",

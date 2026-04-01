@@ -301,6 +301,7 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 	fuel_expense_account = settings.get("fuel_expense_item")
 	ot_account = settings.get("batta_ot_expense_item")
 	fuel_card_account = settings.get("fuel_card_account")
+	batta_cost_head = settings.get("batta_expense_cost_head")
 
 	supplier_payable_account = _get_supplier_payable_account(doc.supplier, company)
 	if not supplier_payable_account:
@@ -336,18 +337,21 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			"account": batta_account,
 			"debit_in_account_currency": total_batta_je,
 			"credit_in_account_currency": 0,
+			"cost_head": batta_cost_head
 		})
 	if ot_account and total_ot_je:
 		accounts.append({
 			"account": ot_account,
 			"debit_in_account_currency": total_ot_je,
 			"credit_in_account_currency": 0,
+			"cost_head": batta_cost_head
 		})
 	if fuel_expense_account and total_fuel_expense:
 		accounts.append({
 			"account": fuel_expense_account,
 			"debit_in_account_currency": total_fuel_expense,
 			"credit_in_account_currency": 0,
+			"cost_head": batta_cost_head
 		})
 	# Credits — fuel card / fuel log only (advance is already reflected in batta_after / ot_after)
 	if fuel_card_account and total_fuel_log:
@@ -355,6 +359,7 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			"account": fuel_card_account,
 			"debit_in_account_currency": 0,
 			"credit_in_account_currency": total_fuel_log,
+			"cost_head": batta_cost_head
 		})
 	# Supplier balancing: credit when company owes supplier, debit when recovering
 	if supplier_payable_account and supplier_amount != 0:
@@ -364,6 +369,7 @@ def create_journal_entry(monthly_consolidated_trip_sheet_name):
 			"party": doc.supplier,
 			"debit_in_account_currency": abs(supplier_amount) if supplier_amount < 0 else 0,
 			"credit_in_account_currency": supplier_amount if supplier_amount > 0 else 0,
+			"cost_head": batta_cost_head
 		})
 
 	if not accounts:
