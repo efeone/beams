@@ -53,6 +53,20 @@ class BureauTripSheet(Document):
 		'''
 		Calculate total trip batta from daily rate × number of days (or food allowance total).
 		'''
+		policy = get_batta_policy_values(supplier=self.supplier)
+
+		if policy.get("is_actual_with") or policy.get("is_actual_without") or policy.get("is_actual_food"):
+
+			self.total_food_allowance = (
+				flt(self.breakfast) +
+				flt(self.lunch) +
+				flt(self.dinner)
+			)
+
+			self.batta = self.total_food_allowance
+
+			return
+
 		if self.total_food_allowance:
 			self.batta = self.total_food_allowance
 		else:
@@ -126,6 +140,11 @@ class BureauTripSheet(Document):
 		  - Else → No Allowance
 		When policy allows actual (editable) daily amounts, user-entered values are preserved on save.
 		'''
+		policy = get_batta_policy_values(supplier=self.supplier)
+
+		if policy.get("is_actual_with") or policy.get("is_actual_without") or policy.get("is_actual_food"):
+			return
+
 		# Preserve manually entered daily rates before reset.
 		manual_daily_batta_without_overnight = flt(self.get("daily_batta_without_overnight_stay"))
 		manual_daily_batta_with_overnight = flt(self.get("daily_batta_with_overnight_stay"))
