@@ -74,3 +74,25 @@ function check_include_in_ibf(frm) {
         });
     }
 }
+
+/**
+ * Fetch cost head from the item doctype.
+ */
+function set_cost_head(cdt, cdn) {
+	let row = locals[cdt][cdn];
+	if (row.item_code) {
+		frappe.db.get_value('Item', row.item_code, 'cost_head')
+			.then(r => {
+				if (r.message && r.message.cost_head) {
+					frappe.model.set_value(cdt, cdn, 'cost_head', r.message.cost_head);
+				}
+			});
+	}
+}
+
+frappe.ui.form.on('Sales Invoice Item', {
+	item_code: function(frm, cdt, cdn) {
+		set_cost_head(cdt, cdn);
+	}
+});
+

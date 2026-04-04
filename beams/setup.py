@@ -1999,6 +1999,13 @@ def get_item_custom_fields():
 				"fieldtype": "Check",
 				"label": "Is Bundle Item",
 				"insert_after": "has_variants"
+			},
+			{
+				"fieldname": "cost_head",
+				"fieldtype": "Link",
+				"label": "Cost Head",
+				"options": "Cost Head",
+				"insert_after": "item_defaults"
 			}
 		]
 	}
