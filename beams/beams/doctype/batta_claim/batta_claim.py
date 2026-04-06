@@ -24,7 +24,7 @@ class BattaClaim(Document):
 			self.from_bureau = 1
 
 	def on_submit(self):
-		if self.workflow_state == 'Approved':
+		if self.workflow_state in ["Approved by CEO", "Approved"] and self.docstatus == 1:
 			if not self.expense_type:
 				frappe.throw(
 					title="Expense Type Required",
