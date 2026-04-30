@@ -197,7 +197,10 @@ doc_events = {
 	"Sales Invoice": {
 		"on_update_after_submit":"beams.beams.custom_scripts.sales_invoice.sales_invoice.on_update_after_submit",
 		"autoname": "beams.beams.custom_scripts.sales_invoice.sales_invoice.autoname",
-		"validate": "beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_for_barter"
+		"validate": [
+			"beams.beams.custom_scripts.sales_invoice.sales_invoice.validate_sales_invoice_for_barter",
+			"beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_cost_head_from_item",
+		],
 	},
 	"Quotation": {
 		"validate": "beams.beams.custom_scripts.quotation.quotation.validate_is_barter",
@@ -208,6 +211,7 @@ doc_events = {
 		"before_save": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.before_save",
 		"before_insert": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_from_bureau_flag",
 		"before_validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
+		"validate": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_cost_head_from_item",
 	},
 	"Account": {
 		"after_insert": "beams.beams.custom_scripts.account.account.create_todo_on_creation_for_account"
@@ -229,7 +233,10 @@ doc_events = {
 	},
 	"Purchase Order": {
 		"on_update": "beams.beams.custom_scripts.purchase_order.purchase_order.create_todo_on_finance_verification",
-		"validate": "beams.beams.custom_scripts.purchase_order.purchase_order.validate_reason_for_rejection",
+		"validate": [
+			"beams.beams.custom_scripts.purchase_order.purchase_order.validate_reason_for_rejection",
+			"beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_cost_head_from_item",
+		],
 		"before_validate": "beams.beams.custom_scripts.purchase_order.purchase_order.set_is_budgeted",
 		"on_change":"beams.beams.custom_scripts.purchase_order.purchase_order.update_equipment_quantities",
 	},
@@ -243,7 +250,8 @@ doc_events = {
 	"Sales Order": {
 		"autoname": "beams.beams.custom_scripts.sales_order.sales_order.autoname",
 		"before_save": "beams.beams.custom_scripts.sales_order.sales_order.validate_sales_order_amount_with_quotation",
-		"before_insert": "beams.beams.custom_scripts.sales_order.sales_order.set_region_from_quotation"
+		"before_insert": "beams.beams.custom_scripts.sales_order.sales_order.set_region_from_quotation",
+		"validate": "beams.beams.custom_scripts.purchase_invoice.purchase_invoice.set_cost_head_from_item",
 	},
 	"Contract": {
 		"on_update": "beams.beams.custom_scripts.contract.contract.create_todo_on_contract_verified_by_finance",
