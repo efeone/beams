@@ -1,0 +1,638 @@
+/* ─── Frappe Design Tokens ──────────────────────────────────────── */
+:root {
+    --primary: #2490ef;
+    --primary-light: rgba(36, 144, 239, 0.1);
+    --primary-dark: #1c72be;
+    --text-color: #1c2126;
+    --text-muted: #8d99a6;
+    --text-light: #c4c4c4;
+    --border-color: #d1d8dd;
+    --subtle-border: #ebeff2;
+    --bg-color: #f0f4f7;
+    --card-bg: #ffffff;
+    --input-bg: #ffffff;
+    --navbar-bg: #ffffff;
+    --red: #e24c4b;
+    --yellow: #f8a100;
+    --green: #29cd42;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, .06), 0 1px 3px rgba(0, 0, 0, .10);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, .10), 0 2px 4px -1px rgba(0, 0, 0, .06);
+    --border-radius: 6px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 10px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --page-head-height: 56px;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font);
+    font-size: 13px;
+    color: var(--text-color);
+    background: var(--bg-color);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Page Wrapper ───────────────────────────────────────────────── */
+.page-wrapper {
+    min-height: calc(100vh - 48px);
+}
+
+/* ─── Page Head ──────────────────────────────────────────────────── */
+.page-head {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 24px;
+    height: var(--page-head-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 48px;
+    z-index: 100;
+}
+
+.page-head-left {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.page-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1;
+}
+
+.page-head-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ─── Frappe Buttons ─────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-family: var(--font);
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s, box-shadow 0.12s;
+    white-space: nowrap;
+    text-decoration: none;
+    border: 1px solid transparent;
+    line-height: 1;
+}
+
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+.btn-md {
+    padding: 7px 14px;
+}
+
+.btn-default {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+.btn-default:hover {
+    background: var(--bg-color);
+    border-color: #b8c2cc;
+}
+
+.btn-default:active {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .1);
+}
+
+.btn-primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-danger {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+    color: var(--red);
+}
+
+.btn-danger:hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+/* ─── View Toggle (Frappe-style segmented) ───────────────────────── */
+.view-toggle {
+    display: flex;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 2px;
+    gap: 2px;
+}
+
+.view-toggle .btn {
+    padding: 4px 12px;
+    font-size: 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 4px;
+}
+
+.view-toggle .btn.active {
+    background: var(--card-bg);
+    color: var(--text-color);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ─── Page Body ──────────────────────────────────────────────────── */
+.page-body {
+    padding: 20px 24px;
+}
+
+/* ─── Frappe Card ────────────────────────────────────────────────── */
+.frappe-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+/* ─── Roster Toolbar ─────────────────────────────────────────────── */
+.roster-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--subtle-border);
+}
+
+.toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-range-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+/* ─── Roster Table Wrapper ───────────────────────────────────────── */
+.roster-table-wrap {
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+/* ─── Roster Table ───────────────────────────────────────────────── */
+.roster-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    table-layout: fixed;
+}
+
+.roster-table th,
+.roster-table td {
+    border-right: 1px solid var(--subtle-border);
+}
+
+.roster-table th:last-child,
+.roster-table td:last-child {
+    border-right: none;
+}
+
+/* thead */
+.roster-table thead tr {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.th-shift {
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    left: 0;
+    background: var(--card-bg);
+    z-index: 10;
+}
+
+.th-day {
+    padding: 6px 4px;
+    text-align: center;
+    font-weight: 400;
+    font-size: 11px;
+    background: var(--card-bg);
+}
+
+.th-day.today {
+    background: var(--primary-light);
+}
+
+.th-day .day-name {
+    color: var(--text-muted);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.th-day .day-num {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-top: 1px;
+}
+
+.th-day.today .day-name,
+.th-day.today .day-num {
+    color: var(--primary);
+}
+
+.th-day.monthly .day-num {
+    font-size: 11px;
+}
+
+/* tbody */
+.roster-table tbody tr {
+    border-bottom: 1px solid var(--subtle-border);
+    transition: background 0.1s;
+}
+
+.roster-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.roster-table tbody tr:hover>td {
+    background: #f8fafc;
+}
+
+.roster-table tbody tr:hover>.td-shift {
+    background: #f8fafc;
+}
+
+.td-shift {
+    padding: 10px 12px;
+    position: sticky;
+    left: 0;
+    background: var(--card-bg);
+    z-index: 5;
+    transition: background 0.1s;
+}
+
+.shift-name {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--text-color);
+}
+
+.shift-time {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 1px;
+}
+
+.td-cell {
+    padding: 5px 4px;
+    vertical-align: top;
+    background: transparent;
+}
+
+/* Employee chip */
+.emp-chip {
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 10px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 2px;
+}
+
+.emp-chip.monthly {
+    padding: 2px 3px;
+    text-align: center;
+}
+
+.more-count {
+    font-size: 9px;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+/* Add button */
+.add-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1px auto 0;
+    border: 1px dashed var(--border-color);
+    background: transparent;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-muted);
+    transition: all 0.12s;
+    padding: 0;
+    line-height: 1;
+}
+
+.add-btn:hover {
+    background: var(--primary-light);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.add-btn.weekly {
+    width: 28px;
+    height: 22px;
+}
+
+.add-btn.monthly {
+    width: 20px;
+    height: 16px;
+}
+
+/* ─── Shift color legends ────────────────────────────────────────── */
+.legend-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 16px;
+    border-top: 1px solid var(--subtle-border);
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+/* ─── Modal ──────────────────────────────────────────────────────── */
+.modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .45);
+
+    /* Higher than Frappe page layers */
+    z-index: 10000;
+
+    align-items: center;
+    justify-content: center;
+
+    /* allow clicks */
+    pointer-events: auto;
+}
+
+.modal-backdrop.open {
+    display: flex;
+}
+
+.modal-dialog {
+    background: #fff;
+    width: 340px;
+    max-height: 540px;
+    overflow: auto;
+
+    position: relative;
+    z-index: 10001;
+
+    /* IMPORTANT */
+    pointer-events: auto;
+}
+
+.modal-dialog * {
+    pointer-events: auto !important;
+}
+
+@keyframes modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--subtle-border);
+}
+
+.modal-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal-subtitle {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.modal-close {
+    border: none;
+    background: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0;
+    line-height: 1;
+    margin-left: 8px;
+    flex-shrink: 0;
+}
+
+.modal-close:hover {
+    color: var(--text-color);
+}
+
+.modal-body {
+    padding: 12px 16px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+/* Frappe-style search input */
+.frappe-input {
+    width: 100%;
+    padding: 6px 10px;
+    font-family: var(--font);
+    font-size: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    background: var(--input-bg);
+    color: var(--text-color);
+    outline: none;
+    transition: border-color 0.12s, box-shadow 0.12s;
+}
+
+.frappe-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+.frappe-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* Employee list */
+.emp-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 8px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.emp-item:hover {
+    background: var(--bg-color);
+}
+
+.emp-name {
+    font-size: 12px;
+    color: var(--text-color);
+}
+
+.no-results {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 12px 0;
+}
+
+/* Avatar */
+.avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    flex-shrink: 0;
+    background: var(--primary-light);
+    color: var(--primary);
+}
+
+.avatar.green {
+    background: rgba(41, 205, 66, 0.12);
+    color: #1a9c30;
+}
+
+.avatar.sm {
+    width: 24px;
+    height: 24px;
+    font-size: 9px;
+}
+
+/* Assigned section */
+.assigned-section {
+    display: none;
+    margin-top: 10px;
+    border-top: 1px solid var(--subtle-border);
+    padding-top: 10px;
+}
+
+.section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+}
+
+.assigned-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 8px;
+    border-radius: var(--border-radius);
+    margin-bottom: 3px;
+    background: var(--bg-color);
+}
+
+.assigned-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.remove-btn {
+    border: none;
+    background: none;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0 2px;
+    line-height: 1;
+    font-family: var(--font);
+    transition: color 0.1s;
+}
+
+.remove-btn:hover {
+    color: var(--red);
+}
+
+/* ─── Indicator dot ──────────────────────────────────────────────── */
+.indicator {
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    margin-right: 4px;
+    vertical-align: middle;
+}
